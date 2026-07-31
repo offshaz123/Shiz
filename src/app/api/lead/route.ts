@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import nodemailer from "nodemailer";
 import { siteConfig } from "@/lib/site-config";
 
 const REQUIRED_FIELDS = ["name", "business", "email", "phone"];
@@ -49,9 +50,10 @@ export async function POST(request: Request) {
     }
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.error("RESEND_API_KEY is not configured");
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailAppPassword = process.env.GMAIL_APP_PASSWORD;
+  if (!gmailUser || !gmailAppPassword) {
+    console.error("GMAIL_USER / GMAIL_APP_PASSWORD is not configured");
     return NextResponse.json(
       { ok: false, error: "Email delivery is not configured yet." },
       { status: 500 }
@@ -68,24 +70,21 @@ export async function POST(request: Request) {
     )
     .join("");
 
-  const emailRes = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: "Shaz Marketing Group Website <onboarding@resend.dev>",
-      to: [siteConfig.email],
-      reply_to: fields.email,
-      subject: `New website lead: ${fields.business || fields.name}`,
-      html: `<table style="border-collapse:collapse;font-family:sans-serif;font-size:14px;">${rows}</table>`,
-    }),
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: { user: gmailUser, pass: gmailAppPassword },
   });
 
-  if (!emailRes.ok) {
-    const body = await emailRes.text();
-    console.error("Resend API error", emailRes.status, body);
+  try {
+    await transporter.sendMail({
+      from: `"Shaz Marketing Group Website" <${gmailUser}>`,
+      to: siteConfig.email,
+      replyTo: fields.email,
+      subject: `New website lead: ${fields.business || fields.name}`,
+      html: `<table style="border-collapse:collapse;font-family:sans-serif;font-size:14px;">${rows}</table>`,
+    });
+  } catch (err) {
+    console.error("Gmail send error", err);
     return NextResponse.json(
       { ok: false, error: "Failed to send email notification." },
       { status: 502 }
