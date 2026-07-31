@@ -25,38 +25,28 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Lead form → email delivery
 
-The enquiry form (`src/components/LeadForm.tsx`) submits to a first-party API route,
-`src/app/api/lead/route.ts`, which sends the notification email via **Gmail** (using
-`nodemailer` + an App Password) to:
+The enquiry form (`src/components/LeadForm.tsx`) uses **Netlify Forms** — no API keys, no
+app passwords, no backend code required. The form has `data-netlify="true"` and a
+`form-name` field, which Netlify detects automatically at deploy time; submissions are then
+captured by Netlify and can be emailed to you straight from their dashboard.
 
-```
-walid.shah2003@gmail.com
-```
+**Required one-time setup (only works once the site is deployed on Netlify):**
 
-Using a first-party route (instead of calling a third-party service straight from the browser)
-avoids the submission being silently dropped by ad-blockers or privacy extensions.
+1. Deploy the branch with this form to Netlify at least once (Netlify needs to scan a deploy
+   to detect the form).
+2. In the Netlify dashboard, open your site → left sidebar → **Forms**. You should see
+   `lead-inquiry` listed once a deploy has picked it up.
+3. Click **Form notifications** (or **Settings and usage** → **Form notifications**, depending
+   on your Netlify UI version) → **Add notification** → **Email notification**.
+4. Enter `walid.shah2003@gmail.com` and save.
 
-**Required one-time setup — the site will not send emails until you do this:**
+That's it — every submission (from the Home page and Contact page) now emails you directly, and
+the visitor is redirected to `/thank-you`. You can also see every submission logged in the Forms
+tab even if an email is somehow missed.
 
-1. Turn on 2-Step Verification on the `walid.shah2003@gmail.com` Google account, if it isn't on
-   already: [myaccount.google.com/security](https://myaccount.google.com/security).
-2. Generate an App Password: go to
-   [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords), enter a name
-   like "Shaz Marketing Website", and click **Create**. Copy the 16-character password shown
-   (remove the spaces when you copy it).
-3. Add two environment variables on your host:
-   - **Netlify:** Site configuration → Environment variables → Add variable, twice:
-     - Key: `GMAIL_USER`, Value: `walid.shah2003@gmail.com`
-     - Key: `GMAIL_APP_PASSWORD`, Value: *(the 16-character app password)*
-   - **Vercel:** Project Settings → Environment Variables → add the same two key/value pairs.
-4. Trigger a redeploy so the new environment variables are picked up.
-
-Once that's done, every form submission (Home page and Contact page) emails
-walid.shah2003@gmail.com directly, and the visitor is redirected to `/thank-you`.
-
-If you'd rather send from a different Gmail account than the one receiving leads, set
-`GMAIL_USER`/`GMAIL_APP_PASSWORD` to that account — the recipient address is always
-`siteConfig.email` in `src/lib/site-config.ts`, independent of which account sends it.
+Netlify Forms only works when the site is actually hosted on Netlify — locally (`npm run dev`)
+or on other hosts (Vercel, etc.), the form will submit without errors but nothing will be
+captured or emailed, since there's no Netlify bot to intercept it.
 
 ## WhatsApp
 

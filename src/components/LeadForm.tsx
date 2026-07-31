@@ -4,6 +4,8 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { siteConfig } from "@/lib/site-config";
 
+const FORM_NAME = "lead-inquiry";
+
 const industries = [
   "Automotive",
   "Home & Trade Services",
@@ -23,6 +25,12 @@ const budgets = [
   "Not sure yet",
 ];
 
+function encode(data: Record<string, string>) {
+  return Object.entries(data)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .join("&");
+}
+
 export function LeadForm({ compact = false }: { compact?: boolean }) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
@@ -33,20 +41,26 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
     setError(null);
 
     const form = e.currentTarget;
-    const data = new FormData(form);
+    const formData = new FormData(form);
 
-    if ((data.get("_honey") as string)?.length) {
+    if ((formData.get("_honey") as string)?.length) {
       router.push("/thank-you");
       return;
     }
 
+    const payload: Record<string, string> = { "form-name": FORM_NAME };
+    formData.forEach((value, key) => {
+      if (key !== "_honey") payload[key] = String(value);
+    });
+
     setSubmitting(true);
     try {
-      const res = await fetch("/api/lead", { method: "POST", body: data });
-      const result = await res.json();
-      if (!res.ok || !result.ok) {
-        throw new Error(result.error || "Submission failed");
-      }
+      const res = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode(payload),
+      });
+      if (!res.ok) throw new Error("Submission failed");
       form.reset();
       router.push("/thank-you");
     } catch {
@@ -58,7 +72,14 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-4">
+    <form
+      name={FORM_NAME}
+      data-netlify="true"
+      netlify-honeypot="_honey"
+      onSubmit={handleSubmit}
+      className="grid gap-4"
+    >
+      <input type="hidden" name="form-name" value={FORM_NAME} />
       <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
 
       <div className="grid gap-4 sm:grid-cols-2">
