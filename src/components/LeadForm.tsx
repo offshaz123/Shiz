@@ -55,7 +55,7 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
 
     setSubmitting(true);
     try {
-      const res = await fetch("/", {
+      const res = await fetch("/__forms.html", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encode(payload),
@@ -72,13 +72,7 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
   }
 
   return (
-    <form
-      name={FORM_NAME}
-      data-netlify="true"
-      netlify-honeypot="_honey"
-      onSubmit={handleSubmit}
-      className="grid gap-4"
-    >
+    <form name={FORM_NAME} onSubmit={handleSubmit} className="grid gap-4">
       <input type="hidden" name="form-name" value={FORM_NAME} />
       <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
 

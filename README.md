@@ -26,9 +26,16 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Lead form → email delivery
 
 The enquiry form (`src/components/LeadForm.tsx`) uses **Netlify Forms** — no API keys, no
-app passwords, no backend code required. The form has `data-netlify="true"` and a
-`form-name` field, which Netlify detects automatically at deploy time; submissions are then
-captured by Netlify and can be emailed to you straight from their dashboard.
+app passwords, no backend code required.
+
+Modern Next.js apps route every page through a serverless function, so Netlify's build-time form
+scanner can't detect a form declared directly on a Next.js page — `@netlify/plugin-nextjs` will
+actually fail the build if you try. To work around this, there's a small "shadow" static file,
+`public/__forms.html`, that mirrors the same fields with `data-netlify="true"` and a `form-name`
+field. Netlify detects the form from that plain static file (which bypasses the Next.js function
+entirely), and the real form on the website submits to it in the background via `fetch`. If you
+ever add/remove/rename a field in `LeadForm.tsx`, mirror the same change in `public/__forms.html`
+or Netlify's copy of the form definition will get out of sync with what's actually submitted.
 
 **Required one-time setup (only works once the site is deployed on Netlify):**
 
