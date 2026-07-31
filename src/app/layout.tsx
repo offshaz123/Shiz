@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { OrganizationJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
 
 const geistSans = Geist({
@@ -17,20 +18,44 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const defaultTitle = `${siteConfig.name} | Meta & Instagram Ads Agency for Businesses`;
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.name} | Meta & Instagram Ads for Businesses`,
+    default: defaultTitle,
     template: `%s | ${siteConfig.name}`,
   },
   description: siteConfig.description,
+  keywords: [
+    "Meta ads agency",
+    "Instagram ads agency UK",
+    "Facebook ads management",
+    "lead generation agency",
+    "automotive lead generation",
+    "social media marketing agency",
+    "AI receptionist for business",
+    "all-in-one CRM for small business",
+  ],
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
-    title: `${siteConfig.name} | Meta & Instagram Ads for Businesses`,
+    title: defaultTitle,
     description: siteConfig.description,
     url: siteConfig.url,
     siteName: siteConfig.name,
     locale: "en_GB",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: defaultTitle,
+    description: siteConfig.description,
   },
 };
 
@@ -46,6 +71,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        <OrganizationJsonLd />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <Header />
           <main className="flex-1">{children}</main>

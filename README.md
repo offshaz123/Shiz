@@ -63,9 +63,26 @@ changes.
 
 ## Editing content
 
-- Company contact details, phone & email: `src/lib/site-config.ts`
-- Pricing tiers & features: `src/components/PricingSection.tsx`
+- Company contact details, phone & email: `src/lib/site-config.ts` — **`url` must always match the
+  live domain**, since it drives canonical links, the sitemap, robots.txt, and Open Graph tags.
+- Pricing tiers & features: `src/components/PricingSection.tsx` (keep `src/components/StructuredData.tsx`'s
+  `makesOffer` prices in sync if these change)
+- FAQs (shown on the homepage and marked up as FAQPage structured data): `faqs` array in
+  `src/app/page.tsx`
 - Logo: `src/components/Logo.tsx` (and `src/app/icon.svg` for the favicon)
+
+## SEO
+
+- `src/app/sitemap.ts` and `src/app/robots.ts` generate `/sitemap.xml` and `/robots.txt`
+  automatically from `siteConfig.url` — no manual editing needed as pages are added, just extend
+  the `routes` array in `sitemap.ts`.
+- `src/app/opengraph-image.tsx` generates the branded image shown when the site is shared on
+  social media/messaging apps (Next.js's `next/og`, no static image file to maintain).
+- `src/components/StructuredData.tsx` renders JSON-LD: an `Organization`/`ProfessionalService`
+  schema (site-wide, in `layout.tsx`) and an `FAQPage` schema (home page only, from the `faqs`
+  array in `page.tsx`) for rich snippet eligibility in Google.
+- `/thank-you` is marked `noindex` (it's a transactional confirmation page, not something people
+  should land on via search).
 
 ## Deploy
 

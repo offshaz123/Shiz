@@ -3,7 +3,7 @@ export const siteConfig = {
   shortName: "Shaz Marketing",
   description:
     "Shaz Marketing Group runs Meta & Instagram ad campaigns that generate qualified leads for businesses of every kind, backed by an all-in-one CRM, unified social inbox, and 24/7 AI receptionist.",
-  url: "https://shazmarketinggroup.com",
+  url: "https://shazmarketing.com",
   email: "info@shazmarketing.com",
   phoneDisplay: "07539 559947",
   phoneE164: "+447539559947",

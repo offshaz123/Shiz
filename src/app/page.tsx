@@ -1,7 +1,36 @@
 import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { PricingSection } from "@/components/PricingSection";
+import { FaqJsonLd } from "@/components/StructuredData";
 import { whatsappHref } from "@/lib/site-config";
+
+const faqs = [
+  {
+    question: "How much do Meta & Instagram ads cost with Shaz Marketing Group?",
+    answer:
+      "Our done-for-you Meta & Instagram ads management starts from £400/month on the Starter plan, with Growth (£700/month) and Scale (£1,400/month) plans adding a full CRM, automation and an AI receptionist. Ad spend itself is separate and paid directly to Meta.",
+  },
+  {
+    question: "Do you run Meta & Instagram ads for automotive businesses?",
+    answer:
+      "Yes — automotive is one of our specialisms, alongside home & trade services, retail, health & wellness, real estate, hospitality and professional services. We tailor every campaign to the industry it's running in.",
+  },
+  {
+    question: "What's included in the all-in-one CRM and social inbox?",
+    answer:
+      "Every enquiry from Instagram, Facebook Messenger, WhatsApp, SMS and email lands in one shared inbox, mapped to a sales pipeline built around your business, with automated follow-up so no lead goes cold.",
+  },
+  {
+    question: "How does the AI receptionist and chatbot work?",
+    answer:
+      "The AI receptionist answers common questions, qualifies leads and books appointments into your calendar 24/7, even outside business hours, and is included from the Scale plan upwards.",
+  },
+  {
+    question: "How quickly will I start getting leads?",
+    answer:
+      "After a free strategy call, we typically launch your Meta & Instagram ad campaigns within a few days, with leads starting to flow into your inbox as soon as the campaigns go live.",
+  },
+];
 
 const industries = [
   "Automotive",
@@ -286,6 +315,30 @@ export default function Home() {
       </section>
 
       <PricingSection />
+
+      {/* FAQ */}
+      <section className="border-t border-border bg-surface">
+        <div className="mx-auto max-w-3xl px-5 py-24 sm:px-8">
+          <div className="text-center">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+              FAQs
+            </span>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Frequently asked questions
+            </h2>
+          </div>
+
+          <div className="mt-12 space-y-6">
+            {faqs.map((faq) => (
+              <div key={faq.question} className="rounded-2xl border border-border bg-background p-6">
+                <h3 className="text-base font-semibold text-foreground">{faq.question}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <FaqJsonLd items={faqs} />
+      </section>
 
       {/* Final CTA + form */}
       <section id="lead-form" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">

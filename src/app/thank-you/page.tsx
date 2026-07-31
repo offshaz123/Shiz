@@ -5,6 +5,7 @@ import { whatsappHref } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "Thank You",
   description: "Thanks for reaching out to Shaz Marketing Group.",
+  robots: { index: false, follow: true },
 };
 
 export default function ThankYouPage() {

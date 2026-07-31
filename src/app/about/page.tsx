@@ -5,6 +5,12 @@ export const metadata: Metadata = {
   title: "About Us",
   description:
     "Shaz Marketing Group helps businesses of every kind grow with Meta & Instagram ads, all-in-one CRM and AI-powered follow-up.",
+  alternates: { canonical: "/about" },
+  openGraph: {
+    title: "About Shaz Marketing Group",
+    description:
+      "Shaz Marketing Group helps businesses of every kind grow with Meta & Instagram ads, all-in-one CRM and AI-powered follow-up.",
+  },
 };
 
 const values = [

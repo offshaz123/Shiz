@@ -6,6 +6,12 @@ export const metadata: Metadata = {
   title: "Contact Us",
   description:
     "Get in touch with Shaz Marketing Group for a free Meta & Instagram ads strategy call, by form, email, phone or WhatsApp.",
+  alternates: { canonical: "/contact" },
+  openGraph: {
+    title: "Contact Shaz Marketing Group",
+    description:
+      "Get in touch with Shaz Marketing Group for a free Meta & Instagram ads strategy call, by form, email, phone or WhatsApp.",
+  },
 };
 
 export default function ContactPage() {

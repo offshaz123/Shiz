@@ -4,6 +4,7 @@ import { siteConfig } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "Privacy Policy",
   description: "Privacy Policy for Shaz Marketing Group.",
+  alternates: { canonical: "/privacy" },
 };
 
 const sections = [
