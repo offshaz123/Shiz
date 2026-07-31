@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { siteConfig } from "@/lib/site-config";
 
 const industries = [
@@ -22,64 +22,34 @@ const budgets = [
   "Not sure yet",
 ];
 
-type Status = "idle" | "submitting" | "success" | "error";
-
 export function LeadForm({ compact = false }: { compact?: boolean }) {
-  const [status, setStatus] = useState<Status>("idle");
+  const [submitting, setSubmitting] = useState(false);
+  const nextInputRef = useRef<HTMLInputElement>(null);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setStatus("submitting");
-
-    const form = e.currentTarget;
-    const data = new FormData(form);
-
-    if ((data.get("_honey") as string)?.length) {
-      setStatus("success");
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    const honey = new FormData(e.currentTarget).get("_honey") as string;
+    if (honey?.length) {
+      e.preventDefault();
       return;
     }
-
-    try {
-      const res = await fetch(
-        `https://formsubmit.co/ajax/${siteConfig.email}`,
-        {
-          method: "POST",
-          headers: { Accept: "application/json" },
-          body: data,
-        }
-      );
-
-      if (!res.ok) throw new Error("Submission failed");
-      setStatus("success");
-      form.reset();
-    } catch {
-      setStatus("error");
+    if (nextInputRef.current) {
+      nextInputRef.current.value = `${window.location.origin}/thank-you`;
     }
-  }
-
-  if (status === "success") {
-    return (
-      <div className="flex flex-col items-center gap-3 rounded-2xl border border-border bg-surface p-8 text-center">
-        <div className="brand-gradient-bg flex h-12 w-12 items-center justify-center rounded-full">
-          <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6 text-white">
-            <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </div>
-        <h3 className="text-lg font-semibold text-foreground">Thanks — you&apos;re in!</h3>
-        <p className="max-w-sm text-sm text-muted">
-          We&apos;ve received your details. A member of the Shaz Marketing Group team will
-          reach out within one business day. Need us sooner? Message us on WhatsApp.
-        </p>
-      </div>
-    );
+    setSubmitting(true);
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-4">
+    <form
+      action={`https://formsubmit.co/${siteConfig.email}`}
+      method="POST"
+      onSubmit={handleSubmit}
+      className="grid gap-4"
+    >
       <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
       <input type="hidden" name="_subject" value="New lead from shazmarketinggroup.com" />
       <input type="hidden" name="_template" value="table" />
       <input type="hidden" name="_captcha" value="false" />
+      <input type="hidden" name="_next" defaultValue="/thank-you" ref={nextInputRef} />
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Full name" name="name" placeholder="John Smith" required />
@@ -112,18 +82,11 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
 
       <button
         type="submit"
-        disabled={status === "submitting"}
+        disabled={submitting}
         className="brand-gradient-bg mt-1 rounded-full px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.01] disabled:opacity-60"
       >
-        {status === "submitting" ? "Sending..." : "Get My Free Strategy Call"}
+        {submitting ? "Sending..." : "Get My Free Strategy Call"}
       </button>
-
-      {status === "error" && (
-        <p className="text-sm text-red-500">
-          Something went wrong sending your details. Please try again, or reach us directly on
-          WhatsApp at {siteConfig.phoneDisplay}.
-        </p>
-      )}
 
       <p className="text-xs text-muted">
         By submitting, you agree to be contacted by Shaz Marketing Group about our services. See
