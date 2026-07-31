@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { siteConfig } from "@/lib/site-config";
 
 const industries = [
@@ -23,33 +24,42 @@ const budgets = [
 ];
 
 export function LeadForm({ compact = false }: { compact?: boolean }) {
+  const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
-  const nextInputRef = useRef<HTMLInputElement>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
-    const honey = new FormData(e.currentTarget).get("_honey") as string;
-    if (honey?.length) {
-      e.preventDefault();
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError(null);
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    if ((data.get("_honey") as string)?.length) {
+      router.push("/thank-you");
       return;
     }
-    if (nextInputRef.current) {
-      nextInputRef.current.value = `${window.location.origin}/thank-you`;
-    }
+
     setSubmitting(true);
+    try {
+      const res = await fetch("/api/lead", { method: "POST", body: data });
+      const result = await res.json();
+      if (!res.ok || !result.ok) {
+        throw new Error(result.error || "Submission failed");
+      }
+      form.reset();
+      router.push("/thank-you");
+    } catch {
+      setSubmitting(false);
+      setError(
+        `Something went wrong sending your details. Please try again, or reach us directly on WhatsApp at ${siteConfig.phoneDisplay}.`
+      );
+    }
   }
 
   return (
-    <form
-      action={`https://formsubmit.co/${siteConfig.email}`}
-      method="POST"
-      onSubmit={handleSubmit}
-      className="grid gap-4"
-    >
+    <form onSubmit={handleSubmit} className="grid gap-4">
       <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
-      <input type="hidden" name="_subject" value="New lead from shazmarketinggroup.com" />
-      <input type="hidden" name="_template" value="table" />
-      <input type="hidden" name="_captcha" value="false" />
-      <input type="hidden" name="_next" defaultValue="/thank-you" ref={nextInputRef} />
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Full name" name="name" placeholder="John Smith" required />
@@ -87,6 +97,8 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       >
         {submitting ? "Sending..." : "Get My Free Strategy Call"}
       </button>
+
+      {error && <p className="text-sm text-red-500">{error}</p>}
 
       <p className="text-xs text-muted">
         By submitting, you agree to be contacted by Shaz Marketing Group about our services. See

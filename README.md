@@ -25,20 +25,35 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Lead form → email delivery
 
-The enquiry form (`src/components/LeadForm.tsx`) submits to
-[FormSubmit](https://formsubmit.co)'s AJAX endpoint, which forwards every submission straight to:
+The enquiry form (`src/components/LeadForm.tsx`) submits to a first-party API route,
+`src/app/api/lead/route.ts`, which sends the notification email via
+[Resend](https://resend.com) to:
 
 ```
 walid.shah2003@gmail.com
 ```
 
-**Important one-time step:** the first time the form is submitted on the live site, FormSubmit
-sends a confirmation email to that inbox — the link in it must be clicked once to activate
-delivery for the domain. After that, every submission is emailed automatically with no server,
-API keys, or backend required.
+Using a first-party route (instead of calling a third-party service straight from the browser)
+avoids the submission being silently dropped by ad-blockers or privacy extensions.
 
-If you'd prefer a different email provider (Resend, SendGrid, a GoHighLevel webhook, etc.), swap
-the `fetch` target in `LeadForm.tsx` for your provider's endpoint.
+**Required one-time setup — the site will not send emails until you do this:**
+
+1. Sign up at [resend.com](https://resend.com) using **walid.shah2003@gmail.com** as the account
+   email (this lets you send test emails to that address immediately, with no domain
+   verification needed).
+2. In the Resend dashboard, go to **API Keys → Create API Key** and copy it.
+3. Add it as an environment variable on your host:
+   - **Netlify:** Site configuration → Environment variables → Add variable →
+     Key: `RESEND_API_KEY`, Value: *(paste the key)* → Save.
+   - **Vercel:** Project Settings → Environment Variables → add the same key/value.
+4. Trigger a redeploy so the new environment variable is picked up.
+
+Once that's done, every form submission (Home page and Contact page) emails
+walid.shah2003@gmail.com directly, and the visitor is redirected to `/thank-you`.
+
+If you later verify your own domain in Resend, update the `from` address in
+`src/app/api/lead/route.ts` to send from `@yourdomain.com` instead of the default
+`onboarding@resend.dev`.
 
 ## WhatsApp
 
