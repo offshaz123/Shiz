@@ -18,9 +18,10 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Pages
 
-- `/` — Home: hero, services, how it works, unified inbox/CRM pitch, AI receptionist, pricing, lead form
+- `/` — Home: hero, services, how it works, unified inbox/CRM pitch, AI receptionist, pricing, FAQs, lead form
 - `/about` — Who we are / company story
 - `/contact` — Contact details (WhatsApp, phone, email) + full lead form
+- `/blog` — SEO content hub (see below), `/blog/[slug]` for individual posts
 - `/privacy` — Privacy policy
 
 ## Lead form → email delivery
@@ -83,6 +84,19 @@ changes.
   array in `page.tsx`) for rich snippet eligibility in Google.
 - `/thank-you` is marked `noindex` (it's a transactional confirmation page, not something people
   should land on via search).
+
+## Blog / ongoing SEO content
+
+- Blog posts live as data in `src/content/blog.ts` (a typed array — no CMS, no MDX). Each entry
+  has a `slug`, `title`, `description`, `publishedAt`, `keywords`, and `sections` (optional
+  heading + paragraphs + bullets). Add a new object to the top of the array to publish a new post.
+- `/blog` (index) and `/blog/[slug]` (post template, in `src/app/blog/`) render straight from that
+  array — `generateStaticParams` prerenders every post at build time, and each post gets its own
+  canonical URL, meta description, and `BlogPosting` JSON-LD.
+- New posts are automatically picked up by `sitemap.ts` — no separate step needed.
+- A daily automated Routine (set up outside this repo, in Claude) writes one new post per day,
+  picking a topic not already covered, and pushes directly to this branch (which auto-deploys via
+  Netlify). It always runs `npm run lint` and `npm run build` before pushing.
 
 ## Deploy
 
