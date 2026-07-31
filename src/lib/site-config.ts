@@ -4,7 +4,7 @@ export const siteConfig = {
   description:
     "Shaz Marketing Group runs Meta & Instagram ad campaigns that generate qualified leads for businesses of every kind, backed by an all-in-one CRM, unified social inbox, and 24/7 AI receptionist.",
   url: "https://shazmarketinggroup.com",
-  email: "walid.shah2003@gmail.com",
+  email: "info@shazmarketing.com",
   phoneDisplay: "07539 559947",
   phoneE164: "+447539559947",
   whatsappNumber: "447539559947",

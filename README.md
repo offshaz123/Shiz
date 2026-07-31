@@ -45,7 +45,7 @@ or Netlify's copy of the form definition will get out of sync with what's actual
    `lead-inquiry` listed once a deploy has picked it up.
 3. Click **Form notifications** (or **Settings and usage** → **Form notifications**, depending
    on your Netlify UI version) → **Add notification** → **Email notification**.
-4. Enter `walid.shah2003@gmail.com` and save.
+4. Enter `info@shazmarketing.com` and save.
 
 That's it — every submission (from the Home page and Contact page) now emails you directly, and
 the visitor is redirected to `/thank-you`. You can also see every submission logged in the Forms
