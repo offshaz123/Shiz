@@ -7,7 +7,7 @@ export function OrganizationJsonLd() {
     "@id": `${siteConfig.url}/#organization`,
     name: siteConfig.name,
     url: siteConfig.url,
-    logo: `${siteConfig.url}/icon.svg`,
+    logo: `${siteConfig.url}/logo.png`,
     image: `${siteConfig.url}/opengraph-image`,
     description: siteConfig.description,
     email: siteConfig.email,
@@ -47,6 +47,26 @@ export function OrganizationJsonLd() {
           "Unlimited ad campaigns, a 24/7 AI receptionist & chatbot, advanced automation, and a dedicated account manager.",
       },
     ],
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+export function BreadcrumbJsonLd({ items }: { items: { name: string; url: string }[] }) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      item: item.url,
+    })),
   };
 
   return (

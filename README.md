@@ -79,11 +79,18 @@ changes.
   the `routes` array in `sitemap.ts`.
 - `src/app/opengraph-image.tsx` generates the branded image shown when the site is shared on
   social media/messaging apps (Next.js's `next/og`, no static image file to maintain).
-- `src/components/StructuredData.tsx` renders JSON-LD: an `Organization`/`ProfessionalService`
-  schema (site-wide, in `layout.tsx`) and an `FAQPage` schema (home page only, from the `faqs`
-  array in `page.tsx`) for rich snippet eligibility in Google.
+- `src/components/StructuredData.tsx` renders JSON-LD: `Organization`/`ProfessionalService`
+  (site-wide, in `layout.tsx`), `FAQPage` (home page, from the `faqs` array in `page.tsx`), and
+  `BreadcrumbList` + `BlogPosting` (on every blog post) — all feeding rich-snippet eligibility in
+  Google.
 - `/thank-you` is marked `noindex` (it's a transactional confirmation page, not something people
   should land on via search).
+- `public/logo.png` and `src/app/apple-icon.png` are static square PNG exports of the logo mark —
+  used as the Organization schema's `logo` (structured data requires a raster image, not the SVG
+  favicon) and as the Apple touch icon for home-screen bookmarks respectively.
+- The homepage has a "From the Blog" section (latest 3 posts) for internal linking + freshness
+  signals as the daily blog grows.
+- `html lang` is `en-GB` to match the UK targeting (GBP pricing, `en_GB` Open Graph locale).
 
 ## Blog / ongoing SEO content
 

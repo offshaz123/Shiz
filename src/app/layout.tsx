@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const defaultTitle = `${siteConfig.name} | Meta & Instagram Ads Agency for Businesses`;
+const defaultTitle = `${siteConfig.name} | Meta & Instagram Ads Agency`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -66,7 +66,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="en-GB"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { blogPosts } from "@/content/blog";
 import { siteConfig } from "@/lib/site-config";
+import { BreadcrumbJsonLd } from "@/components/StructuredData";
 
 export function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }));
@@ -48,9 +49,19 @@ export default async function BlogPostPage({
     datePublished: post.publishedAt,
     dateModified: post.publishedAt,
     author: { "@type": "Organization", name: siteConfig.name },
-    publisher: { "@type": "Organization", name: siteConfig.name },
+    publisher: {
+      "@type": "Organization",
+      name: siteConfig.name,
+      logo: { "@type": "ImageObject", url: `${siteConfig.url}/logo.png` },
+    },
     mainEntityOfPage: `${siteConfig.url}/blog/${post.slug}`,
   };
+
+  const breadcrumbItems = [
+    { name: "Home", url: siteConfig.url },
+    { name: "Blog", url: `${siteConfig.url}/blog` },
+    { name: post.title, url: `${siteConfig.url}/blog/${post.slug}` },
+  ];
 
   return (
     <article className="mx-auto max-w-3xl px-5 py-20 sm:px-8">
@@ -125,6 +136,7 @@ export default async function BlogPostPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
       />
+      <BreadcrumbJsonLd items={breadcrumbItems} />
     </article>
   );
 }

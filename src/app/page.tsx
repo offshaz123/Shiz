@@ -3,6 +3,7 @@ import { LeadForm } from "@/components/LeadForm";
 import { PricingSection } from "@/components/PricingSection";
 import { FaqJsonLd } from "@/components/StructuredData";
 import { whatsappHref } from "@/lib/site-config";
+import { blogPosts } from "@/content/blog";
 
 const faqs = [
   {
@@ -373,6 +374,55 @@ export default function Home() {
         </div>
         <FaqJsonLd items={faqs} />
       </section>
+
+      {/* From the blog */}
+      {blogPosts.length > 0 && (
+        <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+                From the Blog
+              </span>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                Guides on ads, leads &amp; growth
+              </h2>
+            </div>
+            <Link
+              href="/blog"
+              className="hidden shrink-0 text-sm font-semibold text-brand-pink hover:underline sm:block"
+            >
+              View all posts →
+            </Link>
+          </div>
+
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {blogPosts.slice(0, 3).map((post) => (
+              <Link
+                key={post.slug}
+                href={`/blog/${post.slug}`}
+                className="block rounded-3xl border border-border bg-surface p-8 transition-colors hover:border-brand-pink/40"
+              >
+                <p className="text-xs text-muted">
+                  {new Date(post.publishedAt).toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
+                <h3 className="mt-2 text-lg font-semibold text-foreground">{post.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted">{post.description}</p>
+              </Link>
+            ))}
+          </div>
+
+          <Link
+            href="/blog"
+            className="mt-8 block text-center text-sm font-semibold text-brand-pink hover:underline sm:hidden"
+          >
+            View all posts →
+          </Link>
+        </section>
+      )}
 
       {/* Final CTA + form */}
       <section id="lead-form" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
