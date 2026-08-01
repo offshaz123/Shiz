@@ -145,6 +145,40 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Stats / trust */}
+      <section className="border-y border-border bg-surface">
+        <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8">
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div className="rounded-3xl border border-border bg-background p-8 text-center">
+              <p className="brand-gradient-text text-4xl font-bold sm:text-5xl">£1.5M+</p>
+              <p className="mt-3 text-sm text-muted">
+                Generated in revenue for our clients through Meta &amp; Instagram ad campaigns
+              </p>
+            </div>
+            <div className="rounded-3xl border border-border bg-background p-8 text-center">
+              <div className="flex items-center justify-center gap-3">
+                <span className="text-lg text-muted line-through decoration-2">Hours</span>
+                <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 shrink-0 text-brand-pink">
+                  <path
+                    d="M5 12h14m0 0-5-5m5 5-5 5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span className="brand-gradient-text text-4xl font-bold sm:text-5xl">
+                  &lt;2 min
+                </span>
+              </div>
+              <p className="mt-3 text-sm text-muted">
+                Typical lead reply time, manual follow-up vs. our AI Receptionist
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Services */}
       <section id="services" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
         <div className="mx-auto max-w-2xl text-center">
