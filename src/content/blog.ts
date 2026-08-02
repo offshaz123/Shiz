@@ -16,6 +16,57 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-budget-guide-uk-small-business",
+    title: "How Much Should You Spend on Meta & Instagram Ads? A UK Small Business Guide",
+    description:
+      "A practical guide to setting a realistic Meta & Instagram ads budget for UK small businesses — what ad spend actually buys, and where the money should go first.",
+    publishedAt: "2026-08-02",
+    keywords: [
+      "Meta ads budget UK",
+      "Instagram ads cost",
+      "how much do Facebook ads cost",
+      "small business advertising budget",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "\"How much should I spend on Meta ads?\" is one of the most common questions we hear from business owners — and it's usually the wrong first question. Budget isn't a fixed number that applies to every business; it depends on your margins, your average customer value, and what you're actually trying to achieve.",
+          "That said, there are some genuinely useful ways to think about it, so you're not just picking a number out of thin air.",
+        ],
+      },
+      {
+        heading: "Two separate numbers: ad spend and management",
+        paragraphs: [
+          "It helps to think of Meta advertising as two separate costs. Ad spend is what you pay Meta directly to actually show your ads — this scales with how much reach and volume you want. Management is the cost of the strategy, creative, targeting, and ongoing optimisation behind those ads — whether that's an in-house hire, a freelancer, or an agency.",
+          "Conflating the two is where a lot of businesses go wrong, either by assuming a small management fee should come with a huge ad budget, or by spending heavily on ads with no one actually managing performance day to day.",
+        ],
+      },
+      {
+        heading: "What's a sensible starting ad spend?",
+        paragraphs: [
+          "Rather than picking an arbitrary figure, work backwards from your numbers. If your average customer is worth £500 and you're comfortable paying £50 to acquire one, that's your target cost per lead — everything else follows from there.",
+          "Meta's own ad platform also performs best once an ad set has gathered enough data to exit its \"learning phase\" — in practice this means a campaign needs a consistent, sustained budget for several weeks rather than a small burst of spend followed by silence. A modest, steady budget run consistently for 4–6 weeks will almost always outperform a larger budget switched on and off unpredictably.",
+        ],
+      },
+      {
+        heading: "Where the budget actually goes to work",
+        paragraphs: ["A few things determine whether a given budget performs well or gets wasted, regardless of how much you spend:"],
+        bullets: [
+          "Creative quality — a scroll-stopping video or image matters more to cost-per-result than almost anything else",
+          "Landing page or lead form quality — sending clicks to a slow or confusing page wastes spend that already did its job",
+          "Speed of follow-up — a lead that gets a reply within minutes converts at a very different rate to one left for hours",
+          "Retargeting — showing ads again to people who already engaged is typically far cheaper than reaching cold audiences",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "If you're not sure what a realistic budget looks like for your specific business, that's exactly what a strategy call is for — we'll work through your numbers with you rather than hand you a generic figure. Our plans separate ad spend from management clearly from day one; see the pricing page for how the packages break down.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "instagram-ads-for-car-dealerships",
     title: "Instagram Ads for Car Dealerships: A Complete Guide",
     description:
