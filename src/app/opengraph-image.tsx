@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Shaz Marketing Group — Meta & Instagram Ads for Businesses";
+export const alt = "SMG Details — Car Tinting, Wrapping & Servicing in Romford";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -15,7 +15,7 @@ export default async function Image() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#08080a",
+          backgroundColor: "#06090c",
           padding: 80,
         }}
       >
@@ -31,14 +31,14 @@ export default async function Image() {
               fontSize: 56,
               fontWeight: 800,
               color: "#fff",
-              background: "linear-gradient(135deg, #7b2ff7, #e0218a 55%, #f7941e)",
+              background: "linear-gradient(135deg, #0f5f8c, #0ea5c4 55%, #f2a922)",
             }}
           >
             S
           </div>
           <div style={{ display: "flex", fontSize: 46, fontWeight: 800, color: "#fff" }}>
-            <span>SHAZ&nbsp;</span>
-            <span style={{ color: "#ff3ea5" }}>MARKETING</span>
+            <span>SMG&nbsp;</span>
+            <span style={{ color: "#22d3ee" }}>DETAILS</span>
           </div>
         </div>
         <div
@@ -52,18 +52,18 @@ export default async function Image() {
             display: "flex",
           }}
         >
-          More leads. More bookings. One platform.
+          Tinting, wrapping &amp; servicing. Done properly.
         </div>
         <div
           style={{
             marginTop: 20,
             fontSize: 26,
-            color: "#a1a1ac",
+            color: "#93a3ac",
             textAlign: "center",
             display: "flex",
           }}
         >
-          Meta &amp; Instagram Ads · Lead Generation · All-in-One CRM · AI Receptionist
+          Window Tinting · Wrapping · Servicing · Number Plates · Alloy Refurb
         </div>
       </div>
     ),

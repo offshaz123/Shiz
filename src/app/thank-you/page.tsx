@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { whatsappHref } from "@/lib/site-config";
+import { whatsappHref, siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Thank You",
-  description: "Thanks for reaching out to Shaz Marketing Group.",
+  description: `Thanks for reaching out to ${siteConfig.name}.`,
   robots: { index: false, follow: true },
 };
 
@@ -23,11 +23,10 @@ export default function ThankYouPage() {
         </svg>
       </div>
       <h1 className="mt-6 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-        Thanks — you&apos;re in!
+        Thanks — we&apos;ve got your enquiry!
       </h1>
       <p className="mt-4 max-w-md text-muted">
-        We&apos;ve received your details. A member of the Shaz Marketing Group team will reach out
-        within one business day to talk through your free strategy call.
+        A member of the {siteConfig.name} team will be in touch shortly with a quote and the next available slot.
       </p>
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <a

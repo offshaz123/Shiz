@@ -4,28 +4,28 @@
 
 :root {
   --background: #ffffff;
-  --surface: #f6f6f8;
-  --surface-2: #eeeef1;
-  --foreground: #0a0a0c;
-  --muted: #55555f;
-  --border: #e4e4e9;
-  --brand-purple: #7b2ff7;
-  --brand-pink: #e0218a;
-  --brand-orange: #f7941e;
-  --brand-blue: #0866ff;
+  --surface: #f5f7f8;
+  --surface-2: #eceff1;
+  --foreground: #0a0e12;
+  --muted: #52616b;
+  --border: #dde3e6;
+  --brand-purple: #0f5f8c;
+  --brand-pink: #0ea5c4;
+  --brand-orange: #f2a922;
+  --brand-blue: #1c7fb8;
 }
 
 .dark {
-  --background: #08080a;
-  --surface: #111114;
-  --surface-2: #1a1a1f;
-  --foreground: #f5f5f7;
-  --muted: #a1a1ac;
-  --border: #232329;
-  --brand-purple: #9b4dff;
-  --brand-pink: #ff3ea5;
-  --brand-orange: #ffab2e;
-  --brand-blue: #3b8bff;
+  --background: #06090c;
+  --surface: #0e1418;
+  --surface-2: #161d22;
+  --foreground: #f2f6f8;
+  --muted: #93a3ac;
+  --border: #202a30;
+  --brand-purple: #1c86c4;
+  --brand-pink: #22d3ee;
+  --brand-orange: #ffb830;
+  --brand-blue: #3ba7e8;
 }
 
 @theme inline {
