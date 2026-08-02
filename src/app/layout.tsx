@@ -5,7 +5,6 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { ChatWidget } from "@/components/ChatWidget";
 import { OrganizationJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
 
@@ -19,7 +18,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const defaultTitle = `${siteConfig.name} | Car Tinting, Wrapping & Servicing in Romford`;
+const defaultTitle = `${siteConfig.name} | Meta & Instagram Ads Agency`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -29,15 +28,14 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   keywords: [
-    "car window tinting Romford",
-    "car wrapping Romford",
-    "dechroming",
-    "shop and commercial window tinting",
-    "car servicing Romford",
-    "brake pads and discs",
-    "3D 4D gel number plates",
-    "alloy wheel refurbishment",
-    "caliper respray",
+    "Meta ads agency",
+    "Instagram ads agency UK",
+    "Facebook ads management",
+    "lead generation agency",
+    "automotive lead generation",
+    "social media marketing agency",
+    "AI receptionist for business",
+    "all-in-one CRM for small business",
   ],
   alternates: {
     canonical: "/",
@@ -79,7 +77,6 @@ export default function RootLayout({
           <main className="flex-1">{children}</main>
           <Footer />
           <WhatsAppButton />
-          <ChatWidget />
         </ThemeProvider>
       </body>
     </html>

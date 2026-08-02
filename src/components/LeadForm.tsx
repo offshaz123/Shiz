@@ -3,7 +3,33 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { siteConfig } from "@/lib/site-config";
-import { serviceCategories } from "@/content/services";
+
+const FORM_NAME = "lead-inquiry";
+
+const industries = [
+  "Automotive",
+  "Home & Trade Services",
+  "Retail & E-commerce",
+  "Health, Beauty & Wellness",
+  "Real Estate & Property",
+  "Restaurants & Hospitality",
+  "Professional Services",
+  "Other",
+];
+
+const budgets = [
+  "Under £1,000/mo",
+  "£1,000 - £3,000/mo",
+  "£3,000 - £10,000/mo",
+  "£10,000+/mo",
+  "Not sure yet",
+];
+
+function encode(data: Record<string, string>) {
+  return Object.entries(data)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .join("&");
+}
 
 export function LeadForm({ compact = false }: { compact?: boolean }) {
   const router = useRouter();
@@ -22,56 +48,58 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       return;
     }
 
-    const payload = {
-      name: formData.get("name"),
-      phone: formData.get("phone"),
-      email: formData.get("email"),
-      serviceCategory: formData.get("serviceCategory"),
-      message: formData.get("message"),
-    };
+    const payload: Record<string, string> = { "form-name": FORM_NAME };
+    formData.forEach((value, key) => {
+      if (key !== "_honey") payload[key] = String(value);
+    });
 
     setSubmitting(true);
     try {
-      const res = await fetch("/api/enquiries", {
+      const res = await fetch("/__forms.html", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode(payload),
       });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || "Submission failed");
+      if (!res.ok) throw new Error("Submission failed");
       form.reset();
       router.push("/thank-you");
-    } catch (err) {
+    } catch {
       setSubmitting(false);
       setError(
-        err instanceof Error && err.message !== "Submission failed"
-          ? err.message
-          : `Something went wrong sending your details. Please try again, or reach us directly on WhatsApp at ${siteConfig.phoneDisplay}.`
+        `Something went wrong sending your details. Please try again, or reach us directly on WhatsApp at ${siteConfig.phoneDisplay}.`
       );
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid gap-4">
+    <form name={FORM_NAME} onSubmit={handleSubmit} className="grid gap-4">
+      <input type="hidden" name="form-name" value={FORM_NAME} />
       <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Full name" name="name" placeholder="John Smith" required />
+        <Field label="Business name" name="business" placeholder="Your business" required />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="Email" name="email" type="email" placeholder="you@business.com" required />
         <Field label="Phone number" name="phone" type="tel" placeholder="07XXX XXXXXX" required />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Email (optional)" name="email" type="email" placeholder="you@example.com" />
-        <SelectField label="Which service?" name="serviceCategory" options={serviceCategories.map((c) => c.title)} />
+        <SelectField label="Business category" name="industry" options={industries} />
+        <SelectField label="Monthly ad budget" name="budget" options={budgets} />
       </div>
 
       {!compact && (
         <label className="grid gap-1.5">
-          <span className="text-sm font-medium text-foreground">Tell us more (optional)</span>
+          <span className="text-sm font-medium text-foreground">
+            Tell us about your business (optional)
+          </span>
           <textarea
             name="message"
             rows={4}
-            placeholder="Your vehicle, what you're after, and any dates that suit you"
+            placeholder="What are you hoping to achieve with Meta & Instagram ads?"
             className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted focus:border-brand-pink focus:outline-none"
           />
         </label>
@@ -82,13 +110,14 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         disabled={submitting}
         className="brand-gradient-bg mt-1 rounded-full px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.01] disabled:opacity-60"
       >
-        {submitting ? "Sending..." : "Send Enquiry"}
+        {submitting ? "Sending..." : "Get My Free Strategy Call"}
       </button>
 
       {error && <p className="text-sm text-red-500">{error}</p>}
 
       <p className="text-xs text-muted">
-        By submitting, you agree to be contacted by {siteConfig.name} about your enquiry. See our{" "}
+        By submitting, you agree to be contacted by Shaz Marketing Group about our services. See
+        our{" "}
         <a href="/privacy" className="underline hover:text-foreground">
           Privacy Policy
         </a>
@@ -140,9 +169,12 @@ function SelectField({
       <select
         name={name}
         defaultValue=""
+        required
         className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground focus:border-brand-pink focus:outline-none"
       >
-        <option value="">Not sure yet</option>
+        <option value="" disabled>
+          Select an option
+        </option>
         {options.map((opt) => (
           <option key={opt} value={opt}>
             {opt}

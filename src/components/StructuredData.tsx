@@ -1,13 +1,11 @@
 import { siteConfig } from "@/lib/site-config";
-import { serviceCategories } from "@/content/services";
 
 export function OrganizationJsonLd() {
   const data = {
     "@context": "https://schema.org",
-    "@type": "AutomotiveBusiness",
+    "@type": "ProfessionalService",
     "@id": `${siteConfig.url}/#organization`,
     name: siteConfig.name,
-    alternateName: siteConfig.legalName,
     url: siteConfig.url,
     logo: `${siteConfig.url}/logo.png`,
     image: `${siteConfig.url}/opengraph-image`,
@@ -15,29 +13,40 @@ export function OrganizationJsonLd() {
     email: siteConfig.email,
     telephone: siteConfig.phoneE164,
     priceRange: "££",
+    areaServed: {
+      "@type": "Country",
+      name: "United Kingdom",
+    },
     address: {
       "@type": "PostalAddress",
-      streetAddress: siteConfig.address.line1,
-      addressLocality: siteConfig.address.locality,
-      addressRegion: siteConfig.address.region,
-      postalCode: siteConfig.address.postcode,
-      addressCountry: siteConfig.address.countryCode,
+      addressCountry: "GB",
     },
-    sameAs: [siteConfig.socials.instagram, siteConfig.socials.facebook, siteConfig.socials.tiktok],
-    openingHoursSpecification: siteConfig.openingHours.map((o) => ({
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: o.days,
-      opens: o.hours.split(" - ")[0],
-      closes: o.hours.split(" - ")[1] ?? o.hours.split(" - ")[0],
-    })),
-    makesOffer: serviceCategories.map((category) => ({
-      "@type": "Offer",
-      itemOffered: {
-        "@type": "Service",
-        name: category.title,
-        description: category.description,
+    makesOffer: [
+      {
+        "@type": "Offer",
+        name: "Starter",
+        price: "400",
+        priceCurrency: "GBP",
+        description:
+          "Meta & Instagram ads management, a lead capture landing page, and a unified Instagram + Facebook inbox.",
       },
-    })),
+      {
+        "@type": "Offer",
+        name: "Growth",
+        price: "700",
+        priceCurrency: "GBP",
+        description:
+          "A full CRM pipeline, an all-in-one inbox across Instagram, Messenger, WhatsApp & SMS, and automated lead follow-up.",
+      },
+      {
+        "@type": "Offer",
+        name: "Scale",
+        price: "1400",
+        priceCurrency: "GBP",
+        description:
+          "Unlimited ad campaigns, a 24/7 AI receptionist & chatbot, advanced automation, and a dedicated account manager.",
+      },
+    ],
   };
 
   return (

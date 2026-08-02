@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { LeadForm } from "@/components/LeadForm";
-import { siteConfig, whatsappHref, fullAddress, googleMapsHref } from "@/lib/site-config";
+import { siteConfig, whatsappHref } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Contact Us",
-  description: `Get in touch with ${siteConfig.name} in Romford for a free quote, by form, phone or WhatsApp.`,
+  description:
+    "Get in touch with Shaz Marketing Group for a free Meta & Instagram ads strategy call, by form, email, phone or WhatsApp.",
   alternates: { canonical: "/contact" },
   openGraph: {
-    title: `Contact ${siteConfig.name}`,
-    description: `Get in touch with ${siteConfig.name} in Romford for a free quote, by form, phone or WhatsApp.`,
+    title: "Contact Shaz Marketing Group",
+    description:
+      "Get in touch with Shaz Marketing Group for a free Meta & Instagram ads strategy call, by form, email, phone or WhatsApp.",
   },
 };
 
@@ -16,10 +18,15 @@ export default function ContactPage() {
   return (
     <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
       <div className="mx-auto max-w-2xl text-center">
-        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">Contact</span>
-        <h1 className="mt-3 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">Get in touch</h1>
+        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+          Contact
+        </span>
+        <h1 className="mt-3 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+          Let&apos;s talk about your growth
+        </h1>
         <p className="mt-4 text-muted">
-          Tell us about your vehicle and what you need, and we&apos;ll come back with a quote and the next available slot.
+          Tell us a bit about your business and we&apos;ll come back with a plan for turning Meta
+          &amp; Instagram ads into real customers.
         </p>
       </div>
 
@@ -83,39 +90,12 @@ export default function ContactPage() {
             </div>
           </a>
 
-          <a
-            href={googleMapsHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-start gap-4 rounded-3xl border border-border bg-surface p-6 transition-colors hover:border-brand-pink/40"
-          >
-            <span className="brand-gradient-bg flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
-              <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 text-white">
-                <path
-                  d="M12 21s7-6.3 7-11.5A7 7 0 0 0 5 9.5C5 14.7 12 21 12 21Z"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinejoin="round"
-                />
-                <circle cx="12" cy="9.5" r="2.3" stroke="currentColor" strokeWidth="1.6" />
-              </svg>
-            </span>
-            <div>
-              <p className="font-semibold text-foreground">Find us</p>
-              <p className="text-sm text-muted">{fullAddress}</p>
-            </div>
-          </a>
-
           <div className="rounded-3xl border border-border bg-surface p-6">
-            <p className="font-semibold text-foreground">Opening hours</p>
-            <ul className="mt-2 space-y-1 text-sm text-muted">
-              {siteConfig.openingHours.map((o) => (
-                <li key={o.days} className="flex justify-between gap-4">
-                  <span>{o.days}</span>
-                  <span>{o.hours}</span>
-                </li>
-              ))}
-            </ul>
+            <p className="font-semibold text-foreground">Response time</p>
+            <p className="mt-1 text-sm text-muted">
+              We reply to all enquiries within one business day. For anything urgent, WhatsApp is
+              the fastest way to reach us.
+            </p>
           </div>
         </div>
 

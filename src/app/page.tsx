@@ -1,27 +1,96 @@
 import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
-import { ServicesSection } from "@/components/ServicesSection";
-import { FAQAccordion } from "@/components/FAQAccordion";
+import { PricingSection } from "@/components/PricingSection";
 import { FaqJsonLd } from "@/components/StructuredData";
-import { whatsappHref, fullAddress, googleMapsHref, siteConfig } from "@/lib/site-config";
-import { faqs } from "@/content/faqs";
+import { whatsappHref } from "@/lib/site-config";
+import { blogPosts } from "@/content/blog";
 
-const whyUs = [
+const faqs = [
   {
-    title: "All under one roof",
-    description: "Tinting, wrapping, servicing, plates and alloy refurb — no need to shop around between specialists.",
+    question: "How much do Meta & Instagram ads cost with Shaz Marketing Group?",
+    answer:
+      "Our done-for-you Meta & Instagram ads management starts from £400/month on the Starter plan, with Growth (£700/month) and Scale (£1,400/month) plans adding a full CRM, automation and an AI receptionist. Ad spend itself is separate and paid directly to Meta.",
   },
   {
-    title: "Road-legal, done right",
-    description: "Every tint shade and number plate we fit meets UK legal requirements, so you're covered.",
+    question: "Do you run Meta & Instagram ads for automotive businesses?",
+    answer:
+      "Yes — automotive is one of our specialisms, alongside home & trade services, retail, health & wellness, real estate, hospitality and professional services. We tailor every campaign to the industry it's running in.",
   },
   {
-    title: "Straight-talking quotes",
-    description: "Message us your vehicle and what you need — we'll give you a clear price before any work starts.",
+    question: "What's included in the all-in-one CRM and social inbox?",
+    answer:
+      "Every enquiry from Instagram, Facebook Messenger, WhatsApp, SMS and email lands in one shared inbox, mapped to a sales pipeline built around your business, with automated follow-up so no lead goes cold.",
   },
   {
-    title: "Local to Romford",
-    description: "Based at 12 Roneo Corner, easy to find and easy to reach on WhatsApp for updates.",
+    question: "How does the AI receptionist and chatbot work?",
+    answer:
+      "The AI receptionist answers common questions, qualifies leads and books appointments into your calendar 24/7, even outside business hours, and is included from the Scale plan upwards.",
+  },
+  {
+    question: "How quickly will I start getting leads?",
+    answer:
+      "After a free strategy call, we typically launch your Meta & Instagram ad campaigns within a few days, with leads starting to flow into your inbox as soon as the campaigns go live.",
+  },
+];
+
+const industries = [
+  "Automotive",
+  "Home & Trade Services",
+  "Retail & E-commerce",
+  "Health & Wellness",
+  "Real Estate",
+  "Restaurants & Hospitality",
+  "Professional Services",
+  "Any business, any category",
+];
+
+const services = [
+  {
+    title: "Meta & Instagram Ads",
+    description:
+      "Scroll-stopping campaigns built and managed across Facebook and Instagram, engineered for one goal: qualified enquiries for your business.",
+    points: ["Campaign strategy & creative", "Audience targeting & retargeting", "Continuous testing & optimisation"],
+  },
+  {
+    title: "Done-For-You Lead Generation",
+    description:
+      "We turn ad clicks into real conversations. Every enquiry is captured, organised and delivered straight to you, in any industry — with a specialism in automotive.",
+    points: ["High-converting landing pages", "Instant lead notifications", "Built for automotive & beyond"],
+  },
+  {
+    title: "All Your Socials, One Platform",
+    description:
+      "Instagram, Facebook Messenger, WhatsApp, SMS and email — unified into a single inbox and CRM so every enquiry is seen and nothing slips through the cracks.",
+    points: ["One shared inbox for every channel", "Custom pipelines for your business", "Automated follow-up sequences"],
+  },
+  {
+    title: "AI Receptionist & Chatbot",
+    description:
+      "A 24/7 AI receptionist answers questions, qualifies leads and books appointments even when you're closed — with deeper automation integrations rolling out soon.",
+    points: ["Answers FAQs instantly, day or night", "Qualifies & books leads automatically", "Deeper automation integration coming soon"],
+  },
+];
+
+const steps = [
+  {
+    step: "01",
+    title: "Free Strategy Call",
+    description: "We learn about your business, your goals and your ideal customer.",
+  },
+  {
+    step: "02",
+    title: "We Launch Your Campaigns",
+    description: "Meta & Instagram ads go live, built to generate leads from day one.",
+  },
+  {
+    step: "03",
+    title: "Leads Land in One Inbox",
+    description: "Every enquiry — social, WhatsApp, SMS — flows into your all-in-one CRM.",
+  },
+  {
+    step: "04",
+    title: "You Follow Up & Close",
+    description: "Automated reminders and our AI receptionist help you convert more leads.",
   },
 ];
 
@@ -36,22 +105,23 @@ export default function Home() {
         />
         <div className="relative mx-auto max-w-7xl px-5 pb-20 pt-20 text-center sm:px-8 sm:pt-28">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-xs font-medium text-muted">
-            Romford&apos;s Car Detailing &amp; Tinting Specialists
+            Meta &amp; Instagram Ads Specialists
           </span>
           <h1 className="mx-auto mt-6 max-w-4xl text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
-            Tinting, wrapping &amp; servicing.{" "}
-            <span className="brand-gradient-text">Done properly.</span>
+            More leads. More bookings.{" "}
+            <span className="brand-gradient-text">One platform.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-            SMG Details is your local specialist for car window tinting, vehicle wrapping and dechroming, major &amp;
-            minor servicing, custom number plates, and alloy wheel &amp; caliper refurbishment.
+            Shaz Marketing Group runs Meta &amp; Instagram ad campaigns that generate real, qualified
+            leads for your business — then brings every enquiry, every channel and every follow-up
+            into one simple system, backed by a 24/7 AI receptionist.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
               href="/contact"
               className="brand-gradient-bg w-full rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03] sm:w-auto"
             >
-              Get a Free Quote
+              Get My Free Strategy Call
             </Link>
             <a
               href={whatsappHref}
@@ -63,14 +133,49 @@ export default function Home() {
             </a>
           </div>
 
-          <div className="mx-auto mt-16 flex max-w-3xl flex-wrap items-center justify-center gap-2.5">
-            {["Window Tinting", "Vehicle Wrapping", "Dechroming", "Car Servicing", "Number Plates", "Alloy Refurb"].map(
-              (tag) => (
-                <span key={tag} className="rounded-full border border-border bg-surface px-4 py-2 text-xs font-medium text-muted">
-                  {tag}
+          <div className="mx-auto mt-16 flex max-w-4xl flex-wrap items-center justify-center gap-2.5">
+            {industries.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full border border-border bg-surface px-4 py-2 text-xs font-medium text-muted"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Stats / trust */}
+      <section className="border-y border-border bg-surface">
+        <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8">
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div className="rounded-3xl border border-border bg-background p-8 text-center">
+              <p className="brand-gradient-text text-4xl font-bold sm:text-5xl">£1.5M+</p>
+              <p className="mt-3 text-sm text-muted">
+                Generated in revenue for our clients through Meta &amp; Instagram ad campaigns
+              </p>
+            </div>
+            <div className="rounded-3xl border border-border bg-background p-8 text-center">
+              <div className="flex items-center justify-center gap-3">
+                <span className="text-lg text-muted line-through decoration-2">Hours</span>
+                <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 shrink-0 text-brand-pink">
+                  <path
+                    d="M5 12h14m0 0-5-5m5 5-5 5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                <span className="brand-gradient-text text-4xl font-bold sm:text-5xl">
+                  &lt;2 min
                 </span>
-              )
-            )}
+              </div>
+              <p className="mt-3 text-sm text-muted">
+                Typical lead reply time, manual follow-up vs. our AI Receptionist
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -78,138 +183,285 @@ export default function Home() {
       {/* Services */}
       <section id="services" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
         <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">Our Services</span>
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+            What We Provide
+          </span>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Everything your car needs, in one place
+            Everything you need to turn ads into customers
           </h2>
           <p className="mt-4 text-muted">
-            From a subtle window tint to a full wrap, a routine service to a fresh set of alloys — we&apos;ve got it
-            covered.
+            One partner for advertising, lead management, and follow-up — so you can focus on
+            running your business.
           </p>
         </div>
-        <div className="mt-14">
-          <ServicesSection />
+
+        <div className="mt-14 grid gap-6 sm:grid-cols-2">
+          {services.map((service) => (
+            <div
+              key={service.title}
+              className="rounded-3xl border border-border bg-surface p-8 transition-colors hover:border-brand-pink/40"
+            >
+              <h3 className="text-xl font-semibold text-foreground">{service.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{service.description}</p>
+              <ul className="mt-5 space-y-2.5">
+                {service.points.map((point) => (
+                  <li key={point} className="flex items-start gap-2.5 text-sm text-muted">
+                    <svg viewBox="0 0 24 24" fill="none" className="mt-0.5 h-4 w-4 shrink-0 text-brand-pink">
+                      <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    {point}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Why us */}
+      {/* How it works */}
       <section className="border-y border-border bg-surface">
         <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">Why SMG Details</span>
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+              How It Works
+            </span>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Built around getting it right first time
+              From ad click to booked customer
             </h2>
           </div>
+
           <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {whyUs.map((item) => (
-              <div key={item.title}>
-                <div className="brand-gradient-bg h-1.5 w-10 rounded-full" />
-                <h3 className="mt-4 text-lg font-semibold text-foreground">{item.title}</h3>
-                <p className="mt-2 text-sm text-muted">{item.description}</p>
+            {steps.map((s) => (
+              <div key={s.step}>
+                <span className="brand-gradient-text text-4xl font-bold">{s.step}</span>
+                <h3 className="mt-3 text-lg font-semibold text-foreground">{s.title}</h3>
+                <p className="mt-2 text-sm text-muted">{s.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* AI assistant highlight */}
+      {/* Unified platform */}
       <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div className="order-2 lg:order-1 rounded-3xl border border-border bg-surface p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">Ask Away</p>
-            <div className="mt-5 space-y-3">
-              <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-background px-4 py-3 text-sm text-foreground">
-                Do you do gloss black dechroming on a 3 Series?
-              </div>
-              <div className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm brand-gradient-bg px-4 py-3 text-sm text-white">
-                Yes — we can dechrome the trim and badges in gloss or satin black. Want me to point you to WhatsApp
-                for a quote?
-              </div>
-            </div>
-            <p className="mt-5 text-xs text-muted">Our AI assistant, live in the corner of every page.</p>
-          </div>
-
-          <div className="order-1 lg:order-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">AI Assistant</span>
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+              One Platform
+            </span>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Not sure what you need? Just ask
+              Stop juggling five different apps for leads
             </h2>
             <p className="mt-4 text-muted">
-              Our chat assistant can answer questions about any of our services, any time of day. For a firm quote
-              or to book in, it&apos;ll point you straight to WhatsApp.
+              Instagram DMs, Facebook Messenger, WhatsApp, SMS, email and missed calls — every
+              conversation your business has lands in one shared inbox, mapped to one pipeline, so
+              no lead ever goes cold.
             </p>
+            <ul className="mt-6 space-y-3">
+              {[
+                "Unified inbox for every social & messaging channel",
+                "Custom sales pipeline built around how you work",
+                "Automated follow-up so leads don't go cold",
+                "Missed-call text-back captures every enquiry",
+                "Simple reporting so you always know what's working",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2.5 text-sm text-muted">
+                  <svg viewBox="0 0 24 24" fill="none" className="mt-0.5 h-4 w-4 shrink-0 text-brand-pink">
+                    <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="rounded-3xl border border-border bg-surface p-8">
+            <div className="flex items-center gap-2.5">
+              <span className="brand-gradient-bg h-2.5 w-2.5 rounded-full" />
+              <span className="text-sm font-semibold text-foreground">Shaz Marketing Group — Inbox</span>
+            </div>
+            <div className="mt-6 space-y-3">
+              {[
+                { channel: "Instagram", msg: "Hi! Do you have appointments this week?", time: "2m" },
+                { channel: "WhatsApp", msg: "What's included in the Growth plan?", time: "14m" },
+                { channel: "Facebook", msg: "Can I get a quote for a service package?", time: "38m" },
+                { channel: "Missed Call", msg: "Auto text-back sent to caller", time: "1h" },
+              ].map((row) => (
+                <div
+                  key={row.channel}
+                  className="flex items-center justify-between rounded-2xl border border-border bg-background px-4 py-3"
+                >
+                  <div>
+                    <p className="text-xs font-semibold text-brand-pink">{row.channel}</p>
+                    <p className="mt-0.5 text-sm text-foreground">{row.msg}</p>
+                  </div>
+                  <span className="shrink-0 text-xs text-muted">{row.time}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Location */}
+      {/* AI receptionist highlight */}
       <section className="border-y border-border bg-surface">
-        <div className="mx-auto max-w-4xl px-5 py-20 text-center sm:px-8">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">Find Us</span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Based in Romford</h2>
-          <p className="mt-4 text-muted">{fullAddress}</p>
-          <a
-            href={googleMapsHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-6 inline-flex rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground hover:border-brand-pink/60"
-          >
-            Get Directions
-          </a>
+        <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <div className="order-2 lg:order-1 rounded-3xl border border-border bg-background p-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+                Always On
+              </p>
+              <div className="mt-5 space-y-3">
+                <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-surface px-4 py-3 text-sm text-foreground">
+                  Hi, do you offer this service on weekends and how much does it cost?
+                </div>
+                <div className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm brand-gradient-bg px-4 py-3 text-sm text-white">
+                  Yes! We&apos;re open weekends. Our packages start from £X — want me to book you a
+                  free consultation now?
+                </div>
+              </div>
+              <p className="mt-5 text-xs text-muted">
+                Your AI receptionist replying instantly, any time of day.
+              </p>
+            </div>
+
+            <div className="order-1 lg:order-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+                AI Receptionist &amp; Chatbot
+              </span>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                Never miss another enquiry, even after hours
+              </h2>
+              <p className="mt-4 text-muted">
+                Your AI receptionist greets every visitor, answers common questions about your
+                business, qualifies the lead and books them straight into your calendar — 24 hours a
+                day. We&apos;re continuing to roll out deeper AI automation so it gets smarter over
+                time.
+              </p>
+              <Link
+                href="/contact"
+                className="mt-8 inline-flex rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground hover:border-brand-pink/60"
+              >
+                Ask us about AI Receptionist
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 
+      <PricingSection />
+
       {/* FAQ */}
-      <section id="faq" className="mx-auto max-w-3xl px-5 py-24 sm:px-8">
-        <div className="text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">FAQs</span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">Frequently asked questions</h2>
-        </div>
-        <div className="mt-12">
-          <FAQAccordion items={faqs} />
+      <section className="border-t border-border bg-surface">
+        <div className="mx-auto max-w-3xl px-5 py-24 sm:px-8">
+          <div className="text-center">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+              FAQs
+            </span>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Frequently asked questions
+            </h2>
+          </div>
+
+          <div className="mt-12 space-y-6">
+            {faqs.map((faq) => (
+              <div key={faq.question} className="rounded-2xl border border-border bg-background p-6">
+                <h3 className="text-base font-semibold text-foreground">{faq.question}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{faq.answer}</p>
+              </div>
+            ))}
+          </div>
         </div>
         <FaqJsonLd items={faqs} />
       </section>
 
-      {/* Final CTA + form */}
-      <section id="lead-form" className="border-t border-border bg-surface">
-        <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
-          <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
+      {/* From the blog */}
+      {blogPosts.length > 0 && (
+        <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
+          <div className="flex items-end justify-between gap-4">
             <div>
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">Get Started</span>
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+                From the Blog
+              </span>
               <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                Get your free, no-obligation quote
+                Guides on ads, leads &amp; growth
               </h2>
-              <p className="mt-4 max-w-md text-muted">
-                Tell us about your vehicle and what you&apos;re after, and we&apos;ll come back with a price and the next
-                available slot.
-              </p>
-              <div className="mt-8 space-y-4 text-sm text-muted">
-                <p className="flex items-center gap-2.5">
-                  <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-brand-pink">
-                    <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  Free, no-obligation quote
-                </p>
-                <p className="flex items-center gap-2.5">
-                  <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-brand-pink">
-                    <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  We&apos;ll get back to you quickly
-                </p>
-                <p className="flex items-center gap-2.5">
-                  <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-brand-pink">
-                    <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  Or message us directly on WhatsApp — {siteConfig.phoneDisplay}
-                </p>
-              </div>
             </div>
+            <Link
+              href="/blog"
+              className="hidden shrink-0 text-sm font-semibold text-brand-pink hover:underline sm:block"
+            >
+              View all posts →
+            </Link>
+          </div>
 
-            <div className="rounded-3xl border border-border bg-background p-6 sm:p-8">
-              <LeadForm />
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {blogPosts.slice(0, 3).map((post) => (
+              <Link
+                key={post.slug}
+                href={`/blog/${post.slug}`}
+                className="block rounded-3xl border border-border bg-surface p-8 transition-colors hover:border-brand-pink/40"
+              >
+                <p className="text-xs text-muted">
+                  {new Date(post.publishedAt).toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </p>
+                <h3 className="mt-2 text-lg font-semibold text-foreground">{post.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-muted">{post.description}</p>
+              </Link>
+            ))}
+          </div>
+
+          <Link
+            href="/blog"
+            className="mt-8 block text-center text-sm font-semibold text-brand-pink hover:underline sm:hidden"
+          >
+            View all posts →
+          </Link>
+        </section>
+      )}
+
+      {/* Final CTA + form */}
+      <section id="lead-form" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
+        <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+              Get Started
+            </span>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Let&apos;s generate your next customer
+            </h2>
+            <p className="mt-4 max-w-md text-muted">
+              Fill in your details and our team will be in touch to map out a Meta &amp; Instagram
+              ads plan for your business — no obligation.
+            </p>
+            <div className="mt-8 space-y-4 text-sm text-muted">
+              <p className="flex items-center gap-2.5">
+                <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-brand-pink">
+                  <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                Free, no-pressure strategy call
+              </p>
+              <p className="flex items-center gap-2.5">
+                <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-brand-pink">
+                  <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                Response within one business day
+              </p>
+              <p className="flex items-center gap-2.5">
+                <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-brand-pink">
+                  <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                Or message us directly on WhatsApp
+              </p>
             </div>
+          </div>
+
+          <div className="rounded-3xl border border-border bg-surface p-6 sm:p-8">
+            <LeadForm />
           </div>
         </div>
       </section>
