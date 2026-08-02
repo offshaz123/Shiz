@@ -7,10 +7,9 @@ import { ThemeToggle } from "./ThemeToggle";
 import { whatsappHref } from "@/lib/site-config";
 
 const navLinks = [
-  { href: "/#services", label: "Services" },
-  { href: "/#pricing", label: "Pricing" },
+  { href: "/services", label: "Services" },
+  { href: "/#faq", label: "FAQs" },
   { href: "/about", label: "About" },
-  { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -48,7 +47,7 @@ export function Header() {
             href="/contact"
             className="brand-gradient-bg rounded-full px-5 py-2 text-sm font-semibold text-white shadow-md shadow-black/10 transition-transform hover:scale-[1.03]"
           >
-            Get Free Strategy Call
+            Get a Quote
           </Link>
         </div>
 
@@ -97,7 +96,7 @@ export function Header() {
               onClick={() => setOpen(false)}
               className="brand-gradient-bg rounded-full px-5 py-2 text-center text-sm font-semibold text-white"
             >
-              Get Free Strategy Call
+              Get a Quote
             </Link>
           </nav>
         </div>

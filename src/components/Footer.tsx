@@ -1,6 +1,49 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
-import { siteConfig, whatsappHref } from "@/lib/site-config";
+import { siteConfig, whatsappHref, fullAddress, googleMapsHref } from "@/lib/site-config";
+
+const socialLinks = [
+  {
+    name: "Instagram",
+    href: siteConfig.socials.instagram,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="h-4.5 w-4.5">
+        <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.6" />
+        <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.6" />
+        <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" />
+      </svg>
+    ),
+  },
+  {
+    name: "Facebook",
+    href: siteConfig.socials.facebook,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="h-4.5 w-4.5">
+        <path
+          d="M14 8.5h2V5.5h-2c-2 0-3.5 1.6-3.5 3.5v2H8v3h2.5V21h3v-7h2.4l.6-3h-3v-2c0-.5.4-1 1-1Z"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+  {
+    name: "TikTok",
+    href: siteConfig.socials.tiktok,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" className="h-4.5 w-4.5">
+        <path
+          d="M15 4v9.5a3.5 3.5 0 1 1-3.5-3.5c.3 0 .6 0 .9.1M15 4c.3 2 1.8 3.4 4 3.6V10c-1.5 0-2.9-.5-4-1.4"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    ),
+  },
+];
 
 export function Footer() {
   return (
@@ -9,32 +52,39 @@ export function Footer() {
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-2">
             <Logo />
-            <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">
-              {siteConfig.description}
-            </p>
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">{siteConfig.description}</p>
+            <div className="mt-5 flex items-center gap-3">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.name}
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted transition-colors hover:border-brand-pink/60 hover:text-foreground"
+                >
+                  {social.icon}
+                </a>
+              ))}
+            </div>
           </div>
 
           <div>
             <h3 className="text-sm font-semibold text-foreground">Company</h3>
             <ul className="mt-4 space-y-3 text-sm text-muted">
               <li>
+                <Link href="/services" className="hover:text-foreground">
+                  Services
+                </Link>
+              </li>
+              <li>
                 <Link href="/about" className="hover:text-foreground">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/#services" className="hover:text-foreground">
-                  Services
-                </Link>
-              </li>
-              <li>
-                <Link href="/#pricing" className="hover:text-foreground">
-                  Pricing
-                </Link>
-              </li>
-              <li>
-                <Link href="/blog" className="hover:text-foreground">
-                  Blog
+                <Link href="/#faq" className="hover:text-foreground">
+                  FAQs
                 </Link>
               </li>
               <li>
@@ -54,8 +104,8 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-foreground">Get in touch</h3>
             <ul className="mt-4 space-y-3 text-sm text-muted">
               <li>
-                <a href={`mailto:${siteConfig.email}`} className="hover:text-foreground">
-                  {siteConfig.email}
+                <a href={googleMapsHref} target="_blank" rel="noopener noreferrer" className="hover:text-foreground">
+                  {fullAddress}
                 </a>
               </li>
               <li>
@@ -64,12 +114,12 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a
-                  href={whatsappHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-foreground"
-                >
+                <a href={`mailto:${siteConfig.email}`} className="hover:text-foreground">
+                  {siteConfig.email}
+                </a>
+              </li>
+              <li>
+                <a href={whatsappHref} target="_blank" rel="noopener noreferrer" className="hover:text-foreground">
                   Chat on WhatsApp
                 </a>
               </li>
@@ -78,8 +128,8 @@ export function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col gap-3 border-t border-border pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Shaz Marketing Group. All rights reserved.</p>
-          <p>Meta &amp; Instagram Ads · Lead Generation · All-In-One CRM · AI Receptionist</p>
+          <p>© {new Date().getFullYear()} {siteConfig.legalName}. All rights reserved.</p>
+          <p>Window Tinting &amp; Wrapping · Car Servicing · Number Plates · Alloy Refurbishment</p>
         </div>
       </div>
     </footer>
