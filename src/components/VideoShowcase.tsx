@@ -1,20 +1,31 @@
+"use client";
+
+import { useEffect } from "react";
 import { siteConfig } from "@/lib/site-config";
 
-type FeaturedVideo = {
-  tag: string;
-  embedUrl: string;
-  caption: string;
-};
+// Add real TikTok video links here — each renders as a live embed (real thumbnail, caption,
+// and "View on TikTok" link) via TikTok's official embed widget.
+const videoUrls = [
+  "https://www.tiktok.com/@shazmotorgroup/video/7622318355227168022",
+  "https://www.tiktok.com/@shazmotorgroup/video/7628982753115032854",
+  "https://www.tiktok.com/@shazmotorgroup/video/7621694108863679766",
+  "https://www.tiktok.com/@shazmotorgroup/video/7598574230938111254",
+  "https://www.tiktok.com/@shazmotorgroup/video/7631602941153004822",
+];
 
-// Add real TikTok/Instagram video/reel links here once supplied — each renders as an embedded
-// player instead of the "coming soon" placeholder below.
-const videos: FeaturedVideo[] = [];
+function getVideoId(url: string) {
+  return url.split("/video/")[1]?.split("?")[0] ?? "";
+}
 
-const tags = ["Featured", "Trending", "New"];
+declare global {
+  interface Window {
+    tiktokEmbedLoad?: () => void;
+  }
+}
 
-function TikTokIcon() {
+function TikTokIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
+    <svg viewBox="0 0 24 24" fill="none" className={className}>
       <path
         d="M15 4v9.5a3.5 3.5 0 1 1-3.5-3.5c.3 0 .6 0 .9.1M15 4c.3 2 1.8 3.4 4 3.6V10c-1.5 0-2.9-.5-4-1.4"
         stroke="currentColor"
@@ -26,9 +37,9 @@ function TikTokIcon() {
   );
 }
 
-function InstagramIcon() {
+function InstagramIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
+    <svg viewBox="0 0 24 24" fill="none" className={className}>
       <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.6" />
       <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.6" />
       <circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" />
@@ -36,24 +47,19 @@ function InstagramIcon() {
   );
 }
 
-function PlaceholderCard({ tag }: { tag: string }) {
-  return (
-    <div className="relative overflow-hidden rounded-3xl border border-dashed border-border bg-background">
-      <span className="absolute left-3 top-3 z-10 rounded-md bg-red-600 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
-        ▶ {tag}
-      </span>
-      <div className="flex aspect-9/16 flex-col items-center justify-center gap-3 p-8 text-center">
-        <svg viewBox="0 0 24 24" fill="none" className="h-8 w-8 text-muted">
-          <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
-          <path d="M10 8.5v7l6-3.5-6-3.5Z" fill="currentColor" />
-        </svg>
-        <p className="text-sm text-muted">Real job video — coming soon.</p>
-      </div>
-    </div>
-  );
-}
-
 export function VideoShowcase() {
+  useEffect(() => {
+    const existing = document.querySelector<HTMLScriptElement>('script[src="https://www.tiktok.com/embed.js"]');
+    if (existing) {
+      window.tiktokEmbedLoad?.();
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://www.tiktok.com/embed.js";
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
+
   return (
     <section className="border-y border-border bg-surface">
       <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
@@ -98,23 +104,27 @@ export function VideoShowcase() {
           </div>
         </div>
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {videos.length === 0
-            ? tags.map((tag) => <PlaceholderCard key={tag} tag={tag} />)
-            : videos.map((v) => (
-                <div key={v.embedUrl} className="relative overflow-hidden rounded-3xl border border-border bg-background">
-                  <span className="absolute left-3 top-3 z-10 rounded-md bg-red-600 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
-                    ▶ {v.tag}
-                  </span>
-                  <iframe
-                    src={v.embedUrl}
-                    title={v.caption}
-                    className="aspect-9/16 w-full"
-                    allow="autoplay; encrypted-media; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              ))}
+        <div className="mt-16 flex items-center justify-between border-t border-border pt-8">
+          <div className="flex items-center gap-2 text-foreground">
+            <TikTokIcon className="h-4 w-4" />
+            <InstagramIcon className="h-4 w-4" />
+            <h3 className="text-lg font-bold uppercase tracking-tight">More From The Feed</h3>
+          </div>
+          <span className="text-xs font-semibold uppercase tracking-wide text-muted">{videoUrls.length} Clips</span>
+        </div>
+
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {videoUrls.map((url) => (
+            <blockquote
+              key={url}
+              className="tiktok-embed overflow-hidden rounded-3xl border border-border"
+              cite={url}
+              data-video-id={getVideoId(url)}
+              style={{ maxWidth: "100%", minWidth: "100%" }}
+            >
+              <section />
+            </blockquote>
+          ))}
         </div>
       </div>
     </section>
