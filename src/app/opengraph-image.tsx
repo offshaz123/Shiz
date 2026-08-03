@@ -31,7 +31,7 @@ export default async function Image() {
               fontSize: 56,
               fontWeight: 800,
               color: "#fff",
-              background: "linear-gradient(135deg, #0f5f8c, #0ea5c4 55%, #f2a922)",
+              background: "#0ea5c4",
             }}
           >
             S

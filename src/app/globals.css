@@ -9,10 +9,10 @@
   --foreground: #0a0e12;
   --muted: #52616b;
   --border: #dde3e6;
-  --brand-purple: #0f5f8c;
+  --brand-purple: #0ea5c4;
   --brand-pink: #0ea5c4;
-  --brand-orange: #f2a922;
-  --brand-blue: #1c7fb8;
+  --brand-orange: #0ea5c4;
+  --brand-blue: #0ea5c4;
 }
 
 .dark {
@@ -22,10 +22,10 @@
   --foreground: #f2f6f8;
   --muted: #93a3ac;
   --border: #202a30;
-  --brand-purple: #1c86c4;
+  --brand-purple: #22d3ee;
   --brand-pink: #22d3ee;
-  --brand-orange: #ffb830;
-  --brand-blue: #3ba7e8;
+  --brand-orange: #22d3ee;
+  --brand-blue: #22d3ee;
 }
 
 @theme inline {
@@ -58,24 +58,11 @@ body {
 }
 
 .brand-gradient-text {
-  background-image: linear-gradient(
-    90deg,
-    var(--brand-purple),
-    var(--brand-pink),
-    var(--brand-orange)
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--brand-pink);
 }
 
 .brand-gradient-bg {
-  background-image: linear-gradient(
-    135deg,
-    var(--brand-purple),
-    var(--brand-pink) 55%,
-    var(--brand-orange)
-  );
+  background: var(--brand-pink);
 }
 
 .brand-ring {

@@ -9,18 +9,11 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
       className={className}
       aria-hidden="true"
     >
-      <defs>
-        <linearGradient id="smgGrad" x1="2" y1="4" x2="38" y2="36" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#0f5f8c" />
-          <stop offset="0.55" stopColor="#0ea5c4" />
-          <stop offset="1" stopColor="#f2a922" />
-        </linearGradient>
-      </defs>
       <rect x="1" y="1" width="38" height="38" rx="11" fill="#06090c" />
-      <rect x="1" y="1" width="38" height="38" rx="11" stroke="url(#smgGrad)" strokeWidth="1.5" />
+      <rect x="1" y="1" width="38" height="38" rx="11" stroke="#0ea5c4" strokeWidth="1.5" />
       <path
         d="M9 27 20 10l11 17"
-        stroke="url(#smgGrad)"
+        stroke="#0ea5c4"
         strokeWidth="2.6"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -28,12 +21,12 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
       />
       <path
         d="M13.5 27h13"
-        stroke="url(#smgGrad)"
+        stroke="#fff"
         strokeWidth="2.6"
         strokeLinecap="round"
         fill="none"
       />
-      <path d="M20 10v6.5" stroke="url(#smgGrad)" strokeWidth="2.6" strokeLinecap="round" />
+      <path d="M20 10v6.5" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
     </svg>
   );
 }
