@@ -1,6 +1,6 @@
 # SMG Details
 
-Website + admin panel for **SMG Details** (Shaz Moto Group Details) — car window tinting &
+Website + admin panel for **SMG Details** (Shaz Motor Group Details) — car window tinting &
 wrapping, dechroming, home/commercial/shop tinting, car servicing, custom 3D/4D/gel number
 plates, and alloy wheel & caliper refurbishment, based in Romford.
 

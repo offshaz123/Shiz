@@ -48,7 +48,7 @@ export function Logo({ withWordmark = true }: { withWordmark?: boolean }) {
             SMG <span className="brand-gradient-text">DETAILS</span>
           </span>
           <span className="text-[10px] font-semibold tracking-[0.25em] text-muted">
-            SHAZ MOTO GROUP
+            SHAZ MOTOR GROUP
           </span>
         </span>
       )}

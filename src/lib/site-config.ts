@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: "SMG Details",
   shortName: "SMG Details",
-  legalName: "Shaz Moto Group Details",
+  legalName: "Shaz Motor Group Details",
   description:
     "SMG Details is Romford's specialist for car window tinting, wrapping and dechroming, car servicing, custom number plates, and alloy wheel & caliper refurbishment.",
   url: "https://smgdetails.co.uk",
