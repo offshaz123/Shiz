@@ -4,7 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { siteConfig } from "@/lib/site-config";
 
-const FORM_NAME = "lead-inquiry";
+const WEB3FORMS_ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ?? "";
 
 const industries = [
   "Automotive",
@@ -25,12 +25,6 @@ const budgets = [
   "Not sure yet",
 ];
 
-function encode(data: Record<string, string>) {
-  return Object.entries(data)
-    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-    .join("&");
-}
-
 export function LeadForm({ compact = false }: { compact?: boolean }) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
@@ -48,19 +42,24 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       return;
     }
 
-    const payload: Record<string, string> = { "form-name": FORM_NAME };
+    const payload: Record<string, string> = {
+      access_key: WEB3FORMS_ACCESS_KEY,
+      subject: "New lead from shazmarketing.com",
+      from_name: "Shaz Marketing Group website",
+    };
     formData.forEach((value, key) => {
       if (key !== "_honey") payload[key] = String(value);
     });
 
     setSubmitting(true);
     try {
-      const res = await fetch("/__forms.html", {
+      const res = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: encode(payload),
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(payload),
       });
-      if (!res.ok) throw new Error("Submission failed");
+      const result = await res.json();
+      if (!res.ok || !result.success) throw new Error("Submission failed");
       form.reset();
       router.push("/thank-you");
     } catch {
@@ -72,8 +71,7 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
   }
 
   return (
-    <form name={FORM_NAME} onSubmit={handleSubmit} className="grid gap-4">
-      <input type="hidden" name="form-name" value={FORM_NAME} />
+    <form name="lead-inquiry" onSubmit={handleSubmit} className="grid gap-4">
       <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
 
       <div className="grid gap-4 sm:grid-cols-2">

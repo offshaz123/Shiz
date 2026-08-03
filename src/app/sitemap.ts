@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/site-config";
 import { blogPosts } from "@/content/blog";
 
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes: { path: string; changeFrequency: "weekly" | "monthly"; priority: number }[] = [
     { path: "", changeFrequency: "weekly", priority: 1 },

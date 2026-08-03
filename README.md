@@ -26,35 +26,22 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Lead form → email delivery
 
-The enquiry form (`src/components/LeadForm.tsx`) uses **Netlify Forms** — no API keys, no
-app passwords, no backend code required.
+The enquiry form (`src/components/LeadForm.tsx`) submits directly to **[Web3Forms](https://web3forms.com)**
+— a free third-party form-to-email service, chosen because the site is statically exported
+(`output: "export"` in `next.config.ts`) and has no backend/API routes of its own.
 
-Modern Next.js apps route every page through a serverless function, so Netlify's build-time form
-scanner can't detect a form declared directly on a Next.js page — `@netlify/plugin-nextjs` will
-actually fail the build if you try. To work around this, there's a small "shadow" static file,
-`public/__forms.html`, that mirrors the same fields with `data-netlify="true"` and a `form-name`
-field. Netlify detects the form from that plain static file (which bypasses the Next.js function
-entirely), and the real form on the website submits to it in the background via `fetch`. If you
-ever add/remove/rename a field in `LeadForm.tsx`, mirror the same change in `public/__forms.html`
-or Netlify's copy of the form definition will get out of sync with what's actually submitted.
+**One-time setup:**
 
-**Required one-time setup (only works once the site is deployed on Netlify):**
+1. Go to [web3forms.com](https://web3forms.com), enter the destination inbox
+   (`info@shazmarketing.com`) and create a free access key.
+2. Set it as `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` at build time (local `.env.local`, or as a
+   `WEB3FORMS_ACCESS_KEY` secret in the GitHub Actions deploy workflow — see below). It's baked
+   into the static JS bundle at build time, which is expected/fine for this service (the key only
+   authorizes submissions *to* your inbox, same model as Formspree's public form IDs).
 
-1. Deploy the branch with this form to Netlify at least once (Netlify needs to scan a deploy
-   to detect the form).
-2. In the Netlify dashboard, open your site → left sidebar → **Forms**. You should see
-   `lead-inquiry` listed once a deploy has picked it up.
-3. Click **Form notifications** (or **Settings and usage** → **Form notifications**, depending
-   on your Netlify UI version) → **Add notification** → **Email notification**.
-4. Enter `info@shazmarketing.com` and save.
-
-That's it — every submission (from the Home page and Contact page) now emails you directly, and
-the visitor is redirected to `/thank-you`. You can also see every submission logged in the Forms
-tab even if an email is somehow missed.
-
-Netlify Forms only works when the site is actually hosted on Netlify — locally (`npm run dev`)
-or on other hosts (Vercel, etc.), the form will submit without errors but nothing will be
-captured or emailed, since there's no Netlify bot to intercept it.
+Every submission (from the Home page and Contact page) emails the configured inbox directly, and
+the visitor is redirected to `/thank-you`. Without the access key set, submissions will fail
+client-side with the form's built-in error message.
 
 ## WhatsApp
 
@@ -102,14 +89,26 @@ changes.
   canonical URL, meta description, and `BlogPosting` JSON-LD.
 - New posts are automatically picked up by `sitemap.ts` — no separate step needed.
 - A daily automated Routine (set up outside this repo, in Claude) writes one new post per day,
-  picking a topic not already covered, and pushes directly to this branch (which auto-deploys via
-  Netlify). It always runs `npm run lint` and `npm run build` before pushing.
+  picking a topic not already covered, and pushes directly to this branch, which triggers the
+  GitHub Actions deploy below. It always runs `npm run lint` and `npm run build` before pushing.
 
-## Deploy
+## Deploy — Hostinger (shared hosting)
 
-Deploy like any Next.js app (e.g. [Vercel](https://vercel.com/new)):
+This is a static export (`output: "export"`), so the build produces a plain `out/` folder of
+HTML/CSS/JS that any shared host can serve — no Node.js server required on Hostinger.
 
 ```bash
-npm run build
-npm run start
+npm run build   # outputs static site to ./out
 ```
+
+**Automated deploy:** `.github/workflows/deploy-hostinger.yml` builds and FTP-uploads `out/` to
+`public_html/` on every push to this branch. Requires these GitHub repo secrets
+(Settings → Secrets and variables → Actions):
+
+- `HOSTINGER_FTP_SERVER`, `HOSTINGER_FTP_USERNAME`, `HOSTINGER_FTP_PASSWORD` — from hPanel →
+  Files → FTP Accounts
+- `WEB3FORMS_ACCESS_KEY` — from web3forms.com (see Lead form section above)
+
+**Manual deploy (one-off / first time):** run `npm run build` locally, then upload the contents
+of `out/` into `public_html/` via hPanel's File Manager (zip it first, upload, extract) or an
+FTP client like FileZilla.
