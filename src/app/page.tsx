@@ -28,6 +28,11 @@ const whyUs = [
 export default function Home() {
   return (
     <div>
+      {/* Promo banner */}
+      <div className="bg-red-600 px-5 py-2.5 text-center text-sm font-semibold text-white">
+        20% Off All Services — Get Your Free Quote Today
+      </div>
+
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div
@@ -39,8 +44,8 @@ export default function Home() {
             Romford&apos;s Car Detailing &amp; Tinting Specialists
           </span>
           <h1 className="mx-auto mt-6 max-w-4xl text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
-            Tinting, wrapping &amp; servicing.{" "}
-            <span className="brand-gradient-text">Done properly.</span>
+            Welcome to SMG Details —{" "}
+            <span className="brand-gradient-text">here, you get everything done.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
             SMG Details is your local specialist for window tints, chameleon windscreens, vehicle wraps &amp;
