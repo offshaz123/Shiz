@@ -29,8 +29,14 @@ export default function Home() {
   return (
     <div>
       {/* Promo banner */}
-      <div className="bg-red-600 px-5 py-2.5 text-center text-sm font-semibold text-white">
-        20% Off All Services — Get Your Free Quote Today
+      <div className="overflow-hidden bg-red-600 py-2.5">
+        <div className="flex w-max animate-marquee">
+          {[0, 1].map((i) => (
+            <span key={i} aria-hidden={i === 1} className="flex shrink-0 items-center whitespace-nowrap px-8 text-sm font-semibold text-white">
+              20% Off All Services — Get Your Free Quote Today
+            </span>
+          ))}
+        </div>
       </div>
 
       {/* Hero */}
