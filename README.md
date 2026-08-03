@@ -5,7 +5,7 @@ wrapping, dechroming, home/commercial/shop tinting, car servicing, custom 3D/4D/
 plates, and alloy wheel & caliper refurbishment, based in Romford.
 
 Built with Next.js (App Router), TypeScript, Tailwind CSS v4, `next-themes` for the dark/light
-toggle, a MySQL-backed admin panel, and a Claude-powered AI chat assistant.
+toggle, a MySQL-backed admin panel, and a WhatsApp message widget.
 
 ## Getting started
 
@@ -15,8 +15,8 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000). Without the environment variables below,
-the public site works fully, but the enquiry form, admin panel and AI chat assistant will show
-friendly "not configured yet" errors until you set them up.
+the public site works fully, but the enquiry form and admin panel will show friendly
+"not configured yet" errors until you set them up.
 
 ## Environment variables
 
@@ -30,8 +30,6 @@ in your Node.js app's environment settings (hPanel → Websites → your site �
 | `ADMIN_PASSWORD_HASH` | Admin login | A bcrypt hash of your admin password (see below). Preferred over `ADMIN_PASSWORD`. |
 | `ADMIN_PASSWORD` | Admin login (dev fallback) | Plain-text password, only used if `ADMIN_PASSWORD_HASH` isn't set. Fine for local dev, avoid in production. |
 | `SESSION_SECRET` | Admin login | Random 32+ character string used to sign admin session cookies. Generate with `openssl rand -base64 32`. |
-| `ANTHROPIC_API_KEY` | AI chat assistant | From the [Anthropic Console](https://console.anthropic.com/). Without this, the chat widget shows a "not configured" message. |
-| `CHAT_MODEL` | AI chat assistant (optional) | Defaults to `claude-opus-5`. Override if you want to use a different/cheaper model. |
 
 ### Generating an admin password hash
 
@@ -54,7 +52,9 @@ Hostinger's **Node.js** hosting (or a VPS), with the MySQL database on the same 
    current hPanel docs for the exact field names, as they change between hPanel versions).
 3. Add all the environment variables above in the app's environment settings.
 4. Deploy / restart the app. On first request, the app automatically creates the `enquiries` and
-   `chat_messages` tables in your MySQL database — no manual schema step needed.
+   `chat_messages` tables in your MySQL database — no manual schema step needed (`chat_messages`
+   is a legacy table from an earlier AI chat feature; it's no longer written to, but existing
+   rows and the admin dashboard's historical count still read from it).
 5. Visit `/admin/login` and sign in with your `ADMIN_PASSWORD_HASH` password.
 
 If `DB_HOST` is on the *same* Hostinger account as the app, no extra network config is needed.
@@ -62,24 +62,21 @@ If `DB_HOST` is on the *same* Hostinger account as the app, no extra network con
 ## Admin panel
 
 - `/admin/login` — password login (single shared admin password via `ADMIN_PASSWORD_HASH`)
-- `/admin` — dashboard: totals, enquiries by channel/status/service, a 14-day trend, AI chat
-  session count, and recent enquiries
-- `/admin/enquiries` — every enquiry (website form, AI chat, and manually-logged phone calls /
-  WhatsApp messages / walk-ins), with status tracking (New → Contacted → Booked → Completed) and
-  a "Log a call or message" button for the team to record inbound calls/WhatsApp messages by hand
+- `/admin` — dashboard: totals, enquiries by channel/status/service, a 14-day trend, and recent
+  enquiries
+- `/admin/enquiries` — every enquiry (website form, and manually-logged phone calls / WhatsApp
+  messages / walk-ins), with status tracking (New → Contacted → Booked → Completed) and a "Log a
+  call or message" button for the team to record inbound calls/WhatsApp messages by hand
 
 All `/admin/*` routes are protected by `src/proxy.ts` (Next.js's request-time route guard) plus a
 server-side check in the admin layout.
 
-## AI chat assistant
+## Message widget
 
-The floating chat bubble (bottom-left, `src/components/ChatWidget.tsx`) calls
-`POST /api/chat`, which uses the Anthropic Claude API (`src/app/api/chat/route.ts`) with a system
-prompt built from the services and FAQ content (`src/lib/chat-prompt.ts`) — so it only answers
-questions about SMG Details' actual services, hours and contact details. It doesn't take
-bookings or give firm prices; it points visitors to WhatsApp or the contact form for those.
-Conversations are logged to the `chat_messages` table (best-effort — a logging failure never
-breaks the chat).
+The floating message bubble (bottom-left, `src/components/ChatWidget.tsx`) is a simple composer:
+whatever a visitor types opens `wa.me` in a new tab with that message pre-filled, ready to send to
+`whatsappNumber` in `src/lib/site-config.ts`. There's no AI and no server round-trip — replies
+come from the team directly in WhatsApp.
 
 ## WhatsApp & socials
 
@@ -93,12 +90,11 @@ breaks the chat).
 - Business details (name, address, phone, WhatsApp, email, socials, opening hours):
   `src/lib/site-config.ts` — **`url` must match the live domain** once you have one, since it
   drives canonical links, the sitemap, robots.txt and Open Graph tags.
-- Services & sub-services (shown on the homepage, `/services`, and fed into the AI assistant's
-  knowledge): `src/content/services.ts`
-- FAQs (shown on the homepage and fed into the AI assistant): `src/content/faqs.ts`
-- Logo: `src/components/Logo.tsx` (and `src/app/icon.svg` for the favicon — `public/logo.png` and
-  `src/app/apple-icon.png` are placeholder raster exports; swap them for real branded assets when
-  you have them)
+- Services & sub-services (shown on the homepage and `/services`): `src/content/services.ts`
+- FAQs (shown on the homepage): `src/content/faqs.ts`
+- Logo: `src/components/Logo.tsx`, plus `src/app/icon.png` and `src/app/apple-icon.png` for the
+  favicon/Apple touch icon (generated from the real logo in `public/logo-dark-icon.png` and
+  `public/logo-light-icon.png`)
 
 ## Lead capture
 

@@ -14,7 +14,7 @@ const sections = [
   },
   {
     heading: "2. Information we collect",
-    body: `When you submit an enquiry form on this website, message our AI chat assistant, or we log a call or WhatsApp message from you, we collect the information you provide, which may include your name, phone number, email address, vehicle/service details, and the content of your message.`,
+    body: `When you submit an enquiry form on this website, message us via the WhatsApp message box, or we log a call or WhatsApp message from you, we collect the information you provide, which may include your name, phone number, email address, vehicle/service details, and the content of your message.`,
   },
   {
     heading: "3. How we use your information",
@@ -22,15 +22,15 @@ const sections = [
   },
   {
     heading: "4. How we store your information",
-    body: `Enquiries, call/message logs and chat assistant conversations are stored securely in our own database so our team can respond to and track your enquiry.`,
+    body: `Enquiries and call/message logs are stored securely in our own database so our team can respond to and track your enquiry. Messages you send via the WhatsApp message box are sent directly to our WhatsApp and are not stored on this website.`,
   },
   {
     heading: "5. Sharing your information",
-    body: `We do not share your personal information with third parties except where necessary to deliver our services (for example, our hosting and AI assistant providers), to comply with the law, or with your consent.`,
+    body: `We do not share your personal information with third parties except where necessary to deliver our services (for example, our hosting provider, or WhatsApp when you choose to message us), to comply with the law, or with your consent.`,
   },
   {
     heading: "6. Cookies",
-    body: `This website uses essential cookies required for it to function correctly (for example, to remember your dark/light theme preference and to keep the AI chat assistant working). You can control cookies through your browser settings.`,
+    body: `This website uses essential cookies required for it to function correctly (for example, to remember your dark/light theme preference). You can control cookies through your browser settings.`,
   },
   {
     heading: "7. Your rights",

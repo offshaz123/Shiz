@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { ServicesSection } from "@/components/ServicesSection";
+import { VideoShowcase } from "@/components/VideoShowcase";
 import { FAQAccordion } from "@/components/FAQAccordion";
 import { FaqJsonLd } from "@/components/StructuredData";
 import { whatsappHref, fullAddress, googleMapsHref, siteConfig } from "@/lib/site-config";
@@ -149,7 +150,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* AI assistant highlight */}
+      {/* Message us highlight */}
       <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div className="order-2 lg:order-1 rounded-3xl border border-border bg-surface p-8">
@@ -159,25 +160,26 @@ export default function Home() {
                 Do you do gloss black dechroming on a 3 Series?
               </div>
               <div className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm brand-gradient-bg px-4 py-3 text-sm text-white">
-                Yes — we can dechrome the trim and badges in gloss or satin black. Want me to point you to WhatsApp
-                for a quote?
+                Opening WhatsApp with your message — send it over and we&apos;ll reply personally.
               </div>
             </div>
-            <p className="mt-5 text-xs text-muted">Our AI assistant, live in the corner of every page.</p>
+            <p className="mt-5 text-xs text-muted">Message us from the corner of every page — it goes straight to WhatsApp.</p>
           </div>
 
           <div className="order-1 lg:order-2">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">AI Assistant</span>
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">Message Us</span>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Not sure what you need? Just ask
             </h2>
             <p className="mt-4 text-muted">
-              Our chat assistant can answer questions about any of our services, any time of day. For a firm quote
-              or to book in, it&apos;ll point you straight to WhatsApp.
+              Type your question into the message box on any page and it opens straight into WhatsApp, ready to
+              send to us — no bots, just a real reply from the team.
             </p>
           </div>
         </div>
       </section>
+
+      <VideoShowcase />
 
       {/* Location */}
       <section className="border-y border-border bg-surface">

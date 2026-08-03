@@ -88,14 +88,14 @@ export default async function AdminDashboardPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-        <p className="mt-1 text-sm text-muted">A live view of enquiries, channels and the AI chat bot.</p>
+        <p className="mt-1 text-sm text-muted">A live view of enquiries and channels.</p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile label="Total enquiries" value={stats.totalEnquiries} />
         <StatTile label="New this week" value={stats.newThisWeek} />
         <StatTile label="Booked" value={stats.booked} />
-        <StatTile label="AI chat sessions" value={stats.chatSessions} />
+        <StatTile label="AI chat sessions (legacy)" value={stats.chatSessions} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">

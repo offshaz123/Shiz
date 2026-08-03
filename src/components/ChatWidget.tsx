@@ -7,72 +7,33 @@ type Message = { role: "user" | "assistant"; content: string };
 
 const GREETING: Message = {
   role: "assistant",
-  content: `Hi! I'm the SMG Details assistant. Ask me about tinting, wrapping, servicing, plates or alloys — or message us on WhatsApp at ${siteConfig.phoneDisplay} to book.`,
+  content: `Hi! Type your question below and we'll open WhatsApp with it ready to send to ${siteConfig.phoneDisplay} — we reply personally, usually fast.`,
 };
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([GREETING]);
   const [input, setInput] = useState("");
-  const [sending, setSending] = useState(false);
-  const sessionIdRef = useRef<string>("");
   const scrollRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const existing = window.sessionStorage.getItem("smg_chat_session");
-    if (existing) {
-      sessionIdRef.current = existing;
-    }
-  }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, open]);
 
-  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const text = input.trim();
-    if (!text || sending) return;
+    if (!text) return;
 
-    const nextMessages = [...messages, { role: "user" as const, content: text }];
-    setMessages(nextMessages);
+    setMessages((prev) => [
+      ...prev,
+      { role: "user", content: text },
+      { role: "assistant", content: "Opening WhatsApp with your message — send it over and we'll reply there." },
+    ]);
     setInput("");
-    setSending(true);
 
-    try {
-      const res = await fetch("/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message: text,
-          sessionId: sessionIdRef.current || undefined,
-          history: nextMessages.slice(0, -1).slice(-10),
-        }),
-      });
-      const data = await res.json();
-
-      if (!res.ok) {
-        setMessages((prev) => [
-          ...prev,
-          { role: "assistant", content: data.error || "Sorry, something went wrong. Please try WhatsApp instead." },
-        ]);
-        return;
-      }
-
-      if (data.sessionId) {
-        sessionIdRef.current = data.sessionId;
-        window.sessionStorage.setItem("smg_chat_session", data.sessionId);
-      }
-      setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
-    } catch {
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "Sorry, I'm having trouble connecting. Please try WhatsApp instead." },
-      ]);
-    } finally {
-      setSending(false);
-    }
+    const href = `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(text)}`;
+    window.open(href, "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -81,8 +42,8 @@ export function ChatWidget() {
         <div className="fixed bottom-24 left-5 z-50 flex h-[28rem] w-[22rem] max-w-[calc(100vw-2.5rem)] flex-col overflow-hidden rounded-3xl border border-border bg-surface shadow-2xl sm:bottom-28 sm:left-7">
           <div className="brand-gradient-bg flex items-center justify-between px-5 py-4 text-white">
             <div>
-              <p className="text-sm font-semibold">SMG Details Assistant</p>
-              <p className="text-xs opacity-80">Usually replies instantly</p>
+              <p className="text-sm font-semibold">Message SMG Details</p>
+              <p className="text-xs opacity-80">Goes straight to WhatsApp</p>
             </div>
             <button type="button" onClick={() => setOpen(false)} aria-label="Close chat" className="text-white/80 hover:text-white">
               <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5">
@@ -104,11 +65,6 @@ export function ChatWidget() {
                 {m.content}
               </div>
             ))}
-            {sending && (
-              <div className="max-w-[60%] rounded-2xl rounded-tl-sm bg-surface-2 px-4 py-2.5 text-sm text-muted">
-                Typing...
-              </div>
-            )}
           </div>
 
           <form onSubmit={handleSubmit} className="flex items-center gap-2 border-t border-border bg-surface p-3">
@@ -120,8 +76,8 @@ export function ChatWidget() {
             />
             <button
               type="submit"
-              disabled={sending || !input.trim()}
-              aria-label="Send message"
+              disabled={!input.trim()}
+              aria-label="Send to WhatsApp"
               className="brand-gradient-bg flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-white disabled:opacity-50"
             >
               <svg viewBox="0 0 24 24" fill="none" className="h-4.5 w-4.5">
@@ -135,7 +91,7 @@ export function ChatWidget() {
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        aria-label={open ? "Close chat assistant" : "Chat with our AI assistant"}
+        aria-label={open ? "Close message box" : "Message us"}
         className="fixed bottom-5 left-5 z-50 flex h-14 w-14 items-center justify-center rounded-full brand-gradient-bg shadow-lg shadow-black/20 transition-transform hover:scale-105 sm:bottom-7 sm:left-7"
       >
         {open ? (
