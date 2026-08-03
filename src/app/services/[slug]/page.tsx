@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { serviceCategories, findServiceCategory } from "@/content/services";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { VariantSwatch } from "@/components/VariantSwatch";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
 
 export function generateStaticParams() {
@@ -29,6 +30,27 @@ export async function generateMetadata({
   };
 }
 
+function QuoteCta({ tradeEnquiry }: { tradeEnquiry?: boolean }) {
+  return (
+    <div className="flex flex-col justify-center gap-3 sm:flex-row">
+      <Link
+        href="/contact"
+        className="brand-gradient-bg rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10"
+      >
+        Get a Free Quote
+      </Link>
+      <a
+        href={whatsappHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-foreground hover:border-brand-pink/60"
+      >
+        {tradeEnquiry ? "Trade Enquiries — WhatsApp Us" : "Chat on WhatsApp"}
+      </a>
+    </div>
+  );
+}
+
 export default async function ServiceCategoryPage({
   params,
 }: {
@@ -47,41 +69,103 @@ export default async function ServiceCategoryPage({
           <Link href="/services" className="hover:text-foreground">
             Services
           </Link>{" "}
-          / <span className="text-foreground">{category.title}</span>
+          / <span className="text-foreground">{category.navTitle}</span>
         </nav>
         <h1 className="mt-3 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">{category.title}</h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">{category.description}</p>
-        <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-          <Link
-            href="/contact"
-            className="brand-gradient-bg rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10"
-          >
-            Get a Free Quote
-          </Link>
-          <a
-            href={whatsappHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-foreground hover:border-brand-pink/60"
-          >
-            Chat on WhatsApp
-          </a>
+        <div className="mt-8">
+          <QuoteCta tradeEnquiry={category.tradeEnquiry} />
         </div>
+        {(category.timeEstimate || category.warranty) && (
+          <div className="mx-auto mt-8 flex flex-wrap items-center justify-center gap-3">
+            {category.timeEstimate && (
+              <span className="rounded-full border border-border bg-surface px-4 py-2 text-xs font-medium text-muted">
+                ⏱ {category.timeEstimate}
+              </span>
+            )}
+            {category.warranty && (
+              <span className="rounded-full border border-border bg-surface px-4 py-2 text-xs font-medium text-muted">
+                🛡 {category.warranty}
+              </span>
+            )}
+          </div>
+        )}
       </section>
 
-      <section className="border-y border-border bg-surface">
-        <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
-          <h2 className="text-2xl font-bold tracking-tight text-foreground">What&apos;s included</h2>
-          <div className="mt-8 grid gap-6 sm:grid-cols-2">
-            {category.items.map((item) => (
-              <div key={item.name} className="rounded-3xl border border-border bg-background p-8">
-                <h3 className="text-lg font-semibold text-foreground">{item.name}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted">{item.description}</p>
+      {category.variants && category.variants.length > 0 && (
+        <section className="border-y border-border bg-surface">
+          <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">
+              {category.variantsIntro ?? "Options available"}
+            </h2>
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {category.variants.map((variant) => (
+                <div key={variant.name} className="rounded-3xl border border-border bg-background p-5">
+                  <VariantSwatch swatch={variant.swatch} />
+                  <h3 className="mt-4 text-base font-semibold text-foreground">{variant.name}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted">{variant.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {category.legalNote && (
+        <section className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
+          <div className="rounded-3xl border border-brand-orange/30 bg-surface p-8">
+            <h2 className="text-lg font-semibold text-foreground">{category.legalNote.heading}</h2>
+            <p className="mt-3 text-sm leading-relaxed text-muted">{category.legalNote.body}</p>
+          </div>
+        </section>
+      )}
+
+      {category.whatIncluded && category.whatIncluded.length > 0 && (
+        <section className={category.variants ? "mx-auto max-w-6xl px-5 py-20 sm:px-8" : "border-y border-border bg-surface"}>
+          <div className={category.variants ? "" : "mx-auto max-w-6xl px-5 py-20 sm:px-8"}>
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">What&apos;s included</h2>
+            <div className="mt-8 grid gap-6 sm:grid-cols-2">
+              {category.whatIncluded.map((item) => (
+                <div key={item.name} className="rounded-3xl border border-border bg-background p-8">
+                  <h3 className="text-lg font-semibold text-foreground">{item.name}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {category.pricing && category.pricing.length > 0 && (
+        <section className="mx-auto max-w-3xl px-5 py-16 sm:px-8">
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">Pricing</h2>
+          <div className="mt-6 divide-y divide-border rounded-3xl border border-border bg-surface">
+            {category.pricing.map((point) => (
+              <div key={point.label} className="flex items-center justify-between px-6 py-4">
+                <span className="text-sm text-muted">{point.label}</span>
+                <span className="text-base font-semibold text-foreground">{point.price}</span>
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {category.processSteps && category.processSteps.length > 0 && (
+        <section className="border-y border-border bg-surface">
+          <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">How we get there</h2>
+            <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+              {category.processSteps.map((s) => (
+                <div key={s.step}>
+                  <span className="brand-gradient-text text-4xl font-bold">{s.step}</span>
+                  <h3 className="mt-3 text-lg font-semibold text-foreground">{s.title}</h3>
+                  <p className="mt-2 text-sm text-muted">{s.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="mx-auto max-w-4xl px-5 py-20 sm:px-8">
         <h2 className="text-center text-2xl font-bold tracking-tight text-foreground">
@@ -102,22 +186,13 @@ export default async function ServiceCategoryPage({
       <section className="border-t border-border bg-surface">
         <div className="mx-auto max-w-4xl px-5 py-20 text-center sm:px-8">
           <h2 className="text-3xl font-bold tracking-tight text-foreground">Ready to book?</h2>
-          <p className="mt-4 text-muted">Message us your vehicle and what you&apos;re after, and we&apos;ll come back with a quote.</p>
-          <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link
-              href="/contact"
-              className="brand-gradient-bg rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10"
-            >
-              Get a Free Quote
-            </Link>
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-foreground hover:border-brand-pink/60"
-            >
-              Chat on WhatsApp
-            </a>
+          <p className="mt-4 text-muted">
+            {category.tradeEnquiry
+              ? "Message us your vehicle and what you're after for a quote, or message our trade line on WhatsApp for trade pricing."
+              : "Message us your vehicle and what you're after, and we'll come back with a quote."}
+          </p>
+          <div className="mt-8">
+            <QuoteCta tradeEnquiry={category.tradeEnquiry} />
           </div>
         </div>
       </section>
@@ -131,7 +206,7 @@ export default async function ServiceCategoryPage({
               href={`/services/${c.slug}`}
               className="rounded-2xl border border-border bg-surface p-6 transition-colors hover:border-brand-pink/40"
             >
-              <p className="font-semibold text-foreground">{c.title}</p>
+              <p className="font-semibold text-foreground">{c.navTitle}</p>
               <p className="mt-1.5 text-sm text-muted">{c.shortDescription}</p>
             </Link>
           ))}
@@ -142,7 +217,7 @@ export default async function ServiceCategoryPage({
         items={[
           { name: "Home", url: siteConfig.url },
           { name: "Services", url: `${siteConfig.url}/services` },
-          { name: category.title, url: `${siteConfig.url}/services/${category.slug}` },
+          { name: category.navTitle, url: `${siteConfig.url}/services/${category.slug}` },
         ]}
       />
     </div>

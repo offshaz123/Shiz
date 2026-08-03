@@ -3,15 +3,16 @@ import Link from "next/link";
 import { ServicesSection } from "@/components/ServicesSection";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
 
+const servicesDescription =
+  "Window tints, chameleon windscreens, number plates, vehicle wraps & dechrome, PPF, ceramic coating & detailing, caliper painting, alloy refurbishment, car servicing, and vehicle security at SMG Details.";
+
 export const metadata: Metadata = {
   title: "Services",
-  description:
-    "Car window tinting, vehicle wrapping & dechroming, home/commercial tinting, car servicing, number plates, and alloy & caliper refurbishment at SMG Details.",
+  description: servicesDescription,
   alternates: { canonical: "/services" },
   openGraph: {
     title: `Services | ${siteConfig.name}`,
-    description:
-      "Car window tinting, vehicle wrapping & dechroming, home/commercial tinting, car servicing, number plates, and alloy & caliper refurbishment at SMG Details.",
+    description: servicesDescription,
   },
 };
 
@@ -22,7 +23,7 @@ export default function ServicesPage() {
         <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">What We Do</span>
         <h1 className="mt-3 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">Our Services</h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-          Four specialisms, one shop. Have a look through, then get in touch for a quote on your vehicle.
+          Everything under one roof. Have a look through, then get in touch for a quote on your vehicle.
         </p>
       </section>
 

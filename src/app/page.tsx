@@ -43,8 +43,9 @@ export default function Home() {
             <span className="brand-gradient-text">Done properly.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-            SMG Details is your local specialist for car window tinting, vehicle wrapping and dechroming, major &amp;
-            minor servicing, custom number plates, and alloy wheel &amp; caliper refurbishment.
+            SMG Details is your local specialist for window tints, chameleon windscreens, vehicle wraps &amp;
+            dechrome, PPF, ceramic coating &amp; detailing, number plates, alloy &amp; caliper refurbishment, car
+            servicing, and vehicle security.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
@@ -64,7 +65,18 @@ export default function Home() {
           </div>
 
           <div className="mx-auto mt-16 flex max-w-3xl flex-wrap items-center justify-center gap-2.5">
-            {["Window Tinting", "Vehicle Wrapping", "Dechroming", "Car Servicing", "Number Plates", "Alloy Refurb"].map(
+            {[
+              "Window Tints",
+              "Chameleon Windscreen",
+              "Wraps & Dechrome",
+              "PPF",
+              "Ceramic Coating",
+              "Number Plates",
+              "Alloy Refurb",
+              "Caliper Painting",
+              "Car Servicing",
+              "Vehicle Security",
+            ].map(
               (tag) => (
                 <span key={tag} className="rounded-full border border-border bg-surface px-4 py-2 text-xs font-medium text-muted">
                   {tag}
