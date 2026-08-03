@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { Logo } from "./Logo";
-import { siteConfig, whatsappHref, fullAddress, googleMapsHref } from "@/lib/site-config";
+import { siteConfig, whatsappHref, fullAddress, googleMapsHref, yearsExperience } from "@/lib/site-config";
+
+const trustStats = [
+  { label: `Founded ${siteConfig.foundedYear}` },
+  { label: `${yearsExperience}+ Years Experience` },
+  { label: siteConfig.ratingLabel },
+  { label: `Based in ${siteConfig.address.postcode.split(" ")[0]}` },
+];
 
 const socialLinks = [
   {
@@ -48,6 +55,18 @@ const socialLinks = [
 export function Footer() {
   return (
     <footer className="border-t border-border bg-surface">
+      <div className="border-b border-border">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-center gap-3 px-5 py-6 sm:px-8">
+          {trustStats.map((stat) => (
+            <span
+              key={stat.label}
+              className="rounded-full border border-border bg-background px-4 py-1.5 text-xs font-semibold text-muted"
+            >
+              {stat.label}
+            </span>
+          ))}
+        </div>
+      </div>
       <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-2">
@@ -75,6 +94,11 @@ export function Footer() {
               <li>
                 <Link href="/services" className="hover:text-foreground">
                   Services
+                </Link>
+              </li>
+              <li>
+                <Link href="/pricing" className="hover:text-foreground">
+                  Pricing
                 </Link>
               </li>
               <li>
@@ -129,7 +153,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col gap-3 border-t border-border pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} {siteConfig.legalName}. All rights reserved.</p>
-          <p>Window Tinting &amp; Wrapping · Car Servicing · Number Plates · Alloy Refurbishment</p>
+          <p>Window Tints · Wraps &amp; Dechrome · PPF · Ceramic Coating · Number Plates · Alloy Refurbishment</p>
         </div>
       </div>
     </footer>

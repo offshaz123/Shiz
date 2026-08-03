@@ -28,9 +28,13 @@ export const siteConfig = {
     { days: "Saturday", hours: "9:00am - 5:00pm" },
     { days: "Sunday", hours: "Closed" },
   ],
+  foundedYear: 2020,
+  ratingLabel: "5★ Rated",
 };
 
 export const fullAddress = `${siteConfig.address.line1}, ${siteConfig.address.locality}, ${siteConfig.address.postcode}`;
+
+export const yearsExperience = new Date().getFullYear() - siteConfig.foundedYear;
 
 export const whatsappHref = `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(
   siteConfig.whatsappMessage

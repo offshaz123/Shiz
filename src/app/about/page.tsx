@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { siteConfig, fullAddress } from "@/lib/site-config";
+import { siteConfig, fullAddress, yearsExperience } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -46,9 +46,20 @@ export default function AboutPage() {
             {siteConfig.legalName} — trading as {siteConfig.name}
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-            We&apos;re a car detailing shop based in Romford, covering window tinting and wrapping, servicing, custom
-            number plates, and alloy wheel refurbishment — all under one roof.
+            We&apos;re a car detailing shop based in Romford, covering tints, wraps, servicing, plates, alloys and
+            more — all under one roof.
           </p>
+          <div className="mx-auto mt-8 flex flex-wrap items-center justify-center gap-3">
+            <span className="rounded-full border border-border bg-surface px-4 py-2 text-xs font-semibold text-muted">
+              Founded {siteConfig.foundedYear}
+            </span>
+            <span className="rounded-full border border-border bg-surface px-4 py-2 text-xs font-semibold text-muted">
+              {yearsExperience}+ Years Experience
+            </span>
+            <span className="rounded-full border border-border bg-surface px-4 py-2 text-xs font-semibold text-muted">
+              {siteConfig.ratingLabel}
+            </span>
+          </div>
         </div>
       </section>
 
@@ -56,9 +67,10 @@ export default function AboutPage() {
         <div className="rounded-3xl border border-border bg-surface p-8 sm:p-10">
           <h2 className="text-2xl font-bold text-foreground">Our story</h2>
           <p className="mt-4 leading-relaxed text-muted">
-            Too many car owners end up bouncing between different specialists for tinting, wrapping, servicing and
-            wheels. We started {siteConfig.name} to bring all of that together in one place, at {fullAddress} —
-            so you can get your car looking and running exactly how you want it, without the runaround.
+            We founded {siteConfig.name} in {siteConfig.foundedYear} after noticing a gap in the market: too many car
+            owners were bouncing between different specialists for tinting, wrapping, servicing and wheels, with no
+            one place that did it all properly. So we built {siteConfig.name} to bring all of that together in one
+            place, at {fullAddress}.
           </p>
           <p className="mt-4 leading-relaxed text-muted">
             Whether it&apos;s a subtle window tint, a full wrap, a routine service, a set of custom plates, or refurbished

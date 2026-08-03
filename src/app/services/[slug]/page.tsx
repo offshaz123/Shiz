@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { serviceCategories, findServiceCategory } from "@/content/services";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { VariantSwatch } from "@/components/VariantSwatch";
+import { ServiceGallery } from "@/components/ServiceGallery";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
 
 export function generateStaticParams() {
@@ -90,6 +91,13 @@ export default async function ServiceCategoryPage({
             )}
           </div>
         )}
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 pb-20 sm:px-8">
+        <h2 className="text-2xl font-bold tracking-tight text-foreground">See our work</h2>
+        <div className="mt-8">
+          <ServiceGallery images={category.gallery} label={category.navTitle} />
+        </div>
       </section>
 
       {category.variants && category.variants.length > 0 && (

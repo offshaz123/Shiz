@@ -26,6 +26,11 @@ export type LegalNote = {
   body: string;
 };
 
+export type GalleryImage = {
+  src: string;
+  alt: string;
+};
+
 export type ServiceCategory = {
   slug: string;
   navTitle: string;
@@ -42,6 +47,7 @@ export type ServiceCategory = {
   warranty?: string;
   processSteps?: ProcessStep[];
   tradeEnquiry?: boolean;
+  gallery?: GalleryImage[];
 };
 
 export const serviceCategories: ServiceCategory[] = [
@@ -228,13 +234,23 @@ export const serviceCategories: ServiceCategory[] = [
     ],
   },
   {
-    slug: "caliper-painting",
-    navTitle: "Caliper Painting",
-    title: "Caliper Painting",
-    shortDescription: "Brake calipers resprayed in any colour, individually or as a full set.",
+    slug: "alloy-refurbishment",
+    navTitle: "Alloy Refurb & Calipers",
+    title: "Alloy Refurbishment & Caliper Painting",
+    shortDescription: "Diamond cut, painted or powder-coated alloy refurb, plus calipers resprayed in any colour.",
     description:
-      "A quick way to finish off your alloys — calipers resprayed in any colour you like, to a clean, durable finish.",
-    variantsIntro: "A few popular colours (any colour available)",
+      "Bring tired, kerbed or corroded alloys back to a factory finish, and finish the look with calipers resprayed in any colour you like — individually or as a full set.",
+    whatIncluded: [
+      {
+        name: "Alloy Wheel Refurbishment",
+        description: "Diamond cut, painted or powder-coated refurb to repair kerb damage, corrosion and scuffs.",
+      },
+      {
+        name: "Caliper Painting",
+        description: "Brake calipers resprayed in any colour, individually or as a full set, for a clean, durable finish.",
+      },
+    ],
+    variantsIntro: "Popular caliper colours (any colour available)",
     variants: [
       { name: "Red", description: "A classic performance red.", swatch: { kind: "solid", hex: "#c1272d" } },
       { name: "Yellow", description: "A bright, high-visibility yellow.", swatch: { kind: "solid", hex: "#f2b705" } },
@@ -242,30 +258,14 @@ export const serviceCategories: ServiceCategory[] = [
       { name: "Gloss Black", description: "A stealthy factory-look black.", swatch: { kind: "solid", hex: "#161616" } },
     ],
     pricing: [
-      { label: "All 4 calipers", price: "£200" },
-      { label: "Single caliper", price: "£70" },
+      { label: "Caliper painting — all 4 calipers", price: "£200" },
+      { label: "Caliper painting — single caliper", price: "£70" },
     ],
-    timeEstimate: "Around 6 hours",
+    timeEstimate: "Caliper painting: around 6 hours",
     highlights: [
-      "Any colour to match your car or wheels",
-      "All four for £200 — the better-value option",
-      "Around 6 hours turnaround",
-    ],
-  },
-  {
-    slug: "alloy-refurbishment",
-    navTitle: "Alloy Refurbishment",
-    title: "Alloy Wheel Refurbishment",
-    shortDescription: "Diamond cut, painted or powder-coated refurb to repair kerb damage, corrosion and scuffs.",
-    description:
-      "Bring tired, kerbed or corroded alloys back to a factory finish. Looking to add some colour too? See our dedicated Caliper Painting page.",
-    whatIncluded: [
-      { name: "Alloy Wheel Refurbishment", description: "Diamond cut, painted or powder-coated refurb to repair kerb damage, corrosion and scuffs." },
-    ],
-    highlights: [
-      "Diamond cut, painted or powder-coated finishes",
+      "Diamond cut, painted or powder-coated alloy finishes",
       "Kerb damage, corrosion and scuffs repaired properly",
-      "Pair it with a caliper respray to finish the look",
+      "Any caliper colour — all four for £200, the better-value option",
     ],
   },
   {
