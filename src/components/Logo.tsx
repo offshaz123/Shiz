@@ -44,8 +44,11 @@ export function Logo({ withWordmark = true }: { withWordmark?: boolean }) {
       <LogoMark />
       {withWordmark && (
         <span className="flex flex-col leading-none">
-          <span className="text-[15px] font-bold tracking-tight text-foreground">
-            SMG <span className="brand-gradient-text">DETAILS</span>
+          <span className="text-[15px] font-bold tracking-tight">
+            <span className="text-foreground">S</span>
+            <span className="text-brand-pink">M</span>
+            <span className="text-foreground">G</span>{" "}
+            <span className="brand-gradient-text">DETAILS</span>
           </span>
           <span className="text-[10px] font-semibold tracking-[0.25em] text-muted">
             SHAZ MOTOR GROUP
