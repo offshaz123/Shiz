@@ -6,6 +6,14 @@ import { FaqJsonLd } from "@/components/StructuredData";
 import { whatsappHref, fullAddress, googleMapsHref, siteConfig } from "@/lib/site-config";
 import { faqs } from "@/content/faqs";
 
+const promoItems = [
+  "20% Off All Services — Get Your Free Quote Today",
+  "Same Day Service Available",
+  "Up to 10 Years Warranty on Wraps",
+  "NHS Discount Available",
+  "Leave a Review & Get a Discount",
+];
+
 const whyUs = [
   {
     title: "All under one roof",
@@ -30,10 +38,15 @@ export default function Home() {
     <div>
       {/* Promo banner */}
       <div className="overflow-hidden bg-red-600 py-2.5">
-        <div className="flex w-max animate-marquee">
+        <div className="flex w-max animate-marquee-fast">
           {[0, 1].map((i) => (
-            <span key={i} aria-hidden={i === 1} className="flex shrink-0 items-center whitespace-nowrap px-8 text-sm font-semibold text-white">
-              20% Off All Services — Get Your Free Quote Today
+            <span key={i} aria-hidden={i === 1} className="flex shrink-0 items-center whitespace-nowrap text-sm font-semibold text-white">
+              {promoItems.map((item, j) => (
+                <span key={j} className="flex items-center">
+                  <span className="px-4">{item}</span>
+                  <span aria-hidden className="text-white/50">•</span>
+                </span>
+              ))}
             </span>
           ))}
         </div>
