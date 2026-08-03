@@ -74,11 +74,9 @@ export function ServicesSection({ detailed = false }: { detailed?: boolean }) {
               </li>
             ))}
           </ul>
-          {!detailed && (
-            <Link href={`/services#${category.slug}`} className="mt-5 inline-flex text-sm font-semibold text-brand-pink hover:underline">
-              Learn more →
-            </Link>
-          )}
+          <Link href={`/services/${category.slug}`} className="mt-5 inline-flex text-sm font-semibold text-brand-pink hover:underline">
+            {detailed ? "Full details →" : "Learn more →"}
+          </Link>
         </div>
       ))}
     </div>

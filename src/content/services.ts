@@ -9,6 +9,7 @@ export type ServiceCategory = {
   shortDescription: string;
   description: string;
   items: ServiceItem[];
+  highlights: string[];
 };
 
 export const serviceCategories: ServiceCategory[] = [
@@ -36,6 +37,11 @@ export const serviceCategories: ServiceCategory[] = [
         description: "Privacy and solar control window film fitted to homes, shopfronts and commercial premises.",
       },
     ],
+    highlights: [
+      "Legal tint shades front and rear, explained before you book",
+      "Quality film and vinyl — no bubbling, peeling or fading",
+      "Cars, shopfronts and commercial units all covered",
+    ],
   },
   {
     slug: "car-servicing",
@@ -56,6 +62,11 @@ export const serviceCategories: ServiceCategory[] = [
         name: "Brake Pads & Discs",
         description: "Supply and fit of brake pads and discs, front or rear, for safe stopping power.",
       },
+    ],
+    highlights: [
+      "Manufacturer-standard service schedules",
+      "Straightforward pricing before any work starts",
+      "Brakes checked and replaced properly, front or rear",
     ],
   },
   {
@@ -78,6 +89,11 @@ export const serviceCategories: ServiceCategory[] = [
         description: "Smooth, glossy gel-resin digits for a clean, modern look.",
       },
     ],
+    highlights: [
+      "Made to DVLA specification — fully road-legal",
+      "3D, 4D and gel finishes, ready while you wait",
+      "Proof of entitlement checked so there's no come-back",
+    ],
   },
   {
     slug: "alloy-refurbishment",
@@ -94,6 +110,11 @@ export const serviceCategories: ServiceCategory[] = [
         name: "Caliper Respray",
         description: "Brake caliper respray in any colour for a sharp finishing touch.",
       },
+    ],
+    highlights: [
+      "Diamond cut, painted or powder-coated finishes",
+      "Kerb damage, corrosion and scuffs repaired properly",
+      "Caliper respray in any colour to finish the look",
     ],
   },
 ];

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/site-config";
+import { serviceCategories } from "@/content/services";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes: { path: string; changeFrequency: "weekly" | "monthly"; priority: number }[] = [
@@ -10,10 +11,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/privacy", changeFrequency: "monthly", priority: 0.3 },
   ];
 
-  return routes.map((route) => ({
+  const staticEntries = routes.map((route) => ({
     url: `${siteConfig.url}${route.path}`,
     lastModified: new Date(),
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));
+
+  const serviceEntries = serviceCategories.map((category) => ({
+    url: `${siteConfig.url}/services/${category.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.85,
+  }));
+
+  return [...staticEntries, ...serviceEntries];
 }
