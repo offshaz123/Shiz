@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { LeadForm } from "@/components/LeadForm";
-import { RealResultsSection } from "@/components/RealResults";
+import { RealResultsSection, bestCostPerLead } from "@/components/RealResults";
+import { CaseStudySection } from "@/components/CaseStudy";
 import { FaqJsonLd } from "@/components/StructuredData";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
 
@@ -17,6 +18,7 @@ export const metadata: Metadata = {
 };
 
 const trustBadges = [
+  `Real Client Leads From £${bestCostPerLead}`,
   "No Long-Term Contract",
   "UK-Based Team",
   "Campaigns Launch Within Days",
@@ -151,9 +153,10 @@ export default function DemoPage() {
       </section>
 
       <RealResultsSection />
+      <CaseStudySection />
 
       {/* Demo video */}
-      <section id="demo-video" className="mx-auto max-w-5xl px-5 py-20 sm:px-8">
+      <section id="demo-video" className="border-t border-border mx-auto max-w-5xl px-5 py-20 sm:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
             See It In Action

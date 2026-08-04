@@ -2,6 +2,7 @@ import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { PricingSection } from "@/components/PricingSection";
 import { RealResultsSection } from "@/components/RealResults";
+import { CaseStudySection } from "@/components/CaseStudy";
 import { FaqJsonLd } from "@/components/StructuredData";
 import { whatsappHref } from "@/lib/site-config";
 import { blogPosts } from "@/content/blog";
@@ -148,6 +149,7 @@ export default function Home() {
       </section>
 
       <RealResultsSection />
+      <CaseStudySection />
 
       {/* Services */}
       <section id="services" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">

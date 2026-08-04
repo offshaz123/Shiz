@@ -1,9 +1,12 @@
+// Ordered best cost-per-lead first.
 const results = [
+  { industry: "Automotive — Ceramic Coating", leads: 37, spend: 166.02 },
   { industry: "Automotive — Window Tinting", leads: 43, spend: 316.29 },
   { industry: "Automotive — Servicing & Repairs", leads: 92, spend: 743.75 },
-  { industry: "Automotive — Ceramic Coating", leads: 37, spend: 166.02 },
   { industry: "Real Estate", leads: 20, spend: 205.68 },
 ];
+
+export const bestCostPerLead = Math.min(...results.map((r) => r.spend / r.leads)).toFixed(2);
 
 const totalLeads = results.reduce((sum, r) => sum + r.leads, 0);
 const totalSpend = results.reduce((sum, r) => sum + r.spend, 0);
