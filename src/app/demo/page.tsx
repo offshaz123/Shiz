@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LeadForm } from "@/components/LeadForm";
+import { RealResultsSection } from "@/components/RealResults";
 import { FaqJsonLd } from "@/components/StructuredData";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
 
@@ -127,29 +128,29 @@ export default function DemoPage() {
       </section>
 
       {/* What you get */}
-      <section className="border-y border-border bg-surface">
-        <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
-              What You Get
-            </span>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Everything you need, in one place
-            </h2>
-          </div>
-          <div className="mt-14 grid gap-6 sm:grid-cols-2">
-            {whatYouGet.map((item) => (
-              <div
-                key={item.title}
-                className="rounded-3xl border border-border bg-background p-8 transition-colors hover:border-brand-pink/40"
-              >
-                <h3 className="text-lg font-semibold text-foreground">{item.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted">{item.description}</p>
-              </div>
-            ))}
-          </div>
+      <section className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
+        <div className="mx-auto max-w-2xl text-center">
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+            What You Get
+          </span>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            Everything you need, in one place
+          </h2>
+        </div>
+        <div className="mt-14 grid gap-6 sm:grid-cols-2">
+          {whatYouGet.map((item) => (
+            <div
+              key={item.title}
+              className="rounded-3xl border border-border bg-surface p-8 transition-colors hover:border-brand-pink/40"
+            >
+              <h3 className="text-lg font-semibold text-foreground">{item.title}</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{item.description}</p>
+            </div>
+          ))}
         </div>
       </section>
+
+      <RealResultsSection />
 
       {/* Demo video */}
       <section id="demo-video" className="mx-auto max-w-5xl px-5 py-20 sm:px-8">
