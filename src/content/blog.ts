@@ -16,6 +16,67 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "boosting-a-post-vs-real-ad-campaign",
+    title: "Boosting a Post vs Running a Real Ad Campaign: What's the Difference?",
+    description:
+      "Why the \"Boost Post\" button and a proper Meta Ads Manager campaign aren't the same tool — and which one actually generates leads for your business.",
+    publishedAt: "2026-08-04",
+    keywords: [
+      "boost post vs ads manager",
+      "should I boost my Facebook post",
+      "Meta ads campaign vs boosted post",
+      "Instagram boost post worth it",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "That blue \"Boost Post\" button under your latest Instagram or Facebook post is the single biggest reason small businesses think they've \"tried Meta ads\" and it \"didn't work.\" It's not that boosting is useless — it's that it's a different tool solving a different problem, and using it to generate leads is a bit like using a bicycle to move house.",
+          "Here's what actually separates the two, and how to tell which one your business needs.",
+        ],
+      },
+      {
+        heading: "What boosting a post actually does",
+        paragraphs: [
+          "Boosting takes a post you've already published and pays to show it to more people. It's built for speed and simplicity — pick a budget, pick a rough audience, hit go — which is exactly why it's the first thing most business owners try.",
+          "The trade-off is that it's simplified on purpose. Boosting only optimises for a narrow set of outcomes, mainly engagement (likes, comments, shares) or, at best, a basic version of traffic or messages. It doesn't give you access to lead form ads, conversion tracking, detailed audience layering, or the ability to test multiple creatives and pause the losers. You're renting reach for a post, not running a campaign built around a business outcome.",
+        ],
+      },
+      {
+        heading: "What a real campaign gives you that boosting doesn't",
+        paragraphs: ["Building a campaign properly in Ads Manager (rather than tapping Boost) unlocks the parts that actually drive leads and sales:"],
+        bullets: [
+          "Objective-based optimisation — telling Meta to specifically find people likely to submit a lead form or message you, not just people likely to tap like",
+          "Multiple ad sets tested against each other, so underperforming audiences or creative get cut and budget shifts to what's working",
+          "Detailed targeting and exclusions — reaching the right radius, age range, and interests, and excluding people who've already enquired",
+          "The Meta Pixel or Conversions API feeding real outcome data back into the campaign, which is what lets Meta's algorithm actually improve results over time",
+          "Retargeting set up deliberately, rather than left to chance",
+        ],
+      },
+      {
+        heading: "When boosting is genuinely fine",
+        paragraphs: [
+          "Boosting isn't a mistake in every context. If the goal is simply visibility — more people seeing an announcement, a review, a behind-the-scenes post, or something building general brand awareness — a small boost can be a perfectly reasonable, low-effort way to extend reach. The problem is using it for the wrong job: expecting a tool built for engagement to reliably produce booked customers.",
+        ],
+      },
+      {
+        heading: "Signs it's time to move off the Boost button",
+        paragraphs: ["A few reliable signs the Boost button has stopped being enough for what you actually need:"],
+        bullets: [
+          "You're boosting posts regularly but can't point to any leads or bookings that came from it",
+          "You've never seen a cost-per-lead or cost-per-result number, only reach and engagement stats",
+          "You don't have a Meta Pixel installed on your website, so Meta has no idea which clicks actually turned into enquiries",
+          "You're relying on the same post performing well organically first before boosting it, rather than building creative specifically to convert",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "If boosting posts has felt like spending money without a clear return, that's usually not a sign Meta ads don't work for your business — it's a sign the campaign was never actually built as one. Get in touch for a free strategy call and we'll show you what a properly structured campaign looks like for your numbers.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-budget-guide-uk-small-business",
     title: "How Much Should You Spend on Meta & Instagram Ads? A UK Small Business Guide",
     description:
