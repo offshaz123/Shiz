@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
-import { whatsappHref } from "@/lib/site-config";
+import { siteConfig, whatsappHref } from "@/lib/site-config";
 
 const navLinks = [
   { href: "/#services", label: "Services" },
@@ -16,6 +17,24 @@ const navLinks = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const isLandingPage = pathname?.startsWith("/demo");
+
+  if (isLandingPage) {
+    return (
+      <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
+        <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
+          <Logo />
+          <a
+            href={`tel:${siteConfig.phoneE164}`}
+            className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-brand-pink/60"
+          >
+            Call {siteConfig.phoneDisplay}
+          </a>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">

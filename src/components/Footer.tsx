@@ -1,8 +1,30 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
 
 export function Footer() {
+  const pathname = usePathname();
+  const isLandingPage = pathname?.startsWith("/demo");
+
+  if (isLandingPage) {
+    return (
+      <footer className="border-t border-border bg-surface">
+        <div className="mx-auto flex max-w-7xl flex-col items-center gap-4 px-5 py-10 text-center sm:px-8">
+          <Logo />
+          <p className="text-xs text-muted">
+            © {new Date().getFullYear()} {siteConfig.name}. All rights reserved. ·{" "}
+            <Link href="/privacy" className="hover:text-foreground">
+              Privacy Policy
+            </Link>
+          </p>
+        </div>
+      </footer>
+    );
+  }
+
   return (
     <footer className="border-t border-border bg-surface">
       <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
