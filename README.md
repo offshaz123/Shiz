@@ -92,23 +92,24 @@ changes.
   picking a topic not already covered, and pushes directly to this branch, which triggers the
   GitHub Actions deploy below. It always runs `npm run lint` and `npm run build` before pushing.
 
-## Deploy — Hostinger (shared hosting)
+## Deploy — Hostinger (Websites product, GitHub-connected)
 
-This is a static export (`output: "export"`), so the build produces a plain `out/` folder of
-HTML/CSS/JS that any shared host can serve — no Node.js server required on Hostinger.
+Hostinger's "Websites" product (hpanel.hostinger.com → Websites) connects directly to a GitHub
+branch and auto-builds/deploys on every push — no FTP, no GitHub Actions workflow needed. This is
+the same setup already used for the SMG Details site in this repo.
 
-```bash
-npm run build   # outputs static site to ./out
-```
+**One-time setup, in hPanel:**
 
-**Automated deploy:** `.github/workflows/deploy-hostinger.yml` builds and FTP-uploads `out/` to
-`public_html/` on every push to this branch. Requires these GitHub repo secrets
-(Settings → Secrets and variables → Actions):
+1. **Websites** → **Add website** (or similar "create/connect" button) → choose to connect a Git
+   repository rather than starting from a template
+2. Authorize/select GitHub, choose the `Shiz` repo, and set the branch to
+   `claude/meta-ads-instagram-website-p2ah5o`
+3. Framework should auto-detect as Next.js. Set the `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY`
+   environment variable (from web3forms.com — see Lead form section above) in the site's
+   **Environment variables** panel so the lead form can send
+4. Deploy — Hostinger gives it a temporary `*.hostingersite.com` URL first
+5. Once it's working, go to **Domains** → **Connect domain** and point `shazmarketing.com` at it
 
-- `HOSTINGER_FTP_SERVER`, `HOSTINGER_FTP_USERNAME`, `HOSTINGER_FTP_PASSWORD` — from hPanel →
-  Files → FTP Accounts
-- `WEB3FORMS_ACCESS_KEY` — from web3forms.com (see Lead form section above)
-
-**Manual deploy (one-off / first time):** run `npm run build` locally, then upload the contents
-of `out/` into `public_html/` via hPanel's File Manager (zip it first, upload, extract) or an
-FTP client like FileZilla.
+This is a static export (`output: "export"` in `next.config.ts`), so it'll build to a plain
+`out/` folder regardless of how Hostinger runs it — safe either as a static site or served via
+Node.
