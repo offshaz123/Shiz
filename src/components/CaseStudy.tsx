@@ -27,22 +27,56 @@ export function CaseStudySection() {
       </div>
 
       <div className="mt-14 grid gap-8 lg:grid-cols-5 lg:items-start">
-        <div className="lg:col-span-2 grid grid-cols-2 gap-4">
-          <div className="rounded-2xl border border-border bg-surface p-5 text-center lg:text-left">
-            <p className="brand-gradient-text text-3xl font-bold">{testimonial.stats.leads}</p>
-            <p className="mt-1 text-xs text-muted">leads in month one</p>
+        <div className="lg:col-span-2 rounded-3xl border border-border bg-surface p-6">
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-brand-pink" />
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-muted">
+              Meta Ads Manager — Detailmatics
+            </p>
           </div>
-          <div className="rounded-2xl border border-border bg-surface p-5 text-center lg:text-left">
-            <p className="brand-gradient-text text-3xl font-bold">£{testimonial.stats.costPerLead}</p>
-            <p className="mt-1 text-xs text-muted">cost per lead</p>
-          </div>
-          <div className="rounded-2xl border border-border bg-surface p-5 text-center lg:text-left">
-            <p className="brand-gradient-text text-3xl font-bold">{testimonial.stats.bookedCustomers}</p>
-            <p className="mt-1 text-xs text-muted">customers booked in</p>
-          </div>
-          <div className="rounded-2xl border border-border bg-surface p-5 text-center lg:text-left">
-            <p className="brand-gradient-text text-3xl font-bold">1 year</p>
-            <p className="mt-1 text-xs text-muted">ongoing partnership</p>
+
+          <svg viewBox="0 0 300 100" fill="none" className="mt-5 h-24 w-full" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="caseStudyLine" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stopColor="#7b2ff7" />
+                <stop offset="0.55" stopColor="#e0218a" />
+                <stop offset="1" stopColor="#f7941e" />
+              </linearGradient>
+              <linearGradient id="caseStudyFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stopColor="#e0218a" stopOpacity="0.25" />
+                <stop offset="1" stopColor="#e0218a" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M0 85 C 40 80, 60 60, 100 55 S 160 35, 200 28 S 260 12, 300 6 V100 H0 Z"
+              fill="url(#caseStudyFill)"
+            />
+            <path
+              d="M0 85 C 40 80, 60 60, 100 55 S 160 35, 200 28 S 260 12, 300 6"
+              stroke="url(#caseStudyLine)"
+              strokeWidth="3"
+              strokeLinecap="round"
+            />
+          </svg>
+          <p className="mt-1 text-[11px] text-muted">Leads generated — month one, trending up</p>
+
+          <div className="mt-6 grid grid-cols-2 gap-4 border-t border-border pt-5">
+            <div>
+              <p className="brand-gradient-text text-2xl font-bold">{testimonial.stats.leads}</p>
+              <p className="mt-1 text-xs text-muted">leads in month one</p>
+            </div>
+            <div>
+              <p className="brand-gradient-text text-2xl font-bold">£{testimonial.stats.costPerLead}</p>
+              <p className="mt-1 text-xs text-muted">cost per lead</p>
+            </div>
+            <div>
+              <p className="brand-gradient-text text-2xl font-bold">{testimonial.stats.bookedCustomers}</p>
+              <p className="mt-1 text-xs text-muted">customers booked in</p>
+            </div>
+            <div>
+              <p className="brand-gradient-text text-2xl font-bold">1 year</p>
+              <p className="mt-1 text-xs text-muted">ongoing partnership</p>
+            </div>
           </div>
         </div>
 
