@@ -4,8 +4,6 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { siteConfig } from "@/lib/site-config";
 
-const WEB3FORMS_ACCESS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ?? "";
-
 const industries = [
   "Automotive",
   "Home & Trade Services",
@@ -42,20 +40,16 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       return;
     }
 
-    const payload: Record<string, string> = {
-      access_key: WEB3FORMS_ACCESS_KEY,
-      subject: "New lead from shazmarketing.com",
-      from_name: "Shaz Marketing Group website",
-    };
+    const payload: Record<string, string> = {};
     formData.forEach((value, key) => {
       if (key !== "_honey") payload[key] = String(value);
     });
 
     setSubmitting(true);
     try {
-      const res = await fetch("https://api.web3forms.com/submit", {
+      const res = await fetch("/api/lead", {
         method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
       const result = await res.json();

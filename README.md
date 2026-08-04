@@ -26,22 +26,25 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Lead form → email delivery
 
-The enquiry form (`src/components/LeadForm.tsx`) submits directly to **[Web3Forms](https://web3forms.com)**
-— a free third-party form-to-email service, chosen because the site is statically exported
-(`output: "export"` in `next.config.ts`) and has no backend/API routes of its own.
+The enquiry form (`src/components/LeadForm.tsx`) posts to `src/app/api/lead/route.ts`, a server
+route that sends the submission by email via SMTP using `nodemailer` — through the existing
+`info@shazmarketing.com` mailbox, no third-party form service involved. This requires the site to
+run as a real Next.js server (not a static export), which is what Hostinger's Websites product
+does.
 
-**One-time setup:**
+**One-time setup — 4 environment variables**, from hPanel → Emails → the `info@shazmarketing.com`
+mailbox → "Connect devices" / email client settings:
 
-1. Go to [web3forms.com](https://web3forms.com), enter the destination inbox
-   (`info@shazmarketing.com`) and create a free access key.
-2. Set it as `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` at build time (local `.env.local`, or as a
-   `WEB3FORMS_ACCESS_KEY` secret in the GitHub Actions deploy workflow — see below). It's baked
-   into the static JS bundle at build time, which is expected/fine for this service (the key only
-   authorizes submissions *to* your inbox, same model as Formspree's public form IDs).
+- `SMTP_HOST` — e.g. `smtp.hostinger.com`
+- `SMTP_PORT` — usually `465`
+- `SMTP_USER` — the mailbox address
+- `SMTP_PASS` — the mailbox password
 
-Every submission (from the Home page and Contact page) emails the configured inbox directly, and
-the visitor is redirected to `/thank-you`. Without the access key set, submissions will fail
-client-side with the form's built-in error message.
+Set these in the Hostinger site's **Environment variables** panel (or `.env.local` for local dev)
+and redeploy. Every submission (from the Home page, Contact page and /demo page) emails
+`siteConfig.email` directly, with `replyTo` set to the enquirer's own address, and the visitor is
+redirected to `/thank-you`. Without these set, the API route returns an error and the form shows
+its built-in fallback message.
 
 ## WhatsApp
 
