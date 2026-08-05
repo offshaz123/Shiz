@@ -41,7 +41,8 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       return;
     }
 
-    const payload: Record<string, string> = {};
+    const eventId = crypto.randomUUID();
+    const payload: Record<string, string> = { eventId };
     formData.forEach((value, key) => {
       if (key !== "_honey") payload[key] = String(value);
     });
@@ -55,7 +56,7 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       });
       const result = await res.json();
       if (!res.ok || !result.success) throw new Error("Submission failed");
-      trackLeadEvent();
+      trackLeadEvent(eventId);
       form.reset();
       router.push("/thank-you");
     } catch {

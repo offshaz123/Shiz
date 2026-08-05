@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { siteConfig } from "@/lib/site-config";
+import { sendMetaLeadEvent } from "@/lib/meta-conversions-api";
 
 const FIELDS: { key: string; label: string }[] = [
   { key: "name", label: "Name" },
@@ -47,9 +48,14 @@ export async function POST(request: Request) {
       subject: `New lead: ${data.business || data.name}`,
       text: rows,
     });
-    return NextResponse.json({ success: true });
   } catch (err) {
     console.error("Lead form: failed to send email", err);
     return NextResponse.json({ success: false }, { status: 500 });
   }
+
+  if (data.eventId) {
+    void sendMetaLeadEvent({ request, eventId: data.eventId, email: data.email, phone: data.phone });
+  }
+
+  return NextResponse.json({ success: true });
 }

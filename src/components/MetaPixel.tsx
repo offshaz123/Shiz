@@ -34,9 +34,9 @@ export function MetaPixel() {
   );
 }
 
-export function trackLeadEvent() {
+export function trackLeadEvent(eventId: string) {
   if (typeof window !== "undefined" && typeof window.fbq === "function") {
-    window.fbq("track", "Lead");
+    window.fbq("track", "Lead", {}, { eventID: eventId });
   }
 }
 
