@@ -234,24 +234,32 @@ export default function DemoPage() {
 
         <div className="mt-10 overflow-hidden rounded-3xl border border-border bg-surface">
           {hasBooking ? (
-            <>
-              <iframe
-                src={siteConfig.demoBookingUrl}
-                title="Book a free demo"
-                className="h-[700px] w-full"
-                style={{ border: 0 }}
-              />
-              <div className="border-t border-border p-4 text-center">
-                <a
-                  href={siteConfig.demoBookingUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm font-semibold text-brand-pink hover:underline"
-                >
-                  Booking not loading? Open it in a new tab →
-                </a>
-              </div>
-            </>
+            <div className="flex flex-col items-center gap-5 px-6 py-16 text-center">
+              <span className="brand-gradient-bg flex h-16 w-16 items-center justify-center rounded-full">
+                <svg viewBox="0 0 24 24" fill="none" className="h-7 w-7 text-white">
+                  <path
+                    d="M8 3v4M16 3v4M4 9h16M6 5h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+              <p className="text-sm font-medium text-foreground">Pick a slot in under a minute</p>
+              <p className="max-w-sm text-sm text-muted">
+                Opens Google Calendar to book instantly — pick a time, get a confirmation, and a
+                Google Meet link lands in your inbox automatically.
+              </p>
+              <a
+                href={siteConfig.demoBookingUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="brand-gradient-bg mt-2 rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
+              >
+                Book My Free Demo →
+              </a>
+            </div>
           ) : (
             <div className="flex flex-col items-center gap-5 px-6 py-16 text-center">
               <p className="text-sm font-medium text-foreground">
