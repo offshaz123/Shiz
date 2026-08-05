@@ -11,7 +11,7 @@ export const siteConfig = {
   whatsappMessage: "Hi Shaz Marketing Group, I'd like to find out more about your Meta & Instagram ads packages.",
   // Google Calendar "Appointment schedule" booking link for the /demo page's Book Now button.
   // Leave empty until it's set up — the page falls back to the lead form until then.
-  demoBookingUrl: "https://calendar.app.google/ZnNjWqw4gZ9aoiE18",
+  demoBookingUrl: "https://calendar.app.google/KPLv3BHXqZPeZ3Bk8",
   // Demo walkthrough video (YouTube/Vimeo embed URL, or a direct video file URL). Leave empty for now.
   demoVideoUrl: "",
   // Meta (Facebook/Instagram) Pixel ID, from Events Manager. Leave empty to disable.
