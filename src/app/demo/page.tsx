@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { LeadForm } from "@/components/LeadForm";
 import { RealResultsSection, bestCostPerLead } from "@/components/RealResults";
 import { CaseStudySection } from "@/components/CaseStudy";
+import { GoogleCalendarBadge } from "@/components/GoogleCalendarBadge";
 import { FaqJsonLd } from "@/components/StructuredData";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
 
@@ -259,16 +260,7 @@ export default function DemoPage() {
               >
                 Book Yourself In For a Demo →
               </a>
-              <div className="mt-1 flex items-center gap-2 text-xs text-muted">
-                <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
-                  <path fill="#4285F4" d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z" opacity="0.15" />
-                  <rect x="3" y="6" width="18" height="15" rx="2" fill="none" stroke="#4285F4" strokeWidth="1.6" />
-                  <path d="M3 9h18" stroke="#4285F4" strokeWidth="1.6" />
-                  <path d="M8 3v4M16 3v4" stroke="#4285F4" strokeWidth="1.6" strokeLinecap="round" />
-                  <rect x="12" y="12" width="4" height="4" fill="#34A853" />
-                </svg>
-                <span>Instant booking via Google Calendar</span>
-              </div>
+              <GoogleCalendarBadge />
             </div>
           ) : (
             <div className="flex flex-col items-center gap-5 px-6 py-16 text-center">
