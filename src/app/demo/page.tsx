@@ -109,12 +109,14 @@ export default function DemoPage() {
             >
               Book My Free Demo
             </a>
-            <a
-              href="#demo-video"
-              className="w-full rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-foreground transition-colors hover:border-brand-pink/60 sm:w-auto"
-            >
-              Watch How It Works
-            </a>
+            {hasVideo && (
+              <a
+                href="#demo-video"
+                className="w-full rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-foreground transition-colors hover:border-brand-pink/60 sm:w-auto"
+              >
+                Watch How It Works
+              </a>
+            )}
           </div>
 
           <div className="mx-auto mt-14 flex max-w-3xl flex-wrap items-center justify-center gap-2.5">
@@ -157,18 +159,18 @@ export default function DemoPage() {
       <CaseStudySection />
 
       {/* Demo video */}
-      <section id="demo-video" className="border-t border-border mx-auto max-w-5xl px-5 py-20 sm:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
-            See It In Action
-          </span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Watch a quick walkthrough
-          </h2>
-        </div>
+      {hasVideo && (
+        <section id="demo-video" className="border-t border-border mx-auto max-w-5xl px-5 py-20 sm:px-8">
+          <div className="mx-auto max-w-2xl text-center">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+              See It In Action
+            </span>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              Watch a quick walkthrough
+            </h2>
+          </div>
 
-        <div className="mt-10 overflow-hidden rounded-3xl border border-border bg-surface">
-          {hasVideo ? (
+          <div className="mt-10 overflow-hidden rounded-3xl border border-border bg-surface">
             <div className="aspect-video">
               <iframe
                 src={siteConfig.demoVideoUrl}
@@ -178,22 +180,9 @@ export default function DemoPage() {
                 allowFullScreen
               />
             </div>
-          ) : (
-            <div className="flex aspect-video flex-col items-center justify-center gap-4 px-6 text-center">
-              <span className="brand-gradient-bg flex h-16 w-16 items-center justify-center rounded-full">
-                <svg viewBox="0 0 24 24" fill="none" className="ml-1 h-6 w-6 text-white">
-                  <path d="M7 5v14l12-7L7 5Z" fill="currentColor" />
-                </svg>
-              </span>
-              <p className="text-sm font-medium text-foreground">Demo video coming very soon</p>
-              <p className="max-w-sm text-sm text-muted">
-                In the meantime, book a free live walkthrough below and we&apos;ll show you
-                everything in person.
-              </p>
-            </div>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       {/* How it works */}
       <section className="border-y border-border bg-surface">
