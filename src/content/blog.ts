@@ -16,6 +16,68 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "how-fast-should-you-reply-to-a-lead",
+    title: "How Fast Should You Reply to a Lead? (And What It Costs You If You Don't)",
+    description:
+      "Why speed to lead matters more than most businesses realise, what counts as \"fast\" in practice, and how to actually close the gap without hiring a full-time receptionist.",
+    publishedAt: "2026-08-05",
+    keywords: [
+      "speed to lead",
+      "lead response time",
+      "how fast to respond to leads",
+      "lead follow up time",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "A great ad campaign can generate a strong flow of enquiries and still produce disappointing sales — and the reason is rarely the ads themselves. It's what happens in the minutes and hours after someone enquires.",
+          "Most people looking for a service don't enquire with just one business. They message two or three, then book in with whoever replies first and sounds like they've got it together. Response speed isn't a nice-to-have on top of good marketing — it's part of the campaign.",
+        ],
+      },
+      {
+        heading: "Why the first reply usually wins",
+        paragraphs: [
+          "Think about the last time you enquired about something online — a quote, a booking, a callback. If one business replied within minutes and another took until the next day, which one did you end up going with? Most people default to whoever engages first, because by the time the slow reply arrives, the decision has often already been made elsewhere.",
+          "This isn't about being pushy. It's simply that a fresh enquiry is a moment of genuine interest, and that interest fades fast. Someone messaging on a Friday evening has usually moved on to something else by Monday morning.",
+        ],
+      },
+      {
+        heading: "What actually counts as \"fast\"",
+        paragraphs: [
+          "There's no single magic number, but a useful way to think about it: reply while the enquiry is still front-of-mind for the person who sent it. In practice that means minutes during business hours, not the end of the day — and ideally some kind of acknowledgement outside business hours too, even if the full reply comes later.",
+          "A simple test: if you enquired with your own business right now, would you be impressed with how long it took to hear back?",
+        ],
+      },
+      {
+        heading: "Why replies end up slow in the first place",
+        paragraphs: ["It's rarely a lack of care — it's usually a structural problem:"],
+        bullets: [
+          "Enquiries arrive across several channels (Instagram DMs, Facebook Messenger, missed calls, a contact form) with no single place to see them all",
+          "Nobody's specifically responsible for watching for new enquiries, so they sit until someone happens to check",
+          "There's no cover outside business hours, so anything that comes in overnight or at the weekend waits until the next working day",
+          "Manually typing a reply to every enquiry from scratch takes longer than it needs to",
+        ],
+      },
+      {
+        heading: "Closing the gap",
+        paragraphs: ["A few changes make the biggest difference, roughly in order of effort:"],
+        bullets: [
+          "Get every channel into one place you actually check — a unified inbox beats switching between four apps",
+          "Turn on instant notifications for new enquiries rather than checking periodically",
+          "Prepare a few reply templates for common questions, so a solid first response takes seconds, not minutes",
+          "Add missed-call text-back, so a call you can't answer still gets an immediate reply",
+          "Cover the gaps outside business hours with an AI receptionist that can answer common questions and book the enquiry in, so nothing waits until Monday",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "If you're generating solid enquiries through Meta & Instagram ads but suspect some are slipping through the cracks before you get to them, that's exactly the gap our unified inbox, automated follow-up and AI receptionist are built to close. Get in touch for a free strategy call.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "boosting-a-post-vs-real-ad-campaign",
     title: "Boosting a Post vs Running a Real Ad Campaign: What's the Difference?",
     description:

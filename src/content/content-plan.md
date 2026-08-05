@@ -45,7 +45,7 @@ keywords, dealership social strategy).
       Facebook ads"
 
 ## Backlog — practical how-to / checklist
-- [ ] How Fast Should You Reply to a Lead? (and what it costs you if you don't) — target: "lead
+- [x] How Fast Should You Reply to a Lead? (and what it costs you if you don't) — target: "lead
       response time statistics", "speed to lead"
 - [ ] 7 Signs Your Landing Page Is Losing You Leads — target: "landing page conversion tips"
 - [ ] What Makes Ad Creative Actually Convert (Not Just Get Likes) — target: "Facebook ad
