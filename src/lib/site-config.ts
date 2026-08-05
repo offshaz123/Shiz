@@ -14,6 +14,8 @@ export const siteConfig = {
   demoBookingUrl: "",
   // Demo walkthrough video (YouTube/Vimeo embed URL, or a direct video file URL). Leave empty for now.
   demoVideoUrl: "",
+  // Meta (Facebook/Instagram) Pixel ID, from Events Manager. Leave empty to disable.
+  metaPixelId: "1096415716381078",
 };
 
 export const whatsappHref = `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(

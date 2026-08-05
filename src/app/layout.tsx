@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/ThemeProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { MetaPixel } from "@/components/MetaPixel";
 import { OrganizationJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
 
@@ -71,6 +72,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        <MetaPixel />
         <OrganizationJsonLd />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <Header />

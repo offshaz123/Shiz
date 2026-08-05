@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { siteConfig } from "@/lib/site-config";
+import { trackLeadEvent } from "@/components/MetaPixel";
 
 const industries = [
   "Automotive",
@@ -54,6 +55,7 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       });
       const result = await res.json();
       if (!res.ok || !result.success) throw new Error("Submission failed");
+      trackLeadEvent();
       form.reset();
       router.push("/thank-you");
     } catch {
