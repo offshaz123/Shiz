@@ -248,8 +248,8 @@ export default function DemoPage() {
               </span>
               <p className="text-sm font-medium text-foreground">Pick a slot in under a minute</p>
               <p className="max-w-sm text-sm text-muted">
-                Opens Google Calendar to book instantly — pick a time, get a confirmation, and a
-                Google Meet link lands in your inbox automatically.
+                Pick a time, get instant confirmation, and a Google Meet link lands in your inbox
+                automatically.
               </p>
               <a
                 href={siteConfig.demoBookingUrl}
@@ -257,8 +257,18 @@ export default function DemoPage() {
                 rel="noopener noreferrer"
                 className="brand-gradient-bg mt-2 rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
               >
-                Book My Free Demo →
+                Book Yourself In For a Demo →
               </a>
+              <div className="mt-1 flex items-center gap-2 text-xs text-muted">
+                <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
+                  <path fill="#4285F4" d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z" opacity="0.15" />
+                  <rect x="3" y="6" width="18" height="15" rx="2" fill="none" stroke="#4285F4" strokeWidth="1.6" />
+                  <path d="M3 9h18" stroke="#4285F4" strokeWidth="1.6" />
+                  <path d="M8 3v4M16 3v4" stroke="#4285F4" strokeWidth="1.6" strokeLinecap="round" />
+                  <rect x="12" y="12" width="4" height="4" fill="#34A853" />
+                </svg>
+                <span>Instant booking via Google Calendar</span>
+              </div>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-5 px-6 py-16 text-center">
