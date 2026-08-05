@@ -4,7 +4,7 @@ import { PricingSection } from "@/components/PricingSection";
 import { RealResultsSection } from "@/components/RealResults";
 import { CaseStudySection } from "@/components/CaseStudy";
 import { FaqJsonLd } from "@/components/StructuredData";
-import { whatsappHref } from "@/lib/site-config";
+import { siteConfig, whatsappHref } from "@/lib/site-config";
 import { blogPosts } from "@/content/blog";
 
 const faqs = [
@@ -275,50 +275,40 @@ export default function Home() {
       </section>
 
       {/* AI receptionist highlight */}
-      <section className="border-y border-border bg-surface">
-        <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            <div className="order-2 lg:order-1 rounded-3xl border border-border bg-background p-8">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
-                Always On
-              </p>
-              <div className="mt-5 space-y-3">
-                <div className="max-w-[85%] rounded-2xl rounded-tl-sm bg-surface px-4 py-3 text-sm text-foreground">
-                  Hi, do you offer this service on weekends and how much does it cost?
-                </div>
-                <div className="ml-auto max-w-[85%] rounded-2xl rounded-tr-sm brand-gradient-bg px-4 py-3 text-sm text-white">
-                  Yes! We&apos;re open weekends. Our packages start from £X — want me to book you a
-                  free consultation now?
-                </div>
-              </div>
-              <p className="mt-5 text-xs text-muted">
-                Your AI receptionist replying instantly, any time of day.
-              </p>
-            </div>
-
-            <div className="order-1 lg:order-2">
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
-                AI Receptionist &amp; Chatbot
-              </span>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                Never miss another enquiry, even after hours
-              </h2>
-              <p className="mt-4 text-muted">
-                Your AI receptionist greets every visitor, answers common questions about your
-                business, qualifies the lead and books them straight into your calendar — 24 hours a
-                day. We&apos;re continuing to roll out deeper AI automation so it gets smarter over
-                time.
-              </p>
-              <Link
-                href="/contact"
-                className="mt-8 inline-flex rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground hover:border-brand-pink/60"
-              >
-                Ask us about AI Receptionist
-              </Link>
+      {siteConfig.demoBookingUrl && (
+        <section className="border-y border-border bg-surface">
+          <div className="mx-auto max-w-4xl px-5 py-24 text-center sm:px-8">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+              Book a Demo
+            </span>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+              See it in action before you commit
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-muted">
+              Pick a time that works for you — 15 minutes, no pressure. We&apos;ll show you exactly
+              how this would work for your business, then get instant confirmation with a Google
+              Meet link sent straight to your inbox.
+            </p>
+            <a
+              href={siteConfig.demoBookingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="brand-gradient-bg mt-8 inline-flex rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
+            >
+              Book Yourself In For a Demo →
+            </a>
+            <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted">
+              <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
+                <rect x="3" y="6" width="18" height="15" rx="2" fill="none" stroke="#4285F4" strokeWidth="1.6" />
+                <path d="M3 9h18" stroke="#4285F4" strokeWidth="1.6" />
+                <path d="M8 3v4M16 3v4" stroke="#4285F4" strokeWidth="1.6" strokeLinecap="round" />
+                <rect x="12" y="12" width="4" height="4" fill="#34A853" />
+              </svg>
+              <span>Instant booking via Google Calendar</span>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <PricingSection />
 

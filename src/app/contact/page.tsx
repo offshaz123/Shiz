@@ -49,25 +49,25 @@ export default function ContactPage() {
             </div>
           </a>
 
-          <a
-            href={`tel:${siteConfig.phoneE164}`}
-            className="flex items-start gap-4 rounded-3xl border border-border bg-surface p-6 transition-colors hover:border-brand-pink/40"
-          >
-            <span className="brand-gradient-bg flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
-              <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 text-white">
-                <path
-                  d="M4 5c0-1 1-2 2-2h2l2 5-2 1.5a11 11 0 0 0 5 5L14.5 12l5 2v2c0 1-1 2-2 2C10.5 18 4 11.5 4 5Z"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
-            <div>
-              <p className="font-semibold text-foreground">Call us</p>
-              <p className="text-sm text-muted">{siteConfig.phoneDisplay}</p>
-            </div>
-          </a>
+          {siteConfig.demoBookingUrl && (
+            <a
+              href={siteConfig.demoBookingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-start gap-4 rounded-3xl border border-border bg-surface p-6 transition-colors hover:border-brand-pink/40"
+            >
+              <span className="brand-gradient-bg flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
+                <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 text-white">
+                  <rect x="3" y="6" width="18" height="15" rx="2" stroke="currentColor" strokeWidth="1.6" />
+                  <path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                </svg>
+              </span>
+              <div>
+                <p className="font-semibold text-foreground">Book yourself in</p>
+                <p className="text-sm text-muted">No call needed — pick a time instantly</p>
+              </div>
+            </a>
+          )}
 
           <a
             href={`mailto:${siteConfig.email}`}
