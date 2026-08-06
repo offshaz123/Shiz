@@ -56,7 +56,7 @@ keywords, dealership social strategy).
 ## Backlog — feature deep-dives (what Shaz Marketing Group sells)
 - [ ] What Is a Unified Inbox, and Why Does It Matter for Lead Gen? — target: "social media
       inbox software UK"
-- [ ] Missed-Call Text-Back: How It Recovers Leads You're Already Paying For — target:
+- [x] Missed-Call Text-Back: How It Recovers Leads You're Already Paying For — target:
       "missed call text back"
 - [ ] What an AI Receptionist Actually Does (and Doesn't) — target: "AI receptionist for small
       business UK"

@@ -16,6 +16,58 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "missed-call-text-back-recovers-lost-leads",
+    title: "Missed-Call Text-Back: How It Recovers Leads You're Already Paying For",
+    description:
+      "A missed call from a paid ad often means a lost customer. Here's how automatic missed-call text-back keeps that enquiry alive without you lifting a finger.",
+    publishedAt: "2026-08-06",
+    keywords: [
+      "missed call text back",
+      "automatic text back missed call",
+      "missed call follow up",
+      "recover lost leads phone",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You've paid to get someone to call you. They call, you're on the other line, in a meeting, or it's after hours — and it goes to voicemail. Most people don't leave one. They just move on to the next business on their list.",
+          "That missed call isn't a lost cause — it's a lead you already paid for, sitting there for a few more minutes before it goes cold. Missed-call text-back is one of the simplest, highest-leverage fixes for exactly this problem.",
+        ],
+      },
+      {
+        heading: "What it actually does",
+        paragraphs: [
+          "It's straightforward: the moment a call to your business number goes unanswered, the caller automatically receives a text message — something like \"Sorry we missed your call, how can we help?\" — within seconds. No one has to remember to do it, and it happens whether you're mid-appointment, closed for the day, or just didn't hear the phone.",
+          "The caller gets an immediate response instead of silence, and the conversation moves to text, where you (or an AI receptionist) can pick it up whenever you're free — without them having to try calling again or, more likely, ringing a competitor instead.",
+        ],
+      },
+      {
+        heading: "Why a missed call is worse than it sounds",
+        paragraphs: [
+          "A phone call is one of the highest-intent actions someone can take — they cared enough to actually ring rather than just browse. Losing that enquiry to a missed call is a particularly expensive kind of waste, especially if that call came from a paid ad campaign, where you've already spent money getting them to reach out in the first place.",
+          "Unlike a missed Instagram DM or email, a missed call often leaves no record at all if there's no voicemail — you may not even know the enquiry existed. Text-back closes that gap by guaranteeing every missed call leaves a trace and gets a reply.",
+        ],
+      },
+      {
+        heading: "Where it fits alongside everything else",
+        paragraphs: [
+          "Missed-call text-back works best as one piece of a wider follow-up system, not a standalone fix. On its own, it stops the immediate silence — but the reply still needs to land somewhere you'll actually see it and follow up properly.",
+        ],
+        bullets: [
+          "Route the resulting text conversation into the same unified inbox as your other channels, so it doesn't get missed a second time",
+          "Pair it with an AI receptionist for messages that come in outside business hours, so the reply isn't just an acknowledgement but can actually answer questions and book someone in",
+          "Use it alongside — not instead of — fast human follow-up during business hours, since a real reply still converts better than an automated one once someone's engaged",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "If you're running Meta & Instagram ads and driving phone enquiries, missed-call text-back is one of the simplest additions that pays for itself — it's not a big strategic shift, just a gap closed. It's included as part of our unified inbox and automation setup — get in touch for a free strategy call to see it alongside the rest of the system.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-fast-should-you-reply-to-a-lead",
     title: "How Fast Should You Reply to a Lead? (And What It Costs You If You Don't)",
     description:
