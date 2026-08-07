@@ -19,6 +19,9 @@ export function OrganizationJsonLd() {
     },
     address: {
       "@type": "PostalAddress",
+      streetAddress: `${siteConfig.address.line1}, ${siteConfig.address.line2}`,
+      addressLocality: siteConfig.address.city,
+      postalCode: siteConfig.address.postcode,
       addressCountry: "GB",
     },
     makesOffer: [

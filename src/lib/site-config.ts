@@ -16,6 +16,13 @@ export const siteConfig = {
   demoVideoUrl: "",
   // Meta (Facebook/Instagram) Pixel ID, from Events Manager. Leave empty to disable.
   metaPixelId: "1096415716381078",
+  address: {
+    line1: "Level 39",
+    line2: "One Canada Square",
+    city: "London",
+    postcode: "E14 5AB",
+    country: "United Kingdom",
+  },
 };
 
 export const whatsappHref = `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(

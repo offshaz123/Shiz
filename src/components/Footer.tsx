@@ -34,6 +34,22 @@ export function Footer() {
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">
               {siteConfig.description}
             </p>
+            <div className="mt-6 flex items-start gap-3">
+              <svg viewBox="0 0 24 24" fill="none" className="mt-0.5 h-4 w-4 shrink-0 text-brand-pink">
+                <path
+                  d="M12 21s7-6.5 7-11.5A7 7 0 0 0 5 9.5C5 14.5 12 21 12 21Z"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinejoin="round"
+                />
+                <circle cx="12" cy="9.5" r="2.4" stroke="currentColor" strokeWidth="1.6" />
+              </svg>
+              <address className="text-sm not-italic leading-relaxed text-muted">
+                {siteConfig.address.line1}, {siteConfig.address.line2}
+                <br />
+                {siteConfig.address.city} {siteConfig.address.postcode}
+              </address>
+            </div>
           </div>
 
           <div>
