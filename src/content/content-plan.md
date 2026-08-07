@@ -12,9 +12,12 @@ keywords, dealership social strategy).
 - Instagram Ads for Car Dealerships: A Complete Guide (automotive)
 - How Much Should You Spend on Meta & Instagram Ads? (budgeting)
 - Boosting a Post vs Running a Real Ad Campaign (comparison/explainer)
+- How Fast Should You Reply to a Lead? (practical how-to)
+- Missed-Call Text-Back: How It Recovers Leads You're Already Paying For (feature deep-dive)
+- Meta & Instagram Ads for Home & Trade Services (industry-specific)
 
 ## Backlog — industry-specific guides
-- [ ] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
+- [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
       target: "Instagram ads for tradesmen", "Facebook ads for builders UK"
 - [ ] Meta & Instagram Ads for Retail & E-commerce — target: "Instagram shopping ads UK",
       "Facebook ads for online store"

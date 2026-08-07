@@ -16,6 +16,77 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-for-trade-home-services",
+    title: "Meta & Instagram Ads for Trade & Home Service Businesses: A Practical Guide",
+    description:
+      "How plumbers, electricians, and builders can use Meta & Instagram ads to generate qualified local leads — without wasting spend on the wrong customers.",
+    publishedAt: "2026-08-07",
+    keywords: [
+      "Instagram ads for tradesmen",
+      "Facebook ads for builders UK",
+      "Meta ads for trade businesses",
+      "local lead generation for tradesmen",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "If you run a plumbing, electrical, or building business, your customers aren't scrolling Instagram browsing brands the way they might for fashion or food. They're searching with intent — a burst pipe, a rewire that's been put off too long, an extension that needs planning. Meta & Instagram ads can put you in front of exactly those people, but only if the campaign is built around how trade businesses actually get work, not a generic playbook borrowed from retail.",
+          "This guide covers what actually works for trade and home service advertising on Meta's platforms, and where campaigns for this industry tend to go wrong.",
+        ],
+      },
+      {
+        heading: "Emergency work vs planned work needs different campaigns",
+        paragraphs: [
+          "Trade enquiries generally fall into two very different buckets, and treating them the same is one of the most common mistakes. An emergency call-out — a burst pipe, no heating, a tripped circuit that won't reset — is an immediate-need search with almost no consideration phase; whoever responds first and looks credible usually wins the job. A planned job — a bathroom refit, a rewire, a kitchen extension — involves comparing quotes, checking reviews, and thinking it over for days or weeks.",
+          "A single ad trying to serve both audiences usually serves neither well. Emergency-focused ads should lead with speed and availability — same-day callout, always answering — and drive straight to a phone call or WhatsApp message. Planned-job ads can afford a slower funnel: project photos, a lead form asking a few qualifying questions, retargeting over a longer window.",
+        ],
+      },
+      {
+        heading: "Get the radius right before anything else",
+        paragraphs: [
+          "Most trade businesses only serve a realistic drive-time radius, and targeting outside it wastes ad spend on leads you'll turn down anyway. Rather than defaulting to a whole city or county, set the radius around your actual service area — and be honest about it. A builder happy to travel further for a large extension might only want emergency plumbing enquiries within a much tighter radius.",
+          "It's also worth excluding areas you've deliberately stopped serving, and reviewing the radius periodically as the business changes — a growing team can usually justify covering more ground than a sole trader working solo.",
+        ],
+      },
+      {
+        heading: "What creative actually works for trades",
+        paragraphs: [
+          "Generic stock photography of someone in a hard hat tends to perform worse than real photos and video of your own work, even when the production quality is simple. A short phone-shot video of a completed job, a quick walkthrough of a finished bathroom, or a photo of the van outside a job in progress all build more trust than a polished but obviously staged stock image — people are hiring a specific business, not a category.",
+        ],
+        bullets: [
+          "Before-and-after photos of completed jobs, where you have them",
+          "Short video clips showing the work in progress, not just the finished result",
+          "Your branded van, uniform, or team — trade businesses sell trust as much as skill",
+          "Clear, simple text overlays stating the service and area, since many people scroll with the sound off",
+        ],
+      },
+      {
+        heading: "Phone calls, forms, or both?",
+        paragraphs: [
+          "Emergency-style ads tend to convert best when they go straight to a phone call or WhatsApp message — someone with a burst pipe isn't going to fill in a form and wait for a callback. Planned-job ads, on the other hand, often do better with a short lead form, since it lets you collect the details you need — rough budget, timeline, property type — before the first conversation, saving time on unqualified calls.",
+          "Whichever route you use, the same rule applies as with any lead: reply fast. And because phone enquiries are so central to trade businesses, missed-call text-back is worth pairing with any campaign that sends people to your number — a missed call during a job is one of the easiest leads to lose.",
+        ],
+      },
+      {
+        heading: "Common mistakes to avoid",
+        paragraphs: ["A few patterns show up again and again in underperforming trade campaigns:"],
+        bullets: [
+          "Targeting a whole city or region instead of a realistic service radius",
+          "Using the same ad for emergency call-outs and planned larger jobs",
+          "Relying on boosted posts instead of a properly structured campaign",
+          "Sending every enquiry to a generic contact page instead of a fast-loading form or a direct call/WhatsApp option",
+          "No system for missed calls or after-hours enquiries, so a chunk of demand is lost outside the 9-to-5",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "If you run a trade or home service business and want Meta & Instagram ads built around how your customers actually search — emergency versus planned, the right radius, and a follow-up system that doesn't drop calls — get in touch for a free strategy call.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "missed-call-text-back-recovers-lost-leads",
     title: "Missed-Call Text-Back: How It Recovers Leads You're Already Paying For",
     description:
