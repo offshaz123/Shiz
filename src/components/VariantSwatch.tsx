@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { SwatchVisual } from "@/content/services";
 
 function swatchStyle(swatch?: SwatchVisual): React.CSSProperties {
@@ -7,25 +8,25 @@ function swatchStyle(swatch?: SwatchVisual): React.CSSProperties {
   return {};
 }
 
+// Traces the window band (front quarter glass through to the rear screen) on
+// /tint-preview/bmw-m8-gran-coupe.png, a 630x201 side-profile reference photo
+// (cropped tight to the car).
+const WINDOW_POLYGON = "243,69 276,27 336,10 426,10 461,20 484,55 416,64 339,67 276,69";
+
 function CarTintPreview({ opacity }: { opacity: number }) {
   return (
-    <svg viewBox="0 0 240 130" className="h-28 w-full">
-      <rect width="240" height="130" rx="14" fill="var(--surface-2)" />
-      <line x1="14" y1="102" x2="226" y2="102" stroke="var(--border)" strokeWidth="2" />
-      <path
-        d="M22,98 L22,78 L50,78 L67,46 L153,46 L170,78 L218,78 L218,98 Z"
-        fill="#9aa4ab"
-        stroke="#6b747b"
-        strokeWidth="1.5"
+    <div className="relative h-28 w-full overflow-hidden rounded-xl border border-border bg-surface-2">
+      <Image
+        src="/tint-preview/bmw-m8-gran-coupe.png"
+        alt="Side profile of a car showing the window area"
+        fill
+        sizes="(max-width: 768px) 100vw, 400px"
+        className="object-contain"
       />
-      <path d="M71,49 L149,49 L162,75 L58,75 Z" fill="#cfeaf3" />
-      <path d="M71,49 L149,49 L162,75 L58,75 Z" fill="#000" fillOpacity={opacity} />
-      <path d="M71,49 L149,49 L162,75 L58,75 Z" fill="none" stroke="#6b747b" strokeWidth="1" />
-      <circle cx="58" cy="98" r="12" fill="#2b3136" />
-      <circle cx="58" cy="98" r="4.5" fill="#5a6167" />
-      <circle cx="185" cy="98" r="12" fill="#2b3136" />
-      <circle cx="185" cy="98" r="4.5" fill="#5a6167" />
-    </svg>
+      <svg viewBox="0 0 630 201" className="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid meet">
+        <polygon points={WINDOW_POLYGON} fill="#000" fillOpacity={opacity} />
+      </svg>
+    </div>
   );
 }
 

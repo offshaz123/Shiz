@@ -93,13 +93,6 @@ export default async function ServiceCategoryPage({
         )}
       </section>
 
-      <section className="mx-auto max-w-6xl px-5 pb-20 sm:px-8">
-        <h2 className="text-2xl font-bold tracking-tight text-foreground">See our work</h2>
-        <div className="mt-8">
-          <ServiceGallery images={category.gallery} label={category.navTitle} />
-        </div>
-      </section>
-
       {category.variants && category.variants.length > 0 && (
         <section className="border-y border-border bg-surface">
           <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
@@ -118,6 +111,13 @@ export default async function ServiceCategoryPage({
           </div>
         </section>
       )}
+
+      <section className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
+        <h2 className="text-2xl font-bold tracking-tight text-foreground">See our work</h2>
+        <div className="mt-8">
+          <ServiceGallery images={category.gallery} label={category.navTitle} />
+        </div>
+      </section>
 
       {category.trustNote && (
         <section className="mx-auto max-w-4xl px-5 pb-16 sm:px-8">
