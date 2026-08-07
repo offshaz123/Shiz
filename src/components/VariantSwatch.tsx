@@ -24,6 +24,9 @@ function CarTintPreview({ opacity }: { opacity: number }) {
         className="object-contain"
       />
       <svg viewBox="0 0 630 201" className="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid meet">
+        {/* Reset the photo's own glass to a clean, even base before applying the shade,
+            so every card starts from the same "clear glass" look. */}
+        <polygon points={WINDOW_POLYGON} fill="#dceaf0" fillOpacity={0.94} />
         <polygon points={WINDOW_POLYGON} fill="#000" fillOpacity={opacity} />
       </svg>
     </div>
