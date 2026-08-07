@@ -8,8 +8,8 @@ import { ThemeToggle } from "./ThemeToggle";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
 
 const navLinks = [
-  { href: "/#services", label: "Services" },
-  { href: "/#pricing", label: "Pricing" },
+  { href: "/services", label: "Services" },
+  { href: "/pricing", label: "Pricing" },
   { href: "/about", label: "About" },
   { href: "/blog", label: "Blog" },
   { href: "/contact", label: "Contact" },

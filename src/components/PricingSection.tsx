@@ -56,16 +56,17 @@ const tiers: Tier[] = [
   },
 ];
 
-export function PricingSection() {
+export function PricingSection({ headingLevel = "h2" }: { headingLevel?: "h1" | "h2" }) {
+  const Heading = headingLevel;
   return (
     <section id="pricing" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
       <div className="mx-auto max-w-2xl text-center">
         <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
           Pricing
         </span>
-        <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+        <Heading className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           Simple plans, built to grow with you
-        </h2>
+        </Heading>
         <p className="mt-4 text-muted">
           Every plan includes done-for-you Meta &amp; Instagram ads management. Choose the level
           of automation and support that fits where your business is right now.

@@ -45,12 +45,12 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/#services" className="hover:text-foreground">
+                <Link href="/services" className="hover:text-foreground">
                   Services
                 </Link>
               </li>
               <li>
-                <Link href="/#pricing" className="hover:text-foreground">
+                <Link href="/pricing" className="hover:text-foreground">
                   Pricing
                 </Link>
               </li>

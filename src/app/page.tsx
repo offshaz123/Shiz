@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
-import { PricingSection } from "@/components/PricingSection";
 import { RealResultsSection } from "@/components/RealResults";
 import { CaseStudySection } from "@/components/CaseStudy";
 import { GoogleCalendarBadge } from "@/components/GoogleCalendarBadge";
@@ -47,54 +46,11 @@ const industries = [
   "Any business, any category",
 ];
 
-const services = [
-  {
-    title: "Meta & Instagram Ads",
-    description:
-      "Scroll-stopping campaigns built and managed across Facebook and Instagram, engineered for one goal: qualified enquiries for your business.",
-    points: ["Campaign strategy & creative", "Audience targeting & retargeting", "Continuous testing & optimisation"],
-  },
-  {
-    title: "Done-For-You Lead Generation",
-    description:
-      "We turn ad clicks into real conversations. Every enquiry is captured, organised and delivered straight to you, in any industry — with a specialism in automotive.",
-    points: ["High-converting landing pages", "Instant lead notifications", "Built for automotive & beyond"],
-  },
-  {
-    title: "All Your Socials, One Platform",
-    description:
-      "Instagram, Facebook Messenger, WhatsApp, SMS and email — unified into a single inbox and CRM so every enquiry is seen and nothing slips through the cracks.",
-    points: ["One shared inbox for every channel", "Custom pipelines for your business", "Automated follow-up sequences"],
-  },
-  {
-    title: "AI Receptionist & Chatbot",
-    description:
-      "A 24/7 AI receptionist answers questions, qualifies leads and books appointments even when you're closed — with deeper automation integrations rolling out soon.",
-    points: ["Answers FAQs instantly, day or night", "Qualifies & books leads automatically", "Deeper automation integration coming soon"],
-  },
-];
-
-const steps = [
-  {
-    step: "01",
-    title: "Free Strategy Call",
-    description: "We learn about your business, your goals and your ideal customer.",
-  },
-  {
-    step: "02",
-    title: "We Launch Your Campaigns",
-    description: "Meta & Instagram ads go live, built to generate leads from day one.",
-  },
-  {
-    step: "03",
-    title: "Leads Land in One Inbox",
-    description: "Every enquiry — social, WhatsApp, SMS — flows into your all-in-one CRM.",
-  },
-  {
-    step: "04",
-    title: "You Follow Up & Close",
-    description: "Automated reminders and our AI receptionist help you convert more leads.",
-  },
+const whatWeDo = [
+  { title: "Meta & Instagram Ads", description: "Campaigns built and managed for qualified enquiries, not just likes." },
+  { title: "Done-For-You Lead Generation", description: "Every ad click turned into a captured, organised enquiry." },
+  { title: "One Inbox, Every Channel", description: "Instagram, WhatsApp, SMS & email — unified so nothing's missed." },
+  { title: "24/7 AI Receptionist", description: "Answers questions and books leads even when you're closed." },
 ];
 
 export default function Home() {
@@ -152,8 +108,8 @@ export default function Home() {
       <RealResultsSection />
       <CaseStudySection />
 
-      {/* Services */}
-      <section id="services" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
+      {/* What we do (condensed — full detail on /services) */}
+      <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
             What We Provide
@@ -161,117 +117,24 @@ export default function Home() {
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Everything you need to turn ads into customers
           </h2>
-          <p className="mt-4 text-muted">
-            One partner for advertising, lead management, and follow-up — so you can focus on
-            running your business.
-          </p>
         </div>
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2">
-          {services.map((service) => (
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {whatWeDo.map((item) => (
             <div
-              key={service.title}
-              className="rounded-3xl border border-border bg-surface p-8 transition-colors hover:border-brand-pink/40"
+              key={item.title}
+              className="rounded-3xl border border-border bg-surface p-7 transition-colors hover:border-brand-pink/40"
             >
-              <h3 className="text-xl font-semibold text-foreground">{service.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{service.description}</p>
-              <ul className="mt-5 space-y-2.5">
-                {service.points.map((point) => (
-                  <li key={point} className="flex items-start gap-2.5 text-sm text-muted">
-                    <svg viewBox="0 0 24 24" fill="none" className="mt-0.5 h-4 w-4 shrink-0 text-brand-pink">
-                      <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    {point}
-                  </li>
-                ))}
-              </ul>
+              <h3 className="text-base font-semibold text-foreground">{item.title}</h3>
+              <p className="mt-2.5 text-sm leading-relaxed text-muted">{item.description}</p>
             </div>
           ))}
         </div>
-      </section>
 
-      {/* How it works */}
-      <section className="border-y border-border bg-surface">
-        <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
-              How It Works
-            </span>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              From ad click to booked customer
-            </h2>
-          </div>
-
-          <div className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {steps.map((s) => (
-              <div key={s.step}>
-                <span className="brand-gradient-text text-4xl font-bold">{s.step}</span>
-                <h3 className="mt-3 text-lg font-semibold text-foreground">{s.title}</h3>
-                <p className="mt-2 text-sm text-muted">{s.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Unified platform */}
-      <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
-          <div>
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
-              One Platform
-            </span>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Stop juggling five different apps for leads
-            </h2>
-            <p className="mt-4 text-muted">
-              Instagram DMs, Facebook Messenger, WhatsApp, SMS, email and missed calls — every
-              conversation your business has lands in one shared inbox, mapped to one pipeline, so
-              no lead ever goes cold.
-            </p>
-            <ul className="mt-6 space-y-3">
-              {[
-                "Unified inbox for every social & messaging channel",
-                "Custom sales pipeline built around how you work",
-                "Automated follow-up so leads don't go cold",
-                "Missed-call text-back captures every enquiry",
-                "Simple reporting so you always know what's working",
-              ].map((item) => (
-                <li key={item} className="flex items-start gap-2.5 text-sm text-muted">
-                  <svg viewBox="0 0 24 24" fill="none" className="mt-0.5 h-4 w-4 shrink-0 text-brand-pink">
-                    <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="rounded-3xl border border-border bg-surface p-8">
-            <div className="flex items-center gap-2.5">
-              <span className="brand-gradient-bg h-2.5 w-2.5 rounded-full" />
-              <span className="text-sm font-semibold text-foreground">Shaz Marketing Group — Inbox</span>
-            </div>
-            <div className="mt-6 space-y-3">
-              {[
-                { channel: "Instagram", msg: "Hi! Do you have appointments this week?", time: "2m" },
-                { channel: "WhatsApp", msg: "What's included in the Growth plan?", time: "14m" },
-                { channel: "Facebook", msg: "Can I get a quote for a service package?", time: "38m" },
-                { channel: "Missed Call", msg: "Auto text-back sent to caller", time: "1h" },
-              ].map((row) => (
-                <div
-                  key={row.channel}
-                  className="flex items-center justify-between rounded-2xl border border-border bg-background px-4 py-3"
-                >
-                  <div>
-                    <p className="text-xs font-semibold text-brand-pink">{row.channel}</p>
-                    <p className="mt-0.5 text-sm text-foreground">{row.msg}</p>
-                  </div>
-                  <span className="shrink-0 text-xs text-muted">{row.time}</span>
-                </div>
-              ))}
-            </div>
-          </div>
+        <div className="mt-10 text-center">
+          <Link href="/services" className="text-sm font-semibold text-brand-pink hover:underline">
+            See everything we do →
+          </Link>
         </div>
       </section>
 
@@ -303,7 +166,25 @@ export default function Home() {
         </section>
       )}
 
-      <PricingSection />
+      {/* Pricing teaser (full plans on /pricing) */}
+      <section className="mx-auto max-w-4xl px-5 py-24 text-center sm:px-8">
+        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+          Pricing
+        </span>
+        <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          Plans from £400/month, no long-term contract
+        </h2>
+        <p className="mx-auto mt-4 max-w-xl text-muted">
+          Done-for-you Meta &amp; Instagram ads management, with a full CRM and 24/7 AI
+          receptionist on our higher plans. Ad spend is separate, paid directly to Meta.
+        </p>
+        <Link
+          href="/pricing"
+          className="brand-gradient-bg mt-8 inline-flex rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
+        >
+          See Full Pricing →
+        </Link>
+      </section>
 
       {/* FAQ */}
       <section className="border-t border-border bg-surface">
