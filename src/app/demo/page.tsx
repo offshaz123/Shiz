@@ -84,7 +84,7 @@ export default function DemoPage() {
 
   return (
     <div>
-      {/* Hero */}
+      {/* Hero + booking */}
       <section className="relative overflow-hidden">
         <div
           aria-hidden
@@ -100,26 +100,63 @@ export default function DemoPage() {
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
             See exactly how we turn Meta &amp; Instagram ads into booked customers for your
-            business — book a free, no-obligation demo below.
+            business — fill in your details or book yourself straight in below.
           </p>
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <a
-              href="#book"
-              className="brand-gradient-bg w-full rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03] sm:w-auto"
-            >
-              Book My Free Demo
-            </a>
-            {hasVideo && (
+
+          {hasVideo && (
+            <div className="mt-8">
               <a
                 href="#demo-video"
                 className="w-full rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-foreground transition-colors hover:border-brand-pink/60 sm:w-auto"
               >
                 Watch How It Works
               </a>
+            </div>
+          )}
+
+          {/* Merged lead form + instant booking */}
+          <div
+            id="book"
+            className="mx-auto mt-10 max-w-2xl rounded-3xl border border-border bg-surface p-6 text-left shadow-lg shadow-black/5 sm:p-8"
+          >
+            <h2 className="text-center text-lg font-semibold text-foreground">
+              Tell us about your business
+            </h2>
+            <p className="mt-1.5 text-center text-sm text-muted">
+              We&apos;ll get back to you within one business day.
+            </p>
+            <div className="mt-6">
+              <LeadForm compact />
+            </div>
+
+            {hasBooking && (
+              <>
+                <div className="my-7 flex items-center gap-3">
+                  <span className="h-px flex-1 bg-border" />
+                  <span className="text-xs font-semibold uppercase tracking-wide text-muted">
+                    Or
+                  </span>
+                  <span className="h-px flex-1 bg-border" />
+                </div>
+                <div className="flex flex-col items-center gap-4 text-center">
+                  <p className="text-sm font-medium text-foreground">
+                    Skip the form — pick a time instantly
+                  </p>
+                  <a
+                    href={siteConfig.demoBookingUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="brand-gradient-bg w-full rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.02] sm:w-auto"
+                  >
+                    Book Yourself In For a Demo →
+                  </a>
+                  <GoogleCalendarBadge />
+                </div>
+              </>
             )}
           </div>
 
-          <div className="mx-auto mt-14 flex max-w-3xl flex-wrap items-center justify-center gap-2.5">
+          <div className="mx-auto mt-10 flex max-w-3xl flex-wrap items-center justify-center gap-2.5">
             {trustBadges.map((badge) => (
               <span
                 key={badge}
@@ -131,6 +168,9 @@ export default function DemoPage() {
           </div>
         </div>
       </section>
+
+      <RealResultsSection />
+      <CaseStudySection />
 
       {/* What you get */}
       <section className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
@@ -154,9 +194,6 @@ export default function DemoPage() {
           ))}
         </div>
       </section>
-
-      <RealResultsSection />
-      <CaseStudySection />
 
       {/* Demo video */}
       {hasVideo && (
@@ -207,101 +244,32 @@ export default function DemoPage() {
         </div>
       </section>
 
-      {/* Booking */}
-      <section id="book" className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
-            Book Your Demo
-          </span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Pick a time that works for you
-          </h2>
-          <p className="mt-4 text-muted">
-            15 minutes, no pressure. We&apos;ll show you exactly how this would work for your
-            business.
+      {!hasBooking && (
+        <section className="mx-auto max-w-3xl px-5 py-16 text-center sm:px-8">
+          <p className="text-sm font-medium text-foreground">
+            Online booking is being set up right now
           </p>
-        </div>
-
-        <div className="mt-10 overflow-hidden rounded-3xl border border-border bg-surface">
-          {hasBooking ? (
-            <div className="flex flex-col items-center gap-5 px-6 py-16 text-center">
-              <span className="brand-gradient-bg flex h-16 w-16 items-center justify-center rounded-full">
-                <svg viewBox="0 0 24 24" fill="none" className="h-7 w-7 text-white">
-                  <path
-                    d="M8 3v4M16 3v4M4 9h16M6 5h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-              <p className="text-sm font-medium text-foreground">Pick a slot in under a minute</p>
-              <p className="max-w-sm text-sm text-muted">
-                Pick a time, get instant confirmation, and a Google Meet link lands in your inbox
-                automatically.
-              </p>
-              <a
-                href={siteConfig.demoBookingUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="brand-gradient-bg mt-2 rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
-              >
-                Book Yourself In For a Demo →
-              </a>
-              <GoogleCalendarBadge />
-            </div>
-          ) : (
-            <div className="flex flex-col items-center gap-5 px-6 py-16 text-center">
-              <p className="text-sm font-medium text-foreground">
-                Online booking is being set up right now
-              </p>
-              <p className="max-w-sm text-sm text-muted">
-                In the meantime, message us directly and we&apos;ll find a time that works for
-                you — or fill in your details below and we&apos;ll reach out.
-              </p>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <a
-                  href={whatsappHref}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="brand-gradient-bg rounded-full px-6 py-3 text-sm font-semibold text-white shadow-md shadow-black/10 transition-transform hover:scale-[1.03]"
-                >
-                  Chat on WhatsApp
-                </a>
-                <a
-                  href={`tel:${siteConfig.phoneE164}`}
-                  className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground hover:border-brand-pink/60"
-                >
-                  Call {siteConfig.phoneDisplay}
-                </a>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Lead form fallback */}
-      <section id="lead-form" className="border-y border-border bg-surface">
-        <div className="mx-auto max-w-3xl px-5 py-20 sm:px-8">
-          <div className="text-center">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
-              Prefer We Reach Out?
-            </span>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              Tell us about your business
-            </h2>
-            <p className="mt-4 text-muted">
-              Fill in a few details and our team will get back to you within one business day to
-              set up your demo.
-            </p>
+          <p className="mx-auto mt-2 max-w-sm text-sm text-muted">
+            In the meantime, message us directly and we&apos;ll find a time that works for you.
+          </p>
+          <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <a
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="brand-gradient-bg rounded-full px-6 py-3 text-sm font-semibold text-white shadow-md shadow-black/10 transition-transform hover:scale-[1.03]"
+            >
+              Chat on WhatsApp
+            </a>
+            <a
+              href={`tel:${siteConfig.phoneE164}`}
+              className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground hover:border-brand-pink/60"
+            >
+              Call {siteConfig.phoneDisplay}
+            </a>
           </div>
-
-          <div className="mt-10 rounded-3xl border border-border bg-background p-6 sm:p-8">
-            <LeadForm />
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* FAQ */}
       <section className="mx-auto max-w-3xl px-5 py-20 sm:px-8">
