@@ -119,6 +119,38 @@ export default async function ServiceCategoryPage({
         </section>
       )}
 
+      {category.trustNote && (
+        <section className="mx-auto max-w-4xl px-5 pb-16 sm:px-8">
+          <div className="flex items-center justify-center gap-3 rounded-2xl border border-border bg-surface px-6 py-4 text-center">
+            <span className="text-brand-pink">★★★★★</span>
+            <p className="text-sm font-medium text-foreground">{category.trustNote}</p>
+          </div>
+        </section>
+      )}
+
+      {category.comparisonTable && (
+        <section className="mx-auto max-w-4xl px-5 pb-20 sm:px-8">
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">{category.comparisonTable.title}</h2>
+          <div className="mt-6 overflow-hidden rounded-3xl border border-border">
+            <div className="grid grid-cols-3 bg-surface text-sm font-semibold text-foreground">
+              <div className="px-4 py-3 sm:px-6">Feature</div>
+              <div className="px-4 py-3 sm:px-6">{category.comparisonTable.columnA}</div>
+              <div className="px-4 py-3 sm:px-6 text-brand-pink">{category.comparisonTable.columnB}</div>
+            </div>
+            {category.comparisonTable.rows.map((row, i) => (
+              <div
+                key={row.feature}
+                className={`grid grid-cols-3 text-sm ${i % 2 === 0 ? "bg-background" : "bg-surface/50"}`}
+              >
+                <div className="px-4 py-3 font-medium text-foreground sm:px-6">{row.feature}</div>
+                <div className="px-4 py-3 text-muted sm:px-6">{row.a}</div>
+                <div className="px-4 py-3 text-foreground sm:px-6">{row.b}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
       {category.legalNote && (
         <section className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
           <div className="rounded-3xl border border-brand-orange/30 bg-surface p-8">

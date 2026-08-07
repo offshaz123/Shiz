@@ -31,6 +31,13 @@ export type GalleryImage = {
   alt: string;
 };
 
+export type ComparisonTable = {
+  title: string;
+  columnA: string;
+  columnB: string;
+  rows: { feature: string; a: string; b: string }[];
+};
+
 export type ServiceCategory = {
   slug: string;
   navTitle: string;
@@ -48,6 +55,8 @@ export type ServiceCategory = {
   processSteps?: ProcessStep[];
   tradeEnquiry?: boolean;
   gallery?: GalleryImage[];
+  comparisonTable?: ComparisonTable;
+  trustNote?: string;
 };
 
 export const serviceCategories: ServiceCategory[] = [
@@ -99,6 +108,26 @@ export const serviceCategories: ServiceCategory[] = [
       "Most cars done within about 2 hours",
     ],
     timeEstimate: "Around 2 hours for a full car",
+    gallery: [
+      { src: "/gallery/window-tints/bmw-7-series-tint.jpg", alt: "BMW 7 Series with window tints freshly fitted in the SMG Details studio" },
+      { src: "/gallery/window-tints/mercedes-amg-tint.jpg", alt: "Mercedes-AMG GLE with dark window tints fitted by SMG Details" },
+      { src: "/gallery/window-tints/vw-golf-r-tint.jpg", alt: "VW Golf R with window tints fitted at the SMG Details studio" },
+      { src: "/gallery/window-tints/land-rover-defender-front-tint.jpg", alt: "Land Rover Defender in the SMG Details studio for window tinting" },
+      { src: "/gallery/window-tints/land-rover-defender-rear-tint.jpg", alt: "Land Rover Defender rear view at the SMG Details tinting studio" },
+    ],
+    comparisonTable: {
+      title: "Dyed vs Ceramic Film",
+      columnA: "Dyed Film",
+      columnB: "Ceramic Film",
+      rows: [
+        { feature: "Heat rejection", a: "Cuts glare, modest heat reduction", b: "Excellent heat rejection — noticeably cooler cabin" },
+        { feature: "Look over time", a: "Can fade to purple with age", b: "Won't fade or discolour" },
+        { feature: "Warranty", a: "Standard warranty", b: "Longer manufacturer warranty" },
+        { feature: "Signal & electronics", a: "No interference", b: "No interference (non-metallic)" },
+        { feature: "Best for", a: "Budget-friendly privacy", b: "Maximum heat control & longevity" },
+      ],
+    },
+    trustNote: "Loved by repeat customers — a lot of our tint customers come back with their next car too.",
   },
   {
     slug: "chameleon-windscreen",
