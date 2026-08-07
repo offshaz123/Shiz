@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { RealResultsSection } from "@/components/RealResults";
+import { IndustryStatsSection } from "@/components/IndustryStats";
 import { CaseStudySection } from "@/components/CaseStudy";
 import { GoogleCalendarBadge } from "@/components/GoogleCalendarBadge";
 import { FaqJsonLd } from "@/components/StructuredData";
@@ -105,6 +106,7 @@ export default function Home() {
         </div>
       </section>
 
+      <IndustryStatsSection />
       <RealResultsSection />
       <CaseStudySection />
 

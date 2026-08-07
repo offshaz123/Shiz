@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { RealResultsSection } from "@/components/RealResults";
+import { IndustryStatsSection } from "@/components/IndustryStats";
 import { whatsappHref } from "@/lib/site-config";
 
 export const metadata: Metadata = {
@@ -142,6 +143,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
+      <IndustryStatsSection />
       <RealResultsSection />
 
       {/* How it works */}
