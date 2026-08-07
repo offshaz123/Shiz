@@ -90,21 +90,17 @@ export default function DemoPage() {
           aria-hidden
           className="pointer-events-none absolute -top-40 left-1/2 h-[560px] w-[900px] -translate-x-1/2 rounded-full opacity-20 blur-3xl brand-gradient-bg"
         />
-        <div className="relative mx-auto max-w-4xl px-5 pb-16 pt-16 text-center sm:px-8 sm:pt-24">
+        <div className="relative mx-auto max-w-4xl px-5 pb-16 pt-8 text-center sm:px-8 sm:pt-12">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-xs font-medium text-muted">
             Meta &amp; Instagram Ads Specialists
           </span>
-          <h1 className="mx-auto mt-6 max-w-3xl text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
+          <h1 className="mx-auto mt-4 max-w-2xl text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
             More leads. More bookings.{" "}
             <span className="brand-gradient-text">Zero guesswork.</span>
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-            See exactly how we turn Meta &amp; Instagram ads into booked customers for your
-            business — fill in your details or book yourself straight in below.
-          </p>
 
           {hasVideo && (
-            <div className="mt-8">
+            <div className="mt-6">
               <a
                 href="#demo-video"
                 className="w-full rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-foreground transition-colors hover:border-brand-pink/60 sm:w-auto"
@@ -114,33 +110,50 @@ export default function DemoPage() {
             </div>
           )}
 
-          {/* Merged lead form + instant booking */}
+          {/* Merged lead form + instant booking — the first thing visible on the page */}
           <div
             id="book"
-            className="mx-auto mt-10 max-w-2xl rounded-3xl border border-border bg-surface p-6 text-left shadow-lg shadow-black/5 sm:p-8"
+            className="mx-auto mt-6 max-w-4xl overflow-hidden rounded-3xl border border-border bg-surface text-left shadow-lg shadow-black/5"
           >
-            <h2 className="text-center text-lg font-semibold text-foreground">
-              Tell us about your business
-            </h2>
-            <p className="mt-1.5 text-center text-sm text-muted">
-              We&apos;ll get back to you within one business day.
-            </p>
-            <div className="mt-6">
-              <LeadForm compact />
-            </div>
-
-            {hasBooking && (
-              <>
-                <div className="my-7 flex items-center gap-3">
-                  <span className="h-px flex-1 bg-border" />
-                  <span className="text-xs font-semibold uppercase tracking-wide text-muted">
-                    Or
-                  </span>
-                  <span className="h-px flex-1 bg-border" />
+            <div className={hasBooking ? "grid sm:grid-cols-2" : ""}>
+              <div className="p-6 sm:p-8">
+                <h2 className="text-lg font-semibold text-foreground">
+                  Tell us about your business
+                </h2>
+                <p className="mt-1.5 text-sm text-muted">
+                  We&apos;ll get back to you within one business day.
+                </p>
+                <div className="mt-6">
+                  <LeadForm compact />
                 </div>
-                <div className="flex flex-col items-center gap-4 text-center">
-                  <p className="text-sm font-medium text-foreground">
-                    Skip the form — pick a time instantly
+              </div>
+
+              {hasBooking && (
+                <div className="flex flex-col items-center justify-center gap-4 border-t border-border p-6 text-center sm:border-t-0 sm:border-l sm:p-8">
+                  <svg viewBox="0 0 48 48" className="h-16 w-16 shrink-0" aria-hidden="true">
+                    <path
+                      fill="#FFC107"
+                      d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.4-.1-2.7-.4-3.5Z"
+                    />
+                    <path
+                      fill="#FF3D00"
+                      d="M6.3 14.7l6.6 4.8C14.3 16 18.8 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.6 3 24 3 16.3 3 9.7 7.3 6.3 14.7Z"
+                    />
+                    <path
+                      fill="#4CAF50"
+                      d="M24 45c5.5 0 10.4-2.1 14.1-5.6l-6.5-5.5C29.6 35.6 26.9 37 24 37c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 40.6 16.2 45 24 45Z"
+                    />
+                    <path
+                      fill="#1976D2"
+                      d="M43.6 20.5H24v8h11.3c-.8 2.3-2.3 4.3-4.3 5.9l6.5 5.5C41.7 36.7 45 31 45 24c0-1.4-.1-2.7-.4-3.5Z"
+                    />
+                  </svg>
+                  <p className="text-base font-semibold text-foreground">
+                    Prefer to book yourself in?
+                  </p>
+                  <p className="max-w-xs text-sm text-muted">
+                    Pick a time, get instant confirmation, and a Google Meet link lands in your
+                    inbox automatically.
                   </p>
                   <a
                     href={siteConfig.demoBookingUrl}
@@ -152,8 +165,8 @@ export default function DemoPage() {
                   </a>
                   <GoogleCalendarBadge />
                 </div>
-              </>
-            )}
+              )}
+            </div>
           </div>
 
           <div className="mx-auto mt-10 flex max-w-3xl flex-wrap items-center justify-center gap-2.5">

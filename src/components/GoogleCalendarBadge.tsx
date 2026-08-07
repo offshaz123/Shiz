@@ -1,7 +1,9 @@
-export function GoogleCalendarBadge() {
+export function GoogleCalendarBadge({ size = "sm" }: { size?: "sm" | "lg" }) {
+  const iconClass = size === "lg" ? "h-14 w-14 shrink-0" : "h-4 w-4 shrink-0";
+  const textClass = size === "lg" ? "text-sm text-muted" : "text-xs text-muted";
   return (
-    <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted">
-      <svg viewBox="0 0 48 48" className="h-4 w-4 shrink-0" aria-hidden="true">
+    <div className="mt-4 flex items-center justify-center gap-2.5">
+      <svg viewBox="0 0 48 48" className={iconClass} aria-hidden="true">
         <path
           fill="#FFC107"
           d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.5 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.4-.1-2.7-.4-3.5Z"
@@ -19,7 +21,7 @@ export function GoogleCalendarBadge() {
           d="M43.6 20.5H24v8h11.3c-.8 2.3-2.3 4.3-4.3 5.9l6.5 5.5C41.7 36.7 45 31 45 24c0-1.4-.1-2.7-.4-3.5Z"
         />
       </svg>
-      <span>Instant booking via Google Calendar</span>
+      <span className={textClass}>Instant booking via Google Calendar</span>
     </div>
   );
 }
