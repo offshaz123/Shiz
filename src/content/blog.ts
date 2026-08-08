@@ -16,6 +16,71 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "cost-per-lead-meta-ads-uk-by-industry",
+    title: "What's a Good Cost Per Lead for Meta Ads in the UK?",
+    description:
+      "\"What's a good cost per lead?\" is the wrong first question. Here's why CPL varies so much by industry, and a better way to judge your own numbers.",
+    publishedAt: "2026-08-08",
+    keywords: [
+      "cost per lead UK",
+      "average cost per lead Facebook ads",
+      "Meta ads cost per lead by industry",
+      "what is a good CPL Meta ads",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "\"What's a good cost per lead?\" is one of the most-asked questions about Meta ads, and it rarely has a single useful answer. A cost per lead that would be a brilliant result for one business would be a disaster for another, because the number on its own doesn't tell you anything — it only means something next to what that lead is actually worth to you.",
+          "Here's a more useful way to think about cost per lead, what actually moves it, and why comparing your number to a generic \"industry average\" can send you in the wrong direction entirely.",
+        ],
+      },
+      {
+        heading: "Why cost per lead varies so much by industry",
+        paragraphs: [
+          "A few things drive most of the difference between industries. Higher-value purchases (a kitchen extension, a car, a property) can usually justify a higher cost per lead, because one converted customer is worth far more. Competitive auction dynamics matter too — categories with a lot of advertisers bidding for the same audience tend to see higher costs, regardless of how good the campaign is.",
+          "How considered the purchase is plays a part as well. An emergency call-out has almost no consideration phase, so leads can come in cheap and fast; a service someone researches for weeks before enquiring naturally involves more of Meta's ad auction working to find and re-find the right person over that longer window.",
+        ],
+      },
+      {
+        heading: "What \"a lead\" even means changes the number completely",
+        paragraphs: [
+          "Cost per lead figures are only comparable if \"a lead\" means the same thing in both cases, and it rarely does. A raw form submission, a qualified enquiry that's actually a fit for the business, and a booked, showed-up customer are three very different numbers — often several multiples apart from each other.",
+          "This is why a headline cost-per-lead figure without context can be misleading in either direction: a low number might just mean loosely qualified form-fills that go nowhere, and a higher number might reflect tightly qualified leads that convert at a much higher rate. Cost per booked customer is usually the number that actually matters to the business, even though cost per lead is the one people ask about first.",
+        ],
+      },
+      {
+        heading: "Real numbers, in context",
+        paragraphs: [
+          "Rather than quote generic industry benchmarks, it's more useful to look at real, current numbers. Our own live client campaigns over the last 30 days have generated leads from £4.49 for ceramic coating, up to around £10.28 for real estate — see the live figures on our results page. Those numbers reflect specific accounts, targeting and creative, not a universal rate for those industries, and they'll shift over time as campaigns are optimised — past performance isn't a guarantee of future results.",
+          "The point of sharing them isn't \"this is what you should expect\" — it's to show that a single UK-wide average cost per lead isn't a meaningful benchmark, because even within one account, cost per lead varies significantly by exactly what's being advertised.",
+        ],
+      },
+      {
+        heading: "A better way to judge your own cost per lead",
+        paragraphs: [
+          "Instead of comparing your number to an industry average, work backwards from your own numbers. Take your average customer value and your margin, decide what you can comfortably afford to pay to acquire one customer, then work back through your typical lead-to-customer conversion rate to find your target cost per lead. That figure is specific to your business — it doesn't need to match anyone else's.",
+        ],
+      },
+      {
+        heading: "What actually moves your cost per lead",
+        paragraphs: ["Whatever your starting point, a few levers tend to have the biggest effect on the number over time:"],
+        bullets: [
+          "Creative quality — a scroll-stopping video or image consistently outperforms generic stock imagery",
+          "Targeting and radius — a tightly defined, relevant audience wastes less spend than a broad one",
+          "Landing page or lead form friction — a slow page or a long form loses people who were otherwise ready to enquire",
+          "Retargeting — re-engaging people who already showed interest is typically far cheaper than reaching cold audiences",
+          "Time in market — cost per lead usually improves as a campaign gathers data and Meta's delivery system learns who converts",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "If you want a realistic cost-per-lead target for your specific business rather than a generic number, that's exactly what a strategy call is for — we'll work through your margins and customer value with you. Get in touch for a free strategy call.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-for-trade-home-services",
     title: "Meta & Instagram Ads for Trade & Home Service Businesses: A Practical Guide",
     description:

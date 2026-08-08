@@ -15,6 +15,7 @@ keywords, dealership social strategy).
 - How Fast Should You Reply to a Lead? (practical how-to)
 - Missed-Call Text-Back: How It Recovers Leads You're Already Paying For (feature deep-dive)
 - Meta & Instagram Ads for Home & Trade Services (industry-specific)
+- What's a Good Cost Per Lead for Meta Ads in the UK? (cost/budgeting)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -34,7 +35,7 @@ keywords, dealership social strategy).
       dealer marketing", building on the existing automotive guide with a sharper angle
 
 ## Backlog — cost/budgeting guides
-- [ ] What's a Good Cost Per Lead for Meta Ads in the UK? (by industry) — target: "cost per
+- [x] What's a Good Cost Per Lead for Meta Ads in the UK? (by industry) — target: "cost per
       lead UK", "average cost per lead Facebook ads"
 - [ ] Ad Spend vs Management Fees: What You're Actually Paying For — target: "Facebook ads
       management fees UK"
