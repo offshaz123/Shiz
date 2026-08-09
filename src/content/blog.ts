@@ -16,6 +16,77 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-for-restaurants-hospitality",
+    title: "Meta & Instagram Ads for Restaurants & Hospitality: What Actually Fills Tables",
+    description:
+      "Restaurant ads aren't lead generation — the goal is a booked table. Here's how to structure Meta & Instagram campaigns around covers, radius and timing.",
+    publishedAt: "2026-08-09",
+    keywords: [
+      "Instagram ads for restaurants UK",
+      "Facebook ads for cafes",
+      "restaurant social media advertising",
+      "how to get more restaurant bookings",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Food is one of the most naturally suited categories on Instagram — it's visual, immediate, and people genuinely enjoy looking at it. That makes restaurants and cafés easy to advertise and surprisingly hard to advertise *profitably*, because attention is not the same thing as a booked table.",
+          "Most restaurant campaigns that underperform aren't badly made. They're borrowed — a lead generation playbook built for a business selling a £3,000 service, applied to a business selling a £30 dinner. The economics are completely different, and so is the campaign that works.",
+        ],
+      },
+      {
+        heading: "The goal isn't a lead — it's a covered table",
+        paragraphs: [
+          "For most businesses we advertise for, success is a form submission: a name and number, followed up by a salesperson. Restaurants don't work that way. Nobody fills in a four-field enquiry form to book a table for Thursday — they tap through to a booking system, send a quick DM, or simply turn up.",
+          "That difference should shape the whole campaign. Optimising for form fills in a restaurant campaign usually produces a list of half-interested people rather than filled tables. Sending traffic straight to a booking platform, or to a Messenger or WhatsApp conversation, matches how people actually behave when they're hungry and deciding where to eat.",
+        ],
+      },
+      {
+        heading: "Your radius is much smaller than you think",
+        paragraphs: [
+          "People will drive forty minutes to view a car and an hour to see a house. They will not drive forty minutes for a mid-week dinner unless you're a destination in your own right. For most independent restaurants and cafés, the realistic catchment is a few miles — and in dense city areas, it can be considerably tighter than that, because a customer three miles away has fifty alternatives between them and you.",
+          "Getting this wrong is one of the most expensive mistakes in hospitality advertising, because a wide radius looks like it's working. Impressions and engagement go up. The reach numbers look healthy. But you're paying to show beautiful food photography to people who were never realistically going to visit, and none of it turns into covers.",
+          "A tighter radius also tends to make retargeting far more effective, because you're re-reaching a smaller group of genuinely local people repeatedly, rather than spreading the same budget thinly across a whole city.",
+        ],
+      },
+      {
+        heading: "Timing is the lever most restaurants ignore",
+        paragraphs: [
+          "Hospitality has something almost no other industry has: demand that's tied to specific hours and specific days, and capacity that expires. An empty Tuesday table is revenue you can never recover — but a Saturday night ad for a restaurant that's already fully booked on Saturdays is money spent to create a queue you can't serve.",
+          "This is why the sharpest restaurant campaigns are usually built around the gaps in the week rather than the whole week. If weekends fill themselves and midweek is thin, the entire budget belongs on midweek. Scheduling ads to run in the hours before people decide — late morning for lunch trade, late afternoon for dinner — puts the ad in front of someone at the moment the decision is actually being made, rather than at 9am when they're thinking about something else.",
+        ],
+      },
+      {
+        heading: "What actually works as creative",
+        paragraphs: [
+          "This is one category where the obvious answer is also the correct one: real footage of your own food, shot close and well-lit, outperforms almost everything else. Short video — something being plated, poured, sliced, or lifted — consistently does more work than a static image, because movement stops the scroll.",
+          "A few things worth building into the creative rotation:",
+        ],
+        bullets: [
+          "Close-up video of signature dishes being prepared or served, shot on a phone if that's what you have",
+          "The room itself — atmosphere sells a booking as much as the food does, particularly for evening trade",
+          "A specific, concrete offer where you're running one, rather than a vague \"come and visit us\"",
+          "Text overlays that state the offer and the area clearly, since a large share of people watch with the sound off",
+          "Seasonal and event-led creative refreshed regularly, because food ads fatigue faster than most — the same dish shown for three months stops working",
+        ],
+      },
+      {
+        heading: "Where restaurant ad spend quietly leaks away",
+        paragraphs: [
+          "The most common place hospitality budget disappears isn't the campaign — it's the twenty minutes after someone responds to it. An ad does its job, someone messages on Instagram asking whether you have a table for four on Friday, and the message sits unanswered until the evening because everyone was on the floor working service. By then they've booked somewhere else.",
+          "This is a structural problem rather than a staffing failure. The people who could answer are, by definition, busiest exactly when enquiries arrive. Routing every channel — Instagram DMs, Facebook Messenger, WhatsApp and missed calls — into a single inbox, and covering the service-hours gap with automated replies or an AI receptionist that can answer common questions and take a booking, is what stops paid attention from evaporating during the dinner rush.",
+          "It's also worth being realistic about measurement. Walk-in trade generated by an ad is genuinely difficult to attribute, which is one reason booking links and trackable offer codes are useful — not because they capture everything, but because they give you at least one honest signal to judge the campaign by.",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "Restaurants and hospitality are one of the categories we work in, alongside automotive and finance, and the booking and enquiry side matters here more than almost anywhere else. If you want Meta & Instagram ads built around your quiet nights, your real catchment area, and a system that answers enquiries while your team is running service, get in touch for a free strategy call.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "cost-per-lead-meta-ads-uk-by-industry",
     title: "What's a Good Cost Per Lead for Meta Ads in the UK?",
     description:

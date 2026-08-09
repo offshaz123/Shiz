@@ -16,6 +16,7 @@ keywords, dealership social strategy).
 - Missed-Call Text-Back: How It Recovers Leads You're Already Paying For (feature deep-dive)
 - Meta & Instagram Ads for Home & Trade Services (industry-specific)
 - What's a Good Cost Per Lead for Meta Ads in the UK? (cost/budgeting)
+- Meta & Instagram Ads for Restaurants & Hospitality (industry-specific)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -27,7 +28,7 @@ keywords, dealership social strategy).
       health/beauty claims — flag anything that touches medical claims)
 - [ ] Meta & Instagram Ads for Real Estate & Property — target: "Facebook ads for estate agents",
       "Instagram lead ads property UK"
-- [ ] Meta & Instagram Ads for Restaurants & Hospitality — target: "Instagram ads for
+- [x] Meta & Instagram Ads for Restaurants & Hospitality — target: "Instagram ads for
       restaurants UK", "Facebook ads for cafes"
 - [ ] Meta & Instagram Ads for Professional Services (accountants, solicitors, consultants) —
       target: "Facebook ads for professional services", "lead gen ads for consultants"
