@@ -16,6 +16,81 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-ads-vs-google-ads-which-is-right",
+    title: "Meta Ads vs Google Ads: Which Is Right for Your Business?",
+    description:
+      "Google captures demand that already exists. Meta creates it. Here's how to tell which one your business needs first — and when running both actually makes sense.",
+    publishedAt: "2026-08-10",
+    keywords: [
+      "Facebook ads vs Google ads",
+      "Meta ads vs Google ads small business",
+      "should I use Google or Facebook ads",
+      "paid advertising channel comparison UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "It's one of the first questions most business owners ask when they start thinking seriously about paid advertising, and the honest answer isn't a preference — it's a diagnosis. The two platforms do genuinely different jobs, and which one works better for you depends less on your budget than on how your customers actually go looking for what you sell.",
+          "Here's the distinction that matters, and how to work out which side of it your business falls on.",
+        ],
+      },
+      {
+        heading: "The real difference: capturing demand vs creating it",
+        paragraphs: [
+          "Google Ads captures demand that already exists. Someone has a problem, they type it into a search bar, and you pay to appear in front of them at that exact moment. The intent is already there — you're competing to be the answer to a question they've already asked.",
+          "Meta and Instagram ads work the other way round. Nobody opens Instagram intending to hire a builder or book a table. You're interrupting a scroll and creating interest that wasn't there thirty seconds earlier. That sounds like a disadvantage, and for some businesses it is — but it also means you're not limited to the number of people already searching, which for a lot of categories is a very small pool.",
+          "Almost everything else — cost, creative, campaign structure, how you measure success — follows from that one difference.",
+        ],
+      },
+      {
+        heading: "When Google Ads is usually the better first move",
+        paragraphs: [
+          "Google tends to be the stronger starting point when the demand for what you sell is urgent, specific, and already being searched for:",
+        ],
+        bullets: [
+          "Emergency or time-critical services — a burst pipe, a lockout, an urgent repair. Nobody scrolls Instagram looking for an emergency plumber; they search, and they call the first credible result",
+          "Established categories people know how to search for, where the search volume genuinely exists in your area",
+          "High-intent \"near me\" and location-based searching, which is a large share of local service demand",
+          "Businesses where the customer already knows exactly what they want and is comparing providers rather than deciding whether to buy at all",
+        ],
+      },
+      {
+        heading: "When Meta & Instagram ads usually win",
+        paragraphs: [
+          "Meta tends to be stronger when what you sell is visual, discretionary, or simply not something people think to search for:",
+        ],
+        bullets: [
+          "Visual products and experiences — food, vehicles, interiors, anything where seeing it is most of the sell",
+          "Services people don't know they want until they see them, where there's little or no existing search volume to capture",
+          "Retargeting people who visited your site or engaged with previous content but never enquired, which is typically far cheaper than reaching cold audiences on any platform",
+          "Businesses that need volume — you can reach far more people for the same money than you can by bidding on a handful of competitive keywords",
+          "Building an audience over time rather than paying afresh for every single click",
+        ],
+      },
+      {
+        heading: "What about cost?",
+        paragraphs: [
+          "This is where comparisons often get muddled, because the two platforms sell you different things. Google largely sells clicks from people actively searching, and in competitive categories that intent is expensive — you're bidding against everyone else who wants to be the answer to the same question. Meta largely sells reach, which is usually cheaper per person, but a far smaller proportion of those people are ready to act right now.",
+          "That means a raw cost-per-click comparison between the two tells you very little. What matters is cost per booked customer, and that depends on your conversion rate, your follow-up speed, and how well the ad matches what the person was doing when they saw it. For context on the Meta side, our own live client campaigns are currently generating leads from around £4.49 — though those are specific accounts with specific targeting and creative, and results vary considerably by industry.",
+        ],
+      },
+      {
+        heading: "Why the answer is often both — in a specific order",
+        paragraphs: [
+          "For most established businesses, the mature answer is both. Google captures the people already looking; Meta creates awareness among people who weren't, then retargets everyone who showed interest but didn't convert. They compound rather than compete.",
+          "But \"both\" is rarely the right place to start. Splitting a modest budget across two platforms usually means neither gets enough spend or data to perform properly — Meta in particular needs consistent, sustained budget to get out of its learning phase and start optimising. Picking one, running it properly for a few weeks, and adding the second once the first is working reliably will nearly always beat launching both at half strength.",
+          "One thing worth saying plainly: if your customers genuinely are searching for what you sell in meaningful volume, Google may well be the better first pound spent — even though Meta & Instagram ads are what we do. Recommending the wrong channel because it's the one we sell would be a short-sighted way to run an agency.",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "If you're not sure which side your business falls on, that's exactly the kind of thing worth talking through before spending anything. Get in touch for a free strategy call and we'll give you an honest read on whether Meta & Instagram ads are the right first move for you — or whether something else should come first.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-for-restaurants-hospitality",
     title: "Meta & Instagram Ads for Restaurants & Hospitality: What Actually Fills Tables",
     description:

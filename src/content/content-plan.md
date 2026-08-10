@@ -17,6 +17,7 @@ keywords, dealership social strategy).
 - Meta & Instagram Ads for Home & Trade Services (industry-specific)
 - What's a Good Cost Per Lead for Meta Ads in the UK? (cost/budgeting)
 - Meta & Instagram Ads for Restaurants & Hospitality (industry-specific)
+- Meta Ads vs Google Ads: Which Is Right for Your Business? (comparison/explainer)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -42,7 +43,7 @@ keywords, dealership social strategy).
       management fees UK"
 
 ## Backlog — comparison/explainer
-- [ ] Meta Ads vs Google Ads: Which Is Right for Your Business? — target: "Facebook ads vs
+- [x] Meta Ads vs Google Ads: Which Is Right for Your Business? — target: "Facebook ads vs
       Google ads", "Meta ads vs Google ads small business"
 - [ ] Organic Social vs Paid Ads: Why You Probably Need Both — target: "organic vs paid social
       media"
