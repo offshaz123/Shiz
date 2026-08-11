@@ -124,6 +124,17 @@ export default async function BlogPostPage({
         <h2 className="text-xl font-semibold text-foreground">
           Ready to grow your business with Meta &amp; Instagram ads?
         </h2>
+        <p className="mx-auto mt-3 max-w-md text-sm text-muted">
+          See{" "}
+          <Link href="/services" className="text-brand-pink hover:underline">
+            what we do
+          </Link>{" "}
+          and{" "}
+          <Link href="/pricing" className="text-brand-pink hover:underline">
+            how our plans work
+          </Link>
+          , or book a free strategy call and we&apos;ll map it out for your business.
+        </p>
         <Link
           href="/contact"
           className="brand-gradient-bg mt-6 inline-flex rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { PricingSection } from "@/components/PricingSection";
-import { FaqJsonLd } from "@/components/StructuredData";
+import { BreadcrumbJsonLd, FaqJsonLd } from "@/components/StructuredData";
+import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
-  title: "Pricing",
+  title: "Meta & Instagram Ads Pricing",
   description:
     "Simple, transparent pricing for done-for-you Meta & Instagram ads management — from £400/month, no long-term contract. See what's included in each plan.",
   alternates: { canonical: "/pricing" },
@@ -39,6 +40,12 @@ const faqs = [
 export default function PricingPage() {
   return (
     <div>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: siteConfig.url },
+          { name: "Pricing", url: `${siteConfig.url}/pricing` },
+        ]}
+      />
       <div aria-hidden className="relative overflow-hidden">
         <div className="pointer-events-none absolute -top-40 left-1/2 h-[560px] w-[900px] -translate-x-1/2 rounded-full opacity-20 blur-3xl brand-gradient-bg" />
       </div>

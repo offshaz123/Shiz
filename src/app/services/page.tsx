@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { RealResultsSection } from "@/components/RealResults";
 import { IndustryStatsSection } from "@/components/IndustryStats";
-import { whatsappHref } from "@/lib/site-config";
+import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { siteConfig, whatsappHref } from "@/lib/site-config";
 
 export const metadata: Metadata = {
-  title: "Services",
+  title: "Meta & Instagram Ads Services",
   description:
     "Meta & Instagram ads, done-for-you lead generation, a unified inbox & CRM, and a 24/7 AI receptionist — everything Shaz Marketing Group provides, in one place.",
   alternates: { canonical: "/services" },
@@ -84,6 +85,12 @@ const inboxPreview = [
 export default function ServicesPage() {
   return (
     <div>
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Home", url: siteConfig.url },
+          { name: "Services", url: `${siteConfig.url}/services` },
+        ]}
+      />
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div

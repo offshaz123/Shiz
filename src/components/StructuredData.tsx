@@ -1,4 +1,4 @@
-import { siteConfig } from "@/lib/site-config";
+import { siteConfig, socialProfileUrls } from "@/lib/site-config";
 
 export function OrganizationJsonLd() {
   const data = {
@@ -13,6 +13,8 @@ export function OrganizationJsonLd() {
     email: siteConfig.email,
     telephone: siteConfig.phoneE164,
     priceRange: "££",
+    // Tells Google these social profiles are the same business entity.
+    ...(socialProfileUrls.length > 0 && { sameAs: socialProfileUrls }),
     areaServed: {
       "@type": "Country",
       name: "United Kingdom",
@@ -50,6 +52,41 @@ export function OrganizationJsonLd() {
           "Unlimited ad campaigns, a 24/7 AI receptionist & chatbot, advanced automation, and a dedicated account manager.",
       },
     ],
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
+}
+
+// Declares the site as a named entity and lists its primary sections. This is
+// the structure Google draws on when deciding whether to show sitelinks under
+// the main search result for a brand search.
+export function WebSiteJsonLd() {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": `${siteConfig.url}/#website`,
+    name: siteConfig.name,
+    alternateName: siteConfig.shortName,
+    url: siteConfig.url,
+    description: siteConfig.description,
+    inLanguage: "en-GB",
+    publisher: { "@id": `${siteConfig.url}/#organization` },
+    hasPart: [
+      { name: "Services", url: `${siteConfig.url}/services` },
+      { name: "Pricing", url: `${siteConfig.url}/pricing` },
+      { name: "About", url: `${siteConfig.url}/about` },
+      { name: "Blog", url: `${siteConfig.url}/blog` },
+      { name: "Contact", url: `${siteConfig.url}/contact` },
+    ].map((item) => ({
+      "@type": "SiteNavigationElement",
+      name: item.name,
+      url: item.url,
+    })),
   };
 
   return (

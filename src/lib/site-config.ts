@@ -23,7 +23,17 @@ export const siteConfig = {
     postcode: "E14 5AB",
     country: "United Kingdom",
   },
+  // Public social profiles. These are published in the Organization schema's
+  // `sameAs` so Google links these accounts to this business as one entity.
+  // Leave a value empty to omit it. Use full URLs.
+  social: {
+    instagram: "",
+    facebook: "",
+    linkedin: "",
+  },
 };
+
+export const socialProfileUrls = Object.values(siteConfig.social).filter(Boolean);
 
 export const whatsappHref = `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(
   siteConfig.whatsappMessage

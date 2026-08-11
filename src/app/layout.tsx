@@ -6,7 +6,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { MetaPixel } from "@/components/MetaPixel";
-import { OrganizationJsonLd } from "@/components/StructuredData";
+import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
 
 const geistSans = Geist({
@@ -19,7 +19,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const defaultTitle = `${siteConfig.name} | Meta & Instagram Ads Agency`;
+// Keyword-first: an unfamiliar brand name earns fewer clicks in search results
+// than the service being searched for.
+const defaultTitle = `Meta & Instagram Ads Agency London | ${siteConfig.name}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -31,7 +33,9 @@ export const metadata: Metadata = {
   keywords: [
     "Meta ads agency",
     "Instagram ads agency UK",
+    "marketing agency London",
     "Facebook ads management",
+    "Instagram ads agency London",
     "lead generation agency",
     "automotive lead generation",
     "social media marketing agency",
@@ -74,6 +78,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <MetaPixel />
         <OrganizationJsonLd />
+        <WebSiteJsonLd />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <Header />
           <main className="flex-1">{children}</main>
