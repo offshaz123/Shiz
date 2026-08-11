@@ -16,6 +16,75 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "what-makes-ad-creative-actually-convert",
+    title: "What Makes Ad Creative Actually Convert (Not Just Get Likes)",
+    description:
+      "Creative is the biggest lever you control on Meta ad performance. Here's what separates an ad that collects likes from one that generates real enquiries.",
+    publishedAt: "2026-08-11",
+    keywords: [
+      "Facebook ad creative best practices",
+      "Meta ad creative that converts",
+      "Instagram ad design tips",
+      "why are my Facebook ads not converting",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "It's a frustrating and surprisingly common situation: an ad performs beautifully by every visible measure — plenty of likes, a few shares, some nice comments — and generates almost no enquiries. Meanwhile a plainer ad nobody engaged with quietly brings in a steady stream of leads.",
+          "This isn't bad luck. Engagement and conversion are two different outcomes, and the creative that produces one often isn't the creative that produces the other. Understanding that difference matters more than it used to, because as Meta's targeting has become increasingly automated, creative has become the main lever an advertiser actually controls.",
+        ],
+      },
+      {
+        heading: "Likes are a signal, not a goal",
+        paragraphs: [
+          "A like costs the viewer nothing. Filling in a form, sending a message, or picking up the phone costs them time and a small amount of commitment. Those are different psychological acts, and an ad optimised to earn the first often doesn't earn the second.",
+          "Entertaining, relatable or funny creative tends to collect engagement broadly — including from people who will never be customers. Creative that converts tends to be narrower: it speaks directly to someone with a specific problem, and it's perfectly happy to be ignored by everyone else. A lower engagement rate with a lower cost per enquiry is a better ad, even though it looks worse on the surface.",
+        ],
+      },
+      {
+        heading: "The first two seconds do most of the work",
+        paragraphs: [
+          "Almost all of the decision to keep watching or keep scrolling happens before your ad has said anything meaningful. That makes the opening frame the single highest-leverage part of the whole creative — and it's the part most often wasted on a logo animation or a slow establishing shot.",
+          "Open on the thing that's actually interesting: the finished result, the problem being solved, a face talking directly to camera, or movement of some kind. Save the branding for later in the ad, where it reinforces something the viewer already cares about rather than acting as a toll gate before they get to the point.",
+        ],
+      },
+      {
+        heading: "Design for sound off, and for the feed it lives in",
+        paragraphs: [
+          "A large share of people watch with the sound off, which means any ad that depends on audio to make sense is losing a substantial chunk of its audience before it starts. Captions and clear text overlays aren't an accessibility afterthought — they're a performance requirement.",
+          "It's also worth being honest about production values. Highly polished, obviously corporate creative frequently underperforms simpler content that looks like it belongs in the feed around it. This is one of the few areas where a smaller business has a genuine advantage: a real phone-shot video of your actual work, your actual premises, or you actually speaking often outperforms something that looks like a television commercial, because it reads as authentic rather than as an interruption.",
+        ],
+      },
+      {
+        heading: "Specific beats clever, every time",
+        paragraphs: [
+          "Clever headlines win awards. Specific headlines win enquiries. \"Elevate your everyday drive\" tells the viewer nothing; \"Ceramic coating from £395, booked in this week\" tells them exactly what's on offer, roughly what it costs, and when they can have it.",
+          "A few habits that consistently separate specific creative from vague creative:",
+        ],
+        bullets: [
+          "Name the actual service and the actual area, so the right person immediately recognises the ad is for them",
+          "Say one thing per ad — an ad trying to communicate five benefits usually communicates none of them",
+          "Make the next step unmistakable and low-friction, so there's no ambiguity about what happens if they tap",
+          "Match the creative to the destination — an ad promising a quote should land on a page about getting a quote, not a generic homepage",
+          "Write for the person with the problem, not for your industry peers",
+        ],
+      },
+      {
+        heading: "Creative fatigue is real — plan for it",
+        paragraphs: [
+          "No creative works forever. Show the same image or video to the same audience often enough and performance declines — cost per result creeps up, and the temptation is to blame the targeting or the budget when the actual problem is that people have simply seen it too many times.",
+          "The practical answer is to treat creative as something you refresh on a schedule rather than something you finish. Keep several variations running so the platform has options to distribute between, watch for the point where cost per result starts drifting upward, and have the next batch ready before you need it. This is also why testing creative is usually more productive than endlessly testing audiences — it's the variable with the most room to move.",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "If your ads are getting attention but not enquiries, the campaign settings usually aren't the problem — the creative is doing the wrong job. Get in touch for a free strategy call and we'll look at what you're running now and where the gap between engagement and enquiries is opening up.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-ads-vs-google-ads-which-is-right",
     title: "Meta Ads vs Google Ads: Which Is Right for Your Business?",
     description:

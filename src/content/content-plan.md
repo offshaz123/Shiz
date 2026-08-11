@@ -18,6 +18,7 @@ keywords, dealership social strategy).
 - What's a Good Cost Per Lead for Meta Ads in the UK? (cost/budgeting)
 - Meta & Instagram Ads for Restaurants & Hospitality (industry-specific)
 - Meta Ads vs Google Ads: Which Is Right for Your Business? (comparison/explainer)
+- What Makes Ad Creative Actually Convert (Not Just Get Likes) (practical how-to)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -54,7 +55,7 @@ keywords, dealership social strategy).
 - [x] How Fast Should You Reply to a Lead? (and what it costs you if you don't) — target: "lead
       response time statistics", "speed to lead"
 - [ ] 7 Signs Your Landing Page Is Losing You Leads — target: "landing page conversion tips"
-- [ ] What Makes Ad Creative Actually Convert (Not Just Get Likes) — target: "Facebook ad
+- [x] What Makes Ad Creative Actually Convert (Not Just Get Likes) — target: "Facebook ad
       creative best practices"
 - [ ] A Simple Checklist Before You Launch Your First Meta Ad Campaign — target: "how to start
       Facebook ads checklist"
