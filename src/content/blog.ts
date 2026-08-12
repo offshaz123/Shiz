@@ -16,6 +16,78 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "what-an-ai-receptionist-actually-does",
+    title: "What an AI Receptionist Actually Does (and What It Doesn't)",
+    description:
+      "An honest look at what an AI receptionist handles well, where it genuinely falls short, and which businesses get the most out of one.",
+    publishedAt: "2026-08-12",
+    keywords: [
+      "AI receptionist for small business UK",
+      "what does an AI receptionist do",
+      "AI chatbot for customer enquiries",
+      "automated appointment booking small business",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "\"AI receptionist\" is a term that gets used to describe everything from a basic auto-reply to something close to a full virtual employee, which makes it hard to know what you'd actually be buying. It's worth being specific — both about what these systems genuinely do well, and about where they fall short.",
+          "Here's an honest breakdown, including the parts that don't tend to feature in the sales pitch.",
+        ],
+      },
+      {
+        heading: "What it actually does well",
+        paragraphs: [
+          "The core value is simple: it responds immediately, at any hour, to every enquiry. Not eventually, not when someone gets a moment between jobs — immediately, including at eleven o'clock on a Sunday night when the alternative is silence until Monday.",
+          "Within that, the things it handles reliably are the repetitive ones:",
+        ],
+        bullets: [
+          "Answering the same common questions it gets asked constantly — opening hours, rough pricing, which areas you cover, whether you offer a particular service",
+          "Qualifying an enquiry by asking the questions you'd ask anyway, so what reaches you is already useful rather than just a name",
+          "Booking appointments straight into your calendar, without the back-and-forth of proposing times",
+          "Handling several conversations at once, so nobody sits in a queue during a busy spell",
+          "Capturing the enquiry in writing, so even the ones that don't convert leave a record you can look back at",
+        ],
+        },
+      {
+        heading: "What it doesn't do — and shouldn't pretend to",
+        paragraphs: [
+          "This is the part worth being clear-eyed about, because expecting the wrong things is how businesses end up disappointed.",
+          "It won't replace a salesperson on anything complex or high-value. Reading hesitation in someone's voice, sensing when to push and when to back off, negotiating a bespoke job — that's still human work, and it's usually the difference on the deals that matter most. What the AI does is make sure the conversation exists at all, so a human can pick it up warm rather than never knowing it happened.",
+          "It also can't rescue a weak offer. If your pricing isn't competitive or your service isn't what people are looking for, replying in four seconds rather than four hours simply gets you to the same answer faster. Fast follow-up amplifies a good offer — it doesn't substitute for one.",
+          "And it isn't set-and-forget. It answers based on what it's been given about your business, which means it needs proper setup and periodic review as your prices, services and availability change. An AI receptionist working from last year's pricing is worse than no AI receptionist at all.",
+          "Finally, it should hand over quickly when a conversation turns complicated — an upset customer or a genuine complaint needs a person, and fast. A well-configured system knows its own limits and escalates rather than looping.",
+        ],
+      },
+      {
+        heading: "Should it tell people it's AI?",
+        paragraphs: [
+          "This comes up almost every time, and the answer is yes — be upfront about it.",
+          "In practice, most people are entirely comfortable dealing with an automated assistant to book an appointment or ask a straightforward question. What they react badly to is discovering they were misled about it. Presenting the system as a human and being found out costs you far more trust than simply saying \"I'm the virtual assistant, I can get you booked in or pass you to the team\" ever would.",
+          "There's a practical argument too: when people know they're talking to an assistant, they tend to ask clearer, simpler questions — which is exactly the sort the system answers well.",
+        ],
+      },
+      {
+        heading: "Which businesses get the most out of one",
+        paragraphs: [
+          "An AI receptionist isn't equally valuable everywhere. The businesses that benefit most tend to share one of a few characteristics:",
+        ],
+        bullets: [
+          "A high volume of similar, repetitive enquiries — the same handful of questions, over and over",
+          "Real demand outside working hours, particularly evenings and weekends, that currently goes unanswered until the next working day",
+          "A team that's physically unavailable exactly when enquiries peak — a restaurant mid-service, a tradesperson on a job, a workshop with everyone on the tools",
+          "Paid advertising driving the enquiries, where every unanswered message is money already spent and wasted",
+        ],
+        },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "If your enquiries mostly arrive during working hours and you're already answering them within minutes, an AI receptionist probably isn't the first thing your business needs — a unified inbox or better follow-up might matter more. If enquiries are piling up overnight or during your busiest hours, it's solving a problem you actually have.",
+          "It's included from our Scale plan, and we'd rather tell you honestly whether it fits before you pay for it. Get in touch for a free strategy call and we'll look at where your enquiries are actually coming from and when.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "what-makes-ad-creative-actually-convert",
     title: "What Makes Ad Creative Actually Convert (Not Just Get Likes)",
     description:

@@ -19,6 +19,7 @@ keywords, dealership social strategy).
 - Meta & Instagram Ads for Restaurants & Hospitality (industry-specific)
 - Meta Ads vs Google Ads: Which Is Right for Your Business? (comparison/explainer)
 - What Makes Ad Creative Actually Convert (Not Just Get Likes) (practical how-to)
+- What an AI Receptionist Actually Does (and Doesn't) (feature deep-dive)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -65,7 +66,7 @@ keywords, dealership social strategy).
       inbox software UK"
 - [x] Missed-Call Text-Back: How It Recovers Leads You're Already Paying For — target:
       "missed call text back"
-- [ ] What an AI Receptionist Actually Does (and Doesn't) — target: "AI receptionist for small
+- [x] What an AI Receptionist Actually Does (and Doesn't) — target: "AI receptionist for small
       business UK"
 - [ ] CRM Pipelines Explained for Business Owners Who Aren't Techy — target: "simple CRM for
       small business UK"
