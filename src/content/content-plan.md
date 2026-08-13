@@ -20,6 +20,7 @@ keywords, dealership social strategy).
 - Meta Ads vs Google Ads: Which Is Right for Your Business? (comparison/explainer)
 - What Makes Ad Creative Actually Convert (Not Just Get Likes) (practical how-to)
 - What an AI Receptionist Actually Does (and Doesn't) (feature deep-dive)
+- Ad Spend vs Management Fees: What You're Actually Paying For (cost/budgeting)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -41,7 +42,7 @@ keywords, dealership social strategy).
 ## Backlog — cost/budgeting guides
 - [x] What's a Good Cost Per Lead for Meta Ads in the UK? (by industry) — target: "cost per
       lead UK", "average cost per lead Facebook ads"
-- [ ] Ad Spend vs Management Fees: What You're Actually Paying For — target: "Facebook ads
+- [x] Ad Spend vs Management Fees: What You're Actually Paying For — target: "Facebook ads
       management fees UK"
 
 ## Backlog — comparison/explainer

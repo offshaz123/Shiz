@@ -16,6 +16,85 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "ad-spend-vs-management-fees",
+    title: "Ad Spend vs Management Fees: What You're Actually Paying For",
+    description:
+      "Two separate costs that get confused constantly — and the confusion is expensive. Here's what each one buys and what to ask before you sign with any agency.",
+    publishedAt: "2026-08-13",
+    keywords: [
+      "Facebook ads management fees UK",
+      "ad spend vs management fee",
+      "how much do agencies charge for Facebook ads",
+      "Meta ads agency pricing explained",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "\"I've got about £1,000 a month for marketing.\" It's a completely reasonable thing to say, and it's also the point at which two very different costs get quietly merged into one — usually without anyone noticing until it causes a problem.",
+          "Does that £1,000 mean £1,000 going to Meta to actually run ads, with a management fee on top? Or £1,000 total, split between the agency and the ads? Those are wildly different arrangements, and getting the answer straight before anything starts saves an awkward conversation later.",
+        ],
+      },
+      {
+        heading: "Two different things, paid to two different places",
+        paragraphs: [
+          "Ad spend is money that goes to Meta. It buys distribution — impressions, clicks, the actual showing of your ad to people. It's paid from your ad account on your card, and it scales directly with how much volume you want.",
+          "The management fee is money that goes to whoever runs the campaigns. It buys strategy, creative, setup, ongoing optimisation and reporting. It doesn't buy a single impression.",
+          "The distinction matters because they don't substitute for one another. Doubling your management fee doesn't put your ad in front of more people. Doubling your ad spend doesn't make the campaign better structured. A business that spends heavily on ads with nobody managing them wastes money slowly; a business paying a large fee with almost nothing left for ad spend has an expertly optimised campaign that barely anyone sees.",
+        ],
+      },
+      {
+        heading: "What the management fee actually buys",
+        paragraphs: [
+          "It's a fair question, and \"we manage your ads\" isn't much of an answer. In practice, the work sits in a few distinct areas:",
+        ],
+        bullets: [
+          "Campaign structure — objectives, audiences, and how ad sets are organised so the platform optimises toward the outcome you actually want",
+          "Creative — producing and testing the images, video and copy, then replacing them as they fatigue",
+          "Tracking setup — the Pixel, Conversions API and event configuration that let Meta learn which clicks became real enquiries",
+          "Ongoing optimisation — cutting what isn't working, shifting budget toward what is, and adjusting as costs move",
+          "Reporting and interpretation — not just numbers, but what they mean and what changes next",
+          "Judgement — knowing when a bad week is normal variance and when it's a genuine problem worth acting on",
+        ],
+      },
+      {
+        heading: "How agencies charge, and what each model rewards",
+        paragraphs: [
+          "There are two common structures, and neither is inherently right or wrong — but they do pull in different directions, which is worth understanding before you pick one.",
+          "A percentage of ad spend, typically somewhere in the region of 10–20%, scales with your budget. It can work out cheaper at low spend levels, and it means the agency earns more as you grow. The trade-off is the incentive it creates: the agency's income rises when your ad budget rises, whether or not increasing it was the right call for you.",
+          "A flat monthly fee is predictable and doesn't move with your budget. You know the cost regardless of whether you spend £500 or £5,000 with Meta that month, which makes forecasting straightforward and removes any incentive to push your budget upward. The trade-off runs the other way — at very high spend, a flat fee can end up cheaper than a percentage would have been, and at very low spend it can represent a large share of your total marketing cost.",
+          "For transparency: we charge a flat monthly fee, starting at £400, with ad spend paid separately and directly to Meta. That's a deliberate choice, but it isn't the only defensible one.",
+        ],
+      },
+      {
+        heading: "Getting the split right at smaller budgets",
+        paragraphs: [
+          "This is where the distinction stops being academic. If your total marketing budget is modest, how you divide it genuinely affects whether the campaign can work at all.",
+          "Meta's delivery system needs a consistent flow of data before it optimises well — it has to gather enough results to move out of its learning phase. A campaign starved of ad spend takes far longer to get there, or never quite does, which means poor performance that gets blamed on the platform when the real cause was a budget spread too thin.",
+          "As a rough sanity check: if the management fee is consuming most of your total budget, something needs to change — either the budget goes up, or you start with a simpler, cheaper level of management and scale it as results come in. An honest agency will tell you when your budget isn't yet at a level where their full service makes sense.",
+        ],
+      },
+      {
+        heading: "What to ask before you sign with anyone",
+        paragraphs: [
+          "Whoever you end up working with, these questions are worth asking plainly at the start:",
+        ],
+        bullets: [
+          "Is your fee separate from ad spend, or does it come out of the same budget?",
+          "Whose name is the ad account in? You want to own it — if the agency owns the account, you can lose your campaign history and accumulated Pixel data when you leave, and that data has real value",
+          "Who owns the creative and the landing pages if we part ways?",
+          "Is there a minimum contract, and what's the notice period?",
+          "What reporting will I get, how often, and will it show cost per lead rather than just reach and impressions?",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "If you're weighing up quotes and struggling to compare them because everyone presents their pricing differently, it's usually because the split between fee and spend is being described inconsistently. Get in touch for a free strategy call — we'll break down what your budget realistically supports, and tell you straight if it isn't there yet.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "what-an-ai-receptionist-actually-does",
     title: "What an AI Receptionist Actually Does (and What It Doesn't)",
     description:
