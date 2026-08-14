@@ -16,6 +16,74 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "facebook-ads-vs-instagram-ads-budget",
+    title: "Facebook Ads vs Instagram Ads: Where Should Your Budget Go?",
+    description:
+      "Most businesses ask which platform to pick. It's usually the wrong question — here's why, and when restricting placements genuinely does make sense.",
+    publishedAt: "2026-08-14",
+    keywords: [
+      "Instagram ads vs Facebook ads",
+      "should I advertise on Facebook or Instagram",
+      "Meta ads placements explained",
+      "Advantage+ placements",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "\"We only want to be on Instagram — our customers aren't really on Facebook.\" It's one of the most common things business owners say when setting up their first campaign, and it's usually a decision made on instinct rather than on anything from their own account.",
+          "It's also, more often than not, a decision that quietly costs money. Here's why the question is framed wrongly, and when choosing between them is genuinely the right call.",
+        ],
+      },
+      {
+        heading: "They're not two platforms — they're placements in one",
+        paragraphs: [
+          "Facebook and Instagram ads are bought through the same system. You're not choosing between two advertising products; you're choosing which surfaces within Meta's network your ads are eligible to appear on — Facebook Feed, Instagram Feed, Stories, Reels, Marketplace, and several others.",
+          "That distinction matters because of how the auction works. Meta distributes your budget toward wherever it can get you results most cheaply at any given moment. Restricting placements doesn't redirect that budget to better opportunities — it removes options from the system, leaving it to buy from a smaller pool. Less competition to win on your behalf usually means paying more, not less.",
+        ],
+      },
+      {
+        heading: "\"My customers aren't on Facebook\" — worth actually checking",
+        paragraphs: [
+          "This assumption is usually rooted in something real: Facebook's user base does skew somewhat older than Instagram's in the UK. But \"skews older\" is not the same as \"absent,\" and the platform remains enormous across every age group that has money to spend.",
+          "There's also a mismatch worth noticing between where people *post* and where they *see ads*. Someone might not have published anything to Facebook in five years while still scrolling it daily, checking Marketplace, or using Messenger constantly. Ad delivery follows attention, not posting activity — and plenty of people who'd describe themselves as \"not really on Facebook\" are reachable there.",
+          "The honest answer is that you don't need to guess. Run both, let a few weeks of data accumulate, then look at the placement breakdown in Ads Manager. Your own account will tell you where your enquiries actually came from, and it fairly regularly surprises people.",
+        ],
+      },
+      {
+        heading: "Why letting Meta choose usually beats picking",
+        paragraphs: [
+          "Meta's automatic placement setting (Advantage+ placements) exists because the system optimises placement allocation faster and more granularly than manual selection realistically can. It's shifting delivery continuously based on live cost signals, not on a decision someone made at setup and never revisited.",
+          "For most advertisers — particularly those working with modest budgets — leaving placements open is the higher-performing default. It gives the algorithm more room to find cheap conversions, and it means you're not paying a premium for a restriction you chose on a hunch. There's also a practical benefit: broader placement eligibility helps a campaign gather results faster, which matters for getting out of the learning phase.",
+        ],
+      },
+      {
+        heading: "When restricting placements genuinely makes sense",
+        paragraphs: [
+          "There are real cases for narrowing placements — they're just narrower than most people assume:",
+        ],
+        bullets: [
+          "Your creative only works in one format — a vertical video built for Reels will look cropped and awkward squeezed into a right-column placement",
+          "Your own placement data, over a meaningful period, shows one surface consistently generating cost-per-result well outside the others",
+          "There's a specific brand or context reason a particular placement isn't appropriate for what you're advertising",
+          "You're deliberately testing one placement in isolation, with a plan to reopen once you've learned what you needed",
+        ],
+        },
+      {
+        heading: "The real difference is format, not platform",
+        paragraphs: [
+          "If there's a practical decision to make here, it isn't Facebook versus Instagram — it's making sure your creative suits the surfaces it lands on. A Story or Reel is full-screen, vertical, fast, and expected to feel native to the feed around it. An in-feed placement is square or portrait, sits among static posts, and can carry more text before it stops being read.",
+          "The advertisers who get the most out of leaving placements open are the ones who supply creative in more than one aspect ratio, so whichever surface Meta chooses, the ad actually looks like it belongs there. That's a far better use of effort than agonising over which platform to switch off.",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "If you're running Instagram-only because it felt like the obvious choice, it's worth opening things up and letting a few weeks of real data settle the question. Get in touch for a free strategy call and we'll look at where your results are genuinely coming from, rather than where anyone assumed they would.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "ad-spend-vs-management-fees",
     title: "Ad Spend vs Management Fees: What You're Actually Paying For",
     description:

@@ -21,6 +21,7 @@ keywords, dealership social strategy).
 - What Makes Ad Creative Actually Convert (Not Just Get Likes) (practical how-to)
 - What an AI Receptionist Actually Does (and Doesn't) (feature deep-dive)
 - Ad Spend vs Management Fees: What You're Actually Paying For (cost/budgeting)
+- Facebook Ads vs Instagram Ads: Where Should Your Budget Go? (comparison/explainer)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -50,7 +51,7 @@ keywords, dealership social strategy).
       Google ads", "Meta ads vs Google ads small business"
 - [ ] Organic Social vs Paid Ads: Why You Probably Need Both — target: "organic vs paid social
       media"
-- [ ] Facebook Ads vs Instagram Ads: Where Should Your Budget Go? — target: "Instagram ads vs
+- [x] Facebook Ads vs Instagram Ads: Where Should Your Budget Go? — target: "Instagram ads vs
       Facebook ads"
 
 ## Backlog — practical how-to / checklist
