@@ -16,6 +16,72 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "signs-your-landing-page-is-losing-leads",
+    title: "7 Signs Your Landing Page Is Losing You Leads",
+    description:
+      "Your ads can do everything right and still produce nothing if the page they land on leaks. Seven specific problems to check, and how to spot them yourself.",
+    publishedAt: "2026-08-15",
+    keywords: [
+      "landing page conversion tips",
+      "why is my landing page not converting",
+      "landing page mistakes lead generation",
+      "improve landing page conversion rate UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "It's a particularly frustrating way to waste money: the campaign is well built, the creative is stopping people mid-scroll, the clicks are coming in at a sensible cost — and almost nobody enquires. The instinct is to go back and change the ads, when the ads have already done their job.",
+          "Everything after the click is the landing page's responsibility, and a page that leaks will quietly undo good advertising. Here are seven specific things that cause it, grouped by where in the journey they lose people.",
+        ],
+      },
+      {
+        heading: "Before they've read a word: speed and mobile",
+        paragraphs: [
+          "The first two problems cost you visitors who never saw your offer at all.",
+        ],
+        bullets: [
+          "Slow loading — someone tapping an ad on a phone, often on mobile data, will give your page a couple of seconds at most. A page heavy with large uncompressed images or unnecessary scripts loses a meaningful share of visitors before anything appears, and you've already paid for every one of those clicks",
+          "Not genuinely built for mobile — most ad traffic arrives on a phone. If text needs pinching to read, the page scrolls sideways, or buttons are too small to tap confidently, you're asking people to work for the privilege of enquiring. Open your own page on your phone rather than judging it on a desktop screen",
+        ],
+      },
+      {
+        heading: "The moment they land: does the page keep the ad's promise?",
+        paragraphs: [
+          "The next three are about continuity — whether the page delivers what the ad set up.",
+        ],
+        bullets: [
+          "A page that doesn't match the ad — the most common and most expensive fault of the seven. An ad promoting a specific service or offer that lands on a generic homepage forces the visitor to go looking for what they were promised, and most won't bother. Whatever the ad said should be the first thing on the page, in recognisably the same words",
+          "No single obvious action — pages offering four competing options (call, email, book, download, follow) spread attention instead of directing it. One primary action, repeated, converts better than five presented as equals",
+          "The main action buried below the fold — if someone has to scroll to work out what you want them to do, a portion never will. The offer and the way to take it should be visible immediately, then repeated further down for people who read on",
+        ],
+      },
+      {
+        heading: "At the point of enquiring: friction and doubt",
+        paragraphs: [
+          "The last two lose people who were genuinely ready — which makes them the most painful of the seven.",
+        ],
+        bullets: [
+          "A form asking for too much — every additional field costs you completions. Ask only for what you genuinely need to have a useful first conversation, and collect the rest once you're talking. A form demanding postcode, budget, company size and preferred contact time is doing your qualification at the expense of your conversion rate",
+          "Nothing proving you're a real business — a stranger who arrived thirty seconds ago is being asked for their phone number. Real photos of your work, genuine reviews, a company address, a named person: these do quiet, unglamorous work. A page that could belong to anyone gets treated with the caution that deserves",
+        ],
+      },
+      {
+        heading: "A ten-minute self-check",
+        paragraphs: [
+          "You don't need analytics tooling to catch most of this. Click your own ad on your own phone, as though you'd never seen it before, and ask:",
+          "Did the page appear quickly? Does the first thing on screen say what the ad said? Is it immediately obvious what I'm meant to do next? Could I complete the form one-handed, standing up, in under a minute? Is there anything here proving this is a real business?",
+          "If you hesitate on any of those, you've found something worth fixing — and fixing the page is usually faster and cheaper than rebuilding the campaign that's pointing at it.",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "Landing pages are part of what we build for every client, precisely because the campaign and the page it points to have to be designed as one thing rather than handed off between two. If your ads are generating clicks that aren't turning into enquiries, get in touch for a free strategy call and we'll look at where the drop-off is actually happening.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "facebook-ads-vs-instagram-ads-budget",
     title: "Facebook Ads vs Instagram Ads: Where Should Your Budget Go?",
     description:

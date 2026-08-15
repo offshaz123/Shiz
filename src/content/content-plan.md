@@ -22,6 +22,7 @@ keywords, dealership social strategy).
 - What an AI Receptionist Actually Does (and Doesn't) (feature deep-dive)
 - Ad Spend vs Management Fees: What You're Actually Paying For (cost/budgeting)
 - Facebook Ads vs Instagram Ads: Where Should Your Budget Go? (comparison/explainer)
+- 7 Signs Your Landing Page Is Losing You Leads (practical how-to)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -57,7 +58,7 @@ keywords, dealership social strategy).
 ## Backlog — practical how-to / checklist
 - [x] How Fast Should You Reply to a Lead? (and what it costs you if you don't) — target: "lead
       response time statistics", "speed to lead"
-- [ ] 7 Signs Your Landing Page Is Losing You Leads — target: "landing page conversion tips"
+- [x] 7 Signs Your Landing Page Is Losing You Leads — target: "landing page conversion tips"
 - [x] What Makes Ad Creative Actually Convert (Not Just Get Likes) — target: "Facebook ad
       creative best practices"
 - [ ] A Simple Checklist Before You Launch Your First Meta Ad Campaign — target: "how to start
