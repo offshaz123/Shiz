@@ -23,6 +23,7 @@ keywords, dealership social strategy).
 - Ad Spend vs Management Fees: What You're Actually Paying For (cost/budgeting)
 - Facebook Ads vs Instagram Ads: Where Should Your Budget Go? (comparison/explainer)
 - 7 Signs Your Landing Page Is Losing You Leads (practical how-to)
+- What Is a Unified Inbox, and Why Does It Matter for Lead Gen? (feature deep-dive)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -65,7 +66,7 @@ keywords, dealership social strategy).
       Facebook ads checklist"
 
 ## Backlog — feature deep-dives (what Shaz Marketing Group sells)
-- [ ] What Is a Unified Inbox, and Why Does It Matter for Lead Gen? — target: "social media
+- [x] What Is a Unified Inbox, and Why Does It Matter for Lead Gen? — target: "social media
       inbox software UK"
 - [x] Missed-Call Text-Back: How It Recovers Leads You're Already Paying For — target:
       "missed call text back"

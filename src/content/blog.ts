@@ -16,6 +16,76 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "what-is-a-unified-inbox-lead-generation",
+    title: "What Is a Unified Inbox, and Why Does It Matter for Lead Generation?",
+    description:
+      "Enquiries arrive across six different apps and half get missed. Here's what a unified inbox actually changes, what it doesn't, and when you genuinely need one.",
+    publishedAt: "2026-08-16",
+    keywords: [
+      "social media inbox software UK",
+      "unified inbox for business",
+      "manage Instagram and Facebook messages in one place",
+      "shared team inbox for enquiries",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Count the places a new enquiry can reach your business. Instagram DMs. Facebook Messenger. WhatsApp. Text messages. Email. The contact form on your website. Missed calls. For most small businesses that's seven separate channels, each with its own app, its own notifications, and sometimes its own device or member of staff.",
+          "A unified inbox pulls all of them into one place. That sounds like a convenience feature — a bit of tidying up — and it's routinely underestimated for that reason. In practice it's usually the difference between knowing what enquiries you've had and guessing.",
+        ],
+      },
+      {
+        heading: "The problem it's actually solving",
+        paragraphs: [
+          "The obvious issue is missed messages, and that's real: an enquiry sitting unread in an app nobody thought to check is simply lost. But the less obvious problems tend to cost more over time.",
+        ],
+        bullets: [
+          "Nobody knows what's already been handled — two people reply to the same person, or everyone assumes someone else did and nobody does",
+          "The business owner has no visibility — you can't manage, measure or improve a flow of enquiries you can't actually see in one place",
+          "Context disappears at handover — someone covering a shift has no idea what was already discussed, so the customer repeats themselves",
+          "There's no record to look back on — \"did we ever follow up with that person from last month?\" becomes unanswerable",
+          "Enquiries land on personal accounts — DMs arriving on a staff member's own phone leave with them when they go on holiday, or leave the business entirely",
+        ],
+      },
+      {
+        heading: "What changes when everything lands in one place",
+        paragraphs: [
+          "The immediate change is that every enquiry becomes visible in a single queue, whichever channel it arrived through. From there, several things become possible that simply weren't before: assigning conversations so there's always one clear owner, seeing a person's full history even if they messaged on WhatsApp last month and Instagram today, and using saved replies for the questions you answer constantly.",
+          "The part that surprises people most is the reporting. Once every enquiry passes through one system, you can finally see how many you're actually getting, how quickly they're being answered, and which channels produce the ones that turn into customers. Most businesses running ads have a rough sense of their ad metrics and almost no data on what happens after the click — this is the gap that closes.",
+          "That matters more when you're paying for the enquiries. A missed message from someone who found you organically is unfortunate. A missed message from someone you paid to bring in is money spent and thrown away, and it's happening in a channel you're not watching.",
+        ],
+      },
+      {
+        heading: "What it doesn't do",
+        paragraphs: [
+          "A unified inbox organises conversations. It doesn't have them for you. If nobody has time to reply, consolidating the enquiries just gives you a tidier view of the ones you're missing — the automation and AI answering sit on top of it as separate things, not as features you get automatically by consolidating.",
+          "It also isn't quite the seamless picture the marketing usually paints. Messaging platforms each impose their own rules about what can be accessed through their APIs and how long you have to respond, so a few things behave slightly differently than they would in the native app. It's a real limitation, though a minor one next to not seeing the message at all.",
+          "And there's genuine setup involved — connecting accounts, sorting out permissions, agreeing who handles what. It's a couple of hours of faff, not a switch you flip.",
+        ],
+      },
+      {
+        heading: "Do you actually need one yet?",
+        paragraphs: [
+          "Not every business does, and it's worth being honest about that. If you're a sole trader getting a handful of enquiries a week, all by phone, answering them yourself as they come in, a unified inbox is solving a problem you don't have.",
+          "It starts genuinely earning its place when any of these are true:",
+        ],
+        bullets: [
+          "Enquiries are arriving on three or more channels and you're checking them separately",
+          "More than one person handles enquiries, so ownership and context matter",
+          "You're running paid ads, and every unanswered message is money already spent",
+          "Messages arrive outside working hours and you have no reliable way of catching them",
+          "You genuinely don't know how many enquiries you got last month",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "A unified inbox is part of what we set up for clients from the Growth plan upwards, alongside the automated follow-up that runs on top of it. If enquiries are scattered across half a dozen apps and you suspect some are being missed, get in touch for a free strategy call and we'll map out where they're actually arriving.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "signs-your-landing-page-is-losing-leads",
     title: "7 Signs Your Landing Page Is Losing You Leads",
     description:
