@@ -16,6 +16,69 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-for-professional-services",
+    title: "Meta & Instagram Ads for Professional Services: What's Different",
+    description:
+      "Accountants, solicitors and consultants can't advertise like a takeaway. Longer decisions, higher lead values, and platform rules most firms don't know about.",
+    publishedAt: "2026-08-17",
+    keywords: [
+      "Facebook ads for professional services",
+      "lead gen ads for consultants",
+      "Instagram ads for accountants",
+      "digital marketing for solicitors UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Professional services sit awkwardly with most advertising advice. The standard playbook assumes a fairly quick decision, a visual product, and a customer who can be nudged into acting today. Nobody impulse-hires a solicitor at eleven at night because the creative was compelling.",
+          "That doesn't mean Meta and Instagram ads don't work for accountants, consultants, solicitors and similar firms — it means the campaign has to be built around a longer, more considered decision, and around a set of platform rules that catch a lot of professional firms out.",
+        ],
+      },
+      {
+        heading: "The economics are different, and that changes the maths",
+        paragraphs: [
+          "A single professional services client can be worth thousands of pounds, often recurring over years. That changes what a sensible cost per lead looks like entirely. A figure that would be alarming for a restaurant filling midweek tables can be perfectly rational when the resulting client stays for five years.",
+          "The flip side is that lead volume is usually lower and the proportion that convert is smaller, because people shop around more carefully for something they'll be trusting with their accounts, their legal position or their business strategy. Judging these campaigns on cost per lead alone tends to mislead — cost per signed client is the number that actually reflects whether it's working, even though it takes longer to establish.",
+        ],
+      },
+      {
+        heading: "Special Ad Categories — check this before you spend anything",
+        paragraphs: [
+          "This is the part that catches professional firms out most often, and it's worth understanding before your first campaign rather than after it gets rejected.",
+          "Meta requires certain kinds of advertising to be declared as a Special Ad Category — credit, employment, housing, and social or political issues. If your firm advertises anything touching credit or lending, or roles you're recruiting for, that declaration is mandatory. Declaring it restricts your targeting significantly: age and gender targeting are removed, detailed targeting options are reduced, and location targeting is limited to a wider minimum radius than you'd otherwise use.",
+          "Two practical consequences. First, if this applies to you, plan for it — a campaign designed around tight local targeting may need rethinking. Second, declare it honestly. Running restricted-category ads without the declaration risks having ads rejected and, repeated, your ad account restricted. Getting this wrong is a far more expensive problem than the targeting limitation you were avoiding.",
+          "Separately, your own professional body's advertising rules still apply — the SRA, ICAEW, FCA and equivalents each have their own requirements about how services can be promoted. Meta approving an ad says nothing about whether your regulator would. That check is the firm's responsibility and worth doing properly.",
+        ],
+      },
+      {
+        heading: "Trust does most of the selling",
+        paragraphs: [
+          "For a considered, high-value service, credibility carries more weight than cleverness. People are choosing who to trust with something that matters, and the creative that works reflects that.",
+        ],
+        bullets: [
+          "The actual professional on camera — a partner explaining a common problem in plain language consistently outperforms stock imagery, because clients are hiring a person rather than a firm in the abstract",
+          "Genuine credentials, stated plainly — qualifications, accreditations and years in practice do quiet, unglamorous work here",
+          "Real specifics about who you serve — \"accountants for owner-managed construction firms\" pulls harder than \"accountancy services,\" because the right person recognises themselves immediately",
+          "Careful language about outcomes — never promise a result you can't guarantee. Beyond the regulatory problem, outcome promises tend to attract exactly the enquiries you'd rather not have",
+        ],
+      },
+      {
+        heading: "Offer a smaller first step, then follow up properly",
+        paragraphs: [
+          "Asking a stranger to instruct your firm straight from an ad is a large leap. A smaller commitment converts far better as an opening move: a genuinely useful guide, a short review of their current position, or simply a no-obligation conversation with a real person.",
+          "What matters more is what happens next, because this is where professional services campaigns most often fall down. Someone who downloads a guide about business structure in August might not be ready to move until their year end. If the enquiry sits in an inbox and nobody follows up in the meantime, you've paid to generate a lead and then handed it to whoever does stay in touch.",
+          "That makes structured follow-up — a record of every enquiry, a sensible sequence of contact over weeks rather than hours, and a clear owner for each conversation — more important in this sector than in almost any other. The ads open the door; the follow-up decides whether anyone walks through it.",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "If you run a professional services firm and want Meta & Instagram ads built around a longer decision cycle — with the category rules handled properly and follow-up that survives a sales cycle measured in months — get in touch for a free strategy call.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "what-is-a-unified-inbox-lead-generation",
     title: "What Is a Unified Inbox, and Why Does It Matter for Lead Generation?",
     description:

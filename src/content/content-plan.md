@@ -24,6 +24,7 @@ keywords, dealership social strategy).
 - Facebook Ads vs Instagram Ads: Where Should Your Budget Go? (comparison/explainer)
 - 7 Signs Your Landing Page Is Losing You Leads (practical how-to)
 - What Is a Unified Inbox, and Why Does It Matter for Lead Gen? (feature deep-dive)
+- Meta & Instagram Ads for Professional Services (industry-specific)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -37,7 +38,7 @@ keywords, dealership social strategy).
       "Instagram lead ads property UK"
 - [x] Meta & Instagram Ads for Restaurants & Hospitality — target: "Instagram ads for
       restaurants UK", "Facebook ads for cafes"
-- [ ] Meta & Instagram Ads for Professional Services (accountants, solicitors, consultants) —
+- [x] Meta & Instagram Ads for Professional Services (accountants, solicitors, consultants) —
       target: "Facebook ads for professional services", "lead gen ads for consultants"
 - [ ] Used Car Dealers vs Franchise Dealers: Different Meta Ads Strategy — target: "used car
       dealer marketing", building on the existing automotive guide with a sharper angle
