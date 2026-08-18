@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { siteConfig } from "@/lib/site-config";
 
 const points = [
@@ -10,6 +11,35 @@ export function LondonOfficeSection() {
   return (
     <section className="border-y border-border bg-surface">
       <div className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
+        {/* Office photo — gradient hairline frame and a fade so the caption sits
+            over the image rather than in a separate bar. */}
+        <div className="brand-gradient-bg mb-12 rounded-[26px] p-[1.5px] shadow-2xl shadow-black/20">
+          <div className="relative overflow-hidden rounded-[25px] bg-background">
+            <Image
+              src="/office-level39.jpg"
+              alt="Level 39 workspace at One Canada Square, Canary Wharf"
+              width={1024}
+              height={479}
+              className="h-full w-full object-cover"
+              priority={false}
+            />
+            <div className="absolute inset-x-0 bottom-0 h-2/5 bg-gradient-to-t from-black/85 via-black/45 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-3 p-5 sm:p-7">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/70">
+                  Our Workspace
+                </p>
+                <p className="mt-1 text-lg font-bold text-white sm:text-2xl">
+                  Level 39, One Canada Square
+                </p>
+              </div>
+              <span className="rounded-full border border-white/25 bg-white/10 px-3.5 py-1.5 text-xs font-medium text-white backdrop-blur-sm">
+                Canary Wharf, London
+              </span>
+            </div>
+          </div>
+        </div>
+
         <div className="grid items-center gap-10 lg:grid-cols-2">
           <div>
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
