@@ -31,7 +31,20 @@ export const siteConfig = {
     facebook: "",
     linkedin: "",
   },
+  // Public review rating, shown as a star badge and published in the
+  // Organization schema. Fill these in ONLY from reviews genuinely received on
+  // a real profile — the count and average must match what's publicly visible
+  // there. While `count` is 0 the badge renders nothing and no rating is
+  // published, which is deliberate: publishing a rating you can't evidence
+  // breaches UK consumer protection rules and risks a Google manual action.
+  reviews: {
+    averageRating: 0,
+    count: 0,
+    profileUrl: "",
+  },
 };
+
+export const hasPublishedReviews = siteConfig.reviews.count > 0;
 
 export const socialProfileUrls = Object.values(siteConfig.social).filter(Boolean);
 

@@ -1,4 +1,4 @@
-import { siteConfig, socialProfileUrls } from "@/lib/site-config";
+import { siteConfig, socialProfileUrls, hasPublishedReviews } from "@/lib/site-config";
 
 export function OrganizationJsonLd() {
   const data = {
@@ -15,6 +15,15 @@ export function OrganizationJsonLd() {
     priceRange: "££",
     // Tells Google these social profiles are the same business entity.
     ...(socialProfileUrls.length > 0 && { sameAs: socialProfileUrls }),
+    // Only published once real reviews exist — an unevidenced rating here is a
+    // manual-action risk, not just a credibility one.
+    ...(hasPublishedReviews && {
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: siteConfig.reviews.averageRating,
+        reviewCount: siteConfig.reviews.count,
+      },
+    }),
     areaServed: {
       "@type": "Country",
       name: "United Kingdom",

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { RealResultsSection } from "@/components/RealResults";
 import { IndustryStatsSection } from "@/components/IndustryStats";
+import { LondonOfficeSection } from "@/components/LondonOffice";
+import { ReviewBadge } from "@/components/ReviewBadge";
 import { CaseStudySection } from "@/components/CaseStudy";
 import { GoogleCalendarBadge } from "@/components/GoogleCalendarBadge";
 import { FaqJsonLd } from "@/components/StructuredData";
@@ -93,6 +95,10 @@ export default function Home() {
             </a>
           </div>
 
+          <div className="mt-8 flex justify-center">
+            <ReviewBadge />
+          </div>
+
           <div className="mx-auto mt-16 flex max-w-4xl flex-wrap items-center justify-center gap-2.5">
             {industries.map((tag) => (
               <span
@@ -106,6 +112,7 @@ export default function Home() {
         </div>
       </section>
 
+      <LondonOfficeSection />
       <IndustryStatsSection />
       <RealResultsSection />
       <CaseStudySection />
