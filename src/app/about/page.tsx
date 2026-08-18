@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "About Us",
+  title: "About Our London Meta Ads Agency",
   description:
     "Shaz Marketing Group helps businesses of every kind grow with Meta & Instagram ads, all-in-one CRM and AI-powered follow-up.",
   alternates: { canonical: "/about" },

@@ -3,7 +3,7 @@ import { LeadForm } from "@/components/LeadForm";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
 
 export const metadata: Metadata = {
-  title: "Contact Us",
+  title: "Contact Our Meta Ads Team in London",
   description:
     "Get in touch with Shaz Marketing Group for a free Meta & Instagram ads strategy call, by form, email, phone or WhatsApp.",
   alternates: { canonical: "/contact" },
