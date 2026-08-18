@@ -25,6 +25,7 @@ keywords, dealership social strategy).
 - 7 Signs Your Landing Page Is Losing You Leads (practical how-to)
 - What Is a Unified Inbox, and Why Does It Matter for Lead Gen? (feature deep-dive)
 - Meta & Instagram Ads for Professional Services (industry-specific)
+- Organic Social vs Paid Ads: Why You Probably Need Both (comparison/explainer)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -52,7 +53,7 @@ keywords, dealership social strategy).
 ## Backlog — comparison/explainer
 - [x] Meta Ads vs Google Ads: Which Is Right for Your Business? — target: "Facebook ads vs
       Google ads", "Meta ads vs Google ads small business"
-- [ ] Organic Social vs Paid Ads: Why You Probably Need Both — target: "organic vs paid social
+- [x] Organic Social vs Paid Ads: Why You Probably Need Both — target: "organic vs paid social
       media"
 - [x] Facebook Ads vs Instagram Ads: Where Should Your Budget Go? — target: "Instagram ads vs
       Facebook ads"

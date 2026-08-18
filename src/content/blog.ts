@@ -16,6 +16,71 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "organic-social-vs-paid-ads",
+    title: "Organic Social vs Paid Ads: Why You Probably Need Both",
+    description:
+      "They do genuinely different jobs, and the handover between them decides whether an interested person enquires or quietly moves on. Here's how they fit together.",
+    publishedAt: "2026-08-18",
+    keywords: [
+      "organic vs paid social media",
+      "do I need to post on social media if I run ads",
+      "organic social media for small business",
+      "social media strategy small business UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "It's usually framed as a choice: should we be posting consistently, or should we put that effort and money into ads? For most small businesses it isn't really a choice, because the two aren't alternatives — they do different jobs, and each one is noticeably weaker without the other.",
+          "The interesting part isn't the comparison. It's what happens in the handover between them, which is where most businesses quietly lose enquiries they'd already paid for.",
+        ],
+      },
+      {
+        heading: "They're doing two different jobs",
+        paragraphs: [
+          "Paid ads buy reach among people who don't know you exist. That's their entire function, and nothing else does it as quickly or as predictably. You decide who sees you, roughly how many of them, and when.",
+          "Organic posting does almost the opposite. Its reach is mostly limited to people who already follow you or have already come across you — which sounds like a weakness until you consider that those are exactly the people closest to buying. Organic isn't a discovery channel for most small businesses; it's a credibility and depth channel for people already circling.",
+          "Judging one by the other's yardstick is where the confusion starts. Organic posts that reach a few hundred people look like a failure next to an ad reaching thousands. But if those few hundred include people currently deciding whether to trust you, the comparison isn't measuring anything useful.",
+        ],
+      },
+      {
+        heading: "The moment they check your profile",
+        paragraphs: [
+          "Here's the interaction that gets overlooked, and it's the strongest practical argument for doing both.",
+          "Someone sees your ad. It lands, they're interested — and before enquiring, a large share of people will tap through to your profile to see who you actually are. That check takes about four seconds, and what they find decides a lot.",
+          "A profile with recent posts, real work, and some evidence the business is active reassures them and they carry on. A profile whose last post was eighteen months ago raises a quiet doubt — are these people still trading, are they any good, is this worth the risk? They rarely articulate it. They just don't enquire, and nothing in your ad reporting will ever tell you that's why.",
+          "This is what makes the two genuinely interdependent. Paid does the work of getting someone interested; organic is the credibility check that happens immediately afterwards. Spending well on ads while your profile sits dormant means paying to send people to something that undermines the ad.",
+        ],
+      },
+      {
+        heading: "What each one genuinely can't do",
+        paragraphs: [
+          "Being honest about the limits on both sides makes the split easier to reason about:",
+        ],
+        bullets: [
+          "Organic can't be scaled on demand — if you need enquiries next week, posting more won't reliably produce them, and there's no dial to turn",
+          "Organic can't be targeted — you reach whoever the platform shows it to, largely people already connected to you",
+          "Paid can't build trust on its own — an ad is a claim about your business; a profile full of real work is evidence for it",
+          "Paid stops the moment you stop paying — the reach ends with the budget, whereas posts and the credibility they build stay put",
+          "Neither fixes a weak offer — both simply get more people to the same decision faster",
+        ],
+      },
+      {
+        heading: "A realistic split when you're short on time",
+        paragraphs: [
+          "The usual failure isn't choosing wrongly — it's committing to an organic schedule nobody can sustain, posting daily for three weeks, then stopping entirely. A dormant profile with a burst of activity last spring reads worse than a modest but current one.",
+          "For most small businesses, a sustainable rhythm beats an ambitious one. A couple of genuinely useful posts a week, kept up indefinitely, does the credibility job perfectly well. Real work, finished jobs, the team, answers to questions customers actually ask — none of which needs to be polished to count.",
+          "Put the money into paid, because that's what buys reach and it's the part that scales. Put the time into keeping the profile current and credible, because that's the part that decides whether the reach converts. And bear in mind that the organic post which gets the most likes isn't necessarily the best ad creative — engagement and enquiries are different outcomes, and the crossover is less direct than it looks.",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "If you're running ads while your profile sits mostly untouched, that gap is worth closing before increasing budget — it's cheaper to fix than more spend is to buy. Get in touch for a free strategy call and we'll look at both sides of it together.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-for-professional-services",
     title: "Meta & Instagram Ads for Professional Services: What's Different",
     description:
