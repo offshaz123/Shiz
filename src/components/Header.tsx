@@ -37,39 +37,9 @@ export function Header() {
   }
 
   return (
-    <>
-      {/* Address strip — first thing on the page, above the nav. */}
-      <div className="border-b border-border bg-surface">
-        <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 px-5 py-2 text-center sm:justify-between sm:px-8 sm:text-left">
-          <p className="flex items-center gap-2 text-xs text-muted">
-            <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5 shrink-0 text-brand-pink">
-              <path
-                d="M12 21s7-6.5 7-11.5A7 7 0 0 0 5 9.5C5 14.5 12 21 12 21Z"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinejoin="round"
-              />
-              <circle cx="12" cy="9.5" r="2.4" stroke="currentColor" strokeWidth="1.8" />
-            </svg>
-            <span>
-              {siteConfig.address.line1}, {siteConfig.address.line2}, {siteConfig.address.city}{" "}
-              {siteConfig.address.postcode}
-            </span>
-          </p>
-          <div className="hidden items-center gap-5 text-xs text-muted sm:flex">
-            <a href={`mailto:${siteConfig.email}`} className="hover:text-foreground">
-              {siteConfig.email}
-            </a>
-            <a href={`tel:${siteConfig.phoneE164}`} className="hover:text-foreground">
-              {siteConfig.phoneDisplay}
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
-        <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
-          <Logo />
+    <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
+      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
+        <Logo />
 
         <nav className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
@@ -148,10 +118,9 @@ export function Header() {
             >
               Get Free Strategy Call
             </Link>
-            </nav>
-          </div>
-        )}
-      </header>
-    </>
+          </nav>
+        </div>
+      )}
+    </header>
   );
 }
