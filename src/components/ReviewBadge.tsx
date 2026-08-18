@@ -40,11 +40,20 @@ export function ReviewBadge() {
   const className =
     "inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2";
 
-  return profileUrl ? (
-    <a href={profileUrl} target="_blank" rel="noopener noreferrer" className={`${className} transition-colors hover:border-brand-pink/60`}>
-      {inner}
-    </a>
-  ) : (
-    <div className={className}>{inner}</div>
+  return (
+    <div className="mt-8 flex justify-center">
+      {profileUrl ? (
+        <a
+          href={profileUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`${className} transition-colors hover:border-brand-pink/60`}
+        >
+          {inner}
+        </a>
+      ) : (
+        <div className={className}>{inner}</div>
+      )}
+    </div>
   );
 }

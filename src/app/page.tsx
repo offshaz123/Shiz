@@ -95,9 +95,7 @@ export default function Home() {
             </a>
           </div>
 
-          <div className="mt-8 flex justify-center">
-            <ReviewBadge />
-          </div>
+          <ReviewBadge />
 
           <div className="mx-auto mt-16 flex max-w-4xl flex-wrap items-center justify-center gap-2.5">
             {industries.map((tag) => (
