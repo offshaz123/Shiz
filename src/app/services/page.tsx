@@ -42,6 +42,12 @@ const services = [
       "A 24/7 AI receptionist answers questions, qualifies leads and books appointments even when you're closed — with deeper automation integrations rolling out soon.",
     points: ["Answers FAQs instantly, day or night", "Qualifies & books leads automatically", "Deeper automation integration coming soon"],
   },
+  {
+    title: "Website Design & Build",
+    description:
+      "Ads can only do so much if they send people to a slow or dated website. We build fast, mobile-first sites designed around one thing: turning visitors into enquiries.",
+    points: ["Built to convert, not just to look good", "SEO foundations set up from day one", "From £300 as a standalone project"],
+  },
 ];
 
 const steps = [
@@ -222,6 +228,73 @@ export default function ServicesPage() {
                   <span className="shrink-0 text-xs text-muted">{row.time}</span>
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Website design */}
+      <section id="websites" className="border-y border-border bg-surface">
+        <div className="mx-auto max-w-6xl px-5 py-24 sm:px-8">
+          <div className="grid items-center gap-12 lg:grid-cols-2">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+                Website Design &amp; Build
+              </span>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                Does your website actually win you work?
+              </h2>
+              <p className="mt-4 text-muted">
+                Plenty of businesses have a website that looks fine and does nothing. It loads
+                slowly on a phone, buries the phone number, and never appears when someone
+                searches for what you do. If you&apos;re paying to send people there, that&apos;s
+                money leaking on arrival.
+              </p>
+              <p className="mt-4 text-muted">
+                We build sites designed around enquiries rather than decoration — fast, mobile
+                first, and set up so search engines can actually find you.
+              </p>
+              <ul className="mt-6 space-y-3">
+                {[
+                  "Built mobile-first, because that's where nearly all ad traffic lands",
+                  "SEO foundations set up properly from day one, not bolted on later",
+                  "Clear enquiry paths — call, WhatsApp, form or booking, whichever suits you",
+                  "Yours outright, with no monthly lock-in on the build itself",
+                ].map((item) => (
+                  <li key={item} className="flex items-start gap-2.5 text-sm text-muted">
+                    <svg viewBox="0 0 24 24" fill="none" className="mt-0.5 h-4 w-4 shrink-0 text-brand-pink">
+                      <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="rounded-3xl border border-border bg-background p-8">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+                Website Projects
+              </p>
+              <div className="mt-4 flex items-baseline gap-2">
+                <span className="text-sm text-muted">from</span>
+                <span className="brand-gradient-text text-5xl font-bold">£300</span>
+              </div>
+              <p className="mt-4 text-sm leading-relaxed text-muted">
+                Priced per project rather than monthly, and completely separate from our Meta
+                &amp; Instagram ads plans — you can have a website built without taking on any
+                ongoing management, or run both together.
+              </p>
+              <p className="mt-4 text-sm leading-relaxed text-muted">
+                Final cost depends on how many pages you need and whether you want booking,
+                payments or a blog built in. We&apos;ll quote properly once we know what
+                you&apos;re after.
+              </p>
+              <Link
+                href="/contact"
+                className="brand-gradient-bg mt-8 inline-flex rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
+              >
+                Get a Website Quote
+              </Link>
             </div>
           </div>
         </div>

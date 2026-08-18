@@ -54,6 +54,7 @@ const whatWeDo = [
   { title: "Done-For-You Lead Generation", description: "Every ad click turned into a captured, organised enquiry." },
   { title: "One Inbox, Every Channel", description: "Instagram, WhatsApp, SMS & email — unified so nothing's missed." },
   { title: "24/7 AI Receptionist", description: "Answers questions and books leads even when you're closed." },
+  { title: "Website Design & Build", description: "Fast, mobile-first sites built to convert — from £300." },
 ];
 
 export default function Home() {
@@ -126,7 +127,7 @@ export default function Home() {
           </h2>
         </div>
 
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {whatWeDo.map((item) => (
             <div
               key={item.title}
