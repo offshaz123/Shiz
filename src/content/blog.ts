@@ -16,6 +16,91 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "checklist-before-first-meta-ad-campaign",
+    title: "A Simple Checklist Before You Launch Your First Meta Ad Campaign",
+    description:
+      "Most first campaigns fail on something set up before launch, not on the ads themselves. Fifteen things worth checking while it's still cheap to fix them.",
+    publishedAt: "2026-08-19",
+    keywords: [
+      "how to start Facebook ads checklist",
+      "Meta ads setup checklist",
+      "launching first Instagram ad campaign",
+      "what to do before running Facebook ads",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "The frustrating thing about a first campaign going badly is that the cause is usually decided before it ever goes live. The targeting was fine, the creative was fine — but the Pixel wasn't firing, or the objective was set to traffic, or the page the clicks landed on took six seconds to load on a phone.",
+          "None of that is difficult to fix. It's just far cheaper to fix beforehand than to discover three weeks and several hundred pounds later. Here's what's worth checking first, roughly in the order you'll meet it.",
+        ],
+      },
+      {
+        heading: "Before you spend anything: the account setup",
+        paragraphs: [
+          "Dull, and the source of most launch-day problems:",
+        ],
+        bullets: [
+          "The ad account is in your name, not your agency's — this matters more than it sounds, because campaign history and accumulated Pixel data stay with whoever owns the account when you part ways",
+          "Currency is set correctly — Meta will not let you change it afterwards, and fixing it means creating a whole new ad account from scratch",
+          "A working payment method that won't decline — a card being refused is one of the most common reasons a first campaign fails to publish, and the error message rarely says so clearly",
+          "The correct Facebook Page and Instagram account are connected — if you run more than one business, check this carefully, because ads defaulting to the wrong brand is easy to miss until someone points it out",
+          "The Meta Pixel is installed and actually firing, verified in Test Events rather than assumed — without it Meta has no idea which clicks turned into enquiries, and cannot optimise toward the ones that do",
+        ],
+      },
+      {
+        heading: "The campaign settings that matter most",
+        paragraphs: [
+          "A handful of choices here account for most of the difference between a campaign that works and one that quietly wastes money:",
+        ],
+        bullets: [
+          "The objective is leads or conversions, not traffic or engagement — this is the single most consequential setting, because it tells Meta what kind of person to go and find",
+          "The budget is enough to gather data — a campaign fed too little sits in its learning phase, optimising badly, and the poor results get blamed on the platform rather than the budget",
+          "Placements are left open unless you have a specific reason to restrict them, since narrowing them shrinks the pool Meta can buy from and usually raises costs",
+          "Location targeting matches your realistic service area — a radius wider than you'd actually travel spends money on enquiries you'll turn down",
+          "If your business touches credit, employment or housing, the Special Ad Category is declared — running restricted ads without declaring risks your ads and eventually your account",
+        ],
+      },
+      {
+        heading: "Where the click lands",
+        paragraphs: [
+          "You've now paid for the click. Everything from here decides whether it was worth anything.",
+        ],
+        bullets: [
+          "The page loads quickly on a phone over mobile data, not just on your office wifi",
+          "The first thing on the page says what the ad said, in recognisably the same words — sending a specific ad to a generic homepage is the most expensive mismatch there is",
+          "There's one obvious next action rather than four competing ones",
+          "The form asks only for what you genuinely need to have a first conversation — every extra field costs completions",
+          "Something on the page proves you're a real business: real photos, an address, genuine reviews",
+        ],
+      },
+      {
+        heading: "What happens after the enquiry arrives",
+        paragraphs: [
+          "This is the part almost nobody checks before launching, and it's where good campaigns most often come apart. An ad that generates enquiries nobody answers has cost you money and produced nothing.",
+        ],
+        bullets: [
+          "Someone is actually responsible for watching for new enquiries, and knows they are",
+          "Notifications are switched on for whichever channel the leads arrive through — enquiries sitting unread in an app nobody checks is depressingly common",
+          "There's a plan for enquiries arriving outside working hours, even if it's only an acknowledgement until morning",
+          "You know what you'll say — a couple of prepared replies to common questions turns a five-minute response into a thirty-second one",
+        ],
+      },
+      {
+        heading: "One last thing before you press publish",
+        paragraphs: [
+          "Decide in advance what you'll judge the campaign on, and give it long enough to be judged fairly. Meta needs a couple of weeks of consistent spend before performance settles, so a decision made on day three is being made on noise.",
+          "Write down the number that matters — cost per enquiry, or better, cost per booked customer — and the date you'll review it. Doing that beforehand stops you turning a campaign off during the normal early wobble, which is the most common way a first campaign gets abandoned just before it starts working.",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "If you'd rather someone went through this with you before you spend anything, that's what a strategy call is for. Get in touch and we'll look at your setup, your budget and what's realistic for your business — even if the answer is that you're not quite ready to start yet.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "organic-social-vs-paid-ads",
     title: "Organic Social vs Paid Ads: Why You Probably Need Both",
     description:

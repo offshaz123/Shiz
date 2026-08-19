@@ -22,6 +22,8 @@ keywords, dealership social strategy).
 - What an AI Receptionist Actually Does (and Doesn't) (feature deep-dive)
 - Ad Spend vs Management Fees: What You're Actually Paying For (cost/budgeting)
 - Facebook Ads vs Instagram Ads: Where Should Your Budget Go? (comparison/explainer)
+- Organic Social vs Paid Ads: Why You Probably Need Both (comparison/explainer)
+- A Simple Checklist Before You Launch Your First Meta Ad Campaign (practical how-to)
 - 7 Signs Your Landing Page Is Losing You Leads (practical how-to)
 - What Is a Unified Inbox, and Why Does It Matter for Lead Gen? (feature deep-dive)
 - Meta & Instagram Ads for Professional Services (industry-specific)
@@ -64,7 +66,7 @@ keywords, dealership social strategy).
 - [x] 7 Signs Your Landing Page Is Losing You Leads — target: "landing page conversion tips"
 - [x] What Makes Ad Creative Actually Convert (Not Just Get Likes) — target: "Facebook ad
       creative best practices"
-- [ ] A Simple Checklist Before You Launch Your First Meta Ad Campaign — target: "how to start
+- [x] A Simple Checklist Before You Launch Your First Meta Ad Campaign — target: "how to start
       Facebook ads checklist"
 
 ## Backlog — feature deep-dives (what Shaz Marketing Group sells)
