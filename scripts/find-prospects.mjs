@@ -21,6 +21,26 @@
 
 const API = "https://api.company-information.service.gov.uk/advanced-search/companies";
 
+// Node's fetch ignores HTTP(S)_PROXY environment variables, unlike curl, so
+// behind an egress proxy every request fails with an opaque 403. NODE_USE_ENV_PROXY
+// fixes it but is only read at startup — so when we're behind a proxy and it
+// isn't set, re-exec ourselves once with it in place. No-op without a proxy.
+if ((process.env.HTTPS_PROXY || process.env.https_proxy) && !process.env.NODE_USE_ENV_PROXY) {
+  const { spawnSync } = await import("node:child_process");
+  const { existsSync } = await import("node:fs");
+  const env = { ...process.env, NODE_USE_ENV_PROXY: "1" };
+
+  // The proxy terminates TLS, so Node needs to trust its CA to verify the chain.
+  const caBundle = "/root/.ccr/ca-bundle.crt";
+  if (!env.NODE_EXTRA_CA_CERTS && existsSync(caBundle)) env.NODE_EXTRA_CA_CERTS = caBundle;
+
+  const child = spawnSync(process.execPath, [...process.execArgv, ...process.argv.slice(1)], {
+    env,
+    stdio: "inherit",
+  });
+  process.exit(child.status ?? 1);
+}
+
 // UK SIC 2007 codes, grouped by the sectors Shaz Marketing sells into.
 const SECTORS = {
   automotive: {
