@@ -24,6 +24,7 @@ keywords, dealership social strategy).
 - Facebook Ads vs Instagram Ads: Where Should Your Budget Go? (comparison/explainer)
 - Organic Social vs Paid Ads: Why You Probably Need Both (comparison/explainer)
 - A Simple Checklist Before You Launch Your First Meta Ad Campaign (practical how-to)
+- CRM Pipelines Explained for Business Owners Who Aren't Techy (feature deep-dive)
 - 7 Signs Your Landing Page Is Losing You Leads (practical how-to)
 - What Is a Unified Inbox, and Why Does It Matter for Lead Gen? (feature deep-dive)
 - Meta & Instagram Ads for Professional Services (industry-specific)
@@ -76,7 +77,7 @@ keywords, dealership social strategy).
       "missed call text back"
 - [x] What an AI Receptionist Actually Does (and Doesn't) — target: "AI receptionist for small
       business UK"
-- [ ] CRM Pipelines Explained for Business Owners Who Aren't Techy — target: "simple CRM for
+- [x] CRM Pipelines Explained for Business Owners Who Aren't Techy — target: "simple CRM for
       small business UK"
 
 ## Notes for whoever (human or Routine) picks the next topic

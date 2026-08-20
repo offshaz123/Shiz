@@ -16,6 +16,79 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "crm-pipelines-explained-for-business-owners",
+    title: "CRM Pipelines Explained for Business Owners Who Aren't Techy",
+    description:
+      "A pipeline is just the stages an enquiry passes through on its way to becoming a customer. Here's what that means in practice, and why most attempts fail.",
+    publishedAt: "2026-08-20",
+    keywords: [
+      "simple CRM for small business UK",
+      "what is a sales pipeline",
+      "CRM explained for small business",
+      "track enquiries small business",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "\"CRM\" and \"pipeline\" are two of those words that make perfectly capable business owners assume the topic isn't for them. They sound like software problems — something with a dashboard, a monthly fee and a training video nobody watches.",
+          "Underneath the jargon it's much simpler than that. A pipeline is just the list of stages an enquiry goes through between someone first contacting you and them becoming a paying customer. That's genuinely all it is.",
+        ],
+      },
+      {
+        heading: "What a pipeline actually is",
+        paragraphs: [
+          "Write down what happens to an enquiry in your business. For most, it looks something like: someone gets in touch, you speak to them, you send a price, they think about it, they book. Five steps.",
+          "Those steps are your pipeline. A CRM is just a place where every enquiry sits visibly in whichever step it's currently at, instead of living in your head, a notebook, and four different apps.",
+          "The value isn't in the software. It's that at any moment you can see how many people are waiting on a quote, how many said they'd think about it, and which ones haven't been contacted yet.",
+        ],
+      },
+      {
+        heading: "Why the notebook stops working",
+        paragraphs: [
+          "Tracking enquiries mentally works perfectly well at five a week. You remember who's who, you know who owes you a call, nothing slips.",
+          "It stops working somewhere around fifteen or twenty, and the failure is gradual rather than dramatic. You don't forget the enquiry that came in an hour ago, and you don't forget the customer booked in tomorrow. What you forget is everyone in the middle — the person you quoted eight days ago who said they'd get back to you, and then didn't.",
+          "That middle group is the most valuable and most neglected part of any small business. They've spoken to you, they know your price, they haven't said no. They're just waiting for a nudge nobody remembers to give them.",
+        ],
+      },
+      {
+        heading: "The stage that quietly loses you money",
+        paragraphs: [
+          "If you only ever fix one thing, make it this: know exactly who is sitting in the \"quoted, waiting to hear back\" stage, and have a habit of following up with them.",
+          "Most businesses lose more revenue here than anywhere else in their marketing. Not to competitors, and not because the price was wrong — simply because the conversation stopped and nobody restarted it. A single follow-up message a week later recovers a meaningful share of those.",
+          "This is also why a pipeline and paid advertising belong together. If you're spending money to generate enquiries and then losing a chunk of them in the middle stage, more ad budget just pushes more people into the same leak.",
+        ],
+      },
+      {
+        heading: "Keeping it simple enough to actually use",
+        paragraphs: [
+          "Most CRM attempts fail for one reason: someone builds something far too complicated, it becomes a chore to update, and within a month it's abandoned and quietly out of date — which is worse than no system at all, because now you don't trust what it says.",
+          "A few things keep it usable:",
+        ],
+        bullets: [
+          "Four to six stages, maximum — if you can't say them out loud from memory, it's too complex",
+          "Name them after what actually happens, not sales jargon — \"Quoted\" and \"Waiting to hear back\" beat \"Qualified opportunity\"",
+          "Everyone who touches an enquiry uses it, or it drifts out of date within a fortnight",
+          "Every enquiry has one clear owner, so nobody assumes someone else is handling it",
+          "It updates itself where possible — enquiries arriving from your ads, inbox or website should land in it automatically rather than needing typing in",
+        ],
+      },
+      {
+        heading: "What it won't do",
+        paragraphs: [
+          "A pipeline doesn't sell anything. It won't make a bad offer attractive or turn a slow reply into a fast one — it just makes visible what's already happening, which is often uncomfortable the first time you look at it properly.",
+          "It also isn't free of effort. Something has to keep it current, whether that's a person or automation. A CRM nobody updates is just a more expensive notebook.",
+        ],
+      },
+      {
+        heading: "Getting started",
+        paragraphs: [
+          "You don't need software to begin. Write down your five stages on paper, then list every open enquiry under the right one. Most people find several they'd completely forgotten, and following those up is usually worth more than the next month of ad spend.",
+          "When you want it running properly — enquiries flowing in automatically from your ads and inbox, follow-up happening without anyone remembering — that's what we build for clients from the Growth plan up. Get in touch for a free strategy call.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "checklist-before-first-meta-ad-campaign",
     title: "A Simple Checklist Before You Launch Your First Meta Ad Campaign",
     description:

@@ -147,7 +147,7 @@ async function main() {
 
   let total = 0;
 
-  for (const [slugName, group] of Object.entries(chosen)) {
+  for (const group of Object.values(chosen)) {
     let data;
     try {
       data = await search({ key, codes: group.codes, from, to, location, size: limit });
