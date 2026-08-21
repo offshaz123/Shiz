@@ -92,6 +92,7 @@ export default function Home() {
           <div className="mx-auto mt-16 flex max-w-3xl flex-wrap items-center justify-center gap-2.5">
             {[
               "Window Tints",
+              "Tail Light Tints",
               "Chameleon Windscreen",
               "Wraps & Dechrome",
               "PPF",

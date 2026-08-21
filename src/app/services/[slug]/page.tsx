@@ -5,6 +5,7 @@ import { serviceCategories, findServiceCategory } from "@/content/services";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { VariantSwatch } from "@/components/VariantSwatch";
 import { ServiceGallery } from "@/components/ServiceGallery";
+import { PlateDesigner } from "@/components/PlateDesigner";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
 
 export function generateStaticParams() {
@@ -92,6 +93,18 @@ export default async function ServiceCategoryPage({
           </div>
         )}
       </section>
+
+      {category.slug === "number-plates" && (
+        <section className="border-y border-border bg-surface">
+          <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">Design Your Plate</h2>
+            <p className="mt-2 text-sm text-muted">Choose your style, see it live, and send your order request.</p>
+            <div className="mt-8">
+              <PlateDesigner />
+            </div>
+          </div>
+        </section>
+      )}
 
       {category.variants && category.variants.length > 0 && (
         <section className="border-y border-border bg-surface">

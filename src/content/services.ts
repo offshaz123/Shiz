@@ -130,6 +130,24 @@ export const serviceCategories: ServiceCategory[] = [
     trustNote: "Loved by repeat customers — a lot of our tint customers come back with their next car too.",
   },
   {
+    slug: "tail-light-tinting",
+    navTitle: "Tail Light Tints",
+    title: "Tail Light Tinting",
+    shortDescription: "Smoke and dark smoke tail light tints, full or partial, in various finishes.",
+    description:
+      "Transform the back of your car with premium tail light tinting — a subtle smoke or a full dark-smoke look, fitted with UV-protected film that won't fade or peel.",
+    whatIncluded: [
+      { name: "Finish Options", description: "Smoke, dark smoke, or a custom finish to match what you're after." },
+      { name: "Full or Partial Coverage", description: "Tint the whole lens or just part of it, depending on the look you want." },
+    ],
+    highlights: [
+      "Smoke, dark smoke and custom finishes",
+      "UV-protected film material — won't fade or peel",
+      "Professional installation guarantee",
+    ],
+    pricing: [{ label: "Tail light tinting", price: "From £79" }],
+  },
+  {
     slug: "chameleon-windscreen",
     navTitle: "Chameleon Windscreen",
     title: "Chameleon Windscreen",
@@ -160,6 +178,7 @@ export const serviceCategories: ServiceCategory[] = [
       "Fitted as a legal sun-strip, not a full windscreen film",
       "Available in red/gold or blue",
     ],
+    pricing: [{ label: "Chameleon sun-strip", price: "From £99" }],
   },
   {
     slug: "number-plates",
@@ -214,6 +233,7 @@ export const serviceCategories: ServiceCategory[] = [
       { name: "Chrome", description: "A mirror-like, highly reflective finish.", swatch: { kind: "gradient", from: "#c8ccd2", to: "#f2f4f6" } },
     ],
     pricing: [
+      { label: "Full vehicle wrap", price: "From £999" },
       { label: "Accent wrap (roof, bonnet or mirrors)", price: "From £150" },
       { label: "Debadge", price: "From £20" },
     ],
@@ -243,6 +263,7 @@ export const serviceCategories: ServiceCategory[] = [
       "Self-healing film shrugs off light scratches and swirls",
       "Protects the panels that take the most damage — front bumper, bonnet, mirrors",
     ],
+    pricing: [{ label: "PPF protection", price: "From £499" }],
   },
   {
     slug: "ceramic-coating-detailing",
@@ -261,6 +282,7 @@ export const serviceCategories: ServiceCategory[] = [
       "Full detailing service alongside the coating, not just a wipe-down",
       "Choose the polish stage that matches your paint's condition",
     ],
+    pricing: [{ label: "Ceramic coating", price: "From £299" }],
   },
   {
     slug: "alloy-refurbishment",
