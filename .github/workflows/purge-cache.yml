@@ -1,0 +1,103 @@
+name: Purge Hostinger cache after deploy
+
+# Hostinger builds and deploys from this branch on push. This workflow clears
+# Hostinger's server-side and CDN caches afterwards, so nobody is served a page
+# left over from the previous build.
+#
+# This is belt-and-braces. The real fix is in next.config.ts, which stopped pages
+# being served with a year-long `s-maxage`; caches now revalidate before reusing
+# HTML. The purge is here in case a cache layer ignores those headers.
+#
+# There is no reliable way from here to detect the moment the deploy lands - the
+# homepage ETag varies between requests, so watching it gives false positives.
+# Instead we purge twice at spaced intervals, which covers both fast and slow
+# deploys without pretending to know which happened.
+#
+# Requires two repository secrets (Settings -> Secrets and variables -> Actions):
+#   HOSTINGER_API_TOKEN  - created in hPanel, under the API / access tokens area
+#   HOSTINGER_USERNAME   - the hosting account username, in the form u123456789
+# Without them the job exits cleanly rather than failing, so the branch never
+# shows a red tick just because the secrets haven't been added yet.
+
+on:
+  push:
+    branches: [claude/meta-ads-instagram-website-p2ah5o]
+  workflow_dispatch:
+
+concurrency:
+  group: purge-cache
+  cancel-in-progress: false
+
+env:
+  SITE: https://shazmarketing.com
+  DOMAIN: shazmarketing.com
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check secrets are present
+        id: check
+        run: |
+          if [ -z "${{ secrets.HOSTINGER_API_TOKEN }}" ] || [ -z "${{ secrets.HOSTINGER_USERNAME }}" ]; then
+            echo "Hostinger secrets not set - skipping purge."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: First purge, once the deploy has had time to build
+        if: steps.check.outputs.ready == 'true'
+        run: |
+          sleep 180
+          # Failures here are tolerated - the second purge is the one that must
+          # succeed, and this one may land before a slow deploy has finished.
+          code=$(curl -sS -X DELETE -o /tmp/purge1.json -w '%{http_code}' \
+            -H "Authorization: Bearer ${{ secrets.HOSTINGER_API_TOKEN }}" \
+            -H "Accept: application/json" \
+            "https://developers.hostinger.com/api/hosting/v1/accounts/${{ secrets.HOSTINGER_USERNAME }}/websites/${DOMAIN}/cache/clear")
+          echo "HTTP $code"
+          cat /tmp/purge1.json || true
+          echo
+
+      - name: Second purge, in case the deploy was slow
+        if: steps.check.outputs.ready == 'true'
+        run: |
+          sleep 300
+          code=$(curl -sS -X DELETE -o /tmp/purge.json -w '%{http_code}' \
+            -H "Authorization: Bearer ${{ secrets.HOSTINGER_API_TOKEN }}" \
+            -H "Accept: application/json" \
+            "https://developers.hostinger.com/api/hosting/v1/accounts/${{ secrets.HOSTINGER_USERNAME }}/websites/${DOMAIN}/cache/clear")
+          echo "HTTP $code"
+          cat /tmp/purge.json || true
+          echo
+          if [ "$code" != "200" ] && [ "$code" != "204" ]; then
+            echo "::error::Cache purge failed with HTTP $code"
+            exit 1
+          fi
+          echo "Cache purged."
+
+      - name: Verify the live page and its assets agree
+        if: steps.check.outputs.ready == 'true'
+        run: |
+          sleep 30
+          status=$(curl -sS -o /tmp/home.html -w '%{http_code}' "$SITE/")
+          echo "Homepage: HTTP $status"
+          [ "$status" = "200" ] || { echo "::error::Homepage returned $status"; exit 1; }
+
+          # The original bug was cached HTML referencing build assets that no
+          # longer existed. Checking a sample of them turns this into a canary:
+          # if the stale-cache problem ever returns, this step goes red.
+          fail=0
+          for asset in $(grep -o '/_next/static/chunks/[A-Za-z0-9._-]*\.js' /tmp/home.html | sort -u | head -8); do
+            code=$(curl -sS -o /dev/null -w '%{http_code}' "$SITE$asset")
+            echo "$code $asset"
+            [ "$code" = "200" ] || fail=1
+          done
+
+          if [ "$fail" = "1" ]; then
+            echo "::error::Live HTML references assets that do not exist - stale cache."
+            exit 1
+          fi
+          echo "HTML and assets are in step."
