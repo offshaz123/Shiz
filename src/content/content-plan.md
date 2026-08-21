@@ -29,6 +29,7 @@ keywords, dealership social strategy).
 - What Is a Unified Inbox, and Why Does It Matter for Lead Gen? (feature deep-dive)
 - Meta & Instagram Ads for Professional Services (industry-specific)
 - Organic Social vs Paid Ads: Why You Probably Need Both (comparison/explainer)
+- Why Meta Ads Get Rejected — and How to Get Them Approved (policy & troubleshooting)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -79,6 +80,43 @@ keywords, dealership social strategy).
       business UK"
 - [x] CRM Pipelines Explained for Business Owners Who Aren't Techy — target: "simple CRM for
       small business UK"
+
+## Backlog — policy & troubleshooting (added 2026-08-21 research round)
+- [x] Why Meta Ads Get Rejected — and How to Get Them Approved — target: "Facebook ad rejected",
+      "why was my Facebook ad rejected", "Meta ad policy UK"
+- [ ] Meta's Special Ad Categories: What Clinics, Lenders and Letting Agents Must Declare —
+      target: "Facebook ads special ad category", "restricted ad categories Meta UK"
+      (explain the rules and compliant alternatives only — never how to work around them)
+- [ ] What to Do If Your Facebook Ad Account Gets Disabled — target: "Facebook ad account
+      disabled UK", "Meta ad account restricted appeal"
+- [ ] Why Your Meta Ads Are Getting Low-Quality Leads (and How to Fix It) — target: "poor
+      quality Facebook leads", "fake leads Facebook ads"
+
+## Backlog — practical how-to (added 2026-08-21 research round)
+- [ ] How to Set Up Retargeting When You're a Small Business — target: "Facebook retargeting
+      small business", "warm audience ads UK"
+- [ ] How to Write Meta Ad Copy That Actually Gets Replies — target: "Facebook ad copy tips UK",
+      "how to write Facebook ads"
+- [ ] Reading Your Meta Ads Report: The Only Five Numbers That Matter — target: "Facebook ads
+      metrics explained", "Meta ads reporting for beginners"
+
+## Backlog — cost & expectation-setting (added 2026-08-21 research round)
+- [ ] How Long Before Meta Ads Start Working? The Learning Phase Explained — target: "Facebook
+      ads learning phase", "how long for Facebook ads to work"
+- [ ] What £300 a Month on Meta Ads Actually Buys You — target: "small Facebook ads budget UK",
+      "£10 a day Facebook ads"
+- [ ] Do You Need a Big Following to Run Meta Ads? — target: "do I need followers to run
+      Facebook ads", "Facebook ads without followers"
+
+## Backlog — industry-specific (added 2026-08-21 research round)
+- [ ] Meta & Instagram Ads for Gyms and Personal Trainers — target: "Facebook ads for gyms UK",
+      "Instagram ads personal trainer"
+- [ ] Meta & Instagram Ads for Wedding and Event Businesses — target: "Facebook ads for wedding
+      venues UK", "Instagram ads event planners"
+
+## Backlog — feature deep-dive (added 2026-08-21 research round)
+- [ ] What the Meta Pixel Actually Does, and Why It Matters More Than It Used To — target:
+      "Meta Pixel explained", "Facebook pixel small business"
 
 ## Notes for whoever (human or Routine) picks the next topic
 - Rotate categories — don't publish 3 industry guides in a row

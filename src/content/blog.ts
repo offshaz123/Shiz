@@ -16,6 +16,82 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "why-meta-ads-get-rejected",
+    title: "Why Meta Ads Get Rejected — and How to Get Them Approved",
+    description:
+      "Most ad rejections come down to a handful of predictable causes. Here's what actually triggers them, and how to write copy that gets approved first time.",
+    publishedAt: "2026-08-21",
+    keywords: [
+      "Facebook ad rejected",
+      "why was my Facebook ad rejected",
+      "Meta ad policy UK",
+      "Facebook ads approval process",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You write the ad, you pick the photo, you set the budget, and a few hours later there's an email saying your ad wasn't approved. No explanation you can make sense of, just a policy name and a link.",
+          "It feels arbitrary, and the first assumption is usually that you've done something seriously wrong. Almost always you haven't. Rejections cluster around a small number of predictable causes, and once you know what they are, writing an ad that clears review first time stops being guesswork.",
+        ],
+      },
+      {
+        heading: "The review is automated, and it isn't personal",
+        paragraphs: [
+          "Ads are reviewed at a scale no human team could handle, so the first pass is done by automated systems reading your text, your image and the page you're sending people to. Those systems are pattern-matching, not reasoning about your intent.",
+          "This has two practical consequences. The first is that a perfectly honest ad can be rejected because a phrase resembles one used by advertisers who weren't honest. The second is that appealing genuinely works, because a human review often overturns it.",
+          "So treat a rejection as information rather than a verdict. What matters is reading the specific policy cited, because the fix is usually a single sentence.",
+        ],
+      },
+      {
+        heading: "Personal attributes: the rule that catches almost everyone",
+        paragraphs: [
+          "This is the single most common reason a legitimate small business ad gets pulled, and it surprises people every time because the copy sounds completely reasonable when you read it aloud.",
+          "The rule is that your ad must not imply you know something personal about the person seeing it — their health, their finances, their age, their religion, their relationship status. Meta's concern is that people shouldn't feel identified or singled out by an advert.",
+          "The tell is the second-person question. \"Struggling with back pain?\" implies you know the reader has back pain. \"Book a back pain assessment in Birmingham\" says the same thing about your service without making a claim about the reader. Same offer, same audience, completely different outcome at review.",
+          "It applies far more widely than health. \"In debt?\", \"Overweight?\", \"Recently divorced?\" and \"Are you over 50?\" all trip the same rule. The fix is nearly always to describe what you do rather than who you think is reading.",
+        ],
+      },
+      {
+        heading: "Unrealistic outcomes and before-and-after images",
+        paragraphs: [
+          "The second big cluster is promises. Ads must not suggest outcomes that can't reasonably be expected, particularly around health, weight loss and money. Specific numbers make this worse, not better — a guaranteed figure attached to a result is one of the more reliable ways to get rejected.",
+          "Before-and-after imagery is the visual version of the same rule, and it's prohibited outright for body and health transformations. This catches a lot of genuinely good businesses off guard, because before-and-afters are the most persuasive asset a clinic, gym or aesthetics practice owns.",
+          "The workable alternative is to show the process and the place rather than the transformation. The room, the equipment, the practitioner explaining what happens in a first appointment. It converts better than people expect, because the thing stopping most people booking isn't doubt about the result — it's not knowing what they're walking into.",
+        ],
+      },
+      {
+        heading: "Special ad categories, and why declaring them matters",
+        paragraphs: [
+          "Some sectors sit in a separate regime entirely. If your ad relates to credit, employment, housing, social issues or politics, you're required to declare it as a special ad category when you build the campaign.",
+          "Declaring it restricts your targeting — you lose detailed interest targeting, tight postcode radiuses and lookalike audiences in the usual form. That's the point of the rule, which exists to prevent discriminatory targeting in areas where it does real harm.",
+          "The temptation is to skip the declaration to keep better targeting. Don't. Running an undeclared credit or housing ad is the kind of breach that escalates from a rejected ad to a restricted account, and getting an account reinstated is a far worse week than losing some targeting precision.",
+          "Health and beauty work differently again — it isn't a special ad category, but the personal attribute and outcome rules apply with more force. If you run a clinic, assume your copy gets read more strictly than a plumber's, because it does.",
+        ],
+      },
+      {
+        heading: "What to do when an ad is rejected",
+        paragraphs: [
+          "Work through it in order rather than deleting the ad and starting again, which loses whatever learning the campaign has accumulated:",
+        ],
+        bullets: [
+          "Read the actual policy named in the email — not the generic help page, the specific one linked, which usually contains examples close to what you wrote",
+          "Look at your copy for anything addressed to the reader personally, and rewrite it to describe your service instead",
+          "Check the landing page too — ads are reviewed alongside the page they point to, and a compliant ad sending traffic to a non-compliant page still fails",
+          "Request a review if you believe it's wrong, and do it once rather than resubmitting repeatedly, which looks like evasion",
+          "Edit the existing ad rather than creating a duplicate, so you keep the campaign's history",
+        ],
+      },
+      {
+        heading: "Getting approved first time",
+        paragraphs: [
+          "Most of this reduces to one habit: write about what you do, not about the person reading it. Describe the service, name the location, state the price if you have one, and let the targeting do the job of finding the right person.",
+          "It's a small change in phrasing and it costs you nothing in persuasiveness. Ads written that way clear review more often, and in our experience they tend to read as more confident too — a business describing its work plainly sounds more sure of itself than one opening with a question about your problems.",
+          "If you're in one of the stricter sectors, it's worth having someone check your copy against the policies before you spend anything. A rejection costs you a day. A restricted account can cost you the advertising channel altogether.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "crm-pipelines-explained-for-business-owners",
     title: "CRM Pipelines Explained for Business Owners Who Aren't Techy",
     description:
