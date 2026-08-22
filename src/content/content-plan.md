@@ -30,6 +30,7 @@ keywords, dealership social strategy).
 - Meta & Instagram Ads for Professional Services (industry-specific)
 - Organic Social vs Paid Ads: Why You Probably Need Both (comparison/explainer)
 - Why Meta Ads Get Rejected — and How to Get Them Approved (policy & troubleshooting)
+- How Long Before Meta Ads Start Working? The Learning Phase Explained (cost & expectation-setting)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -101,7 +102,7 @@ keywords, dealership social strategy).
       metrics explained", "Meta ads reporting for beginners"
 
 ## Backlog — cost & expectation-setting (added 2026-08-21 research round)
-- [ ] How Long Before Meta Ads Start Working? The Learning Phase Explained — target: "Facebook
+- [x] How Long Before Meta Ads Start Working? The Learning Phase Explained — target: "Facebook
       ads learning phase", "how long for Facebook ads to work"
 - [ ] What £300 a Month on Meta Ads Actually Buys You — target: "small Facebook ads budget UK",
       "£10 a day Facebook ads"

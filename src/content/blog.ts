@@ -16,6 +16,72 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "how-long-before-meta-ads-work-learning-phase",
+    title: "How Long Before Meta Ads Start Working? The Learning Phase Explained",
+    description:
+      "Meta ads rarely perform properly in week one, and there's a mechanical reason for it. Here's what the learning phase is and what a realistic timeline looks like.",
+    publishedAt: "2026-08-22",
+    keywords: [
+      "Facebook ads learning phase",
+      "how long for Facebook ads to work",
+      "Meta ads results timeline",
+      "why are my Facebook ads not working yet",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "The first few days of a new campaign are almost always disappointing. Costs look high, the leads are thin, and the obvious conclusion is that the ads don't work and the money is being wasted.",
+          "Sometimes that's true. Far more often the campaign is doing exactly what it's supposed to be doing at that stage, and switching it off is the single most expensive mistake a business can make with paid advertising.",
+        ],
+      },
+      {
+        heading: "What the learning phase actually is",
+        paragraphs: [
+          "When you launch an ad set, Meta doesn't yet know which people respond to it. It has your targeting, your budget and your creative, but no evidence about who actually converts.",
+          "So it experiments. It shows your ad across different segments of your audience, at different times, in different placements, and watches what happens. This is the learning phase, and Meta labels it as such in Ads Manager — it isn't something agencies invented to buy themselves time.",
+          "During this period performance is genuinely unstable, and deliberately so. The system is spending some of your budget on finding out what doesn't work, because that's the only way to establish what does.",
+        ],
+      },
+      {
+        heading: "Why it takes as long as it does",
+        paragraphs: [
+          "Meta's own guidance is that an ad set generally leaves the learning phase after roughly 50 optimisation events within a seven-day window. If you're optimising for leads, that means about 50 leads a week before delivery settles.",
+          "That threshold is where small budgets run into arithmetic. Take a hypothetical business paying around £5 per lead. Fifty leads a week is roughly £250 a week in ad spend — about £35 a day — before the system has enough signal to stabilise properly.",
+          "Most small businesses start well below that, and that's a perfectly reasonable decision. But it's worth understanding the consequence: at £10 a day, you're not going to hit 50 events in a week, so the ad set may sit in learning for longer, or never fully exit it. Results still come, they're just noisier and take longer to settle.",
+          "This is also the honest argument against splitting a small budget across several campaigns. Three campaigns at £5 a day each gather a third of the signal apiece. One campaign at £15 concentrates it, and concentrated signal is what the system needs.",
+        ],
+      },
+      {
+        heading: "The mistake that quietly restarts the clock",
+        paragraphs: [
+          "Significant edits to an ad set — changing the budget substantially, swapping the targeting, altering the optimisation event, replacing the creative — send it back into the learning phase. The progress it made is gone and it starts gathering evidence again.",
+          "This creates a trap that catches a lot of people. Performance looks poor, so you make a change. That resets learning, so performance looks poor again, so you make another change. The campaign never gets far enough to stabilise, and the conclusion drawn at the end of the month is that Meta ads don't work for this business.",
+          "The practical rule is to decide your changes in advance and make them deliberately, rather than reacting to a bad afternoon. Small budget adjustments are usually tolerated; wholesale changes are not.",
+        ],
+      },
+      {
+        heading: "A realistic timeline",
+        paragraphs: [
+          "What follows is a general shape rather than a promise — every business, budget and market behaves differently:",
+        ],
+        bullets: [
+          "Days 1 to 4 — expect volatility and a cost per lead that looks alarming. Nothing meaningful can be concluded here. Leave it alone",
+          "Days 5 to 14 — delivery usually begins to settle and a genuine cost per lead starts to emerge. This is the earliest point worth forming an opinion",
+          "Weeks 3 to 4 — enough data to judge the creative properly and see which version is carrying the campaign. First sensible point to make real changes",
+          "Months 2 to 3 — the campaign should be reasonably predictable, and the useful work shifts from the ads to what happens after the enquiry arrives",
+        ],
+      },
+      {
+        heading: "What to judge, and when",
+        paragraphs: [
+          "In the first fortnight, judge the mechanics rather than the outcome. Are the ads being delivered? Is anyone clicking? Are leads arriving with real contact details? Those tell you the campaign is functioning, which is all you can reasonably ask early on.",
+          "From the third week, cost per lead becomes a fair measure. By the second month, the question worth asking is a different one entirely — not what a lead costs, but how many of them turn into paying customers. That number is usually determined by how quickly enquiries get answered rather than by anything in the ad account.",
+          "The one thing worth committing to before you start is a minimum run. Give a campaign at least a month before deciding, and budget for that month up front. Advertising switched off in week two costs you the whole spend and teaches you nothing, which is genuinely the worst of both outcomes.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "why-meta-ads-get-rejected",
     title: "Why Meta Ads Get Rejected — and How to Get Them Approved",
     description:
