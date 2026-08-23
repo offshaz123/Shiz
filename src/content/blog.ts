@@ -16,6 +16,74 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-health-beauty-wellness",
+    title: "Meta & Instagram Ads for Health, Beauty & Wellness",
+    description:
+      "Salons and clinics are a natural fit for Instagram ads, but they face the strictest rules on the platform. Here's what you can advertise, and what works instead.",
+    publishedAt: "2026-08-23",
+    keywords: [
+      "Instagram ads for salons",
+      "Facebook ads for beauty clinics UK",
+      "Instagram advertising for aesthetics clinics",
+      "social media ads for wellness businesses",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Few sectors are better suited to Instagram than this one. The work is visual, the results are the product, and people genuinely enjoy following salons and clinics they like the look of. On paper it's the easiest advertising job there is.",
+          "In practice it's one of the hardest, because health, beauty and wellness sit under the strictest advertising rules on the platform. The most persuasive assets these businesses own — the transformation photo, the message that speaks directly to someone's insecurity — are the exact things Meta prohibits.",
+          "That's worth understanding properly rather than discovering through a string of rejected ads.",
+        ],
+      },
+      {
+        heading: "Why the rules are tighter here",
+        paragraphs: [
+          "Meta's position is that people shouldn't feel identified by an advert. An ad implying you know something about someone's body, health or appearance crosses that line, and it's enforced more strictly in this category than anywhere else.",
+          "This catches ordinary, well-meaning copy constantly. \"Struggling with acne?\" and \"Unhappy with your smile?\" both imply knowledge about the reader. \"Book an acne consultation\" and \"Cosmetic dentistry in Manchester\" describe the same service to the same audience without making any claim about who's reading.",
+          "The distinction feels pedantic until you realise it's the difference between an account running smoothly and an account under review.",
+        ],
+      },
+      {
+        heading: "The two things you can't do",
+        paragraphs: [
+          "Before-and-after imagery is prohibited for body and health transformations. This is the one that hurts most, because it's usually the single most convincing asset a clinic has.",
+          "Promising outcomes is the second. Ads must not suggest results that can't reasonably be expected, and specific claims about how much someone will change make it worse rather than more credible.",
+          "There's no clever workaround for either, and anyone offering you one is putting your ad account at risk to win your business. The productive question isn't how to get transformation photos approved — it's what to run instead, because the alternatives are genuinely effective.",
+        ],
+      },
+      {
+        heading: "What works instead",
+        paragraphs: [
+          "The thing actually stopping most people booking isn't doubt about whether the treatment works. It's not knowing what they're walking into — whether it hurts, how long it takes, what it costs, and whether they'll feel judged when they arrive.",
+          "Advertising that answers those questions tends to outperform transformation photos anyway, and it happens to be entirely compliant:",
+        ],
+        bullets: [
+          "The room — clean, calm, well lit. People are deciding whether they'd feel comfortable there, and they decide fast",
+          "The practitioner talking to camera, explaining what a first appointment involves. Faces build trust in a way interiors can't",
+          "Process footage — the tools, the preparation, the steps. It reads as competence without claiming anything",
+          "Plain pricing. In a sector where prices are often hidden, publishing yours is a genuine differentiator and it filters out enquiries you'd have wasted time on",
+          "Practical detail — parking, opening hours, how long to allow, whether there's downtime afterwards",
+        ],
+      },
+      {
+        heading: "The booking gap matters more than the ads",
+        paragraphs: [
+          "Appointment-led businesses share a specific problem: enquiries arrive at the worst possible time. Someone sees your ad at nine in the evening, sends a message asking about availability, and nobody sees it until the following afternoon because the team was with clients all day.",
+          "By then a good proportion have booked elsewhere. Not because the other place was better — because it replied.",
+          "This is why we'd usually push a clinic to sort out how enquiries get answered before increasing ad spend. If messages sit overnight, more advertising just produces more people who go somewhere else. Getting every channel into one place, so evening enquiries are seen and answered, tends to change the numbers more than any change to the ads.",
+        ],
+      },
+      {
+        heading: "Where to put the budget",
+        paragraphs: [
+          "Advertise a specific treatment rather than the business in general. \"Book a facial\" gives someone a decision to make; \"award-winning salon in Leeds\" doesn't. Pick the treatment with a good margin and reasonable repeat potential, and build the campaign around that one thing.",
+          "Keep the radius tight. People travel a long way for a wedding venue and almost no distance for a regular appointment, so a wide radius mostly buys you enquiries that will never convert into a standing booking.",
+          "And be realistic about the first month. New campaigns need time to settle before the numbers mean anything, and this is a sector where the strongest results usually come from the second visit onwards rather than the first.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-long-before-meta-ads-work-learning-phase",
     title: "How Long Before Meta Ads Start Working? The Learning Phase Explained",
     description:

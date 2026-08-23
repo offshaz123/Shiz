@@ -31,13 +31,14 @@ keywords, dealership social strategy).
 - Organic Social vs Paid Ads: Why You Probably Need Both (comparison/explainer)
 - Why Meta Ads Get Rejected — and How to Get Them Approved (policy & troubleshooting)
 - How Long Before Meta Ads Start Working? The Learning Phase Explained (cost & expectation-setting)
+- Meta & Instagram Ads for Health, Beauty & Wellness (industry-specific)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
       target: "Instagram ads for tradesmen", "Facebook ads for builders UK"
 - [ ] Meta & Instagram Ads for Retail & E-commerce — target: "Instagram shopping ads UK",
       "Facebook ads for online store"
-- [ ] Meta & Instagram Ads for Health, Beauty & Wellness — target: "Instagram ads for salons",
+- [x] Meta & Instagram Ads for Health, Beauty & Wellness — target: "Instagram ads for salons",
       "Facebook ads for beauty clinics UK" (note: Meta has restricted-category ad rules for
       health/beauty claims — flag anything that touches medical claims)
 - [ ] Meta & Instagram Ads for Real Estate & Property — target: "Facebook ads for estate agents",
