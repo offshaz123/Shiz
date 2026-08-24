@@ -32,6 +32,7 @@ keywords, dealership social strategy).
 - Why Meta Ads Get Rejected — and How to Get Them Approved (policy & troubleshooting)
 - How Long Before Meta Ads Start Working? The Learning Phase Explained (cost & expectation-setting)
 - Meta & Instagram Ads for Health, Beauty & Wellness (industry-specific)
+- How to Set Up Retargeting When You're a Small Business (practical how-to)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -95,7 +96,7 @@ keywords, dealership social strategy).
       quality Facebook leads", "fake leads Facebook ads"
 
 ## Backlog — practical how-to (added 2026-08-21 research round)
-- [ ] How to Set Up Retargeting When You're a Small Business — target: "Facebook retargeting
+- [x] How to Set Up Retargeting When You're a Small Business — target: "Facebook retargeting
       small business", "warm audience ads UK"
 - [ ] How to Write Meta Ad Copy That Actually Gets Replies — target: "Facebook ad copy tips UK",
       "how to write Facebook ads"

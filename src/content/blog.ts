@@ -16,6 +16,72 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "retargeting-for-small-businesses",
+    title: "How to Set Up Retargeting When You're a Small Business",
+    description:
+      "Most people who visit your website leave without contacting you. Retargeting is how you get a second attempt, and it's usually the cheapest advertising you'll run.",
+    publishedAt: "2026-08-24",
+    keywords: [
+      "Facebook retargeting small business",
+      "warm audience ads UK",
+      "how to set up retargeting ads",
+      "Meta remarketing for small business",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "The overwhelming majority of people who land on your website leave without doing anything. They read a bit, maybe check your prices, and then something interrupts them — a phone call, a train stop, a child. They meant to come back. They didn't.",
+          "Retargeting is simply showing an ad to those people afterwards. It's one of the few pieces of advertising where the audience already knows who you are, and for most small businesses it's the cheapest source of enquiries available.",
+        ],
+      },
+      {
+        heading: "Why it costs so much less",
+        paragraphs: [
+          "A cold audience ad has to do three jobs at once: get attention, explain who you are, and persuade someone to act. A retargeting ad only has to do the third, because the first two already happened.",
+          "That difference shows up in the numbers. Retargeting audiences are small, so they won't carry your whole campaign — but the cost per enquiry is usually a fraction of what cold traffic costs, because you're talking to people who already showed interest.",
+          "It's the closest thing in advertising to picking up money you've already spent to earn. You paid to get those visitors once. Retargeting is what stops that spend evaporating when they don't convert on the first visit.",
+        ],
+      },
+      {
+        heading: "You need the Pixel installed first",
+        paragraphs: [
+          "Retargeting depends on Meta knowing who visited your site, and that requires the Meta Pixel — a small piece of tracking code on every page. Without it there's no audience to retarget, and no way to build one retrospectively.",
+          "This is the part worth doing today even if you're not advertising yet. The Pixel only records people who visit after it's installed. Every week it isn't there is a week of visitors you can never reach again.",
+          "It's also worth setting up the Conversions API alongside it if you can. Browser-based tracking gets blocked by privacy settings and ad blockers fairly often, and sending the same events server-side fills in a meaningful share of what the Pixel alone misses.",
+        ],
+      },
+      {
+        heading: "The audiences actually worth building",
+        paragraphs: [
+          "Resist the urge to retarget everyone who ever touched your business. Intent varies enormously between someone who watched three seconds of a video and someone who started filling in your contact form. Separate them:",
+        ],
+        bullets: [
+          "Visited your pricing or services page — the highest intent group on your site, and the one to spend most of your retargeting budget on",
+          "Started your enquiry form but didn't submit it — small, but usually the best-converting audience you'll ever build",
+          "Visited any page in the last 30 days — a broader catch-all for when the sharper audiences are too small to deliver",
+          "Engaged with your Instagram or Facebook page — useful when your website traffic is still low, since it doesn't depend on the Pixel",
+          "Watched most of a video — worth separating by how much they watched; someone who finished it is a different prospect from someone who scrolled past at two seconds",
+        ],
+      },
+      {
+        heading: "What the ad should actually say",
+        paragraphs: [
+          "The most common mistake is showing retargeted people the same ad they've already seen. They didn't act on it the first time, so repeating it mostly just annoys them.",
+          "Assume they know who you are and answer whatever stopped them instead. If price was the hesitation, be direct about pricing. If it's trust, show a real result or the people behind the business. If it's simply that they got distracted, a plain reminder with an easy next step often does the job on its own.",
+          "Keep the frequency sensible. These audiences are small, so a normal budget can end up showing the same person your ad several times a day, which turns a useful reminder into an irritation. Capping how often it appears, and refreshing the creative every few weeks, keeps it working.",
+        ],
+      },
+      {
+        heading: "When it's worth turning on",
+        paragraphs: [
+          "Retargeting needs traffic to retarget. If your site gets a handful of visitors a week, the audience will be too small for Meta to deliver against, and you're better off putting everything into reaching new people first.",
+          "The sensible sequence is: install the Pixel now, run cold campaigns to build traffic, and switch retargeting on once there's a real audience to work with. By then you'll have weeks of visitors already collected, waiting.",
+          "One caveat worth knowing: if your business falls under a special ad category — credit, employment or housing — website custom audiences aren't available to you in the usual way. Worth checking before you build a plan around it.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-health-beauty-wellness",
     title: "Meta & Instagram Ads for Health, Beauty & Wellness",
     description:
