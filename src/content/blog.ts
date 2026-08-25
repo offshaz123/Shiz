@@ -16,6 +16,73 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "what-the-meta-pixel-actually-does",
+    title: "What the Meta Pixel Actually Does, and Why It Matters More Than It Used To",
+    description:
+      "The Pixel isn't just analytics. It's what tells Meta which of your ads produced real customers, and without it the system is optimising half blind.",
+    publishedAt: "2026-08-25",
+    keywords: [
+      "Meta Pixel explained",
+      "Facebook pixel small business",
+      "what does the Meta Pixel do",
+      "Conversions API small business UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "The Meta Pixel gets explained as a tracking tool, which makes it sound like analytics — a way of counting visitors that you could reasonably put off until you've got time.",
+          "That undersells what it does. The Pixel isn't primarily there so you can look at numbers. It's there so Meta can learn which people are worth showing your ads to. Without it you're not just missing reporting, you're running campaigns that can't improve.",
+        ],
+      },
+      {
+        heading: "The feedback loop is the point",
+        paragraphs: [
+          "When you run a campaign, Meta makes a series of guesses about who might respond. What turns guessing into targeting is finding out what happened next.",
+          "The Pixel is what closes that loop. It reports back that this particular person, from this particular ad, went on to fill in your form. Meta then goes looking for more people who resemble the ones who converted, rather than the ones who merely clicked.",
+          "That distinction matters enormously. Without conversion data, the system optimises toward clicks — and the people most likely to click an advert are not reliably the people most likely to become customers. You end up paying for attention rather than enquiries.",
+        ],
+      },
+      {
+        heading: "What it actually records",
+        paragraphs: [
+          "By default the Pixel records page views. The useful part is the events you define on top of that — the specific actions that matter to your business:",
+        ],
+        bullets: [
+          "Lead — someone submitted your enquiry form. For most service businesses this is the only event that really matters",
+          "Contact — a phone tap or a click through to WhatsApp, which often captures people who'd never fill in a form",
+          "ViewContent — someone looked at a specific service or pricing page, a useful signal of genuine interest",
+          "CompleteRegistration or Schedule — a booking made, where you take appointments online",
+          "Purchase — for anything sold directly on the site, with the value attached so return can be calculated properly",
+        ],
+      },
+      {
+        heading: "Why browser tracking alone stopped being enough",
+        paragraphs: [
+          "The Pixel runs in the visitor's browser, and browsers have become considerably less accommodating. Privacy settings, tracking prevention and ad blockers all interfere with it, and a meaningful share of conversions simply never get reported.",
+          "The consequence isn't only inaccurate reporting. Every missing conversion is a piece of learning the system never receives, so campaigns optimise on a partial picture and costs drift upward.",
+          "This is what the Conversions API addresses. Instead of relying solely on the visitor's browser, your server sends the same events directly to Meta. Both methods run together, each event carries a shared identifier so the same conversion isn't counted twice, and between them they recover a good deal of what the Pixel alone loses.",
+          "Setting both up is more work than pasting in a snippet, and it's genuinely worth it once you're spending real money.",
+        ],
+      },
+      {
+        heading: "It only counts from the day you install it",
+        paragraphs: [
+          "This is the part people regret. The Pixel has no memory of anything before it existed. It cannot be pointed at last year's traffic, and there's no way to reconstruct the audience you'd have built.",
+          "So the sensible move is to install it now, even if advertising is months away. It costs nothing to run, it quietly accumulates the audience you'll later want to retarget, and by the time you launch you're starting with history rather than from zero.",
+          "The reverse is a genuinely expensive mistake — running ads for months with no Pixel, then installing one and effectively starting the learning process again from nothing.",
+        ],
+      },
+      {
+        heading: "The obligations that come with it",
+        paragraphs: [
+          "Tracking visitors brings responsibilities under UK GDPR and PECR. Non-essential tracking needs consent, which means a cookie banner that genuinely works — one that doesn't fire the Pixel until someone agrees, rather than one that announces tracking has already started.",
+          "Your privacy policy should say plainly what you collect and why. None of this is onerous, but it is the sort of thing that gets skipped and then becomes a problem later.",
+          "Take particular care with sensitive categories. Never send event data that reveals health conditions, financial circumstances or anything similar — a treatment name in a URL passed back as a conversion event is exactly the kind of detail that shouldn't be leaving your site.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "retargeting-for-small-businesses",
     title: "How to Set Up Retargeting When You're a Small Business",
     description:
@@ -765,7 +832,7 @@ export const blogPosts: BlogPost[] = [
           "There's a specific brand or context reason a particular placement isn't appropriate for what you're advertising",
           "You're deliberately testing one placement in isolation, with a plan to reopen once you've learned what you needed",
         ],
-        },
+      },
       {
         heading: "The real difference is format, not platform",
         paragraphs: [
@@ -892,7 +959,7 @@ export const blogPosts: BlogPost[] = [
           "Handling several conversations at once, so nobody sits in a queue during a busy spell",
           "Capturing the enquiry in writing, so even the ones that don't convert leave a record you can look back at",
         ],
-        },
+      },
       {
         heading: "What it doesn't do — and shouldn't pretend to",
         paragraphs: [
@@ -922,7 +989,7 @@ export const blogPosts: BlogPost[] = [
           "A team that's physically unavailable exactly when enquiries peak — a restaurant mid-service, a tradesperson on a job, a workshop with everyone on the tools",
           "Paid advertising driving the enquiries, where every unanswered message is money already spent and wasted",
         ],
-        },
+      },
       {
         heading: "Getting started",
         paragraphs: [

@@ -33,6 +33,7 @@ keywords, dealership social strategy).
 - How Long Before Meta Ads Start Working? The Learning Phase Explained (cost & expectation-setting)
 - Meta & Instagram Ads for Health, Beauty & Wellness (industry-specific)
 - How to Set Up Retargeting When You're a Small Business (practical how-to)
+- What the Meta Pixel Actually Does, and Why It Matters More Than It Used To (feature deep-dive)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -118,7 +119,7 @@ keywords, dealership social strategy).
       venues UK", "Instagram ads event planners"
 
 ## Backlog — feature deep-dive (added 2026-08-21 research round)
-- [ ] What the Meta Pixel Actually Does, and Why It Matters More Than It Used To — target:
+- [x] What the Meta Pixel Actually Does, and Why It Matters More Than It Used To — target:
       "Meta Pixel explained", "Facebook pixel small business"
 
 ## Notes for whoever (human or Routine) picks the next topic
