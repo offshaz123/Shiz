@@ -16,6 +16,72 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "do-you-need-a-big-following-to-run-meta-ads",
+    title: "Do You Need a Big Following to Run Meta Ads?",
+    description:
+      "A common reason businesses delay advertising is having barely any followers. It's the wrong thing to wait for, and here's why the two are largely unrelated.",
+    publishedAt: "2026-08-26",
+    keywords: [
+      "do I need followers to run Facebook ads",
+      "Facebook ads without followers",
+      "how many followers to run Instagram ads",
+      "Instagram ads new business UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "It comes up in almost every first conversation. Someone wants to advertise but feels they should wait — build the page up a bit first, get to a thousand followers, make the profile look established. Advertising to nobody feels premature.",
+          "It's an understandable instinct and it's the wrong sequence. Paid reach and organic reach are two largely separate systems, and waiting for one before starting the other usually costs a business months it didn't need to spend.",
+        ],
+      },
+      {
+        heading: "Paid reach doesn't come from your followers",
+        paragraphs: [
+          "When you post organically, Meta shows it to some portion of the people who already follow you. Your follower count is the ceiling on that, which is why growing it feels so important.",
+          "Paid reach works differently. You're buying access to Meta's entire user base, filtered by location, age and behaviour. The system shows your ad to people chosen by targeting, not by whether they've heard of you. An account with eleven followers and an account with eleven thousand are bidding into the same auction for the same strangers.",
+          "This is why a brand new business can run a campaign on day one and generate enquiries in the first week. The audience was never yours to build — you're renting access to it.",
+        ],
+      },
+      {
+        heading: "Where the follower count does matter",
+        paragraphs: [
+          "It isn't entirely irrelevant, just misunderstood. Followers don't affect delivery or cost. What they affect is what happens after someone taps your name.",
+          "A proportion of people who see your ad will check the profile before enquiring, particularly for anything involving trust, money or their body. What they're looking for isn't a follower number — it's evidence that the business is real and currently operating.",
+          "A profile with nine posts and forty followers reads as a small business. A profile with two posts from last year and no bio reads as abandoned, and that's the one that costs you enquiries. The fix takes an afternoon, not six months.",
+        ],
+      },
+      {
+        heading: "What's actually worth having before you spend",
+        paragraphs: [
+          "There's a short list of things that genuinely affect results, and none of them is a follower count:",
+        ],
+        bullets: [
+          "A profile that looks live — a clear bio saying what you do and where, a handful of recent posts, contact details that work",
+          "Somewhere for the enquiry to land — a landing page or an instant form, not just a link to your homepage",
+          "A way to be contacted that suits the customer, which for most local businesses means WhatsApp or a phone number, not only email",
+          "Someone able to reply quickly, because response speed changes outcomes far more than anything on your profile",
+          "The Pixel installed, so the campaign can learn from day one rather than starting blind",
+        ],
+      },
+      {
+        heading: "The cost of waiting",
+        paragraphs: [
+          "Building a following organically from a standing start is slow, unpredictable work, and for most local service businesses it isn't where the customers come from anyway. A plumber does not need an audience. They need to appear in front of people whose boiler has stopped working.",
+          "There's also a compounding cost to delay. The Pixel only records visitors from the day it's installed, campaigns need weeks to settle before their numbers mean anything, and the audiences you'll eventually want to retarget can only be built by having traffic in the first place. Six months of waiting isn't neutral — it's six months of data you never collected.",
+          "Meanwhile the ads themselves tend to grow the following as a side effect. People who see your ads and aren't ready to buy often follow instead, which means the audience you were waiting to build arrives as a by-product of advertising rather than a prerequisite for it.",
+        ],
+      },
+      {
+        heading: "The honest version",
+        paragraphs: [
+          "If your profile is genuinely empty, spend an afternoon on it before you spend money. Write the bio, post a few pieces of real work, make sure someone tapping your name finds a business that clearly exists. That's worth doing and it's a day's work.",
+          "But don't confuse that with needing an audience. The number under your name has almost no bearing on whether your ads reach the right people or what they cost.",
+          "The businesses that struggle with paid advertising are rarely the ones with small followings. They're the ones sending traffic somewhere weak, or letting enquiries sit unanswered until the person has booked elsewhere.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "what-the-meta-pixel-actually-does",
     title: "What the Meta Pixel Actually Does, and Why It Matters More Than It Used To",
     description:

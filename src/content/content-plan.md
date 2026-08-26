@@ -34,6 +34,7 @@ keywords, dealership social strategy).
 - Meta & Instagram Ads for Health, Beauty & Wellness (industry-specific)
 - How to Set Up Retargeting When You're a Small Business (practical how-to)
 - What the Meta Pixel Actually Does, and Why It Matters More Than It Used To (feature deep-dive)
+- Do You Need a Big Following to Run Meta Ads? (comparison/explainer)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -109,7 +110,7 @@ keywords, dealership social strategy).
       ads learning phase", "how long for Facebook ads to work"
 - [ ] What £300 a Month on Meta Ads Actually Buys You — target: "small Facebook ads budget UK",
       "£10 a day Facebook ads"
-- [ ] Do You Need a Big Following to Run Meta Ads? — target: "do I need followers to run
+- [x] Do You Need a Big Following to Run Meta Ads? — target: "do I need followers to run
       Facebook ads", "Facebook ads without followers"
 
 ## Backlog — industry-specific (added 2026-08-21 research round)
