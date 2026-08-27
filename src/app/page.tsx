@@ -156,8 +156,9 @@ export default function Home() {
               description={service.description}
               features={service.features.slice(0, 3)}
               fromPrice={service.fromPrice}
+              priceNote={service.priceNote}
               badge={service.badge}
-              quoteHref={`/quote?service=${encodeURIComponent(service.name)}`}
+              ctaHref={`/quote?service=${encodeURIComponent(service.name)}`}
             />
           ))}
         </div>
@@ -185,7 +186,7 @@ export default function Home() {
           </div>
 
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {repairServices.map((service) => (
+            {repairServices.slice(0, 3).map((service) => (
               <ServiceCard
                 key={service.slug}
                 name={service.name}
@@ -193,7 +194,9 @@ export default function Home() {
                 description={service.description}
                 features={service.features.slice(0, 3)}
                 fromPrice={service.fromPrice}
-                quoteHref={`/quote?service=${encodeURIComponent(service.name)}`}
+                priceLabel={service.priceLabel}
+                ctaHref={service.ctaHref ?? `/quote?service=${encodeURIComponent(service.name)}`}
+                ctaLabel={service.ctaLabel}
               />
             ))}
           </div>

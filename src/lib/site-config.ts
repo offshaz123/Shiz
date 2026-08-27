@@ -55,6 +55,7 @@ export type TintService = {
   description: string;
   features: string[];
   fromPrice: string;
+  priceNote?: string;
   badge?: string;
 };
 
@@ -85,7 +86,7 @@ export const tintServices: TintService[] = [
       "Won't fade, bubble, purple or interfere with signal",
       "Lifetime warranty — the only tint we cover for life",
     ],
-    fromPrice: "£249",
+    fromPrice: "£180",
     badge: "10% off + Lifetime Warranty",
   },
   {
@@ -95,12 +96,13 @@ export const tintServices: TintService[] = [
     description:
       "Chameleon tint is our head-turning specialist film that shifts colour as the light changes across it. Available in blue and red, it's the finish for owners who want their windows to be as much a feature as the paintwork.",
     features: [
-      "Available in blue or red colour-shift",
+      "One flat price for any standard car, in blue or red",
       "Eye-catching, showroom-grade finish",
       "UV and glare protection built in",
       "Hand-fitted for a flawless edge-to-edge finish",
     ],
-    fromPrice: "£299",
+    fromPrice: "£150",
+    priceNote: "Any car — excluding performance cars, which are quoted individually",
   },
   {
     slug: "dechroming",
@@ -114,7 +116,7 @@ export const tintServices: TintService[] = [
       "Fully reversible — chrome trim protected underneath",
       "Often booked alongside a tint for a full transformation",
     ],
-    fromPrice: "£129",
+    fromPrice: "£150",
   },
 ];
 
@@ -125,6 +127,9 @@ export type RepairService = {
   description: string;
   features: string[];
   fromPrice: string;
+  priceLabel?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
 };
 
 export const repairServices: RepairService[] = [
@@ -140,7 +145,7 @@ export const repairServices: RepairService[] = [
       "Quality parts, fitted and checked properly",
       "Straightforward, upfront pricing",
     ],
-    fromPrice: "£89",
+    fromPrice: "£150",
   },
   {
     slug: "oil-change-minor-service",
@@ -170,4 +175,147 @@ export const repairServices: RepairService[] = [
     ],
     fromPrice: "£249",
   },
+  {
+    slug: "polishing",
+    name: "Polishing",
+    tagline: "Stage 1, 2 & 3 machine polishing",
+    description:
+      "Every car's paint is different, so polishing is split into three stages depending on how much correction it needs — from a light refresh to serious swirl and scratch removal. We'll recommend the right stage after seeing the car, and confirm the exact price before starting.",
+    features: [
+      "Stage 1 (Minor) — a light refresh for paint in good condition, from £200",
+      "Stage 2 (Medium) — corrects moderate swirls & scratches, from £400",
+      "Stage 3 (Heavy) — full correction for neglected or heavily marked paint, from £600",
+      "Exact price confirmed after inspection",
+    ],
+    fromPrice: "£200",
+  },
+  {
+    slug: "ceramic-detailing",
+    name: "Ceramic Detailing",
+    tagline: "Long-term paint protection with a showroom finish",
+    description:
+      "A ceramic coating bonds to your paintwork to give lasting gloss, hydrophobic water-beading and protection against everyday dirt, UV and light scratching — priced individually based on your car's size and paint condition.",
+    features: [
+      "Deep, long-lasting gloss finish",
+      "Hydrophobic — dirt and water bead straight off",
+      "Added protection against UV fade & light scratches",
+      "Best paired with a Stage 2 polish — see our bundle below",
+    ],
+    fromPrice: "Contact Us",
+    priceLabel: "",
+  },
+  {
+    slug: "number-plates",
+    name: "Number Plates",
+    tagline: "Standard, 3D, 4D & 5D — gel or standard, in any shape",
+    description:
+      "From standard printed plates through to raised 3D, 4D and 5D gel plates, in short, hexagon or normal shapes — see the full range and how they compare.",
+    features: [
+      "Standard printed plates",
+      "3D & 3D Gel plates",
+      "4D & 4D Gel plates",
+      "5D & 5D Gel plates",
+      "Short, hexagon & normal plate shapes",
+    ],
+    fromPrice: "",
+    ctaLabel: "View Options →",
+    ctaHref: "/number-plates",
+  },
 ];
+
+export type PolishStage = {
+  stage: string;
+  name: string;
+  description: string;
+  fromPrice: string;
+};
+
+export const polishStages: PolishStage[] = [
+  {
+    stage: "Stage 1",
+    name: "Minor Polish",
+    description:
+      "A light machine polish for paint that's already in decent condition — removes light swirls and restores gloss without heavy correction.",
+    fromPrice: "£200",
+  },
+  {
+    stage: "Stage 2",
+    name: "Medium Polish",
+    description:
+      "Our most popular stage — corrects moderate swirl marks, light scratches and dullness for a noticeably sharper, deeper finish.",
+    fromPrice: "£400",
+  },
+  {
+    stage: "Stage 3",
+    name: "Heavy Correction",
+    description:
+      "For paint that's been neglected or heavily marked — a full multi-step correction to remove deeper scratches and restore the paint properly.",
+    fromPrice: "£600",
+  },
+];
+
+export const detailingBundle = {
+  name: "Ceramic Detailing + Stage 2 Polish",
+  description:
+    "Our most popular package — a Stage 2 machine polish to correct and sharpen your paintwork, finished with a full ceramic coating for lasting protection and gloss.",
+  price: "£400",
+};
+
+export type NumberPlateFinish = {
+  id: string;
+  name: string;
+  description: string;
+};
+
+export const numberPlateFinishes: NumberPlateFinish[] = [
+  {
+    id: "standard",
+    name: "Standard",
+    description: "Flat, printed digits — road legal and the most affordable option.",
+  },
+  {
+    id: "3d",
+    name: "3D",
+    description: "Raised, resin-built digits that stand proud of the plate for a sharper look.",
+  },
+  {
+    id: "3d-gel",
+    name: "3D Gel",
+    description: "3D digits finished with a domed gel overlay for extra depth and shine.",
+  },
+  {
+    id: "4d",
+    name: "4D",
+    description: "Laser-cut acrylic digits, taller and glossier than 3D for a premium look.",
+  },
+  {
+    id: "4d-gel",
+    name: "4D Gel",
+    description: "4D acrylic digits with a gel-domed finish for maximum depth and gloss.",
+  },
+  {
+    id: "5d",
+    name: "5D",
+    description: "Our top-tier finish — thicker, glossier acrylic digits with crisp, precise edges.",
+  },
+  {
+    id: "5d-gel",
+    name: "5D Gel",
+    description: "5D digits finished with a gel dome — the deepest, glossiest finish we offer.",
+  },
+];
+
+export const numberPlateShapes = [
+  { name: "Normal", description: "Standard rectangular plate shape." },
+  { name: "Short", description: "Compact plate for cars with a smaller plate recess." },
+  { name: "Hexagon", description: "Angled hexagon-cut corners for a sportier look." },
+];
+
+// Ad-tracking IDs for the Kent PPC landing page. Leave empty to disable —
+// each tracking component renders nothing until its ID is filled in.
+export const trackingConfig = {
+  googleAdsConversionId: "", // e.g. "AW-123456789"
+  googleAdsConversionLabel: "", // e.g. "AbC-D_efGhIjK12-345"
+  ga4MeasurementId: "", // e.g. "G-XXXXXXXXXX"
+  metaPixelId: "", // e.g. "1234567890123456"
+};

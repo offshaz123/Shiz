@@ -16,7 +16,7 @@ export default async function Image() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#060607",
+          backgroundColor: "#06090c",
           padding: 80,
         }}
       >
@@ -31,16 +31,16 @@ export default async function Image() {
               justifyContent: "center",
               fontSize: 52,
               fontWeight: 800,
-              color: "#c9a227",
+              color: "#0ea5c4",
               background: "#0a0a0b",
-              border: "2px solid #c9a227",
+              border: "2px solid #0ea5c4",
             }}
           >
             E
           </div>
           <div style={{ display: "flex", fontSize: 44, fontWeight: 800, color: "#fff" }}>
             <span>EXCLUSIVE&nbsp;</span>
-            <span style={{ color: "#c9a227" }}>TINTS</span>
+            <span style={{ color: "#0ea5c4" }}>TINTS</span>
             <span>&nbsp;&amp; REPAIRS</span>
           </div>
         </div>
@@ -61,7 +61,7 @@ export default async function Image() {
           style={{
             marginTop: 20,
             fontSize: 26,
-            color: "#a2a2aa",
+            color: "#93a3ac",
             textAlign: "center",
             display: "flex",
           }}

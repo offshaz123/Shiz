@@ -6,16 +6,22 @@ export function ServiceCard({
   description,
   features,
   fromPrice,
+  priceLabel = "From",
+  priceNote,
   badge,
-  quoteHref,
+  ctaHref,
+  ctaLabel = "Get a Quote →",
 }: {
   name: string;
   tagline: string;
   description: string;
   features: string[];
   fromPrice: string;
+  priceLabel?: string;
+  priceNote?: string;
   badge?: string;
-  quoteHref: string;
+  ctaHref: string;
+  ctaLabel?: string;
 }) {
   return (
     <div className="flex flex-col rounded-3xl border border-border bg-surface p-7 transition-colors hover:border-brand/40 sm:p-8">
@@ -47,14 +53,19 @@ export function ServiceCard({
 
       <div className="mt-7 flex items-center justify-between gap-4 border-t border-border pt-6">
         <div>
-          <p className="text-xs text-muted">From</p>
-          <p className="text-lg font-bold text-foreground">{fromPrice}</p>
+          {fromPrice && (
+            <>
+              {priceLabel && <p className="text-xs text-muted">{priceLabel}</p>}
+              <p className="text-lg font-bold text-foreground">{fromPrice}</p>
+            </>
+          )}
+          {priceNote && <p className="mt-0.5 text-xs text-muted">{priceNote}</p>}
         </div>
         <Link
-          href={quoteHref}
+          href={ctaHref}
           className="brand-gradient-bg rounded-full px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-black/10 transition-transform hover:scale-[1.03]"
         >
-          Get a Quote →
+          {ctaLabel}
         </Link>
       </div>
     </div>

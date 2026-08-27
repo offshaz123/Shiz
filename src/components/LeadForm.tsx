@@ -2,11 +2,12 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { siteConfig, tintServices, repairServices } from "@/lib/site-config";
+import { siteConfig, tintServices, repairServices, detailingBundle } from "@/lib/site-config";
 
 const serviceOptions = [
   ...tintServices.map((s) => s.name),
   ...repairServices.map((s) => s.name),
+  detailingBundle.name,
   "Not sure yet / other",
 ];
 

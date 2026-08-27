@@ -6,6 +6,8 @@ import { PromoBanner } from "@/components/PromoBanner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { GoogleTag } from "@/components/GoogleTag";
+import { MetaPixel } from "@/components/MetaPixel";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
 import { accentInitScript } from "@/lib/accents";
@@ -75,6 +77,8 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <script dangerouslySetInnerHTML={{ __html: accentInitScript }} />
+        <GoogleTag />
+        <MetaPixel />
         <OrganizationJsonLd />
         <WebSiteJsonLd />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>

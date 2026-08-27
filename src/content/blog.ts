@@ -16,6 +16,61 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "3d-vs-4d-vs-5d-number-plates",
+    title: "3D vs. 4D vs. 5D Number Plates: What's Actually Different?",
+    description:
+      "Standard, 3D, 4D and 5D plates all look similar in a photo but feel completely different in person. Here's what each finish actually gets you.",
+    publishedAt: "2026-08-30",
+    keywords: [
+      "3D number plates",
+      "4D number plates",
+      "5D number plates",
+      "gel number plates",
+      "number plate finishes explained",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "\"What's the actual difference between 3D, 4D and 5D plates?\" is one of the most common questions we get, and it's a fair one — in photos they can look almost identical. In person, the difference is obvious the moment you run a finger over the digits.",
+        ],
+      },
+      {
+        heading: "Standard plates",
+        paragraphs: [
+          "A standard plate has flat, printed digits — no raised texture at all. It's completely road legal and the most affordable option, and for a lot of drivers it's simply not something they think about.",
+        ],
+      },
+      {
+        heading: "3D plates",
+        paragraphs: [
+          "3D plates use digits built up from a resin that sits proud of the plate surface, giving a visible raised edge and a subtle shadow line. It's the first step up from standard, and the difference is noticeable without being flashy.",
+          "3D Gel takes the same raised digit and adds a domed, glass-like resin layer over the top, giving extra depth and a glossier finish under light.",
+        ],
+      },
+      {
+        heading: "4D plates",
+        paragraphs: [
+          "4D plates are laser-cut from acrylic rather than moulded from resin, which gives cleaner edges and a glossier black finish than 3D. They sit slightly taller too, so the raised effect reads more clearly from a distance.",
+          "As with 3D, a 4D Gel option adds a domed resin coating over the acrylic digits for even more shine and depth.",
+        ],
+      },
+      {
+        heading: "5D plates",
+        paragraphs: [
+          "5D is our top-tier finish — thicker acrylic than 4D, cut with the same laser precision, giving the crispest edges and the deepest, glossiest look of any finish we offer. 5D Gel adds the domed top layer for the most premium finish available.",
+        ],
+      },
+      {
+        heading: "Which one should you get?",
+        paragraphs: [
+          "If budget is the priority, standard plates do the job and are completely road legal. If you want a visible upgrade without spending a lot more, 3D is the natural first step. If you want the plates to genuinely stand out, 4D or 5D — especially with the Gel finish — is where the difference becomes obvious even to people who don't know plates.",
+          "Shape matters too — we also offer short, hexagon and normal (standard rectangular) plate shapes, so you can match the plate to your car's plate recess or just to the look you're after.",
+          "Send us your registration and the finish and shape you'd like, and we'll get your plates made up.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "ceramic-vs-standard-window-tint",
     title: "Ceramic vs. Standard Dyed Window Tint: Which One Should You Choose?",
     description:

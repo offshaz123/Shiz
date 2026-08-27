@@ -14,25 +14,27 @@ export default function AppleIcon() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          background: "#0a0a0b",
+          background: "#06090c",
         }}
       >
         <svg width="140" height="140" viewBox="0 0 40 40" fill="none">
+          <defs>
+            <linearGradient id="g" x1="2" y1="4" x2="38" y2="36" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stopColor="#0f5f8c" />
+              <stop offset="0.55" stopColor="#0ea5c4" />
+              <stop offset="1" stopColor="#f2a922" />
+            </linearGradient>
+          </defs>
           <path
-            d="M20 6.5 30.5 12v8.2c0 6.4-4.4 11.6-10.5 13.3-6.1-1.7-10.5-6.9-10.5-13.3V12L20 6.5Z"
-            stroke="#c9a227"
+            d="M7 26.5c0-1.4 1-2.6 2.4-2.9l2.1-.4 2-4c.5-1 1.5-1.6 2.6-1.6h7.8c1.1 0 2.1.6 2.6 1.6l2 4 2.1.4c1.4.3 2.4 1.5 2.4 2.9v1.3c0 .7-.6 1.2-1.2 1.2h-1.6a2.6 2.6 0 0 1-5.1 0h-9.2a2.6 2.6 0 0 1-5.1 0H8.2c-.7 0-1.2-.5-1.2-1.2v-1.3Z"
+            stroke="url(#g)"
             strokeWidth="1.8"
             strokeLinejoin="round"
             fill="none"
           />
-          <path
-            d="M14.5 20.2 18 23.7l7.5-7.9"
-            stroke="#c9a227"
-            strokeWidth="2.4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-          />
+          <path d="M13.5 21.5h13" stroke="url(#g)" strokeWidth="1.8" strokeLinecap="round" />
+          <circle cx="14.5" cy="27" r="1.9" fill="url(#g)" />
+          <circle cx="25.5" cy="27" r="1.9" fill="url(#g)" />
         </svg>
       </div>
     ),

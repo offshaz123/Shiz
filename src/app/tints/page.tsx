@@ -54,8 +54,9 @@ export default function TintsPage() {
               description={service.description}
               features={service.features}
               fromPrice={service.fromPrice}
+              priceNote={service.priceNote}
               badge={service.badge}
-              quoteHref={`/quote?service=${encodeURIComponent(service.name)}`}
+              ctaHref={`/quote?service=${encodeURIComponent(service.name)}`}
             />
           ))}
         </div>

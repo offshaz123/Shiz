@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ConversionTracker } from "@/components/ConversionTracker";
 import { whatsappHref } from "@/lib/site-config";
 
 export const metadata: Metadata = {
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 export default function ThankYouPage() {
   return (
     <div className="mx-auto flex max-w-2xl flex-col items-center px-5 py-28 text-center sm:px-8">
+      <ConversionTracker />
       <div className="brand-gradient-bg flex h-16 w-16 items-center justify-center rounded-full">
         <svg viewBox="0 0 24 24" fill="none" className="h-8 w-8 text-white">
           <path

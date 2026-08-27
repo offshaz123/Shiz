@@ -6,12 +6,12 @@ import { siteConfig, tintServices, repairServices } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "Pricing",
   description:
-    "Transparent pricing for window tinting, dechroming, brakes and servicing — 10% off ceramic tint, 15% off with a valid Blue NHS card.",
+    "Transparent pricing for window tinting, dechroming, brakes, servicing, polishing, ceramic detailing and number plates — 10% off ceramic tint, 15% off with a valid Blue NHS card.",
   alternates: { canonical: "/pricing" },
   openGraph: {
     title: "Pricing | Exclusive Tints & Repairs",
     description:
-      "Transparent pricing for window tinting, dechroming, brakes and servicing — 10% off ceramic tint, 15% off with a valid Blue NHS card.",
+      "Transparent pricing for window tinting, dechroming, brakes, servicing, polishing, ceramic detailing and number plates — 10% off ceramic tint, 15% off with a valid Blue NHS card.",
   },
 };
 
@@ -103,7 +103,7 @@ export default function PricingPage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-5 pb-24 sm:px-8">
-        <h2 className="text-2xl font-bold text-foreground">Repairs &amp; Servicing</h2>
+        <h2 className="text-2xl font-bold text-foreground">Repairs, Servicing &amp; Detailing</h2>
         <div className="mt-6 overflow-hidden rounded-3xl border border-border">
           {repairServices.map((s, i) => (
             <div
@@ -117,12 +117,17 @@ export default function PricingPage() {
                 <p className="text-sm text-muted">{s.tagline}</p>
               </div>
               <div className="flex items-center gap-4">
-                <p className="text-lg font-bold text-foreground">{s.fromPrice}</p>
+                {s.fromPrice && (
+                  <p className="text-lg font-bold text-foreground">
+                    {s.priceLabel !== "" && "From "}
+                    {s.fromPrice}
+                  </p>
+                )}
                 <Link
-                  href={`/quote?service=${encodeURIComponent(s.name)}`}
+                  href={s.ctaHref ?? `/quote?service=${encodeURIComponent(s.name)}`}
                   className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-brand/60"
                 >
-                  Get Quote
+                  {s.ctaLabel ?? "Get Quote"}
                 </Link>
               </div>
             </div>

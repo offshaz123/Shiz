@@ -4,22 +4,26 @@
 
 :root {
   --background: #ffffff;
-  --surface: #f6f6f7;
-  --surface-2: #ececee;
-  --foreground: #0a0a0b;
-  --muted: #55555c;
-  --border: #e3e3e6;
-  --brand: #c9a227;
+  --surface: #f5f7f8;
+  --surface-2: #eceff1;
+  --foreground: #0a0e12;
+  --muted: #52616b;
+  --border: #dde3e6;
+  --brand-purple: #0f5f8c;
+  --brand-pink: #0ea5c4;
+  --brand-orange: #f2a922;
 }
 
 .dark {
-  --background: #060607;
-  --surface: #101012;
-  --surface-2: #19191c;
-  --foreground: #f5f5f6;
-  --muted: #a2a2aa;
-  --border: #232327;
-  --brand: #c9a227;
+  --background: #06090c;
+  --surface: #0e1418;
+  --surface-2: #161d22;
+  --foreground: #f2f6f8;
+  --muted: #93a3ac;
+  --border: #202a30;
+  --brand-purple: #1c86c4;
+  --brand-pink: #22d3ee;
+  --brand-orange: #ffb830;
 }
 
 @theme inline {
@@ -29,7 +33,10 @@
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-border: var(--border);
-  --color-brand: var(--brand);
+  --color-brand: var(--brand-pink);
+  --color-brand-purple: var(--brand-purple);
+  --color-brand-pink: var(--brand-pink);
+  --color-brand-orange: var(--brand-orange);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -44,16 +51,29 @@ body {
 }
 
 ::selection {
-  background: var(--brand);
+  background: var(--brand-pink);
   color: white;
 }
 
 .brand-gradient-text {
-  color: var(--brand);
+  background-image: linear-gradient(
+    90deg,
+    var(--brand-purple),
+    var(--brand-pink),
+    var(--brand-orange)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .brand-gradient-bg {
-  background-color: var(--brand);
+  background-image: linear-gradient(
+    135deg,
+    var(--brand-purple),
+    var(--brand-pink) 55%,
+    var(--brand-orange)
+  );
 }
 
 .brand-ring {
