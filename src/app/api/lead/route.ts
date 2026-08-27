@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import { siteConfig } from "@/lib/site-config";
-import { sendMetaLeadEvent } from "@/lib/meta-conversions-api";
 
 const FIELDS: { key: string; label: string }[] = [
   { key: "name", label: "Name" },
-  { key: "business", label: "Business" },
-  { key: "email", label: "Email" },
   { key: "phone", label: "Phone" },
-  { key: "industry", label: "Industry" },
-  { key: "budget", label: "Budget" },
+  { key: "email", label: "Email" },
+  { key: "vehicle", label: "Vehicle" },
+  { key: "service", label: "Service" },
   { key: "message", label: "Message" },
 ];
 
@@ -42,19 +40,15 @@ export async function POST(request: Request) {
 
   try {
     await transporter.sendMail({
-      from: `"Shaz Marketing Group Website" <${SMTP_USER}>`,
+      from: `"${siteConfig.name} Website" <${SMTP_USER}>`,
       to: siteConfig.email,
       replyTo: data.email,
-      subject: `New lead: ${data.business || data.name}`,
+      subject: `New quote request: ${data.service || data.name}`,
       text: rows,
     });
   } catch (err) {
     console.error("Lead form: failed to send email", err);
     return NextResponse.json({ success: false }, { status: 500 });
-  }
-
-  if (data.eventId) {
-    void sendMetaLeadEvent({ request, eventId: data.eventId, email: data.email, phone: data.phone });
   }
 
   return NextResponse.json({ success: true });

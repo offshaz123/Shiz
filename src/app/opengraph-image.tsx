@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const dynamic = "force-static";
-export const alt = "Shaz Marketing Group — Meta & Instagram Ads for Businesses";
+export const alt = "Exclusive Tints & Repairs — Premium Window Tinting & Car Servicing";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -16,7 +16,7 @@ export default async function Image() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#08080a",
+          backgroundColor: "#060607",
           padding: 80,
         }}
       >
@@ -25,46 +25,48 @@ export default async function Image() {
             style={{
               width: 100,
               height: 100,
-              borderRadius: 28,
+              borderRadius: 22,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: 56,
+              fontSize: 52,
               fontWeight: 800,
-              color: "#fff",
-              background: "linear-gradient(135deg, #7b2ff7, #e0218a 55%, #f7941e)",
+              color: "#c9a227",
+              background: "#0a0a0b",
+              border: "2px solid #c9a227",
             }}
           >
-            S
+            E
           </div>
-          <div style={{ display: "flex", fontSize: 46, fontWeight: 800, color: "#fff" }}>
-            <span>SHAZ&nbsp;</span>
-            <span style={{ color: "#ff3ea5" }}>MARKETING</span>
+          <div style={{ display: "flex", fontSize: 44, fontWeight: 800, color: "#fff" }}>
+            <span>EXCLUSIVE&nbsp;</span>
+            <span style={{ color: "#c9a227" }}>TINTS</span>
+            <span>&nbsp;&amp; REPAIRS</span>
           </div>
         </div>
         <div
           style={{
             marginTop: 48,
-            fontSize: 42,
+            fontSize: 40,
             fontWeight: 700,
             color: "#fff",
             textAlign: "center",
-            maxWidth: 920,
+            maxWidth: 940,
             display: "flex",
           }}
         >
-          More leads. More bookings. One platform.
+          Premium window tinting, finished to an executive standard
         </div>
         <div
           style={{
             marginTop: 20,
             fontSize: 26,
-            color: "#a1a1ac",
+            color: "#a2a2aa",
             textAlign: "center",
             display: "flex",
           }}
         >
-          Meta &amp; Instagram Ads · Lead Generation · All-in-One CRM · AI Receptionist
+          Standard · Ceramic · Chameleon Tint · Dechroming · Brakes · Servicing
         </div>
       </div>
     ),

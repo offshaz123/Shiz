@@ -1,39 +1,40 @@
 import type { Metadata } from "next";
-import { PricingSection } from "@/components/PricingSection";
+import Link from "next/link";
 import { BreadcrumbJsonLd, FaqJsonLd } from "@/components/StructuredData";
-import { siteConfig } from "@/lib/site-config";
+import { siteConfig, tintServices, repairServices } from "@/lib/site-config";
 
 export const metadata: Metadata = {
-  title: "Meta & Instagram Ads Pricing",
+  title: "Pricing",
   description:
-    "Simple, transparent pricing for done-for-you Meta & Instagram ads management — from £400/month, no long-term contract. See what's included in each plan.",
+    "Transparent pricing for window tinting, dechroming, brakes and servicing — 10% off ceramic tint, 15% off with a valid Blue NHS card.",
   alternates: { canonical: "/pricing" },
   openGraph: {
-    title: "Pricing | Shaz Marketing Group",
+    title: "Pricing | Exclusive Tints & Repairs",
     description:
-      "Simple, transparent pricing for done-for-you Meta & Instagram ads management — from £400/month, no long-term contract. See what's included in each plan.",
+      "Transparent pricing for window tinting, dechroming, brakes and servicing — 10% off ceramic tint, 15% off with a valid Blue NHS card.",
   },
 };
 
 const faqs = [
   {
-    question: "Is ad spend included in the price?",
+    question: "Is the ceramic tint discount and lifetime warranty genuine?",
     answer:
-      "No — the plan price covers our management, strategy and platform. Ad spend is separate and paid directly to Meta, so you always know exactly what's going to advertising versus our service.",
+      "Yes — every ceramic tint job currently comes with 10% off and a lifetime warranty against bubbling, peeling and fading, for as long as you own the vehicle.",
   },
   {
-    question: "Is there a long-term contract?",
-    answer: "No. Plans run monthly with no long-term contract — cancel anytime.",
+    question: "How does the Blue NHS card discount work?",
+    answer:
+      "Show a valid Blue Light Card (NHS) at the time of booking and get 15% off any service — tints or repairs. Discounts cannot be combined with other offers.",
   },
   {
-    question: "Can I switch plans later?",
+    question: "Do you give quotes before booking?",
     answer:
-      "Yes, you can move up or down between plans as your business needs change — just get in touch and we'll adjust it for you.",
+      "Always. Every price above is a starting point — the exact cost depends on your vehicle's glass size and condition. Send us your reg or vehicle details on WhatsApp or through the quote form for an exact price.",
   },
   {
-    question: "Which plan is right for my business?",
+    question: "Do you offer any warranty on repairs?",
     answer:
-      "Most businesses starting out choose Starter or Growth. If you want the full CRM, automated follow-up and an AI receptionist handling enquiries around the clock, Scale is built for that. We'll help you pick the right one on a free strategy call.",
+      "All parts we fit are covered by their manufacturer warranty, and our workmanship is guaranteed — if something isn't right after a repair, bring it back and we'll sort it.",
   },
 ];
 
@@ -46,17 +47,93 @@ export default function PricingPage() {
           { name: "Pricing", url: `${siteConfig.url}/pricing` },
         ]}
       />
-      <div aria-hidden className="relative overflow-hidden">
-        <div className="pointer-events-none absolute -top-40 left-1/2 h-[560px] w-[900px] -translate-x-1/2 rounded-full opacity-20 blur-3xl brand-gradient-bg" />
-      </div>
 
-      <PricingSection headingLevel="h1" />
+      <section className="relative overflow-hidden">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -top-40 left-1/2 h-[480px] w-[800px] -translate-x-1/2 rounded-full opacity-10 blur-3xl brand-gradient-bg"
+        />
+        <div className="relative mx-auto max-w-3xl px-5 py-20 text-center sm:px-8">
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+            Pricing
+          </span>
+          <h1 className="mt-3 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            Straightforward pricing, no surprises
+          </h1>
+          <p className="mx-auto mt-6 max-w-xl text-lg text-muted">
+            10% off ceramic tint with a lifetime warranty, and 15% off any service with a valid
+            Blue NHS card.
+          </p>
+        </div>
+      </section>
 
-      {/* FAQ */}
+      <section className="mx-auto max-w-6xl px-5 pb-16 sm:px-8">
+        <h2 className="text-2xl font-bold text-foreground">Window Tints</h2>
+        <div className="mt-6 overflow-hidden rounded-3xl border border-border">
+          {tintServices.map((s, i) => (
+            <div
+              key={s.slug}
+              className={`flex flex-wrap items-center justify-between gap-3 p-6 ${
+                i % 2 === 0 ? "bg-surface" : "bg-background"
+              }`}
+            >
+              <div>
+                <p className="font-semibold text-foreground">
+                  {s.name}
+                  {s.badge && (
+                    <span className="ml-2 rounded-full bg-brand/15 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-brand">
+                      {s.badge}
+                    </span>
+                  )}
+                </p>
+                <p className="text-sm text-muted">{s.tagline}</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <p className="text-lg font-bold text-foreground">{s.fromPrice}</p>
+                <Link
+                  href={`/quote?service=${encodeURIComponent(s.name)}`}
+                  className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-brand/60"
+                >
+                  Get Quote
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 pb-24 sm:px-8">
+        <h2 className="text-2xl font-bold text-foreground">Repairs &amp; Servicing</h2>
+        <div className="mt-6 overflow-hidden rounded-3xl border border-border">
+          {repairServices.map((s, i) => (
+            <div
+              key={s.slug}
+              className={`flex flex-wrap items-center justify-between gap-3 p-6 ${
+                i % 2 === 0 ? "bg-surface" : "bg-background"
+              }`}
+            >
+              <div>
+                <p className="font-semibold text-foreground">{s.name}</p>
+                <p className="text-sm text-muted">{s.tagline}</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <p className="text-lg font-bold text-foreground">{s.fromPrice}</p>
+                <Link
+                  href={`/quote?service=${encodeURIComponent(s.name)}`}
+                  className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-brand/60"
+                >
+                  Get Quote
+                </Link>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="border-t border-border bg-surface">
         <div className="mx-auto max-w-3xl px-5 py-24 sm:px-8">
           <div className="text-center">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
               FAQs
             </span>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">

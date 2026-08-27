@@ -65,7 +65,7 @@ export default async function BlogPostPage({
 
   return (
     <article className="mx-auto max-w-3xl px-5 py-20 sm:px-8">
-      <Link href="/blog" className="text-sm font-medium text-brand-pink hover:underline">
+      <Link href="/blog" className="text-sm font-medium text-brand hover:underline">
         ← Back to Blog
       </Link>
 
@@ -100,7 +100,7 @@ export default async function BlogPostPage({
                       <svg
                         viewBox="0 0 24 24"
                         fill="none"
-                        className="mt-1 h-4 w-4 shrink-0 text-brand-pink"
+                        className="mt-1 h-4 w-4 shrink-0 text-brand"
                       >
                         <path
                           d="M5 13l4 4L19 7"
@@ -122,24 +122,24 @@ export default async function BlogPostPage({
 
       <div className="mt-14 rounded-3xl border border-border bg-surface p-8 text-center">
         <h2 className="text-xl font-semibold text-foreground">
-          Ready to grow your business with Meta &amp; Instagram ads?
+          Ready to book your car in?
         </h2>
         <p className="mx-auto mt-3 max-w-md text-sm text-muted">
           See{" "}
-          <Link href="/services" className="text-brand-pink hover:underline">
-            what we do
+          <Link href="/tints" className="text-brand hover:underline">
+            our window tints
           </Link>{" "}
           and{" "}
-          <Link href="/pricing" className="text-brand-pink hover:underline">
-            how our plans work
+          <Link href="/pricing" className="text-brand hover:underline">
+            our pricing
           </Link>
-          , or book a free strategy call and we&apos;ll map it out for your business.
+          , or get a free, no-obligation quote for your vehicle.
         </p>
         <Link
-          href="/contact"
+          href="/quote"
           className="brand-gradient-bg mt-6 inline-flex rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
         >
-          Get My Free Strategy Call
+          Get a Free Quote
         </Link>
       </div>
 

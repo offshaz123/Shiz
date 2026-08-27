@@ -8,7 +8,7 @@ export type BlogPost = {
   slug: string;
   title: string;
   description: string;
-  publishedAt: string; // ISO date, e.g. "2026-07-31"
+  publishedAt: string; // ISO date, e.g. "2026-08-27"
   keywords: string[];
   sections: BlogSection[];
 };
@@ -16,1747 +16,244 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
-    slug: "why-meta-ads-get-low-quality-leads",
-    title: "Why Your Meta Ads Are Getting Low-Quality Leads (and How to Fix It)",
+    slug: "ceramic-vs-standard-window-tint",
+    title: "Ceramic vs. Standard Dyed Window Tint: Which One Should You Choose?",
     description:
-      "Wrong numbers, people who don't remember enquiring, nobody answering the phone. Poor lead quality is usually a settings problem, and it's fixable.",
+      "Standard dyed tint is cheaper, but ceramic rejects far more heat, won't fade, and is the only film we back with a lifetime warranty. Here's how to decide.",
     publishedAt: "2026-08-27",
     keywords: [
-      "poor quality Facebook leads",
-      "fake leads Facebook ads",
-      "improve Meta lead quality",
-      "instant form lead quality UK",
+      "ceramic vs standard tint",
+      "ceramic window tint",
+      "dyed window tint",
+      "best car window tint UK",
     ],
     sections: [
       {
         paragraphs: [
-          "The campaign looks like it's working. Leads are arriving, the cost per lead is low, the graph in Ads Manager points the right way. Then you start ringing them.",
-          "Numbers that don't connect. People who don't recall filling anything in. Someone who thought they were entering a competition. It's a specific kind of frustrating, because on paper you're winning.",
-          "This is one of the most common complaints about Meta lead ads, and it's rarely a sign the platform doesn't work. It's usually a handful of settings doing exactly what they were configured to do.",
+          "It's the first question almost every customer asks us: standard or ceramic? Both will make your windows legally darker and give your car a cleaner look, but underneath that similar appearance they're genuinely different products, built from different materials, with different lifespans.",
+          "Here's the honest breakdown — not the version that just tries to upsell you.",
         ],
       },
       {
-        heading: "Instant Forms are designed to be easy — that's the problem",
+        heading: "What standard dyed tint actually is",
         paragraphs: [
-          "Instant Forms exist to remove friction. They open inside the app, they pre-fill name, email and phone from the person's account, and submitting takes two taps.",
-          "That's brilliant for volume and terrible for intent. Someone can complete your form almost accidentally, while half-watching something else, without ever consciously deciding to contact your business. The details are real — they came from a real account — but the interest often isn't.",
-          "Pre-filling also means the phone number is whatever they entered when they signed up years ago. It's not a fake number, it's an abandoned one. They never check it.",
+          "Dyed window tint works by bonding a layer of dye between the glass and an adhesive layer. That dye absorbs light rather than reflecting or scattering it, which is what darkens the glass and cuts glare.",
+          "It's a well-established, reliable product, and for a lot of drivers it does exactly what they need: a smart, uniform tinted look, decent UV protection, and a lower price point than ceramic.",
         ],
       },
       {
-        heading: "The settings that make the biggest difference",
+        heading: "Where dyed tint falls short",
         paragraphs: [
-          "Most lead quality problems are solved in the form itself rather than in the targeting:",
+          "The dye itself is the limiting factor. It absorbs heat rather than rejecting it, so a lot of that heat still ends up radiating into the cabin — you'll notice this most on a hot day with the sun directly on the glass.",
+          "Dye also isn't permanently stable. Over several years of UV exposure it can fade or shift towards a purple or brown tint, which looks patchy rather than premium. That's part of why dyed film typically only carries a couple of years of warranty — the manufacturer knows it has a shelf life.",
+        ],
+      },
+      {
+        heading: "What makes ceramic different",
+        paragraphs: [
+          "Ceramic tint replaces the dye with microscopic, non-conductive ceramic particles embedded in the film. These particles reject infrared radiation — the part of sunlight responsible for most of the heat you feel — rather than just absorbing visible light.",
+          "The result is a film that keeps a car noticeably cooler in direct sun, without needing to go any darker than a dyed equivalent. It also stays optically clear rather than looking grey or flat, and because ceramic doesn't rely on dye, it doesn't fade or discolour with age.",
         ],
         bullets: [
-          "Choose the higher intent form type — it adds a review step before submission, so people confirm rather than tapping straight through. Fewer leads, noticeably better ones",
-          "Add one qualifying question with real options, so completing the form requires an actual decision rather than reflex",
-          "Turn off automatic field completion where you can, since typing a number means you get one the person actually uses",
-          "Optimise for leads rather than link clicks, or you're paying the system to find people who like tapping adverts",
-          "Keep the form to four fields — every extra question loses completions without improving quality, and you can qualify properly on the call",
+          "Rejects up to 99% of infrared heat, versus moderate rejection from dyed film",
+          "Blocks up to 99.9% of harmful UV rays, protecting your skin and your interior",
+          "Won't fade, bubble or turn purple over time",
+          "Doesn't interfere with phone signal, GPS or any in-car electronics",
         ],
       },
       {
-        heading: "Say the price in the ad",
+        heading: "Why we only put a lifetime warranty on ceramic",
         paragraphs: [
-          "The most effective quality filter isn't a setting at all. It's putting something in the ad copy that makes unsuitable people scroll past.",
-          "A starting price does this better than anything. \"From £400 a month\" costs you a good number of enquiries and almost none of them were going to buy. What's left is people who saw the number and enquired anyway, which is a far more useful conversation.",
-          "The same applies to eligibility. If you only serve a certain area, only take certain jobs, or have a minimum, say so plainly. Every ad you write is either filtering or it isn't, and vague copy filters nothing.",
+          "This is the part that says the most about the difference: we fit premium ceramic film that's genuinely a step above what a lot of competitors sell as \"ceramic,\" and because of that, we're confident enough to warranty it for as long as you own the car — not for one or two years, for life.",
+          "We couldn't offer that on dyed film even if we wanted to, because the material itself isn't built to last that long. A lifetime warranty is only as good as what's underneath it, and that's exactly why it's exclusive to our ceramic tint.",
         ],
       },
       {
-        heading: "Some of it isn't the leads",
+        heading: "So which one should you pick?",
         paragraphs: [
-          "It's worth checking one uncomfortable possibility before blaming the campaign: how long is it taking to ring these people?",
-          "Instant Form leads go cold faster than almost any other kind, precisely because they took so little effort. Someone who tapped through in five seconds has minimal investment in remembering it. Call them three days later and of course they sound confused — they've genuinely forgotten, and that reads exactly like a bad lead.",
-          "The same enquiry called within the hour behaves completely differently. Before concluding the leads are junk, check how quickly they're being contacted, and how many attempts are being made. One unanswered call at two in the afternoon is not a fair test of anything.",
-        ],
-      },
-      {
-        heading: "The trade-off nobody mentions",
-        paragraphs: [
-          "Every one of these changes will make your cost per lead look worse. That's not a side effect, it's the mechanism — you're deliberately buying fewer, more considered enquiries.",
-          "Which means cost per lead stops being a useful measure the moment you start optimising for quality. If forty leads at £4 produce two customers and twelve leads at £15 produce four, the expensive campaign is comfortably the better one, and any report based on cost per lead will tell you the opposite.",
-          "So track what happened after the call — how many were reachable, how many booked. Without that, you're optimising toward the cheapest possible way of generating people who never answer the phone.",
+          "If budget is the main factor and you mainly want the look and basic UV protection, standard dyed tint is a solid, honest choice — that's exactly why we still offer it.",
+          "If you want the best possible heat rejection, a finish that won't age, and the peace of mind of a lifetime warranty, ceramic is the clear upgrade — and right now it's also 10% off, so the price gap is smaller than you'd think.",
+          "Not sure which is right for your car and budget? Send us your reg on WhatsApp and we'll give you an honest recommendation, not just the more expensive option.",
         ],
       },
     ],
   },
   {
-    slug: "do-you-need-a-big-following-to-run-meta-ads",
-    title: "Do You Need a Big Following to Run Meta Ads?",
+    slug: "why-choose-ceramic-tint-over-competitors",
+    title: "Why Our Ceramic Tint Beats What Most Competitors Are Selling",
     description:
-      "A common reason businesses delay advertising is having barely any followers. It's the wrong thing to wait for, and here's why the two are largely unrelated.",
-    publishedAt: "2026-08-26",
-    keywords: [
-      "do I need followers to run Facebook ads",
-      "Facebook ads without followers",
-      "how many followers to run Instagram ads",
-      "Instagram ads new business UK",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "It comes up in almost every first conversation. Someone wants to advertise but feels they should wait — build the page up a bit first, get to a thousand followers, make the profile look established. Advertising to nobody feels premature.",
-          "It's an understandable instinct and it's the wrong sequence. Paid reach and organic reach are two largely separate systems, and waiting for one before starting the other usually costs a business months it didn't need to spend.",
-        ],
-      },
-      {
-        heading: "Paid reach doesn't come from your followers",
-        paragraphs: [
-          "When you post organically, Meta shows it to some portion of the people who already follow you. Your follower count is the ceiling on that, which is why growing it feels so important.",
-          "Paid reach works differently. You're buying access to Meta's entire user base, filtered by location, age and behaviour. The system shows your ad to people chosen by targeting, not by whether they've heard of you. An account with eleven followers and an account with eleven thousand are bidding into the same auction for the same strangers.",
-          "This is why a brand new business can run a campaign on day one and generate enquiries in the first week. The audience was never yours to build — you're renting access to it.",
-        ],
-      },
-      {
-        heading: "Where the follower count does matter",
-        paragraphs: [
-          "It isn't entirely irrelevant, just misunderstood. Followers don't affect delivery or cost. What they affect is what happens after someone taps your name.",
-          "A proportion of people who see your ad will check the profile before enquiring, particularly for anything involving trust, money or their body. What they're looking for isn't a follower number — it's evidence that the business is real and currently operating.",
-          "A profile with nine posts and forty followers reads as a small business. A profile with two posts from last year and no bio reads as abandoned, and that's the one that costs you enquiries. The fix takes an afternoon, not six months.",
-        ],
-      },
-      {
-        heading: "What's actually worth having before you spend",
-        paragraphs: [
-          "There's a short list of things that genuinely affect results, and none of them is a follower count:",
-        ],
-        bullets: [
-          "A profile that looks live — a clear bio saying what you do and where, a handful of recent posts, contact details that work",
-          "Somewhere for the enquiry to land — a landing page or an instant form, not just a link to your homepage",
-          "A way to be contacted that suits the customer, which for most local businesses means WhatsApp or a phone number, not only email",
-          "Someone able to reply quickly, because response speed changes outcomes far more than anything on your profile",
-          "The Pixel installed, so the campaign can learn from day one rather than starting blind",
-        ],
-      },
-      {
-        heading: "The cost of waiting",
-        paragraphs: [
-          "Building a following organically from a standing start is slow, unpredictable work, and for most local service businesses it isn't where the customers come from anyway. A plumber does not need an audience. They need to appear in front of people whose boiler has stopped working.",
-          "There's also a compounding cost to delay. The Pixel only records visitors from the day it's installed, campaigns need weeks to settle before their numbers mean anything, and the audiences you'll eventually want to retarget can only be built by having traffic in the first place. Six months of waiting isn't neutral — it's six months of data you never collected.",
-          "Meanwhile the ads themselves tend to grow the following as a side effect. People who see your ads and aren't ready to buy often follow instead, which means the audience you were waiting to build arrives as a by-product of advertising rather than a prerequisite for it.",
-        ],
-      },
-      {
-        heading: "The honest version",
-        paragraphs: [
-          "If your profile is genuinely empty, spend an afternoon on it before you spend money. Write the bio, post a few pieces of real work, make sure someone tapping your name finds a business that clearly exists. That's worth doing and it's a day's work.",
-          "But don't confuse that with needing an audience. The number under your name has almost no bearing on whether your ads reach the right people or what they cost.",
-          "The businesses that struggle with paid advertising are rarely the ones with small followings. They're the ones sending traffic somewhere weak, or letting enquiries sit unanswered until the person has booked elsewhere.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "what-the-meta-pixel-actually-does",
-    title: "What the Meta Pixel Actually Does, and Why It Matters More Than It Used To",
-    description:
-      "The Pixel isn't just analytics. It's what tells Meta which of your ads produced real customers, and without it the system is optimising half blind.",
-    publishedAt: "2026-08-25",
-    keywords: [
-      "Meta Pixel explained",
-      "Facebook pixel small business",
-      "what does the Meta Pixel do",
-      "Conversions API small business UK",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "The Meta Pixel gets explained as a tracking tool, which makes it sound like analytics — a way of counting visitors that you could reasonably put off until you've got time.",
-          "That undersells what it does. The Pixel isn't primarily there so you can look at numbers. It's there so Meta can learn which people are worth showing your ads to. Without it you're not just missing reporting, you're running campaigns that can't improve.",
-        ],
-      },
-      {
-        heading: "The feedback loop is the point",
-        paragraphs: [
-          "When you run a campaign, Meta makes a series of guesses about who might respond. What turns guessing into targeting is finding out what happened next.",
-          "The Pixel is what closes that loop. It reports back that this particular person, from this particular ad, went on to fill in your form. Meta then goes looking for more people who resemble the ones who converted, rather than the ones who merely clicked.",
-          "That distinction matters enormously. Without conversion data, the system optimises toward clicks — and the people most likely to click an advert are not reliably the people most likely to become customers. You end up paying for attention rather than enquiries.",
-        ],
-      },
-      {
-        heading: "What it actually records",
-        paragraphs: [
-          "By default the Pixel records page views. The useful part is the events you define on top of that — the specific actions that matter to your business:",
-        ],
-        bullets: [
-          "Lead — someone submitted your enquiry form. For most service businesses this is the only event that really matters",
-          "Contact — a phone tap or a click through to WhatsApp, which often captures people who'd never fill in a form",
-          "ViewContent — someone looked at a specific service or pricing page, a useful signal of genuine interest",
-          "CompleteRegistration or Schedule — a booking made, where you take appointments online",
-          "Purchase — for anything sold directly on the site, with the value attached so return can be calculated properly",
-        ],
-      },
-      {
-        heading: "Why browser tracking alone stopped being enough",
-        paragraphs: [
-          "The Pixel runs in the visitor's browser, and browsers have become considerably less accommodating. Privacy settings, tracking prevention and ad blockers all interfere with it, and a meaningful share of conversions simply never get reported.",
-          "The consequence isn't only inaccurate reporting. Every missing conversion is a piece of learning the system never receives, so campaigns optimise on a partial picture and costs drift upward.",
-          "This is what the Conversions API addresses. Instead of relying solely on the visitor's browser, your server sends the same events directly to Meta. Both methods run together, each event carries a shared identifier so the same conversion isn't counted twice, and between them they recover a good deal of what the Pixel alone loses.",
-          "Setting both up is more work than pasting in a snippet, and it's genuinely worth it once you're spending real money.",
-        ],
-      },
-      {
-        heading: "It only counts from the day you install it",
-        paragraphs: [
-          "This is the part people regret. The Pixel has no memory of anything before it existed. It cannot be pointed at last year's traffic, and there's no way to reconstruct the audience you'd have built.",
-          "So the sensible move is to install it now, even if advertising is months away. It costs nothing to run, it quietly accumulates the audience you'll later want to retarget, and by the time you launch you're starting with history rather than from zero.",
-          "The reverse is a genuinely expensive mistake — running ads for months with no Pixel, then installing one and effectively starting the learning process again from nothing.",
-        ],
-      },
-      {
-        heading: "The obligations that come with it",
-        paragraphs: [
-          "Tracking visitors brings responsibilities under UK GDPR and PECR. Non-essential tracking needs consent, which means a cookie banner that genuinely works — one that doesn't fire the Pixel until someone agrees, rather than one that announces tracking has already started.",
-          "Your privacy policy should say plainly what you collect and why. None of this is onerous, but it is the sort of thing that gets skipped and then becomes a problem later.",
-          "Take particular care with sensitive categories. Never send event data that reveals health conditions, financial circumstances or anything similar — a treatment name in a URL passed back as a conversion event is exactly the kind of detail that shouldn't be leaving your site.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "retargeting-for-small-businesses",
-    title: "How to Set Up Retargeting When You're a Small Business",
-    description:
-      "Most people who visit your website leave without contacting you. Retargeting is how you get a second attempt, and it's usually the cheapest advertising you'll run.",
+      "Not all \"ceramic tint\" is equal. Here's what actually separates premium ceramic film from the budget version many shops fit under the same name.",
     publishedAt: "2026-08-24",
     keywords: [
-      "Facebook retargeting small business",
-      "warm audience ads UK",
-      "how to set up retargeting ads",
-      "Meta remarketing for small business",
+      "best window tint shop",
+      "premium ceramic tint",
+      "lifetime warranty window tint",
+      "window tint quality",
     ],
     sections: [
       {
         paragraphs: [
-          "The overwhelming majority of people who land on your website leave without doing anything. They read a bit, maybe check your prices, and then something interrupts them — a phone call, a train stop, a child. They meant to come back. They didn't.",
-          "Retargeting is simply showing an ad to those people afterwards. It's one of the few pieces of advertising where the audience already knows who you are, and for most small businesses it's the cheapest source of enquiries available.",
+          "\"Ceramic tint\" has become a bit of a marketing term. Plenty of shops advertise it, but the quality of the actual ceramic film varies enormously — and most customers have no easy way to tell the difference until years later, when a cheap film starts underperforming or ageing badly.",
+          "Here's what we look for, and why it matters.",
         ],
       },
       {
-        heading: "Why it costs so much less",
+        heading: "Particle quality and density",
         paragraphs: [
-          "A cold audience ad has to do three jobs at once: get attention, explain who you are, and persuade someone to act. A retargeting ad only has to do the third, because the first two already happened.",
-          "That difference shows up in the numbers. Retargeting audiences are small, so they won't carry your whole campaign — but the cost per enquiry is usually a fraction of what cold traffic costs, because you're talking to people who already showed interest.",
-          "It's the closest thing in advertising to picking up money you've already spent to earn. You paid to get those visitors once. Retargeting is what stops that spend evaporating when they don't convert on the first visit.",
+          "The heat-rejecting performance of ceramic tint comes down to the quality and concentration of the ceramic nano-particles used in the film. Budget ceramic films use a lower grade and lower density of these particles to hit a price point, which means they perform closer to a standard dyed film than a true premium ceramic — while still being sold at ceramic prices.",
+          "We use a premium-grade film specifically because the heat rejection numbers actually back up the claims on the box, not just the marketing.",
         ],
       },
       {
-        heading: "You need the Pixel installed first",
+        heading: "Optical clarity",
         paragraphs: [
-          "Retargeting depends on Meta knowing who visited your site, and that requires the Meta Pixel — a small piece of tracking code on every page. Without it there's no audience to retarget, and no way to build one retrospectively.",
-          "This is the part worth doing today even if you're not advertising yet. The Pixel only records people who visit after it's installed. Every week it isn't there is a week of visitors you can never reach again.",
-          "It's also worth setting up the Conversions API alongside it if you can. Browser-based tracking gets blocked by privacy settings and ad blockers fairly often, and sending the same events server-side fills in a meaningful share of what the Pixel alone misses.",
+          "A genuine giveaway of a lower quality film is a slightly hazy or grey cast, especially noticeable at night or in low light. Premium ceramic film stays optically clear and true to colour — you shouldn't be able to tell it's there beyond the shade itself.",
         ],
       },
       {
-        heading: "The audiences actually worth building",
+        heading: "Adhesive and installation matter just as much as the film",
         paragraphs: [
-          "Resist the urge to retarget everyone who ever touched your business. Intent varies enormously between someone who watched three seconds of a video and someone who started filling in your contact form. Separate them:",
-        ],
-        bullets: [
-          "Visited your pricing or services page — the highest intent group on your site, and the one to spend most of your retargeting budget on",
-          "Started your enquiry form but didn't submit it — small, but usually the best-converting audience you'll ever build",
-          "Visited any page in the last 30 days — a broader catch-all for when the sharper audiences are too small to deliver",
-          "Engaged with your Instagram or Facebook page — useful when your website traffic is still low, since it doesn't depend on the Pixel",
-          "Watched most of a video — worth separating by how much they watched; someone who finished it is a different prospect from someone who scrolled past at two seconds",
+          "Even the best film will fail early if it's cut and fitted poorly. Air bubbles, lifted edges and dust trapped under the film are almost always an installation issue, not a film issue — which is why hand-fitting and a clean workspace matter as much as the material itself.",
+          "Every job we do is fitted edge-to-edge with the same care, checked before the car leaves us.",
         ],
       },
       {
-        heading: "What the ad should actually say",
+        heading: "The warranty tells you everything",
         paragraphs: [
-          "The most common mistake is showing retargeted people the same ad they've already seen. They didn't act on it the first time, so repeating it mostly just annoys them.",
-          "Assume they know who you are and answer whatever stopped them instead. If price was the hesitation, be direct about pricing. If it's trust, show a real result or the people behind the business. If it's simply that they got distracted, a plain reminder with an easy next step often does the job on its own.",
-          "Keep the frequency sensible. These audiences are small, so a normal budget can end up showing the same person your ad several times a day, which turns a useful reminder into an irritation. Capping how often it appears, and refreshing the creative every few weeks, keeps it working.",
-        ],
-      },
-      {
-        heading: "When it's worth turning on",
-        paragraphs: [
-          "Retargeting needs traffic to retarget. If your site gets a handful of visitors a week, the audience will be too small for Meta to deliver against, and you're better off putting everything into reaching new people first.",
-          "The sensible sequence is: install the Pixel now, run cold campaigns to build traffic, and switch retargeting on once there's a real audience to work with. By then you'll have weeks of visitors already collected, waiting.",
-          "One caveat worth knowing: if your business falls under a special ad category — credit, employment or housing — website custom audiences aren't available to you in the usual way. Worth checking before you build a plan around it.",
+          "This is the simplest way to compare shops: ask what warranty they'll put behind their ceramic tint. A shop backing a 2 or 5 year warranty is telling you, indirectly, how long they expect the film to genuinely perform.",
+          "We back our ceramic tint for life, because we've made the decision to fit material that earns that confidence rather than film that just needs to look good on day one.",
         ],
       },
     ],
   },
   {
-    slug: "meta-instagram-ads-health-beauty-wellness",
-    title: "Meta & Instagram Ads for Health, Beauty & Wellness",
+    slug: "chameleon-tint-explained",
+    title: "Chameleon Tint Explained: The Colour-Shift Trend in Blue & Red",
     description:
-      "Salons and clinics are a natural fit for Instagram ads, but they face the strictest rules on the platform. Here's what you can advertise, and what works instead.",
-    publishedAt: "2026-08-23",
-    keywords: [
-      "Instagram ads for salons",
-      "Facebook ads for beauty clinics UK",
-      "Instagram advertising for aesthetics clinics",
-      "social media ads for wellness businesses",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "Few sectors are better suited to Instagram than this one. The work is visual, the results are the product, and people genuinely enjoy following salons and clinics they like the look of. On paper it's the easiest advertising job there is.",
-          "In practice it's one of the hardest, because health, beauty and wellness sit under the strictest advertising rules on the platform. The most persuasive assets these businesses own — the transformation photo, the message that speaks directly to someone's insecurity — are the exact things Meta prohibits.",
-          "That's worth understanding properly rather than discovering through a string of rejected ads.",
-        ],
-      },
-      {
-        heading: "Why the rules are tighter here",
-        paragraphs: [
-          "Meta's position is that people shouldn't feel identified by an advert. An ad implying you know something about someone's body, health or appearance crosses that line, and it's enforced more strictly in this category than anywhere else.",
-          "This catches ordinary, well-meaning copy constantly. \"Struggling with acne?\" and \"Unhappy with your smile?\" both imply knowledge about the reader. \"Book an acne consultation\" and \"Cosmetic dentistry in Manchester\" describe the same service to the same audience without making any claim about who's reading.",
-          "The distinction feels pedantic until you realise it's the difference between an account running smoothly and an account under review.",
-        ],
-      },
-      {
-        heading: "The two things you can't do",
-        paragraphs: [
-          "Before-and-after imagery is prohibited for body and health transformations. This is the one that hurts most, because it's usually the single most convincing asset a clinic has.",
-          "Promising outcomes is the second. Ads must not suggest results that can't reasonably be expected, and specific claims about how much someone will change make it worse rather than more credible.",
-          "There's no clever workaround for either, and anyone offering you one is putting your ad account at risk to win your business. The productive question isn't how to get transformation photos approved — it's what to run instead, because the alternatives are genuinely effective.",
-        ],
-      },
-      {
-        heading: "What works instead",
-        paragraphs: [
-          "The thing actually stopping most people booking isn't doubt about whether the treatment works. It's not knowing what they're walking into — whether it hurts, how long it takes, what it costs, and whether they'll feel judged when they arrive.",
-          "Advertising that answers those questions tends to outperform transformation photos anyway, and it happens to be entirely compliant:",
-        ],
-        bullets: [
-          "The room — clean, calm, well lit. People are deciding whether they'd feel comfortable there, and they decide fast",
-          "The practitioner talking to camera, explaining what a first appointment involves. Faces build trust in a way interiors can't",
-          "Process footage — the tools, the preparation, the steps. It reads as competence without claiming anything",
-          "Plain pricing. In a sector where prices are often hidden, publishing yours is a genuine differentiator and it filters out enquiries you'd have wasted time on",
-          "Practical detail — parking, opening hours, how long to allow, whether there's downtime afterwards",
-        ],
-      },
-      {
-        heading: "The booking gap matters more than the ads",
-        paragraphs: [
-          "Appointment-led businesses share a specific problem: enquiries arrive at the worst possible time. Someone sees your ad at nine in the evening, sends a message asking about availability, and nobody sees it until the following afternoon because the team was with clients all day.",
-          "By then a good proportion have booked elsewhere. Not because the other place was better — because it replied.",
-          "This is why we'd usually push a clinic to sort out how enquiries get answered before increasing ad spend. If messages sit overnight, more advertising just produces more people who go somewhere else. Getting every channel into one place, so evening enquiries are seen and answered, tends to change the numbers more than any change to the ads.",
-        ],
-      },
-      {
-        heading: "Where to put the budget",
-        paragraphs: [
-          "Advertise a specific treatment rather than the business in general. \"Book a facial\" gives someone a decision to make; \"award-winning salon in Leeds\" doesn't. Pick the treatment with a good margin and reasonable repeat potential, and build the campaign around that one thing.",
-          "Keep the radius tight. People travel a long way for a wedding venue and almost no distance for a regular appointment, so a wide radius mostly buys you enquiries that will never convert into a standing booking.",
-          "And be realistic about the first month. New campaigns need time to settle before the numbers mean anything, and this is a sector where the strongest results usually come from the second visit onwards rather than the first.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "how-long-before-meta-ads-work-learning-phase",
-    title: "How Long Before Meta Ads Start Working? The Learning Phase Explained",
-    description:
-      "Meta ads rarely perform properly in week one, and there's a mechanical reason for it. Here's what the learning phase is and what a realistic timeline looks like.",
-    publishedAt: "2026-08-22",
-    keywords: [
-      "Facebook ads learning phase",
-      "how long for Facebook ads to work",
-      "Meta ads results timeline",
-      "why are my Facebook ads not working yet",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "The first few days of a new campaign are almost always disappointing. Costs look high, the leads are thin, and the obvious conclusion is that the ads don't work and the money is being wasted.",
-          "Sometimes that's true. Far more often the campaign is doing exactly what it's supposed to be doing at that stage, and switching it off is the single most expensive mistake a business can make with paid advertising.",
-        ],
-      },
-      {
-        heading: "What the learning phase actually is",
-        paragraphs: [
-          "When you launch an ad set, Meta doesn't yet know which people respond to it. It has your targeting, your budget and your creative, but no evidence about who actually converts.",
-          "So it experiments. It shows your ad across different segments of your audience, at different times, in different placements, and watches what happens. This is the learning phase, and Meta labels it as such in Ads Manager — it isn't something agencies invented to buy themselves time.",
-          "During this period performance is genuinely unstable, and deliberately so. The system is spending some of your budget on finding out what doesn't work, because that's the only way to establish what does.",
-        ],
-      },
-      {
-        heading: "Why it takes as long as it does",
-        paragraphs: [
-          "Meta's own guidance is that an ad set generally leaves the learning phase after roughly 50 optimisation events within a seven-day window. If you're optimising for leads, that means about 50 leads a week before delivery settles.",
-          "That threshold is where small budgets run into arithmetic. Take a hypothetical business paying around £5 per lead. Fifty leads a week is roughly £250 a week in ad spend — about £35 a day — before the system has enough signal to stabilise properly.",
-          "Most small businesses start well below that, and that's a perfectly reasonable decision. But it's worth understanding the consequence: at £10 a day, you're not going to hit 50 events in a week, so the ad set may sit in learning for longer, or never fully exit it. Results still come, they're just noisier and take longer to settle.",
-          "This is also the honest argument against splitting a small budget across several campaigns. Three campaigns at £5 a day each gather a third of the signal apiece. One campaign at £15 concentrates it, and concentrated signal is what the system needs.",
-        ],
-      },
-      {
-        heading: "The mistake that quietly restarts the clock",
-        paragraphs: [
-          "Significant edits to an ad set — changing the budget substantially, swapping the targeting, altering the optimisation event, replacing the creative — send it back into the learning phase. The progress it made is gone and it starts gathering evidence again.",
-          "This creates a trap that catches a lot of people. Performance looks poor, so you make a change. That resets learning, so performance looks poor again, so you make another change. The campaign never gets far enough to stabilise, and the conclusion drawn at the end of the month is that Meta ads don't work for this business.",
-          "The practical rule is to decide your changes in advance and make them deliberately, rather than reacting to a bad afternoon. Small budget adjustments are usually tolerated; wholesale changes are not.",
-        ],
-      },
-      {
-        heading: "A realistic timeline",
-        paragraphs: [
-          "What follows is a general shape rather than a promise — every business, budget and market behaves differently:",
-        ],
-        bullets: [
-          "Days 1 to 4 — expect volatility and a cost per lead that looks alarming. Nothing meaningful can be concluded here. Leave it alone",
-          "Days 5 to 14 — delivery usually begins to settle and a genuine cost per lead starts to emerge. This is the earliest point worth forming an opinion",
-          "Weeks 3 to 4 — enough data to judge the creative properly and see which version is carrying the campaign. First sensible point to make real changes",
-          "Months 2 to 3 — the campaign should be reasonably predictable, and the useful work shifts from the ads to what happens after the enquiry arrives",
-        ],
-      },
-      {
-        heading: "What to judge, and when",
-        paragraphs: [
-          "In the first fortnight, judge the mechanics rather than the outcome. Are the ads being delivered? Is anyone clicking? Are leads arriving with real contact details? Those tell you the campaign is functioning, which is all you can reasonably ask early on.",
-          "From the third week, cost per lead becomes a fair measure. By the second month, the question worth asking is a different one entirely — not what a lead costs, but how many of them turn into paying customers. That number is usually determined by how quickly enquiries get answered rather than by anything in the ad account.",
-          "The one thing worth committing to before you start is a minimum run. Give a campaign at least a month before deciding, and budget for that month up front. Advertising switched off in week two costs you the whole spend and teaches you nothing, which is genuinely the worst of both outcomes.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "why-meta-ads-get-rejected",
-    title: "Why Meta Ads Get Rejected — and How to Get Them Approved",
-    description:
-      "Most ad rejections come down to a handful of predictable causes. Here's what actually triggers them, and how to write copy that gets approved first time.",
-    publishedAt: "2026-08-21",
-    keywords: [
-      "Facebook ad rejected",
-      "why was my Facebook ad rejected",
-      "Meta ad policy UK",
-      "Facebook ads approval process",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "You write the ad, you pick the photo, you set the budget, and a few hours later there's an email saying your ad wasn't approved. No explanation you can make sense of, just a policy name and a link.",
-          "It feels arbitrary, and the first assumption is usually that you've done something seriously wrong. Almost always you haven't. Rejections cluster around a small number of predictable causes, and once you know what they are, writing an ad that clears review first time stops being guesswork.",
-        ],
-      },
-      {
-        heading: "The review is automated, and it isn't personal",
-        paragraphs: [
-          "Ads are reviewed at a scale no human team could handle, so the first pass is done by automated systems reading your text, your image and the page you're sending people to. Those systems are pattern-matching, not reasoning about your intent.",
-          "This has two practical consequences. The first is that a perfectly honest ad can be rejected because a phrase resembles one used by advertisers who weren't honest. The second is that appealing genuinely works, because a human review often overturns it.",
-          "So treat a rejection as information rather than a verdict. What matters is reading the specific policy cited, because the fix is usually a single sentence.",
-        ],
-      },
-      {
-        heading: "Personal attributes: the rule that catches almost everyone",
-        paragraphs: [
-          "This is the single most common reason a legitimate small business ad gets pulled, and it surprises people every time because the copy sounds completely reasonable when you read it aloud.",
-          "The rule is that your ad must not imply you know something personal about the person seeing it — their health, their finances, their age, their religion, their relationship status. Meta's concern is that people shouldn't feel identified or singled out by an advert.",
-          "The tell is the second-person question. \"Struggling with back pain?\" implies you know the reader has back pain. \"Book a back pain assessment in Birmingham\" says the same thing about your service without making a claim about the reader. Same offer, same audience, completely different outcome at review.",
-          "It applies far more widely than health. \"In debt?\", \"Overweight?\", \"Recently divorced?\" and \"Are you over 50?\" all trip the same rule. The fix is nearly always to describe what you do rather than who you think is reading.",
-        ],
-      },
-      {
-        heading: "Unrealistic outcomes and before-and-after images",
-        paragraphs: [
-          "The second big cluster is promises. Ads must not suggest outcomes that can't reasonably be expected, particularly around health, weight loss and money. Specific numbers make this worse, not better — a guaranteed figure attached to a result is one of the more reliable ways to get rejected.",
-          "Before-and-after imagery is the visual version of the same rule, and it's prohibited outright for body and health transformations. This catches a lot of genuinely good businesses off guard, because before-and-afters are the most persuasive asset a clinic, gym or aesthetics practice owns.",
-          "The workable alternative is to show the process and the place rather than the transformation. The room, the equipment, the practitioner explaining what happens in a first appointment. It converts better than people expect, because the thing stopping most people booking isn't doubt about the result — it's not knowing what they're walking into.",
-        ],
-      },
-      {
-        heading: "Special ad categories, and why declaring them matters",
-        paragraphs: [
-          "Some sectors sit in a separate regime entirely. If your ad relates to credit, employment, housing, social issues or politics, you're required to declare it as a special ad category when you build the campaign.",
-          "Declaring it restricts your targeting — you lose detailed interest targeting, tight postcode radiuses and lookalike audiences in the usual form. That's the point of the rule, which exists to prevent discriminatory targeting in areas where it does real harm.",
-          "The temptation is to skip the declaration to keep better targeting. Don't. Running an undeclared credit or housing ad is the kind of breach that escalates from a rejected ad to a restricted account, and getting an account reinstated is a far worse week than losing some targeting precision.",
-          "Health and beauty work differently again — it isn't a special ad category, but the personal attribute and outcome rules apply with more force. If you run a clinic, assume your copy gets read more strictly than a plumber's, because it does.",
-        ],
-      },
-      {
-        heading: "What to do when an ad is rejected",
-        paragraphs: [
-          "Work through it in order rather than deleting the ad and starting again, which loses whatever learning the campaign has accumulated:",
-        ],
-        bullets: [
-          "Read the actual policy named in the email — not the generic help page, the specific one linked, which usually contains examples close to what you wrote",
-          "Look at your copy for anything addressed to the reader personally, and rewrite it to describe your service instead",
-          "Check the landing page too — ads are reviewed alongside the page they point to, and a compliant ad sending traffic to a non-compliant page still fails",
-          "Request a review if you believe it's wrong, and do it once rather than resubmitting repeatedly, which looks like evasion",
-          "Edit the existing ad rather than creating a duplicate, so you keep the campaign's history",
-        ],
-      },
-      {
-        heading: "Getting approved first time",
-        paragraphs: [
-          "Most of this reduces to one habit: write about what you do, not about the person reading it. Describe the service, name the location, state the price if you have one, and let the targeting do the job of finding the right person.",
-          "It's a small change in phrasing and it costs you nothing in persuasiveness. Ads written that way clear review more often, and in our experience they tend to read as more confident too — a business describing its work plainly sounds more sure of itself than one opening with a question about your problems.",
-          "If you're in one of the stricter sectors, it's worth having someone check your copy against the policies before you spend anything. A rejection costs you a day. A restricted account can cost you the advertising channel altogether.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "crm-pipelines-explained-for-business-owners",
-    title: "CRM Pipelines Explained for Business Owners Who Aren't Techy",
-    description:
-      "A pipeline is just the stages an enquiry passes through on its way to becoming a customer. Here's what that means in practice, and why most attempts fail.",
+      "Chameleon tint is one of the most eye-catching finishes available right now. Here's how it works, and why we offer it in blue and red.",
     publishedAt: "2026-08-20",
     keywords: [
-      "simple CRM for small business UK",
-      "what is a sales pipeline",
-      "CRM explained for small business",
-      "track enquiries small business",
+      "chameleon window tint",
+      "colour shift car tint",
+      "blue chameleon tint",
+      "red chameleon tint",
     ],
     sections: [
       {
         paragraphs: [
-          "\"CRM\" and \"pipeline\" are two of those words that make perfectly capable business owners assume the topic isn't for them. They sound like software problems — something with a dashboard, a monthly fee and a training video nobody watches.",
-          "Underneath the jargon it's much simpler than that. A pipeline is just the list of stages an enquiry goes through between someone first contacting you and them becoming a paying customer. That's genuinely all it is.",
+          "If you've seen a car roll past with windows that seem to change colour depending on the angle you're looking from, you've seen chameleon tint. It's become one of the most requested specialist finishes we fit, and for good reason — nothing else on the market looks quite like it.",
         ],
       },
       {
-        heading: "What a pipeline actually is",
+        heading: "How the colour-shift effect works",
         paragraphs: [
-          "Write down what happens to an enquiry in your business. For most, it looks something like: someone gets in touch, you speak to them, you send a price, they think about it, they book. Five steps.",
-          "Those steps are your pipeline. A CRM is just a place where every enquiry sits visibly in whichever step it's currently at, instead of living in your head, a notebook, and four different apps.",
-          "The value isn't in the software. It's that at any moment you can see how many people are waiting on a quote, how many said they'd think about it, and which ones haven't been contacted yet.",
+          "Chameleon film is manufactured with multiple thin layers that reflect and transmit light differently depending on the viewing angle and the light source. That's what creates the shifting effect — the same window can look one shade when viewed straight on and a noticeably different tone from an angle, or under different lighting.",
+          "It's a genuinely different category of product from standard or ceramic tint, more comparable to a specialist wrap than a conventional window film.",
         ],
       },
       {
-        heading: "Why the notebook stops working",
+        heading: "Blue and red — our two chameleon options",
         paragraphs: [
-          "Tracking enquiries mentally works perfectly well at five a week. You remember who's who, you know who owes you a call, nothing slips.",
-          "It stops working somewhere around fifteen or twenty, and the failure is gradual rather than dramatic. You don't forget the enquiry that came in an hour ago, and you don't forget the customer booked in tomorrow. What you forget is everyone in the middle — the person you quoted eight days ago who said they'd get back to you, and then didn't.",
-          "That middle group is the most valuable and most neglected part of any small business. They've spoken to you, they know your price, they haven't said no. They're just waiting for a nudge nobody remembers to give them.",
+          "We currently stock chameleon tint in blue and red, both finished to the same executive, hand-fitted standard as the rest of our range. Blue tends to suit cooler paint tones — blacks, whites, silvers and blues — for a subtle-until-you-look-twice effect, while red gives a bolder, more dramatic finish that pairs particularly well with darker paintwork.",
+          "Both still provide the UV and glare protection you'd expect from any tint we fit — the colour-shift effect is a bonus on top, not a trade-off.",
         ],
       },
       {
-        heading: "The stage that quietly loses you money",
+        heading: "Is chameleon tint right for you?",
         paragraphs: [
-          "If you only ever fix one thing, make it this: know exactly who is sitting in the \"quoted, waiting to hear back\" stage, and have a habit of following up with them.",
-          "Most businesses lose more revenue here than anywhere else in their marketing. Not to competitors, and not because the price was wrong — simply because the conversation stopped and nobody restarted it. A single follow-up message a week later recovers a meaningful share of those.",
-          "This is also why a pipeline and paid advertising belong together. If you're spending money to generate enquiries and then losing a chunk of them in the middle stage, more ad budget just pushes more people into the same leak.",
-        ],
-      },
-      {
-        heading: "Keeping it simple enough to actually use",
-        paragraphs: [
-          "Most CRM attempts fail for one reason: someone builds something far too complicated, it becomes a chore to update, and within a month it's abandoned and quietly out of date — which is worse than no system at all, because now you don't trust what it says.",
-          "A few things keep it usable:",
-        ],
-        bullets: [
-          "Four to six stages, maximum — if you can't say them out loud from memory, it's too complex",
-          "Name them after what actually happens, not sales jargon — \"Quoted\" and \"Waiting to hear back\" beat \"Qualified opportunity\"",
-          "Everyone who touches an enquiry uses it, or it drifts out of date within a fortnight",
-          "Every enquiry has one clear owner, so nobody assumes someone else is handling it",
-          "It updates itself where possible — enquiries arriving from your ads, inbox or website should land in it automatically rather than needing typing in",
-        ],
-      },
-      {
-        heading: "What it won't do",
-        paragraphs: [
-          "A pipeline doesn't sell anything. It won't make a bad offer attractive or turn a slow reply into a fast one — it just makes visible what's already happening, which is often uncomfortable the first time you look at it properly.",
-          "It also isn't free of effort. Something has to keep it current, whether that's a person or automation. A CRM nobody updates is just a more expensive notebook.",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "You don't need software to begin. Write down your five stages on paper, then list every open enquiry under the right one. Most people find several they'd completely forgotten, and following those up is usually worth more than the next month of ad spend.",
-          "When you want it running properly — enquiries flowing in automatically from your ads and inbox, follow-up happening without anyone remembering — that's what we build for clients from the Growth plan up. Get in touch for a free strategy call.",
+          "If you want your car to stand out and you're comfortable with a statement finish, chameleon tint is hard to beat. It's not the most subtle option we offer, and that's exactly the point — it's built for owners who want their car noticed.",
+          "Send us a photo of your car on WhatsApp and we can talk through which colour would work best before you commit.",
         ],
       },
     ],
   },
   {
-    slug: "checklist-before-first-meta-ad-campaign",
-    title: "A Simple Checklist Before You Launch Your First Meta Ad Campaign",
+    slug: "what-is-dechroming",
+    title: "What Is Dechroming, and Is It Worth Doing With Your Tint?",
     description:
-      "Most first campaigns fail on something set up before launch, not on the ads themselves. Fifteen things worth checking while it's still cheap to fix them.",
-    publishedAt: "2026-08-19",
-    keywords: [
-      "how to start Facebook ads checklist",
-      "Meta ads setup checklist",
-      "launching first Instagram ad campaign",
-      "what to do before running Facebook ads",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "The frustrating thing about a first campaign going badly is that the cause is usually decided before it ever goes live. The targeting was fine, the creative was fine — but the Pixel wasn't firing, or the objective was set to traffic, or the page the clicks landed on took six seconds to load on a phone.",
-          "None of that is difficult to fix. It's just far cheaper to fix beforehand than to discover three weeks and several hundred pounds later. Here's what's worth checking first, roughly in the order you'll meet it.",
-        ],
-      },
-      {
-        heading: "Before you spend anything: the account setup",
-        paragraphs: [
-          "Dull, and the source of most launch-day problems:",
-        ],
-        bullets: [
-          "The ad account is in your name, not your agency's — this matters more than it sounds, because campaign history and accumulated Pixel data stay with whoever owns the account when you part ways",
-          "Currency is set correctly — Meta will not let you change it afterwards, and fixing it means creating a whole new ad account from scratch",
-          "A working payment method that won't decline — a card being refused is one of the most common reasons a first campaign fails to publish, and the error message rarely says so clearly",
-          "The correct Facebook Page and Instagram account are connected — if you run more than one business, check this carefully, because ads defaulting to the wrong brand is easy to miss until someone points it out",
-          "The Meta Pixel is installed and actually firing, verified in Test Events rather than assumed — without it Meta has no idea which clicks turned into enquiries, and cannot optimise toward the ones that do",
-        ],
-      },
-      {
-        heading: "The campaign settings that matter most",
-        paragraphs: [
-          "A handful of choices here account for most of the difference between a campaign that works and one that quietly wastes money:",
-        ],
-        bullets: [
-          "The objective is leads or conversions, not traffic or engagement — this is the single most consequential setting, because it tells Meta what kind of person to go and find",
-          "The budget is enough to gather data — a campaign fed too little sits in its learning phase, optimising badly, and the poor results get blamed on the platform rather than the budget",
-          "Placements are left open unless you have a specific reason to restrict them, since narrowing them shrinks the pool Meta can buy from and usually raises costs",
-          "Location targeting matches your realistic service area — a radius wider than you'd actually travel spends money on enquiries you'll turn down",
-          "If your business touches credit, employment or housing, the Special Ad Category is declared — running restricted ads without declaring risks your ads and eventually your account",
-        ],
-      },
-      {
-        heading: "Where the click lands",
-        paragraphs: [
-          "You've now paid for the click. Everything from here decides whether it was worth anything.",
-        ],
-        bullets: [
-          "The page loads quickly on a phone over mobile data, not just on your office wifi",
-          "The first thing on the page says what the ad said, in recognisably the same words — sending a specific ad to a generic homepage is the most expensive mismatch there is",
-          "There's one obvious next action rather than four competing ones",
-          "The form asks only for what you genuinely need to have a first conversation — every extra field costs completions",
-          "Something on the page proves you're a real business: real photos, an address, genuine reviews",
-        ],
-      },
-      {
-        heading: "What happens after the enquiry arrives",
-        paragraphs: [
-          "This is the part almost nobody checks before launching, and it's where good campaigns most often come apart. An ad that generates enquiries nobody answers has cost you money and produced nothing.",
-        ],
-        bullets: [
-          "Someone is actually responsible for watching for new enquiries, and knows they are",
-          "Notifications are switched on for whichever channel the leads arrive through — enquiries sitting unread in an app nobody checks is depressingly common",
-          "There's a plan for enquiries arriving outside working hours, even if it's only an acknowledgement until morning",
-          "You know what you'll say — a couple of prepared replies to common questions turns a five-minute response into a thirty-second one",
-        ],
-      },
-      {
-        heading: "One last thing before you press publish",
-        paragraphs: [
-          "Decide in advance what you'll judge the campaign on, and give it long enough to be judged fairly. Meta needs a couple of weeks of consistent spend before performance settles, so a decision made on day three is being made on noise.",
-          "Write down the number that matters — cost per enquiry, or better, cost per booked customer — and the date you'll review it. Doing that beforehand stops you turning a campaign off during the normal early wobble, which is the most common way a first campaign gets abandoned just before it starts working.",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "If you'd rather someone went through this with you before you spend anything, that's what a strategy call is for. Get in touch and we'll look at your setup, your budget and what's realistic for your business — even if the answer is that you're not quite ready to start yet.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "organic-social-vs-paid-ads",
-    title: "Organic Social vs Paid Ads: Why You Probably Need Both",
-    description:
-      "They do genuinely different jobs, and the handover between them decides whether an interested person enquires or quietly moves on. Here's how they fit together.",
-    publishedAt: "2026-08-18",
-    keywords: [
-      "organic vs paid social media",
-      "do I need to post on social media if I run ads",
-      "organic social media for small business",
-      "social media strategy small business UK",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "It's usually framed as a choice: should we be posting consistently, or should we put that effort and money into ads? For most small businesses it isn't really a choice, because the two aren't alternatives — they do different jobs, and each one is noticeably weaker without the other.",
-          "The interesting part isn't the comparison. It's what happens in the handover between them, which is where most businesses quietly lose enquiries they'd already paid for.",
-        ],
-      },
-      {
-        heading: "They're doing two different jobs",
-        paragraphs: [
-          "Paid ads buy reach among people who don't know you exist. That's their entire function, and nothing else does it as quickly or as predictably. You decide who sees you, roughly how many of them, and when.",
-          "Organic posting does almost the opposite. Its reach is mostly limited to people who already follow you or have already come across you — which sounds like a weakness until you consider that those are exactly the people closest to buying. Organic isn't a discovery channel for most small businesses; it's a credibility and depth channel for people already circling.",
-          "Judging one by the other's yardstick is where the confusion starts. Organic posts that reach a few hundred people look like a failure next to an ad reaching thousands. But if those few hundred include people currently deciding whether to trust you, the comparison isn't measuring anything useful.",
-        ],
-      },
-      {
-        heading: "The moment they check your profile",
-        paragraphs: [
-          "Here's the interaction that gets overlooked, and it's the strongest practical argument for doing both.",
-          "Someone sees your ad. It lands, they're interested — and before enquiring, a large share of people will tap through to your profile to see who you actually are. That check takes about four seconds, and what they find decides a lot.",
-          "A profile with recent posts, real work, and some evidence the business is active reassures them and they carry on. A profile whose last post was eighteen months ago raises a quiet doubt — are these people still trading, are they any good, is this worth the risk? They rarely articulate it. They just don't enquire, and nothing in your ad reporting will ever tell you that's why.",
-          "This is what makes the two genuinely interdependent. Paid does the work of getting someone interested; organic is the credibility check that happens immediately afterwards. Spending well on ads while your profile sits dormant means paying to send people to something that undermines the ad.",
-        ],
-      },
-      {
-        heading: "What each one genuinely can't do",
-        paragraphs: [
-          "Being honest about the limits on both sides makes the split easier to reason about:",
-        ],
-        bullets: [
-          "Organic can't be scaled on demand — if you need enquiries next week, posting more won't reliably produce them, and there's no dial to turn",
-          "Organic can't be targeted — you reach whoever the platform shows it to, largely people already connected to you",
-          "Paid can't build trust on its own — an ad is a claim about your business; a profile full of real work is evidence for it",
-          "Paid stops the moment you stop paying — the reach ends with the budget, whereas posts and the credibility they build stay put",
-          "Neither fixes a weak offer — both simply get more people to the same decision faster",
-        ],
-      },
-      {
-        heading: "A realistic split when you're short on time",
-        paragraphs: [
-          "The usual failure isn't choosing wrongly — it's committing to an organic schedule nobody can sustain, posting daily for three weeks, then stopping entirely. A dormant profile with a burst of activity last spring reads worse than a modest but current one.",
-          "For most small businesses, a sustainable rhythm beats an ambitious one. A couple of genuinely useful posts a week, kept up indefinitely, does the credibility job perfectly well. Real work, finished jobs, the team, answers to questions customers actually ask — none of which needs to be polished to count.",
-          "Put the money into paid, because that's what buys reach and it's the part that scales. Put the time into keeping the profile current and credible, because that's the part that decides whether the reach converts. And bear in mind that the organic post which gets the most likes isn't necessarily the best ad creative — engagement and enquiries are different outcomes, and the crossover is less direct than it looks.",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "If you're running ads while your profile sits mostly untouched, that gap is worth closing before increasing budget — it's cheaper to fix than more spend is to buy. Get in touch for a free strategy call and we'll look at both sides of it together.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "meta-instagram-ads-for-professional-services",
-    title: "Meta & Instagram Ads for Professional Services: What's Different",
-    description:
-      "Accountants, solicitors and consultants can't advertise like a takeaway. Longer decisions, higher lead values, and platform rules most firms don't know about.",
+      "Blacked-out trim has become one of the most popular finishing touches for a modern, executive look. Here's what dechroming actually involves.",
     publishedAt: "2026-08-17",
     keywords: [
-      "Facebook ads for professional services",
-      "lead gen ads for consultants",
-      "Instagram ads for accountants",
-      "digital marketing for solicitors UK",
+      "dechroming",
+      "chrome delete",
+      "black out trim car",
+      "gloss black chrome delete",
     ],
     sections: [
       {
         paragraphs: [
-          "Professional services sit awkwardly with most advertising advice. The standard playbook assumes a fairly quick decision, a visual product, and a customer who can be nudged into acting today. Nobody impulse-hires a solicitor at eleven at night because the creative was compelling.",
-          "That doesn't mean Meta and Instagram ads don't work for accountants, consultants, solicitors and similar firms — it means the campaign has to be built around a longer, more considered decision, and around a set of platform rules that catch a lot of professional firms out.",
+          "Dechroming — sometimes called a \"chrome delete\" — is the process of covering a car's factory chrome trim in black vinyl or wrap, rather than leaving it in its original bright chrome finish. It's one of the simplest changes you can make that has one of the biggest visual impacts.",
         ],
       },
       {
-        heading: "The economics are different, and that changes the maths",
+        heading: "What gets dechromed",
         paragraphs: [
-          "A single professional services client can be worth thousands of pounds, often recurring over years. That changes what a sensible cost per lead looks like entirely. A figure that would be alarming for a restaurant filling midweek tables can be perfectly rational when the resulting client stays for five years.",
-          "The flip side is that lead volume is usually lower and the proportion that convert is smaller, because people shop around more carefully for something they'll be trusting with their accounts, their legal position or their business strategy. Judging these campaigns on cost per lead alone tends to mislead — cost per signed client is the number that actually reflects whether it's working, even though it takes longer to establish.",
+          "Most commonly we're covering window surrounds, door handles, grille surrounds and badges — anywhere factory chrome trim breaks up an otherwise clean paint job. Satin black is the most popular finish for a subtle, factory-look result, though gloss black is available for a sharper contrast.",
         ],
       },
       {
-        heading: "Special Ad Categories — check this before you spend anything",
+        heading: "Why it pairs so well with a fresh tint",
         paragraphs: [
-          "This is the part that catches professional firms out most often, and it's worth understanding before your first campaign rather than after it gets rejected.",
-          "Meta requires certain kinds of advertising to be declared as a Special Ad Category — credit, employment, housing, and social or political issues. If your firm advertises anything touching credit or lending, or roles you're recruiting for, that declaration is mandatory. Declaring it restricts your targeting significantly: age and gender targeting are removed, detailed targeting options are reduced, and location targeting is limited to a wider minimum radius than you'd otherwise use.",
-          "Two practical consequences. First, if this applies to you, plan for it — a campaign designed around tight local targeting may need rethinking. Second, declare it honestly. Running restricted-category ads without the declaration risks having ads rejected and, repeated, your ad account restricted. Getting this wrong is a far more expensive problem than the targeting limitation you were avoiding.",
-          "Separately, your own professional body's advertising rules still apply — the SRA, ICAEW, FCA and equivalents each have their own requirements about how services can be promoted. Meta approving an ad says nothing about whether your regulator would. That check is the firm's responsibility and worth doing properly.",
+          "Chrome trim and dark tinted glass tend to fight each other visually — the bright chrome draws the eye away from the clean, blacked-out look a good tint job creates. Dechroming removes that contrast, so the whole car reads as one cohesive, executive-look finish rather than tint plus untouched trim.",
+          "It's one of the most common combinations we book in, and doing both at once means one visit instead of two.",
         ],
       },
       {
-        heading: "Trust does most of the selling",
+        heading: "Is it permanent?",
         paragraphs: [
-          "For a considered, high-value service, credibility carries more weight than cleverness. People are choosing who to trust with something that matters, and the creative that works reflects that.",
-        ],
-        bullets: [
-          "The actual professional on camera — a partner explaining a common problem in plain language consistently outperforms stock imagery, because clients are hiring a person rather than a firm in the abstract",
-          "Genuine credentials, stated plainly — qualifications, accreditations and years in practice do quiet, unglamorous work here",
-          "Real specifics about who you serve — \"accountants for owner-managed construction firms\" pulls harder than \"accountancy services,\" because the right person recognises themselves immediately",
-          "Careful language about outcomes — never promise a result you can't guarantee. Beyond the regulatory problem, outcome promises tend to attract exactly the enquiries you'd rather not have",
-        ],
-      },
-      {
-        heading: "Offer a smaller first step, then follow up properly",
-        paragraphs: [
-          "Asking a stranger to instruct your firm straight from an ad is a large leap. A smaller commitment converts far better as an opening move: a genuinely useful guide, a short review of their current position, or simply a no-obligation conversation with a real person.",
-          "What matters more is what happens next, because this is where professional services campaigns most often fall down. Someone who downloads a guide about business structure in August might not be ready to move until their year end. If the enquiry sits in an inbox and nobody follows up in the meantime, you've paid to generate a lead and then handed it to whoever does stay in touch.",
-          "That makes structured follow-up — a record of every enquiry, a sensible sequence of contact over weeks rather than hours, and a clear owner for each conversation — more important in this sector than in almost any other. The ads open the door; the follow-up decides whether anyone walks through it.",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "If you run a professional services firm and want Meta & Instagram ads built around a longer decision cycle — with the category rules handled properly and follow-up that survives a sales cycle measured in months — get in touch for a free strategy call.",
+          "No — that's one of the advantages over a full respray. The original chrome trim is fully protected underneath the wrap, so if you ever want to return to standard (for example, before selling the car), it can be removed without any damage to the factory finish.",
         ],
       },
     ],
   },
   {
-    slug: "what-is-a-unified-inbox-lead-generation",
-    title: "What Is a Unified Inbox, and Why Does It Matter for Lead Generation?",
+    slug: "minor-vs-major-service-explained",
+    title: "Minor vs. Major Service: What's the Difference, and Which Does Your Car Need?",
     description:
-      "Enquiries arrive across six different apps and half get missed. Here's what a unified inbox actually changes, what it doesn't, and when you genuinely need one.",
-    publishedAt: "2026-08-16",
-    keywords: [
-      "social media inbox software UK",
-      "unified inbox for business",
-      "manage Instagram and Facebook messages in one place",
-      "shared team inbox for enquiries",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "Count the places a new enquiry can reach your business. Instagram DMs. Facebook Messenger. WhatsApp. Text messages. Email. The contact form on your website. Missed calls. For most small businesses that's seven separate channels, each with its own app, its own notifications, and sometimes its own device or member of staff.",
-          "A unified inbox pulls all of them into one place. That sounds like a convenience feature — a bit of tidying up — and it's routinely underestimated for that reason. In practice it's usually the difference between knowing what enquiries you've had and guessing.",
-        ],
-      },
-      {
-        heading: "The problem it's actually solving",
-        paragraphs: [
-          "The obvious issue is missed messages, and that's real: an enquiry sitting unread in an app nobody thought to check is simply lost. But the less obvious problems tend to cost more over time.",
-        ],
-        bullets: [
-          "Nobody knows what's already been handled — two people reply to the same person, or everyone assumes someone else did and nobody does",
-          "The business owner has no visibility — you can't manage, measure or improve a flow of enquiries you can't actually see in one place",
-          "Context disappears at handover — someone covering a shift has no idea what was already discussed, so the customer repeats themselves",
-          "There's no record to look back on — \"did we ever follow up with that person from last month?\" becomes unanswerable",
-          "Enquiries land on personal accounts — DMs arriving on a staff member's own phone leave with them when they go on holiday, or leave the business entirely",
-        ],
-      },
-      {
-        heading: "What changes when everything lands in one place",
-        paragraphs: [
-          "The immediate change is that every enquiry becomes visible in a single queue, whichever channel it arrived through. From there, several things become possible that simply weren't before: assigning conversations so there's always one clear owner, seeing a person's full history even if they messaged on WhatsApp last month and Instagram today, and using saved replies for the questions you answer constantly.",
-          "The part that surprises people most is the reporting. Once every enquiry passes through one system, you can finally see how many you're actually getting, how quickly they're being answered, and which channels produce the ones that turn into customers. Most businesses running ads have a rough sense of their ad metrics and almost no data on what happens after the click — this is the gap that closes.",
-          "That matters more when you're paying for the enquiries. A missed message from someone who found you organically is unfortunate. A missed message from someone you paid to bring in is money spent and thrown away, and it's happening in a channel you're not watching.",
-        ],
-      },
-      {
-        heading: "What it doesn't do",
-        paragraphs: [
-          "A unified inbox organises conversations. It doesn't have them for you. If nobody has time to reply, consolidating the enquiries just gives you a tidier view of the ones you're missing — the automation and AI answering sit on top of it as separate things, not as features you get automatically by consolidating.",
-          "It also isn't quite the seamless picture the marketing usually paints. Messaging platforms each impose their own rules about what can be accessed through their APIs and how long you have to respond, so a few things behave slightly differently than they would in the native app. It's a real limitation, though a minor one next to not seeing the message at all.",
-          "And there's genuine setup involved — connecting accounts, sorting out permissions, agreeing who handles what. It's a couple of hours of faff, not a switch you flip.",
-        ],
-      },
-      {
-        heading: "Do you actually need one yet?",
-        paragraphs: [
-          "Not every business does, and it's worth being honest about that. If you're a sole trader getting a handful of enquiries a week, all by phone, answering them yourself as they come in, a unified inbox is solving a problem you don't have.",
-          "It starts genuinely earning its place when any of these are true:",
-        ],
-        bullets: [
-          "Enquiries are arriving on three or more channels and you're checking them separately",
-          "More than one person handles enquiries, so ownership and context matter",
-          "You're running paid ads, and every unanswered message is money already spent",
-          "Messages arrive outside working hours and you have no reliable way of catching them",
-          "You genuinely don't know how many enquiries you got last month",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "A unified inbox is part of what we set up for clients from the Growth plan upwards, alongside the automated follow-up that runs on top of it. If enquiries are scattered across half a dozen apps and you suspect some are being missed, get in touch for a free strategy call and we'll map out where they're actually arriving.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "signs-your-landing-page-is-losing-leads",
-    title: "7 Signs Your Landing Page Is Losing You Leads",
-    description:
-      "Your ads can do everything right and still produce nothing if the page they land on leaks. Seven specific problems to check, and how to spot them yourself.",
-    publishedAt: "2026-08-15",
-    keywords: [
-      "landing page conversion tips",
-      "why is my landing page not converting",
-      "landing page mistakes lead generation",
-      "improve landing page conversion rate UK",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "It's a particularly frustrating way to waste money: the campaign is well built, the creative is stopping people mid-scroll, the clicks are coming in at a sensible cost — and almost nobody enquires. The instinct is to go back and change the ads, when the ads have already done their job.",
-          "Everything after the click is the landing page's responsibility, and a page that leaks will quietly undo good advertising. Here are seven specific things that cause it, grouped by where in the journey they lose people.",
-        ],
-      },
-      {
-        heading: "Before they've read a word: speed and mobile",
-        paragraphs: [
-          "The first two problems cost you visitors who never saw your offer at all.",
-        ],
-        bullets: [
-          "Slow loading — someone tapping an ad on a phone, often on mobile data, will give your page a couple of seconds at most. A page heavy with large uncompressed images or unnecessary scripts loses a meaningful share of visitors before anything appears, and you've already paid for every one of those clicks",
-          "Not genuinely built for mobile — most ad traffic arrives on a phone. If text needs pinching to read, the page scrolls sideways, or buttons are too small to tap confidently, you're asking people to work for the privilege of enquiring. Open your own page on your phone rather than judging it on a desktop screen",
-        ],
-      },
-      {
-        heading: "The moment they land: does the page keep the ad's promise?",
-        paragraphs: [
-          "The next three are about continuity — whether the page delivers what the ad set up.",
-        ],
-        bullets: [
-          "A page that doesn't match the ad — the most common and most expensive fault of the seven. An ad promoting a specific service or offer that lands on a generic homepage forces the visitor to go looking for what they were promised, and most won't bother. Whatever the ad said should be the first thing on the page, in recognisably the same words",
-          "No single obvious action — pages offering four competing options (call, email, book, download, follow) spread attention instead of directing it. One primary action, repeated, converts better than five presented as equals",
-          "The main action buried below the fold — if someone has to scroll to work out what you want them to do, a portion never will. The offer and the way to take it should be visible immediately, then repeated further down for people who read on",
-        ],
-      },
-      {
-        heading: "At the point of enquiring: friction and doubt",
-        paragraphs: [
-          "The last two lose people who were genuinely ready — which makes them the most painful of the seven.",
-        ],
-        bullets: [
-          "A form asking for too much — every additional field costs you completions. Ask only for what you genuinely need to have a useful first conversation, and collect the rest once you're talking. A form demanding postcode, budget, company size and preferred contact time is doing your qualification at the expense of your conversion rate",
-          "Nothing proving you're a real business — a stranger who arrived thirty seconds ago is being asked for their phone number. Real photos of your work, genuine reviews, a company address, a named person: these do quiet, unglamorous work. A page that could belong to anyone gets treated with the caution that deserves",
-        ],
-      },
-      {
-        heading: "A ten-minute self-check",
-        paragraphs: [
-          "You don't need analytics tooling to catch most of this. Click your own ad on your own phone, as though you'd never seen it before, and ask:",
-          "Did the page appear quickly? Does the first thing on screen say what the ad said? Is it immediately obvious what I'm meant to do next? Could I complete the form one-handed, standing up, in under a minute? Is there anything here proving this is a real business?",
-          "If you hesitate on any of those, you've found something worth fixing — and fixing the page is usually faster and cheaper than rebuilding the campaign that's pointing at it.",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "Landing pages are part of what we build for every client, precisely because the campaign and the page it points to have to be designed as one thing rather than handed off between two. If your ads are generating clicks that aren't turning into enquiries, get in touch for a free strategy call and we'll look at where the drop-off is actually happening.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "facebook-ads-vs-instagram-ads-budget",
-    title: "Facebook Ads vs Instagram Ads: Where Should Your Budget Go?",
-    description:
-      "Most businesses ask which platform to pick. It's usually the wrong question — here's why, and when restricting placements genuinely does make sense.",
-    publishedAt: "2026-08-14",
-    keywords: [
-      "Instagram ads vs Facebook ads",
-      "should I advertise on Facebook or Instagram",
-      "Meta ads placements explained",
-      "Advantage+ placements",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "\"We only want to be on Instagram — our customers aren't really on Facebook.\" It's one of the most common things business owners say when setting up their first campaign, and it's usually a decision made on instinct rather than on anything from their own account.",
-          "It's also, more often than not, a decision that quietly costs money. Here's why the question is framed wrongly, and when choosing between them is genuinely the right call.",
-        ],
-      },
-      {
-        heading: "They're not two platforms — they're placements in one",
-        paragraphs: [
-          "Facebook and Instagram ads are bought through the same system. You're not choosing between two advertising products; you're choosing which surfaces within Meta's network your ads are eligible to appear on — Facebook Feed, Instagram Feed, Stories, Reels, Marketplace, and several others.",
-          "That distinction matters because of how the auction works. Meta distributes your budget toward wherever it can get you results most cheaply at any given moment. Restricting placements doesn't redirect that budget to better opportunities — it removes options from the system, leaving it to buy from a smaller pool. Less competition to win on your behalf usually means paying more, not less.",
-        ],
-      },
-      {
-        heading: "\"My customers aren't on Facebook\" — worth actually checking",
-        paragraphs: [
-          "This assumption is usually rooted in something real: Facebook's user base does skew somewhat older than Instagram's in the UK. But \"skews older\" is not the same as \"absent,\" and the platform remains enormous across every age group that has money to spend.",
-          "There's also a mismatch worth noticing between where people *post* and where they *see ads*. Someone might not have published anything to Facebook in five years while still scrolling it daily, checking Marketplace, or using Messenger constantly. Ad delivery follows attention, not posting activity — and plenty of people who'd describe themselves as \"not really on Facebook\" are reachable there.",
-          "The honest answer is that you don't need to guess. Run both, let a few weeks of data accumulate, then look at the placement breakdown in Ads Manager. Your own account will tell you where your enquiries actually came from, and it fairly regularly surprises people.",
-        ],
-      },
-      {
-        heading: "Why letting Meta choose usually beats picking",
-        paragraphs: [
-          "Meta's automatic placement setting (Advantage+ placements) exists because the system optimises placement allocation faster and more granularly than manual selection realistically can. It's shifting delivery continuously based on live cost signals, not on a decision someone made at setup and never revisited.",
-          "For most advertisers — particularly those working with modest budgets — leaving placements open is the higher-performing default. It gives the algorithm more room to find cheap conversions, and it means you're not paying a premium for a restriction you chose on a hunch. There's also a practical benefit: broader placement eligibility helps a campaign gather results faster, which matters for getting out of the learning phase.",
-        ],
-      },
-      {
-        heading: "When restricting placements genuinely makes sense",
-        paragraphs: [
-          "There are real cases for narrowing placements — they're just narrower than most people assume:",
-        ],
-        bullets: [
-          "Your creative only works in one format — a vertical video built for Reels will look cropped and awkward squeezed into a right-column placement",
-          "Your own placement data, over a meaningful period, shows one surface consistently generating cost-per-result well outside the others",
-          "There's a specific brand or context reason a particular placement isn't appropriate for what you're advertising",
-          "You're deliberately testing one placement in isolation, with a plan to reopen once you've learned what you needed",
-        ],
-      },
-      {
-        heading: "The real difference is format, not platform",
-        paragraphs: [
-          "If there's a practical decision to make here, it isn't Facebook versus Instagram — it's making sure your creative suits the surfaces it lands on. A Story or Reel is full-screen, vertical, fast, and expected to feel native to the feed around it. An in-feed placement is square or portrait, sits among static posts, and can carry more text before it stops being read.",
-          "The advertisers who get the most out of leaving placements open are the ones who supply creative in more than one aspect ratio, so whichever surface Meta chooses, the ad actually looks like it belongs there. That's a far better use of effort than agonising over which platform to switch off.",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "If you're running Instagram-only because it felt like the obvious choice, it's worth opening things up and letting a few weeks of real data settle the question. Get in touch for a free strategy call and we'll look at where your results are genuinely coming from, rather than where anyone assumed they would.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "ad-spend-vs-management-fees",
-    title: "Ad Spend vs Management Fees: What You're Actually Paying For",
-    description:
-      "Two separate costs that get confused constantly — and the confusion is expensive. Here's what each one buys and what to ask before you sign with any agency.",
+      "Our minor service covers the oil and filter essentials from £150. Our major service goes further with every filter. Here's how to know which one your car is due.",
     publishedAt: "2026-08-13",
     keywords: [
-      "Facebook ads management fees UK",
-      "ad spend vs management fee",
-      "how much do agencies charge for Facebook ads",
-      "Meta ads agency pricing explained",
+      "minor service vs major service",
+      "car oil change price",
+      "full car service UK",
+      "how often service car",
     ],
     sections: [
       {
         paragraphs: [
-          "\"I've got about £1,000 a month for marketing.\" It's a completely reasonable thing to say, and it's also the point at which two very different costs get quietly merged into one — usually without anyone noticing until it causes a problem.",
-          "Does that £1,000 mean £1,000 going to Meta to actually run ads, with a management fee on top? Or £1,000 total, split between the agency and the ads? Those are wildly different arrangements, and getting the answer straight before anything starts saves an awkward conversation later.",
+          "\"Does my car need a minor or a major service?\" is one of the most common questions we get on the repairs side of the business, and the honest answer is: it depends on mileage, how long it's been since the last full service, and what the manufacturer recommends for your specific car.",
+          "Here's what's actually included in each, so you can make an informed call.",
         ],
       },
       {
-        heading: "Two different things, paid to two different places",
+        heading: "Minor Service — £150",
         paragraphs: [
-          "Ad spend is money that goes to Meta. It buys distribution — impressions, clicks, the actual showing of your ad to people. It's paid from your ad account on your card, and it scales directly with how much volume you want.",
-          "The management fee is money that goes to whoever runs the campaigns. It buys strategy, creative, setup, ongoing optimisation and reporting. It doesn't buy a single impression.",
-          "The distinction matters because they don't substitute for one another. Doubling your management fee doesn't put your ad in front of more people. Doubling your ad spend doesn't make the campaign better structured. A business that spends heavily on ads with nobody managing them wastes money slowly; a business paying a large fee with almost nothing left for ad spend has an expertly optimised campaign that barely anyone sees.",
-        ],
-      },
-      {
-        heading: "What the management fee actually buys",
-        paragraphs: [
-          "It's a fair question, and \"we manage your ads\" isn't much of an answer. In practice, the work sits in a few distinct areas:",
+          "Our minor service covers the two things that matter most for keeping your engine protected between full services:",
         ],
         bullets: [
-          "Campaign structure — objectives, audiences, and how ad sets are organised so the platform optimises toward the outcome you actually want",
-          "Creative — producing and testing the images, video and copy, then replacing them as they fatigue",
-          "Tracking setup — the Pixel, Conversions API and event configuration that let Meta learn which clicks became real enquiries",
-          "Ongoing optimisation — cutting what isn't working, shifting budget toward what is, and adjusting as costs move",
-          "Reporting and interpretation — not just numbers, but what they mean and what changes next",
-          "Judgement — knowing when a bad week is normal variance and when it's a genuine problem worth acting on",
+          "A full engine oil change, using the correct grade of oil for your vehicle",
+          "A new oil filter",
+          "A basic fluid level check",
         ],
       },
       {
-        heading: "How agencies charge, and what each model rewards",
+        heading: "Major Service — from £249",
         paragraphs: [
-          "There are two common structures, and neither is inherently right or wrong — but they do pull in different directions, which is worth understanding before you pick one.",
-          "A percentage of ad spend, typically somewhere in the region of 10–20%, scales with your budget. It can work out cheaper at low spend levels, and it means the agency earns more as you grow. The trade-off is the incentive it creates: the agency's income rises when your ad budget rises, whether or not increasing it was the right call for you.",
-          "A flat monthly fee is predictable and doesn't move with your budget. You know the cost regardless of whether you spend £500 or £5,000 with Meta that month, which makes forecasting straightforward and removes any incentive to push your budget upward. The trade-off runs the other way — at very high spend, a flat fee can end up cheaper than a percentage would have been, and at very low spend it can represent a large share of your total marketing cost.",
-          "For transparency: we charge a flat monthly fee, starting at £400, with ad spend paid separately and directly to Meta. That's a deliberate choice, but it isn't the only defensible one.",
-        ],
-      },
-      {
-        heading: "Getting the split right at smaller budgets",
-        paragraphs: [
-          "This is where the distinction stops being academic. If your total marketing budget is modest, how you divide it genuinely affects whether the campaign can work at all.",
-          "Meta's delivery system needs a consistent flow of data before it optimises well — it has to gather enough results to move out of its learning phase. A campaign starved of ad spend takes far longer to get there, or never quite does, which means poor performance that gets blamed on the platform when the real cause was a budget spread too thin.",
-          "As a rough sanity check: if the management fee is consuming most of your total budget, something needs to change — either the budget goes up, or you start with a simpler, cheaper level of management and scale it as results come in. An honest agency will tell you when your budget isn't yet at a level where their full service makes sense.",
-        ],
-      },
-      {
-        heading: "What to ask before you sign with anyone",
-        paragraphs: [
-          "Whoever you end up working with, these questions are worth asking plainly at the start:",
+          "Our major service includes everything in the minor service, plus every other filter that needs replacing on a typical car:",
         ],
         bullets: [
-          "Is your fee separate from ad spend, or does it come out of the same budget?",
-          "Whose name is the ad account in? You want to own it — if the agency owns the account, you can lose your campaign history and accumulated Pixel data when you leave, and that data has real value",
-          "Who owns the creative and the landing pages if we part ways?",
-          "Is there a minimum contract, and what's the notice period?",
-          "What reporting will I get, how often, and will it show cost per lead rather than just reach and impressions?",
+          "Engine oil and oil filter",
+          "Air filter — keeps your engine breathing properly and running efficiently",
+          "Fuel filter — protects the fuel system from contamination",
+          "Cabin (pollen) filter — keeps the air inside the car clean",
+          "A full multi-point vehicle check",
         ],
       },
       {
-        heading: "Getting started",
+        heading: "So which one do you need?",
         paragraphs: [
-          "If you're weighing up quotes and struggling to compare them because everyone presents their pricing differently, it's usually because the split between fee and spend is being described inconsistently. Get in touch for a free strategy call — we'll break down what your budget realistically supports, and tell you straight if it isn't there yet.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "what-an-ai-receptionist-actually-does",
-    title: "What an AI Receptionist Actually Does (and What It Doesn't)",
-    description:
-      "An honest look at what an AI receptionist handles well, where it genuinely falls short, and which businesses get the most out of one.",
-    publishedAt: "2026-08-12",
-    keywords: [
-      "AI receptionist for small business UK",
-      "what does an AI receptionist do",
-      "AI chatbot for customer enquiries",
-      "automated appointment booking small business",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "\"AI receptionist\" is a term that gets used to describe everything from a basic auto-reply to something close to a full virtual employee, which makes it hard to know what you'd actually be buying. It's worth being specific — both about what these systems genuinely do well, and about where they fall short.",
-          "Here's an honest breakdown, including the parts that don't tend to feature in the sales pitch.",
-        ],
-      },
-      {
-        heading: "What it actually does well",
-        paragraphs: [
-          "The core value is simple: it responds immediately, at any hour, to every enquiry. Not eventually, not when someone gets a moment between jobs — immediately, including at eleven o'clock on a Sunday night when the alternative is silence until Monday.",
-          "Within that, the things it handles reliably are the repetitive ones:",
-        ],
-        bullets: [
-          "Answering the same common questions it gets asked constantly — opening hours, rough pricing, which areas you cover, whether you offer a particular service",
-          "Qualifying an enquiry by asking the questions you'd ask anyway, so what reaches you is already useful rather than just a name",
-          "Booking appointments straight into your calendar, without the back-and-forth of proposing times",
-          "Handling several conversations at once, so nobody sits in a queue during a busy spell",
-          "Capturing the enquiry in writing, so even the ones that don't convert leave a record you can look back at",
-        ],
-      },
-      {
-        heading: "What it doesn't do — and shouldn't pretend to",
-        paragraphs: [
-          "This is the part worth being clear-eyed about, because expecting the wrong things is how businesses end up disappointed.",
-          "It won't replace a salesperson on anything complex or high-value. Reading hesitation in someone's voice, sensing when to push and when to back off, negotiating a bespoke job — that's still human work, and it's usually the difference on the deals that matter most. What the AI does is make sure the conversation exists at all, so a human can pick it up warm rather than never knowing it happened.",
-          "It also can't rescue a weak offer. If your pricing isn't competitive or your service isn't what people are looking for, replying in four seconds rather than four hours simply gets you to the same answer faster. Fast follow-up amplifies a good offer — it doesn't substitute for one.",
-          "And it isn't set-and-forget. It answers based on what it's been given about your business, which means it needs proper setup and periodic review as your prices, services and availability change. An AI receptionist working from last year's pricing is worse than no AI receptionist at all.",
-          "Finally, it should hand over quickly when a conversation turns complicated — an upset customer or a genuine complaint needs a person, and fast. A well-configured system knows its own limits and escalates rather than looping.",
-        ],
-      },
-      {
-        heading: "Should it tell people it's AI?",
-        paragraphs: [
-          "This comes up almost every time, and the answer is yes — be upfront about it.",
-          "In practice, most people are entirely comfortable dealing with an automated assistant to book an appointment or ask a straightforward question. What they react badly to is discovering they were misled about it. Presenting the system as a human and being found out costs you far more trust than simply saying \"I'm the virtual assistant, I can get you booked in or pass you to the team\" ever would.",
-          "There's a practical argument too: when people know they're talking to an assistant, they tend to ask clearer, simpler questions — which is exactly the sort the system answers well.",
-        ],
-      },
-      {
-        heading: "Which businesses get the most out of one",
-        paragraphs: [
-          "An AI receptionist isn't equally valuable everywhere. The businesses that benefit most tend to share one of a few characteristics:",
-        ],
-        bullets: [
-          "A high volume of similar, repetitive enquiries — the same handful of questions, over and over",
-          "Real demand outside working hours, particularly evenings and weekends, that currently goes unanswered until the next working day",
-          "A team that's physically unavailable exactly when enquiries peak — a restaurant mid-service, a tradesperson on a job, a workshop with everyone on the tools",
-          "Paid advertising driving the enquiries, where every unanswered message is money already spent and wasted",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "If your enquiries mostly arrive during working hours and you're already answering them within minutes, an AI receptionist probably isn't the first thing your business needs — a unified inbox or better follow-up might matter more. If enquiries are piling up overnight or during your busiest hours, it's solving a problem you actually have.",
-          "It's included from our Scale plan, and we'd rather tell you honestly whether it fits before you pay for it. Get in touch for a free strategy call and we'll look at where your enquiries are actually coming from and when.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "what-makes-ad-creative-actually-convert",
-    title: "What Makes Ad Creative Actually Convert (Not Just Get Likes)",
-    description:
-      "Creative is the biggest lever you control on Meta ad performance. Here's what separates an ad that collects likes from one that generates real enquiries.",
-    publishedAt: "2026-08-11",
-    keywords: [
-      "Facebook ad creative best practices",
-      "Meta ad creative that converts",
-      "Instagram ad design tips",
-      "why are my Facebook ads not converting",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "It's a frustrating and surprisingly common situation: an ad performs beautifully by every visible measure — plenty of likes, a few shares, some nice comments — and generates almost no enquiries. Meanwhile a plainer ad nobody engaged with quietly brings in a steady stream of leads.",
-          "This isn't bad luck. Engagement and conversion are two different outcomes, and the creative that produces one often isn't the creative that produces the other. Understanding that difference matters more than it used to, because as Meta's targeting has become increasingly automated, creative has become the main lever an advertiser actually controls.",
-        ],
-      },
-      {
-        heading: "Likes are a signal, not a goal",
-        paragraphs: [
-          "A like costs the viewer nothing. Filling in a form, sending a message, or picking up the phone costs them time and a small amount of commitment. Those are different psychological acts, and an ad optimised to earn the first often doesn't earn the second.",
-          "Entertaining, relatable or funny creative tends to collect engagement broadly — including from people who will never be customers. Creative that converts tends to be narrower: it speaks directly to someone with a specific problem, and it's perfectly happy to be ignored by everyone else. A lower engagement rate with a lower cost per enquiry is a better ad, even though it looks worse on the surface.",
-        ],
-      },
-      {
-        heading: "The first two seconds do most of the work",
-        paragraphs: [
-          "Almost all of the decision to keep watching or keep scrolling happens before your ad has said anything meaningful. That makes the opening frame the single highest-leverage part of the whole creative — and it's the part most often wasted on a logo animation or a slow establishing shot.",
-          "Open on the thing that's actually interesting: the finished result, the problem being solved, a face talking directly to camera, or movement of some kind. Save the branding for later in the ad, where it reinforces something the viewer already cares about rather than acting as a toll gate before they get to the point.",
-        ],
-      },
-      {
-        heading: "Design for sound off, and for the feed it lives in",
-        paragraphs: [
-          "A large share of people watch with the sound off, which means any ad that depends on audio to make sense is losing a substantial chunk of its audience before it starts. Captions and clear text overlays aren't an accessibility afterthought — they're a performance requirement.",
-          "It's also worth being honest about production values. Highly polished, obviously corporate creative frequently underperforms simpler content that looks like it belongs in the feed around it. This is one of the few areas where a smaller business has a genuine advantage: a real phone-shot video of your actual work, your actual premises, or you actually speaking often outperforms something that looks like a television commercial, because it reads as authentic rather than as an interruption.",
-        ],
-      },
-      {
-        heading: "Specific beats clever, every time",
-        paragraphs: [
-          "Clever headlines win awards. Specific headlines win enquiries. \"Elevate your everyday drive\" tells the viewer nothing; \"Ceramic coating from £395, booked in this week\" tells them exactly what's on offer, roughly what it costs, and when they can have it.",
-          "A few habits that consistently separate specific creative from vague creative:",
-        ],
-        bullets: [
-          "Name the actual service and the actual area, so the right person immediately recognises the ad is for them",
-          "Say one thing per ad — an ad trying to communicate five benefits usually communicates none of them",
-          "Make the next step unmistakable and low-friction, so there's no ambiguity about what happens if they tap",
-          "Match the creative to the destination — an ad promising a quote should land on a page about getting a quote, not a generic homepage",
-          "Write for the person with the problem, not for your industry peers",
-        ],
-      },
-      {
-        heading: "Creative fatigue is real — plan for it",
-        paragraphs: [
-          "No creative works forever. Show the same image or video to the same audience often enough and performance declines — cost per result creeps up, and the temptation is to blame the targeting or the budget when the actual problem is that people have simply seen it too many times.",
-          "The practical answer is to treat creative as something you refresh on a schedule rather than something you finish. Keep several variations running so the platform has options to distribute between, watch for the point where cost per result starts drifting upward, and have the next batch ready before you need it. This is also why testing creative is usually more productive than endlessly testing audiences — it's the variable with the most room to move.",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "If your ads are getting attention but not enquiries, the campaign settings usually aren't the problem — the creative is doing the wrong job. Get in touch for a free strategy call and we'll look at what you're running now and where the gap between engagement and enquiries is opening up.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "meta-ads-vs-google-ads-which-is-right",
-    title: "Meta Ads vs Google Ads: Which Is Right for Your Business?",
-    description:
-      "Google captures demand that already exists. Meta creates it. Here's how to tell which one your business needs first — and when running both actually makes sense.",
-    publishedAt: "2026-08-10",
-    keywords: [
-      "Facebook ads vs Google ads",
-      "Meta ads vs Google ads small business",
-      "should I use Google or Facebook ads",
-      "paid advertising channel comparison UK",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "It's one of the first questions most business owners ask when they start thinking seriously about paid advertising, and the honest answer isn't a preference — it's a diagnosis. The two platforms do genuinely different jobs, and which one works better for you depends less on your budget than on how your customers actually go looking for what you sell.",
-          "Here's the distinction that matters, and how to work out which side of it your business falls on.",
-        ],
-      },
-      {
-        heading: "The real difference: capturing demand vs creating it",
-        paragraphs: [
-          "Google Ads captures demand that already exists. Someone has a problem, they type it into a search bar, and you pay to appear in front of them at that exact moment. The intent is already there — you're competing to be the answer to a question they've already asked.",
-          "Meta and Instagram ads work the other way round. Nobody opens Instagram intending to hire a builder or book a table. You're interrupting a scroll and creating interest that wasn't there thirty seconds earlier. That sounds like a disadvantage, and for some businesses it is — but it also means you're not limited to the number of people already searching, which for a lot of categories is a very small pool.",
-          "Almost everything else — cost, creative, campaign structure, how you measure success — follows from that one difference.",
-        ],
-      },
-      {
-        heading: "When Google Ads is usually the better first move",
-        paragraphs: [
-          "Google tends to be the stronger starting point when the demand for what you sell is urgent, specific, and already being searched for:",
-        ],
-        bullets: [
-          "Emergency or time-critical services — a burst pipe, a lockout, an urgent repair. Nobody scrolls Instagram looking for an emergency plumber; they search, and they call the first credible result",
-          "Established categories people know how to search for, where the search volume genuinely exists in your area",
-          "High-intent \"near me\" and location-based searching, which is a large share of local service demand",
-          "Businesses where the customer already knows exactly what they want and is comparing providers rather than deciding whether to buy at all",
-        ],
-      },
-      {
-        heading: "When Meta & Instagram ads usually win",
-        paragraphs: [
-          "Meta tends to be stronger when what you sell is visual, discretionary, or simply not something people think to search for:",
-        ],
-        bullets: [
-          "Visual products and experiences — food, vehicles, interiors, anything where seeing it is most of the sell",
-          "Services people don't know they want until they see them, where there's little or no existing search volume to capture",
-          "Retargeting people who visited your site or engaged with previous content but never enquired, which is typically far cheaper than reaching cold audiences on any platform",
-          "Businesses that need volume — you can reach far more people for the same money than you can by bidding on a handful of competitive keywords",
-          "Building an audience over time rather than paying afresh for every single click",
-        ],
-      },
-      {
-        heading: "What about cost?",
-        paragraphs: [
-          "This is where comparisons often get muddled, because the two platforms sell you different things. Google largely sells clicks from people actively searching, and in competitive categories that intent is expensive — you're bidding against everyone else who wants to be the answer to the same question. Meta largely sells reach, which is usually cheaper per person, but a far smaller proportion of those people are ready to act right now.",
-          "That means a raw cost-per-click comparison between the two tells you very little. What matters is cost per booked customer, and that depends on your conversion rate, your follow-up speed, and how well the ad matches what the person was doing when they saw it. For context on the Meta side, our own live client campaigns are currently generating leads from around £4.49 — though those are specific accounts with specific targeting and creative, and results vary considerably by industry.",
-        ],
-      },
-      {
-        heading: "Why the answer is often both — in a specific order",
-        paragraphs: [
-          "For most established businesses, the mature answer is both. Google captures the people already looking; Meta creates awareness among people who weren't, then retargets everyone who showed interest but didn't convert. They compound rather than compete.",
-          "But \"both\" is rarely the right place to start. Splitting a modest budget across two platforms usually means neither gets enough spend or data to perform properly — Meta in particular needs consistent, sustained budget to get out of its learning phase and start optimising. Picking one, running it properly for a few weeks, and adding the second once the first is working reliably will nearly always beat launching both at half strength.",
-          "One thing worth saying plainly: if your customers genuinely are searching for what you sell in meaningful volume, Google may well be the better first pound spent — even though Meta & Instagram ads are what we do. Recommending the wrong channel because it's the one we sell would be a short-sighted way to run an agency.",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "If you're not sure which side your business falls on, that's exactly the kind of thing worth talking through before spending anything. Get in touch for a free strategy call and we'll give you an honest read on whether Meta & Instagram ads are the right first move for you — or whether something else should come first.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "meta-instagram-ads-for-restaurants-hospitality",
-    title: "Meta & Instagram Ads for Restaurants & Hospitality: What Actually Fills Tables",
-    description:
-      "Restaurant ads aren't lead generation — the goal is a booked table. Here's how to structure Meta & Instagram campaigns around covers, radius and timing.",
-    publishedAt: "2026-08-09",
-    keywords: [
-      "Instagram ads for restaurants UK",
-      "Facebook ads for cafes",
-      "restaurant social media advertising",
-      "how to get more restaurant bookings",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "Food is one of the most naturally suited categories on Instagram — it's visual, immediate, and people genuinely enjoy looking at it. That makes restaurants and cafés easy to advertise and surprisingly hard to advertise *profitably*, because attention is not the same thing as a booked table.",
-          "Most restaurant campaigns that underperform aren't badly made. They're borrowed — a lead generation playbook built for a business selling a £3,000 service, applied to a business selling a £30 dinner. The economics are completely different, and so is the campaign that works.",
-        ],
-      },
-      {
-        heading: "The goal isn't a lead — it's a covered table",
-        paragraphs: [
-          "For most businesses we advertise for, success is a form submission: a name and number, followed up by a salesperson. Restaurants don't work that way. Nobody fills in a four-field enquiry form to book a table for Thursday — they tap through to a booking system, send a quick DM, or simply turn up.",
-          "That difference should shape the whole campaign. Optimising for form fills in a restaurant campaign usually produces a list of half-interested people rather than filled tables. Sending traffic straight to a booking platform, or to a Messenger or WhatsApp conversation, matches how people actually behave when they're hungry and deciding where to eat.",
-        ],
-      },
-      {
-        heading: "Your radius is much smaller than you think",
-        paragraphs: [
-          "People will drive forty minutes to view a car and an hour to see a house. They will not drive forty minutes for a mid-week dinner unless you're a destination in your own right. For most independent restaurants and cafés, the realistic catchment is a few miles — and in dense city areas, it can be considerably tighter than that, because a customer three miles away has fifty alternatives between them and you.",
-          "Getting this wrong is one of the most expensive mistakes in hospitality advertising, because a wide radius looks like it's working. Impressions and engagement go up. The reach numbers look healthy. But you're paying to show beautiful food photography to people who were never realistically going to visit, and none of it turns into covers.",
-          "A tighter radius also tends to make retargeting far more effective, because you're re-reaching a smaller group of genuinely local people repeatedly, rather than spreading the same budget thinly across a whole city.",
-        ],
-      },
-      {
-        heading: "Timing is the lever most restaurants ignore",
-        paragraphs: [
-          "Hospitality has something almost no other industry has: demand that's tied to specific hours and specific days, and capacity that expires. An empty Tuesday table is revenue you can never recover — but a Saturday night ad for a restaurant that's already fully booked on Saturdays is money spent to create a queue you can't serve.",
-          "This is why the sharpest restaurant campaigns are usually built around the gaps in the week rather than the whole week. If weekends fill themselves and midweek is thin, the entire budget belongs on midweek. Scheduling ads to run in the hours before people decide — late morning for lunch trade, late afternoon for dinner — puts the ad in front of someone at the moment the decision is actually being made, rather than at 9am when they're thinking about something else.",
-        ],
-      },
-      {
-        heading: "What actually works as creative",
-        paragraphs: [
-          "This is one category where the obvious answer is also the correct one: real footage of your own food, shot close and well-lit, outperforms almost everything else. Short video — something being plated, poured, sliced, or lifted — consistently does more work than a static image, because movement stops the scroll.",
-          "A few things worth building into the creative rotation:",
-        ],
-        bullets: [
-          "Close-up video of signature dishes being prepared or served, shot on a phone if that's what you have",
-          "The room itself — atmosphere sells a booking as much as the food does, particularly for evening trade",
-          "A specific, concrete offer where you're running one, rather than a vague \"come and visit us\"",
-          "Text overlays that state the offer and the area clearly, since a large share of people watch with the sound off",
-          "Seasonal and event-led creative refreshed regularly, because food ads fatigue faster than most — the same dish shown for three months stops working",
-        ],
-      },
-      {
-        heading: "Where restaurant ad spend quietly leaks away",
-        paragraphs: [
-          "The most common place hospitality budget disappears isn't the campaign — it's the twenty minutes after someone responds to it. An ad does its job, someone messages on Instagram asking whether you have a table for four on Friday, and the message sits unanswered until the evening because everyone was on the floor working service. By then they've booked somewhere else.",
-          "This is a structural problem rather than a staffing failure. The people who could answer are, by definition, busiest exactly when enquiries arrive. Routing every channel — Instagram DMs, Facebook Messenger, WhatsApp and missed calls — into a single inbox, and covering the service-hours gap with automated replies or an AI receptionist that can answer common questions and take a booking, is what stops paid attention from evaporating during the dinner rush.",
-          "It's also worth being realistic about measurement. Walk-in trade generated by an ad is genuinely difficult to attribute, which is one reason booking links and trackable offer codes are useful — not because they capture everything, but because they give you at least one honest signal to judge the campaign by.",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "Restaurants and hospitality are one of the categories we work in, alongside automotive and finance, and the booking and enquiry side matters here more than almost anywhere else. If you want Meta & Instagram ads built around your quiet nights, your real catchment area, and a system that answers enquiries while your team is running service, get in touch for a free strategy call.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "cost-per-lead-meta-ads-uk-by-industry",
-    title: "What's a Good Cost Per Lead for Meta Ads in the UK?",
-    description:
-      "\"What's a good cost per lead?\" is the wrong first question. Here's why CPL varies so much by industry, and a better way to judge your own numbers.",
-    publishedAt: "2026-08-08",
-    keywords: [
-      "cost per lead UK",
-      "average cost per lead Facebook ads",
-      "Meta ads cost per lead by industry",
-      "what is a good CPL Meta ads",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "\"What's a good cost per lead?\" is one of the most-asked questions about Meta ads, and it rarely has a single useful answer. A cost per lead that would be a brilliant result for one business would be a disaster for another, because the number on its own doesn't tell you anything — it only means something next to what that lead is actually worth to you.",
-          "Here's a more useful way to think about cost per lead, what actually moves it, and why comparing your number to a generic \"industry average\" can send you in the wrong direction entirely.",
-        ],
-      },
-      {
-        heading: "Why cost per lead varies so much by industry",
-        paragraphs: [
-          "A few things drive most of the difference between industries. Higher-value purchases (a kitchen extension, a car, a property) can usually justify a higher cost per lead, because one converted customer is worth far more. Competitive auction dynamics matter too — categories with a lot of advertisers bidding for the same audience tend to see higher costs, regardless of how good the campaign is.",
-          "How considered the purchase is plays a part as well. An emergency call-out has almost no consideration phase, so leads can come in cheap and fast; a service someone researches for weeks before enquiring naturally involves more of Meta's ad auction working to find and re-find the right person over that longer window.",
-        ],
-      },
-      {
-        heading: "What \"a lead\" even means changes the number completely",
-        paragraphs: [
-          "Cost per lead figures are only comparable if \"a lead\" means the same thing in both cases, and it rarely does. A raw form submission, a qualified enquiry that's actually a fit for the business, and a booked, showed-up customer are three very different numbers — often several multiples apart from each other.",
-          "This is why a headline cost-per-lead figure without context can be misleading in either direction: a low number might just mean loosely qualified form-fills that go nowhere, and a higher number might reflect tightly qualified leads that convert at a much higher rate. Cost per booked customer is usually the number that actually matters to the business, even though cost per lead is the one people ask about first.",
-        ],
-      },
-      {
-        heading: "Real numbers, in context",
-        paragraphs: [
-          "Rather than quote generic industry benchmarks, it's more useful to look at real, current numbers. Our own live client campaigns over the last 30 days have generated leads from £4.49 for ceramic coating, up to around £10.28 for real estate — see the live figures on our results page. Those numbers reflect specific accounts, targeting and creative, not a universal rate for those industries, and they'll shift over time as campaigns are optimised — past performance isn't a guarantee of future results.",
-          "The point of sharing them isn't \"this is what you should expect\" — it's to show that a single UK-wide average cost per lead isn't a meaningful benchmark, because even within one account, cost per lead varies significantly by exactly what's being advertised.",
-        ],
-      },
-      {
-        heading: "A better way to judge your own cost per lead",
-        paragraphs: [
-          "Instead of comparing your number to an industry average, work backwards from your own numbers. Take your average customer value and your margin, decide what you can comfortably afford to pay to acquire one customer, then work back through your typical lead-to-customer conversion rate to find your target cost per lead. That figure is specific to your business — it doesn't need to match anyone else's.",
-        ],
-      },
-      {
-        heading: "What actually moves your cost per lead",
-        paragraphs: ["Whatever your starting point, a few levers tend to have the biggest effect on the number over time:"],
-        bullets: [
-          "Creative quality — a scroll-stopping video or image consistently outperforms generic stock imagery",
-          "Targeting and radius — a tightly defined, relevant audience wastes less spend than a broad one",
-          "Landing page or lead form friction — a slow page or a long form loses people who were otherwise ready to enquire",
-          "Retargeting — re-engaging people who already showed interest is typically far cheaper than reaching cold audiences",
-          "Time in market — cost per lead usually improves as a campaign gathers data and Meta's delivery system learns who converts",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "If you want a realistic cost-per-lead target for your specific business rather than a generic number, that's exactly what a strategy call is for — we'll work through your margins and customer value with you. Get in touch for a free strategy call.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "meta-instagram-ads-for-trade-home-services",
-    title: "Meta & Instagram Ads for Trade & Home Service Businesses: A Practical Guide",
-    description:
-      "How plumbers, electricians, and builders can use Meta & Instagram ads to generate qualified local leads — without wasting spend on the wrong customers.",
-    publishedAt: "2026-08-07",
-    keywords: [
-      "Instagram ads for tradesmen",
-      "Facebook ads for builders UK",
-      "Meta ads for trade businesses",
-      "local lead generation for tradesmen",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "If you run a plumbing, electrical, or building business, your customers aren't scrolling Instagram browsing brands the way they might for fashion or food. They're searching with intent — a burst pipe, a rewire that's been put off too long, an extension that needs planning. Meta & Instagram ads can put you in front of exactly those people, but only if the campaign is built around how trade businesses actually get work, not a generic playbook borrowed from retail.",
-          "This guide covers what actually works for trade and home service advertising on Meta's platforms, and where campaigns for this industry tend to go wrong.",
-        ],
-      },
-      {
-        heading: "Emergency work vs planned work needs different campaigns",
-        paragraphs: [
-          "Trade enquiries generally fall into two very different buckets, and treating them the same is one of the most common mistakes. An emergency call-out — a burst pipe, no heating, a tripped circuit that won't reset — is an immediate-need search with almost no consideration phase; whoever responds first and looks credible usually wins the job. A planned job — a bathroom refit, a rewire, a kitchen extension — involves comparing quotes, checking reviews, and thinking it over for days or weeks.",
-          "A single ad trying to serve both audiences usually serves neither well. Emergency-focused ads should lead with speed and availability — same-day callout, always answering — and drive straight to a phone call or WhatsApp message. Planned-job ads can afford a slower funnel: project photos, a lead form asking a few qualifying questions, retargeting over a longer window.",
-        ],
-      },
-      {
-        heading: "Get the radius right before anything else",
-        paragraphs: [
-          "Most trade businesses only serve a realistic drive-time radius, and targeting outside it wastes ad spend on leads you'll turn down anyway. Rather than defaulting to a whole city or county, set the radius around your actual service area — and be honest about it. A builder happy to travel further for a large extension might only want emergency plumbing enquiries within a much tighter radius.",
-          "It's also worth excluding areas you've deliberately stopped serving, and reviewing the radius periodically as the business changes — a growing team can usually justify covering more ground than a sole trader working solo.",
-        ],
-      },
-      {
-        heading: "What creative actually works for trades",
-        paragraphs: [
-          "Generic stock photography of someone in a hard hat tends to perform worse than real photos and video of your own work, even when the production quality is simple. A short phone-shot video of a completed job, a quick walkthrough of a finished bathroom, or a photo of the van outside a job in progress all build more trust than a polished but obviously staged stock image — people are hiring a specific business, not a category.",
-        ],
-        bullets: [
-          "Before-and-after photos of completed jobs, where you have them",
-          "Short video clips showing the work in progress, not just the finished result",
-          "Your branded van, uniform, or team — trade businesses sell trust as much as skill",
-          "Clear, simple text overlays stating the service and area, since many people scroll with the sound off",
-        ],
-      },
-      {
-        heading: "Phone calls, forms, or both?",
-        paragraphs: [
-          "Emergency-style ads tend to convert best when they go straight to a phone call or WhatsApp message — someone with a burst pipe isn't going to fill in a form and wait for a callback. Planned-job ads, on the other hand, often do better with a short lead form, since it lets you collect the details you need — rough budget, timeline, property type — before the first conversation, saving time on unqualified calls.",
-          "Whichever route you use, the same rule applies as with any lead: reply fast. And because phone enquiries are so central to trade businesses, missed-call text-back is worth pairing with any campaign that sends people to your number — a missed call during a job is one of the easiest leads to lose.",
-        ],
-      },
-      {
-        heading: "Common mistakes to avoid",
-        paragraphs: ["A few patterns show up again and again in underperforming trade campaigns:"],
-        bullets: [
-          "Targeting a whole city or region instead of a realistic service radius",
-          "Using the same ad for emergency call-outs and planned larger jobs",
-          "Relying on boosted posts instead of a properly structured campaign",
-          "Sending every enquiry to a generic contact page instead of a fast-loading form or a direct call/WhatsApp option",
-          "No system for missed calls or after-hours enquiries, so a chunk of demand is lost outside the 9-to-5",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "If you run a trade or home service business and want Meta & Instagram ads built around how your customers actually search — emergency versus planned, the right radius, and a follow-up system that doesn't drop calls — get in touch for a free strategy call.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "missed-call-text-back-recovers-lost-leads",
-    title: "Missed-Call Text-Back: How It Recovers Leads You're Already Paying For",
-    description:
-      "A missed call from a paid ad often means a lost customer. Here's how automatic missed-call text-back keeps that enquiry alive without you lifting a finger.",
-    publishedAt: "2026-08-06",
-    keywords: [
-      "missed call text back",
-      "automatic text back missed call",
-      "missed call follow up",
-      "recover lost leads phone",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "You've paid to get someone to call you. They call, you're on the other line, in a meeting, or it's after hours — and it goes to voicemail. Most people don't leave one. They just move on to the next business on their list.",
-          "That missed call isn't a lost cause — it's a lead you already paid for, sitting there for a few more minutes before it goes cold. Missed-call text-back is one of the simplest, highest-leverage fixes for exactly this problem.",
-        ],
-      },
-      {
-        heading: "What it actually does",
-        paragraphs: [
-          "It's straightforward: the moment a call to your business number goes unanswered, the caller automatically receives a text message — something like \"Sorry we missed your call, how can we help?\" — within seconds. No one has to remember to do it, and it happens whether you're mid-appointment, closed for the day, or just didn't hear the phone.",
-          "The caller gets an immediate response instead of silence, and the conversation moves to text, where you (or an AI receptionist) can pick it up whenever you're free — without them having to try calling again or, more likely, ringing a competitor instead.",
-        ],
-      },
-      {
-        heading: "Why a missed call is worse than it sounds",
-        paragraphs: [
-          "A phone call is one of the highest-intent actions someone can take — they cared enough to actually ring rather than just browse. Losing that enquiry to a missed call is a particularly expensive kind of waste, especially if that call came from a paid ad campaign, where you've already spent money getting them to reach out in the first place.",
-          "Unlike a missed Instagram DM or email, a missed call often leaves no record at all if there's no voicemail — you may not even know the enquiry existed. Text-back closes that gap by guaranteeing every missed call leaves a trace and gets a reply.",
-        ],
-      },
-      {
-        heading: "Where it fits alongside everything else",
-        paragraphs: [
-          "Missed-call text-back works best as one piece of a wider follow-up system, not a standalone fix. On its own, it stops the immediate silence — but the reply still needs to land somewhere you'll actually see it and follow up properly.",
-        ],
-        bullets: [
-          "Route the resulting text conversation into the same unified inbox as your other channels, so it doesn't get missed a second time",
-          "Pair it with an AI receptionist for messages that come in outside business hours, so the reply isn't just an acknowledgement but can actually answer questions and book someone in",
-          "Use it alongside — not instead of — fast human follow-up during business hours, since a real reply still converts better than an automated one once someone's engaged",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "If you're running Meta & Instagram ads and driving phone enquiries, missed-call text-back is one of the simplest additions that pays for itself — it's not a big strategic shift, just a gap closed. It's included as part of our unified inbox and automation setup — get in touch for a free strategy call to see it alongside the rest of the system.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "how-fast-should-you-reply-to-a-lead",
-    title: "How Fast Should You Reply to a Lead? (And What It Costs You If You Don't)",
-    description:
-      "Why speed to lead matters more than most businesses realise, what counts as \"fast\" in practice, and how to actually close the gap without hiring a full-time receptionist.",
-    publishedAt: "2026-08-05",
-    keywords: [
-      "speed to lead",
-      "lead response time",
-      "how fast to respond to leads",
-      "lead follow up time",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "A great ad campaign can generate a strong flow of enquiries and still produce disappointing sales — and the reason is rarely the ads themselves. It's what happens in the minutes and hours after someone enquires.",
-          "Most people looking for a service don't enquire with just one business. They message two or three, then book in with whoever replies first and sounds like they've got it together. Response speed isn't a nice-to-have on top of good marketing — it's part of the campaign.",
-        ],
-      },
-      {
-        heading: "Why the first reply usually wins",
-        paragraphs: [
-          "Think about the last time you enquired about something online — a quote, a booking, a callback. If one business replied within minutes and another took until the next day, which one did you end up going with? Most people default to whoever engages first, because by the time the slow reply arrives, the decision has often already been made elsewhere.",
-          "This isn't about being pushy. It's simply that a fresh enquiry is a moment of genuine interest, and that interest fades fast. Someone messaging on a Friday evening has usually moved on to something else by Monday morning.",
-        ],
-      },
-      {
-        heading: "What actually counts as \"fast\"",
-        paragraphs: [
-          "There's no single magic number, but a useful way to think about it: reply while the enquiry is still front-of-mind for the person who sent it. In practice that means minutes during business hours, not the end of the day — and ideally some kind of acknowledgement outside business hours too, even if the full reply comes later.",
-          "A simple test: if you enquired with your own business right now, would you be impressed with how long it took to hear back?",
-        ],
-      },
-      {
-        heading: "Why replies end up slow in the first place",
-        paragraphs: ["It's rarely a lack of care — it's usually a structural problem:"],
-        bullets: [
-          "Enquiries arrive across several channels (Instagram DMs, Facebook Messenger, missed calls, a contact form) with no single place to see them all",
-          "Nobody's specifically responsible for watching for new enquiries, so they sit until someone happens to check",
-          "There's no cover outside business hours, so anything that comes in overnight or at the weekend waits until the next working day",
-          "Manually typing a reply to every enquiry from scratch takes longer than it needs to",
-        ],
-      },
-      {
-        heading: "Closing the gap",
-        paragraphs: ["A few changes make the biggest difference, roughly in order of effort:"],
-        bullets: [
-          "Get every channel into one place you actually check — a unified inbox beats switching between four apps",
-          "Turn on instant notifications for new enquiries rather than checking periodically",
-          "Prepare a few reply templates for common questions, so a solid first response takes seconds, not minutes",
-          "Add missed-call text-back, so a call you can't answer still gets an immediate reply",
-          "Cover the gaps outside business hours with an AI receptionist that can answer common questions and book the enquiry in, so nothing waits until Monday",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "If you're generating solid enquiries through Meta & Instagram ads but suspect some are slipping through the cracks before you get to them, that's exactly the gap our unified inbox, automated follow-up and AI receptionist are built to close. Get in touch for a free strategy call.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "boosting-a-post-vs-real-ad-campaign",
-    title: "Boosting a Post vs Running a Real Ad Campaign: What's the Difference?",
-    description:
-      "Why the \"Boost Post\" button and a proper Meta Ads Manager campaign aren't the same tool — and which one actually generates leads for your business.",
-    publishedAt: "2026-08-04",
-    keywords: [
-      "boost post vs ads manager",
-      "should I boost my Facebook post",
-      "Meta ads campaign vs boosted post",
-      "Instagram boost post worth it",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "That blue \"Boost Post\" button under your latest Instagram or Facebook post is the single biggest reason small businesses think they've \"tried Meta ads\" and it \"didn't work.\" It's not that boosting is useless — it's that it's a different tool solving a different problem, and using it to generate leads is a bit like using a bicycle to move house.",
-          "Here's what actually separates the two, and how to tell which one your business needs.",
-        ],
-      },
-      {
-        heading: "What boosting a post actually does",
-        paragraphs: [
-          "Boosting takes a post you've already published and pays to show it to more people. It's built for speed and simplicity — pick a budget, pick a rough audience, hit go — which is exactly why it's the first thing most business owners try.",
-          "The trade-off is that it's simplified on purpose. Boosting only optimises for a narrow set of outcomes, mainly engagement (likes, comments, shares) or, at best, a basic version of traffic or messages. It doesn't give you access to lead form ads, conversion tracking, detailed audience layering, or the ability to test multiple creatives and pause the losers. You're renting reach for a post, not running a campaign built around a business outcome.",
-        ],
-      },
-      {
-        heading: "What a real campaign gives you that boosting doesn't",
-        paragraphs: ["Building a campaign properly in Ads Manager (rather than tapping Boost) unlocks the parts that actually drive leads and sales:"],
-        bullets: [
-          "Objective-based optimisation — telling Meta to specifically find people likely to submit a lead form or message you, not just people likely to tap like",
-          "Multiple ad sets tested against each other, so underperforming audiences or creative get cut and budget shifts to what's working",
-          "Detailed targeting and exclusions — reaching the right radius, age range, and interests, and excluding people who've already enquired",
-          "The Meta Pixel or Conversions API feeding real outcome data back into the campaign, which is what lets Meta's algorithm actually improve results over time",
-          "Retargeting set up deliberately, rather than left to chance",
-        ],
-      },
-      {
-        heading: "When boosting is genuinely fine",
-        paragraphs: [
-          "Boosting isn't a mistake in every context. If the goal is simply visibility — more people seeing an announcement, a review, a behind-the-scenes post, or something building general brand awareness — a small boost can be a perfectly reasonable, low-effort way to extend reach. The problem is using it for the wrong job: expecting a tool built for engagement to reliably produce booked customers.",
-        ],
-      },
-      {
-        heading: "Signs it's time to move off the Boost button",
-        paragraphs: ["A few reliable signs the Boost button has stopped being enough for what you actually need:"],
-        bullets: [
-          "You're boosting posts regularly but can't point to any leads or bookings that came from it",
-          "You've never seen a cost-per-lead or cost-per-result number, only reach and engagement stats",
-          "You don't have a Meta Pixel installed on your website, so Meta has no idea which clicks actually turned into enquiries",
-          "You're relying on the same post performing well organically first before boosting it, rather than building creative specifically to convert",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "If boosting posts has felt like spending money without a clear return, that's usually not a sign Meta ads don't work for your business — it's a sign the campaign was never actually built as one. Get in touch for a free strategy call and we'll show you what a properly structured campaign looks like for your numbers.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "meta-instagram-ads-budget-guide-uk-small-business",
-    title: "How Much Should You Spend on Meta & Instagram Ads? A UK Small Business Guide",
-    description:
-      "A practical guide to setting a realistic Meta & Instagram ads budget for UK small businesses — what ad spend actually buys, and where the money should go first.",
-    publishedAt: "2026-08-02",
-    keywords: [
-      "Meta ads budget UK",
-      "Instagram ads cost",
-      "how much do Facebook ads cost",
-      "small business advertising budget",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "\"How much should I spend on Meta ads?\" is one of the most common questions we hear from business owners — and it's usually the wrong first question. Budget isn't a fixed number that applies to every business; it depends on your margins, your average customer value, and what you're actually trying to achieve.",
-          "That said, there are some genuinely useful ways to think about it, so you're not just picking a number out of thin air.",
-        ],
-      },
-      {
-        heading: "Two separate numbers: ad spend and management",
-        paragraphs: [
-          "It helps to think of Meta advertising as two separate costs. Ad spend is what you pay Meta directly to actually show your ads — this scales with how much reach and volume you want. Management is the cost of the strategy, creative, targeting, and ongoing optimisation behind those ads — whether that's an in-house hire, a freelancer, or an agency.",
-          "Conflating the two is where a lot of businesses go wrong, either by assuming a small management fee should come with a huge ad budget, or by spending heavily on ads with no one actually managing performance day to day.",
-        ],
-      },
-      {
-        heading: "What's a sensible starting ad spend?",
-        paragraphs: [
-          "Rather than picking an arbitrary figure, work backwards from your numbers. If your average customer is worth £500 and you're comfortable paying £50 to acquire one, that's your target cost per lead — everything else follows from there.",
-          "Meta's own ad platform also performs best once an ad set has gathered enough data to exit its \"learning phase\" — in practice this means a campaign needs a consistent, sustained budget for several weeks rather than a small burst of spend followed by silence. A modest, steady budget run consistently for 4–6 weeks will almost always outperform a larger budget switched on and off unpredictably.",
-        ],
-      },
-      {
-        heading: "Where the budget actually goes to work",
-        paragraphs: ["A few things determine whether a given budget performs well or gets wasted, regardless of how much you spend:"],
-        bullets: [
-          "Creative quality — a scroll-stopping video or image matters more to cost-per-result than almost anything else",
-          "Landing page or lead form quality — sending clicks to a slow or confusing page wastes spend that already did its job",
-          "Speed of follow-up — a lead that gets a reply within minutes converts at a very different rate to one left for hours",
-          "Retargeting — showing ads again to people who already engaged is typically far cheaper than reaching cold audiences",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "If you're not sure what a realistic budget looks like for your specific business, that's exactly what a strategy call is for — we'll work through your numbers with you rather than hand you a generic figure. Our plans separate ad spend from management clearly from day one; see the pricing page for how the packages break down.",
-        ],
-      },
-    ],
-  },
-  {
-    slug: "instagram-ads-for-car-dealerships",
-    title: "Instagram Ads for Car Dealerships: A Complete Guide",
-    description:
-      "How UK car dealerships and automotive businesses can use Instagram & Meta ads to generate qualified buyer leads, not just likes.",
-    publishedAt: "2026-07-31",
-    keywords: [
-      "Instagram ads for car dealerships",
-      "automotive Instagram advertising",
-      "Meta ads for automotive",
-      "car dealership lead generation",
-    ],
-    sections: [
-      {
-        paragraphs: [
-          "Automotive is one of the most competitive categories on Instagram and Facebook — but it's also one of the most rewarding when the campaign is built correctly. Car buyers scroll, compare, and message before they ever set foot on a forecourt, which makes Meta & Instagram ads one of the highest-leverage channels available to a dealership.",
-          "This guide covers what actually works for automotive advertising on Meta's platforms, and the mistakes that quietly waste ad budget.",
-        ],
-      },
-      {
-        heading: "Why Instagram works for car buyers",
-        paragraphs: [
-          "Instagram's visual, video-first format suits vehicles better than almost any other product category. A well-shot reel of a car's interior, a walkaround video, or a short clip of a test drive consistently outperforms static image ads for engagement — and engagement is what Meta's algorithm rewards with cheaper distribution.",
-          "Just as importantly, Instagram and Facebook Messenger give buyers a low-friction way to ask a quick question — \"is this still available?\", \"what's the finance option?\" — without picking up the phone. Dealerships that respond fast to these messages convert a meaningfully higher share of them into showroom visits.",
-        ],
-      },
-      {
-        heading: "What a strong automotive campaign structure looks like",
-        paragraphs: ["A campaign built for lead generation (rather than just brand awareness) typically includes:"],
-        bullets: [
-          "Vehicle-specific ad sets for higher-margin or higher-demand stock, rather than one generic \"visit our dealership\" ad",
-          "Video-first creative — walkarounds, feature highlights, and short customer-facing clips",
-          "A lead form or landing page that captures interest without forcing a phone call",
-          "Retargeting for anyone who engaged with a previous ad but didn't enquire",
-          "Geographic targeting tuned to a realistic drive-time radius, not just a city-wide blast",
-        ],
-      },
-      {
-        heading: "The mistake most dealerships make",
-        paragraphs: [
-          "The single biggest waste of ad spend in automotive marketing is generating interest and then losing it. A buyer messages on Instagram, doesn't get a reply for six hours, and has already messaged three other dealerships by the time someone responds.",
-          "This is exactly why lead generation and lead management need to be treated as one system, not two separate problems. An ad campaign that generates enquiries is only half the job — routing those enquiries into one inbox, replying fast (including with an AI receptionist outside business hours), and following up automatically is what turns interest into a sale.",
-        ],
-      },
-      {
-        heading: "Getting started",
-        paragraphs: [
-          "If you're running an automotive business and want Meta & Instagram ads built around your stock, your margins, and a system that makes sure no enquiry goes unanswered, get in touch for a free strategy call.",
+          "As a general rule, most manufacturers recommend an oil change (our minor service) roughly every 6,000–12,000 miles or once a year, whichever comes first, and a full service (our major service) less frequently, alternating with minor services depending on your car's specific schedule.",
+          "If you're not sure what your car is due, the simplest thing to do is send us the mileage and the date of your last service — we'll tell you honestly which one it needs rather than upselling you to the major service by default.",
         ],
       },
     ],

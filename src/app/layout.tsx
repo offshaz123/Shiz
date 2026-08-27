@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { PromoBanner } from "@/components/PromoBanner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { MetaPixel } from "@/components/MetaPixel";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
+import { accentInitScript } from "@/lib/accents";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,9 +20,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Keyword-first: an unfamiliar brand name earns fewer clicks in search results
-// than the service being searched for.
-const defaultTitle = `Meta & Instagram Ads Agency London | ${siteConfig.name}`;
+const defaultTitle = `Premium Window Tinting & Car Servicing | ${siteConfig.name}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -31,16 +30,15 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   keywords: [
-    "Meta ads agency",
-    "Instagram ads agency UK",
-    "marketing agency London",
-    "Facebook ads management",
-    "Instagram ads agency London",
-    "lead generation agency",
-    "automotive lead generation",
-    "social media marketing agency",
-    "AI receptionist for business",
-    "all-in-one CRM for small business",
+    "window tinting",
+    "ceramic window tint",
+    "car window tinting near me",
+    "chameleon window tint",
+    "dechroming",
+    "car brakes",
+    "car oil change service",
+    "vehicle servicing",
+    "executive car tinting",
   ],
   alternates: {
     canonical: "/",
@@ -76,10 +74,11 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <MetaPixel />
+        <script dangerouslySetInnerHTML={{ __html: accentInitScript }} />
         <OrganizationJsonLd />
         <WebSiteJsonLd />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          <PromoBanner />
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />

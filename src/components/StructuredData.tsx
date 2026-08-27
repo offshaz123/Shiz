@@ -1,22 +1,19 @@
-import { siteConfig, socialProfileUrls, hasPublishedReviews } from "@/lib/site-config";
+import { siteConfig, socialProfileUrls, hasPublishedReviews, tintServices, repairServices } from "@/lib/site-config";
 
 export function OrganizationJsonLd() {
   const data = {
     "@context": "https://schema.org",
-    "@type": "ProfessionalService",
+    "@type": "AutoRepair",
     "@id": `${siteConfig.url}/#organization`,
     name: siteConfig.name,
     url: siteConfig.url,
-    logo: `${siteConfig.url}/logo.png`,
+    logo: `${siteConfig.url}/apple-icon`,
     image: `${siteConfig.url}/opengraph-image`,
     description: siteConfig.description,
     email: siteConfig.email,
     telephone: siteConfig.phoneE164,
     priceRange: "££",
-    // Tells Google these social profiles are the same business entity.
     ...(socialProfileUrls.length > 0 && { sameAs: socialProfileUrls }),
-    // Only published once real reviews exist — an unevidenced rating here is a
-    // manual-action risk, not just a credibility one.
     ...(hasPublishedReviews && {
       aggregateRating: {
         "@type": "AggregateRating",
@@ -30,37 +27,26 @@ export function OrganizationJsonLd() {
     },
     address: {
       "@type": "PostalAddress",
-      streetAddress: `${siteConfig.address.line1}, ${siteConfig.address.line2}`,
+      streetAddress: siteConfig.address.line1,
       addressLocality: siteConfig.address.city,
       postalCode: siteConfig.address.postcode,
       addressCountry: "GB",
     },
-    makesOffer: [
-      {
-        "@type": "Offer",
-        name: "Starter",
-        price: "400",
-        priceCurrency: "GBP",
-        description:
-          "Meta & Instagram ads management, a lead capture landing page, and a unified Instagram + Facebook inbox.",
-      },
-      {
-        "@type": "Offer",
-        name: "Growth",
-        price: "700",
-        priceCurrency: "GBP",
-        description:
-          "A full CRM pipeline, an all-in-one inbox across Instagram, Messenger, WhatsApp & SMS, and automated lead follow-up.",
-      },
-      {
-        "@type": "Offer",
-        name: "Scale",
-        price: "1400",
-        priceCurrency: "GBP",
-        description:
-          "Unlimited ad campaigns, a 24/7 AI receptionist & chatbot, advanced automation, and a dedicated account manager.",
-      },
-    ],
+    openingHoursSpecification: siteConfig.hours
+      .filter((h) => h.time !== "Closed")
+      .map((h) => ({
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: h.day,
+        opens: h.time.split(" - ")[0],
+        closes: h.time.split(" - ")[1],
+      })),
+    makesOffer: [...tintServices, ...repairServices].map((s) => ({
+      "@type": "Offer",
+      name: s.name,
+      priceCurrency: "GBP",
+      price: s.fromPrice.replace("£", ""),
+      description: "description" in s ? s.description : undefined,
+    })),
   };
 
   return (
@@ -86,7 +72,8 @@ export function WebSiteJsonLd() {
     inLanguage: "en-GB",
     publisher: { "@id": `${siteConfig.url}/#organization` },
     hasPart: [
-      { name: "Services", url: `${siteConfig.url}/services` },
+      { name: "Window Tints", url: `${siteConfig.url}/tints` },
+      { name: "Repairs & Servicing", url: `${siteConfig.url}/repairs` },
       { name: "Pricing", url: `${siteConfig.url}/pricing` },
       { name: "About", url: `${siteConfig.url}/about` },
       { name: "Blog", url: `${siteConfig.url}/blog` },

@@ -4,7 +4,7 @@ import { whatsappHref } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Thank You",
-  description: "Thanks for reaching out to Shaz Marketing Group.",
+  description: "Thanks for reaching out to Exclusive Tints & Repairs.",
   robots: { index: false, follow: true },
 };
 
@@ -23,18 +23,18 @@ export default function ThankYouPage() {
         </svg>
       </div>
       <h1 className="mt-6 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-        Thanks — you&apos;re in!
+        Thanks — we&apos;ve got your request
       </h1>
       <p className="mt-4 max-w-md text-muted">
-        We&apos;ve received your details. A member of the Shaz Marketing Group team will reach out
-        within one business day to talk through your free strategy call.
+        A member of the Exclusive Tints &amp; Repairs team will be in touch shortly with your
+        quote.
       </p>
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <a
           href={whatsappHref}
           target="_blank"
           rel="noopener noreferrer"
-          className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground hover:border-brand-pink/60"
+          className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground hover:border-brand/60"
         >
           Message us on WhatsApp now
         </a>
