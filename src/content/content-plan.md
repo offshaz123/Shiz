@@ -35,6 +35,7 @@ keywords, dealership social strategy).
 - How to Set Up Retargeting When You're a Small Business (practical how-to)
 - What the Meta Pixel Actually Does, and Why It Matters More Than It Used To (feature deep-dive)
 - Do You Need a Big Following to Run Meta Ads? (comparison/explainer)
+- Why Your Meta Ads Are Getting Low-Quality Leads (and How to Fix It) (policy & troubleshooting)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -94,7 +95,7 @@ keywords, dealership social strategy).
       (explain the rules and compliant alternatives only — never how to work around them)
 - [ ] What to Do If Your Facebook Ad Account Gets Disabled — target: "Facebook ad account
       disabled UK", "Meta ad account restricted appeal"
-- [ ] Why Your Meta Ads Are Getting Low-Quality Leads (and How to Fix It) — target: "poor
+- [x] Why Your Meta Ads Are Getting Low-Quality Leads (and How to Fix It) — target: "poor
       quality Facebook leads", "fake leads Facebook ads"
 
 ## Backlog — practical how-to (added 2026-08-21 research round)

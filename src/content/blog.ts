@@ -16,6 +16,73 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "why-meta-ads-get-low-quality-leads",
+    title: "Why Your Meta Ads Are Getting Low-Quality Leads (and How to Fix It)",
+    description:
+      "Wrong numbers, people who don't remember enquiring, nobody answering the phone. Poor lead quality is usually a settings problem, and it's fixable.",
+    publishedAt: "2026-08-27",
+    keywords: [
+      "poor quality Facebook leads",
+      "fake leads Facebook ads",
+      "improve Meta lead quality",
+      "instant form lead quality UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "The campaign looks like it's working. Leads are arriving, the cost per lead is low, the graph in Ads Manager points the right way. Then you start ringing them.",
+          "Numbers that don't connect. People who don't recall filling anything in. Someone who thought they were entering a competition. It's a specific kind of frustrating, because on paper you're winning.",
+          "This is one of the most common complaints about Meta lead ads, and it's rarely a sign the platform doesn't work. It's usually a handful of settings doing exactly what they were configured to do.",
+        ],
+      },
+      {
+        heading: "Instant Forms are designed to be easy — that's the problem",
+        paragraphs: [
+          "Instant Forms exist to remove friction. They open inside the app, they pre-fill name, email and phone from the person's account, and submitting takes two taps.",
+          "That's brilliant for volume and terrible for intent. Someone can complete your form almost accidentally, while half-watching something else, without ever consciously deciding to contact your business. The details are real — they came from a real account — but the interest often isn't.",
+          "Pre-filling also means the phone number is whatever they entered when they signed up years ago. It's not a fake number, it's an abandoned one. They never check it.",
+        ],
+      },
+      {
+        heading: "The settings that make the biggest difference",
+        paragraphs: [
+          "Most lead quality problems are solved in the form itself rather than in the targeting:",
+        ],
+        bullets: [
+          "Choose the higher intent form type — it adds a review step before submission, so people confirm rather than tapping straight through. Fewer leads, noticeably better ones",
+          "Add one qualifying question with real options, so completing the form requires an actual decision rather than reflex",
+          "Turn off automatic field completion where you can, since typing a number means you get one the person actually uses",
+          "Optimise for leads rather than link clicks, or you're paying the system to find people who like tapping adverts",
+          "Keep the form to four fields — every extra question loses completions without improving quality, and you can qualify properly on the call",
+        ],
+      },
+      {
+        heading: "Say the price in the ad",
+        paragraphs: [
+          "The most effective quality filter isn't a setting at all. It's putting something in the ad copy that makes unsuitable people scroll past.",
+          "A starting price does this better than anything. \"From £400 a month\" costs you a good number of enquiries and almost none of them were going to buy. What's left is people who saw the number and enquired anyway, which is a far more useful conversation.",
+          "The same applies to eligibility. If you only serve a certain area, only take certain jobs, or have a minimum, say so plainly. Every ad you write is either filtering or it isn't, and vague copy filters nothing.",
+        ],
+      },
+      {
+        heading: "Some of it isn't the leads",
+        paragraphs: [
+          "It's worth checking one uncomfortable possibility before blaming the campaign: how long is it taking to ring these people?",
+          "Instant Form leads go cold faster than almost any other kind, precisely because they took so little effort. Someone who tapped through in five seconds has minimal investment in remembering it. Call them three days later and of course they sound confused — they've genuinely forgotten, and that reads exactly like a bad lead.",
+          "The same enquiry called within the hour behaves completely differently. Before concluding the leads are junk, check how quickly they're being contacted, and how many attempts are being made. One unanswered call at two in the afternoon is not a fair test of anything.",
+        ],
+      },
+      {
+        heading: "The trade-off nobody mentions",
+        paragraphs: [
+          "Every one of these changes will make your cost per lead look worse. That's not a side effect, it's the mechanism — you're deliberately buying fewer, more considered enquiries.",
+          "Which means cost per lead stops being a useful measure the moment you start optimising for quality. If forty leads at £4 produce two customers and twelve leads at £15 produce four, the expensive campaign is comfortably the better one, and any report based on cost per lead will tell you the opposite.",
+          "So track what happened after the call — how many were reachable, how many booked. Without that, you're optimising toward the cheapest possible way of generating people who never answer the phone.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "do-you-need-a-big-following-to-run-meta-ads",
     title: "Do You Need a Big Following to Run Meta Ads?",
     description:
