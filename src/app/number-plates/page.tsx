@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Standard, 3D, 3D Gel, 4D, 4D Gel, 5D and 5D Gel number plates, in short, hexagon or normal shapes. See how each finish compares.",
   alternates: { canonical: "/number-plates" },
   openGraph: {
-    title: "Number Plates | Exclusive Tints & Repairs",
+    title: "Number Plates | Executive Tints & Repairs",
     description:
       "Standard, 3D, 3D Gel, 4D, 4D Gel, 5D and 5D Gel number plates, in short, hexagon or normal shapes.",
   },

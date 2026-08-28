@@ -1,6 +1,6 @@
-# Exclusive Tints & Repairs
+# Executive Tints & Repairs
 
-Website for **Exclusive Tints & Repairs** — premium window tinting (standard dyed, ceramic and
+Website for **Executive Tints & Repairs** — premium window tinting (standard dyed, ceramic and
 chameleon tint, plus dechroming), and vehicle repairs, servicing & detailing (brakes, oil changes,
 machine polishing, ceramic detailing, number plates).
 

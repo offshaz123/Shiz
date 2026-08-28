@@ -6,10 +6,10 @@ import { siteConfig } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "About Us",
   description:
-    "Exclusive Tints & Repairs — premium window tinting and vehicle servicing, using better material than most competitors and backing it with a lifetime warranty on ceramic.",
+    "Executive Tints & Repairs — premium window tinting and vehicle servicing, using better material than most competitors and backing it with a lifetime warranty on ceramic.",
   alternates: { canonical: "/about" },
   openGraph: {
-    title: "About Exclusive Tints & Repairs",
+    title: "About Executive Tints & Repairs",
     description:
       "Premium window tinting and vehicle servicing, using better material than most competitors and backing it with a lifetime warranty on ceramic.",
   },
@@ -60,7 +60,7 @@ export default function AboutPage() {
             Executive standard tinting &amp; servicing
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-            Exclusive Tints &amp; Repairs was built on one idea: your car should be treated like it
+            Executive Tints &amp; Repairs was built on one idea: your car should be treated like it
             matters. That means premium film, careful fitting, and a team that stands behind its
             work.
           </p>

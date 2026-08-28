@@ -5,7 +5,7 @@ import { blogPosts } from "@/content/blog";
 export const metadata: Metadata = {
   title: "Blog",
   description:
-    "Guides on window tinting, ceramic vs. standard film, and keeping your car in top condition — from the Exclusive Tints & Repairs team.",
+    "Guides on window tinting, ceramic vs. standard film, and keeping your car in top condition — from the Executive Tints & Repairs team.",
   alternates: { canonical: "/blog" },
 };
 

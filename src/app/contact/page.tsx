@@ -7,10 +7,10 @@ import { siteConfig } from "@/lib/site-config";
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
-    "Get in touch with Exclusive Tints & Repairs by form, phone, email or WhatsApp for a free quote on tinting, dechroming, brakes or servicing.",
+    "Get in touch with Executive Tints & Repairs by form, phone, email or WhatsApp for a free quote on tinting, dechroming, brakes or servicing.",
   alternates: { canonical: "/contact" },
   openGraph: {
-    title: "Contact Exclusive Tints & Repairs",
+    title: "Contact Executive Tints & Repairs",
     description:
       "Get in touch by form, phone, email or WhatsApp for a free quote on tinting, dechroming, brakes or servicing.",
   },

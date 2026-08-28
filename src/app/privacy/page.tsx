@@ -3,14 +3,14 @@ import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
-  description: "Privacy Policy for Exclusive Tints & Repairs.",
+  description: "Privacy Policy for Executive Tints & Repairs.",
   alternates: { canonical: "/privacy" },
 };
 
 const sections = [
   {
     heading: "1. Who we are",
-    body: `Exclusive Tints & Repairs ("we", "us", "our") provides window tinting and vehicle repair & servicing to customers. This policy explains how we collect, use and protect personal information submitted through this website, and we take keeping that information safe seriously.`,
+    body: `Executive Tints & Repairs ("we", "us", "our") provides window tinting and vehicle repair & servicing to customers. This policy explains how we collect, use and protect personal information submitted through this website, and we take keeping that information safe seriously.`,
   },
   {
     heading: "2. Information we collect",

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/kent" },
   robots: { index: false, follow: true },
   openGraph: {
-    title: "Window Tinting & Detailing in Kent | Exclusive Tints & Repairs",
+    title: "Window Tinting & Detailing in Kent | Executive Tints & Repairs",
     description:
       "Premium window tinting, ceramic detailing and car servicing in Kent. 10% off ceramic tint with a lifetime warranty — get a free quote today.",
   },

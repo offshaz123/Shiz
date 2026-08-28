@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     "Brakes, servicing, machine polishing, ceramic detailing and number plates — straightforward, fixed pricing where we can give it, honest quotes where we can't.",
   alternates: { canonical: "/repairs" },
   openGraph: {
-    title: "Car Repairs, Servicing & Detailing | Exclusive Tints & Repairs",
+    title: "Car Repairs, Servicing & Detailing | Executive Tints & Repairs",
     description:
       "Brakes, servicing, machine polishing, ceramic detailing and number plates — straightforward, fixed pricing where we can give it, honest quotes where we can't.",
   },

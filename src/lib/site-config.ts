@@ -1,19 +1,19 @@
 export const siteConfig = {
-  name: "Exclusive Tints & Repairs",
-  shortName: "Exclusive Tints & Repairs",
+  name: "Executive Tints & Repairs",
+  shortName: "Executive Tints & Repairs",
   description:
     "Premium window tinting and vehicle repairs. Standard dyed, ceramic and chameleon window tints, dechroming, brakes and oil servicing — finished to an executive standard, backed by a lifetime warranty on ceramic.",
-  url: "https://exclusivetintsandrepairs.co.uk",
+  url: "https://executivetintsandrepairs.co.uk",
   email: "executivetints.ontop@gmail.com",
   phoneDisplay: "07300 303538",
   phoneE164: "+447300303538",
   whatsappNumber: "447300303538",
-  whatsappMessage: "Hi Exclusive Tints & Repairs, I'd like to get a quote.",
+  whatsappMessage: "Hi Executive Tints & Repairs, I'd like to get a quote.",
   address: {
-    line1: "Unit 4, Industrial Estate",
+    line1: "15 Cecil Road",
     line2: "",
     city: "London",
-    postcode: "E1 6AN",
+    postcode: "E17 5DH",
     country: "United Kingdom",
   },
   hours: [

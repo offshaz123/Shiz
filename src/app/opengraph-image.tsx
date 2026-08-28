@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const dynamic = "force-static";
-export const alt = "Exclusive Tints & Repairs — Premium Window Tinting & Car Servicing";
+export const alt = "Executive Tints & Repairs — Premium Window Tinting & Car Servicing";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -39,7 +39,7 @@ export default async function Image() {
             E
           </div>
           <div style={{ display: "flex", fontSize: 44, fontWeight: 800, color: "#fff" }}>
-            <span>EXCLUSIVE&nbsp;</span>
+            <span>EXECUTIVE&nbsp;</span>
             <span style={{ color: "#0ea5c4" }}>TINTS</span>
             <span>&nbsp;&amp; REPAIRS</span>
           </div>

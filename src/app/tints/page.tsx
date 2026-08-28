@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     "Standard dyed, ceramic and chameleon window tints, plus dechroming — premium film, executive finish, lifetime warranty on ceramic.",
   alternates: { canonical: "/tints" },
   openGraph: {
-    title: "Window Tinting Services | Exclusive Tints & Repairs",
+    title: "Window Tinting Services | Executive Tints & Repairs",
     description:
       "Standard dyed, ceramic and chameleon window tints, plus dechroming — premium film, executive finish, lifetime warranty on ceramic.",
   },

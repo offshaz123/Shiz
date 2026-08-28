@@ -5,7 +5,7 @@ import { whatsappHref } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Thank You",
-  description: "Thanks for reaching out to Exclusive Tints & Repairs.",
+  description: "Thanks for reaching out to Executive Tints & Repairs.",
   robots: { index: false, follow: true },
 };
 
@@ -28,7 +28,7 @@ export default function ThankYouPage() {
         Thanks — we&apos;ve got your request
       </h1>
       <p className="mt-4 max-w-md text-muted">
-        A member of the Exclusive Tints &amp; Repairs team will be in touch shortly with your
+        A member of the Executive Tints &amp; Repairs team will be in touch shortly with your
         quote.
       </p>
       <div className="mt-8 flex flex-col gap-3 sm:flex-row">

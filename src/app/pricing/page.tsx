@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     "Transparent pricing for window tinting, dechroming, brakes, servicing, polishing, ceramic detailing and number plates — 10% off ceramic tint, 15% off with a valid Blue NHS card.",
   alternates: { canonical: "/pricing" },
   openGraph: {
-    title: "Pricing | Exclusive Tints & Repairs",
+    title: "Pricing | Executive Tints & Repairs",
     description:
       "Transparent pricing for window tinting, dechroming, brakes, servicing, polishing, ceramic detailing and number plates — 10% off ceramic tint, 15% off with a valid Blue NHS card.",
   },
