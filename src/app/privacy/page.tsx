@@ -30,7 +30,7 @@ const sections = [
   },
   {
     heading: "6. Cookies",
-    body: `This website may use essential cookies required for it to function correctly, and a small amount of local browser storage to remember your chosen colour theme. You can control cookies through your browser settings.`,
+    body: `This website may use essential cookies required for it to function correctly, and a small amount of local browser storage to remember your chosen light/dark display preference. You can control cookies through your browser settings.`,
   },
   {
     heading: "7. Your rights",

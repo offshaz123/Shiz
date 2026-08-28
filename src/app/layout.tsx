@@ -10,7 +10,6 @@ import { GoogleTag } from "@/components/GoogleTag";
 import { MetaPixel } from "@/components/MetaPixel";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
-import { accentInitScript } from "@/lib/accents";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -76,7 +75,6 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <script dangerouslySetInnerHTML={{ __html: accentInitScript }} />
         <GoogleTag />
         <MetaPixel />
         <OrganizationJsonLd />

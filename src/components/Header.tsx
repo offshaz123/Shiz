@@ -5,7 +5,6 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
-import { AccentPicker } from "./AccentPicker";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
 
 const navLinks = [
@@ -64,7 +63,6 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <AccentPicker />
           <ThemeToggle />
           <a
             href={whatsappHref}
@@ -83,7 +81,6 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
-          <AccentPicker />
           <ThemeToggle />
           <button
             type="button"

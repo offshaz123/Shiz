@@ -5,9 +5,8 @@ chameleon tint, plus dechroming), and vehicle repairs, servicing & detailing (br
 machine polishing, ceramic detailing, number plates).
 
 Built with Next.js (App Router), TypeScript, Tailwind CSS v4, and `next-themes` for the
-dark/light theme toggle (dark is the default). The colour theme (Ocean Blue → Cyan → Amber
-gradient, matching the SMG Details site) is paired with a user-selectable theme picker in the
-header, letting visitors switch to one of several other gradient presets.
+dark/light theme toggle (dark is the default). The colour theme is a fixed Ocean Blue → Cyan →
+Amber gradient, matching the SMG Details site.
 
 ## Getting started
 
@@ -60,14 +59,14 @@ The floating WhatsApp button (`src/components/WhatsAppButton.tsx`), the header's
 link, and the quote/contact sidebar all use the number configured in `src/lib/site-config.ts`.
 Update `whatsappNumber` there if the number ever changes.
 
-## Colour theme picker
+## Colour theme
 
-`src/lib/accents.ts` defines the gradient theme presets (`--brand-purple` / `--brand-pink` /
-`--brand-orange`, with `--color-brand` aliased to the middle stop for solid accent uses like links
-and badges); `src/components/AccentPicker.tsx` (in the header) lets a visitor pick one, which sets
-those three CSS variables and persists the choice to `localStorage` (`etr-accent-theme`) so it
-survives reloads and theme toggles. A small inline script in `layout.tsx` applies the stored
-choice before first paint to avoid a flash of the default Ocean Blue.
+`src/app/globals.css` defines the gradient (`--brand-purple` / `--brand-pink` / `--brand-orange`,
+with `--color-brand` aliased to the middle stop for solid accent uses like links and badges) as
+fixed values — there's no visitor-facing colour picker, only the light/dark toggle. To rebrand the
+site, edit those three variables (in both the `:root` and `.dark` blocks) and the matching hex
+values hardcoded in `src/app/icon.svg` and `src/app/apple-icon.tsx` (favicons render standalone,
+so they can't read the page's CSS variables).
 
 ## Ad tracking (Google Ads / Meta Pixel)
 
