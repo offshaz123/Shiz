@@ -36,6 +36,7 @@ keywords, dealership social strategy).
 - What the Meta Pixel Actually Does, and Why It Matters More Than It Used To (feature deep-dive)
 - Do You Need a Big Following to Run Meta Ads? (comparison/explainer)
 - Why Your Meta Ads Are Getting Low-Quality Leads (and How to Fix It) (policy & troubleshooting)
+- What £300 a Month on Meta Ads Actually Buys You (cost & expectation-setting)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -109,7 +110,7 @@ keywords, dealership social strategy).
 ## Backlog — cost & expectation-setting (added 2026-08-21 research round)
 - [x] How Long Before Meta Ads Start Working? The Learning Phase Explained — target: "Facebook
       ads learning phase", "how long for Facebook ads to work"
-- [ ] What £300 a Month on Meta Ads Actually Buys You — target: "small Facebook ads budget UK",
+- [x] What £300 a Month on Meta Ads Actually Buys You — target: "small Facebook ads budget UK",
       "£10 a day Facebook ads"
 - [x] Do You Need a Big Following to Run Meta Ads? — target: "do I need followers to run
       Facebook ads", "Facebook ads without followers"

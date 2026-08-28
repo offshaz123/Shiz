@@ -16,6 +16,72 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "what-300-a-month-on-meta-ads-buys-you",
+    title: "What £300 a Month on Meta Ads Actually Buys You",
+    description:
+      "A small budget isn't automatically a wasted one, but it does change what's realistic. Here's what £10 a day genuinely gets you and where it falls short.",
+    publishedAt: "2026-08-28",
+    keywords: [
+      "small Facebook ads budget UK",
+      "£10 a day Facebook ads",
+      "minimum budget Meta ads",
+      "low budget Instagram advertising",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "£300 a month is roughly £10 a day, and it's where a lot of small businesses start. It's a sensible amount to risk on something unproven — big enough to be a real test, small enough that a bad month doesn't hurt.",
+          "What it isn't is a version of a larger budget that simply takes longer. A small budget behaves differently, and knowing how changes what you should expect and what you should do with it.",
+        ],
+      },
+      {
+        heading: "What it realistically produces",
+        paragraphs: [
+          "The honest answer is that it depends almost entirely on what you sell and where. Cost per lead varies enormously between a £40 haircut and a £4,000 loft conversion, and any agency quoting you a specific number before looking at your business is guessing.",
+          "But the arithmetic is easy enough to do yourself. If leads come in around £5, £300 buys roughly sixty a month. At £15 a lead, it's twenty. At £40 — plausible for high-value trades and professional services — it's about seven.",
+          "Seven leads a month sounds thin until you attach a value. If two of those become customers worth £2,000 each, £300 was an extremely good month's work. That's the sum that matters, not the lead count in isolation.",
+        ],
+      },
+      {
+        heading: "The constraint nobody mentions",
+        paragraphs: [
+          "Meta's system needs a certain volume of conversions to optimise properly — its own guidance points at roughly fifty per week before an ad set settles out of the learning phase.",
+          "At £10 a day you're very unlikely to reach that. The practical consequence is that your campaign stays noisier for longer. Results swing about more week to week, and it takes longer before the numbers mean anything.",
+          "That's not a reason to avoid starting. It is a reason to be patient, and a strong reason not to make changes every few days because a bad Tuesday looked alarming.",
+        ],
+      },
+      {
+        heading: "How to make a small budget work harder",
+        paragraphs: [
+          "Small budgets punish anything that spreads them thin. A few things matter far more at this level than they would at ten times the spend:",
+        ],
+        bullets: [
+          "One campaign, not three — three at £3.33 a day each gather almost no signal, and none of them will ever settle",
+          "One offer, one audience — resist testing five things at once, because you'll never get a clear answer on any of them",
+          "Keep the radius tight, since a wide area spreads a small budget across people who were never going to travel to you",
+          "Two ad creatives maximum, so each gets enough delivery to tell you something",
+          "Leave placements on automatic — restricting them shrinks the auction and pushes your costs up, which a small budget can least afford",
+        ],
+      },
+      {
+        heading: "Where the money actually leaks",
+        paragraphs: [
+          "At £300 a month, the biggest risk isn't the ads underperforming. It's losing the enquiries you paid for.",
+          "If £300 buys twenty leads and half never get a reply within the day, you effectively spent £150 on nothing. No change to targeting or creative recovers that — it's lost after the ad has done its job.",
+          "This is why we'd always rather a business sorted out how enquiries get answered before increasing spend. Doubling the budget doubles the leads and doubles what leaks. Fixing the follow-up costs nothing and improves every pound you've already spent.",
+        ],
+      },
+      {
+        heading: "When to spend more, and when not to",
+        paragraphs: [
+          "Increase the budget when you know what a lead costs and what proportion become customers. At that point more spend is arithmetic rather than hope.",
+          "Don't increase it because a month was disappointing. If £300 produced nothing usable, £600 will most likely produce nothing usable twice as fast. Something else is wrong — the offer, the audience, the page they land on, or the follow-up.",
+          "And be realistic about the floor. Below about £5 a day, campaigns struggle to gather enough data to be worth analysing at all. If £150 a month is genuinely the ceiling, the honest advice is usually to wait, save up, and run a proper three-month test rather than dribble it away across six months of noise.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "why-meta-ads-get-low-quality-leads",
     title: "Why Your Meta Ads Are Getting Low-Quality Leads (and How to Fix It)",
     description:
