@@ -32,7 +32,7 @@ Open [http://localhost:3000](http://localhost:3000).
 - `/contact` — Contact details + full lead form
 - `/blog` — SEO content hub (see below), `/blog/[slug]` for individual posts
 - `/privacy` — Privacy policy
-- `/kent` — PPC landing page for Google/Meta ads (Kent geo-targeting), minimal header/footer,
+- `/london` — call-first PPC landing page for Google/Meta ads, minimal header/footer,
   `noindex`d since it's not meant to rank organically
 
 ## Lead form → email delivery
@@ -76,7 +76,7 @@ choice before first paint to avoid a flash of the default Ocean Blue.
 `src/components/GoogleTag.tsx` and `src/components/MetaPixel.tsx` (both loaded site-wide in
 `layout.tsx`) render nothing until their relevant ID is filled in. Once configured,
 `src/components/ConversionTracker.tsx` (mounted on `/thank-you`) fires the Google Ads conversion
-event and the Meta `Lead` event after a successful form submission — see the "Kent landing page &
+event and the Meta `Lead` event after a successful form submission — see the "London landing page &
 ad tracking" section below for the full setup checklist.
 
 ## Editing content
@@ -118,24 +118,31 @@ ad tracking" section below for the full setup checklist.
   canonical URL, meta description, and `BlogPosting` JSON-LD.
 - New posts are automatically picked up by `sitemap.ts` — no separate step needed.
 
-## Kent landing page & ad tracking setup
+## London landing page & ad tracking setup
 
-`/kent` is a stripped-down, form-first landing page built for Google Ads / Meta Ads traffic
-(minimal header — logo + call button only, no main nav) and is marked `noindex` so it doesn't
-compete with the main site in organic search. Before running paid traffic to it:
+`/london` is a stripped-down, call-first landing page built for Google Ads / Meta Ads traffic
+(minimal header — logo, an "Other Services" link back to the main site, and a prominent call
+button; no main nav) and is marked `noindex` so it doesn't compete with the main site in organic
+search. Modelled on the smgtints.com landing page: phone number as the primary CTA (repeated
+several times down the page), Standard vs. Ceramic tint pricing front and centre, and the lead
+form pushed to the very bottom for the minority who'd rather not call. Before running paid traffic
+to it:
 
 1. **Google Ads conversion tracking** — create a conversion action in Google Ads, get its
    Conversion ID (`AW-XXXXXXXXX`) and label, and set `googleAdsConversionId` /
-   `googleAdsConversionLabel` in `trackingConfig` (`src/lib/site-config.ts`).
+   `googleAdsConversionLabel` in `trackingConfig` (`src/lib/site-config.ts`). For a call-first page
+   like this, also set up **call conversion tracking** in Google Ads (a Google forwarding number
+   swapped in automatically) if you want calls themselves counted as conversions, not just form
+   submits.
 2. **Meta Pixel** — create a pixel in Meta Events Manager, get its Pixel ID, and set
    `metaPixelId` in `trackingConfig`. This also enables the sitewide Meta Pixel (not just on
-   `/kent`), so Meta ads pointing anywhere on the site get tracked.
+   `/london`), so Meta ads pointing anywhere on the site get tracked.
 3. **GA4 (optional but recommended)** — set `ga4MeasurementId` so you can see landing page
    behaviour (bounce rate, time on page) outside of the ad platforms themselves.
 4. **Google Ads / Meta linking** — link the Google Ads and Meta Business accounts to this
    domain's Google Search Console / Meta Business verification if you want enhanced conversions
    or broader audience matching (optional, done in each platform's UI, not in this codebase).
-5. **UTM parameters** — tag your ad URLs (e.g. `?utm_source=google&utm_medium=cpc&utm_campaign=kent`)
+5. **UTM parameters** — tag your ad URLs (e.g. `?utm_source=google&utm_medium=cpc&utm_campaign=london`)
    so GA4 can attribute traffic correctly; no code changes needed for this.
 6. **Cookie consent** — once tracking is live, the `/privacy` page should be reviewed to ensure it
    discloses the ad pixels/cookies in use (UK GDPR/PECR requires this for non-essential tracking

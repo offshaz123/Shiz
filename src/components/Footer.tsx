@@ -7,7 +7,7 @@ import { siteConfig, whatsappHref } from "@/lib/site-config";
 
 export function Footer() {
   const pathname = usePathname();
-  const isLandingPage = pathname?.startsWith("/kent");
+  const isLandingPage = pathname?.startsWith("/london");
 
   if (isLandingPage) {
     return (

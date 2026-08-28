@@ -20,19 +20,27 @@ const navLinks = [
 export function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const isLandingPage = pathname?.startsWith("/kent");
+  const isLandingPage = pathname?.startsWith("/london");
 
   if (isLandingPage) {
     return (
       <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
           <Logo />
-          <a
-            href={`tel:${siteConfig.phoneE164}`}
-            className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-brand/60"
-          >
-            Call {siteConfig.phoneDisplay}
-          </a>
+          <div className="flex items-center gap-3">
+            <Link
+              href="/"
+              className="hidden text-sm font-medium text-muted transition-colors hover:text-foreground sm:block"
+            >
+              Other Services
+            </Link>
+            <a
+              href={`tel:${siteConfig.phoneE164}`}
+              className="brand-gradient-bg rounded-full px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-black/10 transition-transform hover:scale-[1.03]"
+            >
+              Call {siteConfig.phoneDisplay}
+            </a>
+          </div>
         </div>
       </header>
     );

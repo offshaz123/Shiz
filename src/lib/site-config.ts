@@ -311,7 +311,7 @@ export const numberPlateShapes = [
   { name: "Hexagon", description: "Angled hexagon-cut corners for a sportier look." },
 ];
 
-// Ad-tracking IDs for the Kent PPC landing page. Leave empty to disable —
+// Ad-tracking IDs for the London PPC landing page. Leave empty to disable —
 // each tracking component renders nothing until its ID is filled in.
 export const trackingConfig = {
   googleAdsConversionId: "", // e.g. "AW-123456789"
