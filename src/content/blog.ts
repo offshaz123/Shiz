@@ -16,6 +16,72 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "used-car-dealer-meta-ads-strategy",
+    title: "Used Car Dealers vs Franchise Dealers: Different Meta Ads Strategy",
+    description:
+      "Independent dealers advertise stock, franchises advertise a brand. Getting that the wrong way round is why most dealership social ads quietly do nothing.",
+    publishedAt: "2026-08-29",
+    keywords: [
+      "used car dealer marketing",
+      "Facebook ads for car dealerships UK",
+      "independent car dealer advertising",
+      "Instagram ads used cars",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Walk past a franchise showroom and the advertising is doing one job: reminding you the brand exists and is nearby. It's paid for centrally, it runs constantly, and nobody expects a single advert to sell a car on its own.",
+          "Independent dealers copy that style all the time, and it's the wrong model entirely. The budget isn't there for it, and it isn't how people find an independent forecourt in the first place.",
+        ],
+      },
+      {
+        heading: "Franchises sell a brand, independents sell stock",
+        paragraphs: [
+          "A franchise dealer benefits from years of manufacturer advertising. Someone already wants that badge before they start looking, so the dealer's job is mostly to be the nearest option when the decision is made.",
+          "An independent has none of that. Nobody wakes up wanting to buy from your forecourt specifically — they want a particular car at a particular price, within a sensible drive.",
+          "So the advertising has to lead with the car, not the business. A specific vehicle, the year, the mileage, the price. That's what people are actually shopping for, and it's what makes someone stop scrolling.",
+        ],
+      },
+      {
+        heading: "Advertise cars, not the dealership",
+        paragraphs: [
+          "The most common mistake is an ad that says something like \"quality used cars, finance available, family run since 1998.\" It's all true and it gives nobody a reason to tap.",
+          "Compare that with a specific car, priced, filmed on the forecourt, with the mileage and MOT stated plainly. One is a business card. The other is something a person in the market can act on.",
+          "This also solves the creative problem that stops most dealers advertising consistently. You don't need to invent content — your stock changes every week and each arrival is a new ad. A ninety second walkaround filmed on a phone will usually outperform anything more polished, because it looks like what it is.",
+        ],
+      },
+      {
+        heading: "What tends to work on a forecourt budget",
+        paragraphs: [
+          "A few things behave differently in this trade than in most:",
+        ],
+        bullets: [
+          "Lead with your most interesting car, not your cheapest — an unusual or well-specced vehicle earns attention that a beige hatchback never will, and the enquiries it brings look at everything else too",
+          "Say the price. Ads without a price get more clicks and far fewer buyers, and you'll spend the difference answering the same question forty times",
+          "Keep the radius realistic — people will travel further for a car than for a haircut, but not indefinitely. Somewhere around an hour is usually the sensible ceiling",
+          "Film the walkaround yourself, including the bits people worry about, because a dealer willing to show a stone chip reads as more trustworthy than one showing only glamour shots",
+          "Retarget anyone who viewed a specific vehicle on your site — that's the warmest audience an independent dealer will ever have",
+        ],
+      },
+      {
+        heading: "Finance advertising has rules you can't ignore",
+        paragraphs: [
+          "This is where dealerships get into trouble. Anything promoting credit falls under Meta's special ad category rules and has to be declared as such when the campaign is built. Declaring it restricts your targeting, which is exactly the point of the rule.",
+          "Running finance ads without declaring them is the kind of breach that escalates from a rejected advert to a restricted ad account, and getting an account back is a considerably worse week than losing some targeting precision.",
+          "Beyond Meta's rules, consumer credit advertising is regulated in its own right in the UK, and representative examples and APR disclosures have to be correct. If you're advertising finance, that copy needs signing off by someone who knows those rules rather than being written to sound appealing. The simpler route, and often the more effective one, is to advertise the car and discuss finance once someone's enquired.",
+        ],
+      },
+      {
+        heading: "The enquiry is where deals are lost",
+        paragraphs: [
+          "Car buyers enquire on several vehicles at several dealers on the same evening. It's a considered purchase made in a distinctly unconsidered way — a few messages fired off from the sofa.",
+          "Whoever replies first, with the actual answer rather than \"is this still available?\", tends to get the viewing. And the viewing is where the car sells itself.",
+          "That's why speed matters more here than almost anywhere else. An independent competing against a franchise with a full sales floor can't win on stock levels or opening hours, but can absolutely win on replying to a nine o'clock message before the following afternoon.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "what-300-a-month-on-meta-ads-buys-you",
     title: "What £300 a Month on Meta Ads Actually Buys You",
     description:

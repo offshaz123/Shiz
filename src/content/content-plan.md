@@ -37,6 +37,7 @@ keywords, dealership social strategy).
 - Do You Need a Big Following to Run Meta Ads? (comparison/explainer)
 - Why Your Meta Ads Are Getting Low-Quality Leads (and How to Fix It) (policy & troubleshooting)
 - What £300 a Month on Meta Ads Actually Buys You (cost & expectation-setting)
+- Used Car Dealers vs Franchise Dealers: Different Meta Ads Strategy (industry-specific)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -52,7 +53,7 @@ keywords, dealership social strategy).
       restaurants UK", "Facebook ads for cafes"
 - [x] Meta & Instagram Ads for Professional Services (accountants, solicitors, consultants) —
       target: "Facebook ads for professional services", "lead gen ads for consultants"
-- [ ] Used Car Dealers vs Franchise Dealers: Different Meta Ads Strategy — target: "used car
+- [x] Used Car Dealers vs Franchise Dealers: Different Meta Ads Strategy — target: "used car
       dealer marketing", building on the existing automotive guide with a sharper angle
 
 ## Backlog — cost/budgeting guides
