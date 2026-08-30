@@ -38,6 +38,7 @@ keywords, dealership social strategy).
 - Why Your Meta Ads Are Getting Low-Quality Leads (and How to Fix It) (policy & troubleshooting)
 - What £300 a Month on Meta Ads Actually Buys You (cost & expectation-setting)
 - Used Car Dealers vs Franchise Dealers: Different Meta Ads Strategy (industry-specific)
+- Reading Your Meta Ads Report: The Only Five Numbers That Matter (practical how-to)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -105,7 +106,7 @@ keywords, dealership social strategy).
       small business", "warm audience ads UK"
 - [ ] How to Write Meta Ad Copy That Actually Gets Replies — target: "Facebook ad copy tips UK",
       "how to write Facebook ads"
-- [ ] Reading Your Meta Ads Report: The Only Five Numbers That Matter — target: "Facebook ads
+- [x] Reading Your Meta Ads Report: The Only Five Numbers That Matter — target: "Facebook ads
       metrics explained", "Meta ads reporting for beginners"
 
 ## Backlog — cost & expectation-setting (added 2026-08-21 research round)

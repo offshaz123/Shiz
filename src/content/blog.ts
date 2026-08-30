@@ -16,6 +16,82 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "reading-your-meta-ads-report",
+    title: "Reading Your Meta Ads Report: The Only Five Numbers That Matter",
+    description:
+      "Ads Manager shows hundreds of columns and most of them are noise. Here are the five worth looking at, and the one that isn't in there at all.",
+    publishedAt: "2026-08-30",
+    keywords: [
+      "Facebook ads metrics explained",
+      "Meta ads reporting for beginners",
+      "how to read Facebook ads results",
+      "which Facebook ad metrics matter",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Ads Manager will show you hundreds of columns if you let it. Reach, impressions, engagement, video plays at three seconds, cost per thousand — an enormous amount of measurement, most of which has no bearing on whether your advertising is working.",
+          "It's also why agency reports are often so long. A twelve-page document full of graphs looks like value for money. It's usually easier to produce than a straight answer about whether the money came back.",
+          "Five numbers will tell you almost everything you need.",
+        ],
+      },
+      {
+        heading: "1. Results",
+        paragraphs: [
+          "How many of the thing you actually wanted. Leads, messages, bookings — whatever the campaign was set up to produce.",
+          "Check the column header says what you think it says. A campaign optimised for link clicks will happily report a healthy number of results that are just clicks, and it's an easy mistake to celebrate for a fortnight before noticing.",
+        ],
+      },
+      {
+        heading: "2. Cost per result",
+        paragraphs: [
+          "Amount spent divided by results. The number most people look at first, and the one most likely to mislead them.",
+          "It's genuinely useful for comparing two ads in the same campaign — same audience, same offer, same week. It's close to meaningless compared against another business, another industry, or an average you read somewhere.",
+          "It also moves in the wrong direction when you do the right thing. Tighten your form to filter out accidental submissions and your cost per result rises, while your actual business improves. Judge it against your own history, not anyone else's, and never on its own.",
+        ],
+      },
+      {
+        heading: "3. Amount spent",
+        paragraphs: [
+          "Obvious, but worth checking rather than assuming. It tells you whether the budget you set is actually being delivered.",
+          "If you set £10 a day and it's spending £4, something is limiting delivery — usually an audience too small, a bid cap that's too tight, or a campaign still stuck in learning. That underspend is the real problem, and it won't show up anywhere else.",
+        ],
+      },
+      {
+        heading: "4. Click-through rate",
+        paragraphs: [
+          "The percentage of people who saw the ad and clicked it. This is your read on the creative specifically.",
+          "A low click-through rate means the ad isn't interesting to the people seeing it — either the wrong people, or the wrong ad. A healthy click-through rate combined with few results points somewhere else entirely: the landing page or the form, not the ad.",
+          "That distinction is the single most useful thing in the whole report, because it tells you which half of the problem to work on. Without it you end up rewriting perfectly good ads to fix a page that's letting people down.",
+        ],
+      },
+      {
+        heading: "5. Frequency",
+        paragraphs: [
+          "The average number of times each person has seen your ad. Quietly one of the most important numbers, and one most people never look at.",
+          "Climbing frequency with falling results means the audience has seen enough. This happens fastest to local businesses, because a tight radius means a small pool of people to show ads to — the same faces, over and over.",
+          "When it climbs, the fix is new creative or a wider audience, not more budget. Spending more against a fatigued audience just shows the same ad to the same people more often, and irritation is not a marketing strategy.",
+        ],
+      },
+      {
+        heading: "What to ignore",
+        paragraphs: [
+          "Reach, impressions, engagement, likes, shares and video views are all things you can point at when the results aren't there. None of them pays wages.",
+          "Cost per thousand impressions has a use for diagnosing sudden cost changes, but it isn't a performance measure and shouldn't lead a report.",
+          "If a monthly update leads with reach and engagement rather than enquiries and what they cost, it's worth asking why those were the numbers chosen.",
+        ],
+      },
+      {
+        heading: "The number that isn't in Ads Manager",
+        paragraphs: [
+          "The one that actually decides everything is how many of those leads became paying customers, and Meta cannot tell you. It knows someone submitted a form. It has no idea whether they answered the phone, turned up, or spent anything.",
+          "Which means the most important reporting job isn't in the ad account at all. Keep a simple record: leads received, leads reached, appointments booked, customers won. A spreadsheet is enough to start.",
+          "Once you have that, everything else becomes straightforward. Forty leads at £4 that produce two customers is worse than twelve at £15 that produce four — and every metric in Ads Manager will tell you the opposite until you're tracking what happened afterwards.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "used-car-dealer-meta-ads-strategy",
     title: "Used Car Dealers vs Franchise Dealers: Different Meta Ads Strategy",
     description:
