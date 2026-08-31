@@ -16,6 +16,80 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-special-ad-categories-explained",
+    title: "Meta's Special Ad Categories: What You Have to Declare",
+    description:
+      "Credit, employment and housing ads must be declared before you run them. Here's what counts, what it costs you in targeting, and why declaring is the only option.",
+    publishedAt: "2026-08-31",
+    keywords: [
+      "Facebook ads special ad category",
+      "restricted ad categories Meta UK",
+      "special ad category housing employment credit",
+      "do I need to declare special ad category",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "When you build a campaign, Meta asks whether your ads fall into a special ad category. It's easy to click past, and plenty of businesses do — either because they don't recognise the terms or because declaring visibly costs them targeting.",
+          "It's worth understanding properly, because getting it wrong is one of the faster ways to lose an ad account rather than just an advert.",
+        ],
+      },
+      {
+        heading: "What counts",
+        paragraphs: [
+          "Four areas, and they're broader than most people assume:",
+        ],
+        bullets: [
+          "Credit — loans, finance, credit cards, buy now pay later, and car or equipment finance. If your ad mentions monthly payments or finance availability, you're in this category",
+          "Employment — job adverts, recruitment, apprenticeships, and anything promoting work opportunities",
+          "Housing — property for sale or rent, estate and letting agency services, mortgages and related insurance",
+          "Social issues, elections and politics — campaigning content, and this one catches charities and community groups more often than they expect",
+        ],
+      },
+      {
+        heading: "Why the rule exists",
+        paragraphs: [
+          "These aren't arbitrary. They're the areas where targeted advertising has historically been used to exclude people — showing housing only to certain groups, or job adverts only to a particular age range.",
+          "That's unlawful discrimination in the UK under the Equality Act, and it's the reason the platform now restricts targeting in these categories by default rather than trusting each advertiser to behave.",
+          "Understanding that helps, because it explains why the restrictions are what they are and why there's no legitimate way around them.",
+        ],
+      },
+      {
+        heading: "What declaring actually costs you",
+        paragraphs: [
+          "The restrictions are real and worth planning for. Once declared, you lose the ability to target by age or gender, detailed interest and behaviour targeting is heavily limited, and location targeting has to cover a wider area than a normal local campaign would.",
+          "Lookalike audiences work differently too — you can still build them, but not in the usual form.",
+          "For a local estate agent or a garage advertising finance, that's a genuine constraint. You're paying to reach a broader audience than you'd choose, and your costs will usually reflect that.",
+        ],
+      },
+      {
+        heading: "Working within it rather than around it",
+        paragraphs: [
+          "The productive response is to change what you advertise rather than trying to dodge the declaration.",
+          "A car dealer can advertise the car — the specification, the price, the mileage — without mentioning finance at all, and discuss payment options once someone has enquired. That's a normal ad with normal targeting, and it usually performs better anyway because the car is the interesting part.",
+          "An estate agent can advertise the valuation service to homeowners rather than listing properties. A recruiter can build brand presence rather than running job adverts through paid social.",
+          "None of that is a loophole. If the ad genuinely doesn't promote credit, housing or employment, it isn't in the category. What matters is that the advert reflects what you're actually promoting — an ad about finance with the word finance removed is still a finance ad, and it will be treated as one.",
+        ],
+      },
+      {
+        heading: "What happens if you don't declare",
+        paragraphs: [
+          "Usually the advert gets rejected. Sometimes it runs for a while and then gets pulled retrospectively, which is worse because you've built up a pattern by then.",
+          "Repeated undeclared ads in these categories put the ad account itself at risk, and account restrictions are considerably harder to resolve than a rejected advert. You lose the campaign history, the audiences and the learning along with the access.",
+          "Given the choice between broader targeting and no account at all, the decision makes itself.",
+        ],
+      },
+      {
+        heading: "One that isn't on the list",
+        paragraphs: [
+          "Health and beauty businesses often assume they're a special ad category. They aren't — a clinic doesn't declare anything.",
+          "But the rules on personal attributes and unrealistic outcomes apply with more force in that sector, and before-and-after imagery is prohibited outright. Different rules, same requirement to know them before spending money.",
+          "If you're unsure which side of a line your business sits on, it's a ten minute conversation before you build the campaign rather than an appeal afterwards.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "reading-your-meta-ads-report",
     title: "Reading Your Meta Ads Report: The Only Five Numbers That Matter",
     description:

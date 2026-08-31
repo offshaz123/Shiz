@@ -39,6 +39,7 @@ keywords, dealership social strategy).
 - What £300 a Month on Meta Ads Actually Buys You (cost & expectation-setting)
 - Used Car Dealers vs Franchise Dealers: Different Meta Ads Strategy (industry-specific)
 - Reading Your Meta Ads Report: The Only Five Numbers That Matter (practical how-to)
+- Meta's Special Ad Categories: What You Have to Declare (policy & troubleshooting)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -93,7 +94,7 @@ keywords, dealership social strategy).
 ## Backlog — policy & troubleshooting (added 2026-08-21 research round)
 - [x] Why Meta Ads Get Rejected — and How to Get Them Approved — target: "Facebook ad rejected",
       "why was my Facebook ad rejected", "Meta ad policy UK"
-- [ ] Meta's Special Ad Categories: What Clinics, Lenders and Letting Agents Must Declare —
+- [x] Meta's Special Ad Categories — published as "What You Have to Declare" (clinics dropped from title: health is not a special ad category) —
       target: "Facebook ads special ad category", "restricted ad categories Meta UK"
       (explain the rules and compliant alternatives only — never how to work around them)
 - [ ] What to Do If Your Facebook Ad Account Gets Disabled — target: "Facebook ad account
