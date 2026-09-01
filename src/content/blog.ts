@@ -16,6 +16,73 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-for-gyms-personal-trainers",
+    title: "Meta & Instagram Ads for Gyms and Personal Trainers",
+    description:
+      "Fitness is made for Instagram and governed by some of its strictest ad rules. Here's what you can run, what gets rejected, and why retention beats sign-ups.",
+    publishedAt: "2026-09-01",
+    keywords: [
+      "Facebook ads for gyms UK",
+      "Instagram ads personal trainer",
+      "gym marketing ideas UK",
+      "personal trainer advertising",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Fitness looks like the easiest thing in the world to advertise. It's visual, people follow it voluntarily, and the results are the product.",
+          "In practice it's one of the trickier categories to run ads in, because the most persuasive material — the transformation photo, the line that names someone's insecurity — is exactly what the platform prohibits. Plenty of gyms find this out through a run of rejected adverts rather than by reading the rules first.",
+        ],
+      },
+      {
+        heading: "The two rules that catch everyone",
+        paragraphs: [
+          "Before-and-after images are prohibited for body transformations. Not discouraged — prohibited. This surprises people every time, because it's usually the single strongest asset a trainer owns.",
+          "The second is personal attributes. Your ad must not imply you know something about the person seeing it, and body copy in this industry breaks that constantly. \"Struggling to lose weight?\" implies you know they are. \"Weight loss coaching in Leeds\" says the same thing about your service without making a claim about the reader.",
+          "It's a small change in phrasing with a large effect on whether your ads run. Describe what you do, not who you think is reading.",
+        ],
+      },
+      {
+        heading: "What to advertise instead",
+        paragraphs: [
+          "The thing stopping most people joining a gym isn't doubt about whether training works. It's not knowing what walking in will be like — whether they'll be the least fit person there, whether anyone will show them how the machines work, whether they'll look stupid.",
+          "Advertising that answers that outperforms transformation content, and it's entirely compliant:",
+        ],
+        bullets: [
+          "The space, filmed when it's quiet — people are deciding whether they'd feel comfortable there before they decide anything else",
+          "You, talking to camera. In personal training the trainer is the product, and nobody signs up to a logo",
+          "What a first session actually involves, start to finish. It removes the main reason people put off booking",
+          "Real members training normally, with permission — ordinary people mid-session beat stock footage of models every time",
+          "Straight pricing. Fitness is a category where prices are often hidden, so publishing yours is a genuine differentiator and it filters out the enquiries you'd have wasted a call on",
+        ],
+      },
+      {
+        heading: "January isn't the only season",
+        paragraphs: [
+          "Everyone in this industry advertises in January, which makes January the most expensive month of the year to buy attention. You're bidding against every gym in the country for the same audience.",
+          "September is the quieter opportunity — the back-to-routine month, when people return from holidays and the year restarts in a way it doesn't in April. Competition is lower and so are costs.",
+          "Both matter less than running all year. A gym that only advertises in January builds an audience once and then goes quiet for eleven months, which means starting from nothing every time. Steady spend beats a seasonal spike.",
+        ],
+      },
+      {
+        heading: "The offer problem",
+        paragraphs: [
+          "Free trials and heavy discounts fill a gym with people who came for the discount. They use it for a fortnight, don't convert to full price, and you've paid to acquire someone who was never going to stay.",
+          "A trial that costs something small tends to work better than a free one. It's a lower barrier than a full membership but high enough that the person turning up has actually decided something.",
+          "For personal trainers, the strongest offer is usually a consultation rather than a session — it's a conversation, not a workout, so it doesn't require the person to already feel fit enough to show up.",
+        ],
+      },
+      {
+        heading: "Retention is the number that decides everything",
+        paragraphs: [
+          "This is a membership business, so what a new member is worth depends almost entirely on how long they stay. Someone paying £40 a month is worth £120 if they leave after three months and £480 if they stay a year.",
+          "That changes what you can afford to spend acquiring them, which is why two gyms with identical ad costs can have completely different outcomes. The one that keeps people can outbid the one that doesn't, indefinitely.",
+          "It also means the highest-return work often isn't in the ad account at all. If members leave at month three, more advertising just fills a bucket with a hole in it — and the first thirty days after someone joins do more for the numbers than any change to targeting.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-special-ad-categories-explained",
     title: "Meta's Special Ad Categories: What You Have to Declare",
     description:

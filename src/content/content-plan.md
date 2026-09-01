@@ -40,6 +40,7 @@ keywords, dealership social strategy).
 - Used Car Dealers vs Franchise Dealers: Different Meta Ads Strategy (industry-specific)
 - Reading Your Meta Ads Report: The Only Five Numbers That Matter (practical how-to)
 - Meta's Special Ad Categories: What You Have to Declare (policy & troubleshooting)
+- Meta & Instagram Ads for Gyms and Personal Trainers (industry-specific)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -119,7 +120,7 @@ keywords, dealership social strategy).
       Facebook ads", "Facebook ads without followers"
 
 ## Backlog — industry-specific (added 2026-08-21 research round)
-- [ ] Meta & Instagram Ads for Gyms and Personal Trainers — target: "Facebook ads for gyms UK",
+- [x] Meta & Instagram Ads for Gyms and Personal Trainers — target: "Facebook ads for gyms UK",
       "Instagram ads personal trainer"
 - [ ] Meta & Instagram Ads for Wedding and Event Businesses — target: "Facebook ads for wedding
       venues UK", "Instagram ads event planners"
