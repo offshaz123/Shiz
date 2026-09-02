@@ -41,6 +41,7 @@ keywords, dealership social strategy).
 - Reading Your Meta Ads Report: The Only Five Numbers That Matter (practical how-to)
 - Meta's Special Ad Categories: What You Have to Declare (policy & troubleshooting)
 - Meta & Instagram Ads for Gyms and Personal Trainers (industry-specific)
+- How to Write Meta Ad Copy That Actually Gets Replies (practical how-to)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -106,7 +107,7 @@ keywords, dealership social strategy).
 ## Backlog — practical how-to (added 2026-08-21 research round)
 - [x] How to Set Up Retargeting When You're a Small Business — target: "Facebook retargeting
       small business", "warm audience ads UK"
-- [ ] How to Write Meta Ad Copy That Actually Gets Replies — target: "Facebook ad copy tips UK",
+- [x] How to Write Meta Ad Copy That Actually Gets Replies — target: "Facebook ad copy tips UK",
       "how to write Facebook ads"
 - [x] Reading Your Meta Ads Report: The Only Five Numbers That Matter — target: "Facebook ads
       metrics explained", "Meta ads reporting for beginners"
@@ -128,6 +129,42 @@ keywords, dealership social strategy).
 ## Backlog — feature deep-dive (added 2026-08-21 research round)
 - [x] What the Meta Pixel Actually Does, and Why It Matters More Than It Used To — target:
       "Meta Pixel explained", "Facebook pixel small business"
+
+## Backlog — comparison/explainer (added 2026-09-02 research round)
+- [ ] Click-to-WhatsApp Ads vs Lead Forms: Which Gets Better Enquiries? — target: "click to
+      WhatsApp ads UK", "WhatsApp ads vs lead forms"
+- [ ] Google Business Profile vs Paid Ads: Where Should a Local Business Start? — target:
+      "Google Business Profile vs Facebook ads", "local business marketing priorities"
+- [ ] WhatsApp Business App vs API: Which Does a Small Business Actually Need? — target:
+      "WhatsApp Business API small business UK"
+
+## Backlog — cost & expectation-setting (added 2026-09-02 research round)
+- [ ] What Does It Cost to Get a Customer? Working Out Your Real Number — target: "customer
+      acquisition cost small business UK", "how much to spend to get a customer"
+- [ ] Why Your Cost Per Lead Went Up (and When to Worry) — target: "Facebook ads cost per lead
+      increasing", "why are my Facebook ads more expensive"
+- [ ] Retainer or Per Campaign? How Marketing Agencies Charge — target: "marketing agency
+      retainer vs project UK", "how do marketing agencies charge"
+
+## Backlog — practical how-to (added 2026-09-02 research round)
+- [ ] How to Get More Google Reviews Without Being Annoying — target: "how to ask for Google
+      reviews UK", "get more Google reviews small business"
+- [ ] Setting Up Click-to-WhatsApp Ads: A Walkthrough — target: "how to set up WhatsApp ads
+      Meta", "click to WhatsApp campaign"
+- [ ] Writing a Follow-Up Sequence That Doesn't Feel Like Nagging — target: "lead follow up
+      sequence", "how many times to follow up with a lead"
+
+## Backlog — local search (added 2026-09-02 research round)
+- [ ] Your Google Business Profile Is Doing More Work Than Your Website — target: "Google
+      Business Profile optimisation UK", "local map pack ranking"
+- [ ] NAP Consistency: The Boring Local SEO Job That Actually Matters — target: "NAP citations
+      UK local SEO", "business listings consistency"
+
+## Backlog — industry-specific (added 2026-09-02 research round)
+- [ ] Meta & Instagram Ads for Cleaning Companies — target: "Facebook ads for cleaning business
+      UK", "domestic cleaning marketing"
+- [ ] Meta & Instagram Ads for Driving Instructors and Driving Schools — target: "Facebook ads
+      driving school UK", "marketing for driving instructors"
 
 ## Notes for whoever (human or Routine) picks the next topic
 - Rotate categories — don't publish 3 industry guides in a row

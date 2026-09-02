@@ -16,6 +16,81 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "how-to-write-meta-ad-copy-that-gets-replies",
+    title: "How to Write Meta Ad Copy That Actually Gets Replies",
+    description:
+      "Good ad copy isn't clever writing. It's saying something specific enough that the right person stops and the wrong person doesn't bother.",
+    publishedAt: "2026-09-02",
+    keywords: [
+      "Facebook ad copy tips UK",
+      "how to write Facebook ads",
+      "Meta ad copy examples",
+      "writing ads that convert",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Most small business ad copy reads like the back of a business card. Established since 2004, fully insured, competitive rates, family run. All true, all completely interchangeable with every competitor, and none of it gives anyone a reason to stop scrolling.",
+          "Good ad copy isn't clever writing. It's being specific enough that the right person recognises themselves and the wrong person keeps going.",
+        ],
+      },
+      {
+        heading: "The first line is nearly the whole job",
+        paragraphs: [
+          "Meta cuts your text off after roughly 125 characters and hides the rest behind \"See more.\" Most people never tap it. So the first line isn't an introduction to your ad — for the majority of people who see it, the first line is the entire ad.",
+          "Which means it can't be a warm-up. \"At [business name], we pride ourselves on...\" has spent the whole budget saying nothing.",
+          "Open with the thing that would make someone stop. A price, a specific problem, a plain statement of what you're offering. The rest of the copy is for the minority who are already interested.",
+        ],
+      },
+      {
+        heading: "Write to one person, not an audience",
+        paragraphs: [
+          "Copy addressed to everyone lands on nobody. \"We help businesses grow\" is technically true of thousands of companies and describes none of them.",
+          "The fix is uncomfortable but simple: narrow it until it feels too narrow. \"Domestic cleaning in Luton, weekly or fortnightly, same cleaner each time\" excludes almost everybody — and that's why the people it does describe pay attention.",
+          "You're not trying to appeal to the maximum number of people. You're trying to be unmistakable to a small number of them.",
+        ],
+      },
+      {
+        heading: "Specifics beat adjectives",
+        paragraphs: [
+          "Adjectives are what people write when they don't have details. Reliable, professional, high quality — nobody advertises being unreliable, so these words carry no information at all.",
+          "Details do the work adjectives can't:",
+        ],
+        bullets: [
+          "Prices — \"from £21 an hour\" says more about your positioning than \"affordable\" ever will",
+          "Timeframes — \"we'll call you back within the hour\" is a promise; \"fast response\" is a hope",
+          "Numbers — how many years, how many jobs, how long a typical job takes",
+          "The awkward bits — what you don't do, who you're not for. Nothing builds trust faster than a business ruling itself out of something",
+          "Location, named properly — the town, not \"your local area\", which reads as a template because it is one",
+        ],
+      },
+      {
+        heading: "Say what happens next",
+        paragraphs: [
+          "A surprising number of ads never tell anyone what to do. They describe the business, then stop, and hope.",
+          "Be plain about the next step and what it involves. \"Tap below, fill in four boxes, and we'll ring you today\" tells someone exactly what they're signing up for. \"Get in touch to discuss your requirements\" makes it sound like effort.",
+          "Reducing the perceived commitment matters more than persuading. Most people who don't enquire aren't unconvinced — they just don't want to be trapped in a sales conversation. Say how long it takes and that there's no obligation, and you'll remove more hesitation than any amount of persuasion adds.",
+        ],
+      },
+      {
+        heading: "The rule this industry gets wrong",
+        paragraphs: [
+          "Ad copy must not imply you know something personal about the reader. That means questions aimed at their situation — their health, weight, finances or age — will get the ad rejected, however sympathetically they're phrased.",
+          "\"Struggling with debt?\" and \"Unhappy with your skin?\" both break it. Describing the service instead — \"debt advice appointments in Leeds\" — says the same thing to the same audience and runs without trouble.",
+          "It's worth internalising, because the rejected version is usually the one that feels most natural to write.",
+        ],
+      },
+      {
+        heading: "A test that takes ten seconds",
+        paragraphs: [
+          "Read your ad and ask whether a competitor could put their name at the bottom of it without changing a word. If they could, it isn't an advert for your business — it's an advert for your industry, and you're paying to run it.",
+          "Then read the first line on its own. If it doesn't work by itself, rewrite it, because for most of the people who see your ad that line is all there is.",
+          "And write two versions, always. Not five — two, properly different from each other, so the answer is clear rather than a set of near-identical results you can't tell apart.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-for-gyms-personal-trainers",
     title: "Meta & Instagram Ads for Gyms and Personal Trainers",
     description:
