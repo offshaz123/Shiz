@@ -3,7 +3,7 @@ export const siteConfig = {
   shortName: "Executive Tints & Repairs",
   description:
     "Premium window tinting and vehicle repairs. Standard dyed, ceramic and chameleon window tints, dechroming, brakes and oil servicing — finished to an executive standard, backed by a lifetime warranty on ceramic.",
-  url: "https://executivetintsandrepairs.co.uk",
+  url: "https://executiveontop.com",
   email: "executivetints.ontop@gmail.com",
   phoneDisplay: "07300 303538",
   phoneE164: "+447300303538",
