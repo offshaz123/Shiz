@@ -1,4 +1,5 @@
 import { siteConfig, whatsappHref } from "@/lib/site-config";
+import { TrackedCallLink } from "./TrackedCallLink";
 
 export function QuoteSidebar() {
   return (
@@ -20,10 +21,7 @@ export function QuoteSidebar() {
         </div>
       </a>
 
-      <a
-        href={`tel:${siteConfig.phoneE164}`}
-        className="flex items-start gap-4 rounded-3xl border border-border bg-surface p-6 transition-colors hover:border-brand/40"
-      >
+      <TrackedCallLink className="flex items-start gap-4 rounded-3xl border border-border bg-surface p-6 transition-colors hover:border-brand/40">
         <span className="brand-gradient-bg flex h-11 w-11 shrink-0 items-center justify-center rounded-full">
           <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5 text-white">
             <path
@@ -38,7 +36,7 @@ export function QuoteSidebar() {
           <p className="font-semibold text-foreground">Call us</p>
           <p className="text-sm text-muted">{siteConfig.phoneDisplay}</p>
         </div>
-      </a>
+      </TrackedCallLink>
 
       <a
         href={`mailto:${siteConfig.email}`}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
+import { TrackedCallLink } from "@/components/TrackedCallLink";
 import { siteConfig, whatsappHref, tintServices } from "@/lib/site-config";
 
 export const metadata: Metadata = {
@@ -27,8 +28,7 @@ const [standardTint, ceramicTint] = tintServices;
 
 function CallCta({ big = false }: { big?: boolean }) {
   return (
-    <a
-      href={`tel:${siteConfig.phoneE164}`}
+    <TrackedCallLink
       className={
         big
           ? "brand-gradient-bg inline-flex items-center gap-2.5 rounded-full px-8 py-4 text-base font-bold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
@@ -44,7 +44,7 @@ function CallCta({ big = false }: { big?: boolean }) {
         />
       </svg>
       Call {siteConfig.phoneDisplay}
-    </a>
+    </TrackedCallLink>
   );
 }
 

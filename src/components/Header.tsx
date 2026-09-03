@@ -5,6 +5,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
+import { TrackedCallLink } from "./TrackedCallLink";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
 
 const navLinks = [
@@ -33,12 +34,9 @@ export function Header() {
             >
               Other Services
             </Link>
-            <a
-              href={`tel:${siteConfig.phoneE164}`}
-              className="brand-gradient-bg rounded-full px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-black/10 transition-transform hover:scale-[1.03]"
-            >
+            <TrackedCallLink className="brand-gradient-bg rounded-full px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-black/10 transition-transform hover:scale-[1.03]">
               Call {siteConfig.phoneDisplay}
-            </a>
+            </TrackedCallLink>
           </div>
         </div>
       </header>

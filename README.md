@@ -70,13 +70,18 @@ so they can't read the page's CSS variables).
 
 ## Ad tracking (Google Ads / Meta Pixel)
 
-`src/lib/site-config.ts`'s `trackingConfig` holds four IDs, all empty by default:
-`googleAdsConversionId`, `googleAdsConversionLabel`, `ga4MeasurementId`, `metaPixelId`.
+`src/lib/site-config.ts`'s `trackingConfig` holds five IDs, all empty by default:
+`googleAdsConversionId`, `googleAdsConversionLabel` (form submissions),
+`googleAdsCallConversionLabel` (click-to-call), `ga4MeasurementId`, `metaPixelId`.
 `src/components/GoogleTag.tsx` and `src/components/MetaPixel.tsx` (both loaded site-wide in
-`layout.tsx`) render nothing until their relevant ID is filled in. Once configured,
-`src/components/ConversionTracker.tsx` (mounted on `/thank-you`) fires the Google Ads conversion
-event and the Meta `Lead` event after a successful form submission — see the "London landing page &
-ad tracking" section below for the full setup checklist.
+`layout.tsx`) render nothing until their relevant ID is filled in. Once configured:
+
+- `src/components/ConversionTracker.tsx` (mounted on `/thank-you`) fires the Google Ads
+  form-submission conversion and the Meta `Lead` event after a successful form submission.
+- `src/components/TrackedCallLink.tsx` wraps every call button on `/london`, the landing-page
+  header and the quote/contact sidebar, and fires the Google Ads click-to-call conversion and the
+  Meta `Contact` event when tapped. On a call-first landing page this is the main conversion, so
+  it needs its own conversion action in Google Ads (see the checklist below).
 
 ## Editing content
 
