@@ -16,6 +16,79 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "click-to-whatsapp-ads-vs-lead-forms",
+    title: "Click-to-WhatsApp Ads vs Lead Forms: Which Gets Better Enquiries?",
+    description:
+      "One gives you volume, the other gives you conversations. The right choice depends less on the ads than on who's around to answer them.",
+    publishedAt: "2026-09-03",
+    keywords: [
+      "click to WhatsApp ads UK",
+      "WhatsApp ads vs lead forms",
+      "Meta lead ads alternatives",
+      "WhatsApp advertising small business",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "When you set up a campaign to generate enquiries, Meta offers a choice of where those enquiries land. Two options dominate for small businesses: an instant lead form that opens inside the app, or a click-to-WhatsApp ad that drops the person straight into a chat with you.",
+          "They produce genuinely different results, and the better one depends far more on how your business operates than on anything about the ads themselves.",
+        ],
+      },
+      {
+        heading: "What each one actually does",
+        paragraphs: [
+          "A lead form opens a small form inside Facebook or Instagram. Name, email and phone are usually pre-filled from the person's account, so submitting takes two taps. You receive a lead record.",
+          "A click-to-WhatsApp ad opens a WhatsApp conversation with a message already typed. There's no form. What you receive is a person talking to you, from the number they actually use, because WhatsApp is tied to a working phone number.",
+          "That last detail matters more than it sounds. The most common complaint about lead forms is unreachable phone numbers — not fake ones, just the number someone entered when they signed up years ago and hasn't checked since. WhatsApp doesn't have that problem by construction.",
+        ],
+      },
+      {
+        heading: "Volume versus intent",
+        paragraphs: [
+          "Lead forms almost always produce more leads for the same money. They're designed to remove friction, and they succeed — sometimes to the point where people complete them without consciously deciding to contact anyone.",
+          "WhatsApp asks for more. Opening a chat means starting a conversation with a stranger, which a certain kind of person won't do. You'll get fewer enquiries.",
+          "The ones you get, though, have chosen to talk to you. In our experience that trade — fewer, warmer — is the right one for most service businesses, because the cost of chasing twenty unreachable leads is your time, and your time is the scarcest thing you have.",
+        ],
+      },
+      {
+        heading: "The catch nobody mentions",
+        paragraphs: [
+          "WhatsApp only works if someone answers it. A form sits in your inbox until you get to it. A WhatsApp message is a conversation someone has started and is waiting in.",
+          "Leave it four hours and you haven't just delayed a callback — you've been visibly ignored, in an app where people can see the message was delivered. That reads worse than a slow email reply, and people say so.",
+          "So the honest test is: is somebody able to reply within the hour during working hours? If the answer's no, WhatsApp will actively work against you, and a lead form with a disciplined callback routine is the better setup.",
+        ],
+      },
+      {
+        heading: "What each suits",
+        paragraphs: [
+          "Broadly, it splits along how the business already communicates:",
+        ],
+        bullets: [
+          "WhatsApp suits trades, cleaners, garages, salons and anyone whose customers already message rather than call — and businesses where the owner has their phone on them all day",
+          "Lead forms suit businesses with someone whose job is to work through a call list, and anything with a longer sales process where you want structured details before speaking",
+          "WhatsApp is stronger where the enquiry needs a back-and-forth — availability, a quote, a photo of the job",
+          "Lead forms are stronger where you need the same four fields from everyone and want them in a spreadsheet",
+          "If you're rarely at a desk but always have your phone, that alone points at WhatsApp",
+        ],
+      },
+      {
+        heading: "Two practical points",
+        paragraphs: [
+          "Tracking is harder with WhatsApp. A form creates a tidy record automatically; a conversation doesn't, unless WhatsApp is connected to a CRM that logs it. Without that you'll struggle to say how many enquiries became customers, which is the number that matters most. It's solvable, but it needs setting up rather than assuming.",
+          "And be careful about what happens after. Someone messaging you from an ad has plainly consented to that conversation. That is not consent to be added to a marketing list and messaged weeks later — under PECR that's a separate permission, and WhatsApp itself is unforgiving about unsolicited messaging. Reply to the enquiry freely; ask before you market to them.",
+        ],
+      },
+      {
+        heading: "The answer for most people",
+        paragraphs: [
+          "If you can answer messages quickly, run click-to-WhatsApp. The enquiries are warmer, the numbers are real, and the conversation starts immediately rather than after a game of phone tag.",
+          "If you can't, run lead forms with the higher-intent setting and a proper callback routine, and fix the response problem before switching.",
+          "And if you're already running one, the other is worth testing rather than debating. Two weeks of each, same budget, same offer, then compare how many became customers — not how many leads arrived. That comparison answers it for your business in a way no general advice can.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-to-write-meta-ad-copy-that-gets-replies",
     title: "How to Write Meta Ad Copy That Actually Gets Replies",
     description:

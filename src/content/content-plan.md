@@ -42,6 +42,7 @@ keywords, dealership social strategy).
 - Meta's Special Ad Categories: What You Have to Declare (policy & troubleshooting)
 - Meta & Instagram Ads for Gyms and Personal Trainers (industry-specific)
 - How to Write Meta Ad Copy That Actually Gets Replies (practical how-to)
+- Click-to-WhatsApp Ads vs Lead Forms: Which Gets Better Enquiries? (comparison/explainer)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -131,7 +132,7 @@ keywords, dealership social strategy).
       "Meta Pixel explained", "Facebook pixel small business"
 
 ## Backlog — comparison/explainer (added 2026-09-02 research round)
-- [ ] Click-to-WhatsApp Ads vs Lead Forms: Which Gets Better Enquiries? — target: "click to
+- [x] Click-to-WhatsApp Ads vs Lead Forms: Which Gets Better Enquiries? — target: "click to
       WhatsApp ads UK", "WhatsApp ads vs lead forms"
 - [ ] Google Business Profile vs Paid Ads: Where Should a Local Business Start? — target:
       "Google Business Profile vs Facebook ads", "local business marketing priorities"
