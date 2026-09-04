@@ -20,6 +20,8 @@ export function TrackedCallLink({
     if (googleAdsConversionId && googleAdsCallConversionLabel && typeof window.gtag === "function") {
       window.gtag("event", "conversion", {
         send_to: `${googleAdsConversionId}/${googleAdsCallConversionLabel}`,
+        value: 30.0,
+        currency: "GBP",
       });
     }
 

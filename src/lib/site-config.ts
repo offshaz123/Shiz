@@ -315,8 +315,10 @@ export const numberPlateShapes = [
 // each tracking component renders nothing until its ID is filled in.
 export const trackingConfig = {
   googleAdsConversionId: "AW-17885565913",
-  googleAdsConversionLabel: "", // form-submission conversion action label, e.g. "AbC-D_efGhIjK12-345"
-  googleAdsCallConversionLabel: "", // click-to-call conversion action label (a separate action)
+  // The form conversion is detected by Google itself from the /thank-you page
+  // load, so it needs no label here — filling one in would double-count it.
+  googleAdsConversionLabel: "",
+  googleAdsCallConversionLabel: "UaiYCPzwj-4cENmnwNBC", // "Click to call"
   ga4MeasurementId: "", // e.g. "G-XXXXXXXXXX"
   metaPixelId: "", // e.g. "1234567890123456"
 };
