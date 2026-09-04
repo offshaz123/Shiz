@@ -11,9 +11,14 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
     >
       <defs>
         <linearGradient id="etrGrad" x1="2" y1="4" x2="38" y2="36" gradientUnits="userSpaceOnUse">
-          <stop offset="0" style={{ stopColor: "var(--brand-purple)" }} />
-          <stop offset="0.55" style={{ stopColor: "var(--brand-pink)" }} />
-          <stop offset="1" style={{ stopColor: "var(--brand-orange)" }} />
+          <stop offset="0" style={{ stopColor: "var(--logo-gold-deep)" }} />
+          <stop offset="0.5" style={{ stopColor: "var(--logo-gold-light)" }} />
+          <stop offset="1" style={{ stopColor: "var(--logo-gold)" }} />
+        </linearGradient>
+        {/* The tinted glass in the cabin — the thing the business actually sells */}
+        <linearGradient id="etrGlass" x1="20" y1="17.5" x2="20" y2="21" gradientUnits="userSpaceOnUse">
+          <stop offset="0" style={{ stopColor: "var(--logo-glass)" }} stopOpacity="0.95" />
+          <stop offset="1" style={{ stopColor: "var(--logo-glass)" }} stopOpacity="0.45" />
         </linearGradient>
       </defs>
 
@@ -28,14 +33,14 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
 
       {/* Wing flourishes */}
       <path
-        d="M15 24c-3.4-.4-6.2-2-8.2-4.6"
+        d="M11.4 23.4c-2.4-.6-4.5-1.9-6.1-3.9"
         stroke="url(#etrGrad)"
         strokeWidth="1.1"
         strokeLinecap="round"
         fill="none"
       />
       <path
-        d="M15 21.3c-2.6-.4-4.8-1.6-6.4-3.6"
+        d="M11.4 21.2c-1.9-.5-3.5-1.5-4.9-2.9"
         stroke="url(#etrGrad)"
         strokeWidth="0.9"
         strokeLinecap="round"
@@ -43,14 +48,14 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
         opacity="0.75"
       />
       <path
-        d="M25 24c3.4-.4 6.2-2 8.2-4.6"
+        d="M28.6 23.4c2.4-.6 4.5-1.9 6.1-3.9"
         stroke="url(#etrGrad)"
         strokeWidth="1.1"
         strokeLinecap="round"
         fill="none"
       />
       <path
-        d="M25 21.3c2.6-.4 4.8-1.6 6.4-3.6"
+        d="M28.6 21.2c1.9-.5 3.5-1.5 4.9-2.9"
         stroke="url(#etrGrad)"
         strokeWidth="0.9"
         strokeLinecap="round"
@@ -66,6 +71,8 @@ export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
         strokeLinejoin="round"
         fill="none"
       />
+      {/* Tinted side glass */}
+      <path d="M17 20.6 18.3 18.8c.6-.8 1.7-1.2 2.7-1.2h.3c1 0 2.1.4 2.7 1.2l1 1.8Z" fill="url(#etrGlass)" />
       <path d="M15.5 20.8h9" stroke="url(#etrGrad)" strokeWidth="1.3" strokeLinecap="round" />
       {/* Custom alloy wheels */}
       <circle cx="16" cy="25.6" r="1.5" stroke="url(#etrGrad)" strokeWidth="0.9" />
@@ -89,7 +96,7 @@ export function Logo({ withWordmark = true }: { withWordmark?: boolean }) {
       {withWordmark && (
         <span className="flex flex-col leading-none">
           <span className="text-[15px] font-bold tracking-tight text-foreground">
-            EXECUTIVE <span className="brand-gradient-text">TINTS</span>
+            EXECUTIVE <span className="logo-gold-text">TINTS</span>
           </span>
           <span className="text-[10px] font-semibold tracking-[0.25em] text-muted">
             &amp; REPAIRS

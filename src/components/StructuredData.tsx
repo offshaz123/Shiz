@@ -32,14 +32,12 @@ export function OrganizationJsonLd() {
       postalCode: siteConfig.address.postcode,
       addressCountry: "GB",
     },
-    openingHoursSpecification: siteConfig.hours
-      .filter((h) => h.time !== "Closed")
-      .map((h) => ({
-        "@type": "OpeningHoursSpecification",
-        dayOfWeek: h.day,
-        opens: h.time.split(" - ")[0],
-        closes: h.time.split(" - ")[1],
-      })),
+    openingHoursSpecification: siteConfig.hours.map((h) => ({
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: h.schemaDays,
+      opens: h.opens,
+      closes: h.closes,
+    })),
     makesOffer: [...tintServices, ...repairServices].map((s) => ({
       "@type": "Offer",
       name: s.name,

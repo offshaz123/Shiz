@@ -68,6 +68,11 @@ site, edit those three variables (in both the `:root` and `.dark` blocks) and th
 values hardcoded in `src/app/icon.svg` and `src/app/apple-icon.tsx` (favicons render standalone,
 so they can't read the page's CSS variables).
 
+The **logo has its own palette** — `--logo-gold-deep` / `--logo-gold` / `--logo-gold-light`, plus
+`--logo-glass` for the blue tinted window in the crest. It's deliberately separate from the site
+brand gradient so rebranding the site doesn't recolour the logo. `.logo-gold-text` renders the
+"TINTS" half of the wordmark in the same gold.
+
 ## Ad tracking (Google Ads / Meta Pixel)
 
 `src/lib/site-config.ts`'s `trackingConfig` holds five IDs, all empty by default:

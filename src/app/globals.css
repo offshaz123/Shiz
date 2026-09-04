@@ -12,6 +12,13 @@
   --brand-purple: #0f5f8c;
   --brand-pink: #0ea5c4;
   --brand-orange: #f2a922;
+  /* Logo-only palette. The crest is gold (executive) with blue tinted glass —
+     deliberately separate from the site's blue/cyan/amber brand gradient, so
+     rebranding the site doesn't accidentally recolour the logo. */
+  --logo-gold-deep: #7a5c10;
+  --logo-gold: #b8860b;
+  --logo-gold-light: #d4af37;
+  --logo-glass: #0f5f8c;
 }
 
 .dark {
@@ -24,6 +31,10 @@
   --brand-purple: #1c86c4;
   --brand-pink: #22d3ee;
   --brand-orange: #ffb830;
+  --logo-gold-deep: #a97b13;
+  --logo-gold: #d4af37;
+  --logo-gold-light: #f6e27a;
+  --logo-glass: #2f9fd8;
 }
 
 @theme inline {
@@ -53,6 +64,18 @@ body {
 ::selection {
   background: var(--brand-pink);
   color: white;
+}
+
+.logo-gold-text {
+  background-image: linear-gradient(
+    90deg,
+    var(--logo-gold-deep),
+    var(--logo-gold-light) 55%,
+    var(--logo-gold)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .brand-gradient-text {

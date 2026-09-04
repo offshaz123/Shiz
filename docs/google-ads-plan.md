@@ -13,7 +13,7 @@ previous "SMG - Tints - 15/1/26" campaign (£7,725 spent, 3 Jan – 4 Sept 2026)
 | Email | executivetints.ontop@gmail.com |
 | Landing page | https://executiveontop.com/london |
 | Main site | https://executiveontop.com |
-| Hours | Mon–Fri 9:00–18:00, Sat 9:00–16:00, Sun closed |
+| Hours | **Monday–Sunday 9:00–18:00** (open seven days) |
 | Mobile fitting | **No** — customers come to the unit |
 | Same-day fitting | **Yes** |
 | Reviews | None published yet — do not advertise a rating |
@@ -121,7 +121,7 @@ Essex. Expected to be a major volume driver once targeting is London.
 | Language | English |
 | Bidding | Maximise Clicks, max CPC £2.50 for week 1; switch to Maximise Conversions after ~15 real conversions |
 | Budget | £26/day |
-| Ad schedule | Mon–Fri 08:00–19:00, Sat 08:00–17:00 (opening hours plus one hour either side) |
+| Ad schedule | **Every day 08:00–19:00** — opening hours plus an hour either side |
 | Devices | Computers −70%, Tablets −100% |
 | Conversion goals | Campaign-specific: Submit lead form + Phone call leads only |
 | AI Max | **OFF** |
@@ -352,7 +352,7 @@ Do **not** claim mobile fitting or residential/commercial tinting — neither is
 | Chameleon Tint | Colour-shifting blue or red | One price, £150 any car | `/tints` |
 | Price List | All tints & services priced | No hidden costs | `/pricing` |
 | Get A Free Quote | Tell us your car and shade | We reply the same day | `/quote` |
-| Opening Hours & Address | 15 Cecil Road, London E17 | Mon-Fri 9-6, Sat 9-4 | `/contact` |
+| Opening Hours & Address | 15 Cecil Road, London E17 | Open 7 days, 9am-6pm | `/contact` |
 
 ### Callouts
 ```

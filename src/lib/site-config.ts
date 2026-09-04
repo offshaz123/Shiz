@@ -16,10 +16,25 @@ export const siteConfig = {
     postcode: "E17 5DH",
     country: "United Kingdom",
   },
+  // `day`/`time` are what visitors read. `schemaDays`/`opens`/`closes` feed the
+  // AutoRepair JSON-LD, which needs individual day names and 24-hour times —
+  // Google won't parse "Monday - Sunday" or "9:00am" for rich results.
   hours: [
-    { day: "Monday - Friday", time: "9:00am - 6:00pm" },
-    { day: "Saturday", time: "9:00am - 4:00pm" },
-    { day: "Sunday", time: "Closed" },
+    {
+      day: "Monday - Sunday",
+      time: "9:00am - 6:00pm",
+      schemaDays: [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday",
+      ],
+      opens: "09:00",
+      closes: "18:00",
+    },
   ],
   // Public social profiles. Leave a value empty to omit it. Use full URLs.
   social: {

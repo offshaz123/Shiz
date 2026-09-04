@@ -31,16 +31,16 @@ export default async function Image() {
               justifyContent: "center",
               fontSize: 52,
               fontWeight: 800,
-              color: "#0ea5c4",
+              color: "#d4af37",
               background: "#0a0a0b",
-              border: "2px solid #0ea5c4",
+              border: "2px solid #d4af37",
             }}
           >
             E
           </div>
           <div style={{ display: "flex", fontSize: 44, fontWeight: 800, color: "#fff" }}>
             <span>EXECUTIVE&nbsp;</span>
-            <span style={{ color: "#0ea5c4" }}>TINTS</span>
+            <span style={{ color: "#d4af37" }}>TINTS</span>
             <span>&nbsp;&amp; REPAIRS</span>
           </div>
         </div>
