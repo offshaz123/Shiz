@@ -16,6 +16,81 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "what-does-it-cost-to-get-a-customer",
+    title: "What Does It Cost to Get a Customer? Working Out Your Real Number",
+    description:
+      "Cost per lead tells you almost nothing on its own. The number that decides whether advertising works is what a paying customer costs you to acquire.",
+    publishedAt: "2026-09-04",
+    keywords: [
+      "customer acquisition cost small business UK",
+      "how much to spend to get a customer",
+      "cost per customer marketing",
+      "is my advertising profitable",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Ask a business owner what a lead costs them and plenty can answer. Ask what a customer costs and the room usually goes quiet.",
+          "It's the more important number by some distance. Cost per lead measures how cheaply you can get someone's phone number. Cost per customer measures whether the advertising is actually making you money, and those two things come apart more often than people expect.",
+        ],
+      },
+      {
+        heading: "The chain, and where it breaks",
+        paragraphs: [
+          "Getting a customer through advertising involves four steps, and each one loses people:",
+        ],
+        bullets: [
+          "Money spent on ads produces leads",
+          "Leads that you manage to actually reach become conversations",
+          "Conversations become quotes, appointments or viewings",
+          "Some of those become paying customers",
+        ],
+      },
+      {
+        heading: "Do the sum with your own figures",
+        paragraphs: [
+          "Take a hypothetical business spending £400 a month on ads and getting 40 leads. That's £10 a lead, which sounds respectable.",
+          "Of those 40, they reach 24 — the rest never answer. Of the 24, 10 book something in. Of the 10, 4 become customers.",
+          "So £400 produced four customers. That's £100 per customer, not £10. The advertising didn't get ten times worse; the number simply measures something different, and it's the one that decides whether to keep going.",
+          "Run that with your own numbers before reading any further. Most people find the answer is considerably higher than they assumed, and that's useful rather than depressing — it's the first honest figure they've had.",
+        ],
+      },
+      {
+        heading: "£100 a customer is meaningless without the other half",
+        paragraphs: [
+          "Whether £100 is excellent or ruinous depends entirely on what a customer is worth to you, and that's where most of the judgement lives.",
+          "For a one-off £80 job, £100 a customer means losing money on every sale. For a kitchen fitter averaging £9,000, it's an extraordinary return that they should be spending far more to get.",
+          "Recurring work changes it again. A cleaner charging £70 a fortnight has a customer worth roughly £1,800 over a year if they stay. Spending £100 to acquire that is not a marketing expense in any meaningful sense — it's buying an income stream at a discount.",
+          "This is why comparing your cost per lead to an industry average is close to worthless. Two businesses with identical ad costs can have completely different outcomes, because what they're buying is worth different amounts.",
+        ],
+      },
+      {
+        heading: "The ratio to aim at",
+        paragraphs: [
+          "A rough working rule: what a customer is worth to you over the whole relationship, divided by what they cost to acquire. Around three to one is generally healthy for a small business — enough margin to cover delivering the work and running everything else.",
+          "Below one to one you're paying for the privilege of doing the job. Somewhere near one to one and it's marginal, which is fine while you're learning but not somewhere to settle.",
+          "Comfortably above three and the sensible response is usually to spend more, not to congratulate yourself. If every £100 reliably returns £600, the constraint on your business isn't marketing — it's how much work you can take on.",
+        ],
+      },
+      {
+        heading: "Where to fix it when the number is bad",
+        paragraphs: [
+          "A high cost per customer is rarely an advertising problem, because the biggest losses usually happen after the lead arrives.",
+          "In the example above, 16 of 40 leads were never reached at all. That's 40% of the ad budget spent on people nobody spoke to. Improving that costs nothing and lifts every other number in the chain — no change to targeting or creative comes close.",
+          "So work backwards through the four steps. Are you reaching people? Are conversations turning into appointments? Are appointments turning into customers? Fix whichever leaks hardest, and only then look at the ads.",
+        ],
+      },
+      {
+        heading: "You need to write it down",
+        paragraphs: [
+          "None of this works from memory, and none of it is in Ads Manager — Meta knows a form was submitted and nothing about what happened afterwards.",
+          "Four columns will do: leads received, leads reached, appointments booked, customers won. A spreadsheet is enough, and a month of it tells you more about your marketing than a year of platform reports.",
+          "Once you have it, decisions get much easier. You'll know what you can afford to pay for a customer, whether to increase spend, and — most usefully — whether the problem is the advertising or what happens after it.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "click-to-whatsapp-ads-vs-lead-forms",
     title: "Click-to-WhatsApp Ads vs Lead Forms: Which Gets Better Enquiries?",
     description:

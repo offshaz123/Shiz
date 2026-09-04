@@ -43,6 +43,7 @@ keywords, dealership social strategy).
 - Meta & Instagram Ads for Gyms and Personal Trainers (industry-specific)
 - How to Write Meta Ad Copy That Actually Gets Replies (practical how-to)
 - Click-to-WhatsApp Ads vs Lead Forms: Which Gets Better Enquiries? (comparison/explainer)
+- What Does It Cost to Get a Customer? Working Out Your Real Number (cost & expectation-setting)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -140,7 +141,7 @@ keywords, dealership social strategy).
       "WhatsApp Business API small business UK"
 
 ## Backlog — cost & expectation-setting (added 2026-09-02 research round)
-- [ ] What Does It Cost to Get a Customer? Working Out Your Real Number — target: "customer
+- [x] What Does It Cost to Get a Customer? Working Out Your Real Number — target: "customer
       acquisition cost small business UK", "how much to spend to get a customer"
 - [ ] Why Your Cost Per Lead Went Up (and When to Worry) — target: "Facebook ads cost per lead
       increasing", "why are my Facebook ads more expensive"
