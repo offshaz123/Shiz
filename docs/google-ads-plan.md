@@ -32,8 +32,8 @@ to 2× on a busy day but cannot exceed the monthly total.
 
 Also set an account-level spend limit in Billing → Settings as a hard ceiling.
 
-> Open question: if Meta ads are to come out of the same £800, drop Google to
-> £18/day (£547/month) and give Meta the rest.
+Meta Ads runs on a **separate £200/month**, not out of this £800. Total paid
+spend across both platforms is £1,000/month.
 
 ## Conversion tracking
 
