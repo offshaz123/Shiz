@@ -1,108 +1,56 @@
 import Link from "next/link";
 
+// The compact mark: a gold "E" inside a hairline square. Used wherever the full
+// wordmark would be illegible — favicons, avatars, anything under ~48px.
 export function LogoMark({ className = "h-9 w-9" }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 40 40"
+      viewBox="0 0 64 64"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id="etrGrad" x1="2" y1="4" x2="38" y2="36" gradientUnits="userSpaceOnUse">
-          <stop offset="0" style={{ stopColor: "var(--logo-gold-deep)" }} />
-          <stop offset="0.5" style={{ stopColor: "var(--logo-gold-light)" }} />
-          <stop offset="1" style={{ stopColor: "var(--logo-gold)" }} />
-        </linearGradient>
-        {/* The tinted glass in the cabin — the thing the business actually sells */}
-        <linearGradient id="etrGlass" x1="20" y1="17.5" x2="20" y2="21" gradientUnits="userSpaceOnUse">
-          <stop offset="0" style={{ stopColor: "var(--logo-glass)" }} stopOpacity="0.95" />
-          <stop offset="1" style={{ stopColor: "var(--logo-glass)" }} stopOpacity="0.45" />
+        <linearGradient id="etrGold" x1="10" y1="10" x2="54" y2="54" gradientUnits="userSpaceOnUse">
+          <stop offset="0" style={{ stopColor: "var(--gold-text-1)" }} />
+          <stop offset="0.32" style={{ stopColor: "var(--gold-text-2)" }} />
+          <stop offset="1" style={{ stopColor: "var(--gold-text-3)" }} />
         </linearGradient>
       </defs>
-
-      {/* Hexagonal crest */}
-      <path
-        d="M20 1.5 36 10.5v18L20 38.5 4 28.5v-18L20 1.5Z"
-        fill="#06090c"
-        stroke="url(#etrGrad)"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-
-      {/* Wing flourishes */}
-      <path
-        d="M11.4 23.4c-2.4-.6-4.5-1.9-6.1-3.9"
-        stroke="url(#etrGrad)"
-        strokeWidth="1.1"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M11.4 21.2c-1.9-.5-3.5-1.5-4.9-2.9"
-        stroke="url(#etrGrad)"
-        strokeWidth="0.9"
-        strokeLinecap="round"
-        fill="none"
-        opacity="0.75"
-      />
-      <path
-        d="M28.6 23.4c2.4-.6 4.5-1.9 6.1-3.9"
-        stroke="url(#etrGrad)"
-        strokeWidth="1.1"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path
-        d="M28.6 21.2c1.9-.5 3.5-1.5 4.9-2.9"
-        stroke="url(#etrGrad)"
-        strokeWidth="0.9"
-        strokeLinecap="round"
-        fill="none"
-        opacity="0.75"
-      />
-
-      {/* Low, custom coupe silhouette */}
-      <path
-        d="M11.5 24.8c0-1 .8-1.9 1.8-2.1l2.3-.5 2.4-3.4c.6-.9 1.7-1.4 2.8-1.4h.4c1.1 0 2.2.5 2.8 1.4l2.4 3.4 2.3.5c1 .2 1.8 1.1 1.8 2.1v.9c0 .6-.5 1-1 1h-1.1a2.2 2.2 0 0 1-4.3 0h-6.2a2.2 2.2 0 0 1-4.3 0h-1.1c-.6 0-1-.4-1-1v-.9Z"
-        stroke="url(#etrGrad)"
-        strokeWidth="1.4"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      {/* Tinted side glass */}
-      <path d="M17 20.6 18.3 18.8c.6-.8 1.7-1.2 2.7-1.2h.3c1 0 2.1.4 2.7 1.2l1 1.8Z" fill="url(#etrGlass)" />
-      <path d="M15.5 20.8h9" stroke="url(#etrGrad)" strokeWidth="1.3" strokeLinecap="round" />
-      {/* Custom alloy wheels */}
-      <circle cx="16" cy="25.6" r="1.5" stroke="url(#etrGrad)" strokeWidth="0.9" />
-      <circle cx="24" cy="25.6" r="1.5" stroke="url(#etrGrad)" strokeWidth="0.9" />
-      <path d="M16 24.2v2.8M14.7 25.6h2.6M15 24.9l2 1.4M17 24.9l-2 1.4" stroke="url(#etrGrad)" strokeWidth="0.5" />
-      <path d="M24 24.2v2.8M22.7 25.6h2.6M23 24.9l2 1.4M25 24.9l-2 1.4" stroke="url(#etrGrad)" strokeWidth="0.5" />
-
-      {/* Executive star */}
-      <path
-        d="M20 6.2 20.9 8l2 .3-1.45 1.4.35 2-1.8-.95-1.8.95.35-2L16.6 8.3l2-.3.4-1.8Z"
-        fill="url(#etrGrad)"
-      />
+      <rect x="6" y="6" width="52" height="52" stroke="url(#etrGold)" strokeWidth="2.6" />
+      <text
+        x="32.4"
+        y="45.5"
+        textAnchor="middle"
+        fontFamily="var(--font-cormorant), Georgia, serif"
+        fontWeight="600"
+        fontSize="38"
+        fill="url(#etrGold)"
+      >
+        E
+      </text>
     </svg>
   );
 }
 
 export function Logo({ withWordmark = true }: { withWordmark?: boolean }) {
+  if (!withWordmark) {
+    return (
+      <Link href="/" className="shrink-0" aria-label="Executive Tints &amp; Repairs">
+        <LogoMark />
+      </Link>
+    );
+  }
+
   return (
-    <Link href="/" className="flex items-center gap-2.5 shrink-0">
-      <LogoMark />
-      {withWordmark && (
-        <span className="flex flex-col leading-none">
-          <span className="text-[15px] font-bold tracking-tight text-foreground">
-            EXECUTIVE <span className="logo-gold-text">TINTS</span>
-          </span>
-          <span className="text-[10px] font-semibold tracking-[0.25em] text-muted">
-            &amp; REPAIRS
-          </span>
-        </span>
-      )}
+    <Link href="/" className="flex shrink-0 flex-col leading-none">
+      <span className="brand-gradient-text font-serif text-[19px] font-semibold tracking-[0.30em] sm:text-[22px]">
+        EXECUTIVE
+      </span>
+      <span className="mt-[3px] text-[8px] font-semibold tracking-[0.34em] text-muted sm:text-[9px]">
+        TINTS &amp; REPAIRS
+      </span>
     </Link>
   );
 }

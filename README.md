@@ -61,17 +61,41 @@ Update `whatsappNumber` there if the number ever changes.
 
 ## Colour theme
 
-`src/app/globals.css` defines the gradient (`--brand-purple` / `--brand-pink` / `--brand-orange`,
-with `--color-brand` aliased to the middle stop for solid accent uses like links and badges) as
-fixed values — there's no visitor-facing colour picker, only the light/dark toggle. To rebrand the
-site, edit those three variables (in both the `:root` and `.dark` blocks) and the matching hex
-values hardcoded in `src/app/icon.svg` and `src/app/apple-icon.tsx` (favicons render standalone,
-so they can't read the page's CSS variables).
+The site is gold on near-black (dark, the default) or gold on warm off-white (light).
+`src/app/globals.css` holds two palettes:
 
-The **logo has its own palette** — `--logo-gold-deep` / `--logo-gold` / `--logo-gold-light`, plus
-`--logo-glass` for the blue tinted window in the crest. It's deliberately separate from the site
-brand gradient so rebranding the site doesn't recolour the logo. `.logo-gold-text` renders the
-"TINTS" half of the wordmark in the same gold.
+- `--brand-purple` / `--brand-pink` / `--brand-orange` — the solid accents. `--color-brand`
+  aliases the middle one for links and badges. **These differ per theme**: the light palette uses
+  deep bronzes (`#6b4e0f`–`#a37c18`) because pale gold is unreadable on white, the dark palette
+  uses brighter golds (`#a37c18`–`#f4e0a0`).
+- `--gold-text-1/2/3` — the stops for `.brand-gradient-text`, kept darker than the button metal
+  since thin letterforms need more contrast than a filled shape.
+
+`.brand-gradient-bg` is the metallic button fill. Its stops are **hard-coded and identical in both
+themes** — a gold button should look like the same piece of metal whatever the page behind it. Two
+bright bands in the gradient are what make it read as polished metal rather than flat mustard. The
+class also sets `color: #14110b`, because gold is a light surface and anything on it must be dark;
+that rule intentionally overrides the `text-white` utilities still present on those buttons.
+
+If you change the darkest stop in `.brand-gradient-bg`, keep it no darker than `#a37c18` or the
+button label drops below 4.5:1 contrast.
+
+The favicons (`src/app/icon.svg`, `src/app/apple-icon.tsx`) carry their own hard-coded golds —
+they render standalone and can't read CSS variables. They draw the "E" as plain rectangles rather
+than text, so they don't depend on a webfont being available.
+
+## Logo
+
+`src/components/Logo.tsx` exports two things:
+
+- `Logo` — the wordmark: EXECUTIVE in wide-tracked Cormorant Garamond caps with a gold gradient,
+  TINTS & REPAIRS beneath in small tracked sans.
+- `LogoMark` — a gold "E" in a hairline square, for anywhere the wordmark would be illegible
+  (favicons, avatars, under ~48px).
+
+Cormorant Garamond is loaded in `src/app/layout.tsx` via `next/font/google` as `--font-cormorant`
+and exposed to Tailwind as `font-serif`. It is used **only** for the wordmark — body copy stays on
+Geist.
 
 ## Ad tracking (Google Ads / Meta Pixel)
 

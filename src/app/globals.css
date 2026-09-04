@@ -4,37 +4,35 @@
 
 :root {
   --background: #ffffff;
-  --surface: #f5f7f8;
-  --surface-2: #eceff1;
-  --foreground: #0a0e12;
-  --muted: #52616b;
-  --border: #dde3e6;
-  --brand-purple: #0f5f8c;
-  --brand-pink: #0ea5c4;
-  --brand-orange: #f2a922;
-  /* Logo-only palette. The crest is gold (executive) with blue tinted glass —
-     deliberately separate from the site's blue/cyan/amber brand gradient, so
-     rebranding the site doesn't accidentally recolour the logo. */
-  --logo-gold-deep: #7a5c10;
-  --logo-gold: #b8860b;
-  --logo-gold-light: #d4af37;
-  --logo-glass: #0f5f8c;
+  --surface: #faf7f0;
+  --surface-2: #f2ebdc;
+  --foreground: #14110b;
+  --muted: #5f5647;
+  --border: #e6dcc6;
+  /* Solid accent (links, badges, icons). Dark enough to read on white. */
+  --brand-purple: #6b4e0f;
+  --brand-pink: #8a6812;
+  --brand-orange: #a37c18;
+  /* Gradient stops for text set in gold — kept darker than the button metal,
+     since thin letterforms on a white page need the extra contrast. */
+  --gold-text-1: #6b4e0f;
+  --gold-text-2: #9a7515;
+  --gold-text-3: #7a5a11;
 }
 
 .dark {
-  --background: #06090c;
-  --surface: #0e1418;
-  --surface-2: #161d22;
-  --foreground: #f2f6f8;
-  --muted: #93a3ac;
-  --border: #202a30;
-  --brand-purple: #1c86c4;
-  --brand-pink: #22d3ee;
-  --brand-orange: #ffb830;
-  --logo-gold-deep: #a97b13;
-  --logo-gold: #d4af37;
-  --logo-gold-light: #f6e27a;
-  --logo-glass: #2f9fd8;
+  --background: #07060a;
+  --surface: #100e0b;
+  --surface-2: #1a1610;
+  --foreground: #f7f2e6;
+  --muted: #a2977f;
+  --border: #2b2519;
+  --brand-purple: #a37c18;
+  --brand-pink: #d4af37;
+  --brand-orange: #f4e0a0;
+  --gold-text-1: #a37c18;
+  --gold-text-2: #f2dc93;
+  --gold-text-3: #d4af37;
 }
 
 @theme inline {
@@ -49,6 +47,7 @@
   --color-brand-pink: var(--brand-pink);
   --color-brand-orange: var(--brand-orange);
   --font-sans: var(--font-geist-sans);
+  --font-serif: var(--font-cormorant);
   --font-mono: var(--font-geist-mono);
 }
 
@@ -63,27 +62,15 @@ body {
 
 ::selection {
   background: var(--brand-pink);
-  color: white;
-}
-
-.logo-gold-text {
-  background-image: linear-gradient(
-    90deg,
-    var(--logo-gold-deep),
-    var(--logo-gold-light) 55%,
-    var(--logo-gold)
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #14110b;
 }
 
 .brand-gradient-text {
   background-image: linear-gradient(
     90deg,
-    var(--brand-purple),
-    var(--brand-pink),
-    var(--brand-orange)
+    var(--gold-text-1),
+    var(--gold-text-2) 50%,
+    var(--gold-text-3)
   );
   -webkit-background-clip: text;
   background-clip: text;
@@ -93,10 +80,16 @@ body {
 .brand-gradient-bg {
   background-image: linear-gradient(
     135deg,
-    var(--brand-purple),
-    var(--brand-pink) 55%,
-    var(--brand-orange)
+    #a37c18 0%,
+    #f2dc93 22%,
+    #c9a227 46%,
+    #f6e6ae 70%,
+    #b8901f 100%
   );
+  /* Gold is a light surface, so anything sitting on it must be dark. This
+     overrides the `text-white` utilities left on these buttons from the old
+     blue theme — utilities are layered, this rule isn't, so it wins. */
+  color: #14110b;
 }
 
 .brand-ring {

@@ -16,32 +16,34 @@ export default async function Image() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          backgroundColor: "#06090c",
+          backgroundColor: "#07060a",
           padding: 80,
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 28 }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
           <div
             style={{
-              width: 100,
-              height: 100,
-              borderRadius: 22,
               display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 52,
-              fontWeight: 800,
-              color: "#d4af37",
-              background: "#0a0a0b",
-              border: "2px solid #d4af37",
+              fontSize: 86,
+              fontWeight: 700,
+              letterSpacing: 22,
+              color: "#e8cf7e",
             }}
           >
-            E
+            EXECUTIVE
           </div>
-          <div style={{ display: "flex", fontSize: 44, fontWeight: 800, color: "#fff" }}>
-            <span>EXECUTIVE&nbsp;</span>
-            <span style={{ color: "#d4af37" }}>TINTS</span>
-            <span>&nbsp;&amp; REPAIRS</span>
+          <div style={{ display: "flex", width: 700, height: 2, background: "#a37c18", marginTop: 18 }} />
+          <div
+            style={{
+              display: "flex",
+              marginTop: 18,
+              fontSize: 26,
+              fontWeight: 600,
+              letterSpacing: 16,
+              color: "#a2977f",
+            }}
+          >
+            TINTS &amp; REPAIRS
           </div>
         </div>
         <div
@@ -49,7 +51,7 @@ export default async function Image() {
             marginTop: 48,
             fontSize: 40,
             fontWeight: 700,
-            color: "#fff",
+            color: "#f7f2e6",
             textAlign: "center",
             maxWidth: 940,
             display: "flex",
@@ -61,7 +63,7 @@ export default async function Image() {
           style={{
             marginTop: 20,
             fontSize: 26,
-            color: "#93a3ac",
+            color: "#a2977f",
             textAlign: "center",
             display: "flex",
           }}
