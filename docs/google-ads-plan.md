@@ -117,7 +117,7 @@ Essex. Expected to be a major volume driver once targeting is London.
 | Type | Search |
 | Name | London Tints – Search |
 | Networks | Search only — **Display OFF, Search Partners OFF** |
-| Location | 8–12 mile radius around E17 5DH, **Presence only** |
+| Location | Nine named areas (see below), **Presence only** — not "presence or interest" |
 | Language | English |
 | Bidding | Maximise Clicks, max CPC £2.50 for week 1; switch to Maximise Conversions after ~15 real conversions |
 | Budget | £26/day |
@@ -125,6 +125,40 @@ Essex. Expected to be a major volume driver once targeting is London.
 | Devices | Computers −70%, Tablets −100% |
 | Conversion goals | Campaign-specific: Submit lead form + Phone call leads only |
 | AI Max | **OFF** |
+
+## Locations
+
+Named areas rather than a radius, so central London (expensive clicks, low car
+ownership, congestion charge) is excluded by omission rather than by exclusion
+rules. Total reach ~3.95 million.
+
+| Area | Type | Reach |
+|---|---|---|
+| London Borough of Waltham Forest | district | 953,000 |
+| London Borough of Newham | district | 902,000 |
+| London Borough of Enfield | borough | 642,000 |
+| London Borough of Redbridge | borough | 593,000 |
+| London Borough of Haringey | district | 498,000 |
+| IG11 (Barking) | postcode | 216,000 |
+| Loughton | city | 65,000 |
+| Chigwell | city | 54,000 |
+| IG9 (Buckhurst Hill) | postcode | 28,000 |
+
+"Epping Forest" is not in Google's location list — use the individual towns
+(Chigwell, Loughton) and postcodes (IG9) instead.
+
+Hackney was deliberately left out: ~965,000 reach but among the lowest car
+ownership in London and the most expensive clicks of the candidates. The E17
+postcode was removed as redundant, since Waltham Forest already contains it.
+
+Deliberate tension with the negative keywords: the targeting includes Ilford and
+Barking while `-ilford` and `-barking` stay blocked. Someone there searching
+"car tinting near me" sees the ad; someone searching "window tinting ilford"
+does not, because shops actually in Ilford will always beat us on that term.
+Target the geography, don't buy the town name.
+
+If impressions are healthy but calls are few after two weeks, narrow the area
+rather than raising the budget.
 
 ## Keywords
 
