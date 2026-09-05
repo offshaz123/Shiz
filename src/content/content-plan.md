@@ -44,6 +44,7 @@ keywords, dealership social strategy).
 - How to Write Meta Ad Copy That Actually Gets Replies (practical how-to)
 - Click-to-WhatsApp Ads vs Lead Forms: Which Gets Better Enquiries? (comparison/explainer)
 - What Does It Cost to Get a Customer? Working Out Your Real Number (cost & expectation-setting)
+- Your Google Business Profile Is Doing More Work Than Your Website (local search)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -157,7 +158,7 @@ keywords, dealership social strategy).
       sequence", "how many times to follow up with a lead"
 
 ## Backlog — local search (added 2026-09-02 research round)
-- [ ] Your Google Business Profile Is Doing More Work Than Your Website — target: "Google
+- [x] Your Google Business Profile Is Doing More Work Than Your Website — target: "Google
       Business Profile optimisation UK", "local map pack ranking"
 - [ ] NAP Consistency: The Boring Local SEO Job That Actually Matters — target: "NAP citations
       UK local SEO", "business listings consistency"

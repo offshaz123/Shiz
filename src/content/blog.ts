@@ -16,6 +16,73 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "google-business-profile-does-more-than-your-website",
+    title: "Your Google Business Profile Is Doing More Work Than Your Website",
+    description:
+      "For most local businesses, the free Google listing gets seen far more than the website does — and it's usually the least maintained thing they own.",
+    publishedAt: "2026-09-05",
+    keywords: [
+      "Google Business Profile optimisation UK",
+      "local map pack ranking",
+      "Google Maps ranking small business",
+      "local SEO for small business UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Search for a plumber, a barber or a garage near you and look at what actually fills the screen. Before any website appears, there's a map with three businesses on it — names, star ratings, opening hours, a call button.",
+          "That's the local pack, and for a business serving a specific area it's usually where the customers come from. The listings behind it are Google Business Profiles: free, quick to set up, and for most small businesses the least maintained thing they own.",
+        ],
+      },
+      {
+        heading: "Why it beats your website for local searches",
+        paragraphs: [
+          "Someone searching for a local service isn't researching. They want a phone number, a location, an indication other people were happy, and confidence you're open now.",
+          "The listing answers all four without anyone clicking anything. Your website answers them too, but only after someone has chosen to visit it — and for a large share of local searches, nobody gets that far.",
+          "This is why a business with a modest website and a well-kept listing routinely out-performs one with an expensive site and a neglected listing. It isn't fair, but it's how the results are laid out.",
+        ],
+      },
+      {
+        heading: "What actually moves it",
+        paragraphs: [
+          "Google weighs relevance, distance and prominence. Distance you can't change — you are where you are. The other two you can work on:",
+        ],
+        bullets: [
+          "Complete every field, particularly the primary category, which does more than almost anything else. \"Emergency plumber\" and \"plumber\" are different categories and surface for different searches",
+          "List services and areas explicitly rather than assuming Google infers them from your website",
+          "Add photos regularly — recent ones. A listing whose newest photo is three years old reads as a business that may not exist any more",
+          "Use Google Posts. Few small businesses bother, which is precisely why it's worth doing",
+          "Answer the questions people ask in the Q&A section, and add the obvious ones yourself. Do you take card? Is there parking? Do you cover my postcode?",
+        ],
+      },
+      {
+        heading: "Reviews: recency matters as much as the total",
+        paragraphs: [
+          "Review count is the number everyone watches. Recency and pace matter at least as much — twenty reviews spread across the past year signals a working business far more strongly than sixty that stopped arriving in 2023.",
+          "So the useful habit isn't a one-off push to reach a round number. It's asking steadily. A couple a month, forever, beats thirty in a fortnight and then silence.",
+          "Ask at the point the customer is happiest, which is usually immediately after the job rather than in an email the following week. And reply to all of them, including the bad ones — a measured reply to a poor review does more for the next reader than the review itself does against you.",
+          "One thing to be plain about: writing or buying fake reviews is illegal in the UK under the Digital Markets, Competition and Consumers Act 2024, and the CMA can act directly on it. Beyond the legal exposure, it's obvious to anyone reading carefully. Don't.",
+        ],
+      },
+      {
+        heading: "Get your details identical everywhere",
+        paragraphs: [
+          "Your business name, address and phone number appear across dozens of directories, some of which you never created. Where those disagree, Google has less confidence it's dealing with one real business.",
+          "It's dull work and it's genuinely worth an afternoon. Pick the exact format you'll use — including whether it's \"Street\" or \"St\", and which phone number is the real one — then make your website, your Google listing and every directory you can find match it character for character.",
+          "Old listings from a previous address cause the most trouble, because they're the ones nobody remembers to update.",
+        ],
+      },
+      {
+        heading: "Where it fits alongside advertising",
+        paragraphs: [
+          "The two do different jobs and neither replaces the other. Search captures people already looking for what you sell. Paid social reaches people who aren't looking yet but would be interested — which is most of your potential customers most of the time.",
+          "A business relying only on search is limited to existing demand. One relying only on ads is paying for attention it could be getting free.",
+          "If you're starting from nothing, the listing comes first simply because it costs nothing but time. Then advertise, and the improved listing makes the advertising work better too — because a good share of people who see your ad will search your name before they enquire, and what they find decides whether they do.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "what-does-it-cost-to-get-a-customer",
     title: "What Does It Cost to Get a Customer? Working Out Your Real Number",
     description:
