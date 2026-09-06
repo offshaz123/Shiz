@@ -45,6 +45,7 @@ keywords, dealership social strategy).
 - Click-to-WhatsApp Ads vs Lead Forms: Which Gets Better Enquiries? (comparison/explainer)
 - What Does It Cost to Get a Customer? Working Out Your Real Number (cost & expectation-setting)
 - Your Google Business Profile Is Doing More Work Than Your Website (local search)
+- What to Do If Your Facebook Ad Account Gets Disabled (policy & troubleshooting)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -102,7 +103,7 @@ keywords, dealership social strategy).
 - [x] Meta's Special Ad Categories — published as "What You Have to Declare" (clinics dropped from title: health is not a special ad category) —
       target: "Facebook ads special ad category", "restricted ad categories Meta UK"
       (explain the rules and compliant alternatives only — never how to work around them)
-- [ ] What to Do If Your Facebook Ad Account Gets Disabled — target: "Facebook ad account
+- [x] What to Do If Your Facebook Ad Account Gets Disabled — target: "Facebook ad account
       disabled UK", "Meta ad account restricted appeal"
 - [x] Why Your Meta Ads Are Getting Low-Quality Leads (and How to Fix It) — target: "poor
       quality Facebook leads", "fake leads Facebook ads"

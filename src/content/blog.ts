@@ -16,6 +16,74 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "facebook-ad-account-disabled-what-to-do",
+    title: "What to Do If Your Facebook Ad Account Gets Disabled",
+    description:
+      "An account restriction is alarming and usually recoverable. Here's what actually causes it, how the appeal works, and the reaction that makes it permanent.",
+    publishedAt: "2026-09-06",
+    keywords: [
+      "Facebook ad account disabled UK",
+      "Meta ad account restricted appeal",
+      "ad account disabled what to do",
+      "how to get Facebook ads account back",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You log in and everything has stopped. A banner says your ad account has been disabled, there's a policy name you don't recognise, and no explanation of what you actually did.",
+          "It's a horrible moment, particularly if advertising is where your enquiries come from. It's also usually recoverable — provided you don't do the thing most people's instincts tell them to do.",
+        ],
+      },
+      {
+        heading: "Don't start a new account",
+        paragraphs: [
+          "The immediate temptation is to set up a fresh ad account, or a new business profile, and carry on. Don't.",
+          "Meta links accounts by payment method, device, browser, IP address and profile connections. A replacement account usually gets caught quickly, and at that point you've turned a single restriction into a pattern of evasion — which is treated far more seriously than whatever triggered the original problem.",
+          "This is the single decision that separates a fortnight of inconvenience from losing access permanently. Appeal the account you have.",
+        ],
+      },
+      {
+        heading: "What usually causes it",
+        paragraphs: [
+          "The stated reason is often generic, but the underlying cause is normally one of a handful of things:",
+        ],
+        bullets: [
+          "Policy breaches in the ads themselves — most often the personal attributes rule, or claims about results that read as unrealistic",
+          "Running credit, employment or housing ads without declaring the special ad category",
+          "Payment problems, including a failed charge or a card that doesn't match the account details",
+          "Unusual account activity — logging in from a new country, a sudden large spend increase, or several people accessing it from different places",
+          "Being new. Brand new accounts that start spending immediately get more scrutiny than established ones, and sometimes get caught by automated checks with nothing actually wrong",
+        ],
+      },
+      {
+        heading: "How to appeal",
+        paragraphs: [
+          "There's a request review option in the notification and in Account Quality, which is worth finding — it shows what's been flagged across your account, adverts and page rather than just the headline.",
+          "Appeal once and wait. Submitting repeatedly doesn't escalate anything and can look like automated behaviour. Most reviews come back within a few days.",
+          "Keep the appeal short and factual. Say what your business does, what you advertise, and that you believe the restriction is a mistake — or, if you can see what went wrong, say what it was and what you've changed. Admitting a genuine error and describing the fix tends to work better than insisting nothing happened.",
+          "What doesn't help is arguing, writing at length about the impact on your business, or repeating the appeal in different words. The review is largely mechanical.",
+        ],
+      },
+      {
+        heading: "If it isn't reinstated",
+        paragraphs: [
+          "Sometimes it stays disabled and no further explanation arrives. That's genuinely frustrating and there's no route around it, but a few things are still worth knowing.",
+          "The restriction may apply to the ad account rather than everything you own — your page and your business portfolio can survive it. Check what's actually restricted before assuming the worst.",
+          "And if the account is gone for good, the honest position is that the business needs a route to customers that doesn't depend on a platform that can switch you off without notice. Which is the real lesson here.",
+        ],
+      },
+      {
+        heading: "Reducing the odds it happens",
+        paragraphs: [
+          "Set the account up properly. Run advertising through a business portfolio rather than off a personal profile, use a consistent payment method in the business's name, and give people their own access rather than sharing one login.",
+          "Warm a new account up. Starting at a modest daily budget and increasing gradually attracts less scrutiny than launching straight into significant spend on day one.",
+          "Learn the two rules that cause most avoidable trouble — don't write copy that implies you know something personal about the reader, and declare special ad categories when they apply. Between them they account for a large share of preventable restrictions.",
+          "And build something you own alongside it. A website that ranks, a Google listing, a list of past customers you can contact directly. Advertising is rented attention, and this is what renting means.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "google-business-profile-does-more-than-your-website",
     title: "Your Google Business Profile Is Doing More Work Than Your Website",
     description:
