@@ -16,6 +16,73 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-for-cleaning-companies",
+    title: "Meta & Instagram Ads for Cleaning Companies",
+    description:
+      "Cleaning is a recurring-revenue business, which changes what a customer is worth and what you can afford to pay for one. Here's how that shapes the advertising.",
+    publishedAt: "2026-09-07",
+    keywords: [
+      "Facebook ads for cleaning business UK",
+      "domestic cleaning marketing",
+      "Instagram ads cleaning company",
+      "how to get cleaning clients UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Most advertising advice treats every business the same: get the lead, close the sale, count the profit. Cleaning doesn't work like that, and the difference is the whole reason it's such a good fit for paid advertising.",
+          "A cleaning customer isn't a sale. They're a standing arrangement that either lasts two visits or two years, and almost everything about how you should advertise follows from that.",
+        ],
+      },
+      {
+        heading: "The number that changes the decision",
+        paragraphs: [
+          "Take a hypothetical regular customer paying £70 a fortnight. Over a year that's around £1,800, and there's no reason it stops at twelve months — regular cleaning arrangements often run for years.",
+          "Now consider what you could sensibly pay to acquire one. If a customer is worth £1,800 in the first year, spending £80 or £100 to get them isn't a marketing cost worth agonising over — it's buying an income stream at a heavy discount.",
+          "This is why cleaning companies who work out their real numbers usually end up advertising more, not less. The businesses that struggle are the ones judging campaigns on cost per lead, panicking at £15 a lead, and never calculating what the customer behind it is actually worth.",
+        ],
+      },
+      {
+        heading: "The barrier is trust, not price",
+        paragraphs: [
+          "You're asking someone to let a stranger into their home, often when they're not there, sometimes with a key. That's a bigger ask than most trades make, and it's the real obstacle in the way of an enquiry.",
+          "Which means advertising that leads on price is answering a question nobody was stuck on. The useful things to show are the ones that address being trusted:",
+        ],
+        bullets: [
+          "The cleaners themselves, on camera. A face does more for trust than any amount of copy about reliability",
+          "Insurance and vetting stated plainly — public liability cover and whatever checks you run on staff",
+          "Same cleaner each visit, if you offer it. It's one of the strongest things a domestic cleaning business can say, because the alternative is a rotating cast of strangers",
+          "What happens on a first visit — how long it takes, whether you need to be in, how keys are handled",
+          "Real homes you've cleaned, with permission. Not stock photography of a show kitchen nobody lives in",
+        ],
+      },
+      {
+        heading: "Advertise the regular slot, not the one-off",
+        paragraphs: [
+          "One-off deep cleans and end-of-tenancy jobs are easier to sell and worth far less. They convert well, which makes them tempting to lead with, and then the customer disappears.",
+          "The advertising should point at the recurring arrangement, because that's where the value is. A first-clean discount is a good way in — it lowers the barrier without pretending the ongoing price is lower than it is.",
+          "If you do take one-off work, treat it as a route to regular work rather than the product. The conversation at the end of a deep clean is the best chance you'll ever get to convert someone to fortnightly, and it costs nothing.",
+        ],
+      },
+      {
+        heading: "Keep the radius tight",
+        paragraphs: [
+          "Travel time is unpaid, and in this trade it's the quiet killer of margin. A customer forty minutes away costs you most of another job.",
+          "So target tightly — the specific towns and postcodes you can actually route efficiently, not a broad radius that looks better on a map. A wide area produces enquiries you'll either turn down or regret accepting.",
+          "Clustering matters too. Ten customers in one town are worth considerably more than ten scattered across a county, because your cleaners spend the day working rather than driving. It's worth advertising area by area for that reason alone.",
+        ],
+      },
+      {
+        heading: "Speed decides who gets the customer",
+        paragraphs: [
+          "People enquire about cleaning at the point they've had enough, and they usually message more than one company. Whoever comes back first with an actual answer — yes we cover your postcode, here's the price, here's when we could start — tends to get the booking.",
+          "It rarely comes down to who was cheapest. It comes down to who replied while the person was still thinking about it.",
+          "This is worth more attention than the ads themselves. If enquiries arrive in the evening and get answered two days later, no amount of budget fixes that — you're paying to generate customers for whoever answers their phone faster than you do.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "facebook-ad-account-disabled-what-to-do",
     title: "What to Do If Your Facebook Ad Account Gets Disabled",
     description:

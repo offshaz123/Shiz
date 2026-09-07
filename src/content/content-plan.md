@@ -46,6 +46,7 @@ keywords, dealership social strategy).
 - What Does It Cost to Get a Customer? Working Out Your Real Number (cost & expectation-setting)
 - Your Google Business Profile Is Doing More Work Than Your Website (local search)
 - What to Do If Your Facebook Ad Account Gets Disabled (policy & troubleshooting)
+- Meta & Instagram Ads for Cleaning Companies (industry-specific)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -165,7 +166,7 @@ keywords, dealership social strategy).
       UK local SEO", "business listings consistency"
 
 ## Backlog — industry-specific (added 2026-09-02 research round)
-- [ ] Meta & Instagram Ads for Cleaning Companies — target: "Facebook ads for cleaning business
+- [x] Meta & Instagram Ads for Cleaning Companies — target: "Facebook ads for cleaning business
       UK", "domestic cleaning marketing"
 - [ ] Meta & Instagram Ads for Driving Instructors and Driving Schools — target: "Facebook ads
       driving school UK", "marketing for driving instructors"
