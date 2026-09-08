@@ -392,7 +392,9 @@ with no query string, and `gclid` is added automatically by auto-tagging.
       the map listing drives more calls than the website. Complete every field,
       add photos, post weekly.
    3. **Reviews** — the single biggest factor in map-pack ranking. Currently
-      zero. Ask every customer.
+      12, averaging 5.0, and all published on the site (home page and /london)
+      with Review + AggregateRating schema. Keep asking every customer, and
+      keep `siteConfig.reviews.count` in step with the real profile.
    4. **Local citations** — consistent name/address/phone on Yell, Thomson
       Local, FreeIndex, Bing Places, Apple Business Connect.
    5. **Location pages** — `/window-tinting-walthamstow` and similar, targeting
@@ -403,3 +405,100 @@ with no query string, and `gclid` is added automatically by auto-tagging.
    Already in place: 6 blog posts (`src/content/blog.ts`), AutoRepair / FAQPage /
    BlogPosting JSON-LD, sitemap and robots generated from `siteConfig.url`,
    per-page canonicals, `en-GB` locale, `/thank-you` disallowed in robots.txt.
+
+
+## Handover — putting everything in the client's name
+
+The work is being run for a client who owns the business. Everything below
+moves the assets onto the client's identity and the client's money. Two
+reasons it matters: the client should legally own what they paid for, and an
+account billed to the agency's card is an account Google can associate with
+the agency's other accounts.
+
+### The structure to aim for
+
+The client owns every asset under **their own Google login, verified in their
+name, billed to their card**. The agency gets in through a **Google Ads
+manager account (MCC)**, which grants day-to-day control without owning the
+account or its billing. This is how agencies are supposed to be set up, and
+it is the arrangement that actually separates the two parties — not editing
+a name field.
+
+### What can never be changed on a Google Ads account
+
+Decide these before creating anything; they are set at creation and permanent:
+
+- **Currency** and **time zone** on the Ads account.
+- **Billing country.**
+- **Payments profile type** — individual vs business. A profile created as
+  individual can never become a business profile.
+
+If any of these are wrong for the client, no amount of editing fixes it — the
+account has to be recreated, which costs the conversion history and the
+bidding algorithm's learning.
+
+### Google Ads
+
+| What | Where | Editable? |
+|---|---|---|
+| Account name | Admin → Account settings | Yes, freely |
+| Business name | Admin → Account settings | Yes |
+| Payments profile name + address | Billing → Settings | Usually, may trigger re-verification |
+| Payment method | Billing → Payment methods | Yes — put the client's card on |
+| Advertiser verification | Admin → Account settings → Advertiser verification | Must be redone in the client's name |
+| Users | Admin → Access and security | Yes |
+| Currency / time zone | — | **Never** |
+
+**Advertiser verification is the one that actually makes it "the client's".**
+Google publicly displays the verified advertiser next to the ads. If the
+client's business should be the advertiser, the client's entity has to pass
+verification with their own documents. Changing the account name without
+redoing verification leaves the agency named on the public disclosure.
+
+### Order of operations
+
+Do not change name, address and payment method on the same day. Several
+simultaneous identity and billing edits on a live account is a known trigger
+for a billing review — which pauses the ads. Stagger it:
+
+1. Client creates (or confirms) their own Google account.
+2. Invite that account as **Admin** under Access and security. Client accepts.
+3. Confirm the client can actually sign in and see the account.
+4. Add the **client's card** as the payment method and make it primary.
+   Leave the old card in place for a few days as a backstop.
+5. A few days later, update the **payments profile name and address**.
+6. Redo **advertiser verification** in the client's name.
+7. Link the account to the agency **manager account**, if using one.
+8. Only once all of the above is confirmed working, remove the agency's
+   direct Admin user. Google requires at least one admin at all times.
+9. Remove the old card.
+
+### The other properties
+
+- **Google Business Profile** — Settings → People and access → Add → Owner.
+  Then transfer primary ownership. Google enforces a waiting period before a
+  newly added owner can be made primary, so add them well ahead of time.
+- **Search Console** — a verified owner has to be added as an owner, not a
+  user. Either the client verifies the domain independently (DNS record) or
+  an existing verified owner delegates ownership under Settings → Users and
+  permissions → Manage property owners.
+- **Google Analytics**, if in use — Admin → Account access management →
+  add the client as Administrator.
+- **The domain** (`executiveontop.com`) and the Hostinger hosting — either
+  transfer the domain to the client's registrar account with an auth code, or
+  hand over the Hostinger account itself. A client who does not control their
+  own domain does not really own their website.
+- **The Gmail address** (`executivetints.ontop@gmail.com`) — the client should
+  hold the password and be the recovery contact. Longer term this should be
+  Google Workspace on the domain rather than a Gmail address.
+- **Meta** — the client's Business Manager should own the Page, the ad
+  account and the pixel; the agency gets partner access.
+
+### What this does not do
+
+Changing these details does not unlink the account from a suspended one.
+Google associates accounts by payment instrument, login, recovery details,
+phone, device and domain as well as by name. Make these changes because the
+current details are wrong, not as a shield. Accurate client details are
+easier to defend in a review than mismatched ones — but they are not a
+firewall.
