@@ -76,7 +76,68 @@ export type CustomerReview = {
   date?: string;
 };
 
-export const customerReviews: CustomerReview[] = [];
+export const customerReviews: CustomerReview[] = [
+  {
+    author: "Doha TASBELT",
+    rating: 5,
+    text: "Had my windows tinted here and honestly really impressed with the finish. No bubbles, nice clean edges and the staff were friendly. Would definitely recommend",
+    date: "2026-09-03",
+  },
+  {
+    author: "Jameelah",
+    rating: 5,
+    text: "Excellent customer Service. Khalid and the team guided me through the whole process and did a great job , tinting the car",
+    date: "2026-09-04",
+  },
+  {
+    author: "khan",
+    rating: 5,
+    text: "Really like how transparent these guys are. The website has clear information about the services and pricing, so there were no surprises when I arrived.",
+    date: "2026-09-05",
+  },
+  {
+    author: "Meryem Tasbelt",
+    rating: 5,
+    text: "Great experience! The service was excellent, everything was smooth, and the staff was very friendly. Highly recommended!",
+    date: "2026-09-07",
+  },
+  {
+    author: "kiara",
+    rating: 5,
+    text: "Exceptional Tinting done by the team. Highly recommend! Definitely will recommend to friends and family.",
+    date: "2026-09-05",
+  },
+  {
+    author: "Zee",
+    rating: 5,
+    text: "Very good quality tints and professional service provided. Definitely recommended",
+    date: "2026-09-07",
+  },
+  {
+    author: "Cmon",
+    rating: 5,
+    text: "I got my range rover tinted today in the morning. I got same day appointment",
+    date: "2026-09-06",
+  },
+  {
+    author: "ella",
+    rating: 5,
+    text: "Window tint is good quality and reasonably priced. Highly Recommend!",
+    date: "2026-09-05",
+  },
+  {
+    author: "Hamid Shah",
+    rating: 5,
+    text: "Great service. Quality tints. Highly recommend.",
+    date: "2026-09-08",
+  },
+  {
+    author: "Khelani",
+    rating: 5,
+    text: "Excellent tinting. The team were great today. Thanks for your help!",
+    date: "2026-09-05",
+  },
+];
 
 // Google Search Console verification token. Get it from Search Console by
 // adding a "URL prefix" property for siteConfig.url and choosing the HTML tag

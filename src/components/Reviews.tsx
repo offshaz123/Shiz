@@ -188,7 +188,7 @@ export function ReviewSlideshow({
           <div
             ref={liveRef}
             aria-live="polite"
-            className="relative rounded-3xl border border-border bg-background p-8 sm:p-10"
+            className="relative min-h-[300px] rounded-3xl border border-border bg-background p-8 sm:min-h-[280px] sm:p-10"
           >
             <svg viewBox="0 0 24 24" aria-hidden className="h-8 w-8 text-brand/60">
               <path
