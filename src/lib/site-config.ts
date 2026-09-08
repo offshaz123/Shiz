@@ -55,6 +55,12 @@ export const siteConfig = {
   },
 };
 
+// Google Search Console verification token. Get it from Search Console by
+// adding a "URL prefix" property for siteConfig.url and choosing the HTML tag
+// method — paste only the content="..." value here, not the whole tag. Leaving
+// it empty omits the meta tag entirely.
+export const googleSiteVerification = "";
+
 export const hasPublishedReviews = siteConfig.reviews.count > 0;
 
 export const socialProfileUrls = Object.values(siteConfig.social).filter(Boolean);

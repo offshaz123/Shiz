@@ -381,9 +381,25 @@ with no query string, and `gclid` is added automatically by auto-tagging.
    contains the hyphen, then redeploy on Hostinger and test the tag fires.
 2. **Google Ads** — this document.
 3. **Meta Ads** — not started.
-4. **SEO** — after launch, so customers come from organic search as well as paid.
-   The site already has: blog posts in `src/content/blog.ts`, JSON-LD structured
-   data, sitemap and robots generated from `siteConfig.url`, per-page canonicals.
-   Next steps will be Google Business Profile optimisation, local citations, and
-   location/service landing pages targeting the terms the ad data proved
-   valuable ("car tinting near me", "window tinting london").
+4. **SEO / organic** — a slower, separate channel to paid. Ordered by what
+   actually moves the needle for a local trade:
+
+   1. **Google Search Console** — verify `executiveontop.com` and submit
+      `sitemap.xml`. Without it a brand-new domain with no inbound links can sit
+      undiscovered for weeks. Paste the token into `googleSiteVerification` in
+      `src/lib/site-config.ts` and redeploy.
+   2. **Google Business Profile** — for a business people search "near me" for,
+      the map listing drives more calls than the website. Complete every field,
+      add photos, post weekly.
+   3. **Reviews** — the single biggest factor in map-pack ranking. Currently
+      zero. Ask every customer.
+   4. **Local citations** — consistent name/address/phone on Yell, Thomson
+      Local, FreeIndex, Bing Places, Apple Business Connect.
+   5. **Location pages** — `/window-tinting-walthamstow` and similar, targeting
+      the "near me" terms the ad data proved valuable.
+   6. **Time.** New domains take roughly 3-6 months to rank for competitive
+      terms. SEO will not deliver customers this month; the ads will.
+
+   Already in place: 6 blog posts (`src/content/blog.ts`), AutoRepair / FAQPage /
+   BlogPosting JSON-LD, sitemap and robots generated from `siteConfig.url`,
+   per-page canonicals, `en-GB` locale, `/thank-you` disallowed in robots.txt.
