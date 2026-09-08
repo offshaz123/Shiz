@@ -16,7 +16,7 @@ previous "SMG - Tints - 15/1/26" campaign (£7,725 spent, 3 Jan – 4 Sept 2026)
 | Hours | **Monday–Sunday 9:00–18:00** (open seven days) |
 | Mobile fitting | **No** — customers come to the unit |
 | Same-day fitting | **Yes** |
-| Reviews | None published yet — do not advertise a rating |
+| Reviews | **5.0 from 12** on Google — published on the site and safe to use in ad copy |
 
 Prices: standard dyed tint £99 · ceramic £180 (lifetime warranty, 10% off) ·
 chameleon £150 (any car, performance cars quoted individually) · dechroming £150 ·
@@ -121,7 +121,7 @@ Essex. Expected to be a major volume driver once targeting is London.
 | Language | English |
 | Bidding | Maximise Clicks, max CPC £2.50 for week 1; switch to Maximise Conversions after ~15 real conversions |
 | Budget | £26/day |
-| Ad schedule | **Every day 08:00–19:00** — opening hours plus an hour either side |
+| Ad schedule | **24/7** — restricting hours only helps a budget-constrained campaign, and this one spends ~£20 of £26. Use a bid adjustment later if night calls convert worse |
 | Devices | Computers −70%, Tablets −100% |
 | Conversion goals | Campaign-specific: Submit lead form + Phone call leads only |
 | AI Max | **OFF** |
