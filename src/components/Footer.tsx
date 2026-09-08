@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
+import { areas } from "@/content/areas";
 
 export function Footer() {
   const pathname = usePathname();
@@ -28,7 +29,7 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-surface">
       <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           <div className="lg:col-span-2">
             <Logo />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">
@@ -85,6 +86,22 @@ export function Footer() {
                   Privacy Policy
                 </Link>
               </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-sm font-semibold text-foreground">Areas we cover</h3>
+            <ul className="mt-4 space-y-3 text-sm text-muted">
+              {areas.map((area) => (
+                <li key={area.slug}>
+                  <Link
+                    href={`/window-tinting/${area.slug}`}
+                    className="hover:text-foreground"
+                  >
+                    Window Tinting {area.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 

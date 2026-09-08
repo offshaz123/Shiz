@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/site-config";
 import { blogPosts } from "@/content/blog";
+import { areas } from "@/content/areas";
 
 export const dynamic = "force-static";
 
@@ -32,5 +33,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...blogEntries];
+  const areaEntries = areas.map((area) => ({
+    url: `${siteConfig.url}/window-tinting/${area.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
+  return [...staticEntries, ...areaEntries, ...blogEntries];
 }
