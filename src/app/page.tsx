@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { ServiceCard } from "@/components/ServiceCard";
+import { ReviewBadge, ReviewSlideshow } from "@/components/Reviews";
 import { FaqJsonLd } from "@/components/StructuredData";
 import { whatsappHref, tintServices, repairServices } from "@/lib/site-config";
 import { blogPosts } from "@/content/blog";
@@ -65,6 +66,9 @@ export default function Home() {
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-xs font-medium text-muted">
             Premium Window Tinting &amp; Vehicle Servicing
           </span>
+          <div className="mt-5">
+            <ReviewBadge />
+          </div>
           <h1 className="mx-auto mt-6 max-w-4xl text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
             Executive standard tinting.{" "}
             <span className="brand-gradient-text">Backed for life.</span>
@@ -323,6 +327,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Customer reviews — last thing on the page, after the form */}
+      <ReviewSlideshow />
     </div>
   );
 }

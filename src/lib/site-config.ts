@@ -48,12 +48,35 @@ export const siteConfig = {
   // there. While `count` is 0, no rating is published, which is deliberate:
   // publishing a rating you can't evidence breaches UK consumer protection
   // rules and risks a Google manual action.
+  //
+  // Keep `count` in step with the Google profile as new reviews land: schema
+  // that overstates the real figure is worse than publishing no schema at all.
   reviews: {
-    averageRating: 0,
-    count: 0,
-    profileUrl: "",
+    averageRating: 5.0,
+    count: 12,
+    profileUrl: "https://share.google/voTPMskosz6TWLCgF",
   },
 };
+
+// Individual customer reviews shown in the slideshow on the home page and the
+// /london landing page. Every entry must be a real review copied verbatim from
+// the Google profile above — same words, same author name as Google displays.
+// Never write, tidy up, shorten or invent one: a made-up testimonial is a
+// misleading commercial practice under the CPRs, and Google issues manual
+// actions for review schema that doesn't match the visible profile.
+//
+// The slideshow renders nothing while this list is empty, so the site simply
+// omits the section rather than showing placeholders.
+export type CustomerReview = {
+  author: string;
+  rating: number;
+  /** Verbatim review text as it appears on the Google profile. */
+  text: string;
+  /** ISO date the review was left, if known. Used for schema only. */
+  date?: string;
+};
+
+export const customerReviews: CustomerReview[] = [];
 
 // Google Search Console verification token. Get it from Search Console by
 // adding a "URL prefix" property for siteConfig.url and choosing the HTML tag
@@ -62,6 +85,8 @@ export const siteConfig = {
 export const googleSiteVerification = "";
 
 export const hasPublishedReviews = siteConfig.reviews.count > 0;
+
+export const hasReviewQuotes = customerReviews.length > 0;
 
 export const socialProfileUrls = Object.values(siteConfig.social).filter(Boolean);
 

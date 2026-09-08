@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
+import { ReviewBadge, ReviewSlideshow } from "@/components/Reviews";
 import { TrackedCallLink } from "@/components/TrackedCallLink";
 import { siteConfig, whatsappHref, tintServices } from "@/lib/site-config";
 
@@ -61,6 +62,9 @@ export default function LondonLandingPage() {
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-xs font-medium text-muted">
             London&apos;s Premium Window Tinting Specialists
           </span>
+          <div className="mt-5">
+            <ReviewBadge />
+          </div>
           <h1 className="mx-auto mt-6 max-w-3xl text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
             Premium Window Tinting in{" "}
             <span className="brand-gradient-text">London</span>
@@ -193,6 +197,9 @@ export default function LondonLandingPage() {
           <LeadForm compact />
         </div>
       </section>
+
+      {/* Reviews sit after the form — reassurance for anyone still deciding */}
+      <ReviewSlideshow heading="What London drivers say about us" />
 
       {/* Footer link back to full site, understated */}
       <div className="pb-10 text-center">

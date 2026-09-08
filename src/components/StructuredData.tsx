@@ -1,4 +1,11 @@
-import { siteConfig, socialProfileUrls, hasPublishedReviews, tintServices, repairServices } from "@/lib/site-config";
+import {
+  siteConfig,
+  socialProfileUrls,
+  hasPublishedReviews,
+  customerReviews,
+  tintServices,
+  repairServices,
+} from "@/lib/site-config";
 
 export function OrganizationJsonLd() {
   const data = {
@@ -19,7 +26,25 @@ export function OrganizationJsonLd() {
         "@type": "AggregateRating",
         ratingValue: siteConfig.reviews.averageRating,
         reviewCount: siteConfig.reviews.count,
+        bestRating: 5,
+        worstRating: 1,
       },
+    }),
+    // Only the reviews quoted on the page are emitted, verbatim. Google
+    // requires marked-up reviews to be visible to the visitor as well.
+    ...(customerReviews.length > 0 && {
+      review: customerReviews.map((r) => ({
+        "@type": "Review",
+        author: { "@type": "Person", name: r.author },
+        reviewRating: {
+          "@type": "Rating",
+          ratingValue: r.rating,
+          bestRating: 5,
+          worstRating: 1,
+        },
+        reviewBody: r.text,
+        ...(r.date && { datePublished: r.date }),
+      })),
     }),
     areaServed: {
       "@type": "Country",
