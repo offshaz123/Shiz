@@ -99,7 +99,7 @@ export default function TintsPage() {
                 </tr>
                 <tr className="border-t border-border">
                   <td className="p-4">Warranty</td>
-                  <td className="p-4">2 years</td>
+                  <td className="p-4">None</td>
                   <td className="p-4 font-medium text-foreground">Lifetime</td>
                 </tr>
               </tbody>
