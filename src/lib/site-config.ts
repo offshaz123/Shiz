@@ -53,7 +53,7 @@ export const siteConfig = {
   // that overstates the real figure is worse than publishing no schema at all.
   reviews: {
     averageRating: 5.0,
-    count: 12,
+    count: 13,
     profileUrl: "https://share.google/voTPMskosz6TWLCgF",
   },
 };
@@ -106,6 +106,12 @@ export const customerReviews: CustomerReview[] = [
     rating: 5,
     text: "Exceptional Tinting done by the team. Highly recommend! Definitely will recommend to friends and family.",
     date: "2026-09-05",
+  },
+  {
+    author: "Haris Khan",
+    rating: 5,
+    text: "First visit to Executive Tints & Repairs. Nothing overly fancy, just a decent service and the work was done properly. Had an oil change done and would probably come back if I needed anything else,",
+    date: "2026-09-08",
   },
   {
     author: "Zee",
