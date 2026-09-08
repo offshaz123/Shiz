@@ -47,6 +47,7 @@ keywords, dealership social strategy).
 - Your Google Business Profile Is Doing More Work Than Your Website (local search)
 - What to Do If Your Facebook Ad Account Gets Disabled (policy & troubleshooting)
 - Meta & Instagram Ads for Cleaning Companies (industry-specific)
+- Writing a Follow-Up Sequence That Doesn't Feel Like Nagging (practical how-to)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -156,7 +157,7 @@ keywords, dealership social strategy).
       reviews UK", "get more Google reviews small business"
 - [ ] Setting Up Click-to-WhatsApp Ads: A Walkthrough — target: "how to set up WhatsApp ads
       Meta", "click to WhatsApp campaign"
-- [ ] Writing a Follow-Up Sequence That Doesn't Feel Like Nagging — target: "lead follow up
+- [x] Writing a Follow-Up Sequence That Doesn't Feel Like Nagging — target: "lead follow up
       sequence", "how many times to follow up with a lead"
 
 ## Backlog — local search (added 2026-09-02 research round)

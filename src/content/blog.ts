@@ -16,6 +16,83 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "follow-up-sequence-that-doesnt-feel-like-nagging",
+    title: "Writing a Follow-Up Sequence That Doesn't Feel Like Nagging",
+    description:
+      "Most enquiries are lost after one unanswered call. Here's how many times to follow up, how far apart, and what to say so it doesn't read as pestering.",
+    publishedAt: "2026-09-08",
+    keywords: [
+      "lead follow up sequence",
+      "how many times to follow up with a lead",
+      "sales follow up template UK",
+      "following up on enquiries",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Someone enquires, you ring, they don't answer. You make a mental note to try again, the day fills up, and that's the last anyone thinks about it.",
+          "This is where most advertising budgets actually go. Not on bad targeting or weak creative — on enquiries that were followed up once and then quietly abandoned.",
+          "The reason people stop is rarely laziness. It's that a second and third attempt feels like pestering. It doesn't have to.",
+        ],
+      },
+      {
+        heading: "Why one attempt is never enough",
+        paragraphs: [
+          "Think about how you behave with an unknown number. You're driving, you're with a customer, you assume it's a scam. Not answering means almost nothing about whether you're interested.",
+          "Someone who filled in a form ten minutes ago wants to hear from you. They just weren't holding the phone when you rang. Treating that first missed call as a rejection is the single most expensive assumption in small business marketing.",
+          "The businesses that do well here aren't more persuasive. They're just still there on attempt four, when everyone else has stopped.",
+        ],
+      },
+      {
+        heading: "A sequence that works",
+        paragraphs: [
+          "Spread over about ten days, mixing channels rather than repeating the same one:",
+        ],
+        bullets: [
+          "Within 5 minutes — call. Speed matters more than anything else in this list",
+          "Immediately after, if no answer — a short WhatsApp or text, so they know who rang and can reply in their own time",
+          "Same day, a few hours later — call again, at a different time of day",
+          "Day 2 — call at a genuinely different hour. Someone who never answers at 2pm may always answer at 9am",
+          "Day 4 — a message with something useful in it rather than another chase",
+          "Day 8 — a final short message that makes it easy to say no",
+        ],
+      },
+      {
+        heading: "The rule that stops it feeling like nagging",
+        paragraphs: [
+          "Every message should contain something other than a request for their attention. \"Just checking in\" and \"following up on my last message\" are pure asking — the third one of those is when a person starts feeling hounded.",
+          "Give something instead. The price they'd have asked about. Your earliest availability. A photo of similar work. An answer to the question everyone in your trade gets asked.",
+          "Compare \"just checking you got my message\" with \"we've got a slot on Thursday morning if that's any use — £180 for the job as you described it.\" Both are follow-ups. Only one is worth receiving.",
+        ],
+      },
+      {
+        heading: "The last message matters most",
+        paragraphs: [
+          "Counter-intuitively, the message that explicitly ends the conversation gets more replies than any of the ones before it.",
+          "Something like: \"I'll leave it there so I'm not filling up your phone. If the timing's wrong just say and I'll close it off — and if you'd rather pick it up in a few weeks, that's no problem either.\"",
+          "It works because it releases the pressure. People who've been avoiding replying out of awkwardness will often respond to this one, and a meaningful share turn into customers. The rest tell you no, which is genuinely useful — you stop spending time on them.",
+        ],
+      },
+      {
+        heading: "Automate the reminders, not the words",
+        paragraphs: [
+          "The sequence fails when it depends on someone remembering. Day four is exactly the day a busy week swallows, and nobody notices it happened.",
+          "So the timing should be automatic — a CRM, a task list, a calendar reminder, whatever survives a bad week. That's what a follow-up system actually is.",
+          "But keep the messages human. A sequence of obviously templated messages performs worse than three genuinely written ones, because people can tell, and a template says you're processing them rather than talking to them. Automate when you're prompted; write the message yourself.",
+          "One legal note: someone who enquired has invited you to reply, so following up is fine. Adding them to a marketing list afterwards is a separate permission under PECR, and worth asking for rather than assuming.",
+        ],
+      },
+      {
+        heading: "What this is worth",
+        paragraphs: [
+          "Take a hypothetical business getting 40 leads a month and reaching 24 of them. If a proper sequence lifts that to 32, they've gained eight conversations without spending another penny on advertising.",
+          "At any realistic conversion rate that's more customers than most targeting changes would produce, from work that costs nothing but discipline.",
+          "It's also the cheapest improvement available to almost every business we speak to — and the one most likely to be dismissed as too obvious to bother with.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-for-cleaning-companies",
     title: "Meta & Instagram Ads for Cleaning Companies",
     description:
