@@ -48,6 +48,7 @@ keywords, dealership social strategy).
 - What to Do If Your Facebook Ad Account Gets Disabled (policy & troubleshooting)
 - Meta & Instagram Ads for Cleaning Companies (industry-specific)
 - Writing a Follow-Up Sequence That Doesn't Feel Like Nagging (practical how-to)
+- Google Business Profile vs Paid Ads: Where Should a Local Business Start? (comparison/explainer)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -139,7 +140,7 @@ keywords, dealership social strategy).
 ## Backlog — comparison/explainer (added 2026-09-02 research round)
 - [x] Click-to-WhatsApp Ads vs Lead Forms: Which Gets Better Enquiries? — target: "click to
       WhatsApp ads UK", "WhatsApp ads vs lead forms"
-- [ ] Google Business Profile vs Paid Ads: Where Should a Local Business Start? — target:
+- [x] Google Business Profile vs Paid Ads: Where Should a Local Business Start? — target:
       "Google Business Profile vs Facebook ads", "local business marketing priorities"
 - [ ] WhatsApp Business App vs API: Which Does a Small Business Actually Need? — target:
       "WhatsApp Business API small business UK"

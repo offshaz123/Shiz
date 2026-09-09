@@ -16,6 +16,71 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "google-business-profile-vs-paid-ads",
+    title: "Google Business Profile vs Paid Ads: Where Should a Local Business Start?",
+    description:
+      "One is free and captures people already looking. The other costs money and reaches people who aren't. Which you need first depends on your trade.",
+    publishedAt: "2026-09-09",
+    keywords: [
+      "Google Business Profile vs Facebook ads",
+      "local business marketing priorities",
+      "should I do SEO or paid ads first",
+      "free vs paid marketing local business",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "With limited time and money, most local business owners face the same question: put the effort into being found on Google, or pay to appear in front of people on Facebook and Instagram?",
+          "They do genuinely different jobs, and which one you need first depends on something specific about your trade — whether people go looking for what you sell, or whether they need reminding it exists.",
+        ],
+      },
+      {
+        heading: "Existing demand versus created demand",
+        paragraphs: [
+          "Search captures demand that already exists. Someone's boiler has failed, so they search for a plumber. Your Google listing puts you in front of them at the exact moment they've decided to buy. Intent doesn't get higher than that.",
+          "Paid social works the other way. Nobody opens Instagram intending to book a cleaner. But show the right person the right offer and a proportion of them realise they've been meaning to sort it for months. You're creating the demand rather than catching it.",
+          "So the first question isn't which channel is better. It's whether people in your trade actively search for what you do.",
+        ],
+      },
+      {
+        heading: "Where each one wins",
+        paragraphs: [
+          "It splits fairly cleanly by how urgent and how considered the purchase is:",
+        ],
+        bullets: [
+          "Urgent, problem-driven work — emergency plumbing, locksmiths, car recovery, breakdowns — is search-first, almost entirely. Nobody browses social media for a locksmith at midnight",
+          "Discretionary, nice-to-have services — beauty treatments, personal training, regular cleaning, home improvements — are where paid social earns its keep, because people rarely search for things they haven't decided to buy yet",
+          "Considered purchases people research — a used car, a kitchen, a wedding venue — usually need both: social to get on the list, search to be found once they're comparing",
+          "Anything genuinely new or unusual has to be paid social first, because people can't search for a thing they don't know exists",
+        ],
+      },
+      {
+        heading: "The practical differences",
+        paragraphs: [
+          "Cost is the obvious one. A Google Business Profile is free, and for most local businesses it's the single highest-return use of an afternoon available.",
+          "Speed goes the other way. Ads can be running by lunchtime and producing enquiries the same week. Building visibility in local search takes weeks to months, and the timeline isn't within your control.",
+          "The bigger difference is the ceiling. Search is capped by how many people are looking — if only forty people a month search for your service in your town, that's the whole market and no amount of effort creates a forty-first. Paid social has no such limit, which is why businesses that outgrow their local search demand end up advertising whether they planned to or not.",
+        ],
+      },
+      {
+        heading: "The order that usually makes sense",
+        paragraphs: [
+          "Do the free thing first. Claim and complete the Google listing, get the categories right, start asking customers for reviews. It costs nothing but time, and it keeps working after you stop.",
+          "Then advertise, once you know what you can afford to spend to get a customer. Starting with paid ads while your listing is half-finished means paying for attention you'd have got free, and a chunk of people who see your ad will search your name before enquiring — landing on a neglected listing with two old reviews.",
+          "The exception is when you need customers this week rather than this quarter. Then it's ads, because search won't move fast enough, and you sort the listing out in parallel.",
+        ],
+      },
+      {
+        heading: "They work better together than apart",
+        paragraphs: [
+          "The two channels aren't really rivals. Someone who sees your advert two or three times and then searches your name converts better than either channel would manage alone, because the ad created the interest and the listing supplied the reassurance.",
+          "That's also why advertising tends to improve your search performance in practice — more people searching your business by name, more visits, more reviews arriving.",
+          "So the honest answer to which one first is: the free one, immediately, because there's no reason not to. Then paid, as soon as you can answer the question of what a customer is worth to you. The businesses that struggle are usually the ones that picked one and treated the other as optional.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "follow-up-sequence-that-doesnt-feel-like-nagging",
     title: "Writing a Follow-Up Sequence That Doesn't Feel Like Nagging",
     description:
