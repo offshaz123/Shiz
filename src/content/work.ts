@@ -22,9 +22,9 @@ export type WorkPhoto = {
 export const workPhotos: WorkPhoto[] = [
   {
     src: "/work/bmw-5-series-window-tint.jpg",
-    alt: "BMW 5 Series with tinted windows inside the Executive Tints & Repairs unit in Walthamstow",
-    caption: "BMW 5 Series, in with us for tinting",
-    position: "50% 34%",
+    alt: "BMW 5 Series with tinted windows under hexagon lighting inside the Executive Tints & Repairs unit in Walthamstow, rolls of tint film on the wall behind",
+    caption: "BMW 5 Series, tinted in our Walthamstow unit",
+    position: "50% 32%",
   },
   {
     src: "/work/window-tint-fitting.jpg",
