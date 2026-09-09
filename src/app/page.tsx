@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { ServiceCard } from "@/components/ServiceCard";
+import { WorkGallery } from "@/components/WorkGallery";
 import { ReviewBadge, ReviewSlideshow } from "@/components/Reviews";
 import { FaqJsonLd } from "@/components/StructuredData";
 import { whatsappHref, tintServices, repairServices } from "@/lib/site-config";
@@ -134,6 +135,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Our work */}
+      <WorkGallery />
 
       {/* Tints */}
       <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
