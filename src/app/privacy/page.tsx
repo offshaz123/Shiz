@@ -30,7 +30,7 @@ const sections = [
   },
   {
     heading: "6. Cookies",
-    body: `This website may use essential cookies required for it to function correctly, and a small amount of local browser storage to remember your chosen light/dark display preference. You can control cookies through your browser settings.`,
+    body: `This website uses essential cookies required for it to function correctly, and a small amount of local browser storage to remember your chosen light/dark display preference. We also load Google's advertising tag, which sets cookies used to measure the performance of our Google Ads campaigns and may be used by Google for advertising purposes. You can control or block cookies through your browser settings, and you can opt out of personalised Google advertising at google.com/settings/ads.`,
   },
   {
     heading: "7. Your rights",
