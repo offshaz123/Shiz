@@ -49,6 +49,7 @@ keywords, dealership social strategy).
 - Meta & Instagram Ads for Cleaning Companies (industry-specific)
 - Writing a Follow-Up Sequence That Doesn't Feel Like Nagging (practical how-to)
 - Google Business Profile vs Paid Ads: Where Should a Local Business Start? (comparison/explainer)
+- Why Your Cost Per Lead Went Up (and When to Worry) (cost & expectation-setting)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -148,7 +149,7 @@ keywords, dealership social strategy).
 ## Backlog — cost & expectation-setting (added 2026-09-02 research round)
 - [x] What Does It Cost to Get a Customer? Working Out Your Real Number — target: "customer
       acquisition cost small business UK", "how much to spend to get a customer"
-- [ ] Why Your Cost Per Lead Went Up (and When to Worry) — target: "Facebook ads cost per lead
+- [x] Why Your Cost Per Lead Went Up (and When to Worry) — target: "Facebook ads cost per lead
       increasing", "why are my Facebook ads more expensive"
 - [ ] Retainer or Per Campaign? How Marketing Agencies Charge — target: "marketing agency
       retainer vs project UK", "how do marketing agencies charge"

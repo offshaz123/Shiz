@@ -16,6 +16,74 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "why-your-cost-per-lead-went-up",
+    title: "Why Your Cost Per Lead Went Up (and When to Worry)",
+    description:
+      "Rising lead costs are usually one of five things, and most of them aren't a problem. Here's how to tell a bad fortnight from a campaign that's genuinely failing.",
+    publishedAt: "2026-09-10",
+    keywords: [
+      "Facebook ads cost per lead increasing",
+      "why are my Facebook ads more expensive",
+      "rising cost per lead Meta",
+      "Meta ads performance dropped",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "The campaign was producing leads at £8. This week they're £14. Nothing was changed, and the obvious conclusion is that something has broken.",
+          "Usually it hasn't. Lead costs move around constantly, and the difference between a normal fluctuation and a genuine problem is mostly a question of how long you look before reacting.",
+        ],
+      },
+      {
+        heading: "Check the timeframe before anything else",
+        paragraphs: [
+          "A single bad week means very little. Small budgets produce small numbers, and small numbers swing wildly — if you get eight leads a week, two quiet days can double your apparent cost per lead without anything having changed.",
+          "Compare a month against the previous month rather than this week against last. If the monthly figure is broadly flat, there's nothing to fix and the temptation to intervene is the actual risk. Changing an ad set sends it back into the learning phase, so a knee-jerk reaction to a bad week frequently causes the very problem it was meant to solve.",
+          "Only when a rise holds across several weeks is it worth investigating properly.",
+        ],
+      },
+      {
+        heading: "The five usual causes",
+        paragraphs: [
+          "Once it's a real trend rather than noise, it's almost always one of these:",
+        ],
+        bullets: [
+          "Audience fatigue — check frequency. If people have seen the ad many times, you've exhausted the pool. This hits local businesses hardest, because a tight radius means a small audience",
+          "Creative fatigue — the ad itself has stopped being interesting. Click-through rate falling while frequency stays flat points here",
+          "Seasonal competition — costs rise when more advertisers bid. The run-up to Christmas and January are both expensive, and you're paying for everyone else's budget as much as your own",
+          "You changed something — a new budget, new targeting or new creative resets learning, and costs usually rise for several days afterwards before settling",
+          "Tracking has broken — if conversions stopped being recorded properly, the leads may still be arriving while the report says otherwise. Worth ruling out first, because it's the one that isn't real",
+        ],
+      },
+      {
+        heading: "The fix depends on which one it is",
+        paragraphs: [
+          "Fatigue of either kind needs new creative — genuinely different, not the same photo with different words. This is the most common cause and the most commonly misdiagnosed one, because rising costs feel like a targeting problem.",
+          "Seasonal competition needs patience or a wider audience. There's no clever way to bid against a market that's temporarily more expensive, and campaigns that get switched off in December often cost more to restart in February than staying on would have.",
+          "If you made a change, wait. Give it a fortnight before judging, and resist making a second change on top of the first — that's how campaigns end up permanently unsettled.",
+          "And if it's tracking, fix the tracking. Nothing else you do will be based on real numbers until you have.",
+        ],
+      },
+      {
+        heading: "When rising costs don't matter",
+        paragraphs: [
+          "Here's the part that catches people out: cost per lead going up is sometimes the sign of an improvement.",
+          "Tighten your form to filter out accidental submissions, add a qualifying question, or put your price in the ad, and your cost per lead will rise. You're buying fewer, better enquiries on purpose. Every report will show the change as negative and your business will be doing better.",
+          "So before reacting, check what happened after the leads arrived. If cost per lead rose from £8 to £14 but the proportion who answered the phone doubled, that's not a problem — that's the campaign getting more useful.",
+          "This is why cost per lead should never be looked at alone. The number that decides anything is what a customer costs you, and that can fall while cost per lead rises.",
+        ],
+      },
+      {
+        heading: "When it is genuinely worth worrying",
+        paragraphs: [
+          "Sustained increases across two months, with no change at your end and no improvement in lead quality, are worth taking seriously — particularly if click-through rate is falling at the same time.",
+          "The other real warning sign is cost per customer rising rather than cost per lead. That means something in the chain after the ad has changed, and no amount of work in the ad account will address it.",
+          "Everything short of that is usually a fortnight that looked worse than it was. The most expensive habit in paid advertising isn't overspending — it's reacting to noise.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "google-business-profile-vs-paid-ads",
     title: "Google Business Profile vs Paid Ads: Where Should a Local Business Start?",
     description:
