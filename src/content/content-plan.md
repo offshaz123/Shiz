@@ -50,6 +50,7 @@ keywords, dealership social strategy).
 - Writing a Follow-Up Sequence That Doesn't Feel Like Nagging (practical how-to)
 - Google Business Profile vs Paid Ads: Where Should a Local Business Start? (comparison/explainer)
 - Why Your Cost Per Lead Went Up (and When to Worry) (cost & expectation-setting)
+- Meta & Instagram Ads for Estate Agents and Property Businesses (industry-specific)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -59,7 +60,7 @@ keywords, dealership social strategy).
 - [x] Meta & Instagram Ads for Health, Beauty & Wellness — target: "Instagram ads for salons",
       "Facebook ads for beauty clinics UK" (note: Meta has restricted-category ad rules for
       health/beauty claims — flag anything that touches medical claims)
-- [ ] Meta & Instagram Ads for Real Estate & Property — target: "Facebook ads for estate agents",
+- [x] Meta & Instagram Ads for Real Estate & Property — published as "for Estate Agents and Property Businesses" — target: "Facebook ads for estate agents",
       "Instagram lead ads property UK"
 - [x] Meta & Instagram Ads for Restaurants & Hospitality — target: "Instagram ads for
       restaurants UK", "Facebook ads for cafes"

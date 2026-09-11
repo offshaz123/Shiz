@@ -16,6 +16,68 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-for-estate-agents-property",
+    title: "Meta & Instagram Ads for Estate Agents and Property Businesses",
+    description:
+      "Property sits in Meta's housing category, which removes the targeting most agencies reach for first. Here's what actually works inside those rules.",
+    publishedAt: "2026-09-11",
+    keywords: [
+      "Facebook ads for estate agents",
+      "Instagram lead ads property UK",
+      "property marketing Facebook ads",
+      "estate agent social media advertising",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Property is one of the most visual things anyone advertises, which makes social media an obvious fit. It's also one of the few categories where the platform deliberately takes your best targeting tools away.",
+          "Most campaigns in this sector fail for that reason rather than anything to do with the properties. The plan was built as though normal targeting rules applied, and they don't.",
+        ],
+      },
+      {
+        heading: "Housing is a special ad category",
+        paragraphs: [
+          "Adverts for property for sale or rent fall into Meta's housing category and have to be declared when you build the campaign. This isn't optional and it isn't a grey area.",
+          "Declaring removes a great deal: no age or gender targeting, detailed interest and behaviour targeting heavily restricted, and a wider minimum location radius than a local campaign would normally use.",
+          "The rule exists because targeted property advertising has been used to exclude people from neighbourhoods — that's unlawful discrimination under the Equality Act, and the restriction is there to prevent it rather than to inconvenience advertisers.",
+          "Running housing ads undeclared is one of the more reliable routes to a restricted ad account. Anyone offering to target first-time buyers by age or investors by interest is either unaware of the category or planning to ignore it, and both end the same way.",
+        ],
+      },
+      {
+        heading: "The creative has to do the qualifying",
+        paragraphs: [
+          "If the targeting can't narrow the audience, the advert must. That sounds like a handicap and mostly isn't — it just moves the work somewhere more useful.",
+          "An ad that opens with the town, the property type and the price is invisible to everyone it doesn't apply to. \"Three-bed semi in Consett, £145,000\" needs no interest targeting to find the right person, because the wrong people scroll past without registering it.",
+          "This is why specificity matters more in property than almost anywhere. Vague brand advertising — \"your local property experts\" — has no filtering power at all, and inside a restricted category that's fatal.",
+        ],
+      },
+      {
+        heading: "Vendors are worth more than buyers",
+        paragraphs: [
+          "For estate agencies, buyer enquiries are plentiful and cheap. Instructions are scarce and valuable, and most agency advertising spends its budget on the wrong one because listings are easier to post.",
+          "Campaigns aimed at people thinking of selling behave differently. The offer isn't a property, it's a valuation, and the honest version works better than the pushy one — what a house like yours recently sold for, how long things are taking locally, what to do before photographs.",
+          "Bear in mind the personal attributes rule still applies. Copy that implies knowledge about someone's circumstances — that they're downsizing, divorcing, or struggling — will get pulled. Describe the service, not the situation you imagine they're in.",
+        ],
+      },
+      {
+        heading: "If you're advertising investment property",
+        paragraphs: [
+          "Sourcing businesses and investment-property sellers face everything above plus a second layer, and it's the one that causes real trouble.",
+          "Returns figures need a clear basis and appropriate risk warnings. Anything suggesting capital is safe, or that a yield is assured, is a problem under advertising rules and under Meta's prohibition on implying unrealistic economic outcomes — property values fall and tenants leave, and an advert that implies otherwise is a genuine liability rather than a stylistic choice.",
+          "It's also worth being clear about what's being sold. A straightforward sale of a physical property is different from anything structured as a managed or fractional arrangement, and the second can bring regulatory obligations that sit well outside a marketing conversation. If there's any doubt, that needs proper advice before a campaign runs, not after.",
+        ],
+      },
+      {
+        heading: "The decision takes months, so the follow-up matters more",
+        paragraphs: [
+          "Nobody buys a house, or an investment property, the week they first enquire. Someone requesting a valuation may sell in nine months. Someone downloading a guide may buy next year.",
+          "That makes the follow-up the whole business. A lead that gets one call and then nothing is worth very little; the same lead kept warm for six months is worth a great deal. Guides, market updates and new listings all give you a reason to stay in contact without chasing.",
+          "And it doesn't contradict replying quickly. Speed wins the first conversation — property enquiries go to several agents at once, and the first to respond usually gets the viewing. Patience wins the second half. Businesses in this sector need both, and most manage neither.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "why-your-cost-per-lead-went-up",
     title: "Why Your Cost Per Lead Went Up (and When to Worry)",
     description:
