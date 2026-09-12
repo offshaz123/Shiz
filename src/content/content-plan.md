@@ -51,6 +51,7 @@ keywords, dealership social strategy).
 - Google Business Profile vs Paid Ads: Where Should a Local Business Start? (comparison/explainer)
 - Why Your Cost Per Lead Went Up (and When to Worry) (cost & expectation-setting)
 - Meta & Instagram Ads for Estate Agents and Property Businesses (industry-specific)
+- NAP Consistency: The Boring Local SEO Job That Actually Matters (local search)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -166,7 +167,7 @@ keywords, dealership social strategy).
 ## Backlog — local search (added 2026-09-02 research round)
 - [x] Your Google Business Profile Is Doing More Work Than Your Website — target: "Google
       Business Profile optimisation UK", "local map pack ranking"
-- [ ] NAP Consistency: The Boring Local SEO Job That Actually Matters — target: "NAP citations
+- [x] NAP Consistency: The Boring Local SEO Job That Actually Matters — target: "NAP citations
       UK local SEO", "business listings consistency"
 
 ## Backlog — industry-specific (added 2026-09-02 research round)

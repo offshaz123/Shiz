@@ -16,6 +16,72 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "nap-consistency-local-seo",
+    title: "NAP Consistency: The Boring Local SEO Job That Actually Matters",
+    description:
+      "Your business details are scattered across dozens of sites, and where they disagree Google trusts you less. Fixing it is dull, cheap and genuinely effective.",
+    publishedAt: "2026-09-12",
+    keywords: [
+      "NAP citations UK local SEO",
+      "business listings consistency",
+      "local SEO citations small business",
+      "inconsistent business details Google",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "NAP stands for name, address and phone number. It's the least interesting thing in local search and one of the few jobs where an afternoon of dull work produces a genuine improvement.",
+          "The problem it solves is simple. Your business details appear on dozens of sites — your own, Google, directories you signed up to years ago, listings you never created at all. Where those details disagree, Google has less confidence it's looking at one real business, and confidence is what local rankings are built on.",
+        ],
+      },
+      {
+        heading: "Why the details drift",
+        paragraphs: [
+          "Almost nobody creates inconsistency deliberately. It accumulates.",
+          "You moved premises and updated your website but not the twelve directories. You changed phone provider. Someone wrote \"Ltd\" on one listing and left it off another. A directory scraped your details from an old source and published a version you've never seen.",
+          "None of these feel like a problem individually, and collectively they're why a business that should rank locally quietly doesn't.",
+        ],
+      },
+      {
+        heading: "Pick one version and stick to it",
+        paragraphs: [
+          "Before changing anything, decide the exact format you'll use everywhere. Write it down — this is the reference you'll check every listing against:",
+        ],
+        bullets: [
+          "The trading name exactly as customers know it, and be consistent about whether Ltd is included",
+          "The address in one fixed format, including whether it's Street or St, Road or Rd, and how the unit number is written",
+          "One phone number. Not the mobile on some listings and the landline on others",
+          "The website with or without www, matching whichever your site actually resolves to",
+          "The same opening hours, updated in one place when they change",
+        ],
+      },
+      {
+        heading: "Where to fix it, in order",
+        paragraphs: [
+          "Start with Google Business Profile, since it matters most, then your own website — the contact page and the footer, which often disagree with each other on the same site.",
+          "After that, work through the big directories, the trade bodies you belong to, your social profiles, and anywhere your business is listed as part of a membership or accreditation. Searching your phone number in quotation marks turns up listings you'd forgotten, and often some you never made.",
+          "Old listings from a previous address cause the most damage and are the easiest to miss, because nobody thinks to look for something they don't remember creating. Most directories have a claim or report process for exactly this.",
+        ],
+      },
+      {
+        heading: "The trap that catches agencies",
+        paragraphs: [
+          "Call tracking numbers are worth a specific warning. Putting a different tracking number on your website, your ads and your Google listing tells you which channel produced the call — useful — while quietly destroying the consistency you've just spent an afternoon building.",
+          "It's solvable. Most call tracking systems support dynamic insertion, which shows the tracking number to visitors while leaving the real number in the page for anything reading it automatically. Google's own listing has a field for a secondary number, so the primary can stay as your real one.",
+          "The point isn't to avoid call tracking — knowing where calls come from is genuinely valuable. It's to set it up so it doesn't undo your local search work, which is what happens when nobody thinks about the two together.",
+        ],
+      },
+      {
+        heading: "What to expect from it",
+        paragraphs: [
+          "Be realistic. Consistent details won't put you top of the local results on their own — categories, reviews and proximity all matter more.",
+          "What it does is remove a handicap. It's foundational rather than transformative: the sort of thing that quietly holds a business back without ever announcing itself, and which no amount of work elsewhere fully compensates for.",
+          "It's also one of the few marketing jobs that stays done. Reviews need asking for continually and ads need paying for every month. Fix your business details once, remember to update them when something changes, and that's the job finished — which makes an afternoon of tedium a reasonable trade.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-for-estate-agents-property",
     title: "Meta & Instagram Ads for Estate Agents and Property Businesses",
     description:
