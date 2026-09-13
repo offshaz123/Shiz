@@ -52,6 +52,7 @@ keywords, dealership social strategy).
 - Why Your Cost Per Lead Went Up (and When to Worry) (cost & expectation-setting)
 - Meta & Instagram Ads for Estate Agents and Property Businesses (industry-specific)
 - NAP Consistency: The Boring Local SEO Job That Actually Matters (local search)
+- How to Get More Google Reviews Without Being Annoying (practical how-to)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -157,7 +158,7 @@ keywords, dealership social strategy).
       retainer vs project UK", "how do marketing agencies charge"
 
 ## Backlog — practical how-to (added 2026-09-02 research round)
-- [ ] How to Get More Google Reviews Without Being Annoying — target: "how to ask for Google
+- [x] How to Get More Google Reviews Without Being Annoying — target: "how to ask for Google
       reviews UK", "get more Google reviews small business"
 - [ ] Setting Up Click-to-WhatsApp Ads: A Walkthrough — target: "how to set up WhatsApp ads
       Meta", "click to WhatsApp campaign"

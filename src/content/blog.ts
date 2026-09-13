@@ -16,6 +16,71 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "how-to-get-more-google-reviews",
+    title: "How to Get More Google Reviews Without Being Annoying",
+    description:
+      "Most customers will leave a review if asked properly and at the right moment. Here's how to ask, and which shortcuts are actually illegal in the UK.",
+    publishedAt: "2026-09-13",
+    keywords: [
+      "how to ask for Google reviews UK",
+      "get more Google reviews small business",
+      "asking customers for reviews",
+      "Google review strategy local business",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Almost every business owner knows reviews matter and almost none ask for them consistently. It feels like begging, there's never a good moment, and the customer's already paid and gone.",
+          "But most people will happily leave one if asked at the right time in the right way. The businesses with two hundred reviews aren't better than the ones with six — they just ask, every time, and have made it take ten seconds.",
+        ],
+      },
+      {
+        heading: "Ask at the peak, not later",
+        paragraphs: [
+          "There's a narrow window where someone is most pleased with you, and it's usually the moment the job finishes. The drive is clean, the hair looks right, the boiler's working again.",
+          "By the following Tuesday that feeling has faded into the background and your email is one of forty. The request hasn't got worse — the moment has.",
+          "So ask face to face, at the end, while you're still there. A text or email straight after works too, provided it's genuinely straight after rather than whenever someone gets round to it.",
+        ],
+      },
+      {
+        heading: "Make it one tap",
+        paragraphs: [
+          "Every extra step loses people. \"Find us on Google and leave a review\" means opening Maps, searching, picking the right listing, scrolling — and by step three they've given up, with no bad feeling at all. They just stopped.",
+          "Google Business Profile gives you a short link that opens the review box directly. Put it everywhere: in the text you send after a job, in your email signature, on a QR code at the counter, on the invoice.",
+          "The ask itself should be plain and short. \"If you've got a minute, a quick Google review really helps us — here's the link\" outperforms anything more elaborate, because it sounds like a person rather than a campaign.",
+        ],
+      },
+      {
+        heading: "Three shortcuts to avoid",
+        paragraphs: [
+          "This is where businesses get themselves into genuine trouble, and two of these are now against the law rather than merely frowned upon:",
+        ],
+        bullets: [
+          "Fake reviews — writing them, buying them, or getting friends to post them is illegal in the UK under the Digital Markets, Competition and Consumers Act 2024, and the CMA can act on it directly",
+          "Paying or incentivising without disclosure — offering a discount for a review breaches Google's policies, and undisclosed incentivised reviews fall foul of the same legislation",
+          "Review gating — asking customers privately how it went and only sending the Google link to the happy ones. It's explicitly against Google's rules, and it's the one most businesses don't realise is a problem because a lot of software used to do it automatically",
+        ],
+      },
+      {
+        heading: "Steady beats bursts",
+        paragraphs: [
+          "Recency counts. Twenty reviews arriving across the past year says more about a working business than sixty that stopped in 2023, and a sudden cluster after a long silence looks exactly like what it often is.",
+          "So a couple a month, continuously, is worth more than thirty in a fortnight followed by nothing. It's also far easier to sustain, because it becomes part of finishing a job rather than a campaign someone has to run.",
+          "The practical version: decide who asks and when, and make it a step in the job rather than an extra task. Anything that depends on remembering will stop within a month.",
+        ],
+      },
+      {
+        heading: "Reply to everything, especially the bad ones",
+        paragraphs: [
+          "Replies are visible to every future reader, and they're read more carefully than the reviews themselves.",
+          "A measured reply to a poor review does more good than the review does harm. Acknowledge it, give the correction briefly if there is one, and offer to sort it out. Anyone reading is judging how you handle a problem, because that's what they're worried about happening to them.",
+          "Arguing does the opposite, however justified you are. The reader has no way to judge who's right and will side with the calmer party every time.",
+          "And a perfect five-star average with no dissent at all reads as suspicious to a lot of people. A handful of four-star reviews and a well-handled complaint make the good ones more believable, not less.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "nap-consistency-local-seo",
     title: "NAP Consistency: The Boring Local SEO Job That Actually Matters",
     description:
