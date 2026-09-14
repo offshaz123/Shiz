@@ -53,6 +53,7 @@ keywords, dealership social strategy).
 - Meta & Instagram Ads for Estate Agents and Property Businesses (industry-specific)
 - NAP Consistency: The Boring Local SEO Job That Actually Matters (local search)
 - How to Get More Google Reviews Without Being Annoying (practical how-to)
+- WhatsApp Business App vs API: Which Does a Small Business Actually Need? (comparison/explainer)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -146,7 +147,7 @@ keywords, dealership social strategy).
       WhatsApp ads UK", "WhatsApp ads vs lead forms"
 - [x] Google Business Profile vs Paid Ads: Where Should a Local Business Start? — target:
       "Google Business Profile vs Facebook ads", "local business marketing priorities"
-- [ ] WhatsApp Business App vs API: Which Does a Small Business Actually Need? — target:
+- [x] WhatsApp Business App vs API: Which Does a Small Business Actually Need? — target:
       "WhatsApp Business API small business UK"
 
 ## Backlog — cost & expectation-setting (added 2026-09-02 research round)

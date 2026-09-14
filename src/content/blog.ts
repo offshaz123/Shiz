@@ -16,6 +16,75 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "whatsapp-business-app-vs-api",
+    title: "WhatsApp Business App vs API: Which Does a Small Business Actually Need?",
+    description:
+      "Most businesses need the free app and are told they need the API. Here's what each one does, what the API really costs, and when the switch is worth making.",
+    publishedAt: "2026-09-14",
+    keywords: [
+      "WhatsApp Business API small business UK",
+      "WhatsApp Business app vs API",
+      "WhatsApp for business UK",
+      "do I need WhatsApp API",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "WhatsApp is how a great many UK customers prefer to contact a business, which makes it worth setting up properly. There are three ways to do it and the differences are badly explained, usually by people selling the most expensive one.",
+          "For most small businesses the free option is the right answer for longer than they're led to believe.",
+        ],
+      },
+      {
+        heading: "Don't run a business on personal WhatsApp",
+        paragraphs: [
+          "Plenty do, and it works until it doesn't. There's no business profile, so customers see a personal account. There's no way to hand it to someone else without handing over your phone. And work conversations sit in the same list as your family group.",
+          "The bigger issue is that it's not yours in any transferable sense. If the person holding that phone leaves, the customer relationships go with them.",
+          "The Business app is free and takes ten minutes. There's no good reason to stay on a personal account.",
+        ],
+      },
+      {
+        heading: "What the free Business app gives you",
+        paragraphs: [
+          "More than most people realise:",
+        ],
+        bullets: [
+          "A proper business profile with your address, hours, website and a description",
+          "Away messages and a greeting for first-time contacts, so nobody is met with silence out of hours",
+          "Quick replies — saved answers to the questions you type forty times a week",
+          "Labels to sort conversations into new enquiry, quoted, booked and so on",
+          "A catalogue for services or products, and linking to your Facebook and Instagram pages",
+        ],
+      },
+      {
+        heading: "Where the app runs out",
+        paragraphs: [
+          "It's built around one business with one number, and that assumption is where the limits come from.",
+          "Several people can't work the inbox properly as a team. It doesn't connect to a CRM, so conversations live in the app and nowhere else — no record of what was said when someone leaves, and no way to see that a WhatsApp enquiry became a customer.",
+          "Automation stops at away messages and quick replies. You can't trigger a follow-up sequence, or have an enquiry create a record automatically, or send a reminder the day before an appointment.",
+          "None of that matters when it's you and your phone. All of it matters when there are three of you and a hundred conversations a month.",
+        ],
+      },
+      {
+        heading: "What the API adds, and what it costs",
+        paragraphs: [
+          "The API isn't an app — it's a connection between WhatsApp and other software, which means you need a platform on top of it. That's usually the real cost rather than WhatsApp itself.",
+          "What you get is a shared inbox several people can work, conversations recorded against a contact in your CRM, automated follow-ups and reminders, and the ability to message customers first using approved templates rather than only replying.",
+          "Charging is per conversation or message depending on the category, and rates change often enough that anything quoted here would be out of date — check the current rates rather than trusting a figure in an article. The platform sitting on top usually has a monthly fee too.",
+          "One practical warning: moving a number from the app to the API isn't casual. Chat history doesn't carry over, and it isn't something to trial on your main business number without planning.",
+        ],
+      },
+      {
+        heading: "How to decide",
+        paragraphs: [
+          "Stay on the app if it's you or one other person answering, you can keep up with the volume, and you're content tracking enquiries elsewhere. This covers most sole traders and small teams, and there's no prize for outgrowing it early.",
+          "Move to the API when several people need the same inbox, when enquiries are getting lost because nothing is recorded, or when you genuinely need automated follow-up rather than just wanting it. Volume alone isn't the trigger — disorganisation is.",
+          "Worth knowing: click-to-WhatsApp ads work with both. You don't need the API to advertise into WhatsApp, which is the upgrade most often suggested unnecessarily.",
+          "The honest test is whether you're losing money to the app's limits. If enquiries are slipping through and nobody can tell you what happened to last month's, the API pays for itself. If you're keeping up fine, it's an expense that solves a problem you haven't got yet.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-to-get-more-google-reviews",
     title: "How to Get More Google Reviews Without Being Annoying",
     description:
