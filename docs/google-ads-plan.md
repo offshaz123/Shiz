@@ -119,8 +119,8 @@ Essex. Expected to be a major volume driver once targeting is London.
 | Networks | Search only — **Display OFF, Search Partners OFF** |
 | Location | Nine named areas (see below), **Presence only** — not "presence or interest" |
 | Language | English |
-| Bidding | Maximise Clicks, max CPC £2.50 for week 1; switch to Maximise Conversions after ~15 real conversions |
-| Budget | £26/day |
+| Bidding | **Maximise Conversions**, no target CPA. Switched from Maximise Clicks on 15 Sep 2026. A target CPA was briefly set at £26 and removed: with a £26 daily budget that allowed roughly one conversion a day, far too tight for smart bidding to learn. Do not set a tCPA until the real cost per lead is known from data. |
+| Budget | £26/day — live since 15 Sep 2026. Previously £20/day, which ran at £592/month against the £800 budget. |
 | Ad schedule | **24/7** — restricting hours only helps a budget-constrained campaign, and this one spends ~£20 of £26. Use a bid adjustment later if night calls convert worse |
 | Devices | Computers −70%, Tablets −100% |
 | Conversion goals | Campaign-specific: Submit lead form + Phone call leads only |
