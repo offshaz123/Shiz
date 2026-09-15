@@ -355,11 +355,25 @@ rather than raising the budget.
 -birmingham
 -watford
 -peterborough
+
+# Added 15 Sep 2026 after checking the live list against the search terms.
+# `cheap` was already blocked but "cheapest car tint shop near me" still served:
+# negative keywords do NOT match close variants, so plurals and word endings
+# have to be added explicitly. `ilford` was in the plan from the start but had
+# never actually made it into the list.
+-cheapest
+-ilford
 ```
 
-Deliberately **not** blocked: `hertfordshire`. "window tinting hertfordshire"
-converted. Targeting is presence-only, so that was someone standing in Enfield
-searching across the county border — a real local lead, not a stray.
+Deliberately **not** blocked:
+
+- `hertfordshire` — "window tinting hertfordshire" converted. Targeting is
+  presence-only, so that was someone standing in Enfield searching across the
+  county border: a real local lead, not a stray.
+- `suntek`, `llumar`, and other premium film brands — these are manufacturers,
+  not competing shops. Someone searching a premium film by name may well be a
+  good prospect. Zero clicks so far; revisit only if they start costing money.
+
 
 Note: `-wrap`, `-chrome delete` and `-detailing` block dechroming and ceramic
 detailing searches. Deliberate — this campaign sells tints only. Those services
