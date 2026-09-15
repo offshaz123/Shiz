@@ -18,7 +18,10 @@ export function FindUs() {
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
             Finding Us
           </span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+          {/* Gold rather than plain foreground: every other section heading on
+              the page is white, so this one needs to catch the eye of someone
+              scrolling to find out where to drive. */}
+          <h2 className="brand-gradient-text mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
             Where we are
           </h2>
         </div>

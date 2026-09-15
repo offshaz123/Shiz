@@ -102,6 +102,11 @@ export default function LondonLandingPage() {
         </div>
       </section>
 
+      {/* Where we are, straight after the hero — on a landing page the first
+          question after "how much" is "where are you", and a driver who cannot
+          find us is a lead already paid for and lost */}
+      <FindUs />
+
       {/* Standard vs Ceramic */}
       <section className="border-t border-border bg-surface">
         <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
@@ -202,9 +207,6 @@ export default function LondonLandingPage() {
           <LeadForm compact />
         </div>
       </section>
-
-      {/* How to find the unit — the address alone sends people to the house */}
-      <FindUs />
 
       {/* Reviews sit after the form — reassurance for anyone still deciding */}
       <ReviewSlideshow heading="What London drivers say about us" />
