@@ -88,10 +88,14 @@ export function FindUs() {
           ) : null}
 
           <div className="mt-8 border-t border-border pt-7 text-sm text-muted">
-            <p className="font-semibold text-foreground">Address for reference</p>
+            <p className="font-semibold text-foreground">Postal address only</p>
             <p className="mt-1.5">
               {address.line1}
               {address.line2 ? `, ${address.line2}` : ""}, {address.city} {address.postcode}
+            </p>
+            <p className="mt-1.5 text-xs">
+              This is the house. Don&apos;t put it in your sat nav — come to the Billet Road
+              entrance.
             </p>
             <p className="mt-3">
               {siteConfig.hours[0].day} · {siteConfig.hours[0].time}
