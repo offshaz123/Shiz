@@ -2,6 +2,7 @@ import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { ServiceCard } from "@/components/ServiceCard";
 import { WorkGallery } from "@/components/WorkGallery";
+import { FindUs } from "@/components/FindUs";
 import { ReviewBadge, ReviewSlideshow } from "@/components/Reviews";
 import { FaqJsonLd } from "@/components/StructuredData";
 import { whatsappHref, tintServices, repairServices } from "@/lib/site-config";
@@ -331,6 +332,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* How to find the unit — the address alone sends people to the house */}
+      <FindUs />
 
       {/* Customer reviews — last thing on the page, after the form */}
       <ReviewSlideshow />

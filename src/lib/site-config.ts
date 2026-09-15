@@ -16,6 +16,22 @@ export const siteConfig = {
     postcode: "E17 5DH",
     country: "United Kingdom",
   },
+  // How to actually find the unit. The registered address is a house; the
+  // workshop is the unit behind it, so a sat nav pointed at the street address
+  // sends customers to the wrong door. `mapsQuery` searches Google by business
+  // name and postcode, which lands on the pin the owner set on the shop itself
+  // rather than on the house.
+  //
+  // `steps` are written directions. Leave the array empty until the real
+  // route is confirmed by the business — wrong directions are worse than none.
+  directions: {
+    mapsQuery: "Executive Tints & Repairs, E17 5DH",
+    /** One line, shown prominently. Say where the entrance actually is. */
+    note: "The workshop is the unit behind the house — carry on past the front door and follow the driveway round to the back.",
+    steps: [] as string[],
+    /** Optional photo of the entrance, so drivers know what to look for. */
+    entrancePhoto: "",
+  },
   // `day`/`time` are what visitors read. `schemaDays`/`opens`/`closes` feed the
   // AutoRepair JSON-LD, which needs individual day names and 24-hour times —
   // Google won't parse "Monday - Sunday" or "9:00am" for rich results.
@@ -154,6 +170,12 @@ export const googleSiteVerification = "";
 export const hasPublishedReviews = siteConfig.reviews.count > 0;
 
 export const hasReviewQuotes = customerReviews.length > 0;
+
+// Deep link that opens Google Maps searching for the business by name, so the
+// pin resolves to the workshop rather than the residential street address.
+export const mapsSearchHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  siteConfig.directions.mapsQuery
+)}`;
 
 export const socialProfileUrls = Object.values(siteConfig.social).filter(Boolean);
 

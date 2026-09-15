@@ -3,6 +3,7 @@ import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { ReviewBadge, ReviewSlideshow } from "@/components/Reviews";
 import { WorkGallery } from "@/components/WorkGallery";
+import { FindUs } from "@/components/FindUs";
 import { TrackedCallLink } from "@/components/TrackedCallLink";
 import { siteConfig, whatsappHref, tintServices } from "@/lib/site-config";
 
@@ -201,6 +202,9 @@ export default function LondonLandingPage() {
           <LeadForm compact />
         </div>
       </section>
+
+      {/* How to find the unit — the address alone sends people to the house */}
+      <FindUs />
 
       {/* Reviews sit after the form — reassurance for anyone still deciding */}
       <ReviewSlideshow heading="What London drivers say about us" />
