@@ -109,6 +109,36 @@ test each, not a large bet.
 "window tinting london" got only 32 impressions because the old campaign targeted
 Essex. Expected to be a major volume driver once targeting is London.
 
+## First 12 days live (4-15 September 2026)
+
+Campaign went live **4 September 2026**.
+
+| | |
+|---|---|
+| Impressions | 946 |
+| Clicks | 68 |
+| CTR | 7.2% |
+| Avg CPC | **£1.56** (old campaign: £2.08 — 25% cheaper) |
+| Conversions | 4 |
+| Reported spend | £106.28 |
+
+The search terms report only lists terms Google deems high-volume enough to
+report, so £106.28 is **not** total campaign spend and the cost per conversion
+cannot be derived from it. Take the campaign-level Cost figure for the true CPA.
+
+Waste found: **£21.63 of £106.28 — one pound in five** — on mobile fitting,
+home/building glass, windscreens, out-of-area towns, competitor brands and
+price-shopping. Negatives added the same day.
+
+Several terms that clicked (`cheap window tint`, `car window tinting southend`,
+`windscreen tint near me`) were already on the negative list, which suggests the
+list was not attached to the campaign for the first few days. Verify the
+attachment before reading too much into early waste figures.
+
+Missed opportunity found in the data: "car window tint **open sunday**" and
+"tints near me **open now**" both drew clicks. The business is open seven days
+and the ads never said so — callout added.
+
 ## Campaign settings
 
 | Setting | Value |
@@ -303,7 +333,33 @@ rather than raising the budget.
 -select tints
 -elite styling
 -mq styling
+
+# Added 15 Sep 2026 from the first 12 days of live search terms.
+# `mobile` was the biggest single gap — we do not do mobile fitting, and it
+# covered 14 search terms and £6.82 of the £106.28 reported spend.
+-mobile
+-home
+-house
+-houses
+-residential
+-conservatory
+-office
+-building
+-nitro
+-suntek
+-xpel
+-llumar
+-polarizado
+-barnet
+-luton
+-birmingham
+-watford
+-peterborough
 ```
+
+Deliberately **not** blocked: `hertfordshire`. "window tinting hertfordshire"
+converted. Targeting is presence-only, so that was someone standing in Enfield
+searching across the county border — a real local lead, not a stray.
 
 Note: `-wrap`, `-chrome delete` and `-detailing` block dechroming and ceramic
 detailing searches. Deliberate — this campaign sells tints only. Those services
