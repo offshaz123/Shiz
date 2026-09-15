@@ -25,8 +25,11 @@ export function FindUs() {
 
         <div className="mt-10 rounded-3xl border border-border bg-background p-7 sm:p-9">
           {/* The warning comes before the address on purpose. */}
-          <div className="flex gap-3.5 rounded-2xl border border-brand/30 bg-brand/5 p-4 sm:p-5">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden className="mt-0.5 h-5 w-5 shrink-0 text-brand">
+          {/* Red rather than brand gold: this is a warning, not a feature, and
+              drivers ending up at the house is the single most expensive way to
+              lose a booked job. */}
+          <div className="flex gap-3.5 rounded-2xl border-2 border-[#d92d20] bg-[#d92d20]/[0.04] p-4 dark:border-[#f0564d] dark:bg-[#f0564d]/[0.07] sm:p-5">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden className="mt-0.5 h-5 w-5 shrink-0 text-[#d92d20] dark:text-[#f0564d]">
               <path d="M12 9v4.5M12 17h.01M10.3 3.9 2.5 17.4A2 2 0 0 0 4.2 20.5h15.6a2 2 0 0 0 1.7-3.1L13.7 3.9a2 2 0 0 0-3.4 0Z"
                 stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
