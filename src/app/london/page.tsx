@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { ReviewBadge, ReviewSlideshow } from "@/components/Reviews";
+import { WorkGallery } from "@/components/WorkGallery";
 import { TrackedCallLink } from "@/components/TrackedCallLink";
 import { siteConfig, whatsappHref, tintServices } from "@/lib/site-config";
 
@@ -147,6 +148,9 @@ export default function LondonLandingPage() {
           </div>
         </div>
       </section>
+
+      {/* Our work — proof between the prices and the pitch */}
+      <WorkGallery />
 
       {/* Mid-page CTA repeat */}
       <section className="mx-auto max-w-3xl px-5 py-20 text-center sm:px-8">

@@ -139,6 +139,35 @@ Missed opportunity found in the data: "car window tint **open sunday**" and
 "tints near me **open now**" both drew clicks. The business is open seven days
 and the ads never said so — callout added.
 
+## Real performance, 5-15 September 2026
+
+Taken from the campaign row, not the search terms report — the search terms
+file covered only £106.28 of £195.74, roughly half. **Never quote a cost per
+conversion from the search terms report.**
+
+| | |
+|---|---|
+| Impressions | 1,564 |
+| Clicks | 125 |
+| CTR | 7.99% |
+| Avg CPC | £1.57 |
+| Cost | £195.74 |
+| Conversions | 5 |
+| **Cost per lead** | **£39.15** |
+| **Click-to-lead rate** | **4.0%** |
+
+The click side is healthy: £1.57 a click against the old campaign's £2.08, and
+an 8% CTR. The weakness is what happens after the click. A local service
+landing page should convert 6-10%; at 8% the same 125 clicks would have
+produced 10 leads at £19.57 rather than 5 at £39.15, for identical spend.
+
+**So the lever is the landing page and the phone, not the bidding.** Cheaper
+clicks are not available; a better conversion rate is.
+
+First fix applied 15 Sep: `/london` carried no photographs at all — the ads
+have been landing on a page of text and gradients. The work gallery now runs
+there too, between the price comparison and the pitch.
+
 ## Campaign settings
 
 | Setting | Value |
