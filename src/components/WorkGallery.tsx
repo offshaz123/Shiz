@@ -5,10 +5,9 @@ import { workPhotos } from "@/content/work";
 // portrait fitting shot carries the full height of the right column, which
 // stops the section reading like a stock photo strip.
 const placement = [
-  "lg:col-span-2",                    // BMW, wide, top left
-  "lg:col-start-3 lg:row-start-1 lg:row-span-2", // fitting shot, tall, right
-  "lg:col-start-1 lg:row-start-2",    // Golf
-  "lg:col-start-2 lg:row-start-2",    // Range Rover
+  "lg:col-span-2 lg:row-span-2", // Lexus — hero, shows the unit itself
+  "lg:row-span-2",               // fitting shot, portrait, fills the tall cell
+  // everything after this sits in a single cell on the bottom row
 ];
 
 export function WorkGallery() {
@@ -29,13 +28,13 @@ export function WorkGallery() {
           </p>
         </div>
 
-        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:grid-rows-[500px_240px]">
+        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:auto-rows-[240px]">
           {workPhotos.map((photo, i) => (
             <figure
               key={photo.src}
               className={`group relative overflow-hidden rounded-3xl border border-border bg-background ${placement[i] ?? ""}`}
             >
-              <div className="relative h-60 sm:h-64 lg:h-full">
+              <div className="relative h-60 sm:h-56 lg:h-full">
                 <Image
                   src={photo.src}
                   alt={photo.alt}

@@ -21,15 +21,21 @@ export type WorkPhoto = {
 
 export const workPhotos: WorkPhoto[] = [
   {
-    src: "/work/bmw-5-series-tint-unit.jpg",
-    alt: "BMW 5 Series with tinted windows under hexagon lighting inside the Executive Tints & Repairs unit in Walthamstow, rolls of tint film on the wall behind",
-    caption: "BMW 5 Series, tinted in our Walthamstow unit",
-    position: "50% 92%",
+    src: "/work/lexus-rx-tint-unit.jpg",
+    alt: "Lexus RX with tinted windows inside the Executive Tints & Repairs unit in Walthamstow, seen from the roller shutter with hexagon lighting overhead",
+    caption: "Lexus RX in the bay at our Walthamstow unit",
+    position: "50% 42%",
   },
   {
     src: "/work/window-tint-fitting.jpg",
     alt: "Tint film being hand-fitted to the tailgate glass of a black Toyota C-HR",
     caption: "Every tint is hand-fitted, panel by panel",
+  },
+  {
+    src: "/work/bmw-5-series-tint-unit.jpg",
+    alt: "BMW 5 Series with tinted windows under hexagon lighting inside the Executive Tints & Repairs unit in Walthamstow, rolls of tint film on the wall behind",
+    caption: "BMW 5 Series, tinted in our Walthamstow unit",
+    position: "50% 92%",
   },
   {
     src: "/work/vw-golf-r-window-tint.jpg",
