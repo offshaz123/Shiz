@@ -27,8 +27,13 @@ export const siteConfig = {
   directions: {
     mapsQuery: "Executive Tints & Repairs, E17 5DH",
     /** One line, shown prominently. Say where the entrance actually is. */
-    note: "The workshop is the unit behind the house — carry on past the front door and follow the driveway round to the back.",
-    steps: [] as string[],
+    note: "We're opposite Kwik Fit on Billet Road. The workshop is the unit behind the house — carry on past the front door and follow the driveway round to the back.",
+    steps: [
+      "Come off the A406 at the Crooked Billet roundabout and onto Billet Road.",
+      "Head along Billet Road and look out for Kwik Fit — we're opposite it.",
+      "Turn into Cecil Road, which runs straight off Billet Road.",
+      "The workshop is behind the house, not the front door. Carry on past it and follow the driveway round to the back.",
+    ],
     /** Optional photo of the entrance, so drivers know what to look for. */
     entrancePhoto: "",
   },
