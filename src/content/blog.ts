@@ -16,6 +16,81 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "retainer-or-per-campaign-how-agencies-charge",
+    title: "Retainer or Per Campaign? How Marketing Agencies Charge",
+    description:
+      "Monthly fee, project price or a percentage of ad spend. Each one changes what the agency is motivated to do, which matters more than the number itself.",
+    publishedAt: "2026-09-16",
+    keywords: [
+      "marketing agency retainer vs project UK",
+      "how do marketing agencies charge",
+      "Facebook ads management cost UK",
+      "percentage of ad spend agency fee",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Ask three agencies what they charge and you'll get three different structures, which makes comparing them almost impossible. One quotes a monthly fee, one quotes per project, one takes a percentage of what you spend.",
+          "The number matters less than the structure, because each one points the agency's incentives somewhere different. Worth understanding before you sign anything, and worth asking about directly.",
+        ],
+      },
+      {
+        heading: "Monthly retainer",
+        paragraphs: [
+          "A fixed fee each month for ongoing management. The most common arrangement for paid advertising, and usually the right one.",
+          "It fits because advertising isn't a job that finishes. Campaigns need watching, creative fatigues, costs drift, and the work of keeping something running well is continuous rather than a task with an end.",
+          "The risk is paying for attention you're not getting. A retainer can quietly become a subscription to monthly reports nobody reads. The protection is simple — ask what actually happens in a normal month, and check the arrangement is rolling rather than a twelve-month tie.",
+        ],
+      },
+      {
+        heading: "Per project",
+        paragraphs: [
+          "A fixed price for a defined piece of work — a website, a campaign built and handed over, a set of creative.",
+          "Good when the work genuinely has an end. You know the cost up front and there's nothing ongoing to justify.",
+          "It works badly for advertising management, because someone paid to build a campaign and leave has no stake in what it produces afterwards. If a project quote includes running ads, ask what happens in week three when the numbers need acting on.",
+        ],
+      },
+      {
+        heading: "Percentage of ad spend",
+        paragraphs: [
+          "The agency takes a cut of what you spend, often somewhere between ten and twenty percent.",
+          "It's common, and it has an obvious problem: the agency earns more when you spend more, whether or not spending more is right for you. The advice to increase budget will always be available and you'll never quite know how disinterested it is.",
+          "It can be reasonable at larger budgets where the workload genuinely scales with spend. At small business level it tends to align the wrong things, and a fixed fee is easier to trust — you both want the same outcome, which is more customers rather than more spending.",
+        ],
+      },
+      {
+        heading: "Ad spend is not the fee",
+        paragraphs: [
+          "The thing to be absolutely clear on before agreeing anything: the management fee and the money going to Meta are separate, and the ad spend should go directly from your own account.",
+          "That matters for more than accounting. If the ads run through the agency's account you can't see the real numbers, you don't own the campaign history or the audiences you've built, and leaving means starting from nothing.",
+          "Your ad account, your payment method, agency given access. Anything else and you're renting something you should own.",
+          "So when comparing quotes, establish whether the number includes ad spend. Two quotes of £500 mean completely different things if one is fee-only and the other is everything.",
+        ],
+      },
+      {
+        heading: "Questions worth asking",
+        paragraphs: [
+          "Structure aside, a handful of questions tell you most of what you need to know:",
+        ],
+        bullets: [
+          "Whose ad account does this run in, and who owns it if we part ways?",
+          "Is there a minimum term, or is it monthly?",
+          "What happens in a normal month, specifically?",
+          "Who writes the ads, and how often do they get changed?",
+          "What do you report on, and does it include what happened after the lead came in?",
+        ],
+      },
+      {
+        heading: "What we do, and why",
+        paragraphs: [
+          "We charge a fixed monthly fee and take nothing from ad spend, which goes directly to Meta from the client's own account. Plans run monthly with no long-term contract.",
+          "The reason is straightforward. A percentage of spend would mean we earn more by recommending you spend more, and that's a conversation neither side can have honestly. A fixed fee means the only way we do better is by you staying, and you only stay if it works.",
+          "That's not a claim to be more virtuous than anyone else. It's just a structure where our interests and yours point the same way, which is worth more than any promise about intentions.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "whatsapp-business-app-vs-api",
     title: "WhatsApp Business App vs API: Which Does a Small Business Actually Need?",
     description:

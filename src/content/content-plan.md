@@ -54,6 +54,7 @@ keywords, dealership social strategy).
 - NAP Consistency: The Boring Local SEO Job That Actually Matters (local search)
 - How to Get More Google Reviews Without Being Annoying (practical how-to)
 - WhatsApp Business App vs API: Which Does a Small Business Actually Need? (comparison/explainer)
+- Retainer or Per Campaign? How Marketing Agencies Charge (cost & expectation-setting)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -155,7 +156,7 @@ keywords, dealership social strategy).
       acquisition cost small business UK", "how much to spend to get a customer"
 - [x] Why Your Cost Per Lead Went Up (and When to Worry) — target: "Facebook ads cost per lead
       increasing", "why are my Facebook ads more expensive"
-- [ ] Retainer or Per Campaign? How Marketing Agencies Charge — target: "marketing agency
+- [x] Retainer or Per Campaign? How Marketing Agencies Charge — target: "marketing agency
       retainer vs project UK", "how do marketing agencies charge"
 
 ## Backlog — practical how-to (added 2026-09-02 research round)
@@ -177,6 +178,42 @@ keywords, dealership social strategy).
       UK", "domestic cleaning marketing"
 - [ ] Meta & Instagram Ads for Driving Instructors and Driving Schools — target: "Facebook ads
       driving school UK", "marketing for driving instructors"
+
+## Backlog — video & creative (added 2026-09-16 research round)
+- [ ] How to Film Ad Videos on Your Phone Without Them Looking Cheap — target: "how to film
+      Reels for business", "phone video ads small business"
+- [ ] What to Actually Film: Video Ideas for a Local Business — target: "video content ideas
+      small business UK", "what to post on Instagram for business"
+- [ ] Why Rough Videos Often Beat Polished Ones — target: "UGC style ads", "authentic video ads
+      small business"
+
+## Backlog — seasonal & planning (added 2026-09-16 research round)
+- [ ] Q4 Advertising: Why Your Costs Rise in November and What to Do About It — target:
+      "Facebook ads Christmas costs", "Q4 CPM increase UK"
+- [ ] Should You Advertise Over Christmas? — target: "Christmas advertising small business UK",
+      "should I run ads in December"
+- [ ] Planning a Marketing Budget for the Year Ahead — target: "small business marketing budget
+      UK", "how much should I spend on marketing"
+
+## Backlog — comparison/explainer (added 2026-09-16 research round)
+- [ ] Reels, Feed or Stories: Where Should Your Ad Actually Run? — target: "Instagram Reels ads
+      vs feed", "Meta ad placements explained"
+- [ ] Video Ads vs Image Ads: Which Works Better for a Local Business? — target: "video vs image
+      Facebook ads", "do video ads perform better"
+
+## Backlog — industry-specific (added 2026-09-16 research round)
+- [ ] Meta & Instagram Ads for Barbers and Hairdressers — target: "Facebook ads for barbers UK",
+      "Instagram marketing for hairdressers"
+- [ ] Meta & Instagram Ads for Dog Groomers and Pet Services — target: "Facebook ads pet
+      business UK", "marketing for dog groomers"
+- [ ] Meta & Instagram Ads for Mobile Businesses — target: "marketing for mobile businesses UK",
+      "advertising a mobile service"
+
+## Backlog — local search & site (added 2026-09-16 research round)
+- [ ] Google Posts: The Free Feature Almost Nobody Uses — target: "Google Business Profile
+      posts", "how to use Google Posts"
+- [ ] Why Your Website Needs a Proper Thank You Page — target: "thank you page conversion
+      tracking", "what to put on a thank you page"
 
 ## Notes for whoever (human or Routine) picks the next topic
 - Rotate categories — don't publish 3 industry guides in a row
