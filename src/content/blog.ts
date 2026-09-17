@@ -16,6 +16,67 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-for-barbers-hairdressers",
+    title: "Meta & Instagram Ads for Barbers and Hairdressers",
+    description:
+      "The problem is rarely awareness. It's Tuesday afternoons, empty chairs and clients who don't rebook. Here's what advertising can and can't fix.",
+    publishedAt: "2026-09-17",
+    keywords: [
+      "Facebook ads for barbers UK",
+      "Instagram marketing for hairdressers",
+      "how to get more clients as a barber",
+      "salon advertising ideas UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Barbers and salons are among the most natural fits for Instagram there is. The work photographs well, clients genuinely enjoy following the people who cut their hair, and nobody has to be persuaded that the platform is relevant.",
+          "Which is why the advertising usually fails for a different reason than in other trades. It isn't that people don't know you exist. It's that the specific problem — a quiet Tuesday, a chair sitting empty at three o'clock — isn't the problem generic advertising solves.",
+        ],
+      },
+      {
+        heading: "Advertise the gap, not the shop",
+        paragraphs: [
+          "Most salon ads say some version of \"book now\" with a photo of a nice fade. It's pleasant and it achieves very little, because it gives nobody a reason to act today rather than whenever they next think about it.",
+          "The useful version is specific about the gap you're actually trying to fill. Midweek daytime appointments. A new stylist with availability this month. Late openings on a Thursday.",
+          "That's a different message to the same audience, and it converts because it answers a question the person already has — when can I get in — rather than announcing something they already knew.",
+        ],
+      },
+      {
+        heading: "People follow the person, not the shop",
+        paragraphs: [
+          "In this trade the individual is the product. Clients follow their barber between shops, and a salon that advertises only its interior is hiding the thing people actually choose.",
+          "So put the staff in the advertising. Someone talking to camera about what they specialise in outperforms a carousel of finished cuts, because the decision being made is whether to trust a stranger with your appearance.",
+          "It also helps with the real objection for anyone switching, which isn't price. It's the awkwardness of explaining what you want to someone new. An ad where the stylist explains how a first consultation works removes more hesitation than any discount.",
+        ],
+      },
+      {
+        heading: "What the rules allow here",
+        paragraphs: [
+          "Hair styling sits in a comfortable position. Before-and-after photographs of a haircut or a colour are fine, because the prohibition on before-and-after imagery applies to body and health transformations rather than to a fringe.",
+          "Two things do move you into stricter territory. Anything to do with hair loss, scalp conditions or restoration treatments is health, and the rules on unrealistic outcomes and personal attributes apply properly.",
+          "And copy aimed at how someone feels about their appearance breaks the personal attributes rule regardless of trade. \"Hate your hair?\" will get pulled. \"Restyles and colour corrections in Leeds\" says the same thing to the same people and runs without trouble.",
+        ],
+      },
+      {
+        heading: "The discount trap",
+        paragraphs: [
+          "Half price first cut fills chairs with people who came for half price. A proportion never return at full price, and you've paid twice — once for the advert and once in the discount.",
+          "A smaller offer usually works better than a large one. Something modest is enough to prompt a first booking without attracting people whose only interest is the saving.",
+          "Better still, offer something that isn't money off. A consultation, a longer first appointment, a product included. It lowers the barrier without teaching anyone that your normal price is negotiable.",
+        ],
+      },
+      {
+        heading: "Rebooking decides whether any of it pays",
+        paragraphs: [
+          "A client who comes once is worth one haircut. The same client every six weeks is worth several hundred pounds a year, and the difference between those two outcomes is almost entirely decided in the shop rather than in the ad account.",
+          "The single highest-return habit in this trade is asking people to book their next appointment before they leave the chair. It costs nothing, and it changes what you can afford to spend acquiring someone.",
+          "It's also why advertising works better for salons than the numbers first suggest. If a new client is worth twenty pounds you can't spend much finding them. If they're worth four hundred a year, you can spend properly — which is why the businesses that fix rebooking end up advertising more, and the ones that don't conclude advertising doesn't work.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "retainer-or-per-campaign-how-agencies-charge",
     title: "Retainer or Per Campaign? How Marketing Agencies Charge",
     description:

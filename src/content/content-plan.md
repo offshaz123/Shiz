@@ -55,6 +55,7 @@ keywords, dealership social strategy).
 - How to Get More Google Reviews Without Being Annoying (practical how-to)
 - WhatsApp Business App vs API: Which Does a Small Business Actually Need? (comparison/explainer)
 - Retainer or Per Campaign? How Marketing Agencies Charge (cost & expectation-setting)
+- Meta & Instagram Ads for Barbers and Hairdressers (industry-specific)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -202,7 +203,7 @@ keywords, dealership social strategy).
       Facebook ads", "do video ads perform better"
 
 ## Backlog — industry-specific (added 2026-09-16 research round)
-- [ ] Meta & Instagram Ads for Barbers and Hairdressers — target: "Facebook ads for barbers UK",
+- [x] Meta & Instagram Ads for Barbers and Hairdressers — target: "Facebook ads for barbers UK",
       "Instagram marketing for hairdressers"
 - [ ] Meta & Instagram Ads for Dog Groomers and Pet Services — target: "Facebook ads pet
       business UK", "marketing for dog groomers"
