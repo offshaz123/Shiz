@@ -16,6 +16,73 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "why-your-website-needs-a-thank-you-page",
+    title: "Why Your Website Needs a Proper Thank You Page",
+    description:
+      "A message saying \"thanks, we'll be in touch\" isn't a thank you page. The difference matters for your tracking and for whether the lead goes cold.",
+    publishedAt: "2026-09-18",
+    keywords: [
+      "thank you page conversion tracking",
+      "what to put on a thank you page",
+      "lead form thank you page",
+      "track form submissions Meta Pixel",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Most enquiry forms do the same thing when someone submits them. The form disappears, a line of green text appears saying thanks, and that's the end of it.",
+          "It works, in the sense that nothing breaks. But it wastes the single most valuable moment on your entire website, and it makes your advertising harder to measure than it needs to be.",
+        ],
+      },
+      {
+        heading: "Tracking needs somewhere to point",
+        paragraphs: [
+          "The cleanest way to record a conversion is a page that only ever loads after a successful submission. Its own address, reached no other way.",
+          "Without one you're relying on an event firing in JavaScript at the moment of submission, which works until something changes on the page and quietly stops. A dedicated page is much harder to break — if someone is on that URL, they submitted the form.",
+          "It also gives you a straightforward check. Look at how many people reached the thank you page this month and compare it to how many enquiries actually arrived. If those numbers disagree, your tracking is wrong, and you'd rather find that out now than after three months of decisions based on it.",
+          "The common mistake worth avoiding is counting clicks on the submit button instead. That records people who tried, including everyone whose submission failed validation, so it always overstates.",
+        ],
+      },
+      {
+        heading: "The moment you're throwing away",
+        paragraphs: [
+          "Someone who has just submitted an enquiry is more interested in you than they will be at any other point. They've decided, they've typed their details, and they're sitting there with your website open.",
+          "Then most businesses show them a line of text and let them leave.",
+          "That's the moment to do something useful with. Not to sell harder — they've already said yes to talking — but to make the next step easier and to stop them drifting.",
+        ],
+      },
+      {
+        heading: "What to actually put on it",
+        paragraphs: [
+          "Keep it short. This is a page people read for fifteen seconds:",
+        ],
+        bullets: [
+          "Confirmation it worked, and what happens next in plain words. \"We've got it. Someone will call you within the hour\" beats \"thank you for your enquiry\"",
+          "A realistic timeframe, and then beat it. Saying within 24 hours and ringing in ten minutes is a very good first impression",
+          "A way to reach you immediately for anyone impatient — a phone number or a WhatsApp link, because some people will want to talk now",
+          "Something to read while they wait. A relevant article or a short guide keeps you in their attention instead of them moving on",
+          "A booking link, if you take appointments. Someone willing to book straight away shouldn't have to wait for a call to do it",
+        ],
+      },
+      {
+        heading: "It reduces the drift",
+        paragraphs: [
+          "There's a gap between someone enquiring and someone hearing from you, and things happen in that gap. They enquire with two more businesses. They forget which one they contacted. They change their mind.",
+          "A thank you page that sets an expectation narrows that gap. Someone told they'll get a call within the hour is far less likely to fire off three more enquiries in the meantime.",
+          "It also cuts the number of people who don't recognise your name when you ring. \"Who's this?\" is a bad start to a conversation, and it happens less when the page told them who would be calling.",
+        ],
+      },
+      {
+        heading: "Two technical points",
+        paragraphs: [
+          "Give it its own address — something like /thank-you — and make sure it can't be reached by wandering around the site. If people can land on it directly, your conversion numbers become fiction.",
+          "And keep it out of search results. A thank you page ranking on Google is both useless to searchers and a source of phantom conversions from people who never filled in anything. Marking it noindex takes a minute.",
+          "If your site runs on a builder that only offers an inline message, most of them also support redirecting to a page instead. It's usually a setting rather than a rebuild, and it's one of the cheapest improvements you can make to how well you can measure your advertising.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-for-barbers-hairdressers",
     title: "Meta & Instagram Ads for Barbers and Hairdressers",
     description:

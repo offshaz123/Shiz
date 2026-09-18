@@ -56,6 +56,7 @@ keywords, dealership social strategy).
 - WhatsApp Business App vs API: Which Does a Small Business Actually Need? (comparison/explainer)
 - Retainer or Per Campaign? How Marketing Agencies Charge (cost & expectation-setting)
 - Meta & Instagram Ads for Barbers and Hairdressers (industry-specific)
+- Why Your Website Needs a Proper Thank You Page (local search & site)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -213,7 +214,7 @@ keywords, dealership social strategy).
 ## Backlog — local search & site (added 2026-09-16 research round)
 - [ ] Google Posts: The Free Feature Almost Nobody Uses — target: "Google Business Profile
       posts", "how to use Google Posts"
-- [ ] Why Your Website Needs a Proper Thank You Page — target: "thank you page conversion
+- [x] Why Your Website Needs a Proper Thank You Page — target: "thank you page conversion
       tracking", "what to put on a thank you page"
 
 ## Notes for whoever (human or Routine) picks the next topic
