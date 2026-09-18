@@ -86,6 +86,7 @@ export function WebSiteJsonLd() {
     inLanguage: "en-GB",
     publisher: { "@id": `${siteConfig.url}/#organization` },
     hasPart: [
+      { name: "Free Audit", url: `${siteConfig.url}/free-audit` },
       { name: "Services", url: `${siteConfig.url}/services` },
       { name: "Pricing", url: `${siteConfig.url}/pricing` },
       { name: "About", url: `${siteConfig.url}/about` },

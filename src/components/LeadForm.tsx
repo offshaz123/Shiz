@@ -24,7 +24,18 @@ const budgets = [
   "Not sure yet",
 ];
 
-export function LeadForm({ compact = false }: { compact?: boolean }) {
+export function LeadForm({
+  compact = false,
+  source,
+  askWebsite = false,
+  submitLabel = "Get My Free Strategy Call",
+}: {
+  compact?: boolean;
+  /** Tags which page the enquiry came from, so we can tell audit requests apart. */
+  source?: string;
+  askWebsite?: boolean;
+  submitLabel?: string;
+}) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -70,6 +81,7 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
   return (
     <form name="lead-inquiry" onSubmit={handleSubmit} className="grid gap-4">
       <input type="text" name="_honey" className="hidden" tabIndex={-1} autoComplete="off" />
+      {source && <input type="hidden" name="source" value={source} />}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Full name" name="name" placeholder="John Smith" required />
@@ -80,6 +92,16 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         <Field label="Email" name="email" type="email" placeholder="you@business.com" required />
         <Field label="Phone number" name="phone" type="tel" placeholder="07XXX XXXXXX" required />
       </div>
+
+      {askWebsite && (
+        <Field
+          label="Your website"
+          name="website"
+          type="url"
+          placeholder="https://yourbusiness.co.uk"
+          required
+        />
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <SelectField label="Business category" name="industry" options={industries} />
@@ -105,7 +127,7 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         disabled={submitting}
         className="brand-gradient-bg mt-1 rounded-full px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.01] disabled:opacity-60"
       >
-        {submitting ? "Sending..." : "Get My Free Strategy Call"}
+        {submitting ? "Sending..." : submitLabel}
       </button>
 
       {error && <p className="text-sm text-red-500">{error}</p>}

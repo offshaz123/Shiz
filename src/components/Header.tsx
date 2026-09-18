@@ -64,10 +64,10 @@ export function Header() {
             WhatsApp Us
           </a>
           <Link
-            href="/contact"
+            href="/free-audit"
             className="brand-gradient-bg rounded-full px-5 py-2 text-sm font-semibold text-white shadow-md shadow-black/10 transition-transform hover:scale-[1.03]"
           >
-            Get Free Strategy Call
+            Get a Free Audit
           </Link>
         </div>
 

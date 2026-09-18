@@ -2,12 +2,13 @@ import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { RealResultsSection } from "@/components/RealResults";
 import { IndustryStatsSection } from "@/components/IndustryStats";
+import { StatsBar } from "@/components/StatsBar";
 import { LondonOfficeSection } from "@/components/LondonOffice";
 import { ReviewBadge } from "@/components/ReviewBadge";
 import { CaseStudySection } from "@/components/CaseStudy";
 import { GoogleCalendarBadge } from "@/components/GoogleCalendarBadge";
 import { FaqJsonLd } from "@/components/StructuredData";
-import { siteConfig, whatsappHref } from "@/lib/site-config";
+import { siteConfig } from "@/lib/site-config";
 import { blogPosts } from "@/content/blog";
 
 const faqs = [
@@ -81,20 +82,23 @@ export default function Home() {
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link
-              href="/contact"
+              href="/free-audit"
               className="brand-gradient-bg w-full rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03] sm:w-auto"
             >
-              Get My Free Strategy Call
+              Get Your Free Marketing Audit
             </Link>
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/contact"
               className="w-full rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-foreground transition-colors hover:border-brand-pink/60 sm:w-auto"
             >
-              Chat on WhatsApp
-            </a>
+              Book a Call
+            </Link>
           </div>
+
+          <p className="mt-5 text-sm text-muted">
+            Free, no obligation — we&apos;ll tell you what&apos;s stopping your enquiries before
+            you spend anything.
+          </p>
 
           <ReviewBadge />
 
@@ -111,6 +115,7 @@ export default function Home() {
         </div>
       </section>
 
+      <StatsBar />
       <LondonOfficeSection />
       <IndustryStatsSection />
       <RealResultsSection />

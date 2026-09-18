@@ -10,7 +10,9 @@ const FIELDS: { key: string; label: string }[] = [
   { key: "phone", label: "Phone" },
   { key: "industry", label: "Industry" },
   { key: "budget", label: "Budget" },
+  { key: "website", label: "Website" },
   { key: "message", label: "Message" },
+  { key: "source", label: "Came from" },
 ];
 
 export async function POST(request: Request) {
