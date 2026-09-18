@@ -31,8 +31,12 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   keywords: [
+    "marketing agency UK",
     "Meta ads agency",
     "Instagram ads agency UK",
+    "Google Ads agency UK",
+    "SEO agency UK",
+    "website design UK",
     "marketing agency London",
     "Facebook ads management",
     "Instagram ads agency London",

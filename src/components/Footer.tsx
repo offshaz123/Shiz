@@ -35,7 +35,10 @@ export function Footer() {
           <div className="lg:col-span-2">
             <Logo />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">
-              {siteConfig.description}
+              A UK marketing agency for businesses that want customers, not impressions. We run
+              Meta, Instagram and Google campaigns, build the websites and landing pages behind
+              them, handle SEO and local search, and put every enquiry into one inbox with the
+              follow-up already set up.
             </p>
             <div className="mt-6 flex items-start gap-3">
               <svg viewBox="0 0 24 24" fill="none" className="mt-0.5 h-4 w-4 shrink-0 text-brand-pink">

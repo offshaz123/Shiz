@@ -2,13 +2,13 @@ export const siteConfig = {
   name: "Shaz Marketing Group",
   shortName: "Shaz Marketing",
   description:
-    "Shaz Marketing Group runs Meta & Instagram ads that generate qualified leads, backed by an all-in-one CRM, social inbox, and 24/7 AI receptionist.",
+    "Shaz Marketing Group is a UK marketing agency running Meta, Instagram and Google Ads, SEO and local search, websites and social media, backed by an all-in-one CRM that makes sure every enquiry gets answered.",
   url: "https://shazmarketing.com",
   email: "info@shazmarketing.com",
   phoneDisplay: "07539 559947",
   phoneE164: "+447539559947",
   whatsappNumber: "447539559947",
-  whatsappMessage: "Hi Shaz Marketing Group, I'd like to find out more about your Meta & Instagram ads packages.",
+  whatsappMessage: "Hi Shaz Marketing Group, I'd like to find out more about what you do.",
   // Google Calendar "Appointment schedule" booking link for the /demo page's Book Now button.
   // Leave empty until it's set up — the page falls back to the lead form until then.
   demoBookingUrl: "https://calendar.app.google/KPLv3BHXqZPeZ3Bk8",

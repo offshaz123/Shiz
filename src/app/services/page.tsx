@@ -7,14 +7,14 @@ import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
 
 export const metadata: Metadata = {
-  title: "Meta & Instagram Ads Services",
+  title: "Marketing Services",
   description:
-    "Meta & Instagram ads, done-for-you lead generation, a unified inbox & CRM, and a 24/7 AI receptionist — everything Shaz Marketing Group provides, in one place.",
+    "Meta and Instagram ads, Google Ads, SEO and local search, websites, CRM and social media management — everything Shaz Marketing Group does, in one place.",
   alternates: { canonical: "/services" },
   openGraph: {
     title: "Services | Shaz Marketing Group",
     description:
-      "Meta & Instagram ads, done-for-you lead generation, a unified inbox & CRM, and a 24/7 AI receptionist — everything Shaz Marketing Group provides, in one place.",
+      "Meta and Instagram ads, Google Ads, SEO and local search, websites, CRM and social media management — everything Shaz Marketing Group does, in one place.",
   },
 };
 

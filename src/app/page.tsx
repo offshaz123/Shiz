@@ -66,16 +66,16 @@ export default function Home() {
         />
         <div className="relative mx-auto max-w-7xl px-5 pb-20 pt-20 text-center sm:px-8 sm:pt-28">
           <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-xs font-medium text-muted">
-            Meta &amp; Instagram Ads Specialists
+            Ads · SEO · Websites · CRM — all in one place
           </span>
           <h1 className="mx-auto mt-6 max-w-4xl text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
-            More leads. More bookings.{" "}
-            <span className="brand-gradient-text">One platform.</span>
+            More customers.{" "}
+            <span className="brand-gradient-text">Fewer missed enquiries.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-            Shaz Marketing Group runs Meta &amp; Instagram ad campaigns that generate real, qualified
-            leads for your business — then brings every enquiry, every channel and every follow-up
-            into one simple system, backed by a 24/7 AI receptionist.
+            We run the Meta, Instagram and Google campaigns that bring people in, build the
+            websites they land on, and put every enquiry into one place so nothing sits unread.
+            A UK agency for businesses that would rather have bookings than impressions.
           </p>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Link

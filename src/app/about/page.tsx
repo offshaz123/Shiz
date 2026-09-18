@@ -3,14 +3,14 @@ import Link from "next/link";
 import { StartProjectCta } from "@/components/StartProjectCta";
 
 export const metadata: Metadata = {
-  title: "About Our London Meta Ads Agency",
+  title: "About Our London Marketing Agency",
   description:
-    "Shaz Marketing Group helps businesses of every kind grow with Meta & Instagram ads, all-in-one CRM and AI-powered follow-up.",
+    "Shaz Marketing Group is a London marketing agency running paid ads, SEO, websites and CRM for UK businesses that want customers rather than impressions.",
   alternates: { canonical: "/about" },
   openGraph: {
     title: "About Shaz Marketing Group",
     description:
-      "Shaz Marketing Group helps businesses of every kind grow with Meta & Instagram ads, all-in-one CRM and AI-powered follow-up.",
+      "Shaz Marketing Group is a London marketing agency running paid ads, SEO, websites and CRM for UK businesses that want customers rather than impressions.",
   },
 };
 
@@ -50,7 +50,7 @@ export default function AboutPage() {
             Who We Are
           </span>
           <h1 className="mt-3 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            We turn Meta &amp; Instagram into a lead-generation engine
+            We turn advertising into customers, not impressions
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
             Shaz Marketing Group is a performance marketing agency built for one purpose: helping
