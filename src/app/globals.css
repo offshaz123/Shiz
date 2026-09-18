@@ -83,9 +83,10 @@ body {
 }
 
 /* --- Hero backdrop animation -------------------------------------------
-   A slow orbit system behind the hero: concentric rings turning at
-   different speeds with markers riding on them. Everything is decorative,
-   so all of it stops for anyone who has asked for reduced motion. */
+   A full-width marketing backdrop: a performance line that keeps drawing
+   itself, a marker running along it, bars breathing underneath, and orbit
+   rings arcing over the whole thing. All decorative, so all of it stops
+   for anyone who has asked for reduced motion. */
 
 @keyframes orbit-spin {
   from {
@@ -120,27 +121,69 @@ body {
 @keyframes pulse-node {
   0%,
   100% {
-    opacity: 0.35;
-    r: 3;
+    opacity: 0.3;
   }
   50% {
     opacity: 1;
-    r: 4.5;
+  }
+}
+
+/* The trend line draws itself in, holds, then clears and starts again. */
+@keyframes draw-trend {
+  0% {
+    stroke-dashoffset: 2600;
+  }
+  55%,
+  85% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -2600;
+  }
+}
+
+/* The marker rides the same path the line follows. */
+@keyframes run-trend {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  55% {
+    offset-distance: 100%;
+    opacity: 1;
+  }
+  62%,
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+@keyframes grow-bar {
+  0%,
+  100% {
+    transform: scaleY(0.45);
+  }
+  50% {
+    transform: scaleY(1);
   }
 }
 
 .animate-orbit-slow {
-  animation: orbit-spin 48s linear infinite;
+  animation: orbit-spin 70s linear infinite;
   transform-origin: 50% 50%;
 }
 
 .animate-orbit-medium {
-  animation: orbit-spin-reverse 34s linear infinite;
+  animation: orbit-spin-reverse 48s linear infinite;
   transform-origin: 50% 50%;
 }
 
 .animate-orbit-fast {
-  animation: orbit-spin 22s linear infinite;
+  animation: orbit-spin 30s linear infinite;
   transform-origin: 50% 50%;
 }
 
@@ -152,22 +195,44 @@ body {
   animation: pulse-node 4s ease-in-out infinite;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .animate-orbit-slow,
-  .animate-orbit-medium,
-  .animate-orbit-fast,
-  .animate-drift-glow,
-  .animate-pulse-node {
-    animation: none;
-  }
+.animate-draw-trend {
+  stroke-dasharray: 2600;
+  animation: draw-trend 16s ease-in-out infinite;
 }
 
-/* The hero glow sits behind text, so it stays faint. Light mode needs less
-   of it again, since a warm gradient over white reads much stronger. */
+.animate-run-trend {
+  offset-rotate: 0deg;
+  animation: run-trend 16s ease-in-out infinite;
+}
+
+.animate-grow-bar {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: grow-bar 7s ease-in-out infinite;
+}
+
 .hero-glow {
   opacity: 0.1;
 }
 
 .dark .hero-glow {
   opacity: 0.16;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-orbit-slow,
+  .animate-orbit-medium,
+  .animate-orbit-fast,
+  .animate-drift-glow,
+  .animate-pulse-node,
+  .animate-draw-trend,
+  .animate-run-trend,
+  .animate-grow-bar {
+    animation: none;
+  }
+
+  /* Without the animation the dash pattern would hide the line entirely. */
+  .animate-draw-trend {
+    stroke-dasharray: none;
+  }
 }
