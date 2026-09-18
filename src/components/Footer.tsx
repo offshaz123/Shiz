@@ -4,6 +4,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
+import { services } from "@/content/services";
+import { industries } from "@/content/industries";
+import { locations } from "@/content/locations";
 
 export function Footer() {
   const pathname = usePathname();
@@ -28,7 +31,7 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-surface">
       <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
             <Logo />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted">
@@ -53,6 +56,19 @@ export function Footer() {
           </div>
 
           <div>
+            <h3 className="text-sm font-semibold text-foreground">Services</h3>
+            <ul className="mt-4 space-y-2.5 text-sm text-muted">
+              {services.map((service) => (
+                <li key={service.slug}>
+                  <Link href={`/services/${service.slug}`} className="hover:text-foreground">
+                    {service.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
             <h3 className="text-sm font-semibold text-foreground">Company</h3>
             <ul className="mt-4 space-y-3 text-sm text-muted">
               <li>
@@ -63,6 +79,21 @@ export function Footer() {
               <li>
                 <Link href="/services" className="hover:text-foreground">
                   Services
+                </Link>
+              </li>
+              <li>
+                <Link href="/industries" className="hover:text-foreground">
+                  Industries
+                </Link>
+              </li>
+              <li>
+                <Link href="/case-studies" className="hover:text-foreground">
+                  Case Studies
+                </Link>
+              </li>
+              <li>
+                <Link href="/free-audit" className="hover:text-foreground">
+                  Free Audit
                 </Link>
               </li>
               <li>
@@ -112,6 +143,30 @@ export function Footer() {
                 </a>
               </li>
             </ul>
+          </div>
+        </div>
+
+        <div className="mt-12 border-t border-border pt-9">
+          <h3 className="text-xs font-semibold uppercase tracking-[0.16em] text-muted">
+            Areas we cover
+          </h3>
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2.5 text-sm text-muted">
+            {locations.map((location) => (
+              <Link key={location.slug} href={`/locations/${location.slug}`} className="hover:text-foreground">
+                Marketing agency {location.city}
+              </Link>
+            ))}
+          </div>
+
+          <h3 className="mt-8 text-xs font-semibold uppercase tracking-[0.16em] text-muted">
+            Industries we work with
+          </h3>
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2.5 text-sm text-muted">
+            {industries.map((industry) => (
+              <Link key={industry.slug} href={`/industries/${industry.slug}`} className="hover:text-foreground">
+                {industry.name}
+              </Link>
+            ))}
           </div>
         </div>
 
