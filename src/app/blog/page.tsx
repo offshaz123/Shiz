@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { StartProjectCta } from "@/components/StartProjectCta";
 import { blogPosts } from "@/content/blog";
 
 export const metadata: Metadata = {
@@ -42,6 +43,8 @@ export default function BlogIndexPage() {
           </Link>
         ))}
       </div>
+      <StartProjectCta />
+
     </div>
   );
 }

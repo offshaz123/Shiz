@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { PricingSection } from "@/components/PricingSection";
 import { BreadcrumbJsonLd, FaqJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
+import { StartProjectCta } from "@/components/StartProjectCta";
 
 export const metadata: Metadata = {
   title: "Meta & Instagram Ads Pricing",
@@ -74,6 +75,8 @@ export default function PricingPage() {
         </div>
         <FaqJsonLd items={faqs} />
       </section>
+
+      <StartProjectCta />
     </div>
   );
 }

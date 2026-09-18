@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { StartProjectCta } from "@/components/StartProjectCta";
 
 export const metadata: Metadata = {
   title: "About Our London Meta Ads Agency",
@@ -108,6 +109,8 @@ export default function AboutPage() {
           Get My Free Strategy Call
         </Link>
       </section>
+      <StartProjectCta />
+
     </div>
   );
 }
