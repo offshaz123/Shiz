@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { RealResultsSection } from "@/components/RealResults";
-import { IndustryStatsSection } from "@/components/IndustryStats";
 import { StatsBar } from "@/components/StatsBar";
 import { ProblemGrid } from "@/components/ProblemGrid";
 import { ServicesGrid } from "@/components/ServicesGrid";
@@ -11,7 +10,6 @@ import { HowWeWork } from "@/components/HowWeWork";
 import { StartProjectCta } from "@/components/StartProjectCta";
 import { LondonOfficeSection } from "@/components/LondonOffice";
 import { ReviewBadge } from "@/components/ReviewBadge";
-import { CaseStudySection } from "@/components/CaseStudy";
 import { GoogleCalendarBadge } from "@/components/GoogleCalendarBadge";
 import { FaqJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
@@ -56,13 +54,6 @@ const industries = [
   "Any business, any category",
 ];
 
-const whatWeDo = [
-  { title: "Meta & Instagram Ads", description: "Campaigns built and managed for qualified enquiries, not just likes." },
-  { title: "Done-For-You Lead Generation", description: "Every ad click turned into a captured, organised enquiry." },
-  { title: "One Inbox, Every Channel", description: "Instagram, WhatsApp, SMS & email — unified so nothing's missed." },
-  { title: "24/7 AI Receptionist", description: "Answers questions and books leads even when you're closed." },
-  { title: "Website Design & Build", description: "Fast, mobile-first sites built to convert — from £300." },
-];
 
 export default function Home() {
   return (
@@ -129,39 +120,7 @@ export default function Home() {
       <HowWeWork />
       <StartProjectCta />
       <LondonOfficeSection />
-      <IndustryStatsSection />
       <RealResultsSection />
-      <CaseStudySection />
-
-      {/* What we do (condensed — full detail on /services) */}
-      <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
-            What We Provide
-          </span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Everything you need to turn ads into customers
-          </h2>
-        </div>
-
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {whatWeDo.map((item) => (
-            <div
-              key={item.title}
-              className="rounded-3xl border border-border bg-surface p-7 transition-colors hover:border-brand-pink/40"
-            >
-              <h3 className="text-base font-semibold text-foreground">{item.title}</h3>
-              <p className="mt-2.5 text-sm leading-relaxed text-muted">{item.description}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-10 text-center">
-          <Link href="/services" className="text-sm font-semibold text-brand-pink hover:underline">
-            See everything we do →
-          </Link>
-        </div>
-      </section>
 
       {/* AI receptionist highlight */}
       {siteConfig.demoBookingUrl && (

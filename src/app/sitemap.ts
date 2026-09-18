@@ -5,6 +5,7 @@ import { services } from "@/content/services";
 import { industries } from "@/content/industries";
 import { locations } from "@/content/locations";
 import { approaches } from "@/content/case-studies";
+import { projects, hasProjects } from "@/content/projects";
 
 export const dynamic = "force-static";
 
@@ -59,6 +60,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
+  const projectEntries = hasProjects
+    ? [
+        {
+          url: `${siteConfig.url}/projects`,
+          lastModified: new Date(),
+          changeFrequency: "monthly" as const,
+          priority: 0.8,
+        },
+        ...projects.map((project) => ({
+          url: `${siteConfig.url}/projects/${project.slug}`,
+          lastModified: new Date(),
+          changeFrequency: "monthly" as const,
+          priority: 0.75,
+        })),
+      ]
+    : [];
+
   const blogEntries = blogPosts.map((post) => ({
     url: `${siteConfig.url}/blog/${post.slug}`,
     lastModified: new Date(post.publishedAt),
@@ -72,6 +90,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...industryEntries,
     ...locationEntries,
     ...approachEntries,
+    ...projectEntries,
     ...blogEntries,
   ];
 }

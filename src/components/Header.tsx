@@ -9,6 +9,7 @@ import { siteConfig, whatsappHref } from "@/lib/site-config";
 import { services } from "@/content/services";
 import { industries } from "@/content/industries";
 import { locations } from "@/content/locations";
+import { projects, hasProjects } from "@/content/projects";
 
 type NavItem = {
   href: string;
@@ -33,6 +34,16 @@ const navLinks: NavItem[] = [
     children: locations.map((l) => ({ href: `/locations/${l.slug}`, label: l.city })),
   },
   { href: "/case-studies", label: "Case Studies" },
+  // Appears automatically once the first project is added.
+  ...(hasProjects
+    ? [
+        {
+          href: "/projects",
+          label: "Projects",
+          children: projects.map((p) => ({ href: `/projects/${p.slug}`, label: p.name })),
+        },
+      ]
+    : []),
   { href: "/pricing", label: "Pricing" },
   { href: "/about", label: "About" },
   { href: "/blog", label: "Blog" },
