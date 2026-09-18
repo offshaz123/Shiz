@@ -27,13 +27,18 @@ export const siteConfig = {
   // `sameAs` so Google links these accounts to this business as one entity.
   // Leave a value empty to omit it. Use full URLs.
   social: {
-    instagram: "",
+    instagram: "https://www.instagram.com/shaz.marketing/",
     facebook: "",
     linkedin: "",
     x: "",
     youtube: "",
     tiktok: "",
   },
+  // Icons shown in the footer with no link behind them, for platforms we want
+  // visible before the profile is live. Nothing here is published in `sameAs`,
+  // since that would tell Google about a page that doesn't exist. To make one
+  // clickable, put its URL in `social` above and drop the key from this list.
+  socialPlaceholders: ["facebook", "x"] as const,
   // Public review rating, shown as a star badge and published in the
   // Organization schema. Fill these in ONLY from reviews genuinely received on
   // a real profile — the count and average must match what's publicly visible

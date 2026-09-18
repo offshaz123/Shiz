@@ -27,29 +27,59 @@ const icons: Record<string, { label: string; path: string; viewBox?: string }> =
   },
 };
 
-/** Renders only the profiles that have a URL set in site-config. */
-export function SocialLinks({ className = "" }: { className?: string }) {
-  const entries = Object.entries(siteConfig.social).filter(
-    ([key, url]) => url && icons[key]
+/** Display order, so the row reads the same whichever profiles are live. */
+const ORDER = ["facebook", "instagram", "x", "linkedin", "youtube", "tiktok"] as const;
+
+const baseClass =
+  "inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-background";
+
+function Mark({ name }: { name: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" aria-hidden="true">
+      <path fill="currentColor" d={icons[name].path} />
+    </svg>
   );
-  if (entries.length === 0) return null;
+}
+
+/**
+ * Renders a profile with a URL as a link. Platforms listed in
+ * `socialPlaceholders` show the icon but aren't links, so a click does
+ * nothing rather than going somewhere that isn't there yet.
+ */
+export function SocialLinks({ className = "" }: { className?: string }) {
+  const placeholders: readonly string[] = siteConfig.socialPlaceholders;
+  const social: Record<string, string> = siteConfig.social;
+
+  const items = ORDER.filter(
+    (key) => icons[key] && (social[key] || placeholders.includes(key))
+  );
+  if (items.length === 0) return null;
 
   return (
     <div className={`flex flex-wrap gap-2.5 ${className}`}>
-      {entries.map(([key, url]) => (
-        <a
-          key={key}
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={icons[key].label}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-background text-muted transition-colors hover:border-brand-pink/60 hover:text-brand-pink"
-        >
-          <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" aria-hidden="true">
-            <path fill="currentColor" d={icons[key].path} />
-          </svg>
-        </a>
-      ))}
+      {items.map((key) =>
+        social[key] ? (
+          <a
+            key={key}
+            href={social[key]}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={icons[key].label}
+            className={`${baseClass} text-muted transition-colors hover:border-brand-pink/60 hover:text-brand-pink`}
+          >
+            <Mark name={key} />
+          </a>
+        ) : (
+          <span
+            key={key}
+            aria-hidden="true"
+            title={`${icons[key].label} — coming soon`}
+            className={`${baseClass} text-muted/45`}
+          >
+            <Mark name={key} />
+          </span>
+        )
+      )}
     </div>
   );
 }
