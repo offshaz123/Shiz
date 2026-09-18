@@ -108,6 +108,30 @@ export default async function ServicePage({
           ))}
         </div>
 
+        {service.pricing && (
+          <div className="mt-16 rounded-3xl border border-brand-pink/35 bg-surface p-7 sm:p-9">
+            <div className="sm:flex sm:items-start sm:justify-between sm:gap-8">
+              <div>
+                <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-pink">
+                  What it costs
+                </h2>
+                <p className="mt-3 text-3xl font-bold tracking-tight text-foreground">
+                  {service.pricing.headline}
+                </p>
+              </div>
+              <Link
+                href={`/pricing#${service.pricing.anchor}`}
+                className="brand-gradient-bg mt-6 inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.02] sm:mt-1"
+              >
+                See What&apos;s Included
+              </Link>
+            </div>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted">
+              {service.pricing.note}
+            </p>
+          </div>
+        )}
+
         {service.readMore && (
           <p className="mt-10 text-sm text-muted">
             Worth reading:{" "}

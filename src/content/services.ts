@@ -11,6 +11,8 @@ export type Service = {
   keywords: string[];
   whoFor: string;
   includes: { title: string; body: string }[];
+  /** Headline price, linked through to the matching block on /pricing. */
+  pricing?: { headline: string; note: string; anchor: string };
   /** A related article, so each service page points into the blog. */
   readMore?: { label: string; href: string };
 };
@@ -36,6 +38,11 @@ export const services: Service[] = [
       { title: "Tracking installed properly", body: "Meta Pixel and Conversions API, so the system learns from real conversions rather than clicks." },
       { title: "Category compliance", body: "Some sectors sit under restricted rules. We handle the declaration and the copy so your account stays safe." },
     ],
+    pricing: {
+      headline: "From £400 a month",
+      note: "Three plans: £400, £700 and £1,400 a month depending on how many campaigns you want running and how much automation you need behind them. Ad spend is separate and paid directly to Meta. No long-term contract.",
+      anchor: "meta-ads",
+    },
     readMore: { label: "What makes ad creative actually convert", href: "/blog/what-makes-ad-creative-actually-convert" },
   },
   {
@@ -57,6 +64,11 @@ export const services: Service[] = [
       { title: "Negative keyword management", body: "The ongoing work that stops your budget going on searches that were never going to convert." },
       { title: "Conversion tracking", body: "Calls and form submissions tracked properly, so you can see which searches produce customers." },
     ],
+    pricing: {
+      headline: "£600 a month, flat",
+      note: "One price covers the account build, the campaigns, a landing page built for the campaign, the conversion and call tracking, a CRM if you need one, and the monthly optimisation. No setup fee and no add-ons. Ad spend is separate and paid directly to Google.",
+      anchor: "google-ads",
+    },
     readMore: { label: "Meta Ads vs Google Ads: which is right for you", href: "/blog/meta-ads-vs-google-ads-which-is-right" },
   },
   {
@@ -99,6 +111,11 @@ export const services: Service[] = [
       { title: "On-page work", body: "Titles, descriptions, structure and the technical basics that let a search engine understand the site." },
       { title: "Content that answers real questions", body: "Written around what people actually search for, not stuffed with keywords." },
     ],
+    pricing: {
+      headline: "From £350 a month",
+      note: "Local SEO £350, SEO Growth £650, SEO Scale £1,200. There's a 3 or 6 month minimum term depending on the plan, because SEO takes time to show and we'd rather say that up front than let you pay for groundwork and leave before it pays.",
+      anchor: "seo",
+    },
     readMore: { label: "Your Google Business Profile is doing more work than your website", href: "/blog/google-business-profile-does-more-than-your-website" },
   },
   {
@@ -141,6 +158,11 @@ export const services: Service[] = [
       { title: "Comments and messages", body: "Answered, in the same inbox as everything else, so nothing sits unread." },
       { title: "Reels and short video", body: "Filmed simply. Rough and real tends to outperform polished in this format." },
     ],
+    pricing: {
+      headline: "Priced on a call",
+      note: "It depends on how many platforms you want covered and how often you want posting, so we quote it properly on a call rather than selling you a package built for someone else. Tell us what you need and you'll get a straight number.",
+      anchor: "social-media-management",
+    },
     readMore: { label: "Organic social vs paid ads: why you need both", href: "/blog/organic-social-vs-paid-ads" },
   },
 ];
