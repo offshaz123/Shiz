@@ -3,6 +3,7 @@ import { LeadForm } from "@/components/LeadForm";
 import { RealResultsSection } from "@/components/RealResults";
 import { IndustryStatsSection } from "@/components/IndustryStats";
 import { StatsBar } from "@/components/StatsBar";
+import { ProblemGrid } from "@/components/ProblemGrid";
 import { LondonOfficeSection } from "@/components/LondonOffice";
 import { ReviewBadge } from "@/components/ReviewBadge";
 import { CaseStudySection } from "@/components/CaseStudy";
@@ -116,6 +117,7 @@ export default function Home() {
       </section>
 
       <StatsBar />
+      <ProblemGrid />
       <LondonOfficeSection />
       <IndustryStatsSection />
       <RealResultsSection />
