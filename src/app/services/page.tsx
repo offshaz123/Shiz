@@ -3,8 +3,9 @@ import Link from "next/link";
 import { RealResultsSection } from "@/components/RealResults";
 import { ServicesGrid } from "@/components/ServicesGrid";
 import { IndustryStatsSection } from "@/components/IndustryStats";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/StructuredData";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
+import { services as servicePages } from "@/content/services";
 
 export const metadata: Metadata = {
   title: "Marketing Services",
@@ -99,6 +100,7 @@ export default function ServicesPage() {
           { name: "Services", url: `${siteConfig.url}/services` },
         ]}
       />
+      <ItemListJsonLd name="Marketing services" items={servicePages.map((s) => ({ name: s.name, url: `/services/${s.slug}` }))} />
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div

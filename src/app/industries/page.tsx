@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { industries } from "@/content/industries";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/StructuredData";
 
 const description =
   "The sectors we work with most: automotive, health and beauty, hospitality, trades, professional services, property, fitness and retail.";
@@ -17,6 +17,7 @@ export default function IndustriesPage() {
   return (
     <div>
       <BreadcrumbJsonLd items={[{ name: "Home", url: "/" }, { name: "Industries", url: "/industries" }]} />
+      <ItemListJsonLd name="Industries we work with" items={industries.map((i) => ({ name: i.name, url: `/industries/${i.slug}` }))} />
       <section className="relative overflow-hidden border-b border-border">
         <div aria-hidden className="brand-gradient-bg pointer-events-none absolute -top-40 left-1/2 h-[440px] w-[780px] -translate-x-1/2 rounded-full opacity-20 blur-3xl" />
         <div className="relative mx-auto max-w-3xl px-5 pb-16 pt-20 text-center sm:px-8 sm:pt-24">

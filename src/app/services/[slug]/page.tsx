@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { services, getService } from "@/content/services";
 import { LeadForm } from "@/components/LeadForm";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { BreadcrumbJsonLd, ServiceJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
 
 export function generateStaticParams() {
@@ -50,6 +50,16 @@ export default async function ServicePage({
           { name: "Services", url: "/services" },
           { name: service.name, url: `/services/${service.slug}` },
         ]}
+      />
+      <ServiceJsonLd
+        name={service.name}
+        description={service.metaDescription}
+        path={`/services/${service.slug}`}
+        offer={
+          service.pricing && /\d/.test(service.pricing.headline)
+            ? { price: service.pricing.headline, note: service.pricing.note }
+            : undefined
+        }
       />
 
       <section className="relative overflow-hidden border-b border-border">

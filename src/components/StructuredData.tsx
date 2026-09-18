@@ -1,4 +1,6 @@
 import { siteConfig, socialProfileUrls, hasPublishedReviews } from "@/lib/site-config";
+import { pricingGroups } from "@/content/pricing";
+import { services } from "@/content/services";
 
 export function OrganizationJsonLd() {
   const data = {
@@ -35,32 +37,31 @@ export function OrganizationJsonLd() {
       postalCode: siteConfig.address.postcode,
       addressCountry: "GB",
     },
-    makesOffer: [
-      {
+    // Built from the pricing content so the two can't drift apart.
+    makesOffer: pricingGroups.flatMap((group) =>
+      group.plans
+        .filter((plan) => plan.price.includes("£"))
+        .map((plan) => ({
+          "@type": "Offer",
+          name: `${group.eyebrow} — ${plan.name}`,
+          price: plan.price.replace(/[^\d.]/g, ""),
+          priceCurrency: "GBP",
+          description: plan.tagline,
+          url: `${siteConfig.url}/pricing#${group.id}`,
+        }))
+    ),
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "Marketing services",
+      itemListElement: services.map((service) => ({
         "@type": "Offer",
-        name: "Starter",
-        price: "400",
-        priceCurrency: "GBP",
-        description:
-          "Meta & Instagram ads management, a lead capture landing page, and a unified Instagram + Facebook inbox.",
-      },
-      {
-        "@type": "Offer",
-        name: "Growth",
-        price: "700",
-        priceCurrency: "GBP",
-        description:
-          "A full CRM pipeline, an all-in-one inbox across Instagram, Messenger, WhatsApp & SMS, and automated lead follow-up.",
-      },
-      {
-        "@type": "Offer",
-        name: "Scale",
-        price: "1400",
-        priceCurrency: "GBP",
-        description:
-          "Unlimited ad campaigns, a 24/7 AI receptionist & chatbot, advanced automation, and a dedicated account manager.",
-      },
-    ],
+        itemOffered: {
+          "@type": "Service",
+          name: service.name,
+          url: `${siteConfig.url}/services/${service.slug}`,
+        },
+      })),
+    },
   };
 
   return (
@@ -107,6 +108,16 @@ export function WebSiteJsonLd() {
   );
 }
 
+/**
+ * Schema.org requires absolute URLs in a BreadcrumbList. Callers pass site
+ * paths as often as full URLs, so resolve them here rather than relying on
+ * every page to remember.
+ */
+function absolute(url: string) {
+  if (/^https?:\/\//.test(url)) return url;
+  return `${siteConfig.url}${url === "/" ? "" : url}`;
+}
+
 export function BreadcrumbJsonLd({ items }: { items: { name: string; url: string }[] }) {
   const data = {
     "@context": "https://schema.org",
@@ -115,7 +126,7 @@ export function BreadcrumbJsonLd({ items }: { items: { name: string; url: string
       "@type": "ListItem",
       position: index + 1,
       name: item.name,
-      item: item.url,
+      item: absolute(item.url),
     })),
   };
 
@@ -146,5 +157,74 @@ export function FaqJsonLd({ items }: { items: { question: string; answer: string
       type="application/ld+json"
       dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />
+  );
+}
+
+/**
+ * A single service, tied back to the organization so Google reads them as one
+ * entity rather than an unrelated business appearing on a sub-page.
+ */
+export function ServiceJsonLd({
+  name,
+  description,
+  path,
+  offer,
+}: {
+  name: string;
+  description: string;
+  path: string;
+  offer?: { price: string; note: string };
+}) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "@id": `${siteConfig.url}${path}#service`,
+    name,
+    description,
+    serviceType: name,
+    url: `${siteConfig.url}${path}`,
+    provider: { "@id": `${siteConfig.url}/#organization` },
+    areaServed: { "@type": "Country", name: "United Kingdom" },
+    ...(offer && {
+      offers: {
+        "@type": "Offer",
+        priceCurrency: "GBP",
+        price: offer.price.replace(/[^\d.]/g, ""),
+        description: offer.note,
+        url: `${siteConfig.url}/pricing`,
+      },
+    }),
+  };
+
+  return (
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
+  );
+}
+
+/**
+ * A hub page's children as an ordered list. Helps Google understand that
+ * /services, /industries and /locations are indexes rather than thin pages.
+ */
+export function ItemListJsonLd({
+  name,
+  items,
+}: {
+  name: string;
+  items: { name: string; url: string }[];
+}) {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      url: item.url.startsWith("http") ? item.url : `${siteConfig.url}${item.url}`,
+    })),
+  };
+
+  return (
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
   );
 }

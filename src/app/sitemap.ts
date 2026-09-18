@@ -9,6 +9,18 @@ import { projects, hasProjects } from "@/content/projects";
 
 export const dynamic = "force-static";
 
+/**
+ * Every entry used to report `new Date()`, so each deploy told Google the whole
+ * site had changed that day. Google learns to ignore a lastmod that is always
+ * "today", so pages carry the date of the content behind them instead, and the
+ * rest use the date of the newest post as a stand-in for the last real edit.
+ */
+const newestPost = blogPosts
+  .map((post) => post.publishedAt)
+  .sort()
+  .at(-1);
+const siteUpdated = new Date(newestPost ?? "2026-01-01");
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes: { path: string; changeFrequency: "weekly" | "monthly"; priority: number }[] = [
     { path: "", changeFrequency: "weekly", priority: 1 },
@@ -28,35 +40,35 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const staticEntries = routes.map((route) => ({
     url: `${siteConfig.url}${route.path}`,
-    lastModified: new Date(),
+    lastModified: siteUpdated,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));
 
   const serviceEntries = services.map((service) => ({
     url: `${siteConfig.url}/services/${service.slug}`,
-    lastModified: new Date(),
+    lastModified: siteUpdated,
     changeFrequency: "monthly" as const,
     priority: 0.85,
   }));
 
   const industryEntries = industries.map((industry) => ({
     url: `${siteConfig.url}/industries/${industry.slug}`,
-    lastModified: new Date(),
+    lastModified: siteUpdated,
     changeFrequency: "monthly" as const,
     priority: 0.8,
   }));
 
   const locationEntries = locations.map((location) => ({
     url: `${siteConfig.url}/locations/${location.slug}`,
-    lastModified: new Date(),
+    lastModified: siteUpdated,
     changeFrequency: "monthly" as const,
     priority: 0.75,
   }));
 
   const approachEntries = approaches.map((approach) => ({
     url: `${siteConfig.url}/case-studies/${approach.slug}`,
-    lastModified: new Date(),
+    lastModified: siteUpdated,
     changeFrequency: "monthly" as const,
     priority: 0.8,
   }));
@@ -65,13 +77,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ? [
         {
           url: `${siteConfig.url}/projects`,
-          lastModified: new Date(),
+          lastModified: siteUpdated,
           changeFrequency: "monthly" as const,
           priority: 0.8,
         },
         ...projects.map((project) => ({
           url: `${siteConfig.url}/projects/${project.slug}`,
-          lastModified: new Date(),
+          lastModified: siteUpdated,
           changeFrequency: "monthly" as const,
           priority: 0.75,
         })),

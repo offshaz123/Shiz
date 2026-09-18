@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { blogPosts } from "@/content/blog";
+import { blogPosts, relatedPosts } from "@/content/blog";
 import { siteConfig } from "@/lib/site-config";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 
@@ -40,6 +40,8 @@ export default async function BlogPostPage({
   const { slug } = await params;
   const post = blogPosts.find((p) => p.slug === slug);
   if (!post) notFound();
+
+  const related = relatedPosts(post.slug);
 
   const articleJsonLd = {
     "@context": "https://schema.org",
@@ -119,6 +121,28 @@ export default async function BlogPostPage({
           </div>
         ))}
       </div>
+
+      {related.length > 0 && (
+        <section className="mt-16 border-t border-border pt-10">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-pink">
+            Read next
+          </h2>
+          <ul className="mt-6 space-y-5">
+            {related.map((other) => (
+              <li key={other.slug}>
+                <Link href={`/blog/${other.slug}`} className="group block">
+                  <h3 className="font-semibold text-foreground group-hover:text-brand-pink">
+                    {other.title}
+                  </h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted">
+                    {other.description}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <div className="mt-14 rounded-3xl border border-border bg-surface p-8 text-center">
         <h2 className="text-xl font-semibold text-foreground">

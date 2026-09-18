@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { locations } from "@/content/locations";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
 
 const description =
@@ -18,6 +18,7 @@ export default function LocationsPage() {
   return (
     <div>
       <BreadcrumbJsonLd items={[{ name: "Home", url: "/" }, { name: "Locations", url: "/locations" }]} />
+      <ItemListJsonLd name="Areas we cover" items={locations.map((l) => ({ name: `Marketing agency ${l.city}`, url: `/locations/${l.slug}` }))} />
       <section className="relative overflow-hidden border-b border-border">
         <div aria-hidden className="brand-gradient-bg pointer-events-none absolute -top-40 left-1/2 h-[440px] w-[780px] -translate-x-1/2 rounded-full opacity-20 blur-3xl" />
         <div className="relative mx-auto max-w-3xl px-5 pb-16 pt-20 text-center sm:px-8 sm:pt-24">

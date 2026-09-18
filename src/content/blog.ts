@@ -3211,3 +3211,29 @@ export const blogPosts: BlogPost[] = [
     ],
   },
 ];
+
+/**
+ * Posts most worth reading next, chosen by how many keywords they share with
+ * the current one, then by recency. Purely so every post links out to three
+ * others: with nearly fifty posts and only a CTA at the foot of each, most of
+ * them sat several clicks from anywhere a crawler would start.
+ */
+export function relatedPosts(slug: string, limit = 3): BlogPost[] {
+  const current = blogPosts.find((post) => post.slug === slug);
+  if (!current) return [];
+
+  const keywords = new Set(current.keywords.map((k) => k.toLowerCase()));
+
+  return blogPosts
+    .filter((post) => post.slug !== slug)
+    .map((post) => ({
+      post,
+      overlap: post.keywords.filter((k) => keywords.has(k.toLowerCase())).length,
+    }))
+    .sort(
+      (a, b) =>
+        b.overlap - a.overlap || b.post.publishedAt.localeCompare(a.post.publishedAt)
+    )
+    .slice(0, limit)
+    .map((entry) => entry.post);
+}
