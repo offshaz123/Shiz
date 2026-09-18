@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { approaches, publishedResult } from "@/content/case-studies";
+import { approaches, clientResults } from "@/content/case-studies";
+import { ClientResultCard } from "@/components/ClientResultCard";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 
 const description =
-  "We publish results a client has approved and we can stand behind. Explore how we approach each area and the metrics we hold ourselves to.";
+  "Real campaigns, real numbers. CoBanq, Executive Tints, Detailmatics and Alliance Security Group, with the leads, cost per lead and spend our clients have approved us to publish.";
 
 export const metadata: Metadata = {
   title: "Case Studies & Method",
@@ -31,9 +32,9 @@ export default function CaseStudiesPage() {
             Marketing <span className="brand-gradient-text">results &amp; method</span>
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-white/60">
-            We publish results a client has approved and that we can stand behind. There is one
-            campaign below with the real figures, and beneath it, how we approach each area and
-            the metrics we hold ourselves to.
+            We publish results our clients have approved and that we can stand behind. Four of
+            them are below with the real figures, and beneath those, how we approach each area
+            and the metrics we hold ourselves to.
           </p>
           <Link href="/free-audit" className="brand-gradient-bg mt-9 inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/30 transition-transform hover:scale-[1.03]">
             Want results like these? Get an audit <span aria-hidden="true">→</span>
@@ -42,24 +43,27 @@ export default function CaseStudiesPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
-        <div className="rounded-3xl border border-border bg-surface p-8 sm:p-10">
-          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
-            <h2 className="text-2xl font-bold text-foreground">{publishedResult.client}</h2>
-            <span className="text-sm text-muted">{publishedResult.sector}</span>
-            <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold text-muted">
-              {publishedResult.period}
-            </span>
-          </div>
-          <p className="mt-5 max-w-3xl text-muted">{publishedResult.summary}</p>
+        <div className="space-y-8">
+          {clientResults.map((result) => (
+            <ClientResultCard key={result.slug} result={result} />
+          ))}
+        </div>
 
-          <div className="mt-9 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {publishedResult.stats.map((stat) => (
-              <div key={stat.label} className="rounded-2xl border border-border bg-background p-6">
-                <p className="brand-gradient-text text-4xl font-bold tracking-tight">{stat.value}</p>
-                <p className="mt-2 text-sm text-muted">{stat.label}</p>
-              </div>
-            ))}
-          </div>
+        <div className="mt-10 rounded-3xl border border-brand-pink/35 bg-surface p-8 sm:p-10">
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">
+            A cheap lead isn&apos;t the point. A lead worth having is.
+          </h2>
+          <p className="mt-4 max-w-3xl leading-relaxed text-muted">
+            Anybody can drive the cost per lead down. The number that matters is what the lead is
+            worth once it turns into a job. A £2 lead that becomes a £20 sale has cost you time
+            and made you nothing. A £2 lead that becomes a £300 job is a different business
+            entirely, and a £9 lead that becomes a £900 contract is better again.
+          </p>
+          <p className="mt-4 max-w-3xl leading-relaxed text-muted">
+            So we set the target against what a customer is actually worth to you, not against a
+            number that looks good in a report. That&apos;s the first thing we work out before we
+            spend anything, and it&apos;s the thing we judge the campaign by afterwards.
+          </p>
         </div>
       </section>
 

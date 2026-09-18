@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { publishedResult } from "@/content/case-studies";
+import { featuredResult } from "@/content/case-studies";
 import { ReviewBadge } from "./ReviewBadge";
 
 export function HomeHero() {
@@ -14,7 +14,7 @@ export function HomeHero() {
         {/* Copy */}
         <div className="text-center lg:text-left">
           <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-pink">
-            A UK marketing agency built for enquiries, not impressions
+            A UK leading marketing agency, built for enquiries not impressions
           </span>
 
           <h1 className="mt-5 text-4xl font-bold leading-[1.08] tracking-tight text-foreground sm:text-5xl lg:text-[3.35rem]">
@@ -91,14 +91,14 @@ export function HomeHero() {
               </div>
 
               <p className="mt-4 text-lg font-semibold leading-snug text-white">
-                {publishedResult.client}
+                {featuredResult.client}
               </p>
               <p className="text-sm text-white/55">
-                {publishedResult.sector} · {publishedResult.period}
+                {featuredResult.sector} · {featuredResult.period}
               </p>
 
               <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-5">
-                {publishedResult.stats.map((stat) => (
+                {featuredResult.stats.map((stat) => (
                   <div key={stat.label}>
                     <p className="text-2xl font-bold tracking-tight text-white sm:text-[1.75rem]">
                       {stat.value}
@@ -108,12 +108,24 @@ export function HomeHero() {
                 ))}
               </div>
 
-              <Link
-                href="/case-studies"
-                className="mt-7 inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:underline"
-              >
-                See how we did it <span aria-hidden="true">→</span>
-              </Link>
+              <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2">
+                <Link
+                  href="/case-studies"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:underline"
+                >
+                  See how we did it <span aria-hidden="true">→</span>
+                </Link>
+                {featuredResult.website && (
+                  <a
+                    href={featuredResult.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-white/55 hover:text-white"
+                  >
+                    {featuredResult.website.replace(/^https?:\/\//, "")} ↗
+                  </a>
+                )}
+              </div>
             </div>
           </div>
 

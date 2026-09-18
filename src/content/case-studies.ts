@@ -17,19 +17,120 @@ export type Approach = {
   relatedServices: { label: string; href: string }[];
 };
 
-export const publishedResult = {
-  client: "Detailmatics",
-  sector: "Automotive — servicing & detailing",
-  period: "12 months",
-  stats: [
-    { value: "235", label: "Leads generated" },
-    { value: "£3.89", label: "Cost per lead" },
-    { value: "150+", label: "Customers booked" },
-    { value: "£913", label: "Total ad spend" },
-  ],
-  summary:
-    "Twelve months of Meta and Instagram campaigns for a car servicing and detailing business, with every enquiry answered through a single inbox. That works out at roughly £6 of advertising per customer through the door.",
+export type ClientResult = {
+  slug: string;
+  client: string;
+  sector: string;
+  /** The live site, where the client is happy for us to link it. */
+  website?: string;
+  period: string;
+  /** What we run for them, as service names. */
+  services: string[];
+  summary: string;
+  /** What the work actually consists of, month to month. */
+  work: string[];
+  stats: { value: string; label: string }[];
 };
+
+export const clientResults: ClientResult[] = [
+  {
+    slug: "cobanq",
+    client: "CoBanq",
+    sector: "Financial services — international payments",
+    website: "https://cobanq.com",
+    period: "6 months",
+    services: [
+      "Website Design & Build",
+      "Meta & Instagram Ads",
+      "Social Media Management",
+      "CRM & Automation",
+    ],
+    summary:
+      "We built the website, we run the Meta and Instagram advertising, and we write and post the social content ourselves. Every message from every platform lands in one CRM inbox, so an enquiry gets answered whichever way it arrives.",
+    work: [
+      "Built the website from scratch, with the tracking installed and verified from day one.",
+      "Run the Meta and Instagram campaigns that bring the enquiries in.",
+      "Write, design and post the social content, so the profile backs up what the ads promise.",
+      "Every message from Instagram, Messenger and WhatsApp syncs into one CRM inbox, with the follow-up already set up.",
+    ],
+    stats: [
+      { value: "35", label: "Leads generated" },
+      { value: "£6.50", label: "Cost per lead" },
+      { value: "19", label: "Clients on board" },
+      { value: "£852", label: "Total ad spend" },
+    ],
+  },
+  {
+    slug: "executive-tints",
+    client: "Executive Tints & Repairs",
+    sector: "Automotive — window tinting & servicing",
+    website: "https://executiveontop.com",
+    period: "12 months",
+    services: [
+      "Website Design & Build",
+      "SEO & Local Search",
+      "Meta & Instagram Ads",
+      "Social Media Management",
+    ],
+    summary:
+      "A full year of work. We built the website, we handle the SEO, we run the ads and we manage the social alongside it, so the paid side and the organic side pull in the same direction rather than against each other.",
+    work: [
+      "Built the website, structured around the booking rather than the brochure.",
+      "SEO and local search, so the business gets found by people already looking for tinting and servicing.",
+      "Meta and Instagram campaigns running alongside the organic work.",
+      "Social media managed for them, with the finished-car content that sells this kind of work.",
+    ],
+    stats: [
+      { value: "540", label: "Leads generated" },
+      { value: "£2.50", label: "Average cost per lead" },
+      { value: "300+", label: "Customers booked" },
+      { value: "£1,560", label: "Total ad spend" },
+    ],
+  },
+  {
+    slug: "detailmatics",
+    client: "Detailmatics",
+    sector: "Automotive — servicing & detailing",
+    period: "6 months",
+    services: ["Meta & Instagram Ads", "CRM & Automation"],
+    summary:
+      "Six months of Meta and Instagram campaigns for a car servicing and detailing business, with every enquiry answered through a single inbox. That works out at roughly £6 of advertising per customer through the door.",
+    work: [
+      "Meta and Instagram campaigns built around booked jobs rather than reach.",
+      "Creative tested continuously, with the versions that stopped working dropped.",
+      "Every enquiry routed into one inbox so nothing sat unread.",
+    ],
+    stats: [
+      { value: "235", label: "Leads generated" },
+      { value: "£3.89", label: "Cost per lead" },
+      { value: "150+", label: "Customers booked" },
+      { value: "£913", label: "Total ad spend" },
+    ],
+  },
+  {
+    slug: "alliance-security-group",
+    client: "Alliance Security Group",
+    sector: "Security services",
+    period: "3 months",
+    services: ["Website Design & Build", "SEO & Local Search"],
+    summary:
+      "Three months in, and this one is mostly a search story. We built the website and we handle the SEO, and the enquiries coming through are from people actively looking for a security provider rather than people who happened to see an advert.",
+    work: [
+      "Built the website, written for the contracts this business actually wants.",
+      "SEO and local search across the areas they cover.",
+      "Enquiries tracked properly, so we know which searches are producing work.",
+    ],
+    stats: [
+      { value: "35", label: "Leads generated" },
+      { value: "£5.26", label: "Cost per lead" },
+      { value: "9", label: "Clients on board" },
+      { value: "£1,850", label: "Total spend" },
+    ],
+  },
+];
+
+/** The one shown on the homepage. */
+export const featuredResult = clientResults[0];
 
 export const approaches: Approach[] = [
   {

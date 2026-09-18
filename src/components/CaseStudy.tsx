@@ -21,8 +21,8 @@ export function CaseStudySection() {
           for {testimonial.company}
         </h2>
         <p className="mt-4 text-muted">
-          {testimonial.company} offers {testimonial.industry.toLowerCase()}. We&apos;ve been
-          running their Meta &amp; Instagram ads for the past year.
+          {testimonial.company} offers {testimonial.industry.toLowerCase()}. We ran their
+          Meta &amp; Instagram ads over six months.
         </p>
       </div>
 

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { approaches, getApproach, publishedResult } from "@/content/case-studies";
+import { approaches, getApproach, clientResults } from "@/content/case-studies";
 import { BreadcrumbJsonLd, FaqJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
 
@@ -22,10 +22,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   };
 }
 
+/** Which service name in a client result corresponds to each approach page. */
+const APPROACH_SERVICE: Record<string, string> = {
+  "meta-ads": "Meta & Instagram Ads",
+  "google-ads": "Google Ads",
+  seo: "SEO & Local Search",
+  websites: "Website Design & Build",
+};
+
 export default async function ApproachPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const approach = getApproach(slug);
   if (!approach) notFound();
+
+  const service = APPROACH_SERVICE[approach.slug];
+  const related = service ? clientResults.filter((r) => r.services.includes(service)) : [];
 
   return (
     <div>
@@ -136,26 +147,53 @@ export default async function ApproachPage({ params }: { params: Promise<{ slug:
         </div>
       </section>
 
-      {approach.slug === "meta-ads" && (
+      {related.length > 0 && (
         <section className="mx-auto max-w-5xl px-5 pb-24 sm:px-8">
-          <div className="rounded-3xl border border-border bg-surface p-8 sm:p-10">
-            <h2 className="text-xl font-bold text-foreground">
-              Published result — {publishedResult.client}
-            </h2>
-            <p className="mt-2 text-sm text-muted">
-              {publishedResult.sector} · {publishedResult.period}
-            </p>
-            <div className="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {publishedResult.stats.map((stat) => (
-                <div key={stat.label} className="rounded-2xl border border-border bg-background p-5">
-                  <p className="brand-gradient-text text-3xl font-bold">{stat.value}</p>
-                  <p className="mt-1.5 text-sm text-muted">{stat.label}</p>
+          <h2 className="text-2xl font-bold tracking-tight text-foreground">
+            Clients we do this for
+          </h2>
+          <div className="mt-8 space-y-6">
+            {related.map((result) => (
+              <div key={result.slug} className="rounded-3xl border border-border bg-surface p-8 sm:p-10">
+                <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+                  <h3 className="text-xl font-bold text-foreground">{result.client}</h3>
+                  <span className="text-sm text-muted">{result.sector}</span>
+                  <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold text-muted">
+                    {result.period}
+                  </span>
                 </div>
-              ))}
-            </div>
+                {result.website && (
+                  <a
+                    href={result.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2.5 inline-block text-sm font-semibold text-brand-pink hover:underline"
+                  >
+                    {result.website.replace(/^https?:\/\//, "")} ↗
+                  </a>
+                )}
+                <div className="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+                  {result.stats.map((stat) => (
+                    <div key={stat.label} className="rounded-2xl border border-border bg-background p-5">
+                      <p className="brand-gradient-text text-3xl font-bold">{stat.value}</p>
+                      <p className="mt-1.5 text-sm text-muted">{stat.label}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
+          <p className="mt-8 text-sm leading-relaxed text-muted">
+            We judge a campaign on what a customer is worth to the business, not on how low we
+            can push the cost per lead. A cheap lead that turns into nothing has cost you time
+            and made you nothing.{" "}
+            <Link href="/case-studies" className="font-semibold text-brand-pink hover:underline">
+              See all our results →
+            </Link>
+          </p>
         </section>
       )}
+
     </div>
   );
 }
