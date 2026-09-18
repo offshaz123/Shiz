@@ -24,21 +24,42 @@ const budgets = [
   "Not sure yet",
 ];
 
+/** 5MB before base64. Larger attachments get bounced by most mail servers. */
+const MAX_ATTACHMENT_BYTES = 5 * 1024 * 1024;
+const ACCEPTED_TYPES = ".pdf,.doc,.docx,.png,.jpg,.jpeg";
+
+function readAsBase64(file: File) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = String(reader.result);
+      // Strip the "data:<mime>;base64," prefix — the API wants the payload only.
+      resolve(result.slice(result.indexOf(",") + 1));
+    };
+    reader.onerror = () => reject(new Error("read_failed"));
+    reader.readAsDataURL(file);
+  });
+}
+
 export function LeadForm({
   compact = false,
   source,
   askWebsite = false,
+  allowAttachment = false,
   submitLabel = "Get My Free Strategy Call",
 }: {
   compact?: boolean;
   /** Tags which page the enquiry came from, so we can tell audit requests apart. */
   source?: string;
   askWebsite?: boolean;
+  /** Adds an optional file field. Kept small so it survives SMTP. */
+  allowAttachment?: boolean;
   submitLabel?: string;
 }) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -58,6 +79,23 @@ export function LeadForm({
       if (key !== "_honey") payload[key] = String(value);
     });
 
+    const fileInput = form.elements.namedItem("attachment") as HTMLInputElement | null;
+    const file = fileInput?.files?.[0];
+    if (file) {
+      if (file.size > MAX_ATTACHMENT_BYTES) {
+        setError("That file is over 5MB. Please attach a smaller one, or send it over on WhatsApp.");
+        return;
+      }
+      try {
+        payload.attachmentName = file.name;
+        payload.attachmentType = file.type || "application/octet-stream";
+        payload.attachmentData = await readAsBase64(file);
+      } catch {
+        setError("We couldn't read that file. Please try another, or send it on WhatsApp.");
+        return;
+      }
+    }
+
     setSubmitting(true);
     try {
       const res = await fetch("/api/lead", {
@@ -69,6 +107,7 @@ export function LeadForm({
       if (!res.ok || !result.success) throw new Error("Submission failed");
       trackLeadEvent(eventId);
       form.reset();
+      setFileName(null);
       router.push("/thank-you");
     } catch {
       setSubmitting(false);
@@ -101,6 +140,26 @@ export function LeadForm({
           placeholder="https://yourbusiness.co.uk"
           required
         />
+      )}
+
+      {allowAttachment && (
+        <label className="grid gap-1.5">
+          <span className="text-sm font-medium text-foreground">
+            Attach something (optional)
+          </span>
+          <span className="rounded-xl border border-dashed border-border bg-background px-4 py-5 text-center">
+            <input
+              type="file"
+              name="attachment"
+              accept={ACCEPTED_TYPES}
+              onChange={(e) => setFileName(e.currentTarget.files?.[0]?.name ?? null)}
+              className="block w-full text-sm text-muted file:mr-4 file:rounded-full file:border-0 file:bg-brand-pink/15 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-brand-pink hover:file:bg-brand-pink/25"
+            />
+            <span className="mt-2 block text-xs text-muted">
+              {fileName ?? "PDF, DOC, DOCX, PNG or JPG · up to 5MB"}
+            </span>
+          </span>
+        </label>
       )}
 
       <div className="grid gap-4 sm:grid-cols-2">

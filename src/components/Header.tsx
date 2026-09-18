@@ -73,15 +73,19 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
+      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-6 px-5 py-3 sm:px-8 lg:grid lg:grid-cols-[auto_1fr_auto]">
         <Logo />
 
-        <nav className="hidden items-center gap-6 lg:flex">
+        <nav className="hidden items-center justify-center gap-7 lg:flex">
           {navLinks.map((link) => (
             <div key={link.href} className="group relative">
               <Link
                 href={link.href}
-                className="flex items-center gap-1 py-2 text-sm font-medium text-muted transition-colors hover:text-foreground"
+                className={`flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium transition-colors ${
+                  pathname === link.href || pathname?.startsWith(`${link.href}/`)
+                    ? "border border-brand-pink/45 text-foreground"
+                    : "border border-transparent text-muted hover:text-foreground"
+                }`}
               >
                 {link.label}
                 {link.children && (
@@ -112,17 +116,9 @@ export function Header() {
 
         <div className="hidden items-center gap-3 lg:flex">
           <ThemeToggle />
-          <a
-            href={whatsappHref}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-brand-pink/60"
-          >
-            WhatsApp Us
-          </a>
           <Link
             href="/free-audit"
-            className="brand-gradient-bg rounded-full px-5 py-2 text-sm font-semibold text-white shadow-md shadow-black/10 transition-transform hover:scale-[1.03]"
+            className="brand-gradient-bg whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-black/10 transition-transform hover:scale-[1.03]"
           >
             Get a Free Audit
           </Link>

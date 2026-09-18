@@ -3,6 +3,10 @@ import nodemailer from "nodemailer";
 import { siteConfig } from "@/lib/site-config";
 import { sendMetaLeadEvent } from "@/lib/meta-conversions-api";
 
+/** 5MB, matching the form. Base64 inflates by roughly a third on the wire. */
+const MAX_ATTACHMENT_BYTES = 5 * 1024 * 1024;
+const ALLOWED_EXTENSIONS = [".pdf", ".doc", ".docx", ".png", ".jpg", ".jpeg"];
+
 const FIELDS: { key: string; label: string }[] = [
   { key: "name", label: "Name" },
   { key: "business", label: "Business" },
@@ -27,6 +31,26 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false }, { status: 400 });
   }
 
+  // Optional attachment. Re-checked server-side — the browser limit is a
+  // convenience, not a control, since anything can post to this endpoint.
+  const attachments: { filename: string; content: Buffer; contentType: string }[] = [];
+  if (data.attachmentData && data.attachmentName) {
+    const buffer = Buffer.from(data.attachmentData, "base64");
+    if (buffer.length > MAX_ATTACHMENT_BYTES) {
+      return NextResponse.json({ success: false, error: "attachment_too_large" }, { status: 413 });
+    }
+    const extension = data.attachmentName.toLowerCase().slice(data.attachmentName.lastIndexOf("."));
+    if (!ALLOWED_EXTENSIONS.includes(extension)) {
+      return NextResponse.json({ success: false, error: "attachment_type" }, { status: 415 });
+    }
+    attachments.push({
+      // Strip any path the browser may have included, and keep the name plain.
+      filename: data.attachmentName.replace(/[^\w.\- ]+/g, "_").slice(-80),
+      content: buffer,
+      contentType: data.attachmentType || "application/octet-stream",
+    });
+  }
+
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
   if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS) {
     console.error("Lead form: SMTP environment variables are not configured");
@@ -48,7 +72,8 @@ export async function POST(request: Request) {
       to: siteConfig.email,
       replyTo: data.email,
       subject: `New lead: ${data.business || data.name}`,
-      text: rows,
+      text: attachments.length ? `${rows}\n\nAttachment: ${attachments[0].filename}` : rows,
+      ...(attachments.length ? { attachments } : {}),
     });
   } catch (err) {
     console.error("Lead form: failed to send email", err);
