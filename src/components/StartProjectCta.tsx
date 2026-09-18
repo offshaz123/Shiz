@@ -16,13 +16,14 @@ export function StartProjectCta() {
             </h2>
             <p className="mt-4 text-lg text-white/65">
               Tell us about your business and we&apos;ll come back with what we&apos;d actually
-              run for you, and what it would cost. No charge, no obligation.
+              run for you, and what it would cost. Goes straight to Walid, no charge and no
+              obligation.
             </p>
           </div>
 
           <div className="flex w-full flex-col gap-3 sm:flex-row lg:w-auto">
             <Link
-              href="/contact"
+              href="/walid"
               className="brand-gradient-bg inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full px-8 py-4 text-sm font-semibold text-white shadow-lg shadow-black/30 transition-transform hover:scale-[1.03]"
             >
               Start Your Project <span aria-hidden="true">→</span>

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 const expect = [
   {
     title: "A straight answer on price",
-    body: "Plans start at £400 a month and ad spend is separate. You'll know the numbers on the first call, not the third.",
+    body: "Plans start at £400 a month and ad spend is separate. You'll have the numbers on the first call, not the third.",
   },
   {
     title: "What I'd actually run",
@@ -49,14 +49,14 @@ export default function WalidPage() {
                 <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
                   Walid Shah
                 </h1>
-                <p className="mt-1.5 text-white/60">Founder · Shaz Marketing Group</p>
+                <p className="mt-1.5 text-white/60">Client Strategy · Shaz Marketing Group</p>
               </div>
             </div>
 
             <p className="mt-8 text-lg leading-relaxed text-white/70">
-              You&apos;ll be dealing with me directly. There&apos;s no call centre, no account
-              manager passing you around, and nobody reading from a script. I build the campaigns
-              and I answer the phone.
+              I look after new client accounts here. If you get in touch through this page it
+              comes straight to me, and I&apos;ll be the one who goes through your business,
+              builds the plan and stays on it once the campaigns are live.
             </p>
 
             <div className="mt-8 rounded-2xl border border-white/10 bg-white/[0.04] p-6">
@@ -102,7 +102,7 @@ export default function WalidPage() {
           <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-7 backdrop-blur sm:p-9">
             <h2 className="text-xl font-bold text-white">Send me a message</h2>
             <p className="mt-2 text-sm text-white/55">
-              Comes straight to me. I&apos;ll come back to you within one working day.
+              Straight to my inbox. I&apos;ll come back to you within one working day.
             </p>
             <div className="mt-7">
               <LeadForm

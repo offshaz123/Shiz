@@ -57,8 +57,8 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
               </span>
             ))}
           </div>
-          <Link href="/free-audit" className="brand-gradient-bg mt-10 inline-block rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]">
-            Get Your Free Marketing Audit
+          <Link href="/walid" className="brand-gradient-bg mt-10 inline-block rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]">
+            Talk To Walid About This
           </Link>
         </div>
       </section>

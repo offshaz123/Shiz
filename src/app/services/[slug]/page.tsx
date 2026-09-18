@@ -79,10 +79,10 @@ export default async function ServicePage({
 
           <div className="mt-10">
             <Link
-              href="/free-audit"
+              href="/walid"
               className="brand-gradient-bg inline-block rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
             >
-              Get Your Free Marketing Audit
+              Talk To Walid About This
             </Link>
           </div>
         </div>
