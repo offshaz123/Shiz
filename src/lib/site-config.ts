@@ -30,6 +30,9 @@ export const siteConfig = {
     instagram: "",
     facebook: "",
     linkedin: "",
+    x: "",
+    youtube: "",
+    tiktok: "",
   },
   // Public review rating, shown as a star badge and published in the
   // Organization schema. Fill these in ONLY from reviews genuinely received on

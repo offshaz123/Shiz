@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { RealResultsSection } from "@/components/RealResults";
+import { HomeHero } from "@/components/HomeHero";
 import { StatsBar } from "@/components/StatsBar";
 import { ProblemGrid } from "@/components/ProblemGrid";
 import { ServicesGrid } from "@/components/ServicesGrid";
@@ -9,7 +10,6 @@ import { AuditFramework } from "@/components/AuditFramework";
 import { HowWeWork } from "@/components/HowWeWork";
 import { StartProjectCta } from "@/components/StartProjectCta";
 import { LondonOfficeSection } from "@/components/LondonOffice";
-import { ReviewBadge } from "@/components/ReviewBadge";
 import { GoogleCalendarBadge } from "@/components/GoogleCalendarBadge";
 import { FaqJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
@@ -43,74 +43,12 @@ const faqs = [
   },
 ];
 
-const industries = [
-  "Automotive",
-  "Home & Trade Services",
-  "Retail & E-commerce",
-  "Health & Wellness",
-  "Real Estate",
-  "Restaurants & Hospitality",
-  "Professional Services",
-  "Any business, any category",
-];
 
 
 export default function Home() {
   return (
     <div>
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -top-40 left-1/2 h-[560px] w-[900px] -translate-x-1/2 rounded-full opacity-20 blur-3xl brand-gradient-bg"
-        />
-        <div className="relative mx-auto max-w-7xl px-5 pb-20 pt-20 text-center sm:px-8 sm:pt-28">
-          <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-1.5 text-xs font-medium text-muted">
-            Ads · SEO · Websites · CRM — all in one place
-          </span>
-          <h1 className="mx-auto mt-6 max-w-4xl text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
-            More customers.{" "}
-            <span className="brand-gradient-text">Fewer missed enquiries.</span>
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">
-            We run the Meta, Instagram and Google campaigns that bring people in, build the
-            websites they land on, and put every enquiry into one place so nothing sits unread.
-            A UK agency for businesses that would rather have bookings than impressions.
-          </p>
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link
-              href="/free-audit"
-              className="brand-gradient-bg w-full rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03] sm:w-auto"
-            >
-              Get Your Free Marketing Audit
-            </Link>
-            <Link
-              href="/contact"
-              className="w-full rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-foreground transition-colors hover:border-brand-pink/60 sm:w-auto"
-            >
-              Book a Call
-            </Link>
-          </div>
-
-          <p className="mt-5 text-sm text-muted">
-            Free, no obligation — we&apos;ll tell you what&apos;s stopping your enquiries before
-            you spend anything.
-          </p>
-
-          <ReviewBadge />
-
-          <div className="mx-auto mt-16 flex max-w-4xl flex-wrap items-center justify-center gap-2.5">
-            {industries.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-full border border-border bg-surface px-4 py-2 text-xs font-medium text-muted"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
+      <HomeHero />
 
       <StatsBar />
       <ProblemGrid />

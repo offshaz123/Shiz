@@ -1,8 +1,8 @@
 const stats = [
-  { value: "200+", label: "Projects", sub: "Delivered", stars: false },
-  { value: "97%", label: "Satisfaction", sub: "Client feedback rating", stars: true },
-  { value: "15+", label: "Industries", sub: "Served UK-wide", stars: false },
-  { value: "300+", label: "Clients", sub: "Worked with to date", stars: false },
+  { value: "200+", label: "Projects", sub: "Delivered" },
+  { value: "97%", label: "Satisfaction", sub: "Client feedback rating" },
+  { value: "15+", label: "Industries", sub: "Served UK-wide" },
+  { value: "300+", label: "Clients", sub: "Worked with to date" },
 ];
 
 function Stars() {
@@ -73,6 +73,10 @@ export function StatsBar() {
           Trusted by UK businesses · Certified across the platforms that matter
         </p>
 
+        <p className="mx-auto mt-4 max-w-xl text-center text-xs text-muted">
+          Five stars is the rating our clients give us across the feedback we collect.
+        </p>
+
         <div className="mt-11 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center lg:text-left">
@@ -83,7 +87,7 @@ export function StatsBar() {
                 </span>
               </div>
               <p className="mt-1.5 text-sm text-muted">{stat.sub}</p>
-              {stat.stars && <Stars />}
+              <Stars />
             </div>
           ))}
         </div>
