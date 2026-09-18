@@ -26,6 +26,8 @@ export type ClientResult = {
   period: string;
   /** What we run for them, as service names. */
   services: string[];
+  /** The one line that does the selling, drawn from the figures below. */
+  headline: string;
   summary: string;
   /** What the work actually consists of, month to month. */
   work: string[];
@@ -45,6 +47,7 @@ export const clientResults: ClientResult[] = [
       "Social Media Management",
       "CRM & Automation",
     ],
+    headline: "19 clients on board from £228 of advertising.",
     summary:
       "We built the website, we run the Meta and Instagram advertising, and we write and post the social content ourselves. Every message from every platform lands in one CRM inbox, so an enquiry gets answered whichever way it arrives.",
     work: [
@@ -55,9 +58,9 @@ export const clientResults: ClientResult[] = [
     ],
     stats: [
       { value: "35", label: "Leads generated" },
-      { value: "£6.50", label: "Cost per lead" },
+      { value: "£6.50", label: "Average cost per lead" },
       { value: "19", label: "Clients on board" },
-      { value: "£852", label: "Total ad spend" },
+      { value: "£228", label: "Total ad spend" },
     ],
   },
   {
@@ -72,6 +75,7 @@ export const clientResults: ClientResult[] = [
       "Meta & Instagram Ads",
       "Social Media Management",
     ],
+    headline: "540 enquiries at £2.50 each, and over 300 cars booked in.",
     summary:
       "A full year of work. We built the website, we handle the SEO, we run the ads and we manage the social alongside it, so the paid side and the organic side pull in the same direction rather than against each other.",
     work: [
@@ -84,7 +88,7 @@ export const clientResults: ClientResult[] = [
       { value: "540", label: "Leads generated" },
       { value: "£2.50", label: "Average cost per lead" },
       { value: "300+", label: "Customers booked" },
-      { value: "£1,560", label: "Total ad spend" },
+      { value: "£1,350", label: "Total ad spend" },
     ],
   },
   {
@@ -93,6 +97,7 @@ export const clientResults: ClientResult[] = [
     sector: "Automotive — servicing & detailing",
     period: "6 months",
     services: ["Meta & Instagram Ads", "CRM & Automation"],
+    headline: "150+ customers through the door on £913 of ad spend.",
     summary:
       "Six months of Meta and Instagram campaigns for a car servicing and detailing business, with every enquiry answered through a single inbox. That works out at roughly £6 of advertising per customer through the door.",
     work: [
@@ -102,7 +107,7 @@ export const clientResults: ClientResult[] = [
     ],
     stats: [
       { value: "235", label: "Leads generated" },
-      { value: "£3.89", label: "Cost per lead" },
+      { value: "£3.89", label: "Average cost per lead" },
       { value: "150+", label: "Customers booked" },
       { value: "£913", label: "Total ad spend" },
     ],
@@ -110,21 +115,23 @@ export const clientResults: ClientResult[] = [
   {
     slug: "alliance-security-group",
     client: "Alliance Security Group",
-    sector: "Security services",
+    sector: "Security services — SIA licensed manned guarding",
+    website: "https://alliancesecuritygrp.com",
     period: "3 months",
     services: ["Website Design & Build", "SEO & Local Search"],
+    headline: "9 clients signed in the first three months, from search alone.",
     summary:
       "Three months in, and this one is mostly a search story. We built the website and we handle the SEO, and the enquiries coming through are from people actively looking for a security provider rather than people who happened to see an advert.",
     work: [
-      "Built the website, written for the contracts this business actually wants.",
-      "SEO and local search across the areas they cover.",
+      "Built the website, written for the contracts this business actually wants, from manned guarding to key holding and alarm response.",
+      "SEO and local search across the areas they cover, for the searches that bring in direct contracts rather than subcontract work.",
       "Enquiries tracked properly, so we know which searches are producing work.",
     ],
     stats: [
       { value: "35", label: "Leads generated" },
-      { value: "£5.26", label: "Cost per lead" },
+      { value: "£5.26", label: "Average cost per lead" },
       { value: "9", label: "Clients on board" },
-      { value: "£1,850", label: "Total spend" },
+      { value: "£184", label: "Total ad spend" },
     ],
   },
 ];

@@ -31,7 +31,10 @@ export function ClientResultCard({ result }: { result: ClientResult }) {
         </a>
       )}
 
-      <p className="mt-5 max-w-3xl leading-relaxed text-muted">{result.summary}</p>
+      <p className="mt-5 max-w-3xl text-xl font-semibold leading-snug text-foreground">
+        {result.headline}
+      </p>
+      <p className="mt-3 max-w-3xl leading-relaxed text-muted">{result.summary}</p>
 
       <div className="mt-6 flex flex-wrap gap-2">
         {result.services.map((service) => (

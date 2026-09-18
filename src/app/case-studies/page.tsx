@@ -49,6 +49,14 @@ export default function CaseStudiesPage() {
           ))}
         </div>
 
+        <p className="mt-8 max-w-3xl text-sm leading-relaxed text-muted">
+          How we report these: leads and cost per lead come from the campaign reporting over the
+          period shown, and the ad spend figure is what that works out to across the run. Cost per
+          lead is an average over the whole period, so individual months sat above and below it.
+          Where a client has since taken their ad account back in house, the figures are the ones
+          from the period we were running it.
+        </p>
+
         <div className="mt-10 rounded-3xl border border-brand-pink/35 bg-surface p-8 sm:p-10">
           <h2 className="text-2xl font-bold tracking-tight text-foreground">
             A cheap lead isn&apos;t the point. A lead worth having is.
