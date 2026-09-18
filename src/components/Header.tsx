@@ -6,9 +6,33 @@ import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
+import { services } from "@/content/services";
+import { industries } from "@/content/industries";
+import { locations } from "@/content/locations";
 
-const navLinks = [
-  { href: "/services", label: "Services" },
+type NavItem = {
+  href: string;
+  label: string;
+  children?: { href: string; label: string }[];
+};
+
+const navLinks: NavItem[] = [
+  {
+    href: "/services",
+    label: "Services",
+    children: services.map((s) => ({ href: `/services/${s.slug}`, label: s.name })),
+  },
+  {
+    href: "/industries",
+    label: "Industries",
+    children: industries.map((i) => ({ href: `/industries/${i.slug}`, label: i.name })),
+  },
+  {
+    href: "/locations",
+    label: "Locations",
+    children: locations.map((l) => ({ href: `/locations/${l.slug}`, label: l.city })),
+  },
+  { href: "/case-studies", label: "Case Studies" },
   { href: "/pricing", label: "Pricing" },
   { href: "/about", label: "About" },
   { href: "/blog", label: "Blog" },
@@ -41,19 +65,41 @@ export function Header() {
       <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
         <Logo />
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-6 lg:flex">
           {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-muted transition-colors hover:text-foreground"
-            >
-              {link.label}
-            </Link>
+            <div key={link.href} className="group relative">
+              <Link
+                href={link.href}
+                className="flex items-center gap-1 py-2 text-sm font-medium text-muted transition-colors hover:text-foreground"
+              >
+                {link.label}
+                {link.children && (
+                  <svg viewBox="0 0 24 24" fill="none" className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" aria-hidden="true">
+                    <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                )}
+              </Link>
+
+              {link.children && (
+                <div className="invisible absolute left-1/2 top-full z-50 w-60 -translate-x-1/2 pt-2 opacity-0 transition-all group-hover:visible group-hover:opacity-100">
+                  <div className="overflow-hidden rounded-2xl border border-border bg-background shadow-xl shadow-black/10">
+                    {link.children.map((child) => (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        className="block px-5 py-3 text-sm font-medium text-muted transition-colors hover:bg-surface hover:text-brand-pink"
+                      >
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-3 lg:flex">
           <ThemeToggle />
           <a
             href={whatsappHref}
@@ -71,7 +117,7 @@ export function Header() {
           </Link>
         </div>
 
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-2 lg:hidden">
           <ThemeToggle />
           <button
             type="button"
@@ -91,17 +137,32 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="border-t border-border bg-background px-5 py-4 md:hidden">
+        <div className="max-h-[75vh] overflow-y-auto border-t border-border bg-background px-5 py-4 lg:hidden">
           <nav className="flex flex-col gap-4">
             {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="text-sm font-medium text-muted transition-colors hover:text-foreground"
-              >
-                {link.label}
-              </Link>
+              <div key={link.href} className="flex flex-col gap-2">
+                <Link
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="text-sm font-semibold text-foreground"
+                >
+                  {link.label}
+                </Link>
+                {link.children && (
+                  <div className="ml-3 flex flex-col gap-2 border-l border-border pl-4">
+                    {link.children.map((child) => (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        onClick={() => setOpen(false)}
+                        className="text-sm text-muted transition-colors hover:text-brand-pink"
+                      >
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
             <a
               href={whatsappHref}
@@ -112,11 +173,11 @@ export function Header() {
               WhatsApp Us
             </a>
             <Link
-              href="/contact"
+              href="/free-audit"
               onClick={() => setOpen(false)}
               className="brand-gradient-bg rounded-full px-5 py-2 text-center text-sm font-semibold text-white"
             >
-              Get Free Strategy Call
+              Get a Free Audit
             </Link>
           </nav>
         </div>

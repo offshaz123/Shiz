@@ -2,6 +2,9 @@ import type { MetadataRoute } from "next";
 import { siteConfig } from "@/lib/site-config";
 import { blogPosts } from "@/content/blog";
 import { services } from "@/content/services";
+import { industries } from "@/content/industries";
+import { locations } from "@/content/locations";
+import { approaches } from "@/content/case-studies";
 
 export const dynamic = "force-static";
 
@@ -10,6 +13,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "", changeFrequency: "weekly", priority: 1 },
     { path: "/demo", changeFrequency: "monthly", priority: 0.9 },
     { path: "/free-audit", changeFrequency: "monthly", priority: 0.95 },
+    { path: "/industries", changeFrequency: "monthly", priority: 0.85 },
+    { path: "/locations", changeFrequency: "monthly", priority: 0.8 },
+    { path: "/case-studies", changeFrequency: "monthly", priority: 0.85 },
     { path: "/services", changeFrequency: "monthly", priority: 0.9 },
     { path: "/pricing", changeFrequency: "monthly", priority: 0.9 },
     { path: "/about", changeFrequency: "monthly", priority: 0.8 },
@@ -32,6 +38,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.85,
   }));
 
+  const industryEntries = industries.map((industry) => ({
+    url: `${siteConfig.url}/industries/${industry.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
+  const locationEntries = locations.map((location) => ({
+    url: `${siteConfig.url}/locations/${location.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.75,
+  }));
+
+  const approachEntries = approaches.map((approach) => ({
+    url: `${siteConfig.url}/case-studies/${approach.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
   const blogEntries = blogPosts.map((post) => ({
     url: `${siteConfig.url}/blog/${post.slug}`,
     lastModified: new Date(post.publishedAt),
@@ -39,5 +66,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticEntries, ...serviceEntries, ...blogEntries];
+  return [
+    ...staticEntries,
+    ...serviceEntries,
+    ...industryEntries,
+    ...locationEntries,
+    ...approachEntries,
+    ...blogEntries,
+  ];
 }
