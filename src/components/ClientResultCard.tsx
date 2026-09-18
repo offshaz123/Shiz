@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ClientResult } from "@/content/case-studies";
+import { ClientLogo } from "./ClientLogo";
 
 function hostname(url: string) {
   return url.replace(/^https?:\/\//, "").replace(/\/$/, "");
@@ -8,12 +9,15 @@ function hostname(url: string) {
 export function ClientResultCard({ result }: { result: ClientResult }) {
   return (
     <article className="rounded-3xl border border-border bg-surface p-8 sm:p-10">
-      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
-        <h3 className="text-2xl font-bold text-foreground">{result.client}</h3>
-        <span className="text-sm text-muted">{result.sector}</span>
-        <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold text-muted">
-          {result.period}
-        </span>
+      <div className="flex items-start gap-4">
+        <ClientLogo result={result} size={52} />
+        <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+          <h3 className="text-2xl font-bold text-foreground">{result.client}</h3>
+          <span className="text-sm text-muted">{result.sector}</span>
+          <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold text-muted">
+            {result.period}
+          </span>
+        </div>
       </div>
 
       {result.website && (

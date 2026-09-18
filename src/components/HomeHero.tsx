@@ -2,6 +2,7 @@ import Link from "next/link";
 import { featuredResult } from "@/content/case-studies";
 import { ReviewBadge } from "./ReviewBadge";
 import { HeroBackdrop } from "./HeroBackdrop";
+import { ClientLogo } from "./ClientLogo";
 
 export function HomeHero() {
   return (
@@ -88,12 +89,17 @@ export function HomeHero() {
                 </span>
               </div>
 
-              <p className="mt-4 text-lg font-semibold leading-snug text-white">
-                {featuredResult.client}
-              </p>
-              <p className="text-sm text-white/55">
-                {featuredResult.sector} · {featuredResult.period}
-              </p>
+              <div className="mt-4 flex items-center gap-3">
+                <ClientLogo result={featuredResult} size={42} onDark />
+                <div>
+                  <p className="text-lg font-semibold leading-snug text-white">
+                    {featuredResult.client}
+                  </p>
+                  <p className="text-sm text-white/55">
+                    {featuredResult.sector} · {featuredResult.period}
+                  </p>
+                </div>
+              </div>
 
               <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-4">
                 {featuredResult.stats.map((stat) => (

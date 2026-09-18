@@ -23,6 +23,8 @@ export type ClientResult = {
   sector: string;
   /** The live site, where the client is happy for us to link it. */
   website?: string;
+  /** The client's own mark, in /public/clients. Falls back to a monogram. */
+  logo?: string;
   period: string;
   /** What we run for them, as service names. */
   services: string[];
@@ -40,6 +42,7 @@ export const clientResults: ClientResult[] = [
     client: "CoBanq",
     sector: "Financial services — international payments",
     website: "https://cobanq.com",
+    logo: "/clients/cobanq.png",
     period: "6 months",
     services: [
       "Website Design & Build",
@@ -68,6 +71,7 @@ export const clientResults: ClientResult[] = [
     client: "Executive Tints & Repairs",
     sector: "Automotive — window tinting & servicing",
     website: "https://executiveontop.com",
+    logo: "/clients/executive-tints.png",
     period: "12 months",
     services: [
       "Website Design & Build",
@@ -117,6 +121,7 @@ export const clientResults: ClientResult[] = [
     client: "Alliance Security Group",
     sector: "Security services — SIA licensed manned guarding",
     website: "https://alliancesecuritygrp.com",
+    logo: "/clients/alliance-security-group.svg",
     period: "3 months",
     services: ["Website Design & Build", "SEO & Local Search"],
     headline: "9 clients signed in the first three months, from search alone.",
