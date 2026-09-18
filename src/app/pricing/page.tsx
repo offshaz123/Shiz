@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { PricingSection } from "@/components/PricingSection";
 import { BreadcrumbJsonLd, FaqJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
@@ -7,7 +6,7 @@ import { StartProjectCta } from "@/components/StartProjectCta";
 import { pricingGroups } from "@/content/pricing";
 
 const description =
-  "Transparent pricing for Meta & Instagram ads from £400/month, Google Ads at one flat £600/month including the landing page and CRM, and SEO from £350/month. No hidden setup fees.";
+  "Transparent pricing for Meta & Instagram ads from £400/month, Google Ads at one flat £600/month including the landing page and CRM, SEO from £350/month and websites from £300. No hidden setup fees.";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -56,9 +55,14 @@ const faqs = [
       "Yes. Move up or down as your business changes, or run more than one service together. Most clients start with one and add the second once the first is paying for itself.",
   },
   {
+    question: "How much is a website?",
+    answer:
+      "From £300 as a one-off, not a monthly fee. A simple few-page site sits at the starting price and it goes up depending on how many pages you want and what needs building into them. Hosting is separate at roughly £10 to £30 a month, set up in your name so you own the site outright. If you're on an ad plan, a campaign landing page is already included, so you only need this if you want a full site.",
+  },
+  {
     question: "Do you charge a setup fee?",
     answer:
-      "No. What's on this page is what you pay. If you also need a website built from scratch that's a separate one-off, and we'll quote it before we start, never after.",
+      "No. What's on this page is what you pay. A website built from scratch is a separate one-off from £300, and we'll quote it before we start, never after.",
   },
 ];
 
@@ -113,30 +117,6 @@ export default function PricingPage() {
           className={i % 2 === 1 ? "border-t border-border bg-surface" : "border-t border-border"}
         />
       ))}
-
-      {/* Websites note */}
-      <section className="border-t border-border bg-surface">
-        <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
-          <div className="rounded-3xl border border-border bg-background p-8 sm:p-10">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">
-              Need the website too?
-            </h2>
-            <p className="mt-3 max-w-3xl leading-relaxed text-muted">
-              If you don&apos;t have a site yet, or the one you have isn&apos;t doing anything for
-              you, we build those as a one-off rather than a monthly fee. A campaign landing page
-              is already included in the ad plans above, so this is for a full site with your
-              pages, your tracking and your Google and Meta pixels wired in from day one. Hosting
-              sits with you so you own it outright, and we&apos;ll set it up for you either way.
-            </p>
-            <Link
-              href="/services/web-design"
-              className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-pink hover:underline"
-            >
-              More on web design <span aria-hidden="true">→</span>
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* FAQ */}
       <section className="border-t border-border">

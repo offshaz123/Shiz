@@ -137,6 +137,11 @@ export const services: Service[] = [
       { title: "Tracking from day one", body: "Meta Pixel, Conversions API, Google Analytics and Search Console, installed and verified rather than half-set-up." },
       { title: "Yours to keep", body: "Your domain, your hosting, your content. No lock-in and nothing held hostage." },
     ],
+    pricing: {
+      headline: "From £300, one-off",
+      note: "Not a monthly fee. A simple few-page site starts at £300 and the price moves depending on how many pages you want and what needs building into them. Hosting is separate and usually runs £10 to £30 a month, set up in your name so you own the site outright.",
+      anchor: "web-design",
+    },
     readMore: { label: "Seven signs your landing page is losing you leads", href: "/blog/signs-your-landing-page-is-losing-leads" },
   },
   {

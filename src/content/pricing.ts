@@ -179,6 +179,38 @@ export const pricingGroups: PricingGroup[] = [
       "We will never promise you a position on Google, and be careful of anyone who does. What we promise is the work, done every month, and reporting honest enough that you can see it happening.",
   },
   {
+    id: "web-design",
+    eyebrow: "Website Design & Build",
+    title: "Websites, built as a one-off",
+    intro:
+      "This one isn't a monthly fee. You pay once, the site is yours, and there's nothing to keep paying us for afterwards. A campaign landing page is already included in the ad plans above, so this is for a proper site with all your pages on it. The price starts at £300 and moves depending on how many pages you want and what needs building into them, so we'll price it once we know what you're after.",
+    serviceSlug: "web-design",
+    serviceLabel: "More on website design",
+    plans: [
+      {
+        name: "Website Design & Build",
+        price: "From £300",
+        priceSuffix: "one-off",
+        popular: true,
+        tagline:
+          "A starting price, not a fixed one. A simple few-page site sits at £300, and it goes up from there depending on how much you want on it.",
+        features: [
+          "Designed around getting the enquiry, not around decoration",
+          "Built mobile-first, because that's where nearly all your ad traffic lands",
+          "Your pages, your services, your areas, written properly",
+          "Meta Pixel and Conversions API installed and verified",
+          "Google Analytics and Search Console connected from day one",
+          "Contact forms that actually reach you, tested before launch",
+          "Built to load fast, which Google cares about and so do your customers",
+          "Yours to keep. Your domain, your hosting, no lock-in and nothing held hostage",
+        ],
+        ctaLabel: "Get A Website Quote",
+      },
+    ],
+    footnote:
+      "Hosting is separate and usually runs somewhere between £10 and £30 a month depending on the size of the site. We'll set that up for you and put it in your name, so you own the site outright and can take it anywhere. Just add us as an admin and we'll handle the rest.",
+  },
+  {
     id: "social-media-management",
     eyebrow: "Social Media Management",
     title: "Social media management",
