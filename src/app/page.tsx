@@ -4,6 +4,11 @@ import { RealResultsSection } from "@/components/RealResults";
 import { IndustryStatsSection } from "@/components/IndustryStats";
 import { StatsBar } from "@/components/StatsBar";
 import { ProblemGrid } from "@/components/ProblemGrid";
+import { ServicesGrid } from "@/components/ServicesGrid";
+import { Deliverables } from "@/components/Deliverables";
+import { AuditFramework } from "@/components/AuditFramework";
+import { HowWeWork } from "@/components/HowWeWork";
+import { StartProjectCta } from "@/components/StartProjectCta";
 import { LondonOfficeSection } from "@/components/LondonOffice";
 import { ReviewBadge } from "@/components/ReviewBadge";
 import { CaseStudySection } from "@/components/CaseStudy";
@@ -118,6 +123,11 @@ export default function Home() {
 
       <StatsBar />
       <ProblemGrid />
+      <ServicesGrid />
+      <Deliverables />
+      <AuditFramework />
+      <HowWeWork />
+      <StartProjectCta />
       <LondonOfficeSection />
       <IndustryStatsSection />
       <RealResultsSection />

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { RealResultsSection } from "@/components/RealResults";
+import { ServicesGrid } from "@/components/ServicesGrid";
 import { IndustryStatsSection } from "@/components/IndustryStats";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
@@ -91,6 +92,7 @@ const inboxPreview = [
 export default function ServicesPage() {
   return (
     <div>
+      <ServicesGrid />
       <BreadcrumbJsonLd
         items={[
           { name: "Home", url: siteConfig.url },
