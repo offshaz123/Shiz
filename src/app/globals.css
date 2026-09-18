@@ -81,3 +81,93 @@ body {
 .brand-ring {
   box-shadow: 0 0 0 1px var(--border);
 }
+
+/* --- Hero backdrop animation -------------------------------------------
+   A slow orbit system behind the hero: concentric rings turning at
+   different speeds with markers riding on them. Everything is decorative,
+   so all of it stops for anyone who has asked for reduced motion. */
+
+@keyframes orbit-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes orbit-spin-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+/* Transform only. Opacity belongs to .hero-glow, and animating it here
+   would override that and wash the hero out. */
+@keyframes drift-glow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(3%, -4%, 0) scale(1.1);
+  }
+}
+
+@keyframes pulse-node {
+  0%,
+  100% {
+    opacity: 0.35;
+    r: 3;
+  }
+  50% {
+    opacity: 1;
+    r: 4.5;
+  }
+}
+
+.animate-orbit-slow {
+  animation: orbit-spin 48s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+.animate-orbit-medium {
+  animation: orbit-spin-reverse 34s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+.animate-orbit-fast {
+  animation: orbit-spin 22s linear infinite;
+  transform-origin: 50% 50%;
+}
+
+.animate-drift-glow {
+  animation: drift-glow 14s ease-in-out infinite;
+}
+
+.animate-pulse-node {
+  animation: pulse-node 4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-orbit-slow,
+  .animate-orbit-medium,
+  .animate-orbit-fast,
+  .animate-drift-glow,
+  .animate-pulse-node {
+    animation: none;
+  }
+}
+
+/* The hero glow sits behind text, so it stays faint. Light mode needs less
+   of it again, since a warm gradient over white reads much stronger. */
+.hero-glow {
+  opacity: 0.1;
+}
+
+.dark .hero-glow {
+  opacity: 0.16;
+}

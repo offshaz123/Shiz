@@ -68,16 +68,13 @@ export function StatsBar() {
         className="brand-gradient-bg pointer-events-none absolute -bottom-32 left-1/2 h-[320px] w-[900px] -translate-x-1/2 rounded-full opacity-[0.07] blur-3xl"
       />
 
-      <div className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8">
+      <div className="relative mx-auto max-w-7xl px-5 py-10 sm:px-8">
         <p className="text-center text-[11px] font-semibold uppercase tracking-[0.24em] text-muted">
           Trusted by UK businesses · Certified across the platforms that matter
         </p>
 
-        <p className="mx-auto mt-4 max-w-xl text-center text-xs text-muted">
-          Five stars is the rating our clients give us across the feedback we collect.
-        </p>
 
-        <div className="mt-11 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center lg:text-left">
               <div className="flex items-baseline justify-center gap-2.5 lg:justify-start">
@@ -92,7 +89,11 @@ export function StatsBar() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-wrap items-center justify-center gap-3 border-t border-border pt-9 sm:gap-4">
+        <p className="mt-8 text-center text-xs text-muted">
+          Five stars is the rating our clients give us across the feedback we collect.
+        </p>
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 border-t border-border pt-8 sm:gap-4">
           {partners.map((partner) => (
             <div
               key={partner.name}

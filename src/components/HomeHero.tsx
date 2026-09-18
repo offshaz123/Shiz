@@ -1,34 +1,32 @@
 import Link from "next/link";
 import { featuredResult } from "@/content/case-studies";
 import { ReviewBadge } from "./ReviewBadge";
+import { HeroBackdrop } from "./HeroBackdrop";
 
 export function HomeHero() {
   return (
     <section className="relative overflow-hidden">
-      <div
-        aria-hidden
-        className="brand-gradient-bg pointer-events-none absolute -left-40 -top-56 h-[640px] w-[820px] rounded-full opacity-[0.18] blur-3xl"
-      />
+      <HeroBackdrop />
 
-      <div className="relative mx-auto grid max-w-7xl gap-14 px-5 pb-16 pt-16 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-16 lg:pb-20 lg:pt-20">
+      <div className="relative mx-auto grid max-w-7xl gap-10 px-5 pb-10 pt-10 sm:px-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:gap-14 lg:pb-12 lg:pt-12">
         {/* Copy */}
         <div className="text-center lg:text-left">
           <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-brand-pink">
             A UK leading marketing agency, built for enquiries not impressions
           </span>
 
-          <h1 className="mt-5 text-4xl font-bold leading-[1.08] tracking-tight text-foreground sm:text-5xl lg:text-[3.35rem]">
+          <h1 className="mt-4 text-4xl font-bold leading-[1.06] tracking-tight text-foreground sm:text-5xl lg:text-[3.05rem]">
             More customers.{" "}
             <span className="brand-gradient-text">Fewer missed enquiries.</span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-muted lg:mx-0">
+          <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-muted lg:mx-0">
             We run the Meta, Instagram and Google campaigns that bring people in, build the
             websites they land on, handle your SEO, and put every enquiry into one place so
             nothing sits unread.
           </p>
 
-          <div className="mt-9 flex flex-col gap-3.5 sm:flex-row sm:justify-center lg:justify-start">
+          <div className="mt-7 flex flex-col gap-3.5 sm:flex-row sm:justify-center lg:justify-start">
             <Link
               href="/free-audit"
               className="brand-gradient-bg inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
@@ -59,7 +57,7 @@ export function HomeHero() {
             </Link>
           </div>
 
-          <p className="mt-5 text-sm text-muted">
+          <p className="mt-4 text-sm text-muted">
             Free and no obligation. We&apos;ll tell you what&apos;s stopping your enquiries before
             you spend anything.
           </p>
@@ -78,8 +76,8 @@ export function HomeHero() {
             className="absolute -right-6 -top-6 h-40 w-40 rounded-full bg-white/15 blur-2xl"
           />
 
-          <div className="relative rounded-[2.5rem] p-6 sm:p-8">
-            <div className="rounded-3xl border border-white/20 bg-[#0b0a0f]/85 p-7 shadow-2xl shadow-black/30 backdrop-blur">
+          <div className="relative rounded-[2.5rem] p-5 sm:p-6">
+            <div className="rounded-3xl border border-white/20 bg-[#0b0a0f]/85 p-6 shadow-2xl shadow-black/30 backdrop-blur">
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2.5 w-2.5">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
@@ -97,7 +95,7 @@ export function HomeHero() {
                 {featuredResult.sector} · {featuredResult.period}
               </p>
 
-              <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-5">
+              <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-4">
                 {featuredResult.stats.map((stat) => (
                   <div key={stat.label}>
                     <p className="text-2xl font-bold tracking-tight text-white sm:text-[1.75rem]">
@@ -108,7 +106,7 @@ export function HomeHero() {
                 ))}
               </div>
 
-              <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2">
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
                 <Link
                   href="/case-studies"
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:underline"
