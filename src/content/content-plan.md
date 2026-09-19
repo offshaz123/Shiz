@@ -57,6 +57,7 @@ keywords, dealership social strategy).
 - Retainer or Per Campaign? How Marketing Agencies Charge (cost & expectation-setting)
 - Meta & Instagram Ads for Barbers and Hairdressers (industry-specific)
 - Why Your Website Needs a Proper Thank You Page (local search & site)
+- Q4 Advertising: Why Your Costs Rise in November and What to Do About It (seasonal & planning)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -190,7 +191,7 @@ keywords, dealership social strategy).
       small business"
 
 ## Backlog — seasonal & planning (added 2026-09-16 research round)
-- [ ] Q4 Advertising: Why Your Costs Rise in November and What to Do About It — target:
+- [x] Q4 Advertising: Why Your Costs Rise in November and What to Do About It — target:
       "Facebook ads Christmas costs", "Q4 CPM increase UK"
 - [ ] Should You Advertise Over Christmas? — target: "Christmas advertising small business UK",
       "should I run ads in December"

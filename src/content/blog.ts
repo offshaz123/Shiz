@@ -16,6 +16,80 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "q4-advertising-why-costs-rise-in-november",
+    title: "Q4 Advertising: Why Your Costs Rise in November and What to Do About It",
+    description:
+      "Meta ad costs climb every year from November as retail budgets flood the auction. Here's why it happens, who it hits hardest, and what to do about it.",
+    publishedAt: "2026-09-19",
+    keywords: [
+      "Facebook ads Christmas costs",
+      "Q4 CPM increase UK",
+      "Black Friday advertising costs",
+      "Meta ads November December budget",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Every year the same message arrives in November. My ads were working fine and now they cost more. Did something break?",
+          "Usually nothing broke. You are advertising in the most expensive quarter of the year, and it happens on schedule. Knowing that in September is worth a great deal more than discovering it on the second week of November.",
+        ],
+      },
+      {
+        heading: "Why it happens",
+        paragraphs: [
+          "Meta sells attention at auction. There is a roughly fixed amount of it — people only scroll so much — and the price is set by how many advertisers are bidding for it.",
+          "From late October onwards, every retailer in the country turns their budget up. Black Friday, Cyber Monday, Christmas, then the January sales. Businesses that advertise lightly all year suddenly spend heavily for eight weeks, and some of them are willing to lose money on the first sale because they expect to make it back over the following year.",
+          "More bidders, same attention, higher price. That's the whole mechanism. It isn't Meta charging more, and it isn't your account being penalised.",
+        ],
+      },
+      {
+        heading: "Who it actually hits",
+        paragraphs: [
+          "The instinct is to think this only matters if you sell products. It doesn't.",
+          "A plumber in Leeds is not competing with a national retailer for customers, but they are competing for the same three seconds of the same person's scroll. The auction doesn't care that your businesses are unrelated. If a clothing brand is willing to pay more to reach a 34-year-old woman in Leeds than you are, they get the placement.",
+          "That said, the effect isn't even. Businesses selling gifts, hospitality and anything people buy for Christmas usually find demand rises enough to cover the higher cost. Businesses selling something nobody buys in December — commercial contracts, house moves, anything B2B — can face higher prices without the matching lift in interest.",
+        ],
+      },
+      {
+        heading: "A higher cost per thousand is not the same as a worse campaign",
+        paragraphs: [
+          "This is the part most people get wrong, and it leads to campaigns being switched off that were doing fine.",
+          "Cost per thousand impressions going up only tells you what it costs to be seen. It says nothing about what happens next. In December people are often in more of a buying mood than they are in February, so the percentage who act on an ad can rise at the same time the price does.",
+          "Which means your cost per enquiry might stay flat, or even improve, while the headline cost looks alarming. Judge the campaign on what a customer costs you, not on what an impression costs you. If you don't know what a customer costs you, that is the problem to fix before November, not the CPM.",
+        ],
+      },
+      {
+        heading: "What to do about it",
+        paragraphs: [
+          "None of this is a reason to panic. It is a reason to plan:",
+        ],
+        bullets: [
+          "Get your tracking right now, not in November. Going into the most expensive quarter of the year unable to tell which ads produce customers is an expensive way to learn",
+          "Build your retargeting audiences early. Reaching somebody who already visited your site is far cheaper than reaching a stranger, and October is when you should be filling that pool",
+          "Decide your ceiling in advance. Work out the most you can pay for a customer and still be happy, write it down, and hold to it when costs move",
+          "Expect to pay more per enquiry and budget for it rather than being surprised. A plan that only works at October prices isn't a plan",
+          "Refresh your creative before the rush. Ad fatigue arrives faster when everybody's feed is busier, and running the same image for eight weeks will cost you",
+          "Shift some weight to the channels where demand is already there. Search and your Google listing don't work on the same auction, and people looking for you directly are less affected by any of this",
+        ],
+      },
+      {
+        heading: "The case for not going quiet",
+        paragraphs: [
+          "Plenty of small businesses respond by switching everything off until January. Sometimes that's the right call, particularly if you sell something nobody is thinking about in December.",
+          "But there's a cost to it that doesn't appear on any report. Campaigns that stop and restart go back through a period of finding their feet, so you pay twice — once in the quiet months for the pause, and again in January while the system relearns who to show your ads to.",
+          "A common middle ground is to keep something running at a reduced budget through the expensive weeks, so the account stays warm and your audiences stay current, then scale back up when prices fall. What actually suits you depends on your margins and your seasonality, which is a conversation worth having in October rather than a decision made in a panic.",
+        ],
+      },
+      {
+        heading: "And then January",
+        paragraphs: [
+          "The flip side of all this is that the retail budgets go away as quickly as they arrived. Late January and February are usually among the cheapest weeks of the year to advertise, because half the businesses that were bidding against you have spent their money and gone quiet.",
+          "If you have flexibility about when you push, that's when to push. Planning for it now means you have budget left to take advantage of it, rather than having spent everything competing in the one quarter where the competition was fiercest.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "why-your-website-needs-a-thank-you-page",
     title: "Why Your Website Needs a Proper Thank You Page",
     description:
