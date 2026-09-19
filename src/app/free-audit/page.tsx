@@ -3,6 +3,7 @@ import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { whatsappHref } from "@/lib/site-config";
+import { ogImage } from "@/lib/seo";
 
 const description =
   "We'll go through your website and social accounts and send you a plain-English list of what's stopping you getting enquiries. Free, no obligation.";
@@ -11,7 +12,8 @@ export const metadata: Metadata = {
   title: "Free Marketing Audit",
   description,
   alternates: { canonical: "/free-audit" },
-  openGraph: { title: "Free Marketing Audit | Shaz Marketing Group", description },
+  openGraph: {
+      images: [ogImage], title: "Free Marketing Audit | Shaz Marketing Group", description },
 };
 
 const checks = [

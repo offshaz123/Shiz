@@ -3,6 +3,7 @@ import Link from "next/link";
 import { locations } from "@/content/locations";
 import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
+import { ogImage } from "@/lib/seo";
 
 const description =
   "We're based in London at One Canada Square and work with businesses across the UK remotely. Here's where our clients are.";
@@ -11,7 +12,8 @@ export const metadata: Metadata = {
   title: "Locations",
   description,
   alternates: { canonical: "/locations" },
-  openGraph: { title: "Locations | Shaz Marketing Group", description },
+  openGraph: {
+      images: [ogImage], title: "Locations | Shaz Marketing Group", description },
 };
 
 export default function LocationsPage() {

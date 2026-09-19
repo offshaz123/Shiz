@@ -3,6 +3,7 @@ import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
+import { ogImage } from "@/lib/seo";
 
 const description =
   "Speak to Walid Shah directly about Meta and Instagram ads for your business. No call centre, no account manager — you deal with the person doing the work.";
@@ -11,7 +12,8 @@ export const metadata: Metadata = {
   title: "Talk to Walid",
   description,
   alternates: { canonical: "/walid" },
-  openGraph: { title: "Talk to Walid | Shaz Marketing Group", description },
+  openGraph: {
+      images: [ogImage], title: "Talk to Walid | Shaz Marketing Group", description },
 };
 
 const expect = [

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { projects, hasProjects } from "@/content/projects";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { ogImage } from "@/lib/seo";
 
 const description =
   "Websites, campaigns and systems we've built for UK businesses.";
@@ -11,7 +12,8 @@ export const metadata: Metadata = {
   title: "Projects",
   description,
   alternates: { canonical: "/projects" },
-  openGraph: { title: "Projects | Shaz Marketing Group", description },
+  openGraph: {
+      images: [ogImage], title: "Projects | Shaz Marketing Group", description },
 };
 
 export default function ProjectsPage() {

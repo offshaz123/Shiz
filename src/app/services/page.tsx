@@ -6,6 +6,7 @@ import { IndustryStatsSection } from "@/components/IndustryStats";
 import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/StructuredData";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
 import { services as servicePages } from "@/content/services";
+import { ogImage } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Marketing Services",
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
     "Meta and Instagram ads, Google Ads, SEO and local search, websites, CRM and social media management — everything Shaz Marketing Group does, in one place.",
   alternates: { canonical: "/services" },
   openGraph: {
+      images: [ogImage],
     title: "Services | Shaz Marketing Group",
     description:
       "Meta and Instagram ads, Google Ads, SEO and local search, websites, CRM and social media management — everything Shaz Marketing Group does, in one place.",

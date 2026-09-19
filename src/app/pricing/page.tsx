@@ -4,15 +4,17 @@ import { BreadcrumbJsonLd, FaqJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
 import { StartProjectCta } from "@/components/StartProjectCta";
 import { pricingGroups } from "@/content/pricing";
+import { ogImage } from "@/lib/seo";
 
 const description =
-  "Transparent pricing for Meta & Instagram ads from £400/month, Google Ads at one flat £600/month including the landing page and CRM, SEO from £350/month and websites from £300. No hidden setup fees.";
+  "Meta ads from £400/month, Google Ads at a flat £600 including the landing page and CRM, SEO from £350 and websites from £300. No setup fees, no hidden extras.";
 
 export const metadata: Metadata = {
   title: "Pricing",
   description,
   alternates: { canonical: "/pricing" },
   openGraph: {
+      images: [ogImage],
     title: "Pricing | Shaz Marketing Group",
     description,
   },

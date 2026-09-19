@@ -3062,7 +3062,7 @@ export const blogPosts: BlogPost[] = [
     slug: "how-fast-should-you-reply-to-a-lead",
     title: "How Fast Should You Reply to a Lead? (And What It Costs You If You Don't)",
     description:
-      "Why speed to lead matters more than most businesses realise, what counts as \"fast\" in practice, and how to actually close the gap without hiring a full-time receptionist.",
+      "Why speed to lead matters more than most businesses realise, what counts as \"fast\" in practice, and how to close the gap without hiring a receptionist.",
     publishedAt: "2026-08-05",
     keywords: [
       "speed to lead",

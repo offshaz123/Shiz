@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { industries } from "@/content/industries";
 import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/StructuredData";
+import { ogImage } from "@/lib/seo";
 
 const description =
   "The sectors we work with most: automotive, health and beauty, hospitality, trades, professional services, property, fitness and retail.";
@@ -10,7 +11,8 @@ export const metadata: Metadata = {
   title: "Industries We Work With",
   description,
   alternates: { canonical: "/industries" },
-  openGraph: { title: "Industries | Shaz Marketing Group", description },
+  openGraph: {
+      images: [ogImage], title: "Industries | Shaz Marketing Group", description },
 };
 
 export default function IndustriesPage() {

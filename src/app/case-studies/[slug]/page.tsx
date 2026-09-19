@@ -5,6 +5,7 @@ import { approaches, getApproach, clientResults } from "@/content/case-studies";
 import { BreadcrumbJsonLd, FaqJsonLd } from "@/components/StructuredData";
 import { ClientLogo } from "@/components/ClientLogo";
 import { siteConfig } from "@/lib/site-config";
+import { ogImage } from "@/lib/seo";
 
 export function generateStaticParams() {
   return approaches.map((approach) => ({ slug: approach.slug }));
@@ -15,11 +16,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const approach = getApproach(slug);
   if (!approach) return {};
   return {
-    title: approach.name,
+    title: `${approach.name} — Our Method & Results`,
     description: approach.metaDescription,
     keywords: approach.keywords,
     alternates: { canonical: `/case-studies/${approach.slug}` },
-    openGraph: { title: `${approach.name} | ${siteConfig.name}`, description: approach.metaDescription },
+    openGraph: {
+      images: [ogImage], title: `${approach.name} — Our Method & Results | ${siteConfig.name}`, description: approach.metaDescription },
   };
 }
 

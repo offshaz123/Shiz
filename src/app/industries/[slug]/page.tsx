@@ -5,6 +5,7 @@ import { industries, getIndustry } from "@/content/industries";
 import { LeadForm } from "@/components/LeadForm";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
+import { ogImage } from "@/lib/seo";
 
 export function generateStaticParams() {
   return industries.map((industry) => ({ slug: industry.slug }));
@@ -15,11 +16,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const industry = getIndustry(slug);
   if (!industry) return {};
   return {
-    title: `Meta & Instagram Ads for ${industry.name}`,
+    title: `Marketing for ${industry.name}`,
     description: industry.metaDescription,
     keywords: industry.keywords,
     alternates: { canonical: `/industries/${industry.slug}` },
-    openGraph: { title: `${industry.name} | ${siteConfig.name}`, description: industry.metaDescription },
+    openGraph: {
+      images: [ogImage], title: `Marketing for ${industry.name} | ${siteConfig.shortName}`, description: industry.metaDescription },
   };
 }
 

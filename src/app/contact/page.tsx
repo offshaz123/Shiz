@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { LeadForm } from "@/components/LeadForm";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
+import { ogImage } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Contact Our Meta Ads Team in London",
@@ -8,6 +9,7 @@ export const metadata: Metadata = {
     "Get in touch with Shaz Marketing Group for a free Meta & Instagram ads strategy call, by form, email, phone or WhatsApp.",
   alternates: { canonical: "/contact" },
   openGraph: {
+      images: [ogImage],
     title: "Contact Shaz Marketing Group",
     description:
       "Get in touch with Shaz Marketing Group for a free Meta & Instagram ads strategy call, by form, email, phone or WhatsApp.",

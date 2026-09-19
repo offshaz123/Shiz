@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { blogPosts, relatedPosts } from "@/content/blog";
 import { siteConfig } from "@/lib/site-config";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { ogImage } from "@/lib/seo";
 
 export function generateStaticParams() {
   return blogPosts.map((post) => ({ slug: post.slug }));
@@ -24,6 +25,7 @@ export async function generateMetadata({
     keywords: post.keywords,
     alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
+      images: [ogImage],
       title: post.title,
       description: post.description,
       type: "article",

@@ -3,15 +3,17 @@ import Link from "next/link";
 import { approaches, clientResults } from "@/content/case-studies";
 import { ClientResultCard } from "@/components/ClientResultCard";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { ogImage } from "@/lib/seo";
 
 const description =
-  "Real campaigns, real numbers. CoBanq, Executive Tints, Detailmatics and Alliance Security Group, with the leads, cost per lead and spend our clients have approved us to publish.";
+  "Real campaigns with real numbers. CoBanq, Executive Tints, Detailmatics and Alliance Security Group — leads, cost per lead and spend, published with consent.";
 
 export const metadata: Metadata = {
   title: "Case Studies & Method",
   description,
   alternates: { canonical: "/case-studies" },
-  openGraph: { title: "Case Studies | Shaz Marketing Group", description },
+  openGraph: {
+      images: [ogImage], title: "Case Studies | Shaz Marketing Group", description },
 };
 
 export default function CaseStudiesPage() {

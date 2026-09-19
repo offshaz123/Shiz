@@ -5,6 +5,7 @@ import { services, getService } from "@/content/services";
 import { LeadForm } from "@/components/LeadForm";
 import { BreadcrumbJsonLd, ServiceJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
+import { ogImage } from "@/lib/seo";
 
 export function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }));
@@ -25,6 +26,7 @@ export async function generateMetadata({
     keywords: service.keywords,
     alternates: { canonical: `/services/${service.slug}` },
     openGraph: {
+      images: [ogImage],
       title: `${service.name} | ${siteConfig.name}`,
       description: service.metaDescription,
     },

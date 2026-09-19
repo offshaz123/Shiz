@@ -5,6 +5,7 @@ import { locations, getLocation } from "@/content/locations";
 import { LeadForm } from "@/components/LeadForm";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
+import { ogImage } from "@/lib/seo";
 
 export function generateStaticParams() {
   return locations.map((location) => ({ slug: location.slug }));
@@ -19,7 +20,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: location.metaDescription,
     keywords: location.keywords,
     alternates: { canonical: `/locations/${location.slug}` },
-    openGraph: { title: `${location.city} | ${siteConfig.name}`, description: location.metaDescription },
+    openGraph: {
+      images: [ogImage], title: `${location.city} | ${siteConfig.name}`, description: location.metaDescription },
   };
 }
 

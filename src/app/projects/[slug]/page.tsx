@@ -5,6 +5,7 @@ import { projects, getProject } from "@/content/projects";
 import { LeadForm } from "@/components/LeadForm";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
+import { ogImage } from "@/lib/seo";
 
 export function generateStaticParams() {
   return projects.map((project) => ({ slug: project.slug }));
@@ -18,7 +19,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: project.name,
     description: project.metaDescription,
     alternates: { canonical: `/projects/${project.slug}` },
-    openGraph: { title: `${project.name} | ${siteConfig.name}`, description: project.metaDescription },
+    openGraph: {
+      images: [ogImage], title: `${project.name} | ${siteConfig.name}`, description: project.metaDescription },
   };
 }
 

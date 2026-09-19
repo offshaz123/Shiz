@@ -5,13 +5,18 @@ import { CaseStudySection } from "@/components/CaseStudy";
 import { GoogleCalendarBadge } from "@/components/GoogleCalendarBadge";
 import { FaqJsonLd } from "@/components/StructuredData";
 import { siteConfig, whatsappHref } from "@/lib/site-config";
+import { ogImage } from "@/lib/seo";
 
 export const metadata: Metadata = {
+  // Paid-traffic landing page. Kept out of search so it doesn't compete with
+  // /contact and /free-audit, which cover the same intent.
+  robots: { index: false, follow: true },
   title: "Book a Free Demo",
   description:
     "See exactly how Shaz Marketing Group turns Meta & Instagram ads into booked customers for your business. Book a free, no-obligation demo.",
   alternates: { canonical: "/demo" },
   openGraph: {
+      images: [ogImage],
     title: "Book a Free Demo | Shaz Marketing Group",
     description:
       "See exactly how Shaz Marketing Group turns Meta & Instagram ads into booked customers for your business. Book a free, no-obligation demo.",

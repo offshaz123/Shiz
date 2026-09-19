@@ -19,15 +19,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Keyword-first: an unfamiliar brand name earns fewer clicks in search results
-// than the service being searched for.
-const defaultTitle = `Meta & Instagram Ads Agency London | ${siteConfig.name}`;
+// The homepage carries the full legal name because that's the entity Google
+// ties the schema to. Inner pages use the short name, which is both what
+// people actually type and 6 characters that titles can spend on content.
+const defaultTitle = `Marketing Agency UK | ${siteConfig.name}`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
     default: defaultTitle,
-    template: `%s | ${siteConfig.name}`,
+    template: `%s | ${siteConfig.shortName}`,
   },
   description: siteConfig.description,
   keywords: [

@@ -19,7 +19,7 @@ export const locations: Location[] = [
     isBase: true,
     teaser: "Our office is here — Level 39, One Canada Square, Canary Wharf.",
     metaDescription:
-      "Meta and Instagram ads agency in London, based at Level 39, One Canada Square, Canary Wharf. Lead generation for London service businesses.",
+      "Marketing agency in London, based at Level 39, One Canada Square, Canary Wharf. Meta and Google Ads, SEO and websites for London service businesses.",
     keywords: ["marketing agency London", "Meta ads agency London", "Instagram ads London"],
     presence:
       "This is where we're based. Our office is at Level 39, One Canada Square in Canary Wharf, and we're happy to meet in person if that's easier than a call.",
@@ -33,7 +33,7 @@ export const locations: Location[] = [
     isBase: false,
     teaser: "We're not based in Birmingham, but we work with businesses here and everything runs remotely.",
     metaDescription:
-      "Meta and Instagram ads for Birmingham businesses. London-based, working remotely with clients across the West Midlands.",
+      "Meta and Google Ads, SEO and websites for Birmingham businesses. London-based, working remotely with clients across the West Midlands. No office here.",
     keywords: ["marketing agency Birmingham", "Meta ads Birmingham", "Facebook ads agency Birmingham"],
     presence:
       "We'll be straight with you: we're not based in Birmingham. Our office is in London. Everything we do runs remotely — campaigns, tracking, reporting and enquiry handling — so where we sit makes no difference to the work.",
@@ -47,7 +47,7 @@ export const locations: Location[] = [
     isBase: false,
     teaser: "London-based, working with Manchester businesses remotely. No local office, and we won't pretend otherwise.",
     metaDescription:
-      "Meta and Instagram ads for Manchester businesses. London-based agency working remotely across Greater Manchester.",
+      "Meta and Google Ads, SEO and websites for Manchester businesses. A London agency working remotely across Greater Manchester, with no office up here.",
     keywords: ["marketing agency Manchester", "Meta ads Manchester", "Instagram ads Manchester"],
     presence:
       "We don't have a Manchester office. We're in London, and we work with businesses here remotely. If you'd rather deal with someone who can come to your premises, that's a fair reason to pick somebody else — we'd rather say so than waste your time.",
@@ -61,7 +61,7 @@ export const locations: Location[] = [
     isBase: false,
     teaser: "Remote, from London. A smaller market where a tight radius and fast replies go a long way.",
     metaDescription:
-      "Meta and Instagram ads for Liverpool businesses. London-based agency working remotely across Merseyside.",
+      "Meta and Google Ads, SEO and websites for Liverpool businesses. A London agency working remotely across Merseyside, honest about not being local.",
     keywords: ["marketing agency Liverpool", "Meta ads Liverpool", "Facebook ads Liverpool"],
     presence:
       "No Liverpool office. We're London-based and everything runs remotely. In practice that means calls, screen shares and reporting rather than site visits.",
@@ -75,7 +75,7 @@ export const locations: Location[] = [
     isBase: false,
     teaser: "Worked remotely from London. Strong professional services market with very little social competition.",
     metaDescription:
-      "Meta and Instagram ads for Leeds businesses. London-based agency working remotely across West Yorkshire.",
+      "Meta and Google Ads, SEO and websites for Leeds businesses. A London agency working remotely across West Yorkshire, honest about not being local.",
     keywords: ["marketing agency Leeds", "Meta ads Leeds", "Instagram ads Leeds"],
     presence:
       "We're not in Leeds. Our office is in London and we work with Yorkshire businesses remotely, the same way we do everywhere outside the capital.",
@@ -89,7 +89,7 @@ export const locations: Location[] = [
     isBase: false,
     teaser: "Remote from London. Scotland's biggest market, with its own legal and regulatory differences worth knowing.",
     metaDescription:
-      "Meta and Instagram ads for Glasgow businesses. London-based agency working remotely with clients across Scotland.",
+      "Meta and Google Ads, SEO and websites for Glasgow businesses. A London agency working remotely with clients across Scotland, with no Glasgow office.",
     keywords: ["marketing agency Glasgow", "Meta ads Glasgow", "Facebook ads Scotland"],
     presence:
       "No Glasgow office — we're based in London and work with Scottish businesses remotely. Meta's targeting covers Glasgow exactly as it does anywhere else in the UK.",

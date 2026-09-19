@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "Shaz Marketing Group",
   shortName: "Shaz Marketing",
   description:
-    "Shaz Marketing Group is a UK marketing agency running Meta, Instagram and Google Ads, SEO and local search, websites and social media, backed by an all-in-one CRM that makes sure every enquiry gets answered.",
+    "UK marketing agency running Meta, Instagram and Google Ads, SEO, websites and social media, with every enquiry landing in one inbox so none go unanswered.",
   url: "https://shazmarketing.com",
   email: "info@shazmarketing.com",
   phoneDisplay: "07539 559947",

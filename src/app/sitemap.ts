@@ -22,9 +22,11 @@ const newestPost = blogPosts
 const siteUpdated = new Date(newestPost ?? "2026-01-01");
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  // /demo is deliberately absent: it's a standalone landing page for paid
+  // traffic with no internal links pointing at it, so listing it asks Google to
+  // crawl a page the site itself doesn't link to.
   const routes: { path: string; changeFrequency: "weekly" | "monthly"; priority: number }[] = [
     { path: "", changeFrequency: "weekly", priority: 1 },
-    { path: "/demo", changeFrequency: "monthly", priority: 0.9 },
     { path: "/free-audit", changeFrequency: "monthly", priority: 0.95 },
     { path: "/walid", changeFrequency: "monthly", priority: 0.7 },
     { path: "/industries", changeFrequency: "monthly", priority: 0.85 },

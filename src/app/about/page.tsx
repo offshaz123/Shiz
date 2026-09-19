@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { StartProjectCta } from "@/components/StartProjectCta";
+import { ogImage } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "About Our London Marketing Agency",
@@ -8,6 +9,7 @@ export const metadata: Metadata = {
     "Shaz Marketing Group is a London marketing agency running paid ads, SEO, websites and CRM for UK businesses that want customers rather than impressions.",
   alternates: { canonical: "/about" },
   openGraph: {
+      images: [ogImage],
     title: "About Shaz Marketing Group",
     description:
       "Shaz Marketing Group is a London marketing agency running paid ads, SEO, websites and CRM for UK businesses that want customers rather than impressions.",
