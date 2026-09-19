@@ -39,6 +39,13 @@ export const siteConfig = {
   // since that would tell Google about a page that doesn't exist. To make one
   // clickable, put its URL in `social` above and drop the key from this list.
   socialPlaceholders: ["facebook", "x"] as const,
+  // Google Search Console verification. In Search Console choose the "HTML tag"
+  // method and paste only the content value here — the long string, not the
+  // whole tag. While this is empty no verification tag is rendered.
+  googleSiteVerification: "",
+  // Bing Webmaster Tools verification, same idea. Bing feeds DuckDuckGo and
+  // increasingly gets used by AI assistants, so it is worth the two minutes.
+  bingSiteVerification: "",
   // Public review rating, shown as a star badge and published in the
   // Organization schema. Fill these in ONLY from reviews genuinely received on
   // a real profile — the count and average must match what's publicly visible

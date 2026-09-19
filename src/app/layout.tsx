@@ -54,6 +54,18 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  // Rendered only once the codes are filled in, so an empty string doesn't
+  // put a meaningless verification tag on every page.
+  ...((siteConfig.googleSiteVerification || siteConfig.bingSiteVerification) && {
+    verification: {
+      ...(siteConfig.googleSiteVerification && {
+        google: siteConfig.googleSiteVerification,
+      }),
+      ...(siteConfig.bingSiteVerification && {
+        other: { "msvalidate.01": siteConfig.bingSiteVerification },
+      }),
+    },
+  }),
   openGraph: {
     title: defaultTitle,
     description: siteConfig.description,
