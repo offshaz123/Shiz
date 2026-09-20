@@ -16,6 +16,88 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "how-to-film-ad-videos-on-your-phone",
+    title: "How to Film Ad Videos on Your Phone Without Them Looking Cheap",
+    description:
+      "You don't need a videographer. You need light, a steady phone and clean audio. Here's what separates phone footage that sells from phone footage that doesn't.",
+    publishedAt: "2026-09-20",
+    keywords: [
+      "how to film Reels for business",
+      "phone video ads small business",
+      "filming video ads on iPhone",
+      "video content tips small business UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "The phone in your pocket shoots better video than a professional camera did fifteen years ago. That part is settled. What isn't settled is whether the footage you get out of it looks like a business that knows what it's doing, or a business that filmed something in a hurry.",
+          "The difference has almost nothing to do with the phone. It comes down to four or five things that cost nothing and take a few minutes to get right.",
+        ],
+      },
+      {
+        heading: "Light does most of the work",
+        paragraphs: [
+          "If you fix one thing, fix this. Nearly every video that looks cheap looks cheap because of lighting, not because of the camera.",
+          "The rule is simple: the light goes behind the camera, not behind the subject. Stand facing a window, not with your back to it. Film outdoors in the shade rather than in direct sun, because direct sun makes people squint and throws hard shadows across faces.",
+          "Overhead strip lighting in a workshop or salon is the usual culprit. It puts shadows under the eyes and turns skin an odd colour. If that's all you've got, move nearer a door or a window and film there instead.",
+          "Early morning and the hour before sunset are genuinely better outdoors, and it's not a myth or a photography affectation. The light is softer and everything looks more expensive.",
+        ],
+      },
+      {
+        heading: "Sound is what people actually judge",
+        paragraphs: [
+          "People will forgive footage that's slightly soft. They will not sit through audio with wind roaring over it or an echo bouncing off a tiled wall.",
+          "Assume a fair number of people will watch with the sound off, so caption anything important. But assume the rest have it on, and make it bearable for them.",
+          "Get the phone closer to whoever is speaking, or use the wired earphones you already own as a microphone. Film indoors when it's windy. Avoid big empty rooms with hard floors, which is where echo comes from. A cheap clip-on microphone costs less than a single day of ad spend and it is the best value thing you can buy for this.",
+        ],
+      },
+      {
+        heading: "Hold it still, and hold it upright",
+        paragraphs: [
+          "Shaky footage reads as amateur faster than almost anything else. You don't need a gimbal. Brace your elbows against your body, or rest the phone on something. If you're walking, walk slowly and keep your knees soft.",
+          "Film vertically. Reels, Stories and most of the feed are vertical, and a horizontal video shown in a vertical space either gets cropped badly or sits in the middle of the screen with black bars, which looks like it was made for somewhere else and reposted.",
+          "If you think you might want the footage for a website or a horizontal placement too, film the same thing twice rather than trying to get one clip to work everywhere.",
+        ],
+      },
+      {
+        heading: "Five settings worth fixing once",
+        paragraphs: [
+          "Most of these you change once and never think about again:",
+        ],
+        bullets: [
+          "Clean the lens. Phones live in pockets and the lens is usually smeared. This single wipe fixes more footage than any setting",
+          "Lock the exposure and focus by pressing and holding on your subject before you start. Otherwise the picture brightens and darkens every time something moves",
+          "Never use the digital zoom. Walk closer instead — zooming on a phone just crops and degrades the image",
+          "Use the rear camera, not the selfie one. It's the better lens on every phone, so use a tripod or hand it to someone rather than filming yourself front-facing",
+          "Film in short takes rather than one long one. Ten usable seconds from six attempts beats two minutes you have to hunt through",
+        ],
+      },
+      {
+        heading: "Point it at the right thing",
+        paragraphs: [
+          "Technical quality only matters once you're filming something worth watching. The most common mistake isn't bad footage, it's footage of nothing in particular.",
+          "Film the work itself. The before and after of a job, the thing being made, the hands doing the skilled part. Film the moment a customer's face changes when they see the finished result, with their permission. That material is specific to you and nobody else can copy it.",
+          "Avoid filming yourself sitting at a desk talking about your values. It's the easiest thing to film and the least interesting thing to watch.",
+        ],
+      },
+      {
+        heading: "The first second decides everything",
+        paragraphs: [
+          "Someone scrolling gives you about a second before they decide. Which means the good bit cannot be at the end.",
+          "Start with the most interesting frame you have. Not a logo, not a slow pan into the shot, not you saying hi and introducing yourself. If the best moment is the finished car or the transformation, open on it and explain afterwards.",
+          "Whatever you've filmed, watch the first second on your phone with the sound off and ask whether you'd stop. If the answer is no, re-cut it before you pay to put it in front of anyone.",
+        ],
+      },
+      {
+        heading: "Good enough, consistently, beats perfect once",
+        paragraphs: [
+          "A business that films something usable every week ends up with a library of material to test with. A business waiting until it can afford a proper shoot ends up running the same two images for a year and wondering why performance drops off.",
+          "Ad creative wears out. The only real defence is having more of it, and the only affordable way to have more of it is to film it yourself. Get the light right, get the sound right, hold it still, and you're most of the way there.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "q4-advertising-why-costs-rise-in-november",
     title: "Q4 Advertising: Why Your Costs Rise in November and What to Do About It",
     description:
