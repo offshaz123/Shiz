@@ -16,6 +16,81 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-for-retail-ecommerce",
+    title: "Meta & Instagram Ads for Retail and E-commerce",
+    description:
+      "Selling a product is a different job to selling a service. Here's what changes when the advert is the product, and why most small stores get retargeting wrong.",
+    publishedAt: "2026-09-21",
+    keywords: [
+      "Instagram shopping ads UK",
+      "Facebook ads for online store",
+      "ecommerce ads agency UK",
+      "retargeting for small online shop",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Most advertising advice is written for service businesses. Generate an enquiry, answer it quickly, book the job. Retail doesn't work like that.",
+          "There's no enquiry to answer. There's a product, a price, and a decision that happens in about four seconds. Which changes what you advertise, how you measure it, and where the money actually goes.",
+        ],
+      },
+      {
+        heading: "The product is the advert",
+        paragraphs: [
+          "In a service business you're selling something nobody can see, so the words do the persuading. In retail the opposite is true. People can see exactly what they're buying, and no amount of copy will rescue a bad photograph.",
+          "Which means the budget that would go on clever writing should go on getting the product photographed properly. Clean, well lit, and ideally in use rather than floating on a white background. A jumper on a person outdoors sells better than the same jumper laid flat, because one shows you what owning it looks like and the other shows you a jumper.",
+          "The written part still matters, but its job is narrower. Answer the questions that stop the purchase. What does it cost to deliver, how long does it take, and what happens if it's wrong.",
+        ],
+      },
+      {
+        heading: "Retargeting is where the money is",
+        paragraphs: [
+          "Almost nobody buys the first time they see a product from a shop they've never heard of. They look, they think about it, they get distracted, and that's the end of it unless you show up again.",
+          "Advertising to people who have already visited your site or viewed a product is the cheapest traffic you will ever buy. They already know who you are, so you're not paying to introduce yourself twice.",
+          "The mistake small stores make is treating retargeting as something to switch on later once the main campaigns are working. It should be the first thing running, because it's the part that turns browsing into buying. If your budget is tight, being seen by a hundred people who already looked is worth more than being seen by a thousand who haven't.",
+        ],
+      },
+      {
+        heading: "Your tracking has to carry purchase values",
+        paragraphs: [
+          "This is where retail differs most, and where a lot of small stores are quietly losing money.",
+          "A service business can get away with counting enquiries. All enquiries are roughly equal. In retail they are not. A £12 order and a £400 order are completely different outcomes, and if your tracking only records that a purchase happened, the system optimises towards whatever is easiest to sell rather than whatever is most profitable.",
+          "So the purchase value needs to be sent through with the event, and the Conversions API needs to be set up alongside the pixel rather than instead of it. Browser tracking alone loses a meaningful share of purchases to ad blockers and privacy settings, and every purchase it loses is one the system never learns from.",
+          "If you're on Shopify or WooCommerce this is mostly configuration rather than development. It's worth doing properly before you scale the spend, not after.",
+        ],
+      },
+      {
+        heading: "What to actually advertise",
+        paragraphs: [
+          "Not everything in the catalogue deserves budget. A few things reliably work better than the rest:",
+        ],
+        bullets: [
+          "Your best seller, not your favourite. The thing that already sells without help is the easiest thing to sell with help",
+          "A first purchase that leads somewhere. If someone who buys once usually comes back, you can afford to be far more aggressive on the first order",
+          "Bundles and sets, which raise the order value without raising what it costs you to get the sale",
+          "Anything with a genuine deadline, like a seasonal line or limited stock. Real scarcity works and invented scarcity gets noticed",
+          "New arrivals to people who already bought from you, which is close to free money and most shops never do it",
+        ],
+      },
+      {
+        heading: "The Q4 problem",
+        paragraphs: [
+          "Retail feels the November cost rise harder than anyone, because retail is what causes it. Every store in the country turns their budget up at once and the auction gets expensive.",
+          "The practical answer is to build your audiences in September and October while they're cheap. Get people onto your site, into your video view audiences, onto your customer list. Then in November you are advertising to people who already know you, at a point when reaching strangers costs the most it will all year.",
+          "Businesses that start thinking about Christmas in November pay the most for the worst results. It is genuinely a planning problem rather than a budget one.",
+        ],
+      },
+      {
+        heading: "Be honest about the maths",
+        paragraphs: [
+          "Retail lives or dies on margin, and advertising only works if there's room in the price for it.",
+          "Work out what you actually make on an order after the cost of the goods, the payment fees, the packaging and the postage. That number, not the order value, is what you have to spend acquiring a customer. Plenty of small stores discover the sum doesn't work at their current price, and the fix is the pricing or the average order value rather than the advertising.",
+          "The exception is when customers come back. If a first order regularly turns into three, you can spend everything you make on the first one and still be well ahead. But that's a decision to make deliberately with numbers in front of you, not a hope to run on.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-to-film-ad-videos-on-your-phone",
     title: "How to Film Ad Videos on Your Phone Without Them Looking Cheap",
     description:

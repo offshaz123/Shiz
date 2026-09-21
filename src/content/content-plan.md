@@ -59,11 +59,12 @@ keywords, dealership social strategy).
 - Why Your Website Needs a Proper Thank You Page (local search & site)
 - Q4 Advertising: Why Your Costs Rise in November and What to Do About It (seasonal & planning)
 - How to Film Ad Videos on Your Phone Without Them Looking Cheap (video & creative)
+- Meta & Instagram Ads for Retail and E-commerce (industry-specific)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
       target: "Instagram ads for tradesmen", "Facebook ads for builders UK"
-- [ ] Meta & Instagram Ads for Retail & E-commerce — target: "Instagram shopping ads UK",
+- [x] Meta & Instagram Ads for Retail & E-commerce — target: "Instagram shopping ads UK",
       "Facebook ads for online store"
 - [x] Meta & Instagram Ads for Health, Beauty & Wellness — target: "Instagram ads for salons",
       "Facebook ads for beauty clinics UK" (note: Meta has restricted-category ad rules for
