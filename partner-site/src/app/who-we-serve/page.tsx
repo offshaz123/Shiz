@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { sectors } from "@/content/sectors";
 import { CurrencyChip } from "@/components/CurrencyChip";
+import { IconTile } from "@/components/IconTile";
 import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 
@@ -37,9 +38,10 @@ export default function WhoWeServePage() {
         </div>
 
         <div className="mt-14 grid gap-5 sm:grid-cols-2">
-          {sectors.map((sector) => (
+          {sectors.map((sector, index) => (
             <Card key={sector.slug} className="flex flex-col">
-              <h2 className="text-xl font-semibold">{sector.longName}</h2>
+              <IconTile name={sector.icon} tone={index + 1} />
+              <h2 className="mt-5 text-xl font-semibold">{sector.longName}</h2>
               <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{sector.intro}</p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {sector.currencies.map((currency) => (

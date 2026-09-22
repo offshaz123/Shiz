@@ -17,6 +17,7 @@ import { CurrencyMarquee } from "@/components/CurrencyMarquee";
 import { WhatYouCanDo } from "@/components/WhatYouCanDo";
 import { CurrencyChip } from "@/components/CurrencyChip";
 import { Flag } from "@/components/Flag";
+import { IconTile } from "@/components/IconTile";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -24,18 +25,22 @@ export const metadata: Metadata = {
 
 const problems = [
   {
+    icon: "block",
     title: "Declined on the category, not the company",
     body: "Whole sectors get turned away at onboarding because a bank has decided the category is too much work. It is rarely about what your business is actually doing.",
   },
   {
+    icon: "alert",
     title: "Offboarded a year in",
     body: "An account that worked fine suddenly closes with two months’ notice and no explanation, and the search starts again from nothing.",
   },
   {
+    icon: "search",
     title: "Paying for FX without seeing the price",
     body: "Two and a half to three percent is common, buried in the rate rather than shown as a fee. Most importers have never been quoted the number.",
   },
   {
+    icon: "clock",
     title: "Payments held every time one is large",
     body: "A supplier invoice for six figures triggers a review, the container waits, and the relationship with the supplier pays for it.",
   },
@@ -43,18 +48,22 @@ const problems = [
 
 const reasons = [
   {
+    icon: "building",
     title: "The account is in your company name",
     body: "Named, not shared. Your retailers pay into your company, and your suppliers see who is paying them.",
   },
   {
+    icon: "shield",
     title: "Onboarded properly, not waved through",
     body: "Real due diligence at the start, on the understanding that yours is a legitimate trading business. That is what makes an account that stays open.",
   },
   {
+    icon: "chart",
     title: "A rate you are quoted before you commit",
     body: "You can price a purchase order against a rate you have been given. You cannot price one against a rate you find out afterwards.",
   },
   {
+    icon: "handshake",
     title: "Someone who knows what you import",
     body: "We deal with importers and wholesalers all day. Nobody here needs the trade explained from the beginning.",
   },
@@ -180,9 +189,10 @@ export default function Home() {
           lede="Not because you are doing anything wrong. Because a blanket risk appetite is cheaper to run than a proper look at an import business. Meanwhile the money still has to move."
         />
         <div className="mt-12 grid gap-5 sm:grid-cols-2">
-          {problems.map((problem) => (
+          {problems.map((problem, index) => (
             <Card key={problem.title}>
-              <h3 className="text-lg font-semibold">{problem.title}</h3>
+              <IconTile name={problem.icon} tone={index === 0 ? 6 : index + 4} />
+              <h3 className="mt-5 text-lg font-semibold">{problem.title}</h3>
               <p className="mt-2.5 text-sm leading-relaxed text-muted">{problem.body}</p>
             </Card>
           ))}
@@ -199,8 +209,11 @@ export default function Home() {
         <div className="mt-12 grid gap-5 md:grid-cols-3">
           {pillars.map((pillar, index) => (
             <Card key={pillar.title} className="flex flex-col">
-              <span className="font-mono text-xs text-accent">0{index + 1}</span>
-              <h3 className="mt-3 text-xl font-semibold">{pillar.title}</h3>
+              <div className="flex items-center gap-3">
+                <IconTile name={pillar.icon} tone={index + 1} />
+                <span className="font-mono text-xs text-muted">0{index + 1}</span>
+              </div>
+              <h3 className="mt-5 text-xl font-semibold">{pillar.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-muted">{pillar.body}</p>
             </Card>
           ))}
@@ -225,8 +238,11 @@ export default function Home() {
         <div className="mt-12 grid gap-5 lg:grid-cols-3">
           {solutions.map((solution, index) => (
             <Card key={solution.slug} className="flex flex-col">
-              <span className="font-mono text-xs text-gold">0{index + 1}</span>
-              <h3 className="font-display mt-3 text-xl font-semibold">{solution.name}</h3>
+              <div className="flex items-center gap-3">
+                <IconTile name={solution.icon} tone={index + 2} />
+                <span className="font-mono text-xs text-muted">0{index + 1}</span>
+              </div>
+              <h3 className="font-display mt-5 text-xl font-semibold">{solution.name}</h3>
               <p className="mt-2 text-sm font-medium text-accent-2">{solution.tagline}</p>
               <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{solution.intro}</p>
               <Link
@@ -248,9 +264,10 @@ export default function Home() {
           lede="Import and distribute, run a large payroll, or invoice clients abroad. If money moves across a border and a bank has made that harder than it needs to be, the account fits."
         />
         <div className="mt-12 grid gap-5 sm:grid-cols-2">
-          {sectors.map((sector) => (
+          {sectors.map((sector, index) => (
             <Card key={sector.slug} className="flex flex-col">
-              <h3 className="text-lg font-semibold">{sector.longName}</h3>
+              <IconTile name={sector.icon} tone={index + 1} />
+              <h3 className="mt-5 text-lg font-semibold">{sector.longName}</h3>
               <p className="mt-2.5 flex-1 text-sm leading-relaxed text-muted">{sector.intro}</p>
               <div className="mt-5 flex flex-wrap items-center gap-2">
                 {sector.currencies.map((currency) => (
@@ -320,9 +337,10 @@ export default function Home() {
           title="What is different is the onboarding, not the marketing"
         />
         <div className="mt-12 grid gap-5 sm:grid-cols-2">
-          {reasons.map((reason) => (
+          {reasons.map((reason, index) => (
             <Card key={reason.title}>
-              <h3 className="text-lg font-semibold">{reason.title}</h3>
+              <IconTile name={reason.icon} tone={index + 1} />
+              <h3 className="mt-5 text-lg font-semibold">{reason.title}</h3>
               <p className="mt-2.5 text-sm leading-relaxed text-muted">{reason.body}</p>
             </Card>
           ))}

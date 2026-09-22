@@ -1,5 +1,7 @@
 export type Solution = {
   slug: string;
+  /** Name from the house icon set. */
+  icon: string;
   /** Short label for the nav and cards. */
   name: string;
   /** The one-line description used in the menu, as our provider phrases it. */
@@ -23,6 +25,7 @@ export type Solution = {
 export const solutions: Solution[] = [
   {
     slug: "business-payments",
+    icon: "route",
     name: "Business payments",
     tagline: "Cross-border payments built to scale",
     title: "Business payments for UK companies trading abroad",
@@ -59,6 +62,7 @@ export const solutions: Solution[] = [
   },
   {
     slug: "multi-currency-accounts",
+    icon: "wallet",
     name: "Multi-currency accounts",
     tagline: "Foreign currencies alongside GBP on one IBAN",
     title: "Multi-currency business accounts",
@@ -94,6 +98,7 @@ export const solutions: Solution[] = [
   },
   {
     slug: "global-payroll",
+    icon: "team",
     name: "Global payroll",
     tagline: "Pay distributed teams across borders",
     title: "Global payroll and volume payouts",

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { solutions, corridorCaveat } from "@/content/solutions";
 import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
+import { IconTile } from "@/components/IconTile";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
@@ -37,8 +38,11 @@ export default function SolutionsPage() {
         <div className="mt-14 grid gap-5 lg:grid-cols-3">
           {solutions.map((solution, index) => (
             <Card key={solution.slug} className="flex flex-col">
-              <span className="font-mono text-xs text-gold">0{index + 1}</span>
-              <h2 className="font-display mt-3 text-xl font-semibold">{solution.name}</h2>
+              <div className="flex items-center gap-3">
+                <IconTile name={solution.icon} tone={index + 2} />
+                <span className="font-mono text-xs text-muted">0{index + 1}</span>
+              </div>
+              <h2 className="font-display mt-5 text-xl font-semibold">{solution.name}</h2>
               <p className="mt-2 text-sm font-medium text-accent-2">{solution.tagline}</p>
               <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{solution.intro}</p>
               <Link

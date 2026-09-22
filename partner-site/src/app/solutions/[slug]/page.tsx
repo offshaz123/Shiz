@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { solutions, getSolution, corridorCaveat } from "@/content/solutions";
 import { brand, currencies } from "@/lib/brand";
 import { CurrencyChip } from "@/components/CurrencyChip";
+import { IconTile } from "@/components/IconTile";
 import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { FlowSteps } from "@/components/FlowSteps";
@@ -36,6 +37,9 @@ export async function generateMetadata({
     },
   };
 }
+
+/** Cycled across a solution's capability cards, so no two sit side by side. */
+const capabilityIcons = ["collect", "convert", "pay", "clock", "document", "globe"];
 
 export default async function SolutionPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -124,19 +128,10 @@ export default async function SolutionPage({ params }: { params: Promise<{ slug:
       <Section>
         <SectionHeading eyebrow="Capabilities" title="What you can do" />
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {solution.capabilities.map((capability) => (
+          {solution.capabilities.map((capability, index) => (
             <Card key={capability}>
-              <svg viewBox="0 0 20 20" className="h-5 w-5 text-accent" aria-hidden="true">
-                <path
-                  d="m4 10.5 4 4 8-9"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              <p className="mt-3.5 text-sm leading-relaxed">{capability}</p>
+              <IconTile name={capabilityIcons[index % capabilityIcons.length]} tone={index + 1} />
+              <p className="mt-5 text-sm leading-relaxed">{capability}</p>
             </Card>
           ))}
         </div>

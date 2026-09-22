@@ -1,5 +1,7 @@
 export type Sector = {
   slug: string;
+  /** Name from the house icon set. */
+  icon: string;
   /** Short label for nav and cards. */
   name: string;
   /** Full plural noun used in headings and body copy. */
@@ -18,6 +20,7 @@ export type Sector = {
 export const sectors: Sector[] = [
   {
     slug: "mobile-phone-wholesalers",
+    icon: "phone",
     name: "Mobile wholesale",
     longName: "Mobile phone wholesalers",
     title: "Business accounts for mobile phone wholesalers",
@@ -47,6 +50,7 @@ export const sectors: Sector[] = [
   },
   {
     slug: "vape-and-e-liquid-distributors",
+    icon: "box",
     name: "Vape distribution",
     longName: "Vape and e-liquid distributors",
     title: "Business accounts for vape and e-liquid distributors",
@@ -75,6 +79,7 @@ export const sectors: Sector[] = [
   },
   {
     slug: "trade-importers",
+    icon: "globe",
     name: "Trade import",
     longName: "General trade importers and wholesalers",
     title: "Business accounts for UK trade importers and wholesalers",
@@ -104,6 +109,7 @@ export const sectors: Sector[] = [
   },
   {
     slug: "freelancers-and-it-exporters",
+    icon: "code",
     name: "Freelance and IT export",
     longName: "Freelancers and IT exporters",
     title: "Multi-currency accounts for freelancers and IT exporters",
@@ -133,6 +139,7 @@ export const sectors: Sector[] = [
   },
   {
     slug: "security-companies",
+    icon: "shield",
     name: "Security payroll",
     longName: "Security companies with large payroll",
     title: "Payment accounts for security companies with large payroll",

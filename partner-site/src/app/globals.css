@@ -511,3 +511,38 @@ body {
     box-shadow: var(--shadow-lift);
   }
 }
+
+/* --- Icon tiles ----------------------------------------------------------
+   Six tones for the little tiles at the top of a card. The brand blue leads;
+   the rest are there so a grid of six cards is not six of the same square.
+   Each tile is a soft tint of its tone with the icon at full strength and a
+   hairline inner highlight, which is what stops them looking flat. */
+
+:root {
+  --tone-1: #069ec1;
+  --tone-2: #4c6ef5;
+  --tone-3: #8b5cf6;
+  --tone-4: #0e9f6e;
+  --tone-5: #d97706;
+  --tone-6: #e0537a;
+}
+
+@layer components {
+  .icon-tile {
+    color: var(--tone);
+    background:
+      linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--tone) 16%, transparent),
+        color-mix(in srgb, var(--tone) 9%, transparent)
+      );
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tone) 22%, transparent);
+  }
+
+  .icon-tile-1 { --tone: var(--tone-1); }
+  .icon-tile-2 { --tone: var(--tone-2); }
+  .icon-tile-3 { --tone: var(--tone-3); }
+  .icon-tile-4 { --tone: var(--tone-4); }
+  .icon-tile-5 { --tone: var(--tone-5); }
+  .icon-tile-6 { --tone: var(--tone-6); }
+}

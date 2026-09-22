@@ -3,14 +3,17 @@ import { brand } from "@/lib/brand";
 /** The three things a customer does with the account. The whole product. */
 export const pillars = [
   {
+    icon: "collect",
     title: "Collect",
     body: "Take payments in from your retailers and buyers across the UK, into an account in your own company name.",
   },
   {
+    icon: "convert",
     title: "Convert",
     body: "Turn sterling into USD, AED, HKD, EUR and the other currencies your suppliers invoice in — at a rate quoted before you commit.",
   },
   {
+    icon: "pay",
     title: "Pay",
     body: "Send it out to suppliers in China, Hong Kong, Dubai and elsewhere, same day, without a letter asking what the money is for.",
   },
