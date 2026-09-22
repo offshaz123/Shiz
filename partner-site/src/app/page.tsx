@@ -14,6 +14,9 @@ import { TrustBar } from "@/components/TrustBar";
 import { PaymentFlowCard } from "@/components/PaymentFlowCard";
 import { DashboardPreview } from "@/components/DashboardPreview";
 import { CurrencyMarquee } from "@/components/CurrencyMarquee";
+import { WhatYouCanDo } from "@/components/WhatYouCanDo";
+import { CurrencyChip } from "@/components/CurrencyChip";
+import { Flag } from "@/components/Flag";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -125,8 +128,13 @@ export default function Home() {
                 </div>
                 <div>
                   <dt className="text-sm text-muted">Pay out in</dt>
-                  <dd className="mt-1 font-mono text-base font-semibold">
-                    {currencies.slice(0, 4).map((c) => c.code).join(" · ")}
+                  <dd className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 font-mono text-base font-semibold">
+                    {currencies.slice(0, 4).map((currency) => (
+                      <span key={currency.code} className="flex items-center gap-1.5">
+                        <Flag code={currency.iso} className="h-3 w-[18px]" />
+                        {currency.code}
+                      </span>
+                    ))}
                   </dd>
                 </div>
                 <div>
@@ -152,6 +160,17 @@ export default function Home() {
       </section>
 
       <TrustBar />
+
+      {/* What you can do — one panel per line, turning on its own. */}
+      <Section>
+        <SectionHeading
+          center
+          title={`What you can do with ${brand.shortName}`}
+        />
+        <div className="mt-12">
+          <WhatYouCanDo />
+        </div>
+      </Section>
 
       {/* The problem */}
       <Section tone="surface">
@@ -225,8 +244,8 @@ export default function Home() {
       <Section tone="surface">
         <SectionHeading
           eyebrow="Who we serve"
-          title="Built around four kinds of business"
-          lede="Import and distribute, or run a large payroll. If money comes in from a spread of UK customers and goes out in volume, the account fits."
+          title="Built around the trades we know"
+          lede="Import and distribute, run a large payroll, or invoice clients abroad. If money moves across a border and a bank has made that harder than it needs to be, the account fits."
         />
         <div className="mt-12 grid gap-5 sm:grid-cols-2">
           {sectors.map((sector) => (
@@ -235,12 +254,7 @@ export default function Home() {
               <p className="mt-2.5 flex-1 text-sm leading-relaxed text-muted">{sector.intro}</p>
               <div className="mt-5 flex flex-wrap items-center gap-2">
                 {sector.currencies.map((currency) => (
-                  <span
-                    key={currency}
-                    className="rounded-full bg-accent-soft px-2.5 py-1 font-mono text-xs text-accent"
-                  >
-                    {currency}
-                  </span>
+                  <CurrencyChip key={currency} code={currency} tone="soft" className="px-2.5 py-1" />
                 ))}
               </div>
               <Link

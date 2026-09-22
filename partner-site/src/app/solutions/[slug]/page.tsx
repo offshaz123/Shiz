@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { solutions, getSolution, corridorCaveat } from "@/content/solutions";
 import { brand, currencies } from "@/lib/brand";
+import { CurrencyChip } from "@/components/CurrencyChip";
 import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { FlowSteps } from "@/components/FlowSteps";
@@ -152,13 +153,12 @@ export default async function SolutionPage({ params }: { params: Promise<{ slug:
           />
           <div className="mx-auto mt-10 flex max-w-4xl flex-wrap justify-center gap-2.5">
             {currencies.map((currency) => (
-              <span
+              <CurrencyChip
                 key={currency.code}
-                className="flex items-baseline gap-2 rounded-full border border-border bg-background px-4 py-2.5"
-              >
-                <span className="font-mono text-sm font-semibold">{currency.code}</span>
-                <span className="text-xs text-muted">{currency.name}</span>
-              </span>
+                code={currency.code}
+                name={currency.name}
+                className="px-4 py-2.5"
+              />
             ))}
           </div>
           <p className="mx-auto mt-6 max-w-2xl text-center text-xs leading-relaxed text-muted">

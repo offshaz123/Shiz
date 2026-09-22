@@ -127,7 +127,7 @@ export default function OpeningAnAccountPage() {
             Not sure whether your business fits?
           </h2>
           <p className="mt-5 text-base leading-relaxed text-on-ink/70">
-            Have a look at the four kinds of business we work with most. If yours is not among them
+            Have a look at the kinds of business we work with most. If yours is not among them
             but follows the same pattern, say so — the pattern matters more than the label.
           </p>
           <Link

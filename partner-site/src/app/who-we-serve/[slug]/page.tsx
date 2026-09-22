@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { sectors, getSector } from "@/content/sectors";
 import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
+import { CurrencyChip } from "@/components/CurrencyChip";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 
@@ -59,12 +60,7 @@ export default async function SectorPage({ params }: { params: Promise<{ slug: s
           <p className="mt-6 text-lg leading-relaxed text-muted">{sector.intro}</p>
           <div className="mt-8 flex flex-wrap gap-2">
             {sector.currencies.map((currency) => (
-              <span
-                key={currency}
-                className="rounded-full border border-border bg-surface px-3.5 py-1.5 font-mono text-xs"
-              >
-                {currency}
-              </span>
+              <CurrencyChip key={currency} code={currency} className="px-3.5" />
             ))}
           </div>
         </div>

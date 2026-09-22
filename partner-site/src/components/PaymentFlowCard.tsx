@@ -1,3 +1,5 @@
+import { Flag } from "@/components/Flag";
+
 /**
  * The hero visual: one payment, start to finish.
  *
@@ -12,20 +14,27 @@ const steps = [
   {
     label: "Money in",
     party: "From your UK retailers",
+    /** The country the money is sitting in at this step. */
+    partyFlag: "GB",
     amount: "£48,200",
     currency: "GBP",
+    flags: ["GB"],
   },
   {
     label: "Converted",
     party: "Rate quoted before you commit",
+    partyFlag: "",
     amount: "1.10",
     currency: "GBP → USD",
+    flags: ["GB", "US"],
   },
   {
     label: "Paid out",
     party: "To your supplier in Shenzhen",
+    partyFlag: "CN",
     amount: "$53,020",
     currency: "USD",
+    flags: ["US"],
   },
 ];
 
@@ -60,8 +69,18 @@ export function PaymentFlowCard() {
                   <span className="font-mono text-sm tabular-nums">{step.amount}</span>
                 </div>
                 <div className="mt-1 flex items-baseline justify-between gap-3">
-                  <span className="text-xs text-muted">{step.party}</span>
-                  <span className="font-mono text-[11px] text-muted">{step.currency}</span>
+                  <span className="flex items-center gap-1.5 text-xs text-muted">
+                    {step.partyFlag && (
+                      <Flag code={step.partyFlag} className="h-2.5 w-[15px]" />
+                    )}
+                    {step.party}
+                  </span>
+                  <span className="flex items-center gap-1.5 font-mono text-[11px] text-muted">
+                    {step.flags.map((flag) => (
+                      <Flag key={flag} code={flag} className="h-2.5 w-[15px]" />
+                    ))}
+                    {step.currency}
+                  </span>
                 </div>
               </div>
             </div>

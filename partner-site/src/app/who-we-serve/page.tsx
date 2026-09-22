@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { sectors } from "@/content/sectors";
+import { CurrencyChip } from "@/components/CurrencyChip";
 import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 
@@ -42,12 +43,7 @@ export default function WhoWeServePage() {
               <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{sector.intro}</p>
               <div className="mt-5 flex flex-wrap gap-2">
                 {sector.currencies.map((currency) => (
-                  <span
-                    key={currency}
-                    className="rounded-full bg-accent-soft px-2.5 py-1 font-mono text-xs text-accent"
-                  >
-                    {currency}
-                  </span>
+                  <CurrencyChip key={currency} code={currency} tone="soft" className="px-2.5 py-1" />
                 ))}
               </div>
               <Link

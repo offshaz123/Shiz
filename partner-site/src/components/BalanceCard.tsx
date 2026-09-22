@@ -1,4 +1,6 @@
 import { currencies } from "@/lib/brand";
+import { currencyFlags } from "@/lib/brand";
+import { Flag } from "@/components/Flag";
 
 /**
  * The product visual: a multi-currency IBAN with balances sitting on it.
@@ -25,7 +27,10 @@ export function BalanceCard() {
             key={row.code}
             className="flex items-center justify-between rounded-xl border border-border bg-background/60 px-4 py-3"
           >
-            <span className="font-mono text-sm font-semibold">{row.code}</span>
+            <span className="flex items-center gap-2 font-mono text-sm font-semibold">
+              <Flag code={currencyFlags[row.code]} className="h-3 w-[18px]" />
+              {row.code}
+            </span>
             <span className="text-sm tabular-nums text-muted">{row.amount}</span>
           </li>
         ))}

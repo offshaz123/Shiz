@@ -127,6 +127,31 @@ export const currencies = [
   { code: "RON", name: "Romanian Leu", country: "Romania", iso: "RO" },
 ] as const;
 
+/**
+ * Currency code -> the country whose flag stands for it.
+ *
+ * AED, HKD and CNY are not on our published currency list, but the sectors do
+ * quote those corridors, so they resolve to a flag here too. Anything with no
+ * entry renders without one rather than guessing.
+ */
+export const currencyFlags: Record<string, string> = {
+  GBP: "GB",
+  USD: "US",
+  EUR: "EU",
+  CAD: "CA",
+  CHF: "CH",
+  DKK: "DK",
+  NOK: "NO",
+  SEK: "SE",
+  PLN: "PL",
+  CZK: "CZ",
+  HUF: "HU",
+  RON: "RO",
+  AED: "AE",
+  HKD: "HK",
+  CNY: "CN",
+};
+
 /** The three things done with the account, as our provider frames them. */
 export const coreActions = [
   { name: "Receive", body: "Receive supported currencies into the account." },

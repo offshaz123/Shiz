@@ -1,3 +1,5 @@
+import { Flag } from "@/components/Flag";
+
 /**
  * The notifications that surface over the hero globe.
  *
@@ -11,10 +13,34 @@
  * with first names, which would imply a customer base we do not yet have.
  */
 const pills = [
-  { label: "GBP → USD", value: "1.2684", note: "quoted", position: "-top-6 left-2 lg:-left-10" },
-  { label: "Supplier paid", value: "$53,020", note: "same day", position: "top-[34%] -right-2 lg:-right-10" },
-  { label: "GBP → EUR", value: "1.1742", note: "quoted", position: "bottom-[14%] left-0 lg:-left-14" },
-  { label: "Payroll sent", value: "42 people", note: "one file", position: "-bottom-7 right-3 lg:right-6" },
+  {
+    label: "GBP → USD",
+    value: "1.2684",
+    note: "quoted",
+    flags: ["GB", "US"],
+    position: "-top-6 left-2 lg:-left-10",
+  },
+  {
+    label: "Supplier paid",
+    value: "$53,020",
+    note: "same day",
+    flags: ["CN"],
+    position: "top-[34%] -right-2 lg:-right-10",
+  },
+  {
+    label: "GBP → EUR",
+    value: "1.1742",
+    note: "quoted",
+    flags: ["GB", "EU"],
+    position: "bottom-[14%] left-0 lg:-left-14",
+  },
+  {
+    label: "Payroll sent",
+    value: "42 people",
+    note: "one file",
+    flags: ["PL"],
+    position: "-bottom-7 right-3 lg:right-6",
+  },
 ] as const;
 
 export function RatePills() {
@@ -27,16 +53,14 @@ export function RatePills() {
           style={{ animationDelay: `${index * 4}s` }}
         >
           <div className="glass flex items-center gap-3 rounded-full py-2 pl-3 pr-4">
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent-soft">
-              <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-accent" fill="none" aria-hidden="true">
-                <path
-                  d="M5 12h14m-5-5 5 5-5 5"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+            <span className="flex items-center -space-x-1.5">
+              {pill.flags.map((flag) => (
+                <Flag
+                  key={flag}
+                  code={flag}
+                  className="h-4 w-6 border border-border shadow-sm"
                 />
-              </svg>
+              ))}
             </span>
             <span className="flex items-baseline gap-2 whitespace-nowrap">
               <span className="text-xs text-muted">{pill.label}</span>

@@ -1,4 +1,5 @@
-import { brand } from "@/lib/brand";
+import { brand, currencyFlags } from "@/lib/brand";
+import { Flag } from "@/components/Flag";
 
 /**
  * A preview of what a customer logs into.
@@ -74,7 +75,10 @@ export function DashboardPreview() {
                   balance.active ? "border-accent bg-accent-soft" : "border-border bg-background"
                 }`}
               >
-                <span className="font-mono text-[11px] text-muted">{balance.code}</span>
+                <span className="flex items-center gap-1.5 font-mono text-[11px] text-muted">
+                  <Flag code={currencyFlags[balance.code]} className="h-2.5 w-[15px]" />
+                  {balance.code}
+                </span>
                 <p className="mt-1 text-sm font-semibold tabular-nums">{balance.amount}</p>
               </div>
             ))}

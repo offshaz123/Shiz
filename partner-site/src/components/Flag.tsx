@@ -2,8 +2,8 @@
  * Country flags, inlined.
  *
  * The markup comes from the `country-flag-icons` set (MIT), copied in at
- * build time rather than imported: twelve flags is about 5KB of paths, which
- * is cheaper inline than as twelve requests, and it keeps the static export
+ * build time rather than imported: fifteen flags is a few KB of paths, which
+ * is cheaper inline than as fifteen requests, and it keeps the static export
  * self-contained — no /flags/ directory to rewrite when the site is served
  * from somewhere other than the domain root.
  *
@@ -11,8 +11,11 @@
  * renders them as bare letter pairs, so half our visitors would see "GB"
  * where a flag should be.
  *
- * Decorative. The currency and country are always written next to the flag,
- * so it carries no information of its own and is hidden from assistive tech.
+ * Decorative. The currency or country is always written next to the flag, so
+ * it carries no information of its own and is hidden from assistive tech.
+ *
+ * AE, HK and CN are here for the sector corridors even though those
+ * currencies are not on our published list — see the note in brand.ts.
  */
 const flags: Record<string, { viewBox: string; body: React.ReactNode }> = {
   GB: {
@@ -108,6 +111,30 @@ const flags: Record<string, { viewBox: string; body: React.ReactNode }> = {
     body: (
       <>
         <path fill="#002b7f" d="M0 0h171v342H0z" /><path fill="#fcd116" d="M171 0h171v342H171z" /><path fill="#ce1126" d="M342 0h171v342H342z" />
+      </>
+    ),
+  },
+  AE: {
+    viewBox: "0 0 513 342",
+    body: (
+      <>
+        <path fill="#FFF" d="M0 0h513v342H0z" /><path fill="#00843d" d="M0 0h513v114H0z" /><path d="M0 228h513v114H0z" /><path fill="#c8102e" d="M0 0h171v342H0z" />
+      </>
+    ),
+  },
+  HK: {
+    viewBox: "0 0 21 14",
+    body: (
+      <>
+        <path fill="#FFF" d="M0 0h21v14H0V0z" /><path fill="#EE1C25" d="M0 0h21v14H0V0z" /><path fill="#FFF" d="M12 6.7c-.8-.5-1 .4-1 0 0-.8.9-1.5 2-1.5s2 .7 2 1.5c-.9 0-1 .5-1.5.5-.6 0-.7 0-1.5-.5zm1.2-.2c.1 0 .2-.1.2-.2s0-.3-.2-.3-.2.1-.2.2.1.3.2.3zm-1.8 2c.2-.9-.7-.8-.3-.9.8-.3 1.7.4 2 1.4.3 1.1 0 2.1-.8 2.4-.3-.9-.8-.8-.9-1.3-.1-.6-.2-.7 0-1.6zm.6 1.1c0 .1.2.2.3.2.1 0 .2-.2.2-.3s-.2-.2-.3-.2c-.2 0-.2.2-.2.3zM9.6 8.5c.9-.1.6-.9.8-.6.5.7.2 1.7-.7 2.4-.9.6-2 .6-2.5 0 .8-.6.6-1 .9-1.3.4-.4.5-.5 1.5-.5zm-.9.9c-.1 0-.2.2-.1.3s.3.2.4.1.1-.3 0-.4-.2-.1-.3 0zM9 6.7c.3.9 1 .3.8.6-.5.7-1.6.7-2.5 0-.9-.6-1.2-1.7-.7-2.4.8.6 1.1.2 1.5.5.4.4.5.4.9 1.3zm-1.1-.6c-.1-.1-.3 0-.4.1s-.1.3 0 .4c.1.1.3 0 .3-.1.2-.1.2-.3.1-.4zm2.6-.5c-.7.6.1 1.1-.3 1-.8-.3-1.2-1.4-.8-2.4.3-1 1.3-1.7 2-1.4-.3.9.2 1.1 0 1.6-.1.5-.2.6-.9 1.2zm.2-1.2c0-.1 0-.3-.1-.3s-.3 0-.3.1 0 .3.2.3c0 .1.1 0 .2-.1z" />
+      </>
+    ),
+  },
+  CN: {
+    viewBox: "0 0 513 342",
+    body: (
+      <>
+        <path fill="#D80027" d="M0 0h513v342H0z" /><g fill="#FFDA44"><path d="m226.8 239.2-9.7-15.6-17.9 4.4 11.9-14.1-9.7-15.6 17.1 6.9 11.8-14.1-1.3 18.4 17.1 6.9-17.9 4.4zM290.6 82l-10.1 15.4 11.6 14.3-17.7-4.8-10.1 15.5-1-18.4-17.7-4.8 17.2-6.6-1-18.4 11.6 14.3zM236.2 25.4l-2 18.3 16.8 7.6-18 3.8-2 18.3-9.2-16-17.9 3.8 12.3-13.7-9.2-15.9 16.8 7.5zM292.8 161.8l-14.9 10.9 5.8 17.5-14.9-10.8-14.9 11 5.6-17.6-14.9-10.7 18.4-.1 5.6-17.6 5.8 17.5zM115 46.3l17.3 53.5h56.2l-45.4 32.9 17.3 53.5-45.4-33-45.5 33 17.4-53.5-45.5-32.9h56.3z" /></g>
       </>
     ),
   },

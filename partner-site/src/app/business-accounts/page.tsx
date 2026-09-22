@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { currencies } from "@/lib/brand";
+import { CurrencyChip } from "@/components/CurrencyChip";
 import { pillars } from "@/content/site";
 import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
@@ -96,13 +97,12 @@ export default function BusinessAccountsPage() {
         />
         <div className="mt-10 flex flex-wrap gap-3">
           {currencies.map((currency) => (
-            <span
+            <CurrencyChip
               key={currency.code}
-              className="flex items-baseline gap-2 rounded-xl border border-border bg-background px-4 py-3"
-            >
-              <span className="font-mono text-sm font-semibold">{currency.code}</span>
-              <span className="text-xs text-muted">{currency.name}</span>
-            </span>
+              code={currency.code}
+              name={currency.name}
+              className="!rounded-xl px-4 py-3"
+            />
           ))}
         </div>
       </Section>
