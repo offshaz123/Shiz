@@ -87,6 +87,29 @@ export default function SoftwarePage() {
         </div>
       </Section>
 
+
+      {/* Stat row */}
+      <div className="border-y border-border bg-surface">
+        <div className="mx-auto grid max-w-6xl gap-8 px-5 py-10 sm:grid-cols-2 lg:grid-cols-4">
+          {[
+            { label: "Package", value: "Portal + 2 apps", note: "and the admin back end" },
+            { label: "Stores", value: "iOS & Android", note: "both covered" },
+            { label: "Integrations", value: "Shipped connected", note: "processing, KYC and payouts" },
+            { label: "Demo", value: "In person", note: "we come to you" },
+          ].map((stat) => (
+            <div key={stat.label}>
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
+                {stat.label}
+              </p>
+              <p className="font-display mt-2.5 text-2xl font-semibold leading-tight">
+                {stat.value}
+              </p>
+              <p className="mt-1.5 text-sm text-muted">{stat.note}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <Section tone="surface">
         <SectionHeading eyebrow="What you get" title="Three pieces, one platform" />
         <div className="mt-12 grid gap-5 md:grid-cols-3">
@@ -115,6 +138,37 @@ export default function SoftwarePage() {
             <Card key={integration.name}>
               <h3 className="text-lg font-semibold">{integration.name}</h3>
               <p className="mt-2 text-sm text-muted">{integration.role}</p>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+
+      {/* Who it is for */}
+      <Section tone="surface">
+        <SectionHeading
+          eyebrow="Who it is for"
+          title="Firms that hold the permission but not the technology"
+          lede="Every authorised and registered payment firm in the UK is on the FCA register, publicly, with an address. That is where these conversations start."
+        />
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+          {[
+            {
+              name: "Small payment institutions",
+              body: "An SPI or API licence already in hand, and a build quote that runs to six figures and a year.",
+            },
+            {
+              name: "High-street money transfer shops",
+              body: "Licensed, trading, and running on very little technology — often spreadsheets and paper.",
+            },
+            {
+              name: "Firms outgrowing what they have",
+              body: "A platform they complain about, a paper agent network, or a corridor they cannot support yet.",
+            },
+          ].map((item) => (
+            <Card key={item.name}>
+              <h3 className="font-display text-lg font-semibold">{item.name}</h3>
+              <p className="mt-2.5 text-sm leading-relaxed text-muted">{item.body}</p>
             </Card>
           ))}
         </div>

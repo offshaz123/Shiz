@@ -7,28 +7,48 @@ import { RegulatoryNote } from "@/components/RegulatoryNote";
 
 export const metadata: Metadata = {
   title: "About us",
-  description: `Who ${brand.name} is, the licence the accounts are held under, and how we are regulated.`,
+  description: `Who ${brand.name} is, who provides the regulated payment services, and where the line between the two sits.`,
   alternates: { canonical: "/about" },
 };
 
+/**
+ * The introducer arrangement, set out plainly. A customer is entitled to know
+ * which firm holds their money and which one is selling to them, and saying so
+ * openly reads as confidence rather than a caveat.
+ */
 const split = [
   {
-    heading: "What we do",
+    heading: `What ${brand.name} does`,
     items: [
-      "Find the businesses the high street will not serve properly, and understand the trade.",
-      "Price the account against what you are paying today.",
-      "Prepare the application with you, so the file goes in complete.",
-      "Run the day-to-day relationship, and answer the phone.",
+      "Finds the businesses the high street will not serve properly, and understands the trade.",
+      "Prices the account against what you are paying today.",
+      "Prepares the application with you, so the file goes in complete first time.",
+      "Runs the day-to-day relationship, and answers the phone.",
     ],
   },
   {
-    heading: "What sits behind the name",
+    heading: "What the regulated firm does",
     items: [
-      "An FCA authorisation under the Payment Services Regulations, held since 2003.",
-      "A compliance function that runs KYB, anti-money-laundering and source-of-funds checks on every application.",
-      "The banking rails, the currency conversion and the payout network.",
-      "The platform your business logs into, and ongoing monitoring of every account.",
+      "Holds the FCA authorisation under the Payment Services Regulations.",
+      "Runs KYB, anti-money-laundering and source-of-funds checks, and decides on every application.",
+      "Provides the accounts, the currency conversion and the payout network.",
+      "Provides the platform you log into, and monitors accounts on an ongoing basis.",
     ],
+  },
+];
+
+const principles = [
+  {
+    title: "We never promise you an account",
+    body: "The decision comes after the checks, and it is not ours to make. Anyone promising approval before that is selling you something they cannot deliver.",
+  },
+  {
+    title: "We do not hide the price in the rate",
+    body: "You are quoted a fee and a margin before you commit. If you would rather compare against what you pay now, bring one real transaction and we will price that one.",
+  },
+  {
+    title: "We turn down what cannot be banked",
+    body: "If your trade is outside appetite you will hear it at the first conversation. Wasting three weeks of your time to find out is not a service.",
   },
 ];
 
@@ -46,31 +66,32 @@ export default function AboutPage() {
         <div className="max-w-3xl">
           <Eyebrow>About {brand.name}</Eyebrow>
           <h1 className="font-display mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-            Banking for businesses that deserve it and cannot get it
+            Payments for the businesses the high street stopped serving
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-muted">
             There is a large, profitable part of British trade that mainstream banks have quietly
-            stopped serving. Not fraudsters — importers, wholesalers and distributors turning over
-            millions, declined at onboarding or offboarded a year later because a category was
-            judged too much work.
+            withdrawn from. Not fraudsters — importers, wholesalers and distributors turning over
+            millions, declined at onboarding or offboarded a year later because a whole category
+            was judged too much work.
           </p>
           <p className="mt-4 text-lg leading-relaxed text-muted">
-            We exist for those businesses. The trade-off is honest: proper due diligence at the
-            start, in exchange for an account that holds up. That is the whole proposition.
+            We exist for those businesses. The trade-off is an honest one: proper due diligence at
+            the start, in exchange for an account that holds up afterwards. That is the whole
+            proposition.
           </p>
         </div>
       </Section>
 
       <Section tone="surface">
         <SectionHeading
-          eyebrow="How it is structured"
-          title="We are not the regulated firm, and we say so"
-          lede="We are a trading name of an FCA-authorised payments firm, not a broker sitting alongside one. That means the licence, the compliance function and the rails are ours to stand behind — and it is your right to know exactly whose permissions your money sits under."
+          eyebrow="How this works"
+          title="Two firms, and you should know which is which"
+          lede={`${brand.name} introduces you. A separate, FCA-authorised firm provides the regulated payment services and holds the permissions. We would rather set that out on this page than bury it, because it is the first thing a business that has been offboarded before will want to establish.`}
         />
         <div className="mt-12 grid gap-5 md:grid-cols-2">
           {split.map((column) => (
             <Card key={column.heading}>
-              <h2 className="text-xl font-semibold">{column.heading}</h2>
+              <h2 className="font-display text-xl font-semibold">{column.heading}</h2>
               <ul className="mt-5 space-y-3 text-sm leading-relaxed text-muted">
                 {column.items.map((item) => (
                   <li key={item} className="flex gap-2.5">
@@ -88,39 +109,23 @@ export default function AboutPage() {
       </Section>
 
       <Section>
-        <SectionHeading
-          eyebrow="How we work"
-          title="Three things we will not do"
-        />
+        <SectionHeading eyebrow="How we work" title="Three things we will not do" />
         <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {[
-            {
-              title: "Promise you an account",
-              body: "Compliance decides, after the checks, every time. Anyone promising approval before that is selling you something they cannot deliver.",
-            },
-            {
-              title: "Hide the price in the rate",
-              body: "You will be quoted a fee and a margin before you commit. If you would rather compare against what you pay now, bring a real transaction and we will price that one.",
-            },
-            {
-              title: "Take business we cannot bank",
-              body: "If your trade is outside appetite, we will tell you at the first conversation. Wasting three weeks of your time to find out is not a service.",
-            },
-          ].map((item) => (
+          {principles.map((item) => (
             <Card key={item.title}>
-              <h3 className="text-lg font-semibold">{item.title}</h3>
+              <h3 className="font-display text-lg font-semibold">{item.title}</h3>
               <p className="mt-2.5 text-sm leading-relaxed text-muted">{item.body}</p>
             </Card>
           ))}
         </div>
       </Section>
 
-      <Section tone="ink">
+      <Section tone="surface">
         <div className="max-w-2xl">
           <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
             Come and tell us about the business
           </h2>
-          <p className="mt-5 text-base leading-relaxed text-on-ink/70">
+          <p className="mt-5 text-base leading-relaxed text-muted">
             We would rather have a fifteen-minute conversation about what you actually import than
             send you a brochure.
           </p>

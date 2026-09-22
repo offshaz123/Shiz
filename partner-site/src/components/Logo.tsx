@@ -2,10 +2,41 @@ import Link from "next/link";
 import { brand } from "@/lib/brand";
 
 /**
- * Wordmark plus a mark built from two crossing arrows — money out one way,
- * currency back the other. Swap the mark for the real logo once it exists;
- * the sizing here is what the header and footer expect.
+ * The mark is the O of Orvopay drawn as a split ring: one arc in ink, one in
+ * copper, with a gap at each join. It reads as the letter and as a cycle —
+ * money going out and coming back — which is the whole product in one glyph.
+ *
+ * The ring is a single circle with a dash pattern rather than two hand-plotted
+ * arcs, so the two halves always meet exactly. Circumference is 2 * PI * 7.5,
+ * about 47.12; a 19 / 4.56 dash gives two arcs and two even gaps.
  */
+function Mark({ className = "" }: { className?: string }) {
+  const dash = "19 4.56";
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <circle
+        cx="12"
+        cy="12"
+        r="7.5"
+        stroke="currentColor"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        strokeDasharray={dash}
+      />
+      <circle
+        cx="12"
+        cy="12"
+        r="7.5"
+        stroke="var(--accent)"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        strokeDasharray={dash}
+        strokeDashoffset="-23.56"
+      />
+    </svg>
+  );
+}
+
 export function Logo({ className = "" }: { className?: string }) {
   return (
     <Link
@@ -13,27 +44,9 @@ export function Logo({ className = "" }: { className?: string }) {
       className={`group inline-flex items-center gap-2.5 ${className}`}
       aria-label={`${brand.name} home`}
     >
-      <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-white transition-transform group-hover:-translate-y-0.5">
-        <svg viewBox="0 0 24 24" fill="none" className="h-5 w-5" aria-hidden="true">
-          <path
-            d="M4 9h13m0 0-3.5-3.5M17 9l-3.5 3.5"
-            stroke="currentColor"
-            strokeWidth="1.9"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          <path
-            d="M20 15H7m0 0 3.5-3.5M7 15l3.5 3.5"
-            stroke="var(--gold)"
-            strokeWidth="1.9"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </span>
+      <Mark className="h-8 w-8 text-foreground transition-transform group-hover:rotate-45" />
       <span className="font-display text-[19px] font-semibold tracking-tight">
         {brand.shortName}
-        <span className="text-gold">.</span>
       </span>
     </Link>
   );
