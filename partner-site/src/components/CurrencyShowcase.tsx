@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { currencies } from "@/lib/brand";
+import { Flag } from "@/components/Flag";
 
 /**
  * The multi-currency demonstration: one payment, landing in whichever currency
@@ -92,15 +93,13 @@ export function CurrencyShowcase() {
                 type="button"
                 onClick={() => select(position)}
                 aria-pressed={selected}
-                className={`flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-medium transition-colors ${
+                className={`flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-medium transition-colors ${
                   selected
                     ? "border-accent bg-accent-soft text-accent-2"
                     : "border-border bg-card text-muted hover:border-accent/60 hover:text-foreground"
                 }`}
               >
-                <span className="font-mono text-[11px] tracking-wide opacity-70">
-                  {currency.iso}
-                </span>
+                <Flag code={currency.iso} className="h-3 w-[18px]" />
                 {currency.code}
               </button>
             );
@@ -118,7 +117,8 @@ export function CurrencyShowcase() {
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
               Incoming payment
             </p>
-            <span className="rounded-full bg-accent-soft px-2.5 py-1 font-mono text-[11px] font-semibold text-accent-2">
+            <span className="flex items-center gap-2 rounded-full bg-accent-soft py-1 pl-2 pr-3 font-mono text-[11px] font-semibold text-accent-2">
+              <Flag code={active.iso} className="h-3 w-[18px]" />
               {active.code}
             </span>
           </div>

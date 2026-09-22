@@ -1,12 +1,12 @@
 import { currencies } from "@/lib/brand";
+import { Flag } from "@/components/Flag";
 
 /**
  * The line of countries and currencies running across the page.
  *
  * It scrolls rather than sitting in a static grid, so it reads as a network
- * rather than a price list. The country badge is the ISO code set in a tile,
- * not a flag emoji: flags fall back to bare letters on Windows, and a
- * consistent tile looks deliberate on every machine.
+ * rather than a price list. The flags are inlined SVG rather than emoji,
+ * which Windows renders as bare letter pairs.
  *
  * The list is rendered twice so the loop is seamless, it stops for anyone who
  * has asked for reduced motion, and the strip is hidden from assistive tech —
@@ -23,9 +23,7 @@ export function CurrencyMarquee() {
             key={`${currency.code}-${index}`}
             className="flex shrink-0 items-center gap-3 rounded-xl border border-border bg-card px-4 py-3"
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent-soft font-mono text-[11px] font-semibold tracking-wide text-accent-2">
-              {currency.iso}
-            </span>
+            <Flag code={currency.iso} className="h-7 w-[42px] border border-border" />
             <span className="flex flex-col leading-tight">
               <span className="text-sm font-semibold">{currency.country}</span>
               <span className="font-mono text-xs text-muted">{currency.code}</span>
