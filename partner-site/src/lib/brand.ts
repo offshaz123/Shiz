@@ -7,7 +7,23 @@
 export const brand = {
   name: "Orvopay",
   shortName: "Orvopay",
-  legalName: "Orvopay Ltd",
+
+  /**
+   * CAREFUL. Two different entities can be in play and they must never be
+   * conflated on a regulated website:
+   *
+   *  - The REGULATED entity is CoBanq Ltd, trading as Orvopay. That is what
+   *    appears on the FCA register and what the customer contracts with. It is
+   *    set in `provider` below and RegulatoryNote publishes it.
+   *  - `legalName` here is whatever company owns this brand and takes the
+   *    revenue share — likely a separate services company. It is used only for
+   *    the copyright line.
+   *
+   * If a separate "Orvopay Ltd" is incorporated, the site must NOT imply that
+   * it is the FCA-authorised firm. Leave this as the regulated entity until
+   * the group structure is settled, which is the safe default.
+   */
+  legalName: "CoBanq Ltd",
 
   /**
    * Must match the live domain exactly: it drives canonical URLs, the sitemap,
