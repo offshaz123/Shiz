@@ -59,7 +59,7 @@ export function DashboardPreview() {
             {["Send money", "Exchange"].map((action) => (
               <div
                 key={action}
-                className="rounded-xl border border-border bg-background px-4 py-3.5 text-center text-xs font-semibold"
+                className="rounded-xl border border-border bg-card px-4 py-3.5 text-center text-xs font-semibold"
               >
                 {action}
               </div>

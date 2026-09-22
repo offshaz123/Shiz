@@ -103,6 +103,35 @@ export const sectors: Sector[] = [
     ],
   },
   {
+    slug: "freelancers-and-it-exporters",
+    name: "Freelance and IT export",
+    longName: "Freelancers and IT exporters",
+    title: "Multi-currency accounts for freelancers and IT exporters",
+    description:
+      "Receive client income in USD, EUR and other supported currencies, hold it, convert at a rate you are quoted, and draw it down in sterling — in your own name or your company's.",
+    intro:
+      "You invoice clients abroad and get paid in their currency. The money arrives in dollars or euros, and by the time it reaches a UK current account somebody has taken a slice of it in a rate you never saw. The account works the other way round from an importer's — money in from overseas, converted, drawn down here — but it is the same three moves, on the same account.",
+    problems: [
+      "Marketplace and platform payouts converted automatically at whatever rate the platform feels like.",
+      "A high street account that treats regular overseas income as something to query rather than to expect.",
+      "No way to hold dollars or euros until the rate is decent — everything converts the moment it lands.",
+      "Personal accounts doing the work of a business account, which makes the bookkeeping and the tax return harder than it needs to be.",
+    ],
+    answers: [
+      "Receive into supported currencies and hold the balance until you choose to convert.",
+      "A rate quoted before you commit, so you can decide whether today is the day.",
+      "An account in your own trading name, which keeps client income and personal money apart.",
+      "Onboarding that expects overseas invoicing, because that is what the account is for.",
+    ],
+    currencies: ["USD", "EUR", "CAD", "CHF"],
+    keywords: [
+      "multi-currency account for freelancers UK",
+      "receive USD payments freelancer UK",
+      "IT exporter payments account",
+      "get paid in euros from UK",
+    ],
+  },
+  {
     slug: "security-companies",
     name: "Security payroll",
     longName: "Security companies with large payroll",

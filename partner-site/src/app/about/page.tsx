@@ -103,7 +103,7 @@ export default function AboutPage() {
             </Card>
           ))}
         </div>
-        <div className="mt-10 max-w-3xl rounded-2xl border border-border bg-background p-6">
+        <div className="mt-10 max-w-3xl card p-6">
           <RegulatoryNote />
         </div>
       </Section>

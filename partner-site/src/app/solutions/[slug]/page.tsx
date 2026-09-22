@@ -89,7 +89,7 @@ export default async function SolutionPage({ params }: { params: Promise<{ slug:
               {solution.flow.map((step, index) => (
                 <li
                   key={step}
-                  className="flex items-center gap-3.5 rounded-xl border border-border bg-background px-4 py-3.5"
+                  className="flex items-center gap-3.5 rounded-xl border border-border bg-card px-4 py-3.5"
                 >
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ink font-mono text-[11px] text-on-ink">
                     {String(index + 1).padStart(2, "0")}

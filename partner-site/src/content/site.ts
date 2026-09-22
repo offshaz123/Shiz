@@ -55,7 +55,7 @@ export const onboardingChecklist = [
 export const faqs = [
   {
     question: "Are you a bank?",
-    answer: `No, and we do not pretend to be. ${brand.name} is a trading name of a UK payments firm authorised and regulated by the Financial Conduct Authority — a payment institution, not a bank. Your money sits in safeguarded accounts rather than being lent out, which is a different protection from a bank deposit: it is not covered by the FSCS, and we would rather tell you that now than have you find out later.`,
+    answer: `No, and we do not pretend to be. ${brand.name} introduces you to ${brand.provider.regulatedEntity}, who provides the regulated payment services and is authorised and regulated by the Financial Conduct Authority as a payment institution — not a bank. Your money sits in safeguarded accounts rather than being lent out, which is why there is no lending and no overdraft attached to it.`,
   },
   {
     question: "Is the account in my company name?",

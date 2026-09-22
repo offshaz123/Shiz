@@ -12,61 +12,55 @@ import { brand } from "@/lib/brand";
  * is deliberately still false: CoBanq's marketing site and its corporate
  * portal currently describe two different regulatory positions, and we should
  * not publish either until they tell us in writing which one is right.
+ *
+ * Every regulated sentence on the site comes from this one component. Do not
+ * hand-write the disclosure into a page — that is how the wording drifts out
+ * of step with `brand.provider.model`.
  */
 export function RegulatoryNote({
   className = "",
   compact = false,
+  tone = "muted",
 }: {
   className?: string;
   /** One sentence for the footer bar, rather than the full disclosure. */
   compact?: boolean;
+  /** `inherit` drops the colour so the note can sit on a dark panel. */
+  tone?: "muted" | "inherit";
 }) {
   const { provider } = brand;
   const named =
     provider.verified && provider.regulatedEntity && provider.firmReferenceNumber;
+  const base = `text-xs leading-relaxed ${tone === "muted" ? "text-muted" : ""}`;
+
+  const introduction = named ? (
+    <>
+      {brand.name} is acting as an introducer to {provider.regulatedEntity}, who is providing the
+      regulated payment services and is authorised and regulated by the Financial Conduct Authority
+      under {provider.permissions} (firm reference number {provider.firmReferenceNumber}).
+    </>
+  ) : (
+    <>
+      {brand.name} is acting as an introducer. The regulated payment services are provided by a firm
+      authorised and regulated by the Financial Conduct Authority under the Payment Services
+      Regulations 2017, not by {brand.name}.
+    </>
+  );
 
   if (compact) {
     return (
-      <p className={`text-xs leading-relaxed text-muted ${className}`}>
-        {named ? (
-          <>
-            {brand.name} is acting as an introducer to {provider.regulatedEntity}, who is providing
-            the regulated payment services and is authorised and regulated by the Financial Conduct
-            Authority under {provider.permissions} (firm reference number{" "}
-            {provider.firmReferenceNumber}). {brand.name} is not a bank.
-          </>
-        ) : (
-          <>
-            {brand.name} is acting as an introducer. The regulated payment services are provided by
-            a firm authorised and regulated by the Financial Conduct Authority under the Payment
-            Services Regulations 2017. {brand.name} is not a bank.
-          </>
-        )}
+      <p className={`${base} ${className}`}>
+        {introduction} {brand.name} is not a bank.
       </p>
     );
   }
 
   return (
-    <p className={`text-xs leading-relaxed text-muted ${className}`}>
-      {named ? (
-        <>
-          {brand.name} is acting as an introducer to {provider.regulatedEntity}, who is providing
-          the regulated payment services and is authorised and regulated by the Financial Conduct
-          Authority under {provider.permissions} (firm reference number{" "}
-          {provider.firmReferenceNumber}).
-        </>
-      ) : (
-        <>
-          {brand.name} acts as an introducer. The regulated payment services are provided by a firm
-          authorised and regulated by the Financial Conduct Authority under the Payment Services
-          Regulations 2017, not by {brand.name}.
-        </>
-      )}{" "}
-      {brand.name} is not a bank and does not hold deposits. Customer funds are held in safeguarded
-      accounts and are not protected by the Financial Services Compensation Scheme. Every
-      application is subject to full identity, anti-money-laundering and source-of-funds checks, and
-      an account is opened only once those checks are satisfied. Nothing on this site is an offer of
-      an account or a guarantee of approval.
+    <p className={`${base} ${className}`}>
+      {introduction} {brand.name} is not a bank and does not hold deposits. Every application is
+      subject to full identity, anti-money-laundering and source-of-funds checks, and an account is
+      opened only once those checks are satisfied. Nothing on this site is an offer of an account or
+      a guarantee of approval.
     </p>
   );
 }

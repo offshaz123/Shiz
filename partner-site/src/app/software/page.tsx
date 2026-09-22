@@ -238,7 +238,7 @@ export default function SoftwarePage() {
               &ldquo;money service business&rdquo; in the form and we will arrange a time.
             </p>
           </div>
-          <div className="rounded-2xl border border-border bg-background p-6 sm:p-8">
+          <div className="card p-6 sm:p-8">
             <EnquiryForm source="Software page" submitLabel="Request a demo" />
           </div>
         </div>

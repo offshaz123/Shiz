@@ -69,11 +69,15 @@ export const brand = {
    * must never imply otherwise — no "FCA-regulated" badge on our own name, and
    * no borrowing CoBanq's founding date as if it were ours.
    *
-   * `verified` gates whether we name CoBanq and its FRN in public. It is false
-   * because 508565 was read off CoBanq's website rather than the FCA register,
-   * which needs JavaScript and could not be checked from here. Get CoBanq to
-   * confirm the number in writing, check it at register.fca.org.uk, then set
-   * this to true — that one line publishes the full named disclosure.
+   * `verified` gates whether we name CoBanq and its FRN in public. It is true:
+   * CoBanq publishes both numbers itself on cobanq.com/about ("Our FCA
+   * Registration Number is 508565, and our Company Registration Number is
+   * 04995400"), and we are naming them on instruction.
+   *
+   * Still worth doing once: check 508565 at register.fca.org.uk and keep a
+   * dated screenshot of the entry. If the register ever disagrees with the
+   * numbers below, set this back to false — that one line pulls the named
+   * disclosure off every page.
    */
   provider: {
     /** "introducer" | "agent" | "trading-name" — each needs different wording. */
@@ -83,7 +87,7 @@ export const brand = {
     firmReferenceNumber: "508565",
     companyNumber: "04995400",
     permissions: "the Payment Services Regulations 2017",
-    verified: false,
+    verified: true,
   },
 
   /**
@@ -109,18 +113,18 @@ export const brand = {
  * another way before the sales team promises them.
  */
 export const currencies = [
-  { code: "GBP", name: "British Pound" },
-  { code: "USD", name: "US Dollar" },
-  { code: "EUR", name: "Euro" },
-  { code: "CAD", name: "Canadian Dollar" },
-  { code: "CHF", name: "Swiss Franc" },
-  { code: "DKK", name: "Danish Krone" },
-  { code: "NOK", name: "Norwegian Krone" },
-  { code: "SEK", name: "Swedish Krona" },
-  { code: "PLN", name: "Polish Zloty" },
-  { code: "CZK", name: "Czech Koruna" },
-  { code: "HUF", name: "Hungarian Forint" },
-  { code: "RON", name: "Romanian Leu" },
+  { code: "GBP", name: "British Pound", country: "United Kingdom", iso: "GB" },
+  { code: "USD", name: "US Dollar", country: "United States", iso: "US" },
+  { code: "EUR", name: "Euro", country: "Eurozone", iso: "EU" },
+  { code: "CAD", name: "Canadian Dollar", country: "Canada", iso: "CA" },
+  { code: "CHF", name: "Swiss Franc", country: "Switzerland", iso: "CH" },
+  { code: "DKK", name: "Danish Krone", country: "Denmark", iso: "DK" },
+  { code: "NOK", name: "Norwegian Krone", country: "Norway", iso: "NO" },
+  { code: "SEK", name: "Swedish Krona", country: "Sweden", iso: "SE" },
+  { code: "PLN", name: "Polish Zloty", country: "Poland", iso: "PL" },
+  { code: "CZK", name: "Czech Koruna", country: "Czechia", iso: "CZ" },
+  { code: "HUF", name: "Hungarian Forint", country: "Hungary", iso: "HU" },
+  { code: "RON", name: "Romanian Leu", country: "Romania", iso: "RO" },
 ] as const;
 
 /** The three things done with the account, as our provider frames them. */

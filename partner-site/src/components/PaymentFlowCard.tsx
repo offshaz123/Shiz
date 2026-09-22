@@ -31,7 +31,7 @@ const steps = [
 
 export function PaymentFlowCard() {
   return (
-    <div className="rounded-2xl border border-border bg-surface/80 p-5 backdrop-blur sm:p-6">
+    <div className="glass rounded-2xl p-5 sm:p-6">
       <div className="flex items-center justify-between">
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted">
           One payment, end to end

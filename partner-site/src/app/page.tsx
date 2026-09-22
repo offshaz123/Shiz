@@ -4,7 +4,9 @@ import { brand, currencies } from "@/lib/brand";
 import { sectors } from "@/content/sectors";
 import { solutions } from "@/content/solutions";
 import { pillars, faqs } from "@/content/site";
-import { HeroBackdrop } from "@/components/HeroBackdrop";
+import { GlobeBackdrop } from "@/components/GlobeBackdrop";
+import { RatePills } from "@/components/RatePills";
+import { CurrencyShowcase } from "@/components/CurrencyShowcase";
 import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { FaqJsonLd } from "@/components/StructuredData";
@@ -62,56 +64,74 @@ export default function Home() {
 
       {/* Hero */}
       <section className="relative overflow-hidden border-b border-border">
-        <HeroBackdrop />
-        <div className="relative mx-auto max-w-6xl px-5 pt-20 pb-24 sm:pt-28 sm:pb-32">
-          <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:items-center">
-          <div>
-            <Eyebrow>For UK importers, wholesalers and distributors</Eyebrow>
-            <h1 className="font-display mt-4 text-4xl font-semibold leading-[1.08] tracking-tight sm:text-6xl">
-              Collect. Convert.{" "}
-              <span className="accent-gradient-text">Pay your suppliers.</span>
-            </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
-              A business payment account in your own company name. Take money in from your UK
-              retailers, convert it into the currency your supplier invoices in, and send it out the
-              same day — without a letter asking what the money is for every time a big one lands.
-            </p>
+        <GlobeBackdrop />
+        <div className="relative mx-auto max-w-6xl px-5 pt-16 pb-20 sm:pt-24 sm:pb-28">
+          <div className="grid gap-16 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-10">
+            <div>
+              <span className="glass inline-flex items-center gap-2.5 rounded-full py-1.5 pl-2 pr-4 text-xs font-semibold">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent-soft">
+                  <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-accent" fill="none" aria-hidden="true">
+                    <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.8" />
+                    <path
+                      d="M3.5 12h17M12 3.5c2.2 2.4 3.3 5.3 3.3 8.5S14.2 18.1 12 20.5c-2.2-2.4-3.3-5.3-3.3-8.5S9.8 5.9 12 3.5Z"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                    />
+                  </svg>
+                </span>
+                Twelve currencies, one account
+              </span>
 
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Link
-                href="/contact"
-                className="rounded-full bg-accent px-6 py-3.5 text-center text-sm font-semibold text-on-accent transition-colors hover:bg-accent-strong"
-              >
-                Talk to us about an account
-              </Link>
-              <Link
-                href="/business-accounts"
-                className="rounded-full border border-border bg-background px-6 py-3.5 text-center text-sm font-semibold transition-colors hover:border-accent"
-              >
-                See how it works
-              </Link>
+              <h1 className="font-display mt-6 text-[2.6rem] font-semibold leading-[1.05] tracking-tight sm:text-6xl lg:text-[4rem]">
+                Collect. Convert.
+                <span className="accent-gradient-text block">Pay your suppliers.</span>
+              </h1>
+
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+                A business payment account in your own company name. Take money in from your UK
+                retailers, convert it into the currency your supplier invoices in, and send it out
+                the same day — without a letter asking what the money is for every time a big one
+                lands.
+              </p>
+
+              <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+                <Link href="/contact" className="btn btn-primary">
+                  Talk to us about an account
+                  <span aria-hidden="true">&rarr;</span>
+                </Link>
+                <Link href="/business-accounts" className="btn btn-ghost">
+                  See how it works
+                </Link>
+              </div>
+
+              <dl className="mt-12 grid max-w-xl grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-3">
+                <div>
+                  <dt className="text-sm text-muted">Account name</dt>
+                  <dd className="mt-1 text-base font-semibold">Your company&rsquo;s</dd>
+                </div>
+                <div>
+                  <dt className="text-sm text-muted">Pay out in</dt>
+                  <dd className="mt-1 font-mono text-base font-semibold">
+                    {currencies.slice(0, 4).map((c) => c.code).join(" · ")}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm text-muted">Licence and compliance</dt>
+                  <dd className="mt-1 text-base font-semibold">FCA-authorised provider</dd>
+                </div>
+              </dl>
             </div>
 
-            <dl className="mt-14 grid max-w-2xl grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-3">
-              <div>
-                <dt className="text-sm text-muted">Account name</dt>
-                <dd className="mt-1 text-base font-semibold">Your company&rsquo;s</dd>
-              </div>
-              <div>
-                <dt className="text-sm text-muted">Pay out in</dt>
-                <dd className="mt-1 text-base font-semibold">{currencies.slice(0, 4).map((c) => c.code).join(" · ")}</dd>
-              </div>
-              <div>
-                <dt className="text-sm text-muted">Licence and compliance</dt>
-                <dd className="mt-1 text-base font-semibold">FCA-authorised provider</dd>
-              </div>
-            </dl>
+            {/* The card, with the activity pills surfacing around it. */}
+            <div className="relative lg:pl-4">
+              <PaymentFlowCard />
+              <RatePills />
+            </div>
           </div>
 
-          <div className="lg:pl-4">
-            <PaymentFlowCard />
-          </div>
-          </div>
+          <p className="relative mt-14 text-xs text-muted">
+            Figures, rates and activity shown here are illustrative, not a live feed.
+          </p>
         </div>
       </section>
 
@@ -304,7 +324,7 @@ export default function Home() {
               (item) => (
                 <li
                   key={item}
-                  className="rounded-xl border border-border bg-background px-4 py-3.5 font-medium"
+                  className="rounded-xl border border-border bg-card px-4 py-3.5 font-medium"
                 >
                   {item}
                 </li>
@@ -315,15 +335,23 @@ export default function Home() {
       </Section>
 
       {/* Currencies */}
-      <Section>
+      <Section tone="surface">
         <SectionHeading
           center
           eyebrow="Currencies"
           title="The currencies you can hold, convert and pay in"
           lede="Eleven foreign currencies alongside sterling, on one account in your own company name."
         />
+        <div className="reveal mt-14">
+          <CurrencyShowcase />
+        </div>
+        <div className="mt-16">
+          <p className="mb-5 text-center text-xs font-semibold uppercase tracking-[0.18em] text-muted">
+            Where the money lands
+          </p>
+          <CurrencyMarquee />
+        </div>
       </Section>
-      <CurrencyMarquee />
 
       {/* Dashboard */}
       <Section tone="surface">
@@ -391,7 +419,7 @@ export default function Home() {
               </p>
             </div>
           </div>
-          <div className="rounded-2xl border border-border bg-background p-6 sm:p-8">
+          <div className="card p-6 sm:p-8">
             <EnquiryForm source="Home page" />
           </div>
         </div>

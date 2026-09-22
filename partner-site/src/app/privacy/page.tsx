@@ -21,7 +21,7 @@ const sections = [
     heading: "Who we are",
     body: [
       `${brand.legalName} ("we", "us") operates this website. If you want to talk to us about anything in this policy, email ${brand.email} or call ${brand.phoneDisplay}.`,
-      "We are a trading name of a UK payments firm authorised and regulated by the Financial Conduct Authority. That firm is the data controller for your information, and this notice is given on its behalf.",
+      `${brand.name} acts as an introducer to ${brand.provider.regulatedEntity}, who provides the regulated payment services and is authorised and regulated by the Financial Conduct Authority. Once you apply, that firm is the data controller for the information you give it, and this notice covers the part we handle: your enquiry.`,
     ],
   },
   {

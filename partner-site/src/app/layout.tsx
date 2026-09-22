@@ -1,7 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/ThemeProvider";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
@@ -18,6 +17,12 @@ const displaySans = Space_Grotesk({
 });
 
 const defaultTitle = `${brand.name} — Business accounts for UK importers and wholesalers`;
+
+/** One theme, so the browser chrome should match it rather than flash white. */
+export const viewport: Viewport = {
+  themeColor: "#060f14",
+  colorScheme: "dark",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(brand.url),
@@ -67,12 +72,10 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <OrganizationJsonLd />
         <WebSiteJsonLd />
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <WhatsAppButton />
-        </ThemeProvider>
+        <Header />
+        <main className="flex-1">{children}</main>
+        <Footer />
+        <WhatsAppButton />
       </body>
     </html>
   );

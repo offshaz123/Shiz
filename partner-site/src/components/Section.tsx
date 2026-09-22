@@ -17,8 +17,8 @@ export function Section({
 }) {
   const tones = {
     default: "",
-    surface: "bg-surface",
-    ink: "bg-ink text-on-ink",
+    surface: "surface-tint",
+    ink: "ink-tint text-on-ink",
   } as const;
 
   return (
@@ -30,7 +30,9 @@ export function Section({
 
 export function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">{children}</p>
+    <p className="eyebrow-rule text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+      {children}
+    </p>
   );
 }
 
@@ -48,7 +50,9 @@ export function SectionHeading({
   return (
     <div className={`${center ? "mx-auto text-center" : ""} max-w-2xl`}>
       {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
-      <h2 className="font-display mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h2>
+      <h2 className="font-display text-balance mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+        {title}
+      </h2>
       {lede && <p className="mt-4 text-base leading-relaxed text-muted sm:text-lg">{lede}</p>}
     </div>
   );
@@ -62,9 +66,7 @@ export function Card({
   className?: string;
 }) {
   return (
-    <div
-      className={`rounded-2xl border border-border bg-background p-6 transition-colors hover:border-accent/60 ${className}`}
-    >
+    <div className={`card reveal p-6 ${className}`}>
       {children}
     </div>
   );

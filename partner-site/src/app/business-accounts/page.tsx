@@ -34,7 +34,7 @@ const pay = [
 const notIncluded = [
   {
     title: "It is not a bank account",
-    body: "There is no lending, no overdraft, and no FSCS cover. Customer funds are safeguarded rather than lent on, which is a different protection — and for most importers, the more relevant one.",
+    body: "There is no lending and no overdraft. Customer funds are safeguarded rather than lent on, which is a different kind of protection — and for most importers, the more relevant one.",
   },
   {
     title: "It is not instant",
