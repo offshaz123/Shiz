@@ -116,3 +116,35 @@ the same setup already used for the SMG Details site in this repo.
 This is a static export (`output: "export"` in `next.config.ts`), so it'll build to a plain
 `out/` folder regardless of how Hostinger runs it — safe either as a static site or served via
 Node.
+
+## Connecting Claude to Hostinger (MCP)
+
+`.mcp.json` in the repo root registers Hostinger's MCP servers (hosting, domains, DNS, billing,
+reach, VPS, ecommerce) so Claude Code can manage the hosting account — deploy sites, check
+domains and DNS, read metrics — without leaving the editor. It is the project-scoped equivalent of
+the config hPanel → **API** hands you for `~/.claude.json`.
+
+The token is **not** in the file. Each server reads `${HOSTINGER_API_TOKEN}` from the environment,
+so nothing secret is committed.
+
+**One-time setup:**
+
+1. hPanel → **API** → **Generate API token**. Copy it once — it isn't shown again.
+2. Export it in your shell profile (`~/.zshrc`), then open a new terminal:
+
+   ```bash
+   export HOSTINGER_API_TOKEN="<the token>"
+   ```
+
+3. Start Claude Code from this repo (`claude` in the project root). It will ask once whether to
+   trust the project's MCP servers — approve it. `/mcp` lists the servers and their status.
+
+Notes:
+
+- The token carries full account access (billing included). Never paste it into a file in this
+  repo, a commit message, or a chat. Rotate it in hPanel if it leaks.
+- Trim `.mcp.json` to the products actually in use (hosting, domains, DNS) if the extra tool
+  definitions make responses noisier — each server adds tools to Claude's context.
+- Claude Code sessions running on the web (claude.ai/code) are ephemeral containers without the
+  environment variable, so the Hostinger servers only connect when `HOSTINGER_API_TOKEN` is set
+  wherever the session runs.
