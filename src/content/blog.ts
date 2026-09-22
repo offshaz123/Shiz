@@ -16,6 +16,81 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "reels-feed-or-stories-where-should-your-ad-run",
+    title: "Reels, Feed or Stories: Where Should Your Ad Actually Run?",
+    description:
+      "Most businesses pick placements by guessing which one they like best. Here's what each one actually is, and why choosing manually usually costs you more.",
+    publishedAt: "2026-09-22",
+    keywords: [
+      "Instagram Reels ads vs feed",
+      "Meta ad placements explained",
+      "automatic placements Facebook ads",
+      "where to run Instagram ads",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "When you build a campaign, Meta asks where you want the ad to appear. Feed, Reels, Stories, Explore, Messenger, and a few places you've probably never heard of.",
+          "Most people answer this by thinking about where they personally spend their time. That's the wrong question, and answering it usually makes the campaign more expensive than leaving it alone would have.",
+        ],
+      },
+      {
+        heading: "What the placements actually are",
+        paragraphs: [
+          "Worth being clear on the main ones before deciding anything:",
+        ],
+        bullets: [
+          "Feed, the scrolling posts on Facebook and Instagram. Square or slightly tall, and the most familiar format to almost everyone",
+          "Reels, full-screen vertical video that plays automatically as people swipe. The fastest-growing place attention has moved to",
+          "Stories, full-screen vertical between people's story updates. Tapped through quickly, so it rewards getting to the point",
+          "Explore, the Instagram discovery grid, where people are actively browsing rather than catching up with people they follow",
+          "Messenger and Inbox, ads that appear inside the messaging apps rather than in a feed",
+          "Audience Network, which isn't Meta at all. These are ads placed on third-party apps and websites, which is where most of the complaints about junk clicks come from",
+        ],
+      },
+      {
+        heading: "Why picking manually usually costs more",
+        paragraphs: [
+          "Meta's system is running an auction across every placement at once, in real time, for every single person. It knows that reaching one person is cheap on Reels this afternoon and that reaching another is cheaper in the feed.",
+          "When you switch placements off, you take those options away. The system still has to find your customers, but now it has to find them in a smaller, more contested space. In practice that tends to raise the price rather than improve the quality.",
+          "So the default answer, for most small businesses most of the time, is to leave placements on automatic and spend your energy on the creative instead. The exception is worth knowing about, though.",
+        ],
+      },
+      {
+        heading: "When it is worth restricting",
+        paragraphs: [
+          "There are a few real reasons to turn something off, and they're specific rather than a matter of taste.",
+          "Audience Network is the one most often worth excluding, at least while you're testing. Because those ads appear inside other people's apps, a share of the clicks are accidental, particularly from games. If your reports show a placement producing plenty of clicks and almost no enquiries, that's usually where it's coming from.",
+          "The other honest reason is creative you can't make work everywhere. If all you have is one landscape video, forcing it into Reels will look bad, and a bad ad in a good placement is still a bad ad. But the right fix there is better creative, not a narrower campaign.",
+          "What isn't a good reason is disliking a placement personally. Your customers are not you, and the data will tell you far more than your instinct does.",
+        ],
+      },
+      {
+        heading: "Make one piece of creative work in all of them",
+        paragraphs: [
+          "This is where the effort should go, because it lets you leave everything switched on without anything looking wrong.",
+          "Film vertically at 9:16, which covers Reels and Stories, and keep the important content in the middle of the frame so a square or 4:5 crop for the feed doesn't cut anything off. Assume the top and bottom fifth of a vertical ad will have buttons over it, so no text, no logo and no phone number down there.",
+          "Meta will let you upload a different version for different placements, and it's worth doing for anything you're spending real money behind. A vertical cut for Reels and Stories, a 4:5 cut for the feed. Ten minutes of work that stops your ad looking like it was made for somewhere else.",
+        ],
+      },
+      {
+        heading: "Read the report before you change anything",
+        paragraphs: [
+          "Your ads report can be broken down by placement, and this is the only thing that should drive the decision. It shows what each one cost you and what each one produced.",
+          "Be careful reading it too early, though. A placement that spent £4 and got no enquiries hasn't told you anything yet. Give it enough spend that the number means something before you act on it, and judge it on cost per enquiry rather than cost per click.",
+          "One thing that surprises people: the placement that gets the most engagement is often not the one that produces the most customers. Reels can rack up views that go nowhere while a quieter feed placement books the work. Views are not the point, and the report will show you that if you look at the right column.",
+        ],
+      },
+      {
+        heading: "The short version",
+        paragraphs: [
+          "Leave placements on automatic. Make creative that works vertically and crops safely. Check the placement breakdown after it's had enough budget to be meaningful, exclude Audience Network if the numbers say so, and otherwise let the system do the job it's better at than you are.",
+          "The time you'd spend agonising over where the ad runs is much better spent on what the ad actually says and shows.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-for-retail-ecommerce",
     title: "Meta & Instagram Ads for Retail and E-commerce",
     description:

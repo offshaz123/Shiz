@@ -60,6 +60,7 @@ keywords, dealership social strategy).
 - Q4 Advertising: Why Your Costs Rise in November and What to Do About It (seasonal & planning)
 - How to Film Ad Videos on Your Phone Without Them Looking Cheap (video & creative)
 - Meta & Instagram Ads for Retail and E-commerce (industry-specific)
+- Reels, Feed or Stories: Where Should Your Ad Actually Run? (comparison/explainer)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -201,7 +202,7 @@ keywords, dealership social strategy).
       UK", "how much should I spend on marketing"
 
 ## Backlog — comparison/explainer (added 2026-09-16 research round)
-- [ ] Reels, Feed or Stories: Where Should Your Ad Actually Run? — target: "Instagram Reels ads
+- [x] Reels, Feed or Stories: Where Should Your Ad Actually Run? — target: "Instagram Reels ads
       vs feed", "Meta ad placements explained"
 - [ ] Video Ads vs Image Ads: Which Works Better for a Local Business? — target: "video vs image
       Facebook ads", "do video ads perform better"
