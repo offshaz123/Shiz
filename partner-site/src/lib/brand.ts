@@ -97,7 +97,7 @@ export const brand = {
    */
   software: {
     setupFrom: "£2,000",
-    monthlyFrom: "£300",
+    monthlyFrom: "£480",
     /** Set false to take the figures off the public page and quote privately. */
     showPricing: true,
   },
