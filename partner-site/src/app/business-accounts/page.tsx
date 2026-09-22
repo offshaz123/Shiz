@@ -97,10 +97,11 @@ export default function BusinessAccountsPage() {
         <div className="mt-10 flex flex-wrap gap-3">
           {currencies.map((currency) => (
             <span
-              key={currency}
-              className="rounded-xl border border-border bg-background px-5 py-3 font-mono text-sm"
+              key={currency.code}
+              className="flex items-baseline gap-2 rounded-xl border border-border bg-background px-4 py-3"
             >
-              {currency}
+              <span className="font-mono text-sm font-semibold">{currency.code}</span>
+              <span className="text-xs text-muted">{currency.name}</span>
             </span>
           ))}
         </div>

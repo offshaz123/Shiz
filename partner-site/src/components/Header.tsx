@@ -7,7 +7,8 @@ import { Logo } from "@/components/Logo";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navLinks = [
-  { href: "/business-accounts", label: "Business accounts" },
+  { href: "/solutions", label: "Solutions" },
+  { href: "/business-accounts", label: "How it works" },
   { href: "/who-we-serve", label: "Who we serve" },
   { href: "/software", label: "Software for MSBs" },
   { href: "/opening-an-account", label: "Opening an account" },

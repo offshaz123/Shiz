@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { brand } from "@/lib/brand";
 import { sectors } from "@/content/sectors";
+import { solutions } from "@/content/solutions";
 import { Logo } from "@/components/Logo";
 import { RegulatoryNote } from "@/components/RegulatoryNote";
 
@@ -26,8 +27,15 @@ export function Footer() {
           </div>
 
           <div>
-            <h2 className="text-sm font-semibold">Accounts</h2>
+            <h2 className="text-sm font-semibold">Solutions</h2>
             <ul className="mt-4 space-y-2.5 text-sm text-muted">
+              {solutions.map((solution) => (
+                <li key={solution.slug}>
+                  <Link href={`/solutions/${solution.slug}`} className="hover:text-foreground">
+                    {solution.name}
+                  </Link>
+                </li>
+              ))}
               <li>
                 <Link href="/business-accounts" className="hover:text-foreground">
                   How the account works

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { brand } from "@/lib/brand";
 import { sectors } from "@/content/sectors";
+import { solutions } from "@/content/solutions";
 
 export const dynamic = "force-static";
 
@@ -14,6 +15,7 @@ const contentUpdated = new Date("2026-09-22");
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes: { path: string; changeFrequency: "weekly" | "monthly"; priority: number }[] = [
     { path: "", changeFrequency: "weekly", priority: 1 },
+    { path: "/solutions", changeFrequency: "monthly", priority: 0.95 },
     { path: "/business-accounts", changeFrequency: "monthly", priority: 0.9 },
     { path: "/who-we-serve", changeFrequency: "monthly", priority: 0.85 },
     { path: "/opening-an-account", changeFrequency: "monthly", priority: 0.8 },
@@ -29,6 +31,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: contentUpdated,
       changeFrequency: route.changeFrequency,
       priority: route.priority,
+    })),
+    ...solutions.map((solution) => ({
+      url: `${brand.url}/solutions/${solution.slug}`,
+      lastModified: contentUpdated,
+      changeFrequency: "monthly" as const,
+      priority: 0.9,
     })),
     ...sectors.map((sector) => ({
       url: `${brand.url}/who-we-serve/${sector.slug}`,

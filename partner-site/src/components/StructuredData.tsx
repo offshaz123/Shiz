@@ -1,4 +1,4 @@
-import { brand } from "@/lib/brand";
+import { brand, currencies } from "@/lib/brand";
 
 function JsonLd({ data }: { data: Record<string, unknown> }) {
   return (
@@ -26,7 +26,7 @@ export function OrganizationJsonLd() {
         email: brand.email,
         telephone: brand.phoneE164,
         areaServed: "GB",
-        currenciesAccepted: "GBP, USD, EUR, AED, HKD",
+        currenciesAccepted: currencies.map((c) => c.code).join(", "),
         ...(brand.address.city
           ? {
               address: {

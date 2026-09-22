@@ -5,20 +5,20 @@
  * sitemap, the structured data and the enquiry emails.
  */
 export const brand = {
-  name: "Navera Pay",
-  shortName: "Navera",
-  legalName: "Navera Pay Ltd",
+  name: "Orvopay",
+  shortName: "Orvopay",
+  legalName: "Orvopay Ltd",
 
   /**
    * Must match the live domain exactly: it drives canonical URLs, the sitemap,
    * robots.txt and the Open Graph tags.
    */
-  url: "https://naverapay.com",
+  url: "https://orvopay.com",
 
   description:
     "Business payment accounts in your own company name for UK importers, wholesalers and distributors. Collect from your retailers, convert at a proper rate, and pay suppliers in USD, AED, HKD and EUR the same day.",
 
-  email: "hello@naverapay.com",
+  email: "hello@orvopay.com",
   phoneDisplay: "020 0000 0000",
   phoneE164: "+442000000000",
   /** Digits only, no plus. Leave empty to hide the WhatsApp button. */
@@ -72,8 +72,36 @@ export const brand = {
   },
 } as const;
 
-/** Currencies quoted across the site. Keep in step with the live rate card. */
-export const currencies = ["USD", "AED", "HKD", "EUR", "CNY", "GBP"] as const;
+/**
+ * The multi-currency set, as our provider publishes it: 11 foreign currencies
+ * alongside GBP on one IBAN.
+ *
+ * NOTE — the partner pack promises USD, AED and HKD, but AED and HKD are NOT on
+ * this list. Priority-one customers (mobile wholesalers) pay suppliers in Dubai
+ * and Hong Kong, so confirm with CoBanq whether those corridors are served
+ * another way before the sales team promises them.
+ */
+export const currencies = [
+  { code: "GBP", name: "British Pound" },
+  { code: "USD", name: "US Dollar" },
+  { code: "EUR", name: "Euro" },
+  { code: "CAD", name: "Canadian Dollar" },
+  { code: "CHF", name: "Swiss Franc" },
+  { code: "DKK", name: "Danish Krone" },
+  { code: "NOK", name: "Norwegian Krone" },
+  { code: "SEK", name: "Swedish Krona" },
+  { code: "PLN", name: "Polish Zloty" },
+  { code: "CZK", name: "Czech Koruna" },
+  { code: "HUF", name: "Hungarian Forint" },
+  { code: "RON", name: "Romanian Leu" },
+] as const;
+
+/** The three things done with the account, as our provider frames them. */
+export const coreActions = [
+  { name: "Receive", body: "Receive supported currencies into the account." },
+  { name: "Convert", body: "Exchange supported currencies through integrated real-time FX." },
+  { name: "Pay", body: "Make supported payments out from the relevant currency balance." },
+] as const;
 
 /** The trust strip under the hero, mirroring how our provider presents itself. */
 export const trustPoints = [

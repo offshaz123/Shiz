@@ -2,12 +2,16 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { brand, currencies } from "@/lib/brand";
 import { sectors } from "@/content/sectors";
+import { solutions } from "@/content/solutions";
 import { pillars, faqs } from "@/content/site";
 import { HeroBackdrop } from "@/components/HeroBackdrop";
 import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { FaqJsonLd } from "@/components/StructuredData";
 import { TrustBar } from "@/components/TrustBar";
+import { PaymentFlowCard } from "@/components/PaymentFlowCard";
+import { DashboardPreview } from "@/components/DashboardPreview";
+import { CurrencyMarquee } from "@/components/CurrencyMarquee";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -60,7 +64,8 @@ export default function Home() {
       <section className="relative overflow-hidden border-b border-border">
         <HeroBackdrop />
         <div className="relative mx-auto max-w-6xl px-5 pt-20 pb-24 sm:pt-28 sm:pb-32">
-          <div className="max-w-3xl">
+          <div className="grid gap-12 lg:grid-cols-[1.15fr_1fr] lg:items-center">
+          <div>
             <Eyebrow>For UK importers, wholesalers and distributors</Eyebrow>
             <h1 className="font-display mt-4 text-4xl font-semibold leading-[1.08] tracking-tight sm:text-6xl">
               Collect. Convert.{" "}
@@ -94,13 +99,18 @@ export default function Home() {
               </div>
               <div>
                 <dt className="text-sm text-muted">Pay out in</dt>
-                <dd className="mt-1 text-base font-semibold">{currencies.slice(0, 4).join(" · ")}</dd>
+                <dd className="mt-1 text-base font-semibold">{currencies.slice(0, 4).map((c) => c.code).join(" · ")}</dd>
               </div>
               <div>
                 <dt className="text-sm text-muted">Licence and compliance</dt>
                 <dd className="mt-1 text-base font-semibold">UK-regulated partner</dd>
               </div>
             </dl>
+          </div>
+
+          <div className="lg:pl-4">
+            <PaymentFlowCard />
+          </div>
           </div>
         </div>
       </section>
@@ -147,6 +157,31 @@ export default function Home() {
           >
             How the account works in practice →
           </Link>
+        </div>
+      </Section>
+
+      {/* Solutions */}
+      <Section>
+        <SectionHeading
+          eyebrow="Solutions"
+          title="Three lines, one account"
+          lede="Money in from your customers, currency converted, money out to suppliers, contractors or staff. Each runs on the same account, in your own company name."
+        />
+        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+          {solutions.map((solution, index) => (
+            <Card key={solution.slug} className="flex flex-col">
+              <span className="font-mono text-xs text-gold">0{index + 1}</span>
+              <h3 className="font-display mt-3 text-xl font-semibold">{solution.name}</h3>
+              <p className="mt-2 text-sm font-medium text-accent-2">{solution.tagline}</p>
+              <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{solution.intro}</p>
+              <Link
+                href={`/solutions/${solution.slug}`}
+                className="mt-6 text-sm font-semibold text-accent-2 underline-offset-4 hover:underline"
+              >
+                {solution.name} →
+              </Link>
+            </Card>
+          ))}
         </div>
       </Section>
 
@@ -277,6 +312,34 @@ export default function Home() {
             )}
           </ul>
         </div>
+      </Section>
+
+      {/* Currencies */}
+      <Section>
+        <SectionHeading
+          center
+          eyebrow="Currencies"
+          title="The currencies you can hold, convert and pay in"
+          lede="Eleven foreign currencies alongside sterling, on one account in your own company name."
+        />
+      </Section>
+      <CurrencyMarquee />
+
+      {/* Dashboard */}
+      <Section tone="surface">
+        <SectionHeading
+          center
+          eyebrow="The platform"
+          title={`See your ${brand.shortName} dashboard`}
+          lede="One place to track balances, send payments, convert between currencies and manage the account."
+        />
+        <div className="mt-12">
+          <DashboardPreview />
+        </div>
+        <p className="mx-auto mt-6 max-w-2xl text-center text-xs leading-relaxed text-muted">
+          Illustrative preview — figures and account details are placeholders, not a real customer
+          account.
+        </p>
       </Section>
 
       {/* FAQs */}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Header } from "@/components/Header";
@@ -8,14 +8,13 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/StructuredData";
 import { brand } from "@/lib/brand";
 
-// Inter for everything, Playfair for headlines — the pairing our provider's
-// own site uses, and the reason its pages read as a financial institution
-// rather than a software startup.
+// Inter for body, Space Grotesk for headlines. Deliberately a geometric sans
+// rather than the serif our provider uses — same trade, different voice.
 const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
+const displaySans = Space_Grotesk({
+  variable: "--font-display-sans",
   subsets: ["latin"],
-  weight: ["600", "700"],
+  weight: ["500", "600", "700"],
 });
 
 const defaultTitle = `${brand.name} — Business accounts for UK importers and wholesalers`;
@@ -62,13 +61,13 @@ export default function RootLayout({
   return (
     <html
       lang="en-GB"
-      className={`${inter.variable} ${playfair.variable} h-full antialiased`}
+      className={`${inter.variable} ${displaySans.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <OrganizationJsonLd />
         <WebSiteJsonLd />
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />
