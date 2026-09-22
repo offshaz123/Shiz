@@ -68,18 +68,32 @@ export default function Home() {
         <div className="relative mx-auto max-w-6xl px-5 pt-16 pb-20 sm:pt-24 sm:pb-28">
           <div className="grid gap-16 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-10">
             <div>
+              {/* CAREFUL. This badge cannot say "FCA regulated" on its own,
+                  because Orvopay is not: it introduces customers to CoBanq
+                  Ltd, who holds the permission. Claiming authorisation you do
+                  not hold is the one thing the FCA acts on fastest. Once
+                  Orvopay is on the register in its own right, this can become
+                  the shorter claim — and `brand.provider.model` should change
+                  with it. */}
               <span className="glass inline-flex items-center gap-2.5 rounded-full py-1.5 pl-2 pr-4 text-xs font-semibold">
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent-soft">
                   <svg viewBox="0 0 24 24" className="h-3.5 w-3.5 text-accent" fill="none" aria-hidden="true">
-                    <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.8" />
                     <path
-                      d="M3.5 12h17M12 3.5c2.2 2.4 3.3 5.3 3.3 8.5S14.2 18.1 12 20.5c-2.2-2.4-3.3-5.3-3.3-8.5S9.8 5.9 12 3.5Z"
+                      d="M12 2.75 4.75 5.6v5.4c0 4.2 2.9 8.1 7.25 10.25C16.35 19.1 19.25 15.2 19.25 11V5.6Z"
                       stroke="currentColor"
-                      strokeWidth="1.5"
+                      strokeWidth="1.7"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="m9 11.75 2.1 2.1L15 10"
+                      stroke="currentColor"
+                      strokeWidth="1.7"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                     />
                   </svg>
                 </span>
-                Twelve currencies, one account
+                FCA-authorised provider
               </span>
 
               <h1 className="font-display mt-6 text-[2.6rem] font-semibold leading-[1.05] tracking-tight sm:text-6xl lg:text-[4rem]">
@@ -116,8 +130,10 @@ export default function Home() {
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-sm text-muted">Licence and compliance</dt>
-                  <dd className="mt-1 text-base font-semibold">FCA-authorised provider</dd>
+                  <dt className="text-sm text-muted">Currencies</dt>
+                  <dd className="mt-1 text-base font-semibold">
+                    {currencies.length} on one account
+                  </dd>
                 </div>
               </dl>
             </div>
