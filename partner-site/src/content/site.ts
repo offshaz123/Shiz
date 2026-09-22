@@ -55,7 +55,7 @@ export const onboardingChecklist = [
 export const faqs = [
   {
     question: "Are you a bank?",
-    answer: `No, and we do not pretend to be. ${brand.name} provides business payment accounts through a UK-regulated payments partner, whose permissions the accounts are opened under. Your money sits in safeguarded accounts rather than being lent out, which is a different — and in some ways stronger — protection than a bank deposit. It is not covered by the FSCS, and we would rather tell you that now than have you find out later.`,
+    answer: `No, and we do not pretend to be. ${brand.name} is a trading name of a UK payments firm authorised and regulated by the Financial Conduct Authority — a payment institution, not a bank. Your money sits in safeguarded accounts rather than being lent out, which is a different protection from a bank deposit: it is not covered by the FSCS, and we would rather tell you that now than have you find out later.`,
   },
   {
     question: "Is the account in my company name?",
@@ -75,7 +75,7 @@ export const faqs = [
   {
     question: "Can you guarantee I will be approved?",
     answer:
-      "No. Every application goes through full KYB, anti-money-laundering and source-of-funds checks, and the regulated partner makes the final decision — not us. Anyone who guarantees you an account before those checks is telling you something they cannot know.",
+      "No. Every application goes through full KYB, anti-money-laundering and source-of-funds checks, and the decision comes after those, not before. Anyone who guarantees you an account up front is telling you something they cannot know.",
   },
   {
     question: "What does it cost?",

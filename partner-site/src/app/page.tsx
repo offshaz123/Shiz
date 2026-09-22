@@ -103,7 +103,7 @@ export default function Home() {
               </div>
               <div>
                 <dt className="text-sm text-muted">Licence and compliance</dt>
-                <dd className="mt-1 text-base font-semibold">UK-regulated partner</dd>
+                <dd className="mt-1 text-base font-semibold">FCA-regulated</dd>
               </div>
             </dl>
           </div>

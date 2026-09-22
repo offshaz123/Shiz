@@ -30,7 +30,7 @@ export default function SolutionsPage() {
           <p className="mt-6 text-lg leading-relaxed text-muted">
             Money in from your customers, currency converted, money out to suppliers, contractors or
             staff. Each line below runs on the same account, in your own company name, on our
-            regulated partner&rsquo;s licence.
+            FCA permissions.
           </p>
         </div>
 

@@ -7,7 +7,7 @@ import { RegulatoryNote } from "@/components/RegulatoryNote";
 
 export const metadata: Metadata = {
   title: "About us",
-  description: `Who ${brand.name} is, how the accounts are provided, and where the line sits between what we do and what our regulated partner does.`,
+  description: `Who ${brand.name} is, the licence the accounts are held under, and how we are regulated.`,
   alternates: { canonical: "/about" },
 };
 
@@ -22,12 +22,12 @@ const split = [
     ],
   },
   {
-    heading: "What our regulated partner does",
+    heading: "What sits behind the name",
     items: [
-      "Holds the licence and the regulatory permissions.",
-      "Runs KYB, anti-money-laundering and source-of-funds checks, and decides on every application.",
-      "Provides the banking rails, the currency conversion and the payouts.",
-      "Provides the platform your business logs into, and monitors accounts on an ongoing basis.",
+      "An FCA authorisation under the Payment Services Regulations, held since 2003.",
+      "A compliance function that runs KYB, anti-money-laundering and source-of-funds checks on every application.",
+      "The banking rails, the currency conversion and the payout network.",
+      "The platform your business logs into, and ongoing monitoring of every account.",
     ],
   },
 ];
@@ -65,7 +65,7 @@ export default function AboutPage() {
         <SectionHeading
           eyebrow="How it is structured"
           title="We are not the regulated firm, and we say so"
-          lede="Accounts are provided under the permissions of a UK-regulated payments partner. Knowing where that line sits is your right as a customer, so here it is in plain terms."
+          lede="We are a trading name of an FCA-authorised payments firm, not a broker sitting alongside one. That means the licence, the compliance function and the rails are ours to stand behind — and it is your right to know exactly whose permissions your money sits under."
         />
         <div className="mt-12 grid gap-5 md:grid-cols-2">
           {split.map((column) => (
@@ -96,7 +96,7 @@ export default function AboutPage() {
           {[
             {
               title: "Promise you an account",
-              body: "We introduce and support. The regulated partner decides. Anyone promising approval before the checks is selling you something they cannot deliver.",
+              body: "Compliance decides, after the checks, every time. Anyone promising approval before that is selling you something they cannot deliver.",
             },
             {
               title: "Hide the price in the rate",

@@ -21,7 +21,7 @@ const sections = [
     heading: "Who we are",
     body: [
       `${brand.legalName} ("we", "us") operates this website. If you want to talk to us about anything in this policy, email ${brand.email} or call ${brand.phoneDisplay}.`,
-      "Business payment accounts are provided through our UK-regulated payments partner. Once you apply for an account, that firm also handles your information as a data controller in its own right, under its own privacy notice, which we will give you before you apply.",
+      "We are a trading name of a UK payments firm authorised and regulated by the Financial Conduct Authority. That firm is the data controller for your information, and this notice is given on its behalf.",
     ],
   },
   {
@@ -44,7 +44,7 @@ const sections = [
     heading: "Who sees it",
     body: [
       "The people at our company who deal with new enquiries.",
-      "Our regulated payments partner, where you ask us to take an application forward.",
+      "Our compliance function, where you ask us to take an application forward.",
       "Our email provider, which carries the message from this website to our inbox.",
       "Anyone we are legally required to disclose it to.",
     ],

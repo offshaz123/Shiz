@@ -41,21 +41,31 @@ export const brand = {
   },
 
   /**
-   * The regulated firm whose permissions the accounts are provided under.
+   * How we relate to the regulated firm.
    *
-   * These figures are taken from CoBanq's own website. CONFIRM THEM WITH COBANQ
-   * IN WRITING before go-live — an FCA firm reference number published on a
-   * payments site has to be right, and we have not yet verified this against
-   * the FCA register itself (the register requires JavaScript and could not be
-   * checked automatically).
+   * "trading-name" means Orvopay IS CoBanq Ltd trading under another name —
+   * the customer contracts with CoBanq, and every regulated communication has
+   * to say so. That is a different arrangement from the introducer model the
+   * partner pack describes ("you introduce and you support"), and it changes
+   * who holds the customer relationship, who employs the sales team, and how
+   * the revenue share is actually documented.
+   *
+   * BEFORE GO-LIVE, two things must happen:
+   *  1. CoBanq registers "Orvopay" as a trading name against its FCA
+   *     permissions, and it appears on the Financial Services Register.
+   *  2. Someone confirms the FRN and company number below in writing. They
+   *     were read off CoBanq's website, not the register, which is why
+   *     `verified` is still false and the site publishes cautious wording.
    */
   provider: {
     name: "CoBanq",
+    relationship: "trading-name",
     regulatedEntity: "CoBanq Ltd",
     firmReferenceNumber: "508565",
     companyNumber: "04995400",
     /** CoBanq is an authorised payment institution, not an e-money institution. */
     permissions: "the Payment Services Regulations 2017",
+    /** Flip to true once the FRN is confirmed AND the trading name is registered. */
     verified: false,
   },
 
@@ -105,8 +115,8 @@ export const coreActions = [
 
 /** The trust strip under the hero, mirroring how our provider presents itself. */
 export const trustPoints = [
-  { label: "Provided on an FCA-regulated licence" },
-  { label: "Partner established 2003" },
+  { label: "FCA-regulated" },
+  { label: "Established 2003" },
   { label: "Named accounts, your company" },
   { label: "UK-based" },
 ] as const;

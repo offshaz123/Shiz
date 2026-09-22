@@ -24,7 +24,7 @@ const steps = [
   },
   {
     title: "Checks and decision",
-    body: "The regulated partner runs identity, anti-money-laundering and source-of-funds checks, and makes the decision. We chase it and keep you posted.",
+    body: "Compliance runs identity, anti-money-laundering and source-of-funds checks, and makes the decision. We keep you posted while it happens.",
   },
   {
     title: "First payment, together",

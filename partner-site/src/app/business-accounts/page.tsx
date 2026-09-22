@@ -42,7 +42,7 @@ const notIncluded = [
   },
   {
     title: "It is not guaranteed",
-    body: "The regulated partner runs the checks and makes the decision. We introduce and we support. Anyone telling you the answer before the checks is guessing.",
+    body: "Compliance runs the checks and makes the decision, and that happens after you apply, not before. Anyone telling you the answer up front is guessing.",
   },
 ];
 
