@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# partner site
+/partner-site/node_modules
+/partner-site/.next/
+/partner-site/out/

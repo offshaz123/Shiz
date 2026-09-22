@@ -95,6 +95,16 @@ changes.
   picking a topic not already covered, and pushes directly to this branch, which triggers the
   GitHub Actions deploy below. It always runs `npm run lint` and `npm run build` before pushing.
 
+## Partner site (separate app)
+
+`partner-site/` is a second, self-contained Next.js app for the white-label banking
+brand — business payment accounts sold on a UK-regulated partner's licence, and the
+remittance platform sold to licensed MSBs. It has its own `package.json`, its own
+`node_modules` and its own build, and it deploys to its own domain. This app's
+`tsconfig.json` and `eslint.config.mjs` exclude it, so building or linting here never
+touches it. See `partner-site/README.md` — start with `src/lib/brand.ts`, which still
+holds a placeholder brand name.
+
 ## Deploy — Hostinger (Websites product, GitHub-connected)
 
 Hostinger's "Websites" product (hpanel.hostinger.com → Websites) connects directly to a GitHub

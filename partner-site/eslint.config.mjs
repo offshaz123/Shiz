@@ -12,9 +12,6 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // The partner site is a separate app with its own eslint config; linting it
-    // from here would resolve its imports against the wrong tsconfig.
-    "partner-site/**",
   ]),
 ]);
 
