@@ -1,37 +1,38 @@
 @import "tailwindcss";
 
-/* One theme, and it is dark.
+/* One theme, and it is white.
    ---------------------------------------------------------------------------
-   The site used to ship a light and a dark palette with a toggle. It now ships
-   a single dark instrument-panel look: the brand blue reads far better on a
-   near-black ground than on white, and one palette means one set of contrast
-   decisions to keep honest rather than two.
+   The site ships a single light palette rather than a light and a dark one
+   with a toggle: one palette means one set of contrast decisions to keep
+   honest rather than two.
 
-   The blue is the Shaz Motor Group house colour, #069EC1, lifted to #1FB6D8
-   because the original goes muddy against a dark ground. Text on the blue is
-   near-black (7:1), never white (which fails AA on this hue).
+   The blue is the Shaz Motor Group house colour, #069EC1, so the group reads
+   as one family. Text on the blue is near-black (6.6:1), never white — white
+   on this hue is about 3.2:1 and fails WCAG AA — so buttons keep the exact
+   brand colour and take dark text rather than diluting the blue.
 
-   `--card` sits a step above `--surface` so a card reads raised on either the
-   page ground or a tinted band. */
+   `--card` is pure white and `--surface` a cool off-white, so a card reads
+   raised on a tinted band, and its border and shadow carry it on the white
+   ground. */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  --background: #060f14;
-  --surface: #0b1a21;
-  --surface-2: #132b34;
-  --card: #101f28;
-  --foreground: #e9f4f8;
-  --muted: #8fa9b3;
-  --border: #1b333d;
-  --ink: #040c10;
-  --on-ink: #e9f4f8;
-  --accent: #1fb6d8;
-  --accent-strong: #4ed0ea;
-  --accent-soft: #0e2c36;
-  --accent-2: #6ad8ef;
-  --gold: #1fb6d8;
-  --gold-soft: #0e2c36;
-  --on-accent: #03202a;
+  --background: #ffffff;
+  --surface: #f4f8fa;
+  --surface-2: #e7f0f4;
+  --card: #ffffff;
+  --foreground: #0b1a20;
+  --muted: #4d6069;
+  --border: #d8e4e9;
+  --ink: #0b1a20;
+  --on-ink: #f4f8fa;
+  --accent: #069ec1;
+  --accent-strong: #05829f;
+  --accent-soft: #e2f4f9;
+  --accent-2: #05758f;
+  --gold: #069ec1;
+  --gold-soft: #e2f4f9;
+  --on-accent: #04222b;
 }
 
 @theme inline {
@@ -167,7 +168,7 @@ body {
 }
 
 .hero-glow {
-  opacity: 0.22;
+  opacity: 0.16;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -218,15 +219,15 @@ body {
 }
 
 /* --- Elevation, buttons, cards -------------------------------------------
-   The look is closer to an instrument panel than a brochure: near-black
-   ground, hairline borders, and light used sparingly so the few raised things
-   on a page genuinely read as raised. */
+   The look is closer to an instrument panel than a brochure: a quiet ground,
+   hairline borders, and shadow used sparingly so the few raised things on a
+   page genuinely read as raised. */
 
 :root {
-  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.4), 0 10px 26px -14px rgb(0 0 0 / 0.7);
-  --shadow-lift: 0 2px 6px rgb(0 0 0 / 0.45), 0 22px 46px -20px rgb(0 0 0 / 0.8);
-  --shadow-accent: 0 10px 28px -12px rgb(31 182 216 / 0.55);
-  --ring: 0 0 0 3px rgb(31 182 216 / 0.25), 0 0 0 4.5px var(--accent);
+  --shadow-card: 0 1px 2px rgb(11 26 32 / 0.05), 0 8px 24px -12px rgb(11 26 32 / 0.14);
+  --shadow-lift: 0 2px 4px rgb(11 26 32 / 0.06), 0 18px 40px -18px rgb(11 26 32 / 0.24);
+  --shadow-accent: 0 10px 26px -12px rgb(6 158 193 / 0.5);
+  --ring: 0 0 0 3px var(--accent-soft), 0 0 0 4.5px var(--accent);
 }
 
 @layer components {

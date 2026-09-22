@@ -18,10 +18,10 @@ const displaySans = Space_Grotesk({
 
 const defaultTitle = `${brand.name} — Business accounts for UK importers and wholesalers`;
 
-/** One theme, so the browser chrome should match it rather than flash white. */
+/** One theme, so the browser chrome matches the page. */
 export const viewport: Viewport = {
-  themeColor: "#060f14",
-  colorScheme: "dark",
+  themeColor: "#ffffff",
+  colorScheme: "light",
 };
 
 export const metadata: Metadata = {

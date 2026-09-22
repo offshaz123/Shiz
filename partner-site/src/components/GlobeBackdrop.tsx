@@ -41,7 +41,7 @@ export function GlobeBackdrop() {
 
       <svg
         viewBox="-420 -300 840 600"
-        className="absolute left-1/2 top-1/2 h-[820px] w-[1150px] -translate-x-[34%] -translate-y-1/2 opacity-60 sm:-translate-x-[26%] lg:left-[68%] lg:-translate-x-1/2"
+        className="absolute left-1/2 top-1/2 h-[820px] w-[1150px] -translate-x-[34%] -translate-y-1/2 opacity-80 sm:-translate-x-[26%] lg:left-[68%] lg:-translate-x-1/2"
         fill="none"
       >
         <defs>
@@ -82,8 +82,8 @@ export function GlobeBackdrop() {
         </g>
 
         {/* Wireframe over the lattice. */}
-        <g stroke="var(--accent)" strokeOpacity="0.13" strokeWidth="1">
-          <circle cx="0" cy="0" r={R} strokeOpacity="0.32" />
+        <g stroke="var(--accent)" strokeOpacity="0.18" strokeWidth="1">
+          <circle cx="0" cy="0" r={R} strokeOpacity="0.4" />
           {meridians.map((rx) => (
             <ellipse key={rx} cx="0" cy="0" rx={rx} ry={R} />
           ))}
