@@ -57,31 +57,35 @@ export const brand = {
   },
 
   /**
-   * How we relate to the regulated firm.
+   * Who provides the regulated payment services, and what we are to them.
    *
-   * "trading-name" means Orvopay IS CoBanq Ltd trading under another name —
-   * the customer contracts with CoBanq, and every regulated communication has
-   * to say so. That is a different arrangement from the introducer model the
-   * partner pack describes ("you introduce and you support"), and it changes
-   * who holds the customer relationship, who employs the sales team, and how
-   * the revenue share is actually documented.
+   *   Orvopay  ->  CoBanq Ltd
+   *   (introducer)  (Authorised Payment Institution, FRN 508565)
    *
-   * BEFORE GO-LIVE, two things must happen:
-   *  1. CoBanq registers "Orvopay" as a trading name against its FCA
-   *     permissions, and it appears on the Financial Services Register.
-   *  2. Someone confirms the FRN and company number below in writing. They
-   *     were read off CoBanq's website, not the register, which is why
-   *     `verified` is still false and the site publishes cautious wording.
+   * Orvopay introduces customers; CoBanq provides the regulated services and
+   * holds the permissions. That is the same construction CoBanq itself used
+   * when it introduced to Gemba Finance Limited — an arrangement that is now
+   * historic. CoBanq holds its own authorisation and does the whole job, so
+   * Gemba must NOT appear anywhere on this site.
+   *
+   * Consequence of the introducer model: Orvopay is NOT itself regulated and
+   * must never imply otherwise — no "FCA-regulated" badge on our own name, and
+   * no borrowing CoBanq's founding date as if it were ours.
+   *
+   * `verified` gates whether we name CoBanq and its FRN in public. It is false
+   * because 508565 was read off CoBanq's website rather than the FCA register,
+   * which needs JavaScript and could not be checked from here. Get CoBanq to
+   * confirm the number in writing, check it at register.fca.org.uk, then set
+   * this to true — that one line publishes the full named disclosure.
    */
   provider: {
+    /** "introducer" | "agent" | "trading-name" — each needs different wording. */
+    model: "introducer",
     name: "CoBanq",
-    relationship: "trading-name",
     regulatedEntity: "CoBanq Ltd",
     firmReferenceNumber: "508565",
     companyNumber: "04995400",
-    /** CoBanq is an authorised payment institution, not an e-money institution. */
     permissions: "the Payment Services Regulations 2017",
-    /** Flip to true once the FRN is confirmed AND the trading name is registered. */
     verified: false,
   },
 
@@ -131,8 +135,8 @@ export const coreActions = [
 
 /** The trust strip under the hero, mirroring how our provider presents itself. */
 export const trustPoints = [
-  { label: "FCA-regulated" },
-  { label: "Established 2003" },
+  { label: "Regulated payment services" },
+  { label: "Established UK provider behind it" },
   { label: "Named accounts, your company" },
   { label: "UK-based" },
 ] as const;

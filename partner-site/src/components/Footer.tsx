@@ -113,7 +113,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 border-t border-border pt-8">
-          <RegulatoryNote />
+          <RegulatoryNote compact />
           <div className="mt-6 flex flex-col gap-2 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
             <p>
               &copy; {new Date().getFullYear()} {brand.legalName}. All rights reserved.
