@@ -24,7 +24,7 @@ export default function WhoWeServePage() {
       <Section>
         <div className="max-w-3xl">
           <Eyebrow>Who we serve</Eyebrow>
-          <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+          <h1 className="font-display mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
             Real trade, real volume, and banking that has not kept up
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-muted">

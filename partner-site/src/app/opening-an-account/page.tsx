@@ -45,7 +45,7 @@ export default function OpeningAnAccountPage() {
       <Section>
         <div className="max-w-3xl">
           <Eyebrow>Opening an account</Eyebrow>
-          <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+          <h1 className="font-display mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
             A complete file is the whole difference
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-muted">
@@ -94,7 +94,7 @@ export default function OpeningAnAccountPage() {
         <div className="grid gap-10 lg:grid-cols-2 lg:items-start">
           <div>
             <Eyebrow>Be straight with us</Eyebrow>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="font-display mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
               Tell us the awkward part early
             </h2>
             <p className="mt-5 text-base leading-relaxed text-muted">
@@ -123,7 +123,7 @@ export default function OpeningAnAccountPage() {
 
       <Section tone="ink">
         <div className="max-w-2xl">
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
             Not sure whether your business fits?
           </h2>
           <p className="mt-5 text-base leading-relaxed text-on-ink/70">

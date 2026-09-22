@@ -26,7 +26,7 @@ export default function ContactPage() {
         <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr]">
           <div>
             <Eyebrow>Contact</Eyebrow>
-            <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+            <h1 className="font-display mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
               Tell us what the business does
             </h1>
             <p className="mt-6 text-base leading-relaxed text-muted">

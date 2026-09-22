@@ -7,6 +7,7 @@ import { HeroBackdrop } from "@/components/HeroBackdrop";
 import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { FaqJsonLd } from "@/components/StructuredData";
+import { TrustBar } from "@/components/TrustBar";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -61,7 +62,7 @@ export default function Home() {
         <div className="relative mx-auto max-w-6xl px-5 pt-20 pb-24 sm:pt-28 sm:pb-32">
           <div className="max-w-3xl">
             <Eyebrow>For UK importers, wholesalers and distributors</Eyebrow>
-            <h1 className="mt-4 text-4xl font-semibold leading-[1.08] tracking-tight sm:text-6xl">
+            <h1 className="font-display mt-4 text-4xl font-semibold leading-[1.08] tracking-tight sm:text-6xl">
               Collect. Convert.{" "}
               <span className="accent-gradient-text">Pay your suppliers.</span>
             </h1>
@@ -103,6 +104,8 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      <TrustBar />
 
       {/* The problem */}
       <Section tone="surface">
@@ -185,7 +188,7 @@ export default function Home() {
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <div>
             <Eyebrow>Pricing</Eyebrow>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="font-display mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
               Tell us what you pay now, and we will price the same transaction next to it
             </h2>
             <p className="mt-5 text-base leading-relaxed text-on-ink/70">
@@ -246,7 +249,7 @@ export default function Home() {
         <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center">
           <div>
             <Eyebrow>The other side of the business</Eyebrow>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="font-display mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
               Already licensed? We sell the platform to run on.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-muted">
@@ -302,7 +305,7 @@ export default function Home() {
         <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr]">
           <div>
             <Eyebrow>Get started</Eyebrow>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="font-display mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
               Send us the shape of the business
             </h2>
             <p className="mt-5 text-base leading-relaxed text-muted">

@@ -59,7 +59,7 @@ export default function SoftwarePage() {
       <Section>
         <div className="max-w-3xl">
           <Eyebrow>For licensed money service businesses</Eyebrow>
-          <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+          <h1 className="font-display mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
             You have the licence. This is the technology to run it on.
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-muted">
@@ -124,7 +124,7 @@ export default function SoftwarePage() {
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <div>
             <Eyebrow>Pricing</Eyebrow>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="font-display mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
               {brand.software.showPricing
                 ? `From ${brand.software.setupFrom} to set up, ${brand.software.monthlyFrom} a month to run`
                 : "Priced against your volume and your requirements"}
@@ -175,7 +175,7 @@ export default function SoftwarePage() {
         <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr]">
           <div>
             <Eyebrow>Book a demo</Eyebrow>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="font-display mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
               Tell us what you are running on today
             </h2>
             <p className="mt-5 text-base leading-relaxed text-muted">

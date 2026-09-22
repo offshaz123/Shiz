@@ -59,7 +59,7 @@ export default function BusinessAccountsPage() {
       <Section>
         <div className="max-w-3xl">
           <Eyebrow>Business accounts</Eyebrow>
-          <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+          <h1 className="font-display mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
             One account for money in, currency, and money out
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-muted">
@@ -127,7 +127,7 @@ export default function BusinessAccountsPage() {
 
       <Section tone="ink">
         <div className="max-w-2xl">
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
             Ready to see what it would cost you?
           </h2>
           <p className="mt-5 text-base leading-relaxed text-on-ink/70">

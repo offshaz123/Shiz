@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Header } from "@/components/Header";
@@ -8,10 +8,17 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/StructuredData";
 import { brand } from "@/lib/brand";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
+// Inter for everything, Playfair for headlines — the pairing our provider's
+// own site uses, and the reason its pages read as a financial institution
+// rather than a software startup.
+const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: ["600", "700"],
+});
 
-const defaultTitle = `Business Accounts for UK Importers & Wholesalers | ${brand.name}`;
+const defaultTitle = `${brand.name} — Business accounts for UK importers and wholesalers`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(brand.url),
@@ -55,13 +62,13 @@ export default function RootLayout({
   return (
     <html
       lang="en-GB"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${playfair.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <OrganizationJsonLd />
         <WebSiteJsonLd />
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <Header />
           <main className="flex-1">{children}</main>
           <Footer />

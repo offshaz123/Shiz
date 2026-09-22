@@ -53,7 +53,7 @@ export default async function SectorPage({ params }: { params: Promise<{ slug: s
       <Section>
         <div className="max-w-3xl">
           <Eyebrow>{sector.longName}</Eyebrow>
-          <h1 className="mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
+          <h1 className="font-display mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
             {sector.title}
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-muted">{sector.intro}</p>
@@ -73,7 +73,7 @@ export default async function SectorPage({ params }: { params: Promise<{ slug: s
       <Section tone="surface">
         <div className="grid gap-10 lg:grid-cols-2">
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight">What it looks like today</h2>
+            <h2 className="font-display text-2xl font-semibold tracking-tight">What it looks like today</h2>
             <ul className="mt-6 space-y-4">
               {sector.problems.map((problem) => (
                 <li
@@ -89,7 +89,7 @@ export default async function SectorPage({ params }: { params: Promise<{ slug: s
             </ul>
           </div>
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight">What the account does about it</h2>
+            <h2 className="font-display text-2xl font-semibold tracking-tight">What the account does about it</h2>
             <ul className="mt-6 space-y-4">
               {sector.answers.map((answer) => (
                 <li
@@ -111,7 +111,7 @@ export default async function SectorPage({ params }: { params: Promise<{ slug: s
         <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr]">
           <div>
             <Eyebrow>Next step</Eyebrow>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="font-display mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
               Let us price one of your payments
             </h2>
             <p className="mt-5 text-base leading-relaxed text-muted">

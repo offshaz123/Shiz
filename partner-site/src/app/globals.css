@@ -2,43 +2,44 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Light is the default here. A payments brand selling to wholesalers is read on
-   a phone in a warehouse as often as at a desk, and the light theme is the one
-   that survives daylight. The toggle is in the header for everyone else. */
+/* Dark is the default. The palette follows the house style our provider's own
+   site uses: a deep navy ground, a confident blue for action, and gold kept
+   back for the moments that should feel expensive. */
 :root {
-  --background: #ffffff;
-  --surface: #f5f7fa;
-  --surface-2: #e9eef5;
-  --foreground: #0b1220;
-  --muted: #55607a;
-  --border: #dbe2ec;
-  --ink: #0b1a33;
-  --on-ink: #eef3fb;
-  --accent: #0a6b60;
-  --accent-strong: #085048;
-  --accent-soft: #e3f2ef;
-  --accent-2: #1d4ed8;
-  --positive: #0a6b60;
-  /* Text and icons sitting on --accent. The dark theme's accent is a bright
-     mint, so white on it fails contrast — it takes dark ink instead. */
+  --background: #050b1a;
+  --surface: #0b1430;
+  --surface-2: #111c42;
+  --foreground: #f7f9fc;
+  --muted: #9dabc9;
+  --border: #1b2850;
+  --ink: #020617;
+  --on-ink: #f7f9fc;
+  --accent: #3b6fe0;
+  --accent-strong: #5b8def;
+  --accent-soft: #111c42;
+  --accent-2: #5b8def;
+  --gold: #c9a24b;
+  --gold-soft: #f8f1e1;
   --on-accent: #ffffff;
 }
 
-.dark {
-  --background: #070b12;
-  --surface: #0e141f;
-  --surface-2: #161f2d;
-  --foreground: #eef2f8;
-  --muted: #9aa6bb;
-  --border: #212c3d;
-  --ink: #0b1220;
-  --on-ink: #eef3fb;
-  --accent: #2fd4bd;
-  --accent-strong: #5fe7d4;
-  --accent-soft: #0d2a28;
-  --accent-2: #6ea8fe;
-  --positive: #2fd4bd;
-  --on-accent: #04241f;
+/* Light theme, for anyone who asks for it via the toggle. */
+:root:not(.dark) {
+  --background: #ffffff;
+  --surface: #f7f9fc;
+  --surface-2: #eef4ff;
+  --foreground: #050b1a;
+  --muted: #4a5878;
+  --border: #dbe3f2;
+  --ink: #050b1a;
+  --on-ink: #f7f9fc;
+  --accent: #2c56c4;
+  --accent-strong: #3b6fe0;
+  --accent-soft: #eef4ff;
+  --accent-2: #3b6fe0;
+  --gold: #a5802f;
+  --gold-soft: #f8f1e1;
+  --on-accent: #ffffff;
 }
 
 @theme inline {
@@ -54,9 +55,11 @@
   --color-accent-strong: var(--accent-strong);
   --color-accent-soft: var(--accent-soft);
   --color-accent-2: var(--accent-2);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
   --color-on-accent: var(--on-accent);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-playfair);
 }
 
 html {
@@ -73,24 +76,35 @@ body {
   color: var(--on-accent);
 }
 
+/* Headlines are set in the display serif; everything else is Inter. */
+.font-display {
+  font-family: var(--font-playfair), Georgia, serif;
+}
+
+.gold-rule {
+  background-image: linear-gradient(90deg, var(--gold), transparent);
+}
+
+/* Blues only. Gold is reserved for small accents — ticks, rules, the mark —
+   the way our provider uses it; stretched across a headline it goes muddy. */
 .accent-gradient-text {
-  background-image: linear-gradient(90deg, var(--accent), var(--accent-2));
+  background-image: linear-gradient(90deg, var(--accent-strong), var(--accent-2));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 /* --- Hero backdrop -------------------------------------------------------
-   Money moving: a ledger grid, and a payment tracing a path across it from
-   the UK side to the supplier side. Decorative only, so all of it stops for
-   anyone who has asked for reduced motion. */
+   A ledger grid, a wash of blue, and a payment tracing its route across the
+   page. Decorative, so it is hidden from assistive tech and stops entirely
+   under reduced motion. */
 
 .ledger-grid {
   background-image:
     linear-gradient(to right, var(--border) 1px, transparent 1px),
     linear-gradient(to bottom, var(--border) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, #000 30%, transparent 75%);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 75% 60% at 50% 35%, #000 25%, transparent 78%);
 }
 
 @keyframes trace-route {
@@ -164,11 +178,11 @@ body {
 }
 
 .hero-glow {
-  opacity: 0.12;
+  opacity: 0.22;
 }
 
-.dark .hero-glow {
-  opacity: 0.2;
+:root:not(.dark) .hero-glow {
+  opacity: 0.12;
 }
 
 @media (prefers-reduced-motion: reduce) {

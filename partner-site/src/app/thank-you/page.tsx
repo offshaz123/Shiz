@@ -15,7 +15,7 @@ export default function ThankYouPage() {
     <Section>
       <div className="mx-auto max-w-xl py-10 text-center">
         <Eyebrow>Enquiry sent</Eyebrow>
-        <h1 className="mt-4 text-4xl font-semibold tracking-tight">Thank you — that is with us</h1>
+        <h1 className="font-display mt-4 text-4xl font-semibold tracking-tight">Thank you — that is with us</h1>
         <p className="mt-6 text-base leading-relaxed text-muted">
           We read every enquiry ourselves and usually come back the same working day. If it is
           urgent, call {brand.phoneDisplay} and ask for whoever is covering new accounts.
