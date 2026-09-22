@@ -16,8 +16,8 @@ export default function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#14110d",
-          color: "#faf7f2",
+          background: "#0b1a20",
+          color: "#f4f8fa",
           padding: 72,
           fontFamily: "sans-serif",
         }}
@@ -28,7 +28,7 @@ export default function OpengraphImage() {
               width: 56,
               height: 56,
               borderRadius: 14,
-              background: "#b4541f",
+              background: "#069ec1",
               display: "flex",
             }}
           />
@@ -39,19 +39,19 @@ export default function OpengraphImage() {
           <div style={{ fontSize: 66, fontWeight: 700, lineHeight: 1.1, letterSpacing: -1.5 }}>
             Collect. Convert. Pay your suppliers.
           </div>
-          <div style={{ fontSize: 30, color: "#a39887", lineHeight: 1.35 }}>
+          <div style={{ fontSize: 30, color: "#93aab3", lineHeight: 1.35 }}>
             Business payment accounts in your own company name, for UK importers, wholesalers and
             distributors.
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: 14, fontSize: 24, color: "#e07b3c" }}>
+        <div style={{ display: "flex", gap: 14, fontSize: 24, color: "#069ec1" }}>
           <div>USD</div>
-          <div style={{ color: "#5d564c" }}>·</div>
+          <div style={{ color: "#4d6069" }}>·</div>
           <div>AED</div>
-          <div style={{ color: "#5d564c" }}>·</div>
+          <div style={{ color: "#4d6069" }}>·</div>
           <div>HKD</div>
-          <div style={{ color: "#5d564c" }}>·</div>
+          <div style={{ color: "#4d6069" }}>·</div>
           <div>EUR</div>
         </div>
       </div>

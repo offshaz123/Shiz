@@ -2,45 +2,46 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Our own look, deliberately unlike our provider's.
-   They are cool: deep navy ground, blue action, gold trim, a Playfair serif.
-   We are warm: a bone-paper ground, ink text, copper for action, and a
-   geometric sans throughout. Light is the default; the dark theme is a warm
-   charcoal rather than a blue-black. */
+/* The house blue, taken from Shaz Motor Group so the group reads as one
+   family: #069EC1. Cool, light ground; near-black cool ink for text.
+
+   Note on the button text: white on #069EC1 is only about 3.2:1, which fails
+   WCAG AA for normal text. Dark ink on the same blue is 6.6:1, so buttons keep
+   the exact brand colour and take dark text rather than diluting the blue. */
 :root {
-  --background: #faf7f2;
-  --surface: #f2ece3;
-  --surface-2: #e8e0d4;
-  --foreground: #14110d;
-  --muted: #5d564c;
-  --border: #ded5c7;
-  --ink: #14110d;
-  --on-ink: #faf7f2;
-  --accent: #b4541f;
-  --accent-strong: #93400f;
-  --accent-soft: #f6e7db;
-  --accent-2: #8a6a3b;
-  --gold: #b4541f;
-  --gold-soft: #f6e7db;
-  --on-accent: #ffffff;
+  --background: #ffffff;
+  --surface: #f4f8fa;
+  --surface-2: #e7f0f4;
+  --foreground: #0b1a20;
+  --muted: #4d6069;
+  --border: #d8e4e9;
+  --ink: #0b1a20;
+  --on-ink: #f4f8fa;
+  --accent: #069ec1;
+  --accent-strong: #05829f;
+  --accent-soft: #e2f4f9;
+  --accent-2: #05758f;
+  --gold: #069ec1;
+  --gold-soft: #e2f4f9;
+  --on-accent: #04222b;
 }
 
 .dark {
-  --background: #14110d;
-  --surface: #1d1913;
-  --surface-2: #27221a;
-  --foreground: #f5f0e8;
-  --muted: #a39887;
-  --border: #322b21;
-  --ink: #0c0a07;
-  --on-ink: #f5f0e8;
-  --accent: #e07b3c;
-  --accent-strong: #f09553;
-  --accent-soft: #2b2018;
-  --accent-2: #d2ab6a;
-  --gold: #d2ab6a;
-  --gold-soft: #2b2018;
-  --on-accent: #14110d;
+  --background: #08141a;
+  --surface: #0f1f27;
+  --surface-2: #163038;
+  --foreground: #eef6f9;
+  --muted: #93aab3;
+  --border: #1d343d;
+  --ink: #050f13;
+  --on-ink: #eef6f9;
+  --accent: #22b8da;
+  --accent-strong: #4fcde9;
+  --accent-soft: #0d2b34;
+  --accent-2: #6fd6ee;
+  --gold: #22b8da;
+  --gold-soft: #0d2b34;
+  --on-accent: #04222b;
 }
 
 @theme inline {
@@ -97,13 +98,10 @@ body {
    under reduced motion. */
 
 .ledger-grid {
-  background-image: repeating-linear-gradient(
-    to bottom,
-    transparent,
-    transparent 31px,
-    var(--border) 31px,
-    var(--border) 32px
-  );
+  background-image:
+    linear-gradient(to right, var(--border) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+  background-size: 56px 56px;
   mask-image: radial-gradient(ellipse 75% 60% at 50% 35%, #000 20%, transparent 78%);
 }
 
