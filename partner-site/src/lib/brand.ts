@@ -63,10 +63,7 @@ export const brand = {
    *   (introducer)  (Authorised Payment Institution, FRN 508565)
    *
    * Orvopay introduces customers; CoBanq provides the regulated services and
-   * holds the permissions. That is the same construction CoBanq itself used
-   * when it introduced to Gemba Finance Limited — an arrangement that is now
-   * historic. CoBanq holds its own authorisation and does the whole job, so
-   * Gemba must NOT appear anywhere on this site.
+   * holds the permissions.
    *
    * Consequence of the introducer model: Orvopay is NOT itself regulated and
    * must never imply otherwise — no "FCA-regulated" badge on our own name, and
