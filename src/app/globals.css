@@ -126,3 +126,12 @@ body {
     animation: none;
   }
 }
+
+/* The sticky call bar carries its own WhatsApp button, so the floating one
+   would be a second green circle sitting on top of it. Stand it down on the
+   pages that have the bar, at the only width where the bar renders. */
+@media (max-width: 639px) {
+  body:has([data-sticky-call-bar]) .whatsapp-fab {
+    display: none;
+  }
+}

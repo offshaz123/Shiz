@@ -4,6 +4,7 @@ import { LeadForm } from "@/components/LeadForm";
 import { ReviewBadge, ReviewSlideshow } from "@/components/Reviews";
 import { WorkGallery } from "@/components/WorkGallery";
 import { FindUs } from "@/components/FindUs";
+import { StickyCallBar } from "@/components/StickyCallBar";
 import { TrackedCallLink } from "@/components/TrackedCallLink";
 import { siteConfig, whatsappHref, tintServices } from "@/lib/site-config";
 
@@ -210,6 +211,8 @@ export default function LondonLandingPage() {
 
       {/* Reviews sit after the form — reassurance for anyone still deciding */}
       <ReviewSlideshow heading="What London drivers say about us" />
+
+      <StickyCallBar />
 
       {/* Footer link back to full site, understated */}
       <div className="pb-10 text-center">
