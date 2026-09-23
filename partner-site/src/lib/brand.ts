@@ -49,6 +49,18 @@ export const brand = {
     country: "United Kingdom",
   },
 
+  /**
+   * The company behind the brand, for the privacy notice and the footer.
+   *
+   * Both are empty until the operating company is incorporated and registered
+   * with the ICO. Every line that would print them is written to read
+   * correctly without them, so leaving them empty is safe — but fill them in
+   * as soon as you have them, because a privacy notice that cannot name its
+   * controller is one the ICO will ask about.
+   */
+  companyNumber: "",
+  icoNumber: "",
+
   /** Public profiles. Leave a value empty to omit it from the footer and schema. */
   social: {
     linkedin: "",
@@ -88,6 +100,12 @@ export const brand = {
     companyNumber: "04995400",
     permissions: "the Payment Services Regulations 2017",
     verified: true,
+
+    /** Published by CoBanq on cobanq.com — used in the privacy notice. */
+    registeredOffice: "Level39, One Canada Square, Canary Wharf, London, England, E14 5AB",
+    icoNumber: "Z3153690",
+    privacyEmail: "privacy@cobanq.com",
+    dpoEmail: "dpo@cobanq.com",
   },
 
   /**
