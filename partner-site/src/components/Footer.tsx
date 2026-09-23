@@ -4,6 +4,7 @@ import { brand } from "@/lib/brand";
 import { solutions } from "@/content/solutions";
 import { Logo } from "@/components/Logo";
 import { RegulatoryNote } from "@/components/RegulatoryNote";
+import { CookieSettingsLink } from "@/components/CookieSettingsLink";
 
 const socialIconClass = "h-4 w-4";
 
@@ -51,6 +52,7 @@ const support = [
   { label: "Opening an account", href: "/opening-an-account" },
   { label: "Send an enquiry", href: "/contact" },
   { label: "Privacy policy", href: "/privacy" },
+  { label: "Cookie policy", href: "/cookies" },
 ];
 
 function ColumnHeading({ children }: { children: ReactNode }) {
@@ -158,9 +160,12 @@ export function Footer() {
 
         <div className="mt-12 border-t border-border pt-8">
           <RegulatoryNote compact />
-          <p className="mt-4 text-xs leading-relaxed text-muted">
-            &copy; {new Date().getFullYear()} {brand.legalName}. All rights reserved.
-          </p>
+          <div className="mt-4 flex flex-col gap-2 text-xs leading-relaxed text-muted sm:flex-row sm:items-center sm:justify-between">
+            <p>
+              &copy; {new Date().getFullYear()} {brand.legalName}. All rights reserved.
+            </p>
+            <CookieSettingsLink className="text-left underline-offset-4 hover:text-foreground hover:underline" />
+          </div>
         </div>
       </div>
     </footer>

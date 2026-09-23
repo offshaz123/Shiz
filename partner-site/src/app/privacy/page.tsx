@@ -59,7 +59,7 @@ const sections: { heading: string; body?: string[]; items?: string[] }[] = [
     heading: "4. What we collect automatically",
     body: [
       "When you visit this website our hosting provider records the standard technical data any web server receives in order to serve you a page: your IP address, your browser type and the pages you requested.",
-      "This website sets no cookies. There is no analytics tag, no advertising pixel and no tracking of you across other sites. If that ever changes, this notice will be updated and you will be asked before any non-essential cookie is set.",
+      "Nothing optional is stored on your device until you have said yes to it. The first time you arrive you are asked whether you are happy with analytics cookies, which count which pages are read; rejecting is one click and the site behaves identically either way. There is no advertising pixel and no tracking of you across other sites. The cookie policy lists everything and lets you change your mind.",
       "We do not ask for identity documents, bank statements or any other application paperwork through this website, and we would rather you did not send them here. When an application needs them, you will be told how to send them securely.",
     ],
   },

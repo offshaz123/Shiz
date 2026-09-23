@@ -18,6 +18,7 @@ import { HeadlineFacts } from "@/components/HeadlineFacts";
 import { SpreadCost } from "@/components/SpreadCost";
 import { BuiltFor } from "@/components/BuiltFor";
 import { GetStarted } from "@/components/GetStarted";
+import { CorridorGrid } from "@/components/CorridorGrid";
 import { Flag } from "@/components/Flag";
 import { IconTile } from "@/components/IconTile";
 
@@ -466,13 +467,22 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="mt-16">
-          <p className="mb-5 text-center text-xs font-semibold uppercase tracking-[0.18em] text-muted">
-            Where the money lands
-          </p>
-          <CurrencyMarquee />
+      </Section>
+
+      {/* Where the money lands */}
+      <Section>
+        <SectionHeading
+          center
+          eyebrow="Currencies"
+          title="Where the money lands"
+          lede={`${currencies.length} currencies on one account. If your supplier invoices in something that is not on this list, ask — the list behind the account is longer than the one on this page.`}
+        />
+        <div className="reveal mt-12">
+          <CorridorGrid />
         </div>
       </Section>
+
+      <CurrencyMarquee />
 
       {/* Dashboard */}
       <Section tone="surface">
