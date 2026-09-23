@@ -177,10 +177,25 @@ export const coreActions = [
   { name: "Pay", body: "Make supported payments out from the relevant currency balance." },
 ] as const;
 
-/** The trust strip under the hero, mirroring how our provider presents itself. */
+/**
+ * The badge row under the hero. Four things that are true today — no founding
+ * date we do not have, no customer count we have not earned.
+ */
 export const trustPoints = [
-  { label: "Regulated payment services" },
-  { label: "Established UK provider behind it" },
-  { label: "Named accounts, your company" },
-  { label: "UK-based" },
+  { icon: "shield", label: "Regulated payment services", note: "Provided by an FCA-authorised firm" },
+  { icon: "building", label: "Accounts in your own name", note: "Named, not shared" },
+  { icon: "globe", label: "Twelve currencies", note: "On one account" },
+  { icon: "handshake", label: "UK-based", note: "Onboarded by people here" },
+] as const;
+
+/**
+ * The dark figures band. Every one of these is checkable: the currency count
+ * comes from the list above, the firm reference number is CoBanq's, and the
+ * rest are statements of how the account works rather than performance claims.
+ */
+export const headlineFacts = [
+  { value: "12", label: "Currencies on one account", tone: 1 },
+  { value: "FCA", label: "Authorised provider, No. 508565", tone: 2 },
+  { value: "Same day", label: "Where the corridor and cut-off allow", tone: 4 },
+  { value: "UK", label: "Based, and onboarded here", tone: 3 },
 ] as const;

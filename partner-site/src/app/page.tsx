@@ -14,6 +14,10 @@ import { PaymentFlowCard } from "@/components/PaymentFlowCard";
 import { DashboardPreview } from "@/components/DashboardPreview";
 import { CurrencyMarquee } from "@/components/CurrencyMarquee";
 import { WhatYouCanDo } from "@/components/WhatYouCanDo";
+import { HeadlineFacts } from "@/components/HeadlineFacts";
+import { SpreadCost } from "@/components/SpreadCost";
+import { BuiltFor } from "@/components/BuiltFor";
+import { GetStarted } from "@/components/GetStarted";
 import { Flag } from "@/components/Flag";
 import { IconTile } from "@/components/IconTile";
 
@@ -41,6 +45,39 @@ const problems = [
     icon: "clock",
     title: "Payments held every time one is large",
     body: "A supplier invoice for six figures triggers a review, the container waits, and the relationship with the supplier pays for it.",
+  },
+];
+
+/** The two cards beside the currency showcase. */
+const sideFeatures = [
+  {
+    icon: "clock",
+    title: "Same-day where it is possible",
+    body: "Supplier invoices settled the same day where the corridor and the cut-off allow it, rather than sitting in a queue while somebody decides whether a large payment looks right.",
+  },
+  {
+    icon: "chart",
+    title: "The rate before you commit",
+    body: "You are quoted, you decide, and then it goes. A purchase order you can price is worth more than a rate you find out about afterwards.",
+  },
+];
+
+/** The three cards under it. */
+const gridFeatures = [
+  {
+    icon: "collect",
+    title: "Money in from the UK",
+    body: "Take payments from retailers and buyers across the country into an account in your own company name, so it is clear who has paid you and for what.",
+  },
+  {
+    icon: "route",
+    title: "Money out to your suppliers",
+    body: "Pay suppliers, contractors and staff abroad from the currency balance you are holding, without a round trip through sterling on the way.",
+  },
+  {
+    icon: "shield",
+    title: "Onboarded properly",
+    body: "Real due diligence at the start, on the understanding that yours is a legitimate trading business. It is what makes an account that stays open.",
   },
 ];
 
@@ -168,6 +205,8 @@ export default function Home() {
 
       <TrustBar />
 
+      <HeadlineFacts />
+
       {/* What you can do — one panel per line, turning on its own. */}
       <Section>
         <SectionHeading
@@ -251,6 +290,47 @@ export default function Home() {
               </Link>
             </Card>
           ))}
+        </div>
+      </Section>
+
+      {/* Built for */}
+      <Section tone="surface">
+        <SectionHeading
+          center
+          eyebrow="Who it is built for"
+          title={`Who ${brand.shortName} is built for`}
+          lede="Three shapes of business, one account underneath. Pick the one that looks like yours."
+        />
+        <div className="mt-12">
+          <BuiltFor />
+        </div>
+      </Section>
+
+      {/* The cost of a bad rate, drawn */}
+      <Section>
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.15fr] lg:items-center">
+          <div>
+            <Eyebrow>The cost of a bad rate</Eyebrow>
+            <h2 className="font-display text-balance mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+              Two and a half percent does not sound like much
+            </h2>
+            <p className="mt-5 text-base leading-relaxed text-muted">
+              It is charged on everything you convert, every month, and it is almost always taken
+              inside the rate rather than shown as a fee — which is why most importers have never
+              been told the number.
+            </p>
+            <p className="mt-4 text-base leading-relaxed text-muted">
+              Here is what that margin takes out of a business, by the amount it converts each
+              month. The figures are arithmetic, not a quote.
+            </p>
+            <Link href="/contact" className="btn btn-primary mt-8">
+              Price one real transaction
+              <span aria-hidden="true">&rarr;</span>
+            </Link>
+          </div>
+          <div className="reveal">
+            <SpreadCost />
+          </div>
         </div>
       </Section>
 
@@ -351,17 +431,41 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* Currencies */}
+      {/* Everything the account does, as one grid */}
       <Section tone="surface">
         <SectionHeading
           center
           eyebrow="Currencies"
-          title="The currencies you can hold, convert and pay in"
-          lede="Eleven foreign currencies alongside sterling, on one account in your own company name."
+          title="Everything you need to move money across a border"
+          lede="One account for money in, the currency in between, and money out — with the rate shown before you commit rather than after."
         />
-        <div className="reveal mt-14">
-          <CurrencyShowcase />
+
+        <div className="mt-14 grid gap-5 lg:grid-cols-[1.55fr_1fr]">
+          <div className="card reveal p-6 sm:p-8">
+            <CurrencyShowcase />
+          </div>
+
+          <div className="grid gap-5">
+            {sideFeatures.map((feature, index) => (
+              <Card key={feature.title} className="flex flex-col justify-center">
+                <IconTile name={feature.icon} tone={index + 2} />
+                <h3 className="mt-5 text-lg font-semibold">{feature.title}</h3>
+                <p className="mt-2.5 text-sm leading-relaxed text-muted">{feature.body}</p>
+              </Card>
+            ))}
+          </div>
         </div>
+
+        <div className="mt-5 grid gap-5 md:grid-cols-3">
+          {gridFeatures.map((feature, index) => (
+            <Card key={feature.title}>
+              <IconTile name={feature.icon} tone={index + 4} />
+              <h3 className="mt-5 text-lg font-semibold">{feature.title}</h3>
+              <p className="mt-2.5 text-sm leading-relaxed text-muted">{feature.body}</p>
+            </Card>
+          ))}
+        </div>
+
         <div className="mt-16">
           <p className="mb-5 text-center text-xs font-semibold uppercase tracking-[0.18em] text-muted">
             Where the money lands
@@ -405,6 +509,49 @@ export default function Home() {
               <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted">{faq.answer}</p>
             </details>
           ))}
+        </div>
+      </Section>
+
+      {/* Getting started */}
+      <Section>
+        <SectionHeading
+          center
+          eyebrow="Getting started"
+          title="Three steps, and none of them are a surprise"
+          lede="No account is opened without proper checks. Knowing what they are up front is what makes them quick."
+        />
+        <div className="mt-14">
+          <GetStarted />
+        </div>
+        <div className="mt-12 text-center">
+          <Link href="/opening-an-account" className="btn btn-ghost">
+            What the file needs to contain
+          </Link>
+        </div>
+      </Section>
+
+      {/* The closing ask */}
+      <Section>
+        <div className="ink-tint relative overflow-hidden rounded-3xl px-6 py-16 text-center text-on-ink sm:px-12 sm:py-20">
+          <div className="ledger-grid pointer-events-none absolute inset-0 opacity-[0.12]" aria-hidden="true" />
+          <div className="relative mx-auto max-w-2xl">
+            <h2 className="font-display text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
+              Send us one real conversion
+            </h2>
+            <p className="mt-5 text-base leading-relaxed text-on-ink/70">
+              The amount, the currency and what you were charged. We will price the same transaction
+              beside it, and you will know within a day whether this is worth your time.
+            </p>
+            <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
+              <Link href="/contact" className="btn btn-primary">
+                Talk to us about an account
+                <span aria-hidden="true">&rarr;</span>
+              </Link>
+              <Link href="/business-accounts" className="btn btn-on-ink">
+                See how it works
+              </Link>
+            </div>
+          </div>
         </div>
       </Section>
 
