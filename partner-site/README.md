@@ -41,12 +41,13 @@ no FRN at all.
 
 ## Pages
 
-- `/` — Home: the problem, collect/convert/pay, the four sectors, pricing posture, FAQs, enquiry form
+- `/` — Home: the problem, collect/convert/pay, the four solutions, who it is built for, the
+  cost of a bad rate, the currencies, the dashboard, FAQs, enquiry form
 - `/business-accounts` — the product in detail, the currencies, and a plain "what this is not"
-- `/who-we-serve` and `/who-we-serve/[slug]` — one page per target sector, generated from `src/content/sectors.ts`
-- `/opening-an-account` — the four steps and the full document checklist
+- `/solutions` and `/solutions/[slug]` — one page per line, generated from `src/content/solutions.ts`
+- `/opening-an-account` — the steps and the full document checklist
 - `/software` — the remittance platform for licensed MSBs, with the integrations named
-- `/about`, `/contact`, `/privacy`, `/thank-you`
+- `/about`, `/contact`, `/privacy`, `/cookies`, `/thank-you`
 
 ## Enquiry form → email
 
@@ -65,10 +66,31 @@ Four environment variables, from the mailbox's "connect devices" / email client 
 Set them in the host's environment variables panel (or `.env.local` for local dev).
 Without them the route returns an error and the form shows its fallback message.
 
+## Analytics — not switched on
+
+The cookie banner is live and works, but there is nothing behind it yet. Accepting
+records the choice and loads nothing, because no analytics ID is configured.
+
+To switch it on, set one more environment variable:
+
+- `NEXT_PUBLIC_GA_ID` — a GA4 measurement ID, `G-XXXXXXXXXX`
+
+From then on, Google Analytics loads for visitors who accept and for nobody else, with
+IP anonymisation on. Until then the banner is honest but decorative.
+
+The alternative worth weighing first: a cookieless analytics product (Plausible, Fathom;
+roughly £9–14/month, EU-hosted) would give the same visitor numbers with no cookies at
+all — which means the banner could be deleted entirely, since there would be nothing
+left to ask permission for. Either way, the swap is a change to
+`src/components/CookieConsent.tsx` only.
+
+Whatever you use, do not make "Reject" harder than "Accept" — same size, same row, one
+click. That specific asymmetry is what the ICO acts on.
+
 ## Editing content
 
-- Sectors (the `/who-we-serve` pages, the homepage cards, the footer links and the form's
-  business-type list): `src/content/sectors.ts`. Add an entry and it appears in all of
+- Solutions (the pages under `/solutions`, the header dropdown, the homepage cards and
+  the footer links): `src/content/solutions.ts`. Add an entry and it appears in all of
   them, including the sitemap.
 - The collect/convert/pay pillars, the onboarding checklist and the FAQs:
   `src/content/site.ts`. The FAQs are also published as `FAQPage` structured data.
