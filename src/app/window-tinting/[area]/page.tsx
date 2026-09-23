@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { StickyCallBar } from "@/components/StickyCallBar";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { areas, findArea } from "@/content/areas";
@@ -179,6 +180,8 @@ export default async function AreaPage({ params }: { params: Promise<{ area: str
           </div>
         </div>
       </section>
+
+      <StickyCallBar />
     </>
   );
 }
