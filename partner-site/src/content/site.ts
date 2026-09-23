@@ -58,7 +58,7 @@ export const onboardingChecklist = [
 export const faqs = [
   {
     question: "Are you a bank?",
-    answer: `No, and we do not pretend to be. ${brand.name} introduces you to ${brand.provider.regulatedEntity}, who provides the regulated payment services and is authorised and regulated by the Financial Conduct Authority as a payment institution — not a bank. Your money sits in safeguarded accounts rather than being lent out, which is why there is no lending and no overdraft attached to it.`,
+    answer: `No, and we do not pretend to be. ${brand.name} introduces you to an established payment institution authorised and regulated by the Financial Conduct Authority. It is a payment institution, not a bank, and the full details are in the footer of every page. Your money sits in safeguarded accounts rather than being lent out, which is why there is no lending and no overdraft attached to it.`,
   },
   {
     question: "Is the account in my company name?",

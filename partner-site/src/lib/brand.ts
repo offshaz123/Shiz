@@ -15,15 +15,16 @@ export const brand = {
    *  - The REGULATED entity is CoBanq Ltd, trading as OvaroPay. That is what
    *    appears on the FCA register and what the customer contracts with. It is
    *    set in `provider` below and RegulatoryNote publishes it.
-   *  - `legalName` here is whatever company owns this brand and takes the
-   *    revenue share — likely a separate services company. It is used only for
-   *    the copyright line.
+   *  - `legalName` is what goes in the copyright line. It is the brand,
+   *    because the brand is what owns this website — the regulated firm is
+   *    named in the disclosure sentence directly above it, which is where
+   *    that obligation actually sits.
    *
-   * If a separate "OvaroPay Ltd" is incorporated, the site must NOT imply that
-   * it is the FCA-authorised firm. Leave this as the regulated entity until
-   * the group structure is settled, which is the safe default.
+   * Once the operating company is incorporated, put its registered name here
+   * ("OvaroPay Ltd", or whatever it ends up being). It must NOT imply that it
+   * is the FCA-authorised firm; the disclosure line keeps those apart.
    */
-  legalName: "CoBanq Ltd",
+  legalName: "OvaroPay",
 
   /**
    * Must match the live domain exactly: it drives canonical URLs, the sitemap,
@@ -34,7 +35,7 @@ export const brand = {
   description:
     "Business payment accounts in your own company name for UK importers, wholesalers and distributors. Collect from your retailers, convert at a proper rate, and pay suppliers in USD, AED, HKD and EUR the same day.",
 
-  email: "hello@ovaropay.com",
+  email: "info@ovaropay.com",
   phoneDisplay: "020 0000 0000",
   phoneE164: "+442000000000",
   /** Digits only, no plus. Leave empty to hide the WhatsApp button. */

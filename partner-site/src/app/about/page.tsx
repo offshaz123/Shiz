@@ -5,23 +5,29 @@ import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { RegulatoryNote } from "@/components/RegulatoryNote";
 import { IconTile } from "@/components/IconTile";
-
 export const metadata: Metadata = {
   title: "About us",
   description: `Who ${brand.name} is, who provides the regulated payment services, and where the line between the two sits.`,
   alternates: { canonical: "/about" },
 };
 
-const { provider } = brand;
 
 /**
- * The introducer arrangement, set out plainly.
+ * About us.
  *
- * A customer is entitled to know which firm holds their money and which one is
- * selling to them. Saying it on the About page, in a panel with the actual
- * numbers in it, reads as confidence; burying it in a footnote reads as
- * something being hidden — and the businesses this is aimed at have usually
- * been let down by somebody who buried it.
+ * DO NOT NAME THE PROVIDER ON THIS PAGE. The arrangement is described in full
+ * — introducer, an FCA-authorised institution behind it, what each side does,
+ * how the money is protected — but the counterparty is not named here.
+ *
+ * It is named in the footer disclosure on every page, and in the privacy
+ * notice where data protection law requires the controller to be identified.
+ * That is where the obligation actually sits, and it is how every white-label
+ * and introducer brand in this market handles it. A prospect who reads the
+ * provider's name on an About page can go to the provider direct, and then
+ * there is no business here.
+ *
+ * The page's job is to build trust in us: what we do, who we do it for, and
+ * the things we will not do.
  */
 const split = [
   {
@@ -36,7 +42,7 @@ const split = [
   },
   {
     icon: "shield",
-    heading: `What ${provider.regulatedEntity} does`,
+    heading: "What the regulated firm does",
     items: [
       "Holds the FCA authorisation and the permissions the service runs on.",
       "Runs the identity, anti-money-laundering and source-of-funds checks, and decides every application.",
@@ -46,11 +52,23 @@ const split = [
   },
 ];
 
-/** The hard facts, as the provider publishes them. */
-const registration = [
-  { label: "FCA firm reference", value: provider.firmReferenceNumber },
-  { label: "Company number", value: provider.companyNumber },
-  { label: "Authorised under", value: "PSRs 2017" },
+/** How the money is protected, in the three sentences people actually ask. */
+const protection = [
+  {
+    label: "Who is authorised",
+    value: "The provider, not us",
+    note: "The firm behind the account holds the FCA permission. We introduce you to it.",
+  },
+  {
+    label: "Where your money sits",
+    value: "Safeguarded",
+    note: "In segregated accounts, separate from the firm's own money, until it reaches your beneficiary.",
+  },
+  {
+    label: "What we are not",
+    value: "Not a bank",
+    note: "No lending, no overdraft, and we never hold your money ourselves.",
+  },
 ];
 
 const benefits = [
@@ -129,7 +147,7 @@ export default function AboutPage() {
         <SectionHeading
           eyebrow="How this works"
           title="Two firms, and you should know which is which"
-          lede={`${brand.name} is an introducer. We work with an established, FCA-authorised payment institution, which means you deal with us — our name, our people, our service — while the authorisation, the accounts, the currency and the payout network come from the regulated firm behind it. That is a deliberate arrangement, not an accident of wording, and this is where the line falls.`}
+          lede={`${brand.name} is an introducer. We work with an established, FCA-authorised payment institution, which means you deal with us — our name, our people, our service — while the authorisation, the accounts, the currency and the payout network come from the regulated firm behind it. It is a deliberate arrangement rather than an accident of wording, and this is where the line falls.`}
         />
 
         <div className="mt-12 grid gap-5 md:grid-cols-2">
@@ -150,55 +168,47 @@ export default function AboutPage() {
         </div>
       </Section>
 
-      {/* Licensing and regulation, with the numbers on the page. */}
+      {/* How the money is protected. The provider is not named here — see the
+          note at the top of this file. */}
       <Section tone="ink">
         <div className="grid gap-12 lg:grid-cols-[1.25fr_1fr] lg:items-start">
           <div>
-            <Eyebrow>Licensing and regulation</Eyebrow>
+            <Eyebrow>Regulation and your money</Eyebrow>
             <h2 className="font-display text-balance mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Who holds the licence, and what that means for your money
+              Who is authorised, and what happens to your money
             </h2>
 
             <div className="mt-6 space-y-4 text-base leading-relaxed text-on-ink/70">
               <p>
-                {provider.regulatedEntity} is authorised and regulated by the Financial Conduct
-                Authority under {provider.permissions} for the provision of payment services. Its
-                registered office is {provider.registeredOffice}.
+                The payment services behind the account are provided by an established institution
+                authorised and regulated by the Financial Conduct Authority under the Payment
+                Services Regulations 2017. Its name, its firm reference number and its registered
+                office appear in the footer of every page on this site.
               </p>
               <p>
-                Customer funds are safeguarded in line with those regulations: held in segregated
-                accounts, separate from the firm&rsquo;s own money, until they are paid out to your
-                beneficiary. If you ever want a breakdown of where your money is sitting, ask and
-                you will be told.
+                In line with those regulations, funds paid into the account are safeguarded: held
+                in segregated accounts, separate from the firm&rsquo;s own money, until they are
+                paid out to your beneficiary. If you ever want a breakdown of where your money is
+                sitting, ask and you will be told.
               </p>
               <p>
-                {brand.name} is not a bank, does not hold your money, and is not itself authorised.
-                It introduces you to the firm that is. For a regulatory or compliance question,
-                write to {brand.email} and we will put it to the right people.
+                {brand.name} is not a bank, is not itself authorised, and never holds your money.
+                It introduces you to the firm that does. For a regulatory or compliance question,
+                write to {brand.email} and it will go to the right people.
               </p>
             </div>
           </div>
 
           <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur sm:p-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-on-ink/50">
-              The regulated firm
-            </p>
-            <p className="font-display mt-3 text-2xl font-semibold">{provider.regulatedEntity}</p>
-
-            <dl className="mt-8 space-y-6">
-              {registration.map((item) => (
+            <dl className="space-y-7">
+              {protection.map((item) => (
                 <div key={item.label}>
                   <dt className="text-xs uppercase tracking-wide text-on-ink/50">{item.label}</dt>
-                  <dd className="font-mono mt-1.5 text-lg font-semibold">{item.value}</dd>
+                  <dd className="font-display mt-1.5 text-xl font-semibold">{item.value}</dd>
+                  <p className="mt-1.5 text-xs leading-relaxed text-on-ink/60">{item.note}</p>
                 </div>
               ))}
             </dl>
-
-            <p className="mt-8 border-t border-white/10 pt-6 text-xs leading-relaxed text-on-ink/60">
-              Check it yourself: search the firm reference number on the FCA register at
-              register.fca.org.uk. Anyone who will not give you a number to check is worth walking
-              away from.
-            </p>
           </div>
         </div>
       </Section>

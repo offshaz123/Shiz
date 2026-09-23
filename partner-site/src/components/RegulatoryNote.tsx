@@ -3,34 +3,41 @@ import { brand } from "@/lib/brand";
 /**
  * The standing regulatory disclosure.
  *
- * OvaroPay introduces customers to the firm that provides the regulated payment
- * services — it does not provide them itself and is not authorised. The
- * wording follows the construction our own counterparty uses on its portal,
- * because that is the form the FCA expects of an introducer.
+ * OvaroPay introduces customers to the firm that provides the regulated
+ * payment services — it does not provide them itself and is not authorised.
  *
- * The named version renders only once `provider.verified` is true. That flag
- * is deliberately still false: CoBanq's marketing site and its corporate
- * portal currently describe two different regulatory positions, and we should
- * not publish either until they tell us in writing which one is right.
+ * WHERE THE PROVIDER IS NAMED, AND WHERE IT IS NOT.
  *
- * Every regulated sentence on the site comes from this one component. Do not
- * hand-write the disclosure into a page — that is how the wording drifts out
- * of step with `brand.provider.model`.
+ * `nameProvider` is off by default, and only the footer turns it on. That is
+ * deliberate and it is how every white-label and introducer brand in this
+ * market handles it: the provider is named in the footer disclosure on every
+ * page, and in the privacy notice where data protection law requires the
+ * controller to be identified. It is not named in body copy, because a
+ * prospect who reads the provider's name on an About page can simply go to
+ * the provider direct, and there is then no business here.
+ *
+ * Unnamed does not mean vague. The arrangement, the permission and the fact
+ * that we are not the regulated firm are all stated plainly either way. What
+ * is withheld is only the counterparty's identity, and only where the law
+ * does not ask for it.
  */
 export function RegulatoryNote({
   className = "",
   compact = false,
   tone = "muted",
+  nameProvider = false,
 }: {
   className?: string;
   /** One sentence for the footer bar, rather than the full disclosure. */
   compact?: boolean;
   /** `inherit` drops the colour so the note can sit on a dark panel. */
   tone?: "muted" | "inherit";
+  /** Name the regulated firm and its FRN. Footer only. */
+  nameProvider?: boolean;
 }) {
   const { provider } = brand;
   const named =
-    provider.verified && provider.regulatedEntity && provider.firmReferenceNumber;
+    nameProvider && provider.verified && provider.regulatedEntity && provider.firmReferenceNumber;
   const base = `text-xs leading-relaxed ${tone === "muted" ? "text-muted" : ""}`;
 
   const introduction = named ? (
@@ -41,9 +48,9 @@ export function RegulatoryNote({
     </>
   ) : (
     <>
-      {brand.name} is acting as an introducer. The regulated payment services are provided by a firm
-      authorised and regulated by the Financial Conduct Authority under the Payment Services
-      Regulations 2017, not by {brand.name}.
+      {brand.name} is acting as an introducer. The regulated payment services are provided by an
+      established payment institution authorised and regulated by the Financial Conduct Authority
+      under the Payment Services Regulations 2017, not by {brand.name}.
     </>
   );
 

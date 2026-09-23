@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { brand } from "@/lib/brand";
+import { SecurityCheck } from "@/components/SecurityCheck";
 
 /**
  * Deliberately broad. The categories a business falls into are for the
@@ -45,6 +46,8 @@ export function EnquiryForm({
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [checkPassed, setCheckPassed] = useState(false);
+  const [checkFailed, setCheckFailed] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -52,6 +55,15 @@ export function EnquiryForm({
 
     const form = event.currentTarget;
     const formData = new FormData(form);
+
+    // The visible half of the bot check. The honeypot below is the other half:
+    // one catches scripts that fill everything in, the other catches scripts
+    // that skip what they cannot read.
+    if (!checkPassed) {
+      setCheckFailed(true);
+      return;
+    }
+    setCheckFailed(false);
 
     // Bots fill hidden fields. Send them to the thank-you page and nowhere else.
     if ((formData.get("_honey") as string)?.length) {
@@ -61,7 +73,7 @@ export function EnquiryForm({
 
     const payload: Record<string, string> = {};
     formData.forEach((value, key) => {
-      if (key !== "_honey") payload[key] = String(value);
+      if (key !== "_honey" && key !== "securityCheck") payload[key] = String(value);
     });
 
     setSubmitting(true);
@@ -205,6 +217,14 @@ export function EnquiryForm({
         <textarea id="message" name="message" rows={4} className={fieldClass} />
       </div>
 
+      <SecurityCheck
+        onChange={(valid) => {
+          setCheckPassed(valid);
+          if (valid) setCheckFailed(false);
+        }}
+        showError={checkFailed}
+      />
+
       {/* Honeypot. Hidden from people, irresistible to bots. */}
       <input
         type="text"
@@ -224,7 +244,7 @@ export function EnquiryForm({
       <button
         type="submit"
         disabled={submitting}
-        className="w-full rounded-full bg-accent px-5 py-3 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-strong disabled:cursor-not-allowed disabled:opacity-60"
+        className="btn btn-primary w-full disabled:cursor-not-allowed disabled:opacity-60"
       >
         {submitting ? "Sending…" : submitLabel}
       </button>

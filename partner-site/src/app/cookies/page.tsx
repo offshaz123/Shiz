@@ -65,7 +65,7 @@ const sections = [
   {
     heading: "Cookies set by other people",
     body: [
-      `If you go on to apply for an account, that application is handled by ${brand.provider.regulatedEntity} on its own website, under its own cookie policy. This policy covers this site only.`,
+      "If you go on to apply for an account, that application is handled on the provider's own website, under its own cookie policy. This policy covers this site only.",
     ],
   },
 ];
