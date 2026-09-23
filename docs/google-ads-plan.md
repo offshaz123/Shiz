@@ -168,6 +168,50 @@ First fix applied 15 Sep: `/london` carried no photographs at all — the ads
 have been landing on a page of text and gradients. The work gallery now runs
 there too, between the price comparison and the pitch.
 
+## 16-23 September: what changed and what it cost
+
+| | 5-15 Sept | 16-23 Sept |
+|---|---|---|
+| Clicks | 125 | 93 |
+| Cost | £195.74 | £215.26 |
+| Avg CPC | £1.57 | **£2.31** |
+| Conversions | 5 | 5 |
+| Click-to-lead | 4.0% | 5.4% |
+| Cost per lead | £39.15 | **£43.05** |
+
+Maximise Conversions did what it says: the click-to-lead rate rose from 4.0% to
+5.4% because it bids harder for likely converters. But CPC rose 47% doing it,
+which more than ate the gain. Cost per lead is roughly flat, slightly worse.
+
+Campaign diagnostics report no serving issues and conversions are recording, so
+tracking is sound.
+
+### The recommendations trap, 23 September
+
+Four recommendations were applied in under a minute and all four were undone
+the same afternoon:
+
+- **17 broad match keywords added.** The most dangerous single change available
+  in this account. The old campaign's loose matching ran at £50.79 per
+  conversion against £23.51 on exact match. On £26/day, broad match spends the
+  budget on invented queries faster than any negative list can catch them.
+- **6 exact match keywords removed** via three "Redundant keyword" cards —
+  almost certainly the "near me" set that produces leads at £11.68-£15.75.
+
+Caught roughly thirty minutes after they were applied, so the cost was
+negligible. **The lesson is the pattern, not the incident:** Google's
+recommendations regenerate every few days and will keep proposing broad match,
+AI Max, Search Partners and keyword deletions. None of those has ever been
+right for this account. Check Change history before assuming a dip is organic.
+
+### The open question
+
+Ten recorded conversions across the campaign, and the owner reports no jobs
+from them. Most conversions are **Click to call**, which counts a *tap* of the
+call button, not a connected conversation. Until the conversion table is split
+by action and checked against the actual phone log, cost per lead is a cost per
+*tap* and may not mean what it appears to.
+
 ## Campaign settings
 
 | Setting | Value |
