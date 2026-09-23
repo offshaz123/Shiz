@@ -31,7 +31,13 @@ export function OrganizationJsonLd() {
           ? {
               address: {
                 "@type": "PostalAddress",
-                ...(brand.address.line1 ? { streetAddress: brand.address.line1 } : {}),
+                ...(brand.address.line1
+                  ? {
+                      streetAddress: [brand.address.line1, brand.address.line2]
+                        .filter(Boolean)
+                        .join(", "),
+                    }
+                  : {}),
                 addressLocality: brand.address.city,
                 ...(brand.address.postcode ? { postalCode: brand.address.postcode } : {}),
                 addressCountry: "GB",

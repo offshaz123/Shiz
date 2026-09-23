@@ -207,6 +207,7 @@ export default function ContactPage() {
                   <dd className="mt-1.5 leading-relaxed">
                     {[
                       brand.address.line1,
+                      brand.address.line2,
                       brand.address.city,
                       brand.address.postcode,
                       brand.address.country,

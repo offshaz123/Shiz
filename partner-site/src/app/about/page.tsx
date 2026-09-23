@@ -3,94 +3,74 @@ import type { Metadata } from "next";
 import { brand } from "@/lib/brand";
 import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
-import { RegulatoryNote } from "@/components/RegulatoryNote";
 import { IconTile } from "@/components/IconTile";
+
 export const metadata: Metadata = {
   title: "About us",
-  description: `Who ${brand.name} is, who provides the regulated payment services, and where the line between the two sits.`,
+  description: `Who ${brand.name} is, who we build accounts for, and how we work.`,
   alternates: { canonical: "/about" },
 };
-
 
 /**
  * About us.
  *
- * DO NOT NAME THE PROVIDER ON THIS PAGE. The arrangement is described in full
- * — introducer, an FCA-authorised institution behind it, what each side does,
- * how the money is protected — but the counterparty is not named here.
+ * THIS PAGE IS ABOUT US. Not about the arrangement behind the account.
  *
- * It is named in the footer disclosure on every page, and in the privacy
- * notice where data protection law requires the controller to be identified.
- * That is where the obligation actually sits, and it is how every white-label
- * and introducer brand in this market handles it. A prospect who reads the
- * provider's name on an About page can go to the provider direct, and then
- * there is no business here.
+ * The partnership gets one block, near the top, in three short paragraphs —
+ * that it is a white-label arrangement, that the institution behind it is
+ * FCA-authorised, and what happens to the money. No name, no firm reference
+ * number, no registered office, and no two-column "what we do / what they do"
+ * comparison. The full disclosure lives in the footer of every page, which is
+ * where the obligation sits and where every introducer brand in this market
+ * keeps it.
  *
- * The page's job is to build trust in us: what we do, who we do it for, and
- * the things we will not do.
+ * The reason is commercial, and it is not subtle: a reader who can name the
+ * institution from this page can go to it directly, and then there is no
+ * business here. Everything below that block is what we do, who for, and how.
  */
-const split = [
-  {
-    icon: "handshake",
-    heading: `What ${brand.name} does`,
-    items: [
-      "Finds the businesses the high street will not serve properly, and understands the trade.",
-      "Prices the account against what you are paying today.",
-      "Prepares the application with you, so the file goes in complete first time.",
-      "Runs the day-to-day relationship, and answers the phone.",
-    ],
-  },
-  {
-    icon: "shield",
-    heading: "What the regulated firm does",
-    items: [
-      "Holds the FCA authorisation and the permissions the service runs on.",
-      "Runs the identity, anti-money-laundering and source-of-funds checks, and decides every application.",
-      "Provides the accounts, the currency conversion and the payout network.",
-      "Provides the platform you log into, and monitors accounts on an ongoing basis.",
-    ],
-  },
-];
-
-/** How the money is protected, in the three sentences people actually ask. */
-const protection = [
-  {
-    label: "Who is authorised",
-    value: "The provider, not us",
-    note: "The firm behind the account holds the FCA permission. We introduce you to it.",
-  },
-  {
-    label: "Where your money sits",
-    value: "Safeguarded",
-    note: "In segregated accounts, separate from the firm's own money, until it reaches your beneficiary.",
-  },
-  {
-    label: "What we are not",
-    value: "Not a bank",
-    note: "No lending, no overdraft, and we never hold your money ourselves.",
-  },
-];
-
 const benefits = [
   {
     icon: "wallet",
-    title: "Twelve currencies, one account",
-    body: "Hold balances in the currencies you actually trade in, alongside sterling, on an account in your own company name.",
+    title: "Multiple currencies, one account",
+    body: "Hold, receive and convert twelve currencies on a single account in your own company name — so money can sit where you need it rather than being converted the moment it lands.",
   },
   {
     icon: "chart",
-    title: "The price shown, not buried",
-    body: "A fee and a margin quoted before you commit, rather than a rate you work out afterwards by looking at what arrived.",
-  },
-  {
-    icon: "building",
-    title: "Named, not shared",
-    body: "Your customers pay your company. No shared client accounts, no payment references doing the work a company name should do.",
+    title: "No margin hidden in the rate",
+    body: "You are quoted a fee and a conversion rate before you commit, not after. Most businesses have never been shown what their current provider takes; we start by showing you.",
   },
   {
     icon: "clock",
-    title: "Same day where it is possible",
-    body: "Supplier invoices settled the same day where the corridor and cut-off allow, instead of sitting in a queue while somebody decides.",
+    title: "Quick where it can be quick",
+    body: "Supplier invoices settled the same day where the corridor and the cut-off allow it. Onboarding is the part that takes care, and we tell you up front what it needs.",
+  },
+  {
+    icon: "building",
+    title: "An account that stays open",
+    body: "Proper due diligence at the start, on the understanding that yours is a legitimate trading business. That is what makes an account that is still there in two years.",
+  },
+];
+
+const security = [
+  {
+    icon: "lock",
+    title: "Your money, kept separate",
+    body: "Funds paid into the account are safeguarded in segregated accounts, apart from the institution's own money, until they reach your beneficiary.",
+  },
+  {
+    icon: "shield",
+    title: "Checks that are done properly",
+    body: "Full identity, anti-money-laundering and source-of-funds checks on every application. It is slower than a sign-up form, and it is the reason the account holds up.",
+  },
+  {
+    icon: "search",
+    title: "Monitoring that continues",
+    body: "Accounts are monitored on an ongoing basis, not just at onboarding, which is how an unusual payment gets a phone call rather than a frozen balance.",
+  },
+  {
+    icon: "document",
+    title: "You can ask, and be told",
+    body: "Where your money is, what a charge was for, why something was queried. If we cannot answer it ourselves we will get the answer.",
   },
 ];
 
@@ -101,14 +81,14 @@ const principles = [
     body: "The decision comes after the checks, and it is not ours to make. Anyone promising approval before that is selling you something they cannot deliver.",
   },
   {
-    icon: "search",
+    icon: "alert",
     title: "We do not hide the price in the rate",
-    body: "You are quoted a fee and a margin before you commit. If you would rather compare against what you pay now, bring one real transaction and we will price that one.",
+    body: "A fee and a margin, quoted up front. If you would rather compare against what you pay now, bring one real transaction and we will price that one beside it.",
   },
   {
-    icon: "alert",
+    icon: "handshake",
     title: "We turn down what cannot be banked",
-    body: "If your trade is outside appetite you will hear it at the first conversation. Wasting three weeks of your time to find out is not a service.",
+    body: "If your trade is outside appetite you will hear it in the first conversation. Wasting three weeks of your time to find that out is not a service.",
   },
 ];
 
@@ -124,91 +104,49 @@ export default function AboutPage() {
 
       <Section>
         <div className="max-w-3xl">
-          <Eyebrow>About {brand.name}</Eyebrow>
+          <Eyebrow>About us</Eyebrow>
           <h1 className="font-display text-balance mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
             Payments for the businesses the high street stopped serving
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-muted">
             There is a large, profitable part of British trade that mainstream banks have quietly
             withdrawn from. Not fraudsters — importers, wholesalers, distributors and independent
-            professionals turning over real money, declined at onboarding or offboarded a year
-            later because a whole category was judged too much work.
+            professionals turning over real money, declined at onboarding or offboarded a year later
+            because a whole category was judged too much work.
           </p>
           <p className="mt-4 text-lg leading-relaxed text-muted">
-            We exist for those businesses. The trade-off is an honest one: proper due diligence at
-            the start, in exchange for an account that holds up afterwards. That is the whole
-            proposition, and everything below is how it is put together.
+            {brand.name} was built for those businesses: an account in your own company name, money
+            in from your customers, currency converted at a rate you were quoted, money out to your
+            suppliers the same day. Run by people who know the trade and will pick up the phone.
           </p>
         </div>
       </Section>
 
-      {/* The model, in one paragraph, before anyone has to ask. */}
+      {/* The one block about the arrangement. Three paragraphs, no names. */}
       <Section tone="surface">
-        <SectionHeading
-          eyebrow="How this works"
-          title="Two firms, and you should know which is which"
-          lede={`${brand.name} is an introducer. We work with an established, FCA-authorised payment institution, which means you deal with us — our name, our people, our service — while the authorisation, the accounts, the currency and the payout network come from the regulated firm behind it. It is a deliberate arrangement rather than an accident of wording, and this is where the line falls.`}
-        />
-
-        <div className="mt-12 grid gap-5 md:grid-cols-2">
-          {split.map((column, index) => (
-            <Card key={column.heading}>
-              <IconTile name={column.icon} tone={index === 0 ? 1 : 2} />
-              <h2 className="font-display mt-5 text-xl font-semibold">{column.heading}</h2>
-              <ul className="mt-5 space-y-3 text-sm leading-relaxed text-muted">
-                {column.items.map((item) => (
-                  <li key={item} className="flex gap-2.5">
-                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-accent" aria-hidden="true" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </Card>
-          ))}
-        </div>
-      </Section>
-
-      {/* How the money is protected. The provider is not named here — see the
-          note at the top of this file. */}
-      <Section tone="ink">
-        <div className="grid gap-12 lg:grid-cols-[1.25fr_1fr] lg:items-start">
-          <div>
-            <Eyebrow>Regulation and your money</Eyebrow>
-            <h2 className="font-display text-balance mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Who is authorised, and what happens to your money
-            </h2>
-
-            <div className="mt-6 space-y-4 text-base leading-relaxed text-on-ink/70">
-              <p>
-                The payment services behind the account are provided by an established institution
-                authorised and regulated by the Financial Conduct Authority under the Payment
-                Services Regulations 2017. Its name, its firm reference number and its registered
-                office appear in the footer of every page on this site.
-              </p>
-              <p>
-                In line with those regulations, funds paid into the account are safeguarded: held
-                in segregated accounts, separate from the firm&rsquo;s own money, until they are
-                paid out to your beneficiary. If you ever want a breakdown of where your money is
-                sitting, ask and you will be told.
-              </p>
-              <p>
-                {brand.name} is not a bank, is not itself authorised, and never holds your money.
-                It introduces you to the firm that does. For a regulatory or compliance question,
-                write to {brand.email} and it will go to the right people.
-              </p>
-            </div>
-          </div>
-
-          <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-6 backdrop-blur sm:p-8">
-            <dl className="space-y-7">
-              {protection.map((item) => (
-                <div key={item.label}>
-                  <dt className="text-xs uppercase tracking-wide text-on-ink/50">{item.label}</dt>
-                  <dd className="font-display mt-1.5 text-xl font-semibold">{item.value}</dd>
-                  <p className="mt-1.5 text-xs leading-relaxed text-on-ink/60">{item.note}</p>
-                </div>
-              ))}
-            </dl>
+        <div className="max-w-3xl">
+          <SectionHeading
+            eyebrow="Our commitment"
+            title="Secure, transparent payment services"
+          />
+          <div className="mt-6 space-y-4 text-base leading-relaxed text-muted">
+            <p>
+              We work with an established, FCA-authorised payment institution through a white-label
+              partnership. In practice that means you deal with {brand.name} — our name, our people,
+              our service — while the regulated infrastructure behind the account, the currency
+              accounts, the liquidity and the compliance framework come from that institution.
+            </p>
+            <p>
+              In line with the regulations, funds paid into your account are safeguarded. They are
+              held in segregated accounts, apart from the institution&rsquo;s own money, and remain
+              safeguarded until they are paid out to your beneficiary. If you ever want an exact
+              breakdown of where your money is sitting, ask and you will be told.
+            </p>
+            <p>
+              {brand.name} is not a bank and does not hold your money itself. The full regulatory
+              detail — the institution, its authorisation and its firm reference number — is set out
+              in the footer of every page on this site.
+            </p>
           </div>
         </div>
       </Section>
@@ -216,14 +154,14 @@ export default function AboutPage() {
       <Section>
         <SectionHeading
           eyebrow="What you get"
-          title="What the account is actually for"
-          lede="Four things, and they are the reason the arrangement above is worth having rather than an interesting piece of structure."
+          title="Built around how a trading business actually runs"
+          lede="Not a feature list borrowed from a consumer app. Four things that change what a month looks like."
         />
         <div className="mt-12 grid gap-5 sm:grid-cols-2">
           {benefits.map((item, index) => (
             <Card key={item.title}>
               <IconTile name={item.icon} tone={index + 1} />
-              <h3 className="font-display mt-5 text-lg font-semibold">{item.title}</h3>
+              <h2 className="font-display mt-5 text-lg font-semibold">{item.title}</h2>
               <p className="mt-2.5 text-sm leading-relaxed text-muted">{item.body}</p>
             </Card>
           ))}
@@ -232,22 +170,35 @@ export default function AboutPage() {
 
       <Section tone="surface">
         <SectionHeading
+          eyebrow="Security"
+          title="Where the care goes"
+          lede="The parts of this that are slow are slow on purpose. Here is what that buys."
+        />
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {security.map((item, index) => (
+            <Card key={item.title}>
+              <IconTile name={item.icon} tone={index + 2} />
+              <h2 className="font-display mt-5 text-base font-semibold">{item.title}</h2>
+              <p className="mt-2.5 text-sm leading-relaxed text-muted">{item.body}</p>
+            </Card>
+          ))}
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeading
           eyebrow="How we work"
           title="Three things we will not do"
-          lede="Every payments company says it is transparent. These are the specific things that claim rules out for us."
+          lede="Every payments company calls itself transparent. These are the specific things that claim rules out for us."
         />
         <div className="mt-12 grid gap-5 md:grid-cols-3">
           {principles.map((item, index) => (
             <Card key={item.title}>
               <IconTile name={item.icon} tone={index + 4} />
-              <h3 className="font-display mt-5 text-lg font-semibold">{item.title}</h3>
+              <h2 className="font-display mt-5 text-lg font-semibold">{item.title}</h2>
               <p className="mt-2.5 text-sm leading-relaxed text-muted">{item.body}</p>
             </Card>
           ))}
-        </div>
-
-        <div className="card mt-10 max-w-3xl p-6">
-          <RegulatoryNote />
         </div>
       </Section>
 

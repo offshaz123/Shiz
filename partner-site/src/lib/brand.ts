@@ -43,10 +43,20 @@ export const brand = {
   whatsappMessage:
     "Hi, I'd like to talk about a business account for my import business.",
 
+  /**
+   * The registered office.
+   *
+   * NOTE — this is the same building as the provider's. That is a fact rather
+   * than a problem, but be aware of what it means: anyone who searches the
+   * address will land on the other firm. It does not appear anywhere the
+   * provider is not already named, so nothing is given away that the footer
+   * does not already say.
+   */
   address: {
-    line1: "",
+    line1: "Level39, One Canada Square",
+    line2: "Canary Wharf",
     city: "London",
-    postcode: "",
+    postcode: "E14 5AB",
     country: "United Kingdom",
   },
 

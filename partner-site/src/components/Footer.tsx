@@ -92,7 +92,12 @@ export function Footer() {
               </p>
               {brand.address.city && (
                 <p className="text-muted">
-                  {[brand.address.line1, brand.address.city, brand.address.postcode]
+                  {[
+                    brand.address.line1,
+                    brand.address.line2,
+                    brand.address.city,
+                    brand.address.postcode,
+                  ]
                     .filter(Boolean)
                     .join(", ")}
                 </p>
