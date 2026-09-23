@@ -16,6 +16,82 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "setting-up-click-to-whatsapp-ads",
+    title: "Setting Up Click-to-WhatsApp Ads: A Walkthrough",
+    description:
+      "No form, no landing page, just a conversation. Here's what you need before you start, how to set the campaign up, and the tracking problem nobody warns you about.",
+    publishedAt: "2026-09-23",
+    keywords: [
+      "how to set up WhatsApp ads Meta",
+      "click to WhatsApp campaign",
+      "WhatsApp Business ads UK",
+      "click to message ads setup",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "A click-to-WhatsApp ad does what it says. Somebody taps it and WhatsApp opens with a message already typed out, ready to send to you.",
+          "No form to fill in, no landing page to load, no waiting for a callback. For a lot of local businesses it produces more enquiries than anything else, because it removes almost every reason somebody might not bother. It also creates a problem most people don't see coming, which we'll get to.",
+        ],
+      },
+      {
+        heading: "What you need before you start",
+        paragraphs: [
+          "Get these in place first. Half the frustration with these campaigns comes from trying to set the ad up before the plumbing exists.",
+        ],
+        bullets: [
+          "A WhatsApp Business account, which is a free app and separate from normal WhatsApp",
+          "A phone number that isn't already on a personal WhatsApp. A number can only live on one WhatsApp account at a time, so a lot of people need a second SIM",
+          "A Facebook Page for the business, with the WhatsApp account connected to it",
+          "The WhatsApp account added to your Business Manager so the ad account can actually use it",
+          "Someone who will genuinely answer messages during the working day",
+        ],
+      },
+      {
+        heading: "Setting the campaign up",
+        paragraphs: [
+          "Meta moves this interface around regularly, so treat the exact wording as a guide rather than gospel. The shape of it stays the same.",
+          "Create a campaign and choose an objective that allows messaging as a destination. In the ad set, set the destination to WhatsApp rather than your website, and pick the WhatsApp account you connected earlier. If it isn't in the list, the connection between the Page and the WhatsApp account hasn't been made properly, and that's what to go and fix.",
+          "The rest is a normal campaign. Audience, budget, placements left on automatic, creative. The only real difference is where the button sends people.",
+        ],
+      },
+      {
+        heading: "The pre-filled message does the qualifying",
+        paragraphs: [
+          "You get to write the message that appears in the chat box before someone sends it. This is the most useful part of the whole setup and most businesses waste it on something like \"Hi, I'd like more information.\"",
+          "Because it's lower friction than a form, these ads get you more enquiries, and some of them will be people who weren't really thinking. The pre-filled message is your filter.",
+          "Write it so sending it tells you something useful. Something like \"Hi, I'm interested in a respray, my car is a\" makes people finish the sentence, and the ones who can't be bothered are the ones you didn't want. You can also use it to sort enquiries, so a message starting with the service name means you can tell at a glance what somebody wants.",
+          "Keep it short and keep it natural. People can edit it before sending, and they will if it reads like a robot wrote it.",
+        ],
+      },
+      {
+        heading: "The tracking problem nobody warns you about",
+        paragraphs: [
+          "Here's the part that catches businesses out. The conversation happens inside WhatsApp, which means your website tracking never sees it. Your Pixel isn't there. Analytics isn't there.",
+          "Meta will tell you how many conversations started, and that's genuinely useful, but a started conversation is not a customer. Some of those people asked a price and vanished. You will have no automatic record of which ones booked.",
+          "So you have to create the record yourself. At the simplest level that means writing down, every week, how many of those conversations turned into paid work. It's tedious but it beats guessing.",
+          "The better answer is routing WhatsApp into a CRM, so every conversation becomes a record you can move through stages and report on. That's the difference between knowing you got forty messages and knowing you got nine jobs worth eleven hundred pounds. Without it, you're optimising a campaign on a number that doesn't mean what you want it to mean.",
+        ],
+      },
+      {
+        heading: "Answering them is the whole game",
+        paragraphs: [
+          "These ads create an expectation of a quick reply. It's a messaging app, so people assume they're messaging a person who's there.",
+          "An enquiry answered in ten minutes and the same enquiry answered the next morning are not the same enquiry. By the morning they've messaged two of your competitors, and the one who replied first is already quoting.",
+          "Set up the away message and the greeting in the WhatsApp Business app so nobody is met with silence outside hours. Save some quick replies for the questions you answer constantly. And be realistic before you launch: if there's genuinely nobody to answer messages during the day, a form and a callback might serve you better than a channel that promises immediacy you can't deliver.",
+        ],
+      },
+      {
+        heading: "When not to bother",
+        paragraphs: [
+          "These aren't right for everything, and it's worth being honest about it up front.",
+          "If you need a lot of detail before you can quote, a form that asks the questions properly will save everyone time. If several people need to see and answer the same enquiries, the basic WhatsApp Business app will start creaking and you'll want the API with something sitting on top of it. And if your sales process genuinely needs a phone call, sending people to a chat just adds a step before the call happens anyway.",
+          "But for a business where somebody has their phone in their hand all day and the work is quoted quickly, it's hard to beat. It puts the enquiry in the place people already spend their time, and it asks almost nothing of them to get started.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "reels-feed-or-stories-where-should-your-ad-run",
     title: "Reels, Feed or Stories: Where Should Your Ad Actually Run?",
     description:

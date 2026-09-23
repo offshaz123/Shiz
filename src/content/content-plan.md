@@ -61,6 +61,7 @@ keywords, dealership social strategy).
 - How to Film Ad Videos on Your Phone Without Them Looking Cheap (video & creative)
 - Meta & Instagram Ads for Retail and E-commerce (industry-specific)
 - Reels, Feed or Stories: Where Should Your Ad Actually Run? (comparison/explainer)
+- Setting Up Click-to-WhatsApp Ads: A Walkthrough (practical how-to)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -168,7 +169,7 @@ keywords, dealership social strategy).
 ## Backlog — practical how-to (added 2026-09-02 research round)
 - [x] How to Get More Google Reviews Without Being Annoying — target: "how to ask for Google
       reviews UK", "get more Google reviews small business"
-- [ ] Setting Up Click-to-WhatsApp Ads: A Walkthrough — target: "how to set up WhatsApp ads
+- [x] Setting Up Click-to-WhatsApp Ads: A Walkthrough — target: "how to set up WhatsApp ads
       Meta", "click to WhatsApp campaign"
 - [x] Writing a Follow-Up Sequence That Doesn't Feel Like Nagging — target: "lead follow up
       sequence", "how many times to follow up with a lead"
