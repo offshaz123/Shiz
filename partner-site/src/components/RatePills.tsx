@@ -45,7 +45,10 @@ const pills = [
 
 export function RatePills() {
   return (
-    <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+    // Hidden below lg: the pills live in the gutter either side of the card,
+    // and on a phone there is no gutter — they landed on top of the card and
+    // covered the figures they were meant to sit beside.
+    <div className="pointer-events-none absolute inset-0 hidden lg:block" aria-hidden="true">
       {pills.map((pill, index) => (
         <div
           key={pill.label}

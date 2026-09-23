@@ -32,16 +32,19 @@ export function GlobeBackdrop() {
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
       {/* The light the globe sits in. */}
       <div
-        className="hero-glow animate-drift-glow absolute left-[62%] top-[6%] h-[620px] w-[820px] -translate-x-1/2 rounded-full blur-3xl"
+        className="hero-glow animate-drift-glow absolute left-1/2 top-[30%] h-[420px] w-[560px] -translate-x-1/2 rounded-full blur-3xl lg:left-[62%] lg:top-[6%] lg:h-[620px] lg:w-[820px]"
         style={{
           backgroundImage:
             "radial-gradient(circle at 40% 45%, var(--accent), transparent 62%), radial-gradient(circle at 70% 60%, var(--accent-2), transparent 60%)",
         }}
       />
 
+      {/* On a phone there is no gutter to put a globe in. It drops below the
+          copy and thins right out rather than running its dot lattice through
+          the headline, which is what made the words hard to read. */}
       <svg
         viewBox="-420 -300 840 600"
-        className="absolute left-1/2 top-1/2 h-[820px] w-[1150px] -translate-x-[34%] -translate-y-1/2 opacity-80 sm:-translate-x-[26%] lg:left-[68%] lg:-translate-x-1/2"
+        className="absolute -bottom-28 left-1/2 h-[460px] w-[640px] -translate-x-1/2 opacity-30 sm:-bottom-32 sm:h-[560px] sm:w-[780px] sm:opacity-40 lg:bottom-auto lg:left-[68%] lg:top-1/2 lg:h-[820px] lg:w-[1150px] lg:-translate-y-1/2 lg:opacity-80"
         fill="none"
       >
         <defs>
