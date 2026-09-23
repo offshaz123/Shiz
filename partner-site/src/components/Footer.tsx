@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
-import { sectors } from "@/content/sectors";
 import { solutions } from "@/content/solutions";
 import { Logo } from "@/components/Logo";
 import { RegulatoryNote } from "@/components/RegulatoryNote";
@@ -70,7 +69,7 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-surface">
       <div className="mx-auto max-w-6xl px-5 py-14">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="sm:col-span-2 lg:col-span-1">
             <Logo />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">
@@ -124,19 +123,6 @@ export function Footer() {
                 <li key={solution.slug}>
                   <Link href={`/solutions/${solution.slug}`} className={linkClass}>
                     {solution.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <ColumnHeading>Who we serve</ColumnHeading>
-            <ul className="mt-4 space-y-2.5 text-sm">
-              {sectors.map((sector) => (
-                <li key={sector.slug}>
-                  <Link href={`/who-we-serve/${sector.slug}`} className={linkClass}>
-                    {sector.longName}
                   </Link>
                 </li>
               ))}

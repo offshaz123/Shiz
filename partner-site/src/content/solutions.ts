@@ -97,6 +97,43 @@ export const solutions: Solution[] = [
     ],
   },
   {
+    slug: "freelancers",
+    icon: "code",
+    name: "Freelancers",
+    tagline: "Get paid by clients abroad, in their currency",
+    title: "Accounts for freelancers and independent contractors",
+    description:
+      "Receive client and marketplace earnings in supported currencies, hold the balance, convert at a rate you are quoted, and draw it down in sterling.",
+    intro:
+      "You invoice clients abroad and get paid in their currency. The money arrives in dollars or euros, and by the time it reaches a UK current account somebody has taken a slice of it in a rate you never saw. This runs the other way round from an importer's account — money in from overseas, held, converted, drawn down here — but it is the same three moves, on the same account.",
+    capabilities: [
+      "Receive client and marketplace earnings in supported currencies.",
+      "Hold the balance in the currency it arrived in until you choose to convert.",
+      "Convert through real-time FX at a rate quoted before you commit.",
+      "Draw down to sterling, or pay out from the currency balance directly.",
+    ],
+    audience:
+      "Freelancers, independent contractors, software developers and agencies invoicing clients outside the UK — anyone whose income arrives in a currency they do not spend in.",
+    stats: [
+      { label: "Income", value: "Supported currencies", note: "from clients and platforms" },
+      { label: "Balances", value: "Hold & convert", note: "when the rate suits you" },
+      { label: "Rate", value: "Quoted up front", note: "before you commit" },
+      { label: "Name", value: "Yours", note: "a named account, not a shared one" },
+    ],
+    flow: ["Get paid", "Hold", "Convert", "Draw down"],
+    audiences: [
+      { name: "Freelancers", body: "Invoice clients abroad and receive in the currency they pay in." },
+      { name: "Software and IT contractors", body: "Regular overseas income, treated as expected rather than queried." },
+      { name: "Small agencies", body: "Overseas client receipts in one place, converted when you decide." },
+    ],
+    keywords: [
+      "multi-currency account for freelancers UK",
+      "receive USD payments freelancer UK",
+      "get paid in euros from UK",
+      "freelancer business account overseas clients",
+    ],
+  },
+  {
     slug: "global-payroll",
     icon: "team",
     name: "Global payroll",

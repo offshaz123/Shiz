@@ -130,9 +130,9 @@ export const currencies = [
 /**
  * Currency code -> the country whose flag stands for it.
  *
- * AED, HKD and CNY are not on our published currency list, but the sectors do
- * quote those corridors, so they resolve to a flag here too. Anything with no
- * entry renders without one rather than guessing.
+ * AED, HKD and CNY are not on our published currency list, but they are the
+ * corridors customers ask about, so they resolve to a flag here too. Anything
+ * with no entry renders without one rather than guessing.
  */
 export const currencyFlags: Record<string, string> = {
   GBP: "GB",

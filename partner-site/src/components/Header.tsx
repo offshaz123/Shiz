@@ -5,10 +5,10 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Logo } from "@/components/Logo";
 import { solutions } from "@/content/solutions";
+import { IconTile } from "@/components/IconTile";
 
 const navLinks = [
   { href: "/business-accounts", label: "How it works" },
-  { href: "/who-we-serve", label: "Who we serve" },
   { href: "/software", label: "Software for MSBs" },
   { href: "/opening-an-account", label: "Opening an account" },
   { href: "/about", label: "About" },
@@ -51,23 +51,28 @@ export function Header() {
               </svg>
             </Link>
 
-            <div className="invisible absolute left-1/2 top-full z-50 w-[22rem] -translate-x-1/2 pt-3 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-              <div className="overflow-hidden rounded-2xl border border-border bg-card p-2 shadow-[var(--shadow-lift)]">
-                {solutions.map((solution) => (
-                  <Link
-                    key={solution.slug}
-                    href={`/solutions/${solution.slug}`}
-                    className="block rounded-xl px-3.5 py-3 transition-colors hover:bg-accent-soft"
-                  >
-                    <span className="block text-sm font-semibold">{solution.name}</span>
-                    <span className="mt-0.5 block text-xs leading-relaxed text-muted">
-                      {solution.tagline}
-                    </span>
-                  </Link>
-                ))}
+            <div className="invisible absolute left-1/2 top-full z-50 w-[38rem] -translate-x-1/2 pt-3 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+              <div className="overflow-hidden rounded-2xl border border-border bg-card p-3 shadow-[var(--shadow-lift)]">
+                <div className="grid grid-cols-2 gap-1">
+                  {solutions.map((solution, index) => (
+                    <Link
+                      key={solution.slug}
+                      href={`/solutions/${solution.slug}`}
+                      className="flex gap-3 rounded-xl p-3 transition-colors hover:bg-accent-soft"
+                    >
+                      <IconTile name={solution.icon} tone={index + 1} className="!h-9 !w-9 shrink-0" />
+                      <span className="block">
+                        <span className="block text-sm font-semibold">{solution.name}</span>
+                        <span className="mt-0.5 block text-xs leading-relaxed text-muted">
+                          {solution.tagline}
+                        </span>
+                      </span>
+                    </Link>
+                  ))}
+                </div>
                 <Link
                   href="/solutions"
-                  className="mt-1 block border-t border-border px-3.5 pb-2 pt-3 text-xs font-semibold text-accent-2"
+                  className="mt-2 block border-t border-border px-3 pb-1 pt-3 text-xs font-semibold text-accent-2"
                 >
                   All solutions &rarr;
                 </Link>

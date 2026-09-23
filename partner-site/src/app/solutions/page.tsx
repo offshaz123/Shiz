@@ -8,7 +8,7 @@ import { BreadcrumbJsonLd } from "@/components/StructuredData";
 export const metadata: Metadata = {
   title: "Solutions",
   description:
-    "Business payments, multi-currency accounts and global payroll — three lines, one account, provided on a UK-regulated licence.",
+    "Business payments, multi-currency accounts, freelancer accounts and global payroll — four lines, one account, provided on a UK-regulated licence.",
   alternates: { canonical: "/solutions" },
 };
 
@@ -26,7 +26,7 @@ export default function SolutionsPage() {
         <div className="max-w-3xl">
           <Eyebrow>Solutions</Eyebrow>
           <h1 className="font-display mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
-            Three lines, one account
+            Four lines, one account
           </h1>
           <p className="mt-6 text-lg leading-relaxed text-muted">
             Money in from your customers, currency converted, money out to suppliers, contractors or
@@ -35,7 +35,7 @@ export default function SolutionsPage() {
           </p>
         </div>
 
-        <div className="mt-14 grid gap-5 lg:grid-cols-3">
+        <div className="mt-14 grid gap-5 sm:grid-cols-2">
           {solutions.map((solution, index) => (
             <Card key={solution.slug} className="flex flex-col">
               <div className="flex items-center gap-3">

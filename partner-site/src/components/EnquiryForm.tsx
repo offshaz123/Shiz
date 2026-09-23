@@ -3,10 +3,18 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { brand } from "@/lib/brand";
-import { sectors } from "@/content/sectors";
 
+/**
+ * Deliberately broad. The categories a business falls into are for the
+ * onboarding file to establish, not for a public dropdown to advertise.
+ */
 const businessTypes = [
-  ...sectors.map((sector) => sector.longName),
+  "Importer or wholesaler",
+  "Distributor",
+  "Exporter",
+  "Freelancer or independent contractor",
+  "Software, IT or digital services",
+  "Business with a large payroll",
   "Money service business (holds an SPI or API licence)",
   "Other",
 ];

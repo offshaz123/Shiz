@@ -127,14 +127,14 @@ export default function OpeningAnAccountPage() {
             Not sure whether your business fits?
           </h2>
           <p className="mt-5 text-base leading-relaxed text-on-ink/70">
-            Have a look at the kinds of business we work with most. If yours is not among them
-            but follows the same pattern, say so — the pattern matters more than the label.
+            Tell us what the business actually does and how the money moves through it. The
+            pattern matters far more than the label: money in from a spread of customers, currency
+            converted, money out in volume is the shape we are built around, whatever the trade is
+            called.
           </p>
-          <Link
-            href="/who-we-serve"
-            className="mt-8 inline-flex rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-strong"
-          >
-            Who we serve
+          <Link href="/contact" className="btn btn-primary mt-8">
+            Talk to us
+            <span aria-hidden="true">&rarr;</span>
           </Link>
         </div>
       </Section>

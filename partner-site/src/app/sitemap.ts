@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
 import { brand } from "@/lib/brand";
-import { sectors } from "@/content/sectors";
 import { solutions } from "@/content/solutions";
 
 export const dynamic = "force-static";
@@ -17,7 +16,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "", changeFrequency: "weekly", priority: 1 },
     { path: "/solutions", changeFrequency: "monthly", priority: 0.95 },
     { path: "/business-accounts", changeFrequency: "monthly", priority: 0.9 },
-    { path: "/who-we-serve", changeFrequency: "monthly", priority: 0.85 },
     { path: "/opening-an-account", changeFrequency: "monthly", priority: 0.8 },
     { path: "/software", changeFrequency: "monthly", priority: 0.8 },
     { path: "/about", changeFrequency: "monthly", priority: 0.7 },
@@ -37,12 +35,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: contentUpdated,
       changeFrequency: "monthly" as const,
       priority: 0.9,
-    })),
-    ...sectors.map((sector) => ({
-      url: `${brand.url}/who-we-serve/${sector.slug}`,
-      lastModified: contentUpdated,
-      changeFrequency: "monthly" as const,
-      priority: 0.75,
     })),
   ];
 }

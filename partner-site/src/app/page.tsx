@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { brand, currencies } from "@/lib/brand";
-import { sectors } from "@/content/sectors";
 import { solutions } from "@/content/solutions";
 import { pillars, faqs } from "@/content/site";
 import { GlobeBackdrop } from "@/components/GlobeBackdrop";
@@ -15,7 +14,6 @@ import { PaymentFlowCard } from "@/components/PaymentFlowCard";
 import { DashboardPreview } from "@/components/DashboardPreview";
 import { CurrencyMarquee } from "@/components/CurrencyMarquee";
 import { WhatYouCanDo } from "@/components/WhatYouCanDo";
-import { CurrencyChip } from "@/components/CurrencyChip";
 import { Flag } from "@/components/Flag";
 import { IconTile } from "@/components/IconTile";
 
@@ -232,10 +230,10 @@ export default function Home() {
       <Section>
         <SectionHeading
           eyebrow="Solutions"
-          title="Three lines, one account"
-          lede="Money in from your customers, currency converted, money out to suppliers, contractors or staff. Each runs on the same account, in your own company name."
+          title="Four lines, one account"
+          lede="Money in from your customers or your clients abroad, currency converted, money out to suppliers, contractors or staff. Each runs on the same account, in your own name."
         />
-        <div className="mt-12 grid gap-5 lg:grid-cols-3">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2">
           {solutions.map((solution, index) => (
             <Card key={solution.slug} className="flex flex-col">
               <div className="flex items-center gap-3">
@@ -250,35 +248,6 @@ export default function Home() {
                 className="mt-6 text-sm font-semibold text-accent-2 underline-offset-4 hover:underline"
               >
                 {solution.name} →
-              </Link>
-            </Card>
-          ))}
-        </div>
-      </Section>
-
-      {/* Sectors */}
-      <Section tone="surface">
-        <SectionHeading
-          eyebrow="Who we serve"
-          title="Built around the trades we know"
-          lede="Import and distribute, run a large payroll, or invoice clients abroad. If money moves across a border and a bank has made that harder than it needs to be, the account fits."
-        />
-        <div className="mt-12 grid gap-5 sm:grid-cols-2">
-          {sectors.map((sector, index) => (
-            <Card key={sector.slug} className="flex flex-col">
-              <IconTile name={sector.icon} tone={index + 1} />
-              <h3 className="mt-5 text-lg font-semibold">{sector.longName}</h3>
-              <p className="mt-2.5 flex-1 text-sm leading-relaxed text-muted">{sector.intro}</p>
-              <div className="mt-5 flex flex-wrap items-center gap-2">
-                {sector.currencies.map((currency) => (
-                  <CurrencyChip key={currency} code={currency} tone="soft" className="px-2.5 py-1" />
-                ))}
-              </div>
-              <Link
-                href={`/who-we-serve/${sector.slug}`}
-                className="mt-5 text-sm font-semibold text-accent underline-offset-4 hover:underline"
-              >
-                {sector.name} accounts →
               </Link>
             </Card>
           ))}
