@@ -81,10 +81,10 @@ export default function Home() {
           <div className="grid gap-16 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-10">
             <div>
               {/* CAREFUL. This badge cannot say "FCA regulated" on its own,
-                  because Orvopay is not: it introduces customers to CoBanq
+                  because OvaroPay is not: it introduces customers to CoBanq
                   Ltd, who holds the permission. Claiming authorisation you do
                   not hold is the one thing the FCA acts on fastest. Once
-                  Orvopay is on the register in its own right, this can become
+                  OvaroPay is on the register in its own right, this can become
                   the shorter claim — and `brand.provider.model` should change
                   with it. */}
               <span className="glass inline-flex items-center gap-2.5 rounded-full py-1.5 pl-2 pr-4 text-xs font-semibold">

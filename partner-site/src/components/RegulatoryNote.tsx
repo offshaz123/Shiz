@@ -3,7 +3,7 @@ import { brand } from "@/lib/brand";
 /**
  * The standing regulatory disclosure.
  *
- * Orvopay introduces customers to the firm that provides the regulated payment
+ * OvaroPay introduces customers to the firm that provides the regulated payment
  * services — it does not provide them itself and is not authorised. The
  * wording follows the construction our own counterparty uses on its portal,
  * because that is the form the FCA expects of an introducer.

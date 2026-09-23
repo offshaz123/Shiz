@@ -5,21 +5,21 @@
  * sitemap, the structured data and the enquiry emails.
  */
 export const brand = {
-  name: "Orvopay",
-  shortName: "Orvopay",
+  name: "OvaroPay",
+  shortName: "OvaroPay",
 
   /**
    * CAREFUL. Two different entities can be in play and they must never be
    * conflated on a regulated website:
    *
-   *  - The REGULATED entity is CoBanq Ltd, trading as Orvopay. That is what
+   *  - The REGULATED entity is CoBanq Ltd, trading as OvaroPay. That is what
    *    appears on the FCA register and what the customer contracts with. It is
    *    set in `provider` below and RegulatoryNote publishes it.
    *  - `legalName` here is whatever company owns this brand and takes the
    *    revenue share — likely a separate services company. It is used only for
    *    the copyright line.
    *
-   * If a separate "Orvopay Ltd" is incorporated, the site must NOT imply that
+   * If a separate "OvaroPay Ltd" is incorporated, the site must NOT imply that
    * it is the FCA-authorised firm. Leave this as the regulated entity until
    * the group structure is settled, which is the safe default.
    */
@@ -29,12 +29,12 @@ export const brand = {
    * Must match the live domain exactly: it drives canonical URLs, the sitemap,
    * robots.txt and the Open Graph tags.
    */
-  url: "https://orvopay.com",
+  url: "https://ovaropay.com",
 
   description:
     "Business payment accounts in your own company name for UK importers, wholesalers and distributors. Collect from your retailers, convert at a proper rate, and pay suppliers in USD, AED, HKD and EUR the same day.",
 
-  email: "hello@orvopay.com",
+  email: "hello@ovaropay.com",
   phoneDisplay: "020 0000 0000",
   phoneE164: "+442000000000",
   /** Digits only, no plus. Leave empty to hide the WhatsApp button. */
@@ -59,13 +59,13 @@ export const brand = {
   /**
    * Who provides the regulated payment services, and what we are to them.
    *
-   *   Orvopay  ->  CoBanq Ltd
+   *   OvaroPay  ->  CoBanq Ltd
    *   (introducer)  (Authorised Payment Institution, FRN 508565)
    *
-   * Orvopay introduces customers; CoBanq provides the regulated services and
+   * OvaroPay introduces customers; CoBanq provides the regulated services and
    * holds the permissions.
    *
-   * Consequence of the introducer model: Orvopay is NOT itself regulated and
+   * Consequence of the introducer model: OvaroPay is NOT itself regulated and
    * must never imply otherwise — no "FCA-regulated" badge on our own name, and
    * no borrowing CoBanq's founding date as if it were ours.
    *

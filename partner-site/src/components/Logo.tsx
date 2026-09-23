@@ -2,7 +2,7 @@ import Link from "next/link";
 import { brand } from "@/lib/brand";
 
 /**
- * The mark is the O of Orvopay drawn as a split ring: one arc in ink, one in
+ * The mark is the O of OvaroPay drawn as a split ring: one arc in ink, one in
  * copper, with a gap at each join. It reads as the letter and as a cycle —
  * money going out and coming back — which is the whole product in one glyph.
  *
