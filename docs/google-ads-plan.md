@@ -212,6 +212,45 @@ call button, not a connected conversation. Until the conversion table is split
 by action and checked against the actual phone log, cost per lead is a cost per
 *tap* and may not mean what it appears to.
 
+## 23 September: reset
+
+Three things changed, all reversals or unblocking rather than new bets.
+
+**Bidding back to Maximise Clicks, max CPC £2.50.** Maximise Conversions was
+optimising towards the only signal it had — "Click to call", which counts a
+*tap* of the number, not a conversation. Eight days of that bid CPC up 47%
+(£1.57 → £2.31) and bought 93 clicks for £215 where the previous week bought
+125 for £196. Smart bidding is only as good as its signal, and this one was
+measuring nothing. £2.50 is the cap that produced the £1.57 average.
+
+**Call conversion action enabled.** It had never been set up — the zero beside
+"Calls from ads" meant *nobody was counting*, not *nobody rang*. For three
+weeks there was no way to tell a misdial from a booking. Calls over 30 seconds
+now count.
+
+**Sticky mobile call bar shipped** to /london, the home page and the six area
+pages. 97% of traffic is on a phone and every call-to-action was inline: a
+visitor had to be scrolled to one to ring. The dialler is now always one press
+away.
+
+### Conversion breakdown, 15-23 September
+
+| Action | Count |
+|---|---|
+| Click to call (a tap) | 5 |
+| Calls from ads (a connected call) | 0 — not being measured |
+| Submit lead form | 0 |
+| Local actions (GBP, excluded from bidding) | 27 |
+
+The lead form was tested end to end and works: SMTP is configured and the
+email arrives. Zero submissions is visitors choosing the phone, not a fault.
+
+### Do not go back to conversion bidding until
+
+"Calls from ads" has a fortnight of data and shows real connected calls. Then
+set **Click to call → Secondary** and **Calls from ads → Primary**, so bidding
+chases conversations rather than taps. Switching earlier repeats the mistake.
+
 ## Campaign settings
 
 | Setting | Value |
