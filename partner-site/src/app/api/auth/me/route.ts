@@ -14,6 +14,13 @@ export async function GET() {
   const userId = readSessionToken(store.get(SESSION_COOKIE)?.value);
   if (!userId) return NextResponse.json({ user: null });
 
-  const user = await findById(userId);
-  return NextResponse.json({ user: user ? publicUser(user) : null });
+  try {
+    const user = await findById(userId);
+    return NextResponse.json({ user: user ? publicUser(user) : null });
+  } catch (err) {
+    // The greeting calls this on every home page view. A storage problem
+    // should make it quietly show nothing, never break the page.
+    console.error("Session lookup failed", err);
+    return NextResponse.json({ user: null });
+  }
 }

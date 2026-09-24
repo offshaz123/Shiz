@@ -7,6 +7,7 @@ import {
   publicUser,
   SESSION_COOKIE,
   sessionCookieOptions,
+  StorageError,
 } from "@/lib/auth";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -43,7 +44,25 @@ export async function POST(request: Request) {
   const problem = passwordProblem(password);
   if (problem) return NextResponse.json({ error: problem }, { status: 400 });
 
-  const user = await createUser({ email, password, firstName, lastName });
+  let user;
+  try {
+    user = await createUser({ email, password, firstName, lastName });
+  } catch (err) {
+    if (err instanceof StorageError) {
+      // The full path and errno go to the server log, where the operator can
+      // see them; the visitor gets a message that says what is wrong without
+      // publishing the filesystem layout.
+      console.error(`Signup: ${err.message}`, err.cause);
+      return NextResponse.json(
+        {
+          error:
+            "We could not save your account because the server has nowhere to write it. This is our end, not yours — please try again shortly.",
+        },
+        { status: 500 }
+      );
+    }
+    throw err;
+  }
 
   // Deliberately the same wording a caller would get for a weak password
   // rather than "that email is taken": the latter tells a stranger which of

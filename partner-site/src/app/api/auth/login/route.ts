@@ -8,6 +8,7 @@ import {
   SESSION_COOKIE,
   sessionCookieOptions,
   verifyPassword,
+  StorageError,
 } from "@/lib/auth";
 
 export async function POST(request: Request) {
@@ -23,7 +24,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Enter your email and password." }, { status: 400 });
   }
 
-  const user = await findByEmail(email);
+  let user;
+  try {
+    user = await findByEmail(email);
+  } catch (err) {
+    if (err instanceof StorageError) {
+      console.error(`Login: ${err.message}`, err.cause);
+      return NextResponse.json(
+        { error: "We cannot reach the account store right now. Please try again shortly." },
+        { status: 500 }
+      );
+    }
+    throw err;
+  }
 
   // One message for "no such account" and for "wrong password", so the
   // response cannot be used to work out which addresses are registered.

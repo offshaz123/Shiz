@@ -45,9 +45,32 @@ export function publicUser(user: User): PublicUser {
   return rest;
 }
 
-function dataFile() {
+/** Where the account store lives. Exported so failures can name it in the log. */
+export function dataFile() {
   const dir = process.env.AUTH_DATA_DIR || path.join(process.cwd(), ".data");
   return path.join(dir, "users.json");
+}
+
+/**
+ * Thrown when the account store cannot be read or written.
+ *
+ * It exists so the routes can tell a storage failure apart from a genuine
+ * "that did not work" and say something useful. Without it a read-only or
+ * unwritable AUTH_DATA_DIR surfaces as an unhandled 500 with an HTML error
+ * page, the browser cannot parse JSON out of it, and the visitor gets
+ * "Something went wrong" with nothing in it to act on. That is exactly what
+ * happened on the first deploy.
+ */
+export class StorageError extends Error {
+  constructor(
+    readonly operation: "read" | "write",
+    readonly path: string,
+    readonly cause: unknown
+  ) {
+    const code = (cause as NodeJS.ErrnoException)?.code ?? "unknown";
+    super(`Could not ${operation} the account store at ${path} (${code})`);
+    this.name = "StorageError";
+  }
 }
 
 function secret() {
@@ -65,22 +88,30 @@ export function authConfigured() {
 }
 
 async function readUsers(): Promise<User[]> {
+  const file = dataFile();
   try {
-    return JSON.parse(await fs.readFile(dataFile(), "utf8")) as User[];
+    return JSON.parse(await fs.readFile(file, "utf8")) as User[];
   } catch (err) {
+    // No file yet is the normal state before the first sign-up.
     if ((err as NodeJS.ErrnoException).code === "ENOENT") return [];
-    throw err;
+    throw new StorageError("read", file, err);
   }
 }
 
 async function writeUsers(users: User[]) {
   const file = dataFile();
-  await fs.mkdir(path.dirname(file), { recursive: true });
   // Write then rename, so a crash mid-write cannot leave a truncated file
-  // where the account list used to be.
+  // where the account list used to be. The temp file is a sibling on
+  // purpose: rename is only atomic within one filesystem.
   const temp = `${file}.${randomBytes(6).toString("hex")}.tmp`;
-  await fs.writeFile(temp, JSON.stringify(users, null, 2), "utf8");
-  await fs.rename(temp, file);
+  try {
+    await fs.mkdir(path.dirname(file), { recursive: true });
+    await fs.writeFile(temp, JSON.stringify(users, null, 2), "utf8");
+    await fs.rename(temp, file);
+  } catch (err) {
+    await fs.rm(temp, { force: true }).catch(() => {});
+    throw new StorageError("write", file, err);
+  }
 }
 
 function hash(password: string, salt: string): Promise<Buffer> {
