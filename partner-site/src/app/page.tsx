@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import { brand, currencies } from "@/lib/brand";
 import { solutions } from "@/content/solutions";
@@ -197,11 +198,23 @@ export default function Home() {
 
       {/* Solutions */}
       <Section>
-        <SectionHeading
-          eyebrow="Solutions"
-          title="Four lines, one account"
-          lede="Money in from your customers or your clients abroad, currency converted, money out to suppliers, contractors or staff. Each runs on the same account, in your own name."
-        />
+        <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+          <SectionHeading
+            eyebrow="Solutions"
+            title="Four lines, one account"
+            lede="Money in from your customers or your clients abroad, currency converted, money out to suppliers, contractors or staff. Each runs on the same account, in your own name."
+          />
+          {/* Drawn on transparency, so it sits on the section rather than in a
+              white box of its own. */}
+          <Image
+            src="/images/transfer-illustration.webp"
+            alt="Money passing from one phone to another."
+            width={1000}
+            height={550}
+            sizes="(min-width: 1024px) 26rem, 80vw"
+            className="mx-auto w-full max-w-sm lg:max-w-none"
+          />
+        </div>
         <div className="mt-12 grid gap-5 sm:grid-cols-2">
           {solutions.map((solution, index) => (
             <Card key={solution.slug} className="flex flex-col">
@@ -251,8 +264,9 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* Pricing posture */}
-      <Section tone="ink">
+      {/* Pricing posture, over the banknotes. The band was already ink, so
+          the photograph only had to sit behind copy that was light. */}
+      <Section tone="ink" backdrop={{ src: "/images/sterling-notes.webp", position: "center 60%" }}>
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <div>
             <Eyebrow>Pricing</Eyebrow>
@@ -353,7 +367,14 @@ export default function Home() {
           <div className="card reveal p-6 sm:p-8">
             <CurrencyShowcase />
           </div>
-          <Illustration name="global-reach" className="w-full" />
+          <Image
+            src="/images/globe-transfer.webp"
+            alt="A globe with a banknote folded into a paper plane flying across it."
+            width={909}
+            height={559}
+            sizes="(min-width: 1024px) 28rem, 100vw"
+            className="w-full rounded-2xl border border-border"
+          />
         </div>
       </Section>
 

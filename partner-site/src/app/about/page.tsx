@@ -102,22 +102,27 @@ export default function AboutPage() {
         ]}
       />
 
-      <Section>
+      {/* The people hero. tone="ink" already gives light copy; the backdrop
+          supplies the photograph under it. */}
+      <Section
+        tone="ink"
+        backdrop={{ src: "/images/team-meeting.webp", position: "center 42%" }}
+      >
         <div className="max-w-3xl">
           <Eyebrow>About us</Eyebrow>
           <h1 className="font-display text-balance mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
             Payments for the businesses the high street stopped serving
           </h1>
-          <p className="mt-6 text-lg leading-relaxed text-muted">
+          <p className="mt-6 text-lg leading-relaxed text-on-ink/80">
             There is a large, profitable part of British trade that mainstream banks have quietly
             withdrawn from. Not fraudsters — importers, wholesalers, distributors and independent
             professionals turning over real money, declined at onboarding or offboarded a year later
             because a whole category was judged too much work.
           </p>
-          <p className="mt-4 text-lg leading-relaxed text-muted">
+          <p className="mt-4 text-lg leading-relaxed text-on-ink/80">
             {brand.name} was built for those businesses: an account in your own company name, money
             in from your customers, currency converted at a rate you were quoted, money out to your
-            suppliers the same day. Run by people who know the trade and will pick up the phone.
+            suppliers the same day. Run by people who know the trade and answer their own email.
           </p>
         </div>
       </Section>

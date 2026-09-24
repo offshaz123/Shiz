@@ -113,68 +113,6 @@ function MoneySending({ className = "" }: SceneProps) {
   );
 }
 
-/** Where the money goes: corridors, not a sales map. */
-function GlobalReach({ className = "" }: SceneProps) {
-  return (
-    <svg viewBox="0 0 420 280" className={className} role="presentation" aria-hidden="true">
-      <defs>
-        <linearGradient id="gr-bg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#eef4ff" />
-          <stop offset="100%" stopColor="#e2f4f9" />
-        </linearGradient>
-        <linearGradient id="gr-globe" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#4c6ef5" />
-          <stop offset="100%" stopColor="#069ec1" />
-        </linearGradient>
-      </defs>
-
-      <rect width="420" height="280" rx="26" fill="url(#gr-bg)" />
-
-      <g transform="translate(210 140)">
-        <circle r="96" fill="url(#gr-globe)" />
-        {/* Latitudes. */}
-        <ellipse rx="96" ry="32" fill="none" stroke="#ffffff" strokeWidth="1.6" opacity="0.42" />
-        <ellipse rx="96" ry="66" fill="none" stroke="#ffffff" strokeWidth="1.6" opacity="0.3" />
-        {/* Longitudes. */}
-        <ellipse rx="34" ry="96" fill="none" stroke="#ffffff" strokeWidth="1.6" opacity="0.42" />
-        <ellipse rx="70" ry="96" fill="none" stroke="#ffffff" strokeWidth="1.6" opacity="0.26" />
-        <line x1="0" y1="-96" x2="0" y2="96" stroke="#ffffff" strokeWidth="1.6" opacity="0.42" />
-      </g>
-
-      {/* Corridors arcing off the surface. */}
-      <path
-        d="M140 92 C 190 34, 300 44, 336 104"
-        fill="none"
-        stroke="#d97706"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeDasharray="8 8"
-      />
-      <path
-        d="M118 176 C 168 246, 286 244, 334 184"
-        fill="none"
-        stroke="#e0537a"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeDasharray="8 8"
-      />
-
-      {/* Pins at the ends of each corridor. */}
-      {[
-        { x: 140, y: 92, fill: "#d97706" },
-        { x: 336, y: 104, fill: "#d97706" },
-        { x: 118, y: 176, fill: "#e0537a" },
-        { x: 334, y: 184, fill: "#e0537a" },
-      ].map((pin) => (
-        <g key={`${pin.x}-${pin.y}`}>
-          <circle cx={pin.x} cy={pin.y} r="11" fill="#ffffff" />
-          <circle cx={pin.x} cy={pin.y} r="6" fill={pin.fill} />
-        </g>
-      ))}
-    </svg>
-  );
-}
-
 /** The platform, for the side of the business that sells software. */
 function Platform({ className = "" }: SceneProps) {
   return (
@@ -248,7 +186,6 @@ function Platform({ className = "" }: SceneProps) {
 
 const scenes = {
   "money-sending": MoneySending,
-  "global-reach": GlobalReach,
   platform: Platform,
 } as const;
 

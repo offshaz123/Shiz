@@ -109,8 +109,12 @@ export function GlobeBackdrop() {
         ))}
       </svg>
 
-      {/* Sinks the bottom of the globe into the page rather than cropping it. */}
-      <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-background to-transparent" />
+      {/* No bottom fade. There used to be a 10rem wash from --background here,
+          which sank the globe into the page back when the hero was white. On
+          the blue band it did the opposite: it bleached the bottom of the
+          hero out to white over a long gradient, so the section ended in a
+          smear instead of an edge. The globe is masked well inside the band,
+          so it does not need it. */}
     </div>
   );
 }

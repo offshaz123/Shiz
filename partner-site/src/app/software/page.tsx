@@ -56,18 +56,21 @@ export default function SoftwarePage() {
         ]}
       />
 
-      <Section>
+      <Section
+        tone="ink"
+        backdrop={{ src: "/images/demo-presentation.webp", position: "center 28%" }}
+      >
         <div className="max-w-3xl">
           <Eyebrow>For licensed money service businesses</Eyebrow>
           <h1 className="font-display mt-4 text-4xl font-semibold leading-tight tracking-tight sm:text-5xl">
             You have the licence. This is the technology to run it on.
           </h1>
-          <p className="mt-6 text-lg leading-relaxed text-muted">
+          <p className="mt-6 text-lg leading-relaxed text-on-ink/80">
             If you hold your own SPI or API permission, you are already allowed to operate. What
             usually stands in the way is software — and building a portal, two mobile apps and a
             compliant back office yourself costs six figures and the best part of a year.
           </p>
-          <p className="mt-4 text-lg leading-relaxed text-muted">
+          <p className="mt-4 text-lg leading-relaxed text-on-ink/80">
             This is that platform, already built, already integrated, and branded as yours.
           </p>
           <div className="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -79,7 +82,7 @@ export default function SoftwarePage() {
             </Link>
             <a
               href={`mailto:${brand.email}`}
-              className="rounded-full border border-border bg-background px-6 py-3.5 text-center text-sm font-semibold transition-colors hover:border-accent"
+              className="rounded-full border border-white/30 bg-white/10 px-6 py-3.5 text-center text-sm font-semibold text-on-ink transition-colors hover:border-white/55 hover:bg-white/20"
             >
               Email {brand.email}
             </a>

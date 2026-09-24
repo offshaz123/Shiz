@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { PhotoBackdrop } from "@/components/PhotoBackdrop";
 
 /**
  * The page rhythm: one max width, one gutter, one vertical spacing scale.
@@ -9,11 +10,19 @@ export function Section({
   className = "",
   tone = "default",
   id,
+  backdrop,
 }: {
   children: ReactNode;
   className?: string;
   tone?: "default" | "surface" | "ink";
   id?: string;
+  /**
+   * A photograph behind the whole band. It has to hang off the <section>
+   * rather than the inner container, or it would be clipped to the 6xl
+   * measure and stop short of the edges. Only use it with tone="ink": the
+   * wash is dark, and dark copy on it would be unreadable.
+   */
+  backdrop?: { src: string; strength?: "full" | "soft"; position?: string };
 }) {
   const tones = {
     default: "",
@@ -22,8 +31,12 @@ export function Section({
   } as const;
 
   return (
-    <section id={id} className={`${tones[tone]} ${className}`}>
-      <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">{children}</div>
+    <section
+      id={id}
+      className={`${tones[tone]} ${backdrop ? "relative overflow-hidden" : ""} ${className}`}
+    >
+      {backdrop && <PhotoBackdrop {...backdrop} />}
+      <div className="relative mx-auto max-w-6xl px-5 py-16 sm:py-20">{children}</div>
     </section>
   );
 }
