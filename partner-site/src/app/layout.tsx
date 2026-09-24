@@ -3,6 +3,7 @@ import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { ChromeSlot } from "@/components/ChromeSlot";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { CookieConsent } from "@/components/CookieConsent";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/StructuredData";
@@ -73,9 +74,13 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col bg-background text-foreground">
         <OrganizationJsonLd />
         <WebSiteJsonLd />
-        <Header />
+        <ChromeSlot>
+          <Header />
+        </ChromeSlot>
         <main className="flex-1">{children}</main>
-        <Footer />
+        <ChromeSlot>
+          <Footer />
+        </ChromeSlot>
         <WhatsAppButton />
         <CookieConsent />
       </body>

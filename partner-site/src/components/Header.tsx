@@ -98,6 +98,12 @@ export function Header() {
 
         <div className="flex items-center gap-2">
           <Link
+            href="/login"
+            className="hidden rounded-full px-4 py-2.5 text-sm font-semibold text-muted transition-colors hover:text-foreground sm:inline-flex"
+          >
+            Log in
+          </Link>
+          <Link
             href="/contact"
             className="btn btn-primary hidden !px-5 !py-2.5 sm:inline-flex"
           >
@@ -150,9 +156,16 @@ export function Header() {
               </Link>
             ))}
             <Link
+              href="/login"
+              onClick={() => setOpen(false)}
+              className="btn btn-ghost mt-3"
+            >
+              Log in
+            </Link>
+            <Link
               href="/contact"
               onClick={() => setOpen(false)}
-              className="btn btn-primary mt-3 mb-3"
+              className="btn btn-primary mt-2 mb-3"
             >
               Talk to us
             </Link>

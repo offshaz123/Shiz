@@ -46,3 +46,6 @@ next-env.d.ts
 /partner-site/node_modules
 /partner-site/.next/
 /partner-site/out/
+
+# The account store. Real user records and password hashes — never commit.
+.data/
