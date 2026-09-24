@@ -78,10 +78,10 @@ export default function SoftwarePage() {
               Book a live demo
             </Link>
             <a
-              href={`tel:${brand.phoneE164}`}
+              href={`mailto:${brand.email}`}
               className="rounded-full border border-border bg-background px-6 py-3.5 text-center text-sm font-semibold transition-colors hover:border-accent"
             >
-              Call {brand.phoneDisplay}
+              Email {brand.email}
             </a>
           </div>
         </div>

@@ -123,11 +123,6 @@ export function Footer() {
                   {brand.email}
                 </a>
               </p>
-              <p>
-                <a href={`tel:${brand.phoneE164}`} className={linkClass}>
-                  {brand.phoneDisplay}
-                </a>
-              </p>
               {brand.address.city && (
                 <p className="text-muted">
                   {[

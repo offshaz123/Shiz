@@ -18,7 +18,7 @@ export default function ThankYouPage() {
         <h1 className="font-display mt-4 text-4xl font-semibold tracking-tight">Thank you — that is with us</h1>
         <p className="mt-6 text-base leading-relaxed text-muted">
           We read every enquiry ourselves and usually come back the same working day. If it is
-          urgent, call {brand.phoneDisplay} and ask for whoever is covering new accounts.
+          urgent, email {brand.email} and put &ldquo;urgent&rdquo; in the subject line.
         </p>
         <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
           <Link

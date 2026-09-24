@@ -90,7 +90,7 @@ export function EnquiryForm({
     } catch {
       setSubmitting(false);
       setError(
-        `We couldn't send that just now. Please try again, or call us on ${brand.phoneDisplay}.`
+        `We couldn't send that just now. Please try again, or email us at ${brand.email}.`
       );
     }
   }

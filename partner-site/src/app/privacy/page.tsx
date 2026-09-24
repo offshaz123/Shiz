@@ -36,7 +36,7 @@ const sections: { heading: string; body?: string[]; items?: string[] }[] = [
     body: [
       `${brand.name} is committed to protecting your privacy and safeguarding your personal data. This notice explains what we collect when you use this website, how we use it, who we share it with, and what rights you have over it. It is given in accordance with the UK General Data Protection Regulation ("UK GDPR") and the Data Protection Act 2018.`,
       `${brand.name} is an introducer. The regulated payment services, and the account you would hold, are provided by ${provider.regulatedEntity}, who is authorised and regulated by the Financial Conduct Authority under ${provider.permissions} (firm reference number ${provider.firmReferenceNumber}). ${provider.name}'s own privacy notice applies to everything that happens after we introduce you, and you should read it alongside this one.`,
-      `If you have a question about anything in this notice, email ${brand.email} or call ${brand.phoneDisplay}.`,
+      `If you have a question about anything in this notice, email ${brand.email}.`,
     ],
   },
   {

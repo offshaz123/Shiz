@@ -464,12 +464,6 @@ export default function Home() {
             </p>
             <div className="mt-8 space-y-3 text-sm">
               <p>
-                <span className="text-muted">Call </span>
-                <a href={`tel:${brand.phoneE164}`} className="font-semibold hover:text-accent">
-                  {brand.phoneDisplay}
-                </a>
-              </p>
-              <p>
                 <span className="text-muted">Email </span>
                 <a href={`mailto:${brand.email}`} className="font-semibold hover:text-accent">
                   {brand.email}

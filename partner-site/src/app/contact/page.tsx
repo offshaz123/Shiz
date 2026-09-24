@@ -102,7 +102,7 @@ export default function ContactPage() {
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-muted">
               Questions about an account, a partnership, or how any of this is regulated — it
-              reaches a person either way.
+              reaches a person, not a ticket queue.
             </p>
 
             <div className="mt-9 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-sm">
@@ -111,12 +111,6 @@ export default function ContactPage() {
                 className="rounded-full border border-border bg-background px-4 py-2 font-medium transition-colors hover:border-accent hover:text-accent"
               >
                 {brand.email}
-              </a>
-              <a
-                href={`tel:${brand.phoneE164}`}
-                className="rounded-full border border-border bg-background px-4 py-2 font-medium transition-colors hover:border-accent hover:text-accent"
-              >
-                {brand.phoneDisplay}
               </a>
               <span className="rounded-full border border-transparent px-2 py-2 text-muted">
                 Replies within one business day
@@ -184,14 +178,6 @@ export default function ContactPage() {
                 <dd className="mt-1.5">
                   <a href={`mailto:${brand.email}`} className="font-semibold hover:text-accent">
                     {brand.email}
-                  </a>
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs uppercase tracking-wide text-on-ink/50">Phone</dt>
-                <dd className="mt-1.5">
-                  <a href={`tel:${brand.phoneE164}`} className="font-semibold hover:text-accent">
-                    {brand.phoneDisplay}
                   </a>
                 </dd>
               </div>

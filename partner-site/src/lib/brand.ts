@@ -36,8 +36,12 @@ export const brand = {
     "Business payment accounts in your own company name for UK importers, wholesalers and distributors. Collect from your retailers, convert at a proper rate, and pay suppliers in USD, AED, HKD and EUR the same day.",
 
   email: "info@ovaropay.com",
-  phoneDisplay: "020 0000 0000",
-  phoneE164: "+442000000000",
+  /**
+   * There is deliberately no phone number. Enquiries come in by email and get
+   * answered by the person who can actually answer them; a number nobody picks
+   * up is worse than no number at all. If one is ever added it goes here and
+   * the places that used to print it are in this commit's history.
+   */
   /** Digits only, no plus. Leave empty to hide the WhatsApp button. */
   whatsappNumber: "",
   whatsappMessage:

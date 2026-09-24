@@ -24,7 +24,6 @@ export function OrganizationJsonLd() {
         url: brand.url,
         description: brand.description,
         email: brand.email,
-        telephone: brand.phoneE164,
         areaServed: "GB",
         currenciesAccepted: currencies.map((c) => c.code).join(", "),
         ...(brand.address.city
