@@ -11,7 +11,7 @@ const steps = [
   {
     icon: "handshake",
     title: "Tell us the shape of the business",
-    body: "What you trade, roughly what comes in each month, and the currency that goes out. A phone call is usually enough to know whether the account fits.",
+    body: "What you trade, roughly what comes in each month, and the currency that goes out. A short email is usually enough to know whether the account fits.",
   },
   {
     icon: "document",
@@ -32,19 +32,29 @@ export function GetStarted() {
         <div key={step.title} className="relative">
           {index < steps.length - 1 && (
             <span
-              className="absolute left-[calc(50%+2.25rem)] right-[-1.5rem] top-7 hidden h-px bg-border md:block"
+              className="absolute left-[calc(50%+2.75rem)] right-[calc(0.5rem-50%)] top-9 hidden h-px bg-border md:block"
               aria-hidden="true"
             />
           )}
 
           <div className="relative flex flex-col items-center text-center">
+            {/* The sticker. The number is the whole point of it, so the number
+                is what is big; the icon rides the corner on a white chip. The
+                tilt alternates so a row of three does not look stamped. */}
             <span
-              className={`icon-tile icon-tile-${index + 1} flex h-14 w-14 items-center justify-center rounded-2xl`}
+              className={`step-sticker icon-tile-${index + 1} relative flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-[1.35rem]`}
+              style={{ transform: `rotate(${index % 2 === 0 ? -6 : 5}deg)` }}
             >
-              <Icon name={step.icon} className="h-6 w-6" />
+              <span className="font-display text-2xl font-bold tabular-nums">
+                0{index + 1}
+              </span>
+              <span
+                className={`step-chip absolute -right-2.5 -bottom-2.5 flex h-8 w-8 items-center justify-center rounded-xl`}
+              >
+                <Icon name={step.icon} className="h-4 w-4" />
+              </span>
             </span>
-            <span className="font-mono mt-4 text-xs text-muted">0{index + 1}</span>
-            <h3 className="font-display mt-2 text-lg font-semibold">{step.title}</h3>
+            <h3 className="font-display mt-7 text-lg font-semibold">{step.title}</h3>
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-muted">{step.body}</p>
           </div>
         </div>

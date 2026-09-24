@@ -18,6 +18,7 @@ import { SpreadCost } from "@/components/SpreadCost";
 import { GetStarted } from "@/components/GetStarted";
 import { Flag } from "@/components/Flag";
 import { IconTile } from "@/components/IconTile";
+import { Illustration } from "@/components/Illustration";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -55,7 +56,7 @@ export default function Home() {
       <FaqJsonLd faqs={faqs} />
 
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-border">
+      <section className="hero-blue relative overflow-hidden">
         <GlobeBackdrop />
         <div className="relative mx-auto max-w-6xl px-5 pt-16 pb-20 sm:pt-24 sm:pb-28">
           <div className="grid gap-16 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-10">
@@ -110,7 +111,7 @@ export default function Home() {
                 </Link>
               </div>
 
-              <dl className="mt-12 grid max-w-xl grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-3">
+              <dl className="hero-stat mt-12 grid max-w-xl grid-cols-2 gap-x-6 gap-y-6 pt-8 sm:grid-cols-3">
                 <div>
                   <dt className="text-sm text-muted">Account name</dt>
                   <dd className="mt-1 text-base font-semibold">Your company&rsquo;s</dd>
@@ -164,11 +165,14 @@ export default function Home() {
 
       {/* Pillars */}
       <Section>
-        <SectionHeading
-          eyebrow="What the account does"
-          title="Three things, and they are your whole working week"
-          lede="Money in from your buyers, currency converted, money out to your suppliers. That is the product. Everything else on this page is detail underneath it."
-        />
+        <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+          <SectionHeading
+            eyebrow="What the account does"
+            title="Three things, and they are your whole working week"
+            lede="Money in from your buyers, currency converted, money out to your suppliers. That is the product. Everything else on this page is detail underneath it."
+          />
+          <Illustration name="money-sending" className="w-full" />
+        </div>
         <div className="mt-12 grid gap-5 md:grid-cols-3">
           {pillars.map((pillar, index) => (
             <Card key={pillar.title} className="flex flex-col">
@@ -329,18 +333,7 @@ export default function Home() {
               See the platform
             </Link>
           </div>
-          <ul className="grid gap-3 text-sm">
-            {["Customer web portal", "iOS and Android apps", "Admin back end", "Live demo, in person"].map(
-              (item) => (
-                <li
-                  key={item}
-                  className="rounded-xl border border-border bg-card px-4 py-3.5 font-medium"
-                >
-                  {item}
-                </li>
-              )
-            )}
-          </ul>
+          <Illustration name="platform" className="w-full" />
         </div>
       </Section>
 
@@ -356,8 +349,11 @@ export default function Home() {
           lede="One account for money in, the currency in between, and money out — with the rate shown before you commit rather than after."
         />
 
-        <div className="mt-14 card reveal p-6 sm:p-8">
-          <CurrencyShowcase />
+        <div className="mt-14 grid gap-5 lg:grid-cols-[1.5fr_1fr] lg:items-center">
+          <div className="card reveal p-6 sm:p-8">
+            <CurrencyShowcase />
+          </div>
+          <Illustration name="global-reach" className="w-full" />
         </div>
       </Section>
 
