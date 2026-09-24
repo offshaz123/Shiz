@@ -72,11 +72,18 @@ export function HeaderAccount({ onNavigate }: { onNavigate?: () => void }) {
             </p>
             <p className="truncate text-xs text-muted">{account.email}</p>
           </div>
+          <Link
+            href="/account"
+            onClick={() => setOpen(false)}
+            className="mt-1 block rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors hover:bg-surface"
+          >
+            Account settings
+          </Link>
           <button
             type="button"
             onClick={logOut}
             disabled={leaving}
-            className="mt-1 w-full rounded-xl px-3 py-2.5 text-left text-sm font-semibold transition-colors hover:bg-surface disabled:opacity-60"
+            className="w-full rounded-xl px-3 py-2.5 text-left text-sm font-semibold transition-colors hover:bg-surface disabled:opacity-60"
           >
             {leaving ? "Logging out…" : "Log out"}
           </button>

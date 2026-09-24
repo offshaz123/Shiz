@@ -51,6 +51,7 @@ const company = [
 const support = [
   { label: "Opening an account", href: "/opening-an-account" },
   { label: "Send an enquiry", href: "/contact" },
+  { label: "Give us feedback", href: "/feedback" },
   { label: "Privacy policy", href: "/privacy" },
   { label: "Cookie policy", href: "/cookies" },
 ];
@@ -203,7 +204,15 @@ export function Footer() {
             <p>
               &copy; {new Date().getFullYear()} {brand.legalName}. All rights reserved.
             </p>
-            <CookieSettingsLink className="text-left underline-offset-4 hover:text-foreground hover:underline" />
+            <span className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <Link
+                href="/feedback"
+                className="underline-offset-4 hover:text-foreground hover:underline"
+              >
+                Feedback
+              </Link>
+              <CookieSettingsLink className="text-left underline-offset-4 hover:text-foreground hover:underline" />
+            </span>
           </div>
         </div>
       </div>

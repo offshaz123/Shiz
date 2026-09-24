@@ -27,6 +27,14 @@ const SESSION_DAYS = 30;
 
 export const SESSION_COOKIE = "ovaropay_session";
 
+export type Address = {
+  line1: string;
+  line2: string;
+  city: string;
+  postcode: string;
+  country: string;
+};
+
 export type User = {
   id: string;
   email: string;
@@ -35,9 +43,13 @@ export type User = {
   /** "salt:hash", both hex. */
   password: string;
   createdAt: string;
+  /** Optional from here down — an account is usable without any of it. */
+  phone?: string;
+  company?: string;
+  address?: Address;
 };
 
-export type PublicUser = Pick<User, "id" | "email" | "firstName" | "lastName" | "createdAt">;
+export type PublicUser = Omit<User, "password">;
 
 /** Strip the password before anything leaves the server. */
 export function publicUser(user: User): PublicUser {
@@ -164,6 +176,77 @@ export async function createUser(input: {
     createdAt: new Date().toISOString(),
   };
   await writeUsers([...users, user]);
+  return user;
+}
+
+/** Fields a person may change about themselves. Never the id or the email. */
+export type ProfilePatch = Partial<
+  Pick<User, "firstName" | "lastName" | "phone" | "company" | "address">
+>;
+
+async function mutate(id: string, change: (user: User) => User) {
+  const users = await readUsers();
+  const index = users.findIndex((user) => user.id === id);
+  if (index === -1) return null;
+  const updated = change(users[index]);
+  users[index] = updated;
+  await writeUsers(users);
+  return updated;
+}
+
+export function updateProfile(id: string, patch: ProfilePatch) {
+  return mutate(id, (user) => ({
+    ...user,
+    ...(patch.firstName !== undefined ? { firstName: patch.firstName.trim() } : {}),
+    ...(patch.lastName !== undefined ? { lastName: patch.lastName.trim() } : {}),
+    ...(patch.phone !== undefined ? { phone: patch.phone.trim() } : {}),
+    ...(patch.company !== undefined ? { company: patch.company.trim() } : {}),
+    ...(patch.address !== undefined ? { address: patch.address } : {}),
+  }));
+}
+
+export async function setPassword(id: string, password: string) {
+  const hashed = await hashPassword(password);
+  return mutate(id, (user) => ({ ...user, password: hashed }));
+}
+
+/* -------------------------------------------------------------------------
+   Password reset tokens.
+
+   Stateless, like the session, but signed over the CURRENT PASSWORD HASH as
+   well as the id and expiry. That is what makes them single-use without a
+   table to track them in: the moment the password changes the hash changes,
+   every token minted against the old one stops verifying, and a link that
+   has been used — or an old link from a previous request — is dead.
+
+   One hour, because a reset link sitting in a mailbox is a way into the
+   account.
+   ---------------------------------------------------------------------- */
+
+const RESET_MINUTES = 60;
+
+const signReset = (payload: string, passwordHash: string) =>
+  createHmac("sha256", secret()).update(`reset:${payload}:${passwordHash}`).digest("hex");
+
+export function createResetToken(user: User) {
+  const payload = `${user.id}.${Date.now() + RESET_MINUTES * 60_000}`;
+  return `${payload}.${signReset(payload, user.password)}`;
+}
+
+export async function userForResetToken(token: string): Promise<User | null> {
+  const parts = token.split(".");
+  if (parts.length !== 3) return null;
+
+  const [userId, expiry, signature] = parts;
+  if (!Number(expiry) || Number(expiry) < Date.now()) return null;
+
+  const user = await findById(userId);
+  if (!user) return null;
+
+  const expected = Buffer.from(signReset(`${userId}.${expiry}`, user.password), "hex");
+  const given = Buffer.from(signature, "hex");
+  if (expected.length !== given.length || !timingSafeEqual(expected, given)) return null;
+
   return user;
 }
 

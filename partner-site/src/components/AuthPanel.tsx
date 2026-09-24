@@ -313,6 +313,17 @@ export function AuthPanel() {
           </p>
         )}
 
+        {!isSignup && (
+          <p className="-mt-1 text-right">
+            <Link
+              href="/forgot-password"
+              className="text-sm font-semibold text-accent-2 hover:underline"
+            >
+              Forgotten your password?
+            </Link>
+          </p>
+        )}
+
         <button type="submit" disabled={submitting} className="btn btn-primary w-full disabled:opacity-60">
           {submitting
             ? isSignup
