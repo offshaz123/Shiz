@@ -31,7 +31,14 @@ export async function PATCH(request: Request) {
     // The email is not in the patch on purpose. Changing it is a change of
     // identity — it would need the new address verified before it takes
     // effect, or an account can be moved to someone else's inbox.
+    // Clamped rather than trusted: this drives a figure shown back to the
+    // person, and a negative or absurd number would render as nonsense.
+    const rawVolume = Number(body.monthlyVolume);
+    const monthlyVolume =
+      Number.isFinite(rawVolume) && rawVolume > 0 ? Math.min(Math.round(rawVolume), 100_000_000) : 0;
+
     const updated = await updateProfile(me.id, {
+      monthlyVolume,
       firstName,
       lastName,
       phone: str(body.phone, 40).trim(),

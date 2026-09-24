@@ -50,7 +50,7 @@ export function ResetPasswordForm() {
         return;
       }
       // The route signs them in, so go straight to the site.
-      window.location.assign("/");
+      window.location.assign("/dashboard");
     } catch {
       setError("We could not reach the server. Please try again.");
       setBusy(false);

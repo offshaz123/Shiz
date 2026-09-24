@@ -116,6 +116,8 @@ export function AuthPanel() {
         return;
       }
 
+      // Straight to the dashboard, which is the point of signing in.
+      //
       // A FULL page load, not router.push().
       //
       // push() followed by refresh() raced: refresh invalidates the router
@@ -127,7 +129,7 @@ export function AuthPanel() {
       //
       // A hard load also guarantees the new session cookie is on the request
       // that renders the next page, with no client cache in the way.
-      window.location.assign("/");
+      window.location.assign("/dashboard");
     } catch {
       setNotice(`We could not reach the server. Please try again, or email ${brand.email}.`);
       setSubmitting(false);
@@ -143,8 +145,8 @@ export function AuthPanel() {
         <p className="mt-3 text-sm leading-relaxed text-muted">
           You are already signed in as {existing.email}.
         </p>
-        <Link href="/" className="btn btn-primary mt-7 w-full">
-          Go to the site
+        <Link href="/dashboard" className="btn btn-primary mt-7 w-full">
+          Go to your account
         </Link>
       </div>
     );

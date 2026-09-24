@@ -73,9 +73,16 @@ export function HeaderAccount({ onNavigate }: { onNavigate?: () => void }) {
             <p className="truncate text-xs text-muted">{account.email}</p>
           </div>
           <Link
-            href="/account"
+            href="/dashboard"
             onClick={() => setOpen(false)}
             className="mt-1 block rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors hover:bg-surface"
+          >
+            Your account
+          </Link>
+          <Link
+            href="/account"
+            onClick={() => setOpen(false)}
+            className="block rounded-xl px-3 py-2.5 text-sm font-semibold transition-colors hover:bg-surface"
           >
             Account settings
           </Link>

@@ -47,6 +47,8 @@ export type User = {
   phone?: string;
   company?: string;
   address?: Address;
+  /** Roughly what they convert in a month, in GBP. Drives the cost figure. */
+  monthlyVolume?: number;
 };
 
 export type PublicUser = Omit<User, "password">;
@@ -181,7 +183,7 @@ export async function createUser(input: {
 
 /** Fields a person may change about themselves. Never the id or the email. */
 export type ProfilePatch = Partial<
-  Pick<User, "firstName" | "lastName" | "phone" | "company" | "address">
+  Pick<User, "firstName" | "lastName" | "phone" | "company" | "address" | "monthlyVolume">
 >;
 
 async function mutate(id: string, change: (user: User) => User) {
@@ -202,6 +204,7 @@ export function updateProfile(id: string, patch: ProfilePatch) {
     ...(patch.phone !== undefined ? { phone: patch.phone.trim() } : {}),
     ...(patch.company !== undefined ? { company: patch.company.trim() } : {}),
     ...(patch.address !== undefined ? { address: patch.address } : {}),
+    ...(patch.monthlyVolume !== undefined ? { monthlyVolume: patch.monthlyVolume } : {}),
   }));
 }
 

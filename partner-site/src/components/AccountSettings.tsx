@@ -51,6 +51,7 @@ export function AccountSettings({ user }: { user: PublicUser }) {
           lastName: form.get("lastName"),
           company: form.get("company"),
           phone: form.get("phone"),
+          monthlyVolume: form.get("monthlyVolume"),
           address: {
             line1: form.get("line1"),
             line2: form.get("line2"),
@@ -135,6 +136,28 @@ export function AccountSettings({ user }: { user: PublicUser }) {
         <div className="mt-4">
           <label className={label} htmlFor="phone">Phone</label>
           <input id="phone" name="phone" type="tel" autoComplete="tel" defaultValue={user.phone ?? ""} className={field} />
+        </div>
+
+        <div className="mt-4">
+          <label className={label} htmlFor="monthlyVolume">
+            Roughly what you convert each month{" "}
+            <span className="font-normal text-muted">(optional)</span>
+          </label>
+          <input
+            id="monthlyVolume"
+            name="monthlyVolume"
+            type="number"
+            min={0}
+            step={1000}
+            inputMode="numeric"
+            placeholder="100000"
+            defaultValue={user.monthlyVolume || ""}
+            className={field}
+          />
+          <p className="mt-1.5 text-xs leading-relaxed text-muted">
+            In pounds. Used only to show you what a margin costs at your size —
+            nobody is quoted anything from it.
+          </p>
         </div>
 
         <fieldset className="mt-6 border-t border-border pt-5">
