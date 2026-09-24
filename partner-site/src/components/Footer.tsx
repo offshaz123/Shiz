@@ -63,6 +63,44 @@ function ColumnHeading({ children }: { children: ReactNode }) {
 
 const linkClass = "text-muted transition-colors hover:text-foreground";
 
+
+/**
+ * The statutory trading disclosure.
+ *
+ * Companies Act 2006 s.82 and the Trading Disclosures Regulations 2015 require
+ * a limited company's website to carry its registered name, its number and its
+ * place of registration. It only has to appear once and it only has to be easy
+ * to find, so it lives here rather than on every page.
+ *
+ * It renders nothing until `registeredName` is filled in. That is deliberate:
+ * an incomplete disclosure is a fixable gap, but a disclosure naming a company
+ * the register does not show is a false statement, and this company is mid
+ * change-of-name. See the note in brand.ts.
+ */
+function CompanyDisclosure() {
+  if (!brand.registeredName || !brand.companyNumber) return null;
+
+  const office = [
+    brand.address.line1,
+    brand.address.line2,
+    brand.address.city,
+    brand.address.postcode,
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  return (
+    <p className="mt-4 text-xs leading-relaxed text-muted">
+      {brand.registeredName} is a company registered in {brand.registeredIn},
+      company number {brand.companyNumber}.
+      {office ? ` Registered office: ${office}.` : ""}
+      {brand.icoNumber
+        ? ` Registered with the Information Commissioner's Office, reference ${brand.icoNumber}.`
+        : ""}
+    </p>
+  );
+}
+
 export function Footer() {
   const links = socials.filter(
     (social) => brand.social[social.key as keyof typeof brand.social]
@@ -165,6 +203,7 @@ export function Footer() {
 
         <div className="mt-12 border-t border-border pt-8">
           <RegulatoryNote compact nameProvider />
+          <CompanyDisclosure />
           <div className="mt-4 flex flex-col gap-2 text-xs leading-relaxed text-muted sm:flex-row sm:items-center sm:justify-between">
             <p>
               &copy; {new Date().getFullYear()} {brand.legalName}. All rights reserved.

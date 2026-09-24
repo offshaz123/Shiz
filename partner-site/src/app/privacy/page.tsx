@@ -24,10 +24,11 @@ const { provider } = brand;
  * on its own site.
  *
  * TODO before go-live: have a solicitor read this alongside the terms that
- * will govern the account relationship, and fill in `brand.companyNumber` and
- * `brand.icoNumber` once the operating company is incorporated and registered
- * with the ICO. Registering with the ICO is a legal requirement, not a
- * formality, for a company processing personal data in the UK.
+ * will govern the account relationship, and fill in `brand.icoNumber` once the
+ * company is registered with the ICO. Registering with the ICO is a legal
+ * requirement, not a formality, for a company processing personal data in the
+ * UK. `brand.companyNumber` is filled in; `brand.registeredName` waits on the
+ * change of name landing on the register.
  */
 const sections: { heading: string; body?: string[]; items?: string[] }[] = [
   {

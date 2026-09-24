@@ -61,15 +61,29 @@ export const brand = {
   },
 
   /**
-   * The company behind the brand, for the privacy notice and the footer.
+   * The company behind the brand.
    *
-   * Both are empty until the operating company is incorporated and registered
-   * with the ICO. Every line that would print them is written to read
-   * correctly without them, so leaving them empty is safe — but fill them in
-   * as soon as you have them, because a privacy notice that cannot name its
-   * controller is one the ICO will ask about.
+   * This is a legal disclosure, not marketing copy. A limited company trading
+   * through a website must publish its registered name, its company number and
+   * its place of registration somewhere easily found on that site — Companies
+   * Act 2006 s.82 and the Trading Disclosures Regulations 2015. The footer
+   * prints them; the privacy notice prints the number beside the controller.
+   *
+   * `registeredName` must match Companies House CHARACTER FOR CHARACTER. It is
+   * the one field here that must never be guessed or run ahead of the register:
+   * publishing a name the register does not yet show is exactly the mismatch a
+   * bank's onboarding check flags. Company 10116052 is mid change-of-name, so
+   * it stays empty until the register shows OVAROPAY LTD, and the footer block
+   * hides itself while it is empty.
+   *
+   * The number, by contrast, never changes — a company keeps it through every
+   * rename — so it is safe to publish now.
+   *
+   * `icoNumber` fills in once the company is registered with the ICO.
    */
-  companyNumber: "",
+  registeredName: "",
+  registeredIn: "England and Wales",
+  companyNumber: "10116052",
   icoNumber: "",
 
   /** Public profiles. Leave a value empty to omit it from the footer and schema. */
