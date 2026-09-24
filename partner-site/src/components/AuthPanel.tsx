@@ -66,11 +66,13 @@ export function AuthPanel() {
   // which made a working session look like a broken one.
   const existing = useAccount();
   const [mode, setMode] = useState<"login" | "signup">("login");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [emailTaken, setEmailTaken] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   const isSignup = mode === "signup";
@@ -79,11 +81,13 @@ export function AuthPanel() {
   function switchTo(next: "login" | "signup") {
     setMode(next);
     setNotice(null);
+    setEmailTaken(false);
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setNotice(null);
+    setEmailTaken(false);
 
     if (isSignup && password !== confirm) {
       setNotice("The two passwords do not match.");
@@ -103,6 +107,7 @@ export function AuthPanel() {
       const data = await response.json().catch(() => null);
 
       if (!response.ok) {
+        setEmailTaken(data?.code === "email_taken");
         setNotice(
           data?.error ??
             `Something went wrong. Please try again, or email ${brand.email}.`
@@ -219,6 +224,8 @@ export function AuthPanel() {
             autoComplete="email"
             required
             placeholder="you@yourcompany.co.uk"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
             className={fieldClass}
           />
         </div>
@@ -305,12 +312,28 @@ export function AuthPanel() {
         )}
 
         {notice && (
-          <p
+          <div
             role="status"
             className="rounded-xl border border-accent/30 bg-accent-soft px-4 py-3 text-sm leading-relaxed text-accent-2"
           >
-            {notice}
-          </p>
+            <p>{notice}</p>
+            {emailTaken && (
+              // A dead end otherwise: the person has an account, cannot get
+              // in, and the form just says no. The email carries across.
+              <p className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 font-semibold">
+                <button
+                  type="button"
+                  onClick={() => switchTo("login")}
+                  className="underline underline-offset-4"
+                >
+                  Log in instead
+                </button>
+                <Link href="/forgot-password" className="underline underline-offset-4">
+                  Reset your password
+                </Link>
+              </p>
+            )}
+          </div>
         )}
 
         {!isSignup && (

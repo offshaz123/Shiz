@@ -67,12 +67,28 @@ export async function POST(request: Request) {
     throw err;
   }
 
-  // Deliberately the same wording a caller would get for a weak password
-  // rather than "that email is taken": the latter tells a stranger which of
-  // our addresses are real.
+  // This says plainly that the address is taken, which is a deliberate
+  // reversal.
+  //
+  // It used to be vague ("we could not create that account") to avoid
+  // telling a stranger which addresses are registered. That protection was
+  // illusory: 409 is returned ONLY for a duplicate, so the status code gave
+  // it away regardless of the wording, and anyone probing reads status codes
+  // rather than prose. All the vagueness achieved was confusing the person
+  // who genuinely had an account and could not work out why signing up
+  // failed.
+  //
+  // Real enumeration resistance here means answering 200 and sending the
+  // address an email instead — which would mean showing a signed-out person
+  // a success screen. For an account holding a name and a phone number and
+  // no money, that trade is not worth it. If this ever fronts anything
+  // financial, revisit it.
   if (!user) {
     return NextResponse.json(
-      { error: "We could not create that account. Try logging in instead." },
+      {
+        error: "An account already exists with that email address.",
+        code: "email_taken",
+      },
       { status: 409 }
     );
   }
