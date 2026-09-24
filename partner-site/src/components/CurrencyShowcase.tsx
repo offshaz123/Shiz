@@ -1,5 +1,7 @@
 "use client";
 
+import { useRates } from "@/lib/useRates";
+
 import { useCallback, useEffect, useState } from "react";
 import { currencies } from "@/lib/brand";
 import { Flag } from "@/components/Flag";
@@ -12,13 +14,19 @@ import { Flag } from "@/components/Flag";
  * tap takes over — the cycle restarts from whatever you chose rather than
  * yanking the card away a second later.
  *
- * Everything here is illustrative. The rates below are indicative mid-market
- * figures written down once, not a feed, and the card says so on its face so
- * nobody reads it as a live quote.
+ * The rates are LIVE mid-market reference rates from the European Central
+ * Bank, refreshed through /api/rates. The figures below are the fallback the
+ * card ships with, used until the fetch lands and if it ever fails — the
+ * layout must never depend on rates having arrived.
+ *
+ * Live or not, these are a reference rate and not a quote, and the card says
+ * so on its face. We introduce customers to a regulated firm; we do not
+ * price foreign exchange, and a number that reads like an offer would stray
+ * into a permission that is not ours.
  */
 const AMOUNT_GBP = 1240;
 
-const RATES: Record<string, number> = {
+const FALLBACK: Record<string, number> = {
   GBP: 1,
   USD: 1.2684,
   EUR: 1.1742,
@@ -51,17 +59,24 @@ const NOTES: Record<string, string> = {
 
 const SHOWN = currencies.filter((currency) => currency.code !== "GBP").slice(0, 6);
 
-function format(code: string) {
+function format(code: string, rates: Record<string, number>) {
   return new Intl.NumberFormat("en-GB", {
     style: "currency",
     currency: code,
     maximumFractionDigits: code === "HUF" ? 0 : 2,
-  }).format(AMOUNT_GBP * RATES[code]);
+  }).format(AMOUNT_GBP * rates[code]);
 }
 
 export function CurrencyShowcase() {
   const [index, setIndex] = useState(0);
   const active = SHOWN[index];
+
+  // Live rates when they land, the shipped figures until then. The component
+  // must render correctly either way: the page is static and reaches the
+  // browser before this resolves.
+  const live = useRates();
+  const rates =
+    live && Object.keys(live.rates).length > 1 ? live.rates : FALLBACK;
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -131,7 +146,7 @@ export function CurrencyShowcase() {
             <div className="flex items-center justify-between">
               <dt className="text-muted">Converted</dt>
               <dd className="font-mono">
-                £{AMOUNT_GBP.toLocaleString("en-GB")} at {RATES[active.code].toLocaleString("en-GB")}
+                £{AMOUNT_GBP.toLocaleString("en-GB")} at {rates[active.code].toLocaleString("en-GB", { maximumFractionDigits: 4 })}
               </dd>
             </div>
             <div className="flex items-center justify-between">
@@ -148,13 +163,29 @@ export function CurrencyShowcase() {
             key={active.code}
             className="font-display animate-amount mt-2 text-4xl font-semibold tracking-tight"
           >
-            {format(active.code)}
+            {format(active.code, rates)}
           </p>
           <p className="mt-2 text-sm text-accent-2">Rate shown before you commit.</p>
 
           <p className="mt-6 border-t border-border pt-4 text-xs leading-relaxed text-muted">
-            Illustrative: indicative rates written down once, not a live quote. The rate you are
-            given is quoted before you commit.
+            {live?.live && live.date ? (
+              <>
+                <span className="font-semibold text-foreground">
+                  Mid-market reference rate,{" "}
+                  {new Date(live.date).toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "short",
+                  })}
+                </span>{" "}
+                (European Central Bank). Not a quote — the rate you are given is quoted
+                before you commit, and will differ.
+              </>
+            ) : (
+              <>
+                Indicative mid-market rates, not a live quote. The rate you are given is
+                quoted before you commit.
+              </>
+            )}
           </p>
         </div>
 

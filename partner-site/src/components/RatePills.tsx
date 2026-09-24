@@ -1,4 +1,7 @@
+"use client";
+
 import { Flag } from "@/components/Flag";
+import { formatRate, useRates } from "@/lib/useRates";
 
 /**
  * The activity notifications that surface over the hero.
@@ -65,6 +68,11 @@ const arrows = {
 } as const;
 
 export function RatePills() {
+  // The first pill carries a real rate once it arrives; the rest describe
+  // activity rather than price, so they are unaffected.
+  const live = useRates();
+  const usd = live?.rates?.USD;
+
   return (
     // Hidden below lg. On a phone the band has no margins to speak of, so
     // every one of these positions would land on top of the copy.
@@ -95,8 +103,12 @@ export function RatePills() {
                 {arrow.glyph && (
                   <span className={`text-xs ${arrow.className}`}>{arrow.glyph}</span>
                 )}
-                <span className="font-mono text-sm font-semibold">{pill.value}</span>
-                <span className="text-[11px] text-white/45">{pill.note}</span>
+                <span className="font-mono text-sm font-semibold">
+                  {pill.label === "GBP → USD" && usd ? formatRate(usd) : pill.value}
+                </span>
+                <span className="text-[11px] text-white/45">
+                  {pill.label === "GBP → USD" && usd ? "mid-market" : pill.note}
+                </span>
               </span>
             </div>
           </div>

@@ -15,7 +15,7 @@ import { PaymentFlowCard } from "@/components/PaymentFlowCard";
 import { DashboardPreview } from "@/components/DashboardPreview";
 import { CurrencyMarquee } from "@/components/CurrencyMarquee";
 import { WhatYouCanDo } from "@/components/WhatYouCanDo";
-import { SpreadCost } from "@/components/SpreadCost";
+import { SpreadCalculator } from "@/components/SpreadCalculator";
 import { GetStarted } from "@/components/GetStarted";
 import { Flag } from "@/components/Flag";
 import { IconTile } from "@/components/IconTile";
@@ -147,7 +147,8 @@ export default function Home() {
           </div>
 
           <p className="relative mt-14 text-xs text-muted">
-            Figures, rates and activity shown here are illustrative, not a live feed.
+            Exchange rates are live mid-market reference rates from the European Central Bank,
+            not a quote. Amounts and activity shown here are illustrative.
           </p>
         </div>
       </section>
@@ -252,8 +253,8 @@ export default function Home() {
               been told the number.
             </p>
             <p className="mt-4 text-base leading-relaxed text-muted">
-              Here is what that margin takes out of a business, by the amount it converts each
-              month. The figures are arithmetic, not a quote.
+              Put in what you convert in a month and see what the margin actually takes out.
+              The figures are arithmetic, not a quote.
             </p>
             <Link href="/contact" className="btn btn-primary mt-8">
               Price one real transaction
@@ -261,7 +262,7 @@ export default function Home() {
             </Link>
           </div>
           <div className="reveal">
-            <SpreadCost />
+            <SpreadCalculator />
           </div>
         </div>
       </Section>

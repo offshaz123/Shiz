@@ -651,3 +651,46 @@ body {
   background: #ffffff;
   box-shadow: 0 4px 10px -4px color-mix(in srgb, var(--tone) 70%, transparent);
 }
+
+/* ---------------------------------------------------------------------------
+   The spread slider.
+
+   Range inputs cannot be styled through one selector: the track and thumb are
+   different pseudo-elements per engine, and a browser that does not recognise
+   the rule drops the whole block. So WebKit and Firefox are written out
+   separately rather than grouped, which would silently disable both.
+   ------------------------------------------------------------------------- */
+.spread-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--tone-2));
+  outline: none;
+}
+
+.spread-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 3px solid var(--accent);
+  box-shadow: 0 3px 10px -2px color-mix(in srgb, var(--accent) 70%, transparent);
+  cursor: grab;
+}
+
+.spread-slider::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 3px solid var(--accent);
+  box-shadow: 0 3px 10px -2px color-mix(in srgb, var(--accent) 70%, transparent);
+  cursor: grab;
+}
+
+.spread-slider:focus-visible {
+  box-shadow: var(--ring);
+}
