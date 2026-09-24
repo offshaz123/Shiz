@@ -446,26 +446,37 @@ body {
 
 /* Each pill takes the same cycle and a different delay, so one rises as the
    last one leaves rather than all of them breathing together. */
+/* The pills come and go as a GROUP.
+   
+   They used to hold for 5%-33% of the cycle each, on a four-second stagger,
+   which meant only ever one on screen and never a moment with none. The
+   reference site does the opposite: a handful surface together, sit long
+   enough to read, all clear, and the globe turns on its own for a good
+   while before they return. This window is the same for every pill; the
+   only thing that differs is a few tenths of a second of delay, so they
+   ripple in rather than snapping in together.
+
+   At 15s: in by 0.6s, held to ~7s, gone by 8s, then seven clear seconds. */
 @keyframes pill-cycle {
   0% {
     opacity: 0;
-    transform: translate3d(0, 14px, 0) scale(0.94);
+    transform: translate3d(0, 16px, 0) scale(0.94);
   }
-  5%,
-  26% {
+  4%,
+  46% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
   }
-  33%,
+  53%,
   100% {
     opacity: 0;
-    transform: translate3d(0, -10px, 0) scale(0.97);
+    transform: translate3d(0, -12px, 0) scale(0.97);
   }
 }
 
 .animate-pill {
   opacity: 0;
-  animation: pill-cycle 16s ease-in-out infinite;
+  animation: pill-cycle 15s ease-in-out infinite;
 }
 
 /* A one-shot entrance, for content that changes in place and must stay

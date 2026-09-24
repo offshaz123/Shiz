@@ -59,6 +59,8 @@ export default function Home() {
       {/* Hero */}
       <section className="hero-blue relative overflow-hidden">
         <GlobeBackdrop />
+        {/* Positioned against the band, not the card — see RatePills. */}
+        <RatePills />
         <div className="relative mx-auto max-w-6xl px-5 pt-16 pb-20 sm:pt-24 sm:pb-28">
           <div className="grid gap-16 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-10">
             <div>
@@ -137,10 +139,8 @@ export default function Home() {
               </dl>
             </div>
 
-            {/* The card, with the activity pills surfacing around it. */}
             <div className="relative lg:pl-4">
               <PaymentFlowCard />
-              <RatePills />
             </div>
           </div>
 
