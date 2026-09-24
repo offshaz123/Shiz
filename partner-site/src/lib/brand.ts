@@ -69,19 +69,26 @@ export const brand = {
    * Act 2006 s.82 and the Trading Disclosures Regulations 2015. The footer
    * prints them; the privacy notice prints the number beside the controller.
    *
-   * `registeredName` must match Companies House CHARACTER FOR CHARACTER. It is
-   * the one field here that must never be guessed or run ahead of the register:
-   * publishing a name the register does not yet show is exactly the mismatch a
-   * bank's onboarding check flags. Company 10116052 is mid change-of-name, so
-   * it stays empty until the register shows OVAROPAY LTD, and the footer block
-   * hides itself while it is empty.
+   * `registeredName` should match Companies House. At the time of writing it
+   * does not yet: company 10116052 is mid change-of-name and the register
+   * still shows ALLIANCE SECURITY GROUP LTD, with the change filed and the
+   * SIC update from the same session already posted. Published ahead of the
+   * register on the owner's instruction, the change being expected within
+   * days.
    *
-   * The number, by contrast, never changes — a company keeps it through every
-   * rename — so it is safe to publish now.
+   * Worth knowing what that trades off, if it is still out of step later:
+   * a company name on a website that the register does not show is what an
+   * onboarding or KYC check compares against, and a mismatch is the kind of
+   * thing it flags. If the change of name is ever refused or withdrawn, blank
+   * this field — the footer block hides itself when it is empty — rather than
+   * leaving it standing.
+   *
+   * The number needs no such care. A company keeps it through every rename,
+   * so 10116052 is true now and stays true.
    *
    * `icoNumber` fills in once the company is registered with the ICO.
    */
-  registeredName: "",
+  registeredName: "OvaroPay Ltd",
   registeredIn: "England and Wales",
   companyNumber: "10116052",
   icoNumber: "",
