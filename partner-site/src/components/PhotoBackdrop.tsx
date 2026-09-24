@@ -24,11 +24,16 @@ export function PhotoBackdrop({
   position = "center",
 }: {
   src: string;
-  strength?: "full" | "soft";
+  strength?: "full" | "soft" | "heavy";
   position?: string;
 }) {
   const wash =
-    strength === "full"
+    strength === "heavy"
+      ? `linear-gradient(100deg,
+           rgba(3, 22, 32, 0.97) 0%,
+           rgba(4, 34, 48, 0.93) 42%,
+           rgba(6, 74, 96, 0.82) 100%)`
+      : strength === "full"
       ? `linear-gradient(105deg,
            rgba(4, 29, 41, 0.95) 0%,
            rgba(5, 46, 64, 0.88) 45%,

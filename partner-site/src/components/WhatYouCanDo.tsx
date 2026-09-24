@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { PhotoBackdrop } from "@/components/PhotoBackdrop";
 import { currencies } from "@/lib/brand";
 
 /**
@@ -12,9 +13,20 @@ import { currencies } from "@/lib/brand";
  * anyone who has asked for reduced motion. The dots are real buttons: tapping
  * one takes over and the dwell restarts from there.
  *
- * The panels are built rather than photographed — a ledger grid and our own
- * accent light — because the alternative is stock photography of bank notes,
- * which every payments site in this category already has.
+ * The panel sits on a photograph with our blue washed over it, and the
+ * ledger grid stays on top for texture.
+ *
+ * This reverses an earlier decision. The panels used to be drawn rather than
+ * photographed, on the grounds that every payments site in this category
+ * already runs stock photography — and that still holds as a general point.
+ * What changed is that the picture is the owner's own and it is treated
+ * rather than dropped in: the wash keeps it in the brand, so it reads as our
+ * panel rather than as a stock image someone bought.
+ *
+ * The photograph is deliberately ONE image behind all four slides, not one
+ * per slide. The other images are already on this page, and the panel
+ * changing its own backdrop every six seconds on top of everything else
+ * moving would be one animation too many.
  */
 const slides = [
   {
@@ -78,7 +90,8 @@ export function WhatYouCanDo() {
       onFocusCapture={() => setPaused(true)}
       onBlurCapture={() => setPaused(false)}
     >
-      <div className="ink-tint relative overflow-hidden rounded-3xl text-on-ink">
+      <div className="relative overflow-hidden rounded-3xl text-on-ink">
+        <PhotoBackdrop src="/images/demo-presentation.webp" strength="heavy" position="center 30%" />
         <div className="ledger-grid pointer-events-none absolute inset-0 opacity-[0.12]" aria-hidden="true" />
 
         <div
@@ -86,27 +99,27 @@ export function WhatYouCanDo() {
           className="animate-amount relative grid gap-8 p-7 sm:p-10 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-12 lg:p-14"
         >
           <div>
-            <span className="inline-flex rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-accent-2">
+            <span className="inline-flex rounded-full border border-white/20 bg-white/15 px-3 py-1 text-xs font-semibold text-[#7dd3fc] backdrop-blur">
               {slide.badge}
             </span>
             <h3 className="font-display text-balance mt-5 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
               {slide.title}
             </h3>
-            <p className="mt-4 max-w-xl text-base leading-relaxed text-on-ink/70">{slide.body}</p>
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-white/80">{slide.body}</p>
             <Link
               href={slide.href}
-              className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-accent-2 transition-colors hover:text-accent-strong"
+              className="mt-7 inline-flex items-center gap-2 text-sm font-semibold text-[#7dd3fc] transition-colors hover:text-white"
             >
               {slide.linkLabel}
               <span aria-hidden="true">&rarr;</span>
             </Link>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-7 text-center backdrop-blur">
+          <div className="rounded-2xl border border-white/15 bg-white/[0.10] p-7 text-center backdrop-blur-md">
             <p className="font-display text-4xl font-semibold tracking-tight sm:text-5xl">
               {slide.statValue}
             </p>
-            <p className="mt-3 text-sm leading-relaxed text-on-ink/60">{slide.statLabel}</p>
+            <p className="mt-3 text-sm leading-relaxed text-white/70">{slide.statLabel}</p>
           </div>
         </div>
       </div>
