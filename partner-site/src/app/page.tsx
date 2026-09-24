@@ -14,11 +14,8 @@ import { PaymentFlowCard } from "@/components/PaymentFlowCard";
 import { DashboardPreview } from "@/components/DashboardPreview";
 import { CurrencyMarquee } from "@/components/CurrencyMarquee";
 import { WhatYouCanDo } from "@/components/WhatYouCanDo";
-import { HeadlineFacts } from "@/components/HeadlineFacts";
 import { SpreadCost } from "@/components/SpreadCost";
-import { BuiltFor } from "@/components/BuiltFor";
 import { GetStarted } from "@/components/GetStarted";
-import { CorridorGrid } from "@/components/CorridorGrid";
 import { Flag } from "@/components/Flag";
 import { IconTile } from "@/components/IconTile";
 
@@ -26,61 +23,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-const problems = [
-  {
-    icon: "block",
-    title: "Declined on the category, not the company",
-    body: "Whole sectors get turned away at onboarding because a bank has decided the category is too much work. It is rarely about what your business is actually doing.",
-  },
-  {
-    icon: "alert",
-    title: "Offboarded a year in",
-    body: "An account that worked fine suddenly closes with two months’ notice and no explanation, and the search starts again from nothing.",
-  },
-  {
-    icon: "search",
-    title: "Paying for FX without seeing the price",
-    body: "Two and a half to three percent is common, buried in the rate rather than shown as a fee. Most importers have never been quoted the number.",
-  },
-  {
-    icon: "clock",
-    title: "Payments held every time one is large",
-    body: "A supplier invoice for six figures triggers a review, the container waits, and the relationship with the supplier pays for it.",
-  },
-];
 
-/** The two cards beside the currency showcase. */
-const sideFeatures = [
-  {
-    icon: "clock",
-    title: "Same-day where it is possible",
-    body: "Supplier invoices settled the same day where the corridor and the cut-off allow it, rather than sitting in a queue while somebody decides whether a large payment looks right.",
-  },
-  {
-    icon: "chart",
-    title: "The rate before you commit",
-    body: "You are quoted, you decide, and then it goes. A purchase order you can price is worth more than a rate you find out about afterwards.",
-  },
-];
 
-/** The three cards under it. */
-const gridFeatures = [
-  {
-    icon: "collect",
-    title: "Money in from the UK",
-    body: "Take payments from retailers and buyers across the country into an account in your own company name, so it is clear who has paid you and for what.",
-  },
-  {
-    icon: "route",
-    title: "Money out to your suppliers",
-    body: "Pay suppliers, contractors and staff abroad from the currency balance you are holding, without a round trip through sterling on the way.",
-  },
-  {
-    icon: "shield",
-    title: "Onboarded properly",
-    body: "Real due diligence at the start, on the understanding that yours is a legitimate trading business. It is what makes an account that stays open.",
-  },
-];
 
 const reasons = [
   {
@@ -206,7 +150,6 @@ export default function Home() {
 
       <TrustBar />
 
-      <HeadlineFacts />
 
       {/* What you can do — one panel per line, turning on its own. */}
       <Section>
@@ -216,24 +159,6 @@ export default function Home() {
         />
         <div className="mt-12">
           <WhatYouCanDo />
-        </div>
-      </Section>
-
-      {/* The problem */}
-      <Section tone="surface">
-        <SectionHeading
-          eyebrow="The problem"
-          title="The high street has decided your sector is too much work"
-          lede="Not because you are doing anything wrong. Because a blanket risk appetite is cheaper to run than a proper look at an import business. Meanwhile the money still has to move."
-        />
-        <div className="mt-12 grid gap-5 sm:grid-cols-2">
-          {problems.map((problem, index) => (
-            <Card key={problem.title}>
-              <IconTile name={problem.icon} tone={index === 0 ? 6 : index + 4} />
-              <h3 className="mt-5 text-lg font-semibold">{problem.title}</h3>
-              <p className="mt-2.5 text-sm leading-relaxed text-muted">{problem.body}</p>
-            </Card>
-          ))}
         </div>
       </Section>
 
@@ -291,19 +216,6 @@ export default function Home() {
               </Link>
             </Card>
           ))}
-        </div>
-      </Section>
-
-      {/* Built for */}
-      <Section tone="surface">
-        <SectionHeading
-          center
-          eyebrow="Who it is built for"
-          title={`Who ${brand.shortName} is built for`}
-          lede="Three shapes of business, one account underneath. Pick the one that looks like yours."
-        />
-        <div className="mt-12">
-          <BuiltFor />
         </div>
       </Section>
 
@@ -432,7 +344,10 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* Everything the account does, as one grid */}
+      {/* Currencies. The cards that used to flank this restated Collect /
+          Convert / Pay and the Why-us grid almost word for word, so the
+          showcase now carries the section on its own and the marquee under it
+          does the countries. */}
       <Section tone="surface">
         <SectionHeading
           center
@@ -441,48 +356,17 @@ export default function Home() {
           lede="One account for money in, the currency in between, and money out — with the rate shown before you commit rather than after."
         />
 
-        <div className="mt-14 grid gap-5 lg:grid-cols-[1.55fr_1fr]">
-          <div className="card reveal p-6 sm:p-8">
-            <CurrencyShowcase />
-          </div>
-
-          <div className="grid gap-5">
-            {sideFeatures.map((feature, index) => (
-              <Card key={feature.title} className="flex flex-col justify-center">
-                <IconTile name={feature.icon} tone={index + 2} />
-                <h3 className="mt-5 text-lg font-semibold">{feature.title}</h3>
-                <p className="mt-2.5 text-sm leading-relaxed text-muted">{feature.body}</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-5 grid gap-5 md:grid-cols-3">
-          {gridFeatures.map((feature, index) => (
-            <Card key={feature.title}>
-              <IconTile name={feature.icon} tone={index + 4} />
-              <h3 className="mt-5 text-lg font-semibold">{feature.title}</h3>
-              <p className="mt-2.5 text-sm leading-relaxed text-muted">{feature.body}</p>
-            </Card>
-          ))}
-        </div>
-
-      </Section>
-
-      {/* Where the money lands */}
-      <Section>
-        <SectionHeading
-          center
-          eyebrow="Currencies"
-          title="Where the money lands"
-          lede={`${currencies.length} currencies on one account. If your supplier invoices in something that is not on this list, ask — the list behind the account is longer than the one on this page.`}
-        />
-        <div className="reveal mt-12">
-          <CorridorGrid />
+        <div className="mt-14 card reveal p-6 sm:p-8">
+          <CurrencyShowcase />
         </div>
       </Section>
 
-      <CurrencyMarquee />
+      {/* Its own white band. The marquee draws no background of its own, and
+          the sections either side are both tone="surface", so without this it
+          reads as one long grey block with a gap in it. */}
+      <div className="border-y border-border bg-background py-8">
+        <CurrencyMarquee />
+      </div>
 
       {/* Dashboard */}
       <Section tone="surface">
