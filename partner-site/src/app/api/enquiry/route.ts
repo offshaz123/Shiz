@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { mailer, mailFrom } from "@/lib/mailer";
 import { brand } from "@/lib/brand";
 
 const FIELDS: { key: string; label: string }[] = [
@@ -27,18 +27,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false }, { status: 400 });
   }
 
-  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
-  if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS) {
+  const transporter = mailer();
+  if (!transporter) {
     console.error("Enquiry form: SMTP environment variables are not configured");
     return NextResponse.json({ success: false }, { status: 500 });
   }
-
-  const transporter = nodemailer.createTransport({
-    host: SMTP_HOST,
-    port: Number(SMTP_PORT),
-    secure: Number(SMTP_PORT) === 465,
-    auth: { user: SMTP_USER, pass: SMTP_PASS },
-  });
 
   const rows = FIELDS.filter((field) => data[field.key])
     .map((field) => `${field.label}: ${data[field.key]}`)
@@ -46,7 +39,7 @@ export async function POST(request: Request) {
 
   try {
     await transporter.sendMail({
-      from: `"${brand.name} website" <${SMTP_USER}>`,
+      from: `"${brand.name} website" <${mailFrom()}>`,
       to: brand.email,
       replyTo: data.email,
       subject: `New enquiry: ${data.business || data.name}`,

@@ -1,4 +1,7 @@
 import { NextResponse } from "next/server";
+import { mailer, mailFrom } from "@/lib/mailer";
+import { welcomeEmail } from "@/lib/welcomeEmail";
+import { brand } from "@/lib/brand";
 import { cookies } from "next/headers";
 import {
   authConfigured,
@@ -76,6 +79,29 @@ export async function POST(request: Request) {
 
   const store = await cookies();
   store.set(SESSION_COOKIE, createSessionToken(user.id), sessionCookieOptions);
+
+  // Welcome email. Awaited so a hard failure shows up in the log rather than
+  // vanishing into an unhandled rejection, but never allowed to fail the
+  // request: the account exists either way, and nobody should be turned away
+  // because the mail server is misconfigured.
+  try {
+    const transport = mailer();
+    if (transport) {
+      const message = welcomeEmail(user.firstName);
+      await transport.sendMail({
+        from: `"${brand.name}" <${mailFrom()}>`,
+        to: user.email,
+        replyTo: brand.email,
+        subject: message.subject,
+        text: message.text,
+        html: message.html,
+      });
+    } else {
+      console.warn("Welcome email skipped: SMTP is not configured");
+    }
+  } catch (err) {
+    console.error("Welcome email failed to send", err);
+  }
 
   return NextResponse.json({ user: publicUser(user) });
 }

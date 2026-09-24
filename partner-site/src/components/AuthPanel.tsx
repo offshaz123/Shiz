@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { brand } from "@/lib/brand";
+import { greetingFor, useAccount } from "@/lib/useAccount";
 
 /**
  * The log in / sign up panel.
@@ -61,7 +61,10 @@ function Tick({ met }: { met: boolean }) {
 }
 
 export function AuthPanel() {
-  const router = useRouter();
+  // Somebody who is already signed in should not be looking at a login form.
+  // Before this, returning to /login showed the form again no matter what,
+  // which made a working session look like a broken one.
+  const existing = useAccount();
   const [mode, setMode] = useState<"login" | "signup">("login");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -108,15 +111,38 @@ export function AuthPanel() {
         return;
       }
 
-      // The session cookie is set by the response. Go to the home page,
-      // which is where the greeting appears. refresh() clears the router
-      // cache so the greeting's fetch does not hit a cached miss.
-      router.push("/");
-      router.refresh();
+      // A FULL page load, not router.push().
+      //
+      // push() followed by refresh() raced: refresh invalidates the router
+      // cache for the route you are currently on, and firing it in the same
+      // tick as a navigation could leave the browser sitting on /login with
+      // the button stuck on "Logging in…", because nothing clears submitting
+      // on the success path. From outside that looks exactly like the login
+      // silently failing — which is what it was reported as.
+      //
+      // A hard load also guarantees the new session cookie is on the request
+      // that renders the next page, with no client cache in the way.
+      window.location.assign("/");
     } catch {
       setNotice(`We could not reach the server. Please try again, or email ${brand.email}.`);
       setSubmitting(false);
     }
+  }
+
+  if (existing) {
+    return (
+      <div className="mx-auto w-full max-w-sm text-center">
+        <h1 className="font-display text-3xl font-semibold tracking-tight">
+          {greetingFor()}, {existing.firstName}
+        </h1>
+        <p className="mt-3 text-sm leading-relaxed text-muted">
+          You are already signed in as {existing.email}.
+        </p>
+        <Link href="/" className="btn btn-primary mt-7 w-full">
+          Go to the site
+        </Link>
+      </div>
+    );
   }
 
   return (
