@@ -62,6 +62,7 @@ keywords, dealership social strategy).
 - Meta & Instagram Ads for Retail and E-commerce (industry-specific)
 - Reels, Feed or Stories: Where Should Your Ad Actually Run? (comparison/explainer)
 - Setting Up Click-to-WhatsApp Ads: A Walkthrough (practical how-to)
+- Google Posts: The Free Feature Almost Nobody Uses (local search)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -217,7 +218,7 @@ keywords, dealership social strategy).
       "advertising a mobile service"
 
 ## Backlog — local search & site (added 2026-09-16 research round)
-- [ ] Google Posts: The Free Feature Almost Nobody Uses — target: "Google Business Profile
+- [x] Google Posts: The Free Feature Almost Nobody Uses — target: "Google Business Profile
       posts", "how to use Google Posts"
 - [x] Why Your Website Needs a Proper Thank You Page — target: "thank you page conversion
       tracking", "what to put on a thank you page"

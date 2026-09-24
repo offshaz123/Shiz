@@ -16,6 +16,84 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "google-posts-the-free-feature-nobody-uses",
+    title: "Google Posts: The Free Feature Almost Nobody Uses",
+    description:
+      "Your Google Business Profile lets you publish updates that show up in search results. It costs nothing, takes five minutes, and most local businesses ignore it.",
+    publishedAt: "2026-09-24",
+    keywords: [
+      "Google Business Profile posts",
+      "how to use Google Posts",
+      "Google Business Profile updates UK",
+      "local business Google listing tips",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "For most local businesses, the Google Business Profile gets seen more often than the website does. Somebody searches, the panel appears with the phone number and the opening hours, and they ring. They never visit the site at all.",
+          "Inside that profile is a posting feature. You can publish short updates with a photo and a button, and they appear on your profile in Search and Maps. It is free, it takes a few minutes, and the overwhelming majority of local businesses have never used it once.",
+        ],
+      },
+      {
+        heading: "What they actually are",
+        paragraphs: [
+          "A post is a short update attached to your profile. A photo, a bit of text, and usually a button that sends people somewhere useful.",
+          "They show up in the Updates section of your profile when somebody looks you up, and depending on how Google is displaying things that week, sometimes higher up than that. They are designed to be recent, so older posts drop back over time rather than sitting there forever.",
+          "You write them in the Google Business Profile app or through the profile management screen in Search. There's no approval queue for most things, so a post goes live within minutes.",
+        ],
+      },
+      {
+        heading: "The three kinds, and when each is right",
+        paragraphs: [
+          "Google gives you a few post types and they behave differently:",
+        ],
+        bullets: [
+          "Update, the general one. New work, a change in what you offer, something you've finished. Use this for most things",
+          "Offer, which carries a start and end date and displays the deal more prominently. Use it for anything genuinely time-limited, and only when it really is",
+          "Event, also with dates attached. Useful if you run open days, demo days, or anything people can turn up to",
+        ],
+      },
+      {
+        heading: "Do they help you rank? An honest answer",
+        paragraphs: [
+          "You'll find plenty of articles claiming posting weekly lifts you up the map pack. Google has never confirmed that posts are a ranking factor, and anybody stating it as fact is guessing.",
+          "What is true is more useful anyway. Posts take up space on your profile, and a profile with recent activity looks like a business that's open and busy rather than one that might have closed. If somebody is deciding between you and two competitors while looking at three profiles side by side, the one showing work from last week has an advantage that has nothing to do with algorithms.",
+          "So post because it helps the person deciding, not because you've been promised a ranking. If there's a ranking benefit as well, that's a bonus you didn't pay for.",
+        ],
+      },
+      {
+        heading: "What to actually post",
+        paragraphs: [
+          "The blank box is where most people give up. It doesn't need to be clever:",
+        ],
+        bullets: [
+          "A job you've just finished, with a photo. This is the easiest and the best one, and you could do it every week for a year without running out",
+          "A question customers ask constantly, answered in three sentences. It's useful, and it's the sort of thing people are searching for anyway",
+          "Something genuinely seasonal. Winter checks, Christmas closing dates, availability before a busy period",
+          "A new service, a new piece of kit, or an area you've started covering",
+          "An award, an accreditation or a qualification somebody on the team has earned",
+          "Your actual opening hours over a bank holiday, which people search for and rarely find",
+        ],
+      },
+      {
+        heading: "Use the button",
+        paragraphs: [
+          "Most posts you'll see have no button on them at all, which wastes the most valuable part.",
+          "You can attach a call to action: Call now, Book, Learn more, Order online, Sign up. Pick the one that matches what you actually want to happen. For a trade or a garage that's usually Call now. For anything with a diary, Book.",
+          "If you're sending people to the website, send them to the specific page rather than the homepage. Somebody reading about a respray should land on the respray page, not be asked to go and find it.",
+        ],
+      },
+      {
+        heading: "Keep it realistic",
+        paragraphs: [
+          "Once a week is plenty and once a fortnight is fine. A business posting every day on here is solving a problem nobody has.",
+          "The thing that actually kills it is starting enthusiastically, posting four times in a fortnight and then stopping for eight months. A profile whose most recent update is from last spring looks worse than one that never posted at all.",
+          "The practical version is to take a photo whenever you finish something you're pleased with, and write two lines about it while you're stood there. Five minutes, no editing, no planning. Do that most weeks and your profile will be better maintained than almost every competitor you have.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "setting-up-click-to-whatsapp-ads",
     title: "Setting Up Click-to-WhatsApp Ads: A Walkthrough",
     description:
