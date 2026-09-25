@@ -63,6 +63,7 @@ keywords, dealership social strategy).
 - Reels, Feed or Stories: Where Should Your Ad Actually Run? (comparison/explainer)
 - Setting Up Click-to-WhatsApp Ads: A Walkthrough (practical how-to)
 - Google Posts: The Free Feature Almost Nobody Uses (local search)
+- What to Actually Film: Video Ideas for a Local Business (video & creative)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -190,7 +191,7 @@ keywords, dealership social strategy).
 ## Backlog — video & creative (added 2026-09-16 research round)
 - [x] How to Film Ad Videos on Your Phone Without Them Looking Cheap — target: "how to film
       Reels for business", "phone video ads small business"
-- [ ] What to Actually Film: Video Ideas for a Local Business — target: "video content ideas
+- [x] What to Actually Film: Video Ideas for a Local Business — target: "video content ideas
       small business UK", "what to post on Instagram for business"
 - [ ] Why Rough Videos Often Beat Polished Ones — target: "UGC style ads", "authentic video ads
       small business"

@@ -16,6 +16,87 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "what-to-actually-film-video-ideas-local-business",
+    title: "What to Actually Film: Video Ideas for a Local Business",
+    description:
+      "Knowing how to film is the easy part. Here are the things worth pointing a camera at, the ones that always work, and the ones nobody watches.",
+    publishedAt: "2026-09-25",
+    keywords: [
+      "video content ideas small business UK",
+      "what to post on Instagram for business",
+      "content ideas for local business",
+      "social media video ideas trades",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Getting decent footage out of a phone is mostly solved. Light from the right direction, hold it still, watch the sound, film vertically.",
+          "The harder question is what to point it at. Most businesses that stop posting don't stop because the videos looked bad. They stop because they opened the camera, couldn't think of anything, and put the phone back in their pocket.",
+        ],
+      },
+      {
+        heading: "The principle everything else follows from",
+        paragraphs: [
+          "Film the work, not yourself talking about the work.",
+          "Anyone can say they're thorough. Nobody can fake ninety seconds of the actual job being done properly. The footage is the proof, and it's the one thing a competitor can't copy from your website.",
+          "This is also why the desk-and-chair video underperforms. You sitting in an office explaining your values looks exactly like every other business doing the same thing. You doing the skilled part of your job, with your hands, in your actual workshop, does not.",
+        ],
+      },
+      {
+        heading: "Things worth filming, in rough order of usefulness",
+        paragraphs: [
+          "None of these need a plan. Most of them are twenty seconds long:",
+        ],
+        bullets: [
+          "The finished job, filmed properly. Walk around it slowly, get close on the detail you're proud of. This is the single most reusable thing you own",
+          "The moment something changes. Paint going on, a machine starting, the dirt lifting, the piece fitting. People will watch a satisfying process far longer than they'll watch a person",
+          "The bit customers never see. The prep, the masking, the measuring, the checks. Half your value is in the work nobody's aware you do, and filming it is how they find out",
+          "Answering a question you get asked every week. Film yourself saying it once and you've got a video plus something useful for your website",
+          "The mistake you keep fixing for other people. Anything that starts with \"this is what happens when\" holds attention, and it quietly makes the case for using someone who knows what they're doing",
+          "The tools or kit, if yours are better than average. Specialist equipment is a credibility argument that doesn't sound like boasting",
+          "The team doing normal things. Not a staged team photo. Someone concentrating, someone laughing at something, the place looking busy",
+          "A customer reacting, with their permission. Nothing you write about your service is worth as much as ten seconds of somebody's face when they see it finished",
+        ],
+      },
+      {
+        heading: "Before and after, and the one rule to know",
+        paragraphs: [
+          "For most trades this is the best format there is. Cars, kitchens, driveways, gardens, bodywork, upholstery. Split screen or a straight cut, and the video makes its own argument.",
+          "One rule worth knowing before you run it as an advert. Meta prohibits before-and-after imagery for body and health outcomes, so weight, skin, cosmetic procedures and similar are out, and ads using them get rejected. That restriction is about the human body. A filthy kitchen becoming a clean one, or a scratched panel becoming a straight one, is entirely fine.",
+          "If you are in a sector where the restriction applies, film the process and the environment instead. The clinic, the equipment, the care taken. It's slower to convince people but it doesn't get your account in trouble.",
+        ],
+      },
+      {
+        heading: "What nobody watches",
+        paragraphs: [
+          "Worth knowing so you don't waste the effort:",
+        ],
+        bullets: [
+          "Logo animations. Nobody has ever stayed for one",
+          "Long introductions. If the first eight seconds are you saying hello and explaining who you are, most people are gone before the content starts",
+          "National days and generic calendar posts. Unless it's genuinely relevant to what you sell, it's filler and it reads as filler",
+          "Stock footage of someone else's business. People can tell immediately, and it makes everything around it less believable",
+          "Anything longer than it needs to be. If it's a thirty second idea, thirty seconds is the right length",
+        ],
+      },
+      {
+        heading: "Make it a habit rather than a project",
+        paragraphs: [
+          "The businesses that end up with a decent library don't schedule filming days. They take fifteen seconds of whatever they're doing, most days, and sort through it later.",
+          "Keep a folder on your phone and drop everything in it. You won't use most of it and that's fine. A week where you shot six clips and two are usable is a good week.",
+          "The reason it matters is that ad creative wears out. The same image in front of the same audience for three months stops working, and the only real defence is having more to swap in. A business with forty clips sat in a folder can keep testing. A business with two has to keep paying more for the same result.",
+        ],
+      },
+      {
+        heading: "If you only do one thing",
+        paragraphs: [
+          "Film the next job you finish that you're genuinely pleased with. Walk around it, get close on the good bit, keep it under thirty seconds.",
+          "That single clip will outperform anything you could write, and you'll be able to use it in an advert, on your website, on your Google profile and in a reply to a customer asking what you do. One piece of footage, four jobs.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "google-posts-the-free-feature-nobody-uses",
     title: "Google Posts: The Free Feature Almost Nobody Uses",
     description:
