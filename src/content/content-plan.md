@@ -64,6 +64,7 @@ keywords, dealership social strategy).
 - Setting Up Click-to-WhatsApp Ads: A Walkthrough (practical how-to)
 - Google Posts: The Free Feature Almost Nobody Uses (local search)
 - What to Actually Film: Video Ideas for a Local Business (video & creative)
+- Planning a Marketing Budget for the Year Ahead (seasonal & planning)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -201,7 +202,7 @@ keywords, dealership social strategy).
       "Facebook ads Christmas costs", "Q4 CPM increase UK"
 - [ ] Should You Advertise Over Christmas? — target: "Christmas advertising small business UK",
       "should I run ads in December"
-- [ ] Planning a Marketing Budget for the Year Ahead — target: "small business marketing budget
+- [x] Planning a Marketing Budget for the Year Ahead — target: "small business marketing budget
       UK", "how much should I spend on marketing"
 
 ## Backlog — comparison/explainer (added 2026-09-16 research round)

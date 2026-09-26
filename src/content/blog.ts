@@ -16,6 +16,90 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "planning-a-marketing-budget-for-the-year-ahead",
+    title: "Planning a Marketing Budget for the Year Ahead",
+    description:
+      "Most small businesses don't have a marketing budget, they have a reaction to how the month went. Here's how to set a real one and split it across the year.",
+    publishedAt: "2026-09-26",
+    keywords: [
+      "small business marketing budget UK",
+      "how much should I spend on marketing",
+      "annual marketing budget planning",
+      "marketing budget allocation small business",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Ask most small business owners what their marketing budget is and the honest answer is that it depends how last month went. Busy month, spend a bit more. Quiet month, switch things off.",
+          "Which is understandable and completely backwards. You cut the thing that fills the diary at precisely the moment the diary is empty, then wonder why the following month is also quiet.",
+          "A real budget isn't a bigger number. It's a decision made in advance so that a slow February doesn't make it for you.",
+        ],
+      },
+      {
+        heading: "Start with what a customer is worth",
+        paragraphs: [
+          "Before any percentages or benchmarks, work out two numbers.",
+          "What do you make on an average job, after the cost of doing it? Not the invoice value, what's actually left. And how many times does a typical customer come back, if they do at all?",
+          "Multiply those together and you have what a customer is genuinely worth to you. That number decides everything else. A business making £60 a customer and a business making £900 a customer should not be planning the same way, and most budget advice ignores that completely.",
+          "If a customer is worth £900 over two years, spending £120 to get one is obviously sensible. If a customer is worth £60, it obviously isn't. You cannot have the budget conversation until you know which business you are.",
+        ],
+      },
+      {
+        heading: "The percentage rule is a sanity check, not a plan",
+        paragraphs: [
+          "You'll see a rule of thumb that a business should spend somewhere around five to ten percent of revenue on marketing, more if it's trying to grow quickly.",
+          "It's a reasonable sense check and a terrible plan. It tells you whether your number is wildly out, and nothing else. Plenty of businesses sit well outside that range for good reasons, and a percentage of revenue says nothing about whether the money you're spending is working.",
+          "Use it once, to see whether you're an order of magnitude off. Then go back to the customer value maths, which is the one that actually decides anything.",
+        ],
+      },
+      {
+        heading: "Splitting it across what you're buying",
+        paragraphs: [
+          "The second question is what the money is spread across, and the common mistake is putting all of it into advertising because that's the part that feels like marketing.",
+          "A workable shape for most small businesses looks roughly like this. The largest share goes to whatever brings enquiries in now, usually paid advertising, because it's the part that produces results this month. A meaningful second slice goes to the things that compound, so SEO, your Google listing, content, the work that costs the same whether it produces one enquiry or fifty. A smaller amount covers the foundations, meaning your website, tracking and the system that holds your leads. And something is held back for testing.",
+          "The exact percentages matter less than making sure the second category isn't zero. Businesses that put everything into ads are renting their customers, and the day they stop paying, it all stops. The compounding work is slow and dull and it's what makes you less dependent on the advertising over time.",
+        ],
+      },
+      {
+        heading: "What people forget to budget for",
+        paragraphs: [
+          "These are the ones that turn up unplanned and get taken out of the ad budget, which is the worst place to take them from:",
+        ],
+        bullets: [
+          "Your website not lasting forever. Something needs rebuilding or seriously updating every few years, and it's cheaper to plan for than to panic about",
+          "Photography and video. Even if you film it yourself, there's time in it, and the creative wears out and needs replacing",
+          "The software. CRM, email, scheduling, call tracking. Individually small, collectively not",
+          "Your own time, or somebody's. Unanswered enquiries cost more than any line on this list",
+          "The quiet season, which is when you need the advertising most and have the least appetite for it",
+        ],
+      },
+      {
+        heading: "Plan by month, not by year",
+        paragraphs: [
+          "A budget divided evenly by twelve ignores two things that are entirely predictable.",
+          "The first is your own seasonality. Most businesses have months where the work arrives on its own and months where the phone doesn't ring. Spending the same in both is a waste at one end and a missed opportunity at the other. Generally you want to spend ahead of your busy period rather than during it, because there's a gap between somebody seeing an advert and booking.",
+          "The second is that advertising isn't the same price all year. Costs climb through November as retail budgets flood the auction, and late January is usually among the cheapest weeks there are. If you have any flexibility about when you push, that's worth planning around rather than discovering.",
+        ],
+      },
+      {
+        heading: "Keep something back for testing",
+        paragraphs: [
+          "Set aside a slice, maybe a tenth, for things you're not sure about. A channel you haven't tried, a different offer, a new format.",
+          "The point isn't that these will work. Most won't. The point is that a business spending one hundred percent of its budget on what worked last year is one algorithm change away from a problem, and will have no idea what to do next because it hasn't tried anything in eighteen months.",
+          "Treat that slice as the cost of finding out, and judge it over a year rather than a month.",
+        ],
+      },
+      {
+        heading: "Then actually review it",
+        paragraphs: [
+          "Put three dates in the diary to look at the numbers properly. Not to panic in a quiet month, but to ask whether what you assumed at the start is still true.",
+          "Has the cost of getting a customer moved? Is a channel that was working still working? Has what a customer is worth changed, because if it has, everything downstream of it changes too.",
+          "A budget you set in September and never look at again is only slightly better than not having one. The value is in the decision being deliberate, and in being able to see, at the end of the year, what the money actually bought you.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "what-to-actually-film-video-ideas-local-business",
     title: "What to Actually Film: Video Ideas for a Local Business",
     description:
