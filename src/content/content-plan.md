@@ -65,6 +65,7 @@ keywords, dealership social strategy).
 - Google Posts: The Free Feature Almost Nobody Uses (local search)
 - What to Actually Film: Video Ideas for a Local Business (video & creative)
 - Planning a Marketing Budget for the Year Ahead (seasonal & planning)
+- Meta & Instagram Ads for Mobile Businesses (industry-specific)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -216,7 +217,7 @@ keywords, dealership social strategy).
       "Instagram marketing for hairdressers"
 - [ ] Meta & Instagram Ads for Dog Groomers and Pet Services — target: "Facebook ads pet
       business UK", "marketing for dog groomers"
-- [ ] Meta & Instagram Ads for Mobile Businesses — target: "marketing for mobile businesses UK",
+- [x] Meta & Instagram Ads for Mobile Businesses — target: "marketing for mobile businesses UK",
       "advertising a mobile service"
 
 ## Backlog — local search & site (added 2026-09-16 research round)

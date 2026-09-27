@@ -16,6 +16,77 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-for-mobile-businesses",
+    title: "Meta & Instagram Ads for Mobile Businesses",
+    description:
+      "When you go to the customer, your service area is the campaign. Here's how to advertise a mobile business without filling your day with driving instead of working.",
+    publishedAt: "2026-09-27",
+    keywords: [
+      "marketing for mobile businesses UK",
+      "advertising a mobile service",
+      "Facebook ads mobile valeting",
+      "how to get more customers mobile business",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Mobile valeters, mobile mechanics, mobile hairdressers, mobile dog groomers, mobile physios. Different trades, same model, and the same two problems.",
+          "The first is good news. Going to the customer is genuinely easier to sell than asking them to come to you, and it's an advantage a fixed premises can't match. The second is the one that catches people out: the wrong job in the wrong place can cost you more in driving than the work pays.",
+          "Advertising a mobile business well is mostly about solving the second problem without giving up the first.",
+        ],
+      },
+      {
+        heading: "Your service area is the campaign",
+        paragraphs: [
+          "For a business with premises, targeting is roughly about who lives near enough to travel. For you it's about where you're willing to drive, which is a much sharper question and one you should answer honestly before spending anything.",
+          "Draw the radius around where you actually start your day, not around the middle of the nearest city. Then be realistic about it. A ten mile radius that includes a river with one bridge, or a stretch of motorway that's stationary at half four, is not really ten miles.",
+          "It's usually better to start tighter than feels comfortable. A small, dense area you can cover properly produces jobs that sit close together. A wide one produces a diary that looks busy and a day that's mostly driving.",
+        ],
+      },
+      {
+        heading: "The travel time problem",
+        paragraphs: [
+          "This is the number that decides whether a mobile business makes money, and almost nobody puts it in the maths.",
+          "Work out what a job is actually worth after the drive there, the drive back and the time you couldn't be working. A £45 job forty minutes away is not a £45 job. Done twice a day it's a full day's work for a fraction of a day's money.",
+          "Once you have that number, you know two things. What your minimum job value needs to be at different distances, and how far it's worth going at all. Both of those should shape the advertising rather than being discovered afterwards, one disappointing Thursday at a time.",
+        ],
+      },
+      {
+        heading: "Lead with the thing they can't get elsewhere",
+        paragraphs: [
+          "The advert almost writes itself, and most mobile businesses bury the best part of it.",
+          "You come to them. They don't have to drive anywhere, wait anywhere, take time off or arrange anything. For plenty of people that's the entire reason they'd choose you, and it should be the first line rather than something mentioned halfway down.",
+          "Name the areas you cover in the ad copy too. Someone seeing their own town written down believes it in a way they don't believe \"covering the local area\", and it saves you fielding enquiries from people thirty miles outside.",
+          "Show the van or the kit if it looks the part. It answers the quiet question people have about whether a mobile service is a proper business or somebody with a bucket.",
+        ],
+      },
+      {
+        heading: "Qualify by postcode before you book",
+        paragraphs: [
+          "Ask for the postcode in the enquiry. Not the town, the postcode.",
+          "If you're using a lead form, make it a required question. If you're running click-to-WhatsApp ads, write the pre-filled message so it starts the job for you, something like \"Hi, I'd like a quote, my postcode is\". People fill in the gap without thinking about it, and you know instantly whether it's a job worth doing.",
+          "It's also how you say no properly. Telling somebody they're outside your area in the first reply is much better than realising it after you've quoted, and people generally respect a straight answer more than a business that quietly never gets back to them.",
+        ],
+      },
+      {
+        heading: "Cluster the work",
+        paragraphs: [
+          "A mobile business gets more profitable when jobs sit near each other, and advertising can help with that in ways people rarely use.",
+          "Run tighter campaigns aimed at specific areas rather than one wide one, so you can push harder wherever you already have work booked. If you've got three jobs in one town on Wednesday, that's the week to be advertising there, because a fourth in the same postcode is almost pure profit.",
+          "It's also worth mentioning to the customer while you're there. Somebody happy with the work will often tell a neighbour, and a line as simple as saying you're back in the area next week does more than any advert.",
+        ],
+      },
+      {
+        heading: "Don't skip the Google side",
+        paragraphs: [
+          "A lot of mobile businesses assume a Google Business Profile isn't for them because they've no shopfront. It is, and it's set up differently.",
+          "Google lets you register as a service-area business, which means you list the areas you cover instead of publishing an address, and your home address stays hidden. That option exists precisely for businesses like yours.",
+          "Worth doing, because people searching for a mobile service near them are the warmest enquiries you'll get. They've already decided they want somebody to come to them and they're looking for who. That's a much shorter conversation than persuading somebody scrolling through Instagram, and it costs nothing but the time to set it up.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "planning-a-marketing-budget-for-the-year-ahead",
     title: "Planning a Marketing Budget for the Year Ahead",
     description:
