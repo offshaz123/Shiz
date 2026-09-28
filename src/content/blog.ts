@@ -16,6 +16,77 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "video-ads-vs-image-ads-for-local-business",
+    title: "Video Ads vs Image Ads: Which Works Better for a Local Business?",
+    description:
+      "Everyone says video wins. It depends entirely on what you're selling and what you've actually got. Here's when each one is the right call.",
+    publishedAt: "2026-09-28",
+    keywords: [
+      "video vs image Facebook ads",
+      "do video ads perform better",
+      "best ad format local business",
+      "Meta ads creative format",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Ask around and you'll be told video wins. Every platform pushes it, every agency recommends it, and there's a general sense that an image ad is what you run when you couldn't be bothered.",
+          "It's not that simple. Video is better at some jobs and worse at others, and for a lot of local businesses the honest answer is that the format matters far less than whether the thing is any good.",
+        ],
+      },
+      {
+        heading: "What video is genuinely better at",
+        paragraphs: [
+          "There are jobs an image cannot do, and if yours is one of them the decision is already made.",
+          "Anything involving a change over time. A transformation, a process, a before and after. A picture of a finished driveway is fine. Watching the old one come up and the new one go down is a different thing entirely, because it shows the work rather than the result.",
+          "Anything where trust is the obstacle. Somebody letting a stranger into their house, or handing over a car they care about, is buying the person as much as the service. Ten seconds of you working is more reassuring than any photo, because it's harder to fake.",
+          "And anything that needs explaining. If people don't understand what you do until you've talked them through it, video does that work while they scroll rather than after they enquire.",
+        ],
+      },
+      {
+        heading: "What images are genuinely better at",
+        paragraphs: [
+          "Images get written off too easily, and they hold two real advantages.",
+          "The first is speed. An image lands immediately. There's nothing to wait for, nothing to load, no point three seconds in where somebody decides not to bother. If your message is one clear thing, an image delivers it faster than video ever will.",
+          "The second is that a striking photograph of a finished job is often simply better than mediocre footage of the same job. A well-shot picture of a gleaming car will outperform a shaky, badly-lit video of it every time. Format doesn't rescue bad execution.",
+          "Images also suit anything where the offer is the message. A price, a date, a limited availability. Those want to be read, not watched.",
+        ],
+      },
+      {
+        heading: "The variable that actually matters",
+        paragraphs: [
+          "Neither format wins on its own. What decides it is whether the thing stops somebody scrolling, and that comes down to the first moment either way.",
+          "For video that's the opening second. For an image it's the whole thing at a glance. In both cases the question is identical: is there something here worth stopping for? A video that opens on a logo and an image that's mostly white space fail for the same reason.",
+          "Which is why comparing formats in the abstract is a waste of time. A good image beats a bad video. A good video beats a good image at some jobs and not others. The format is a long way down the list of things that decide how a campaign performs.",
+        ],
+      },
+      {
+        heading: "The argument nobody makes for images",
+        paragraphs: [
+          "Here's the practical case, and it's about quantity rather than quality.",
+          "Ad creative wears out. The same thing in front of the same audience stops working after a while, and the only defence is having more to swap in. In the time it takes to shoot and cut one decent video, you could have photographed six finished jobs.",
+          "For a small business with limited time, that matters more than any performance difference between the formats. Six images you can rotate through beat one video you're still running in March because there's nothing to replace it with.",
+          "The sensible version is both. Photograph everything, because it costs nothing. Film the handful of things that genuinely need movement to make sense.",
+        ],
+      },
+      {
+        heading: "Test it properly, or don't bother testing",
+        paragraphs: [
+          "If you want to know which works for your business, run them against each other in the same campaign, at the same time, to the same audience. Anything else isn't a comparison.",
+          "Running video in March and images in April tells you nothing, because the weather changed, the auction changed and so did the people. Neither does judging it on views or likes. Video will always win on engagement because watching is easier than enquiring. Judge both on cost per enquiry and nothing else.",
+          "And give it long enough to mean something. A format that spent £8 and produced nothing hasn't told you anything yet.",
+        ],
+      },
+      {
+        heading: "If you want a straight answer",
+        paragraphs: [
+          "For most local service businesses: photograph every job you finish, because it's free and it builds the library you'll need. Film the things where the change is the point, and film yourself doing the skilled part occasionally so people can see who they're dealing with.",
+          "Then run both and let the numbers decide rather than the received wisdom. You'll probably find that what actually matters is whether the work looks good, which is a far more useful thing to worry about than which format it arrived in.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-for-mobile-businesses",
     title: "Meta & Instagram Ads for Mobile Businesses",
     description:

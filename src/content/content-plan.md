@@ -66,6 +66,7 @@ keywords, dealership social strategy).
 - What to Actually Film: Video Ideas for a Local Business (video & creative)
 - Planning a Marketing Budget for the Year Ahead (seasonal & planning)
 - Meta & Instagram Ads for Mobile Businesses (industry-specific)
+- Video Ads vs Image Ads: Which Works Better for a Local Business? (comparison/explainer)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -209,7 +210,7 @@ keywords, dealership social strategy).
 ## Backlog — comparison/explainer (added 2026-09-16 research round)
 - [x] Reels, Feed or Stories: Where Should Your Ad Actually Run? — target: "Instagram Reels ads
       vs feed", "Meta ad placements explained"
-- [ ] Video Ads vs Image Ads: Which Works Better for a Local Business? — target: "video vs image
+- [x] Video Ads vs Image Ads: Which Works Better for a Local Business? — target: "video vs image
       Facebook ads", "do video ads perform better"
 
 ## Backlog — industry-specific (added 2026-09-16 research round)
