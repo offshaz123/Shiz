@@ -16,6 +16,74 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-uk-location-fee-explained",
+    title: "Meta's 2% UK Location Fee: What It Means for Your Ad Budget",
+    description:
+      "Since July, Meta adds a 2% fee on ads shown to UK audiences. It sits on top of your budget, not inside it. Here's what it costs and what to do about it.",
+    publishedAt: "2026-09-29",
+    keywords: [
+      "Meta location fee UK",
+      "Meta digital services tax advertisers",
+      "Facebook ads location fee 2026",
+      "why is my Facebook ads bill higher",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "If you've looked at a Meta invoice since the summer and found a line you didn't recognise, this is probably it.",
+          "From 1 July 2026, Meta began adding a location fee to ads delivered to UK audiences. It's 2% here, and it isn't optional. Plenty of business owners have noticed the bill creeping up without ever finding out why, so it's worth understanding properly.",
+        ],
+      },
+      {
+        heading: "What it actually is",
+        paragraphs: [
+          "The UK has a Digital Services Tax, a levy on the revenue large digital platforms earn from UK users. It has been in place since 2020.",
+          "Until this summer Meta absorbed that cost. Now it passes it on to advertisers instead, which brings it in line with Google, who have been doing exactly the same since late 2020. So this isn't Meta inventing a charge. It's Meta stopping the practice of swallowing one.",
+          "The UK rate is 2%. Several other countries are affected at different rates, with France, Italy and Spain higher again, so if you advertise beyond the UK it's worth checking what applies where you're delivering.",
+        ],
+      },
+      {
+        heading: "The part that catches people out",
+        paragraphs: [
+          "It is charged on top of your budget, not taken out of it.",
+          "If you set a campaign to spend £1,000, Meta still spends £1,000 on reaching people. The fee is added afterwards, so the amount leaving your account is higher than the number you typed in.",
+          "It's also worked out on where your ads are shown rather than where your business is registered. A UK business advertising to people abroad is charged according to where those impressions land. A business registered elsewhere advertising into the UK still pays the UK fee.",
+          "And it applies across the board. Facebook, Instagram, every ad format, and click-to-WhatsApp campaigns too.",
+        ],
+      },
+      {
+        heading: "What it actually costs you",
+        paragraphs: [
+          "Two percent sounds like nothing, and on its own it nearly is. On a £500 monthly budget it's ten pounds.",
+          "The reason it feels worse is that it lands on top of VAT, which was already there. UK advertisers pay 20% VAT on ad spend, so a £1,000 budget was already billing at £1,200 before any of this. Now there's another layer on top of that.",
+          "If you're VAT registered you'll reclaim the VAT, so the fee is the only genuinely new cost. If you're not VAT registered, you're feeling both, and the gap between what you budgeted and what actually left your bank is bigger than most people realise.",
+        ],
+      },
+      {
+        heading: "What to do about it",
+        paragraphs: [
+          "There's no way to avoid the fee, so the useful responses are all about accounting for it properly:",
+        ],
+        bullets: [
+          "Check your own invoice rather than taking anyone's word for it, including ours. Meta's billing section itemises the fees, and it's worth seeing the real numbers on your own account",
+          "Budget from the total, not the campaign figure. If £600 a month is genuinely your ceiling, the campaign budget needs to be lower than £600, not equal to it",
+          "Rework your cost per customer using what actually leaves your account. Every calculation you've made about what a lead is worth is now slightly optimistic",
+          "If you're not VAT registered and you're spending meaningfully, it's worth a conversation with your accountant about whether registering makes sense. That's their call, not a marketing decision",
+          "Don't let it change the strategy. Two percent doesn't turn a campaign that works into one that doesn't. If your advertising was profitable in June it almost certainly still is",
+        ],
+      },
+      {
+        heading: "Why this keeps happening",
+        paragraphs: [
+          "This won't be the last change of this kind, and it's worth understanding the pattern rather than being surprised each time.",
+          "Governments tax large platforms. Platforms pass the cost to advertisers. It happened with Google years ago, it's happening with Meta now, and something similar will happen again.",
+          "The businesses that handle it well are the ones who know what a customer is worth to them. If you know a customer is worth £400 and currently costs you £45 to get, a 2% movement in costs is genuinely irrelevant and you can carry on. If you have no idea what either number is, every change feels alarming because you have nothing to measure it against.",
+          "That's the real lesson here. The fee is small. Not knowing whether you can absorb it is the actual problem, and that one is fixable.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "video-ads-vs-image-ads-for-local-business",
     title: "Video Ads vs Image Ads: Which Works Better for a Local Business?",
     description:

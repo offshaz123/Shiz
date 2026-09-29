@@ -67,6 +67,7 @@ keywords, dealership social strategy).
 - Planning a Marketing Budget for the Year Ahead (seasonal & planning)
 - Meta & Instagram Ads for Mobile Businesses (industry-specific)
 - Video Ads vs Image Ads: Which Works Better for a Local Business? (comparison/explainer)
+- Meta's 2% UK Location Fee: What It Means for Your Ad Budget (platform & policy changes)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -226,6 +227,42 @@ keywords, dealership social strategy).
       posts", "how to use Google Posts"
 - [x] Why Your Website Needs a Proper Thank You Page — target: "thank you page conversion
       tracking", "what to put on a thank you page"
+
+## Backlog — platform & policy changes (added 2026-09-29 research round)
+- [x] Meta's 2% UK Location Fee: What It Means for Your Ad Budget — target: "Meta location fee
+      UK", "Meta digital services tax advertisers"
+- [ ] Why Your Meta Ads Invoice Is Higher Than the Budget You Set — target: "Facebook ads VAT
+      UK", "why is my Facebook ads bill higher than my budget"
+
+## Backlog — local search & AI (added 2026-09-29 research round)
+- [ ] Showing Up in AI Answers, Not Just Google Results — target: "AI Overviews local business",
+      "how to appear in AI search results UK"
+- [ ] Why Google Suspended Your Business Profile, and How to Get It Back — target: "Google
+      Business Profile suspended UK", "GBP reinstatement"
+- [ ] Keyword Stuffing Your Business Name Will Cost You — target: "Google Business Profile name
+      rules", "adding keywords to business name Google"
+
+## Backlog — cost & expectation-setting (added 2026-09-29 research round)
+- [ ] Is There a Minimum Budget for Meta Ads to Work? — target: "minimum Facebook ads budget
+      UK", "how much per day for Facebook ads"
+- [ ] Why Small Budgets Struggle to Optimise — target: "Facebook ads not optimising", "Facebook
+      ads conversions threshold learning"
+
+## Backlog — feature deep-dive (added 2026-09-29 research round)
+- [ ] Server-Side Tracking Explained Without the Jargon — target: "Conversions API small
+      business", "server side tracking explained UK"
+
+## Backlog — industry-specific (added 2026-09-29 research round)
+- [ ] Meta & Instagram Ads for Accident Repair Centres and Bodyshops — target: "marketing for
+      bodyshop UK", "Facebook ads accident repair"
+- [ ] Meta & Instagram Ads for Removals and Man-and-Van Businesses — target: "Facebook ads
+      removals company UK", "marketing for man and van"
+- [ ] Meta & Instagram Ads for Landscapers and Garden Services — target: "Facebook ads
+      landscaping UK", "marketing for gardeners"
+
+## Backlog — comparison/explainer (added 2026-09-29 research round)
+- [ ] Reviews or Ads: Which Brings a Local Business More Work? — target: "do online reviews
+      bring customers", "reviews vs advertising local business UK"
 
 ## Notes for whoever (human or Routine) picks the next topic
 - Rotate categories — don't publish 3 industry guides in a row
