@@ -251,6 +251,39 @@ email arrives. Zero submissions is visitors choosing the phone, not a fault.
 set **Click to call → Secondary** and **Calls from ads → Primary**, so bidding
 chases conversations rather than taps. Switching earlier repeats the mistake.
 
+## 24-29 September: the revert worked
+
+Six days back on Maximise Clicks with the £2.50 cap.
+
+| | 16-23 Sept<br>Max Conversions | 24-29 Sept<br>Max Clicks |
+|---|---|---|
+| Clicks per day | 11.6 | **14.7** (+26%) |
+| Avg CPC | £2.31 | **£1.72** (-26%) |
+| Click-to-lead rate | 5.4% | **8.0%** |
+| Cost per conversion | £43.05 | **£21.57** (-50%) |
+| Spend per day | £26.91 | £25.17 |
+
+Cost per conversion halved. The conclusion from the week before holds: smart
+bidding optimising towards button taps was destroying value, and removing it
+recovered more than it cost.
+
+The rise in conversion **rate** — 5.4% to 8.0% — is the part worth noticing,
+because a bidding change should not improve it. The sticky call bar and the
+corrected Billet Road directions went live on 23 September, the day before
+this period starts. Six days is too short to call it proven, but it is the
+only other thing that changed.
+
+**"Limited by bid strategy" is benign here.** The campaign spends £25.17 of a
+£26 budget, so the cap is skipping expensive auctions rather than throttling
+delivery. Leave it: raising the cap would buy back the CPC just recovered.
+
+**Still unresolved:** whether those 7 conversions are connected calls or
+button taps. Call tracking went live 23 September; the breakdown by action is
+the next thing to check.
+
+Dismissed again on 29 September: Performance Max (now the top card at +9.2%),
+Merchant Center, Search Partners, dynamic images.
+
 ## Campaign settings
 
 | Setting | Value |
