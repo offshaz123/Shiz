@@ -103,6 +103,31 @@ prices, which would remove about a third of the planned profit.
 **This needs an accountant's advice at £7,500 a month, not at £10,000.** It
 changes pricing, and it is far cheaper to plan for than to discover.
 
+## What Meta actually cost
+
+Figures for the month before it was switched off:
+
+| | Meta | Google |
+|---|---|---|
+| Spend | £571.88 | ~£790 |
+| Clicks | **23** | ~459 |
+| Cost per click | **£24.86** | **£1.72** |
+| People reached | 47,000 | — |
+
+**47,000 people saw the ads and 23 clicked** — one in 2,043. Meta clicks cost
+**14x** what Google clicks cost; the same £571.88 on Google buys 332 clicks
+rather than 23.
+
+Meta reported "£11.22 per result", implying 51 results from 23 clicks. That is
+arithmetically impossible for anything happening on the website, so "result"
+was counting an on-platform action — a video view, an engagement, a form
+opened and abandoned. It was not counting customers.
+
+**This also corrects the cost base.** The model assumed £200/month for Meta; it
+was £572. While both channels ran, true fixed costs were **£4,552**, and at 19
+cars a month the business was losing **£1,996** at a £150 average or **£1,046**
+at £200.
+
 ## Decisions
 
 **29 Sep — Meta Ads switched off.** The owner's reasoning, which the structure
@@ -111,6 +136,35 @@ they want tints and is looking for someone to do it, so a call converts to a
 booking the same day. Meta interrupts someone who was not thinking about it,
 which costs more per lead and converts worse for a service booked by
 appointment. £200/month released.
+
+## Current output and the capacity gap
+
+The fitter completes **4-5 cars a week** — about 19 a month.
+
+| Average job | Break even | For £5k net | Monthly result at 19 cars |
+|---|---|---|---|
+| £150 | 7.2/wk | 15.8/wk | −£1,559 |
+| £180 | 5.9/wk | 12.9/wk | −£975 |
+| **£200** | **5.2/wk** | **11.5/wk** | **−£585** |
+| £250 | 4.1/wk | 9.0/wk | +£389 |
+
+Two things fall out of that table.
+
+**Break-even is one car away.** At a £200 average it takes 5.2 cars a week
+against 4.5 today — under one extra car. At £150 it takes 7.2, nearly three
+more. Same effort, entirely different distance.
+
+**At £150 the target is impossible.** £5,000 net needs 15.8 cars a week, and
+one fitter at three hours a car tops out near 13. No amount of advertising
+fixes that. At a £200 average it needs 11.5 — tight, but real.
+
+So the strategy is not "more customers". It is **more customers and a higher
+average job**, and the second half is not optional.
+
+**The fitter is at roughly a third of capacity.** £2,165 a month buys around 13
+cars a week; he is doing 4.5. Two-thirds of that wage is already spent on time
+nobody is using — which is also why each extra car is worth £184 against
+£15.50 of film. Demand is the constraint here, not capacity.
 
 ## Still needed
 
