@@ -68,6 +68,7 @@ keywords, dealership social strategy).
 - Meta & Instagram Ads for Mobile Businesses (industry-specific)
 - Video Ads vs Image Ads: Which Works Better for a Local Business? (comparison/explainer)
 - Meta's 2% UK Location Fee: What It Means for Your Ad Budget (platform & policy changes)
+- Server-Side Tracking Explained Without the Jargon (feature deep-dive)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -249,7 +250,7 @@ keywords, dealership social strategy).
       ads conversions threshold learning"
 
 ## Backlog — feature deep-dive (added 2026-09-29 research round)
-- [ ] Server-Side Tracking Explained Without the Jargon — target: "Conversions API small
+- [x] Server-Side Tracking Explained Without the Jargon — target: "Conversions API small
       business", "server side tracking explained UK"
 
 ## Backlog — industry-specific (added 2026-09-29 research round)

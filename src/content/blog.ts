@@ -16,6 +16,81 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "server-side-tracking-explained",
+    title: "Server-Side Tracking Explained Without the Jargon",
+    description:
+      "Your Pixel is missing conversions and it's making your ads more expensive. Here's what server-side tracking actually is and why it stopped being optional.",
+    publishedAt: "2026-09-30",
+    keywords: [
+      "Conversions API small business",
+      "server side tracking explained UK",
+      "Meta Conversions API setup",
+      "why is my Facebook pixel not tracking",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "If somebody has told you that you need the Conversions API, or server-side tracking, or CAPI, and you nodded along without knowing what they meant, this is for you.",
+          "It sounds like a technical detail for large businesses. It isn't. It's the difference between your advertising getting better over time and your advertising quietly getting more expensive while nobody can work out why.",
+        ],
+      },
+      {
+        heading: "How tracking used to work",
+        paragraphs: [
+          "The Meta Pixel is a small piece of code that sits on your website. Somebody buys something, and the code running in their browser sends a message to Meta saying a purchase happened.",
+          "That worked well for years. It doesn't any more, and not because of anything you did.",
+          "Ad blockers stop it. Browsers block it on their own now, without the user asking. Apple's privacy settings interfere with it. And anybody who declines your cookie banner has switched it off themselves. All of that is entirely reasonable from the customer's point of view, and it means a meaningful share of your sales and enquiries never reach Meta at all.",
+        ],
+      },
+      {
+        heading: "What server-side means",
+        paragraphs: [
+          "Instead of relying on the customer's browser to send the message, your website's server sends it directly to Meta. Server to server, with nothing in between that can block it.",
+          "That's genuinely the whole idea. The event takes a different road, and it's a road that isn't closed.",
+          "In practice you run both at once. The browser sends what it can, the server sends everything, and they're matched up using a shared event ID so one purchase doesn't get counted as two. If you've heard the word deduplication, that's all it means.",
+        ],
+      },
+      {
+        heading: "Why it costs you money, not just data",
+        paragraphs: [
+          "This is the part that gets misunderstood. People treat missing conversions as a reporting annoyance. It's worse than that.",
+          "Meta's system learns from the conversions it can see. It looks at who bought and goes and finds more people like them. If a third of your buyers are invisible to it, it's learning from a partial and slightly random sample of your customers.",
+          "So it isn't just that your report understates results. The campaign is genuinely worse, because the system is optimising towards an incomplete picture of who your customer is. You pay more per sale and the report also tells you you're getting fewer of them, which is the worst of both worlds.",
+          "It also affects retargeting. Audiences built from browser tracking alone are smaller than they should be, so you're not reaching people who visited your site and would have been cheap to reach again.",
+        ],
+      },
+      {
+        heading: "What it takes to set up",
+        paragraphs: [
+          "Less than you'd expect, and it depends on what your site runs on:",
+        ],
+        bullets: [
+          "Shopify. There's an official app built by Meta. Install it, connect your account, and it handles the Pixel, the Conversions API and your product catalogue together. Close to a non-job",
+          "WooCommerce. Meta's official plugin does the same thing, with a bit more configuration",
+          "WordPress without a shop. A plugin or Google Tag Manager, depending on what you're recording",
+          "A custom-built site. This is the one that needs a developer, because the events have to be sent from your own code",
+          "Meta also offer a hosted gateway option for businesses that can't do any of the above, which sits between your site and Meta and handles it for you",
+        ],
+      },
+      {
+        heading: "Do it properly or don't bother",
+        paragraphs: [
+          "Two things separate a setup that works from one that looks like it works.",
+          "Send the value with the event. A purchase event that says a sale happened is far less useful than one that says a sale happened and it was £340. Without values, the system optimises for the number of orders, which means it hunts for whatever is cheapest to sell rather than whatever makes you money.",
+          "And send the matching information. Server-side events can include an email address or phone number, hashed so it's unreadable, which lets Meta match the purchase to the person who saw the ad. Skip that and you've built the pipe without putting much through it.",
+        ],
+      },
+      {
+        heading: "What you'll notice, and what it won't fix",
+        paragraphs: [
+          "The first thing you'll see is that your numbers go up. Not because you're selling more that week, but because you're finally counting what was already happening. That's worth knowing in advance, because otherwise it looks like a miracle that then plateaus.",
+          "After that it's slower and more useful. Costs come down over a few weeks as the system gets a fuller picture. Your retargeting audiences grow. Your reports start matching what your accountant sees, which is a good day when it happens.",
+          "What it won't do is rescue a campaign that isn't working for other reasons. Tracking tells the system who your customers are. It doesn't make a weak offer compelling or a bad landing page convert. If the ads are wrong, better measurement just tells you that faster, which is still worth having, but it's not the same as a fix.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-uk-location-fee-explained",
     title: "Meta's 2% UK Location Fee: What It Means for Your Ad Budget",
     description:
