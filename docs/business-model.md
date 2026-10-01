@@ -166,6 +166,89 @@ cars a week; he is doing 4.5. Two-thirds of that wage is already spent on time
 nobody is using — which is also why each extra car is worth £184 against
 £15.50 of film. Demand is the constraint here, not capacity.
 
+## Actual trading, 9-30 September 2026
+
+First real figures. 22 days.
+
+| | |
+|---|---|
+| Jobs | 19 |
+| Revenue | £2,325 |
+| **Average job** | **£122** |
+| Median job | £110 |
+| Cars per week | 6.0 |
+| Result for the period | **-£1,264** |
+
+### The price distribution is the whole problem
+
+| | Jobs | Revenue |
+|---|---|---|
+| Under £100 | 6 (32%) | £385 |
+| £100-149 | 9 (47%) | £1,090 |
+| £150-199 | 2 (11%) | £330 |
+| £200+ | 2 (11%) | £520 |
+
+A third of the diary brought in 17% of the money. Only four jobs cleared £150,
+against a ceramic list price of £180-250.
+
+Re-pricing those same 19 customers with an £80 floor and £50 more on the
+midrange gives a **£151 average and £2,870** — **£545 more from nobody extra**.
+
+## Where the customers came from
+
+| Source | Customers |
+|---|---|
+| **Google Ads** | **12-13** |
+| Passing trade | 4-5 |
+| Meta | the remainder |
+
+### Google Ads economics
+
+| | |
+|---|---|
+| Spend 9-30 Sept | £572 |
+| Customers | 12.5 |
+| **Cost per customer** | **£45.76** |
+| Contribution after film and ad spend | **+£764** |
+
+**Google Ads is profitable and is the main source of business.** Each customer
+leaves £61 after film and advertising. The channel is not the problem.
+
+### Why price has to move before spend does
+
+Customers needed from Google to cover all £4,180 of fixed costs:
+
+| Average job | Customers/month | Per week | Ad spend |
+|---|---|---|---|
+| £122 (today) | 69 | **15.9 — above capacity** | £3,149 |
+| £150 | 47 | 10.9 | £2,155 |
+| **£180** | **35** | **8.1** | **£1,611** |
+| £200 | 30 | 7.0 | £1,379 |
+
+At today's £122 average, scaling the ads **cannot** reach break-even: it needs
+16 cars a week against a ~13 ceiling. At £180 it needs 8.1 a week on about
+£1,600 of monthly spend, comfortably inside capacity.
+
+**Raise the average job first, then increase ad spend.** Reversed, the money
+just buys £122 jobs that will not fit in the diary.
+
+### The ceiling with one fitter
+
+At a £200 average and a full 13-car week, one fitter produces roughly **£3,600
+a month net**. The £5,000 target needs either a **£230+ average** or a **second
+pair of hands** — it is not reachable by advertising alone.
+
+## Pricing actions agreed
+
+1. **Three tiers, not two** — £99 dyed / £180 ceramic / £280 ceramic plus. With
+   two options people take the cheaper; with three they take the middle. The
+   top tier exists to reposition the middle, not to sell.
+2. **Never quote "from £99".** Ask the car, quote that car, lead with ceramic.
+3. **Price by vehicle size** — a Range Rover carries twice the glass of a Fiat.
+4. **Upsell in the bay** — windscreen strip and similar, once they have already
+   committed and driven over.
+5. **£80 minimum charge.**
+
 ## Still needed
 
 The model above is built entirely on costs. These are the missing halves:
