@@ -249,6 +249,54 @@ pair of hands** — it is not reachable by advertising alone.
    committed and driven over.
 5. **£80 minimum charge.**
 
+## October 2026 plan
+
+### The two numbers
+
+| | Per week |
+|---|---|
+| Break even | **£1,100** |
+| Break even + £3,000 | **£2,000** |
+
+Both assume a £180-200 average job. Running rate on 1 October: **£740/week**.
+
+| Avg job | Break even | For £3k net |
+|---|---|---|
+| £122 (today) | 10.5 cars/wk | 19.8 — above capacity |
+| £150 | 7.6 | 14.4 — above capacity |
+| **£180** | **5.9** | **11.1** |
+| £200 | 5.1 | 9.7 |
+| £230 | 4.3 | 8.1 |
+
+**At £122 a job, £3,000 net is impossible at any ad budget** — it needs 20 cars
+a week against a 13-car ceiling. The average job has to move before volume or
+spend is worth touching.
+
+### What October can actually do
+
+Not £3,000. Realistically **-£1,455 to about +£700** — a £2,150 swing, and the
+point at which extra ad spend starts paying for itself. £3,000 is a
+November-December target once the average sits near £200 and the diary near 10
+a week.
+
+| Week | Target | Cars | Avg | Focus |
+|---|---|---|---|---|
+| 1-7 Oct | £1,000 | 6 | £150 | Pricing only. No budget change. |
+| 8-14 Oct | £1,200 | 7 | £165 | Hold the price. Bay upsells. Ceramic ad live. |
+| 15-21 Oct | £1,500 | 8 | £180 | Google £26 to £35/day. GBP posts. Review asks. |
+| 22-31 Oct | £1,800 | 8.5 | £190 | Google to £42/day. Referral card. |
+
+October: ~33 cars, ~£5,650 revenue, ~£700 net.
+
+**Week 2 is the failure point.** It is where a couple of "that's expensive"
+responses tempt a quiet retreat to £99. At 6-8 cars against 13 of capacity
+there is room to lose price-shoppers.
+
+### Daily record to keep
+
+One line per job: **date, car, price, source**. Weekly, total two figures —
+takings and average job. Those two decide everything; the rest is noise.
+
 ## Still needed
 
 The model above is built entirely on costs. These are the missing halves:
