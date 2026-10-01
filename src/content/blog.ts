@@ -16,6 +16,89 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "google-business-profile-suspended",
+    title: "Why Google Suspended Your Business Profile, and How to Get It Back",
+    description:
+      "No warning, no email, and suddenly you've vanished from Maps. Here's what triggers a suspension, what to do first, and how to get reinstated without making it worse.",
+    publishedAt: "2026-10-01",
+    keywords: [
+      "Google Business Profile suspended UK",
+      "GBP reinstatement",
+      "Google business listing removed",
+      "how to appeal Google Business Profile suspension",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "One morning your listing is there and the next it isn't. No warning, often no explanation, and for a local business that gets most of its calls through Google, it's the worst notification you can get.",
+          "It is usually fixable. But what you do in the first hour matters, and the instinct most people have makes it harder rather than easier.",
+        ],
+      },
+      {
+        heading: "The two kinds of suspension",
+        paragraphs: [
+          "Worth working out which one you've got, because they're not the same problem.",
+          "A soft suspension means your listing is still out there and still showing to the public, but you've lost the ability to manage it. Annoying, lower stakes, usually quicker to resolve.",
+          "A hard suspension means the listing has been removed entirely. It's gone from Maps and from search, and your reviews have gone with it. That's the one that costs you money every day it's down, and it's the one worth acting on immediately.",
+        ],
+      },
+      {
+        heading: "What actually triggers it",
+        paragraphs: [
+          "Google rarely tells you which rule you broke, so you're left working it out. In practice it's nearly always one of these:",
+        ],
+        bullets: [
+          "Keywords stuffed into the business name. Listing yourself as \"Smith Plumbing Emergency Plumber London 24 Hour\" when your actual registered name is Smith Plumbing. This is the most common cause by a distance",
+          "Changing several important things at once. Name, address and category all edited in the same week looks like somebody taking over a listing rather than a business updating its details",
+          "An address that isn't really yours. Virtual offices, mailboxes, a coworking desk you don't have exclusive use of, or an address shared with several other listed businesses",
+          "A service-area business displaying an address. If you travel to customers and don't serve them at your premises, the address is supposed to be hidden. Showing it can get you pulled",
+          "More than one listing for the same business at the same address, which happens accidentally far more than people realise",
+          "A website that redirects somewhere else, or a category that doesn't match what the site says you do",
+        ],
+      },
+      {
+        heading: "The first hour: do nothing clever",
+        paragraphs: [
+          "The instinct is to start editing. Change the name back, update the address, tidy up the categories. Resist it.",
+          "Editing during a suspension muddies the picture and can slow a review down or get the appeal rejected. Leave the listing alone.",
+          "Instead, take screenshots of everything as it currently stands, and work out honestly what changed recently. Did somebody add a keyword to the name? Did you move? Did an agency or a web designer touch it? Nine times out of ten there's an answer, and knowing it makes the appeal much stronger.",
+          "If it was keyword stuffing in the name, that is the one thing worth correcting before you appeal, because appealing while still in breach gets you nowhere.",
+        ],
+      },
+      {
+        heading: "Making the appeal",
+        paragraphs: [
+          "There's a reinstatement form in the Google Business Profile help section. The process moves around, so find it from the help pages rather than an old link somebody sent you.",
+          "What matters is the evidence. Gather it before you submit:",
+        ],
+        bullets: [
+          "Proof the business exists at that address. A utility bill, a lease, a rates bill, something with the name and address together",
+          "Your registration details if you're a limited company, or whatever documentation applies if you're a sole trader",
+          "Photographs of signage, the premises, the van. Exterior shots showing the name are particularly useful",
+          "Business insurance documents, or a licence or accreditation if your trade requires one",
+          "A short, plain explanation of what you think happened and what you've corrected",
+        ],
+      },
+      {
+        heading: "Then wait, and keep working",
+        paragraphs: [
+          "Timescales vary from a few days to several weeks, and chasing it repeatedly doesn't speed it up. Submitting multiple appeals can actively slow things down, so send one good one rather than three rushed ones.",
+          "In the meantime your phone will be quieter, so lean on everything else. Your website, your ads, your social profiles, your existing customers. A business that only has Google is a business with a single point of failure, and this is the week you find that out.",
+          "If a hard suspension is reinstated, your reviews normally come back with the listing. That's the main reason not to give up and start a fresh listing, which looks like exactly the behaviour that got you suspended and loses years of reviews permanently.",
+        ],
+      },
+      {
+        heading: "How not to end up here",
+        paragraphs: [
+          "Most of this is avoidable, and the rules are duller than people hope.",
+          "Use your real business name, exactly as it appears on your signage and your paperwork. No keywords, no location bolted on, no matter who tells you it helps rankings. It might briefly, and then it costs you the listing.",
+          "Make changes one at a time with a few weeks between them. Keep your name, address and phone number identical everywhere they appear online. If you're a service-area business, set it up as one properly and hide the address.",
+          "And be careful who you hand access to. Plenty of suspensions are caused by somebody being helpful with a listing they didn't understand. If an agency wants to add keywords to your business name, that tells you something useful about the agency.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "server-side-tracking-explained",
     title: "Server-Side Tracking Explained Without the Jargon",
     description:

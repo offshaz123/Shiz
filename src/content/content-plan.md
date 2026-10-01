@@ -69,6 +69,7 @@ keywords, dealership social strategy).
 - Video Ads vs Image Ads: Which Works Better for a Local Business? (comparison/explainer)
 - Meta's 2% UK Location Fee: What It Means for Your Ad Budget (platform & policy changes)
 - Server-Side Tracking Explained Without the Jargon (feature deep-dive)
+- Why Google Suspended Your Business Profile, and How to Get It Back (local search)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -238,7 +239,7 @@ keywords, dealership social strategy).
 ## Backlog — local search & AI (added 2026-09-29 research round)
 - [ ] Showing Up in AI Answers, Not Just Google Results — target: "AI Overviews local business",
       "how to appear in AI search results UK"
-- [ ] Why Google Suspended Your Business Profile, and How to Get It Back — target: "Google
+- [x] Why Google Suspended Your Business Profile, and How to Get It Back — target: "Google
       Business Profile suspended UK", "GBP reinstatement"
 - [ ] Keyword Stuffing Your Business Name Will Cost You — target: "Google Business Profile name
       rules", "adding keywords to business name Google"
