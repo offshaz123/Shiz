@@ -70,6 +70,7 @@ keywords, dealership social strategy).
 - Meta's 2% UK Location Fee: What It Means for Your Ad Budget (platform & policy changes)
 - Server-Side Tracking Explained Without the Jargon (feature deep-dive)
 - Why Google Suspended Your Business Profile, and How to Get It Back (local search)
+- Meta & Instagram Ads for Bodyshops and Accident Repair Centres (industry-specific)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -245,17 +246,19 @@ keywords, dealership social strategy).
       rules", "adding keywords to business name Google"
 
 ## Backlog — cost & expectation-setting (added 2026-09-29 research round)
-- [ ] Is There a Minimum Budget for Meta Ads to Work? — target: "minimum Facebook ads budget
-      UK", "how much per day for Facebook ads"
-- [ ] Why Small Budgets Struggle to Optimise — target: "Facebook ads not optimising", "Facebook
-      ads conversions threshold learning"
+- [~] Is There a Minimum Budget for Meta Ads to Work? — DROPPED 2026-10-02. Covered by "How Much
+      Should You Spend on Meta & Instagram Ads?" and "What £300 a Month on Meta Ads Actually
+      Buys You". A third page on the same intent would split it, not strengthen it.
+- [~] Why Small Budgets Struggle to Optimise — DROPPED 2026-10-02. Covered by "How Long Before
+      Meta Ads Start Working? The Learning Phase Explained". Better handled by expanding that
+      post than by writing a competing one.
 
 ## Backlog — feature deep-dive (added 2026-09-29 research round)
 - [x] Server-Side Tracking Explained Without the Jargon — target: "Conversions API small
       business", "server side tracking explained UK"
 
 ## Backlog — industry-specific (added 2026-09-29 research round)
-- [ ] Meta & Instagram Ads for Accident Repair Centres and Bodyshops — target: "marketing for
+- [x] Meta & Instagram Ads for Accident Repair Centres and Bodyshops — target: "marketing for
       bodyshop UK", "Facebook ads accident repair"
 - [ ] Meta & Instagram Ads for Removals and Man-and-Van Businesses — target: "Facebook ads
       removals company UK", "marketing for man and van"

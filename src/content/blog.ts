@@ -16,6 +16,81 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-for-bodyshops-accident-repair",
+    title: "Meta & Instagram Ads for Bodyshops and Accident Repair Centres",
+    description:
+      "Insurance work arrives when it arrives. The private jobs are the ones advertising can actually bring you, and they're usually the better margin anyway.",
+    publishedAt: "2026-10-02",
+    keywords: [
+      "marketing for bodyshop UK",
+      "Facebook ads accident repair",
+      "how to get more private work bodyshop",
+      "advertising for car body repair",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Most bodyshops have the same shape of problem. Some weeks the ramps are full and some weeks they aren't, and almost none of it feels like something you control.",
+          "That's because the biggest slice of the work depends on people crashing, which no amount of advertising will arrange. But there's a whole category of work sitting next to it that nobody is advertising for properly, and that's the part worth going after.",
+        ],
+      },
+      {
+        heading: "Separate the two halves of your business",
+        paragraphs: [
+          "Insurance work comes through approved repairer arrangements, work providers and engineers. It's relationship and accreditation driven, and an advert on Instagram will not get you onto a network.",
+          "Private work is different. Somebody has scuffed a bumper, kerbed an alloy, caught a gatepost, or wants the car tidied up before they sell it. They're paying out of their own pocket, they're choosing who does it, and they're almost always searching or scrolling to find somebody.",
+          "That second group is who advertising reaches, and the margin on it is usually better than scheduled insurance work because you're not working to somebody else's rates.",
+        ],
+      },
+      {
+        heading: "Why people pay privately when they're insured",
+        paragraphs: [
+          "Worth understanding because it's the whole pitch, and it's more common than people assume:",
+        ],
+        bullets: [
+          "The excess is more than the repair. A £450 bumper repair on a £500 excess is never going through insurance",
+          "Protecting a no-claims discount that's worth more over five years than the job costs today",
+          "Lease and PCP returns, where the end-of-contract damage charges are usually far higher than getting it put right beforehand",
+          "Selling the car, where a tidy panel is worth more than it costs to fix",
+          "Older vehicles the owner would rather not involve an insurer in at all",
+        ],
+      },
+      {
+        heading: "The photo estimate is your best offer",
+        paragraphs: [
+          "If you offer a free estimate from a photo, that should be the thing you advertise, not your company name.",
+          "It works because it removes everything that stops people enquiring. They don't have to drive over, book anything, take time off or speak to anyone. They take a picture of the damage and get a number back.",
+          "Run it into WhatsApp rather than a form and it gets easier again, because sending a photo in WhatsApp is something people do twenty times a day without thinking. Write the pre-filled message so it starts the job for you, something like \"Hi, photo attached, my car is a\" and they finish the sentence.",
+          "You'll get more enquiries this way and some will be people who were never serious. That's the trade, and a quick glance at a photo costs you far less than an empty ramp.",
+        ],
+      },
+      {
+        heading: "Show the work, because here you're allowed to",
+        paragraphs: [
+          "Before and after is the most persuasive thing this trade owns. A kerbed alloy next to a refinished one, a creased wing next to a straight panel. The advert argues for itself and no copy comes close.",
+          "Worth knowing that Meta's restriction on before-and-after imagery applies to the human body, so weight, skin and cosmetic procedures. It has nothing to do with vehicles. You can run it freely.",
+          "Film the process too, not just the outcome. Masking up, the paint going on, the polish coming off. People will watch that far longer than they'll watch a finished car sitting still, and it quietly makes the case that you know what you're doing.",
+        ],
+      },
+      {
+        heading: "Fleet is a different campaign entirely",
+        paragraphs: [
+          "If you want commercial and fleet work, don't try to get it from the same adverts as retail customers. It's a different buyer with a different timescale.",
+          "A fleet manager isn't booking today. They're looking for a shop that can turn vehicles around quickly, deal with paperwork properly and keep their vans moving. The pitch is downtime, not price, and the enquiry is a conversation rather than a booking.",
+          "Run it separately, talk about turnaround and collection, and expect it to take longer to land. One fleet contract is worth a lot of bumpers, so it's worth the patience.",
+        ],
+      },
+      {
+        heading: "Answer quickly or don't bother",
+        paragraphs: [
+          "People with a damaged car ring round. They are not waiting for you specifically, and the shop that replies first is usually the one that gets the job.",
+          "If photos land in the evening and get looked at on Thursday, you've paid to generate work that somebody else booked. That's the single most expensive habit in this trade.",
+          "So before spending anything on advertising, decide who looks at the enquiries and how often. If nobody can, missed-call text-back and an automatic first reply will hold the gap, but somebody still has to pick it up. The advertising is the easy part. Answering it properly is what decides whether it was worth doing.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "google-business-profile-suspended",
     title: "Why Google Suspended Your Business Profile, and How to Get It Back",
     description:
