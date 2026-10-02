@@ -16,6 +16,10 @@ import { brand, currencies } from "@/lib/brand";
  *
  * It sets no expectations we cannot meet: it does not promise an account,
  * a balance, or a payment, because none of those exist behind a login yet.
+ *
+ * The provider is not named, matching the site — see brand.ts. The sentence
+ * that matters is unchanged either way: OvaroPay is the introducer and is not
+ * the regulated firm.
  */
 
 const INK = "#05283a";
@@ -117,10 +121,9 @@ export function welcomeEmail(firstName: string) {
           <td style="padding:30px 36px 34px 36px;">
             <div style="border-top:1px solid ${BORDER};padding-top:20px;">
               <p style="margin:0 0 10px 0;font-size:12px;line-height:1.65;color:#7b8f98;font-family:${FONT};">
-                ${brand.name} is acting as an introducer to ${brand.provider.regulatedEntity}, who is
-                providing the regulated payment services and is authorised and regulated by the Financial
-                Conduct Authority under ${brand.provider.permissions} (firm reference number
-                ${brand.provider.firmReferenceNumber}). ${brand.name} is not a bank.
+                ${brand.name} is acting as an introducer. The regulated payment services are
+                provided by an FCA-authorised payment institution under
+                ${brand.provider.permissions}, not by ${brand.name}. ${brand.name} is not a bank.
               </p>
               <p style="margin:0;font-size:12px;line-height:1.65;color:#7b8f98;font-family:${FONT};">
                 ${brand.registeredName ? `${brand.registeredName} is a company registered in ${brand.registeredIn}, company number ${brand.companyNumber}. ` : ""}You are receiving this because an account was created with this email address at ${brand.url}.
@@ -154,10 +157,9 @@ trades, roughly what comes in each month, and the currency that goes out.
 ${brand.url}
 
 ---
-${brand.name} is acting as an introducer to ${brand.provider.regulatedEntity}, who is providing
-the regulated payment services and is authorised and regulated by the Financial
-Conduct Authority under ${brand.provider.permissions} (firm reference number
-${brand.provider.firmReferenceNumber}). ${brand.name} is not a bank.
+${brand.name} is acting as an introducer. The regulated payment services are provided
+by an FCA-authorised payment institution under ${brand.provider.permissions},
+not by ${brand.name}. ${brand.name} is not a bank.
 You are receiving this because an account was created with this email address.`;
 
   return { subject, html, text };

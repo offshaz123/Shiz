@@ -67,8 +67,8 @@ export default function Home() {
             <div>
               <AccountGreeting />
               {/* CAREFUL. This badge cannot say "FCA regulated" on its own,
-                  because OvaroPay is not: it introduces customers to CoBanq
-                  Ltd, who holds the permission. Claiming authorisation you do
+                  because OvaroPay is not: it introduces customers to the
+                  provider, who holds the permission. Claiming authorisation you do
                   not hold is the one thing the FCA acts on fastest. Once
                   OvaroPay is on the register in its own right, this can become
                   the shorter claim — and `brand.provider.model` should change

@@ -12,9 +12,9 @@ export const brand = {
    * CAREFUL. Two different entities can be in play and they must never be
    * conflated on a regulated website:
    *
-   *  - The REGULATED entity is CoBanq Ltd, trading as OvaroPay. That is what
-   *    appears on the FCA register and what the customer contracts with. It is
-   *    set in `provider` below and RegulatoryNote publishes it.
+   *  - The REGULATED entity is the provider, not us. It is what appears on
+   *    the FCA register and what the customer ultimately contracts with. It
+   *    is set in `provider` below and is currently unnamed.
    *  - `legalName` is what goes in the copyright line. It is the brand,
    *    because the brand is what owns this website — the regulated firm is
    *    named in the disclosure sentence directly above it, which is where
@@ -107,41 +107,43 @@ export const brand = {
   /**
    * Who provides the regulated payment services, and what we are to them.
    *
-   *   OvaroPay  ->  CoBanq Ltd
-   *   (introducer)  (Authorised Payment Institution, FRN 508565)
+   *   OvaroPay      ->  (unnamed)
+   *   (introducer)      (an FCA-authorised payment institution)
    *
-   * OvaroPay introduces customers; CoBanq provides the regulated services and
-   * holds the permissions.
+   * OvaroPay introduces customers; the provider holds the permissions and
+   * provides the regulated services.
    *
-   * Consequence of the introducer model: OvaroPay is NOT itself regulated and
-   * must never imply otherwise — no "FCA-regulated" badge on our own name, and
-   * no borrowing CoBanq's founding date as if it were ours.
+   * THE PROVIDER IS DELIBERATELY NOT NAMED. The identity fields are empty
+   * and `verified` is false, which makes RegulatoryNote fall back to the
+   * unnamed sentence everywhere, including in the footer and the welcome
+   * email. That fallback is the whole reason the component was written with
+   * two versions.
    *
-   * `verified` gates whether we name CoBanq and its FRN in public. It is true:
-   * CoBanq publishes both numbers itself on cobanq.com/about ("Our FCA
-   * Registration Number is 508565, and our Company Registration Number is
-   * 04995400"), and we are naming them on instruction.
+   * This is a commercial decision taken while the arrangement is being
+   * changed, not a regulatory one, and it is lawful: the disclosure that
+   * matters is that OvaroPay is NOT the regulated firm and does not hold the
+   * permission. Saying so without a name still says that.
    *
-   * Still worth doing once: check 508565 at register.fca.org.uk and keep a
-   * dated screenshot of the entry. If the register ever disagrees with the
-   * numbers below, set this back to false — that one line pulls the named
-   * disclosure off every page.
+   * TO NAME A PROVIDER AGAIN: fill in `regulatedEntity`, `firmReferenceNumber`
+   * and the rest, set `verified: true` only after checking the number on
+   * register.fca.org.uk, and pass `nameProvider` where you want it printed.
+   * The privacy notice needs updating at the same time — it currently
+   * describes the recipient by category, which UK GDPR Article 13 allows, but
+   * naming them is better practice once there is a name to give.
    */
   provider: {
-    /** "introducer" | "agent" | "trading-name" — each needs different wording. */
     model: "introducer",
-    name: "CoBanq",
-    regulatedEntity: "CoBanq Ltd",
-    firmReferenceNumber: "508565",
-    companyNumber: "04995400",
+    name: "",
+    regulatedEntity: "",
+    firmReferenceNumber: "",
+    companyNumber: "",
     permissions: "the Payment Services Regulations 2017",
-    verified: true,
-
-    /** Published by CoBanq on cobanq.com — used in the privacy notice. */
-    registeredOffice: "Level39, One Canada Square, Canary Wharf, London, England, E14 5AB",
-    icoNumber: "Z3153690",
-    privacyEmail: "privacy@cobanq.com",
-    dpoEmail: "dpo@cobanq.com",
+    /** Gates whether the firm is named in public. Never true without a check. */
+    verified: false,
+    registeredOffice: "",
+    icoNumber: "",
+    privacyEmail: "",
+    dpoEmail: "",
   },
 
   /**
@@ -163,7 +165,7 @@ export const brand = {
  *
  * NOTE — the partner pack promises USD, AED and HKD, but AED and HKD are NOT on
  * this list. Priority-one customers (mobile wholesalers) pay suppliers in Dubai
- * and Hong Kong, so confirm with CoBanq whether those corridors are served
+ * and Hong Kong, so confirm with the provider whether those corridors are served
  * another way before the sales team promises them.
  */
 export const currencies = [
@@ -226,12 +228,12 @@ export const trustPoints = [
 
 /**
  * The dark figures band. Every one of these is checkable: the currency count
- * comes from the list above, the firm reference number is CoBanq's, and the
+ * comes from the list above, the regulated firm is the provider's not ours, and the
  * rest are statements of how the account works rather than performance claims.
  */
 export const headlineFacts = [
   { value: "12", label: "Currencies on one account", tone: 1 },
-  { value: "FCA", label: "Authorised provider, No. 508565", tone: 2 },
+  { value: "FCA", label: "Regulated provider behind the account", tone: 2 },
   { value: "Same day", label: "Where the corridor and cut-off allow", tone: 4 },
   { value: "UK", label: "Based, and onboarded here", tone: 3 },
 ] as const;
