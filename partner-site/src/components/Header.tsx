@@ -152,19 +152,16 @@ export function Header() {
               </Link>
             ))}
             <Link
-              href="/login"
-              onClick={() => setOpen(false)}
-              className="btn btn-ghost mt-3"
-            >
-              Log in
-            </Link>
-            <Link
               href="/contact"
               onClick={() => setOpen(false)}
-              className="btn btn-primary mt-2 mb-3"
+              className="btn btn-primary mt-3"
             >
               Talk to us
             </Link>
+            {/* Was a hardcoded "Log in" that showed even when you already
+                were. The account control knows the difference. */}
+            <HeaderAccount variant="menu" onNavigate={() => setOpen(false)} />
+            <div className="mb-3" />
           </div>
         </nav>
       )}

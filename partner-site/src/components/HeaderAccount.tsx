@@ -12,8 +12,23 @@ import { useAccount } from "@/lib/useAccount";
  * from one line on the home page, and no way to log out at all — so the only
  * way to tell was to go back to /login, which still showed the form. That is
  * what "it doesn't actually log in" looked like from outside.
+ *
+ * It renders in BOTH headers. The first version was sm:block only, which left
+ * a phone with no account chip, no way to reach the account and no way to log
+ * out at all — on the device most people will actually use.
  */
-export function HeaderAccount({ onNavigate }: { onNavigate?: () => void }) {
+export function HeaderAccount({
+  onNavigate,
+  variant = "bar",
+}: {
+  onNavigate?: () => void;
+  /**
+   * "bar" is the compact chip in the desktop header. "menu" is the stacked
+   * version for inside the mobile menu, where there is no room for a
+   * dropdown and no hover to open it with.
+   */
+  variant?: "bar" | "menu";
+}) {
   const account = useAccount();
   const [open, setOpen] = useState(false);
   const [leaving, setLeaving] = useState(false);
@@ -21,11 +36,18 @@ export function HeaderAccount({ onNavigate }: { onNavigate?: () => void }) {
   // Not known yet. Render the same width as the link so the header does not
   // jump when the answer arrives.
   if (account === undefined) {
-    return <span className="hidden w-[4.5rem] sm:inline-block" aria-hidden="true" />;
+    // Reserve the width so the header does not jump when the answer lands.
+    return variant === "menu" ? null : (
+      <span className="hidden w-[4.5rem] sm:inline-block" aria-hidden="true" />
+    );
   }
 
   if (!account) {
-    return (
+    return variant === "menu" ? (
+      <Link href="/login" onClick={onNavigate} className="btn btn-ghost mt-3">
+        Log in
+      </Link>
+    ) : (
       <Link
         href="/login"
         onClick={onNavigate}
@@ -45,6 +67,38 @@ export function HeaderAccount({ onNavigate }: { onNavigate?: () => void }) {
   }
 
   const initials = `${account.firstName[0] ?? ""}${account.lastName[0] ?? ""}`.toUpperCase();
+
+  if (variant === "menu") {
+    return (
+      <div className="mt-3 rounded-2xl border border-border bg-surface p-3">
+        <div className="flex items-center gap-3 px-1 pb-2">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-xs font-semibold text-on-accent">
+            {initials}
+          </span>
+          <span className="min-w-0">
+            <span className="block truncate text-sm font-semibold">
+              {account.firstName} {account.lastName}
+            </span>
+            <span className="block truncate text-xs text-muted">{account.email}</span>
+          </span>
+        </div>
+        <Link href="/dashboard" onClick={onNavigate} className="btn btn-ghost mt-1 w-full">
+          Your account
+        </Link>
+        <Link href="/account" onClick={onNavigate} className="btn btn-ghost mt-2 w-full">
+          Account settings
+        </Link>
+        <button
+          type="button"
+          onClick={logOut}
+          disabled={leaving}
+          className="btn btn-ghost mt-2 w-full disabled:opacity-60"
+        >
+          {leaving ? "Logging out…" : "Log out"}
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="relative hidden sm:block">
