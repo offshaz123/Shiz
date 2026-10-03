@@ -16,6 +16,77 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "why-rough-videos-often-beat-polished-ones",
+    title: "Why Rough Videos Often Beat Polished Ones",
+    description:
+      "The video you filmed in two minutes usually outperforms the one that cost four figures. Not because rough is better, but because polished looks like an advert.",
+    publishedAt: "2026-10-03",
+    keywords: [
+      "UGC style ads",
+      "authentic video ads small business",
+      "do professional videos work on Facebook",
+      "phone video vs professional video ads",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Plenty of businesses never post anything because they're waiting until they can afford to do it properly. Then they spend money on a proper shoot, run it, and it does worse than the clip somebody filmed on their phone in the car park.",
+          "That happens often enough that it's worth understanding why, because the reason isn't what most people assume.",
+        ],
+      },
+      {
+        heading: "The distinction that actually matters",
+        paragraphs: [
+          "There are two different things people mean by a video looking rough, and only one of them helps you.",
+          "Technically poor is bad. Backlit so you can't see a face, wind roaring over the audio, shaking so much it's uncomfortable to watch. None of that is charming, and people scroll past it because it's unpleasant rather than because it's authentic. We've written about fixing that separately and it's worth doing.",
+          "Unproduced is different, and that's the one that works. Good light, clear sound, steady enough, and otherwise completely ordinary. One take, no script, no music swelling, no drone shot of the industrial estate.",
+          "So the advice isn't film badly. It's stop producing.",
+        ],
+      },
+      {
+        heading: "Polished looks like an advert, and people skip adverts",
+        paragraphs: [
+          "Everyone has spent their whole life learning to ignore advertising. The colour grade, the music, the voiceover, the logo at the end. Those are signals, and people recognise them in well under a second.",
+          "The moment somebody's brain registers advert, the decision is already made and the thumb is already moving. It doesn't matter how good the thing you made is, because they stopped watching before it had a chance.",
+          "A clip that looks like a person filming something interesting doesn't set that off. It reads as content rather than as a message from a company, which buys you the two or three seconds you need.",
+          "This is also why the polished version can test well with your friends and badly in the feed. Your friends watched it deliberately. Nobody in the feed watches anything deliberately.",
+        ],
+      },
+      {
+        heading: "What makes the rough one work",
+        paragraphs: [
+          "It's not the lack of production value doing the work, it's what tends to come with it:",
+        ],
+        bullets: [
+          "A real person, usually the one who does the job, talking like they talk rather than reading something",
+          "The actual place. Your workshop with the mess in it is more convincing than a studio with nothing in it",
+          "Specific details that nobody would script. Mentioning the make of a car, the street, the thing that went wrong on Tuesday",
+          "Imperfections that prove it's real. A stumble over a word, a bit of background noise, somebody walking past",
+          "Speed. It was filmed this week, about something that happened this week, which is a thing a produced video can never be",
+        ],
+      },
+      {
+        heading: "The argument that settles it",
+        paragraphs: [
+          "Even if a produced video performed better, which it often doesn't, there's a practical problem with it.",
+          "Ad creative wears out. The same video in front of the same audience stops working after a few weeks, and then you need another one. If each one takes a shoot, a schedule and a budget, you'll run the same thing for six months because the alternative is too much hassle.",
+          "Filming it yourself means you can replace it on Thursday because you noticed it had gone stale on Wednesday. That ability to keep swapping is worth more over a year than any single video being slightly better.",
+          "The businesses that do well here aren't the ones with the best footage. They're the ones with the most of it.",
+        ],
+      },
+      {
+        heading: "When polished is the right call",
+        paragraphs: [
+          "This isn't an argument that production is always wrong. There are places it earns its money.",
+          "Anything where the product has to look beautiful, so high-end interiors, jewellery, food, a car that's just been finished to a standard worth showing off. Make that look as good as it genuinely is.",
+          "Anything selling at a price where people expect polish. If somebody is spending twenty thousand pounds, a video that looks like it cost nothing can undermine you rather than help.",
+          "And the handful of permanent pieces. The video on your homepage, the one explaining what you do, the thing people watch after they've already decided to look you up properly. Those get watched deliberately, so the rules are different.",
+          "Everything else, the week-to-week material that keeps the advertising fresh, should be filmed by you on a phone. Not because it's cheaper, although it is. Because it works better, and because you'll actually do it.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-for-bodyshops-accident-repair",
     title: "Meta & Instagram Ads for Bodyshops and Accident Repair Centres",
     description:

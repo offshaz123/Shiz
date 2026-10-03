@@ -71,6 +71,7 @@ keywords, dealership social strategy).
 - Server-Side Tracking Explained Without the Jargon (feature deep-dive)
 - Why Google Suspended Your Business Profile, and How to Get It Back (local search)
 - Meta & Instagram Ads for Bodyshops and Accident Repair Centres (industry-specific)
+- Why Rough Videos Often Beat Polished Ones (video & creative)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -200,7 +201,7 @@ keywords, dealership social strategy).
       Reels for business", "phone video ads small business"
 - [x] What to Actually Film: Video Ideas for a Local Business — target: "video content ideas
       small business UK", "what to post on Instagram for business"
-- [ ] Why Rough Videos Often Beat Polished Ones — target: "UGC style ads", "authentic video ads
+- [x] Why Rough Videos Often Beat Polished Ones — target: "UGC style ads", "authentic video ads
       small business"
 
 ## Backlog — seasonal & planning (added 2026-09-16 research round)
