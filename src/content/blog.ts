@@ -16,6 +16,80 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "reviews-or-ads-which-brings-more-work",
+    title: "Reviews or Ads: Which Brings a Local Business More Work?",
+    description:
+      "They do completely different jobs, and doing them in the wrong order wastes money. Here's which one to fix first depending on where your business actually is.",
+    publishedAt: "2026-10-04",
+    keywords: [
+      "do online reviews bring customers",
+      "reviews vs advertising local business UK",
+      "are Google reviews worth it",
+      "should I spend on ads or reviews",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "It gets framed as a choice, usually by somebody selling one of them. Reviews are free so do those, or reviews are slow so pay for ads instead.",
+          "They aren't alternatives. They do different jobs at different points, and the order you do them in makes a genuine difference to what you get back.",
+        ],
+      },
+      {
+        heading: "Reviews don't create demand",
+        paragraphs: [
+          "This is the bit that gets overstated. A wall of five star reviews will not make somebody want a new driveway. Nothing you do on a review platform reaches a person who isn't already looking.",
+          "What reviews do is close people who are already deciding. Somebody has three quotes, or three names in front of them, and they're choosing. At that moment your reviews are doing all the work, and they're doing it while you're asleep.",
+          "They also change who bothers contacting you at all. A business with eleven reviews and a business with two hundred get a very different share of the people comparing them, without either one spending anything that week.",
+        ],
+      },
+      {
+        heading: "Ads don't close anyone",
+        paragraphs: [
+          "The mirror image is also true, and it's the more expensive mistake.",
+          "Advertising reaches people who weren't looking for you, and some who weren't looking at all. That's genuinely valuable and it's the only reliable way to create demand rather than wait for it.",
+          "But an advert doesn't convince anybody on its own. It gets them interested, and then they go and check you out. They search your name, they look at your Google listing, they read what other people said. That check happens on almost every enquiry, even when people don't mention it.",
+          "So your ads deliver people to your reviews. Which is why the order matters.",
+        ],
+      },
+      {
+        heading: "Advertising into a bad first impression",
+        paragraphs: [
+          "Here's the expensive version of getting it wrong. You spend six hundred pounds a month sending interested people to look you up, and what they find is four reviews, the most recent from 2023, and one complaint nobody replied to.",
+          "You have paid to introduce yourself and then paid for them to be put off. The ads worked exactly as intended. The thing after the ad is what failed.",
+          "This is the single most common reason a campaign underperforms for a local business, and it never shows up in the ad reports, because the report only knows they clicked. It doesn't know what they found next.",
+        ],
+      },
+      {
+        heading: "So which first?",
+        paragraphs: [
+          "It depends entirely on which problem you've actually got, and it's usually obvious once you ask:",
+        ],
+        bullets: [
+          "Few or no reviews, and the phone rings sometimes. Fix the reviews first. It costs nothing but asking, and it makes everything you do afterwards work better",
+          "Good reviews and a quiet phone. That's an advertising problem. People who find you are convinced, there just aren't enough of them. Spend the money",
+          "Few reviews and a silent phone. Reviews first anyway, because you can start this afternoon and it's free, then advertise once there's something worth finding",
+          "Plenty of both and still quiet. Something else is wrong, usually the offer, the pricing or how quickly enquiries get answered",
+        ],
+      },
+      {
+        heading: "Getting reviews without getting in trouble",
+        paragraphs: [
+          "Asking is nearly all of it. Most happy customers would leave one and simply never think to, so the businesses with hundreds of reviews are usually just the ones that ask every single time.",
+          "Ask when the job is finished and they're pleased, not a fortnight later. Send a direct link rather than instructions. Make it take ten seconds.",
+          "One thing to be careful about. Since the Digital Markets, Competition and Consumers Act came into force, fake reviews and incentivised reviews are specifically illegal in the UK and enforceable by the CMA directly. Offering a discount for a review is not a grey area any more. Neither is writing them yourself, or getting friends to. Ask, make it easy, and leave it there.",
+          "Reply to the bad ones too, calmly and in public. People read those more carefully than the good ones, and a measured reply to an unfair review persuades better than another five star rating.",
+        ],
+      },
+      {
+        heading: "The short version",
+        paragraphs: [
+          "Reviews convert the demand you already have. Advertising creates demand you don't. A business that only does reviews waits to be found. A business that only advertises pays to send people to an empty profile.",
+          "If you're choosing where to start, start with the free one, because it also makes the paid one work harder. Then advertise into a profile that's actually worth landing on.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "why-rough-videos-often-beat-polished-ones",
     title: "Why Rough Videos Often Beat Polished Ones",
     description:

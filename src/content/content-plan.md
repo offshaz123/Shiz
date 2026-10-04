@@ -72,6 +72,7 @@ keywords, dealership social strategy).
 - Why Google Suspended Your Business Profile, and How to Get It Back (local search)
 - Meta & Instagram Ads for Bodyshops and Accident Repair Centres (industry-specific)
 - Why Rough Videos Often Beat Polished Ones (video & creative)
+- Reviews or Ads: Which Brings a Local Business More Work? (comparison/explainer)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -207,8 +208,9 @@ keywords, dealership social strategy).
 ## Backlog — seasonal & planning (added 2026-09-16 research round)
 - [x] Q4 Advertising: Why Your Costs Rise in November and What to Do About It — target:
       "Facebook ads Christmas costs", "Q4 CPM increase UK"
-- [ ] Should You Advertise Over Christmas? — target: "Christmas advertising small business UK",
-      "should I run ads in December"
+- [~] Should You Advertise Over Christmas? — DROPPED 2026-10-04. "Q4 Advertising: Why Your Costs
+      Rise in November" already answers this, including the case for not going quiet over the
+      expensive weeks. A second page would compete with it for the same searches.
 - [x] Planning a Marketing Budget for the Year Ahead — target: "small business marketing budget
       UK", "how much should I spend on marketing"
 
@@ -267,7 +269,7 @@ keywords, dealership social strategy).
       landscaping UK", "marketing for gardeners"
 
 ## Backlog — comparison/explainer (added 2026-09-29 research round)
-- [ ] Reviews or Ads: Which Brings a Local Business More Work? — target: "do online reviews
+- [x] Reviews or Ads: Which Brings a Local Business More Work? — target: "do online reviews
       bring customers", "reviews vs advertising local business UK"
 
 ## Notes for whoever (human or Routine) picks the next topic
