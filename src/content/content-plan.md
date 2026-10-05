@@ -73,6 +73,7 @@ keywords, dealership social strategy).
 - Meta & Instagram Ads for Bodyshops and Accident Repair Centres (industry-specific)
 - Why Rough Videos Often Beat Polished Ones (video & creative)
 - Reviews or Ads: Which Brings a Local Business More Work? (comparison/explainer)
+- Showing Up in AI Answers, Not Just Google Results (local search & AI)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -241,7 +242,7 @@ keywords, dealership social strategy).
       UK", "why is my Facebook ads bill higher than my budget"
 
 ## Backlog — local search & AI (added 2026-09-29 research round)
-- [ ] Showing Up in AI Answers, Not Just Google Results — target: "AI Overviews local business",
+- [x] Showing Up in AI Answers, Not Just Google Results — target: "AI Overviews local business",
       "how to appear in AI search results UK"
 - [x] Why Google Suspended Your Business Profile, and How to Get It Back — target: "Google
       Business Profile suspended UK", "GBP reinstatement"

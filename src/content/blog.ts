@@ -16,6 +16,82 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "showing-up-in-ai-answers",
+    title: "Showing Up in AI Answers, Not Just Google Results",
+    description:
+      "People increasingly get an answer without clicking anything. Here's how businesses end up named in those answers, and why it's work you should do anyway.",
+    publishedAt: "2026-10-05",
+    keywords: [
+      "AI Overviews local business",
+      "how to appear in AI search results UK",
+      "AI search optimisation small business",
+      "getting recommended by AI assistants",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Search has changed shape. Somebody types a question and gets an answer written for them at the top of the page, often naming a handful of businesses, and a decent share of people never scroll past it.",
+          "On top of that, a growing number of people skip the search engine entirely and ask an assistant to recommend somebody. Either way the question has shifted. It used to be whether you rank. Increasingly it's whether you get mentioned.",
+        ],
+      },
+      {
+        heading: "What's actually different",
+        paragraphs: [
+          "The uncomfortable part first. Appearing in an AI answer often produces fewer clicks than a traditional listing, because the person got what they needed without visiting anyone's website.",
+          "That sounds like bad news and partly it is. But the people who do act after reading one of these answers tend to be further along, because they've already been given a shortlist and a reason. A named recommendation does more work than a blue link ever did.",
+          "What it means practically is that you can no longer judge visibility purely by traffic. A business can be more visible than ever and see flat website numbers, which is confusing if nobody explains it.",
+        ],
+      },
+      {
+        heading: "How these systems decide who to name",
+        paragraphs: [
+          "There's no secret setting, and anyone offering to put you into AI answers for a monthly fee is guessing at best.",
+          "What these systems do is draw on what's consistently said about a business across lots of different places. Your own website, your Google listing, directories, industry bodies, local press, round-up articles, and the actual wording inside your reviews.",
+          "So the thing being rewarded is consistency and corroboration. A business described the same way in fifteen places, by other people as well as itself, is easy to summarise confidently. A business that only describes itself, on one website, is not.",
+          "That's why so much of this comes back to fundamentals rather than anything new.",
+        ],
+      },
+      {
+        heading: "What actually helps",
+        paragraphs: [
+          "Most of it is unglamorous and you should be doing it anyway:",
+        ],
+        bullets: [
+          "Say what you do in plain words. \"We fit acoustic wall panels in homes across South London\" is usable. \"Transforming spaces with innovative solutions\" is not, by a machine or a human",
+          "Keep your name, address and phone number identical everywhere. Inconsistency makes you harder to identify as one business",
+          "Fill in every field on your Google Business Profile, including the services and the attributes people skip",
+          "Get listed where your trade genuinely gets listed. Trade bodies, accreditation registers, local directories that real people use",
+          "Answer the actual questions customers ask, on your own site, in the words they'd use. A page that plainly answers a question is the kind of thing these systems quote",
+          "Add structured data to your site so the basics are machine readable rather than inferred from a design",
+        ],
+      },
+      {
+        heading: "Your reviews are being read, not counted",
+        paragraphs: [
+          "This is the part most businesses haven't adjusted to. A star rating is a number, but the sentences inside the reviews are text, and text is what these systems actually work with.",
+          "If several customers independently mention that you turned up on time, explained the job, and cleaned up afterwards, that's now part of how your business gets described to other people. Nobody at your end wrote it, which is exactly why it carries weight.",
+          "You can't and mustn't script that. Fake and incentivised reviews are illegal in the UK and enforceable directly by the CMA, so this is not an area to get clever in. But you can ask more customers, more often, and you can do the things you'd want mentioned.",
+        ],
+      },
+      {
+        heading: "What doesn't work",
+        paragraphs: [
+          "The shortcuts are the same shortcuts as always, and they fail the same way.",
+          "Stuffing keywords anywhere, including your business name, which risks your Google listing entirely. Publishing volumes of thin AI-written pages, which adds nothing a system would want to quote. Paying for links from places nobody reads.",
+          "And be wary of anyone selling AI search optimisation as a separate product with its own monthly fee. There isn't a lever to pull. What there is, is being clear about what you do, being described consistently in places that matter, and having genuine evidence that you're any good. Which is what good marketing was before any of this.",
+        ],
+      },
+      {
+        heading: "What to actually do about it",
+        paragraphs: [
+          "Don't panic and don't rebuild anything. Go and look yourself first. Search the things your customers would search, and ask an assistant to recommend a business like yours in your area. See whether you come up, and see who does.",
+          "If competitors are named and you aren't, look at what's different. It's usually that they're mentioned in more places than their own website, or that their listing is complete and yours has four empty fields.",
+          "Then fix the fundamentals, keep publishing things that genuinely answer questions, and keep asking for reviews. That's the whole strategy. It's less exciting than it sounds, and it's the same work that would have served you five years ago, which is rather the point.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "reviews-or-ads-which-brings-more-work",
     title: "Reviews or Ads: Which Brings a Local Business More Work?",
     description:
