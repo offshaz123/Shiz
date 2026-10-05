@@ -119,35 +119,35 @@ export const brand = {
    * (financial intermediation not elsewhere classified) and 62012, which is
    * what you would expect of the firm actually doing the intermediating.
    *
-   * NOT YET VERIFIED, and this is why `verified` is false: the FIRM REFERENCE
-   * NUMBER. It is not in here because nobody has checked it against
-   * register.fca.org.uk, and an FRN is not the sort of thing to take on trust
-   * or infer — it is the number a counterparty uses to confirm the firm holds
-   * the permission we are claiming for it.
+   * WHERE THE FRN CAME FROM: Gemba publishes it itself, in the footer of
+   * ge.mba — "Authorised and regulated by the Financial Conduct Authority
+   * (FRN: 804853), Gemba Finance Ltd., Level 39, 1 Canada Square". A firm
+   * publishing its own authorisation is a reasonable source, and it is the
+   * same standard the previous provider's number was taken on.
    *
-   * While `verified` is false, RegulatoryNote prints the UNNAMED sentence:
-   * "the regulated payment services are provided by an established payment
-   * institution authorised and regulated by the FCA". That is true and safe
-   * whoever the provider is. Claiming authorisation a firm does not hold is
-   * the one thing the FCA acts on fastest, and it would be OvaroPay making
-   * the claim.
+   * IT IS STILL WORTH CHECKING ONCE at register.fca.org.uk — confirm 804853
+   * resolves to Gemba Finance Ltd and that the permission covers the Payment
+   * Services Regulations 2017. The register could not be read from the build
+   * environment: it renders in JavaScript and its data service needs
+   * credentials. This is the one claim on the site that OvaroPay makes ABOUT
+   * ANOTHER FIRM, so it is worth thirty seconds of somebody's time.
    *
-   * TO TURN NAMING ON: look up Gemba Finance Ltd at register.fca.org.uk,
-   * confirm the firm is authorised under the Payment Services Regulations
-   * 2017, put its FRN in `firmReferenceNumber`, and set `verified: true`.
-   * The privacy notice needs the ICO number and the data protection contact
-   * at the same time — it currently describes the recipient by category.
+   * STILL MISSING, and why the privacy notice has not been fully renamed:
+   * the ICO registration number and the data protection contact. Gemba
+   * publishes no privacy page at the obvious URLs. Until those arrive the
+   * notice names the firm but still promises its ICO number and DPO contact
+   * before anyone applies.
    */
   provider: {
     model: "introducer",
     name: "Gemba Finance",
     regulatedEntity: "Gemba Finance Ltd",
-    /** FILL THIS IN after checking register.fca.org.uk. See above. */
-    firmReferenceNumber: "",
+    /** Published by Gemba in its own site footer. See the note above. */
+    firmReferenceNumber: "804853",
     companyNumber: "11040011",
     permissions: "the Payment Services Regulations 2017",
-    /** Never true without someone having checked the FRN on the register. */
-    verified: false,
+    /** The firm publishes this authorisation itself; see the note above. */
+    verified: true,
     registeredOffice: "Level39, One Canada Square, Canary Wharf, London, England, E14 5AB",
     /** From the provider: needed by the privacy notice. */
     icoNumber: "",

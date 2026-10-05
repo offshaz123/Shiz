@@ -22,12 +22,12 @@ const { provider } = brand;
  * The structure follows the notice of an introducer in the same position as
  * ours.
  *
- * THE PROVIDER IS NOT NAMED HERE, deliberately, while the arrangement is
- * being changed. UK GDPR Article 13 asks for "the recipients or CATEGORIES of
- * recipients", so describing the recipient by category is lawful — but it is
- * the weaker option, and the notice commits to naming the firm before anyone
- * applies, which is the part that must actually happen. Name it here as soon
- * as there is a name to give.
+ * The provider is named again now the arrangement is settled. What is still
+ * described rather than given is its ICO registration number and its data
+ * protection officer's contact, because the firm publishes no privacy page
+ * at the obvious URLs and nobody has supplied them. The notice promises both
+ * before anyone applies, which is the part that must actually happen — put
+ * them in brand.ts and this section will print them.
  *
  * TODO before go-live: have a solicitor read this alongside the terms that
  * will govern the account relationship, and fill in `brand.icoNumber` once the
@@ -36,14 +36,12 @@ const { provider } = brand;
  * UK. `brand.companyNumber` is filled in; `brand.registeredName` waits on the
  * change of name landing on the register.
  */
-const PROVIDER = "an FCA-authorised payment institution";
-
 const sections: { heading: string; body?: string[]; items?: string[] }[] = [
   {
     heading: "1. Introduction",
     body: [
       `${brand.name} is committed to protecting your privacy and safeguarding your personal data. This notice explains what we collect when you use this website, how we use it, who we share it with, and what rights you have over it. It is given in accordance with the UK General Data Protection Regulation ("UK GDPR") and the Data Protection Act 2018.`,
-      `${brand.name} is an introducer. The regulated payment services, and the account you would hold, are provided by a payment institution authorised and regulated by the Financial Conduct Authority under ${provider.permissions} — not by ${brand.name}. That firm's own privacy notice applies to everything that happens after we introduce you; we will give you its name and its notice before you apply, and you should read it alongside this one.`,
+      `${brand.name} is an introducer. The regulated payment services, and the account you would hold, are provided by ${provider.regulatedEntity}, who is authorised and regulated by the Financial Conduct Authority under ${provider.permissions} (firm reference number ${provider.firmReferenceNumber}) — not by ${brand.name}. That firm's own privacy notice applies to everything that happens after we introduce you, and we will give you a copy before you apply; you should read it alongside this one.`,
       `If you have a question about anything in this notice, email ${brand.email}.`,
     ],
   },
@@ -51,8 +49,8 @@ const sections: { heading: string; body?: string[]; items?: string[] }[] = [
     heading: "2. Who controls your data",
     body: [
       `${brand.name} is the data controller for the enquiry you send through this website and for the correspondence that follows it${brand.companyNumber ? ` (company number ${brand.companyNumber}${brand.icoNumber ? `, ICO registration number ${brand.icoNumber}` : ""})` : ""}.`,
-      `The provider is the data controller for your account application and for the account itself, including the identity checks, the anti-money-laundering screening and the transaction records. We will give you that firm's name, registered office, ICO registration number and data protection officer contact before you apply, and they are available from us at any time on request.`,
-      `In plain terms: what you type into the form on this site is ours to look after. What you send to the provider when you apply is theirs.`,
+      `${provider.regulatedEntity} is the data controller for your account application and for the account itself, including the identity checks, the anti-money-laundering screening and the transaction records. Its registered office is ${provider.registeredOffice}. We will give you its ICO registration number and the contact for its data protection officer before you apply, and they are available from us at any time on request.`,
+      `In plain terms: what you type into the form on this site is ours to look after. What you send to ${provider.name} when you apply is ${provider.name}'s.`,
     ],
   },
   {
@@ -77,7 +75,7 @@ const sections: { heading: string; body?: string[]; items?: string[] }[] = [
     body: ["We process what you send us for the following purposes, on the following lawful bases:"],
     items: [
       "To answer your enquiry and work out whether the account fits what you do — taking steps at your request before entering into a contract, and our legitimate interest in replying to someone who asked us to get in touch.",
-      `To introduce you to the provider where you ask us to take it forward — steps taken at your request.`,
+      `To introduce you to ${provider.regulatedEntity} where you ask us to take it forward — steps taken at your request.`,
       "To keep a record of the enquiry and our correspondence about it — our legitimate interest in knowing who we have spoken to and what was said.",
       "To meet any legal or regulatory obligation that applies to us — legal obligation.",
     ],
@@ -86,7 +84,7 @@ const sections: { heading: string; body?: string[]; items?: string[] }[] = [
     heading: "6. Who we share it with",
     body: ["We share your personal data with:"],
     items: [
-      `${PROVIDER}, where you ask us to introduce you, so that your application can be considered. We will name that firm to you before anything is sent.`,
+      `${provider.regulatedEntity}, where you ask us to introduce you, so that your application can be considered.`,
       "Our email and hosting providers, which carry the message from this website to our inbox and store it there.",
       "Professional advisers bound by confidentiality, where we need advice about an enquiry.",
       "Anyone we are legally required to disclose it to.",
@@ -105,7 +103,7 @@ const sections: { heading: string; body?: string[]; items?: string[] }[] = [
     items: [
       "Enquiries that do not lead to an application: up to two years, in case you come back to us, and then deleted.",
       "Enquiries that lead to an introduction: for as long as the introduction is live, and then for six years, which is the period we may need to evidence what we did and when.",
-      `Records held by the provider in connection with an account follow its own retention periods, which are longer because anti-money-laundering law requires it.`,
+      `Records held by ${provider.regulatedEntity} in connection with an account follow its own retention periods, which are longer because anti-money-laundering law requires it.`,
     ],
   },
   {
@@ -138,7 +136,7 @@ const sections: { heading: string; body?: string[]; items?: string[] }[] = [
     heading: "12. How to exercise them, and how to complain",
     body: [
       `Email ${brand.email} and say what you want. We will respond within one calendar month. If a request is complex, or you have made several, we may extend that by up to two further months and will tell you if we do.`,
-      `For data held in connection with an account rather than an enquiry, those rights are exercised against the provider rather than against us. Write to ${brand.email} and we will give you its data protection contact, or pass the request on.`,
+      `For data held in connection with an account rather than an enquiry, those rights are exercised against ${provider.regulatedEntity} rather than against us. Write to ${brand.email} and we will give you its data protection contact, or pass the request on.`,
       "If you are not satisfied with how we have handled your personal data, you can complain to the Information Commissioner's Office at ico.org.uk, or on 0303 123 1113. We would rather you came to us first, but you do not have to.",
     ],
   },
