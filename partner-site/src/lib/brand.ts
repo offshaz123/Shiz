@@ -107,40 +107,49 @@ export const brand = {
   /**
    * Who provides the regulated payment services, and what we are to them.
    *
-   *   OvaroPay      ->  (unnamed)
-   *   (introducer)      (an FCA-authorised payment institution)
+   *   OvaroPay      ->  Gemba Finance Ltd
+   *   (introducer)      (the regulated firm)
    *
    * OvaroPay introduces customers; the provider holds the permissions and
    * provides the regulated services.
    *
-   * THE PROVIDER IS DELIBERATELY NOT NAMED. The identity fields are empty
-   * and `verified` is false, which makes RegulatoryNote fall back to the
-   * unnamed sentence everywhere, including in the footer and the welcome
-   * email. That fallback is the whole reason the component was written with
-   * two versions.
+   * VERIFIED FROM COMPANIES HOUSE on the date of this commit: GEMBA FINANCE
+   * LTD, company number 11040011, incorporated 31 October 2017, status
+   * active, registered at Level39 One Canada Square. Its SIC codes are 64999
+   * (financial intermediation not elsewhere classified) and 62012, which is
+   * what you would expect of the firm actually doing the intermediating.
    *
-   * This is a commercial decision taken while the arrangement is being
-   * changed, not a regulatory one, and it is lawful: the disclosure that
-   * matters is that OvaroPay is NOT the regulated firm and does not hold the
-   * permission. Saying so without a name still says that.
+   * NOT YET VERIFIED, and this is why `verified` is false: the FIRM REFERENCE
+   * NUMBER. It is not in here because nobody has checked it against
+   * register.fca.org.uk, and an FRN is not the sort of thing to take on trust
+   * or infer — it is the number a counterparty uses to confirm the firm holds
+   * the permission we are claiming for it.
    *
-   * TO NAME A PROVIDER AGAIN: fill in `regulatedEntity`, `firmReferenceNumber`
-   * and the rest, set `verified: true` only after checking the number on
-   * register.fca.org.uk, and pass `nameProvider` where you want it printed.
-   * The privacy notice needs updating at the same time — it currently
-   * describes the recipient by category, which UK GDPR Article 13 allows, but
-   * naming them is better practice once there is a name to give.
+   * While `verified` is false, RegulatoryNote prints the UNNAMED sentence:
+   * "the regulated payment services are provided by an established payment
+   * institution authorised and regulated by the FCA". That is true and safe
+   * whoever the provider is. Claiming authorisation a firm does not hold is
+   * the one thing the FCA acts on fastest, and it would be OvaroPay making
+   * the claim.
+   *
+   * TO TURN NAMING ON: look up Gemba Finance Ltd at register.fca.org.uk,
+   * confirm the firm is authorised under the Payment Services Regulations
+   * 2017, put its FRN in `firmReferenceNumber`, and set `verified: true`.
+   * The privacy notice needs the ICO number and the data protection contact
+   * at the same time — it currently describes the recipient by category.
    */
   provider: {
     model: "introducer",
-    name: "",
-    regulatedEntity: "",
+    name: "Gemba Finance",
+    regulatedEntity: "Gemba Finance Ltd",
+    /** FILL THIS IN after checking register.fca.org.uk. See above. */
     firmReferenceNumber: "",
-    companyNumber: "",
+    companyNumber: "11040011",
     permissions: "the Payment Services Regulations 2017",
-    /** Gates whether the firm is named in public. Never true without a check. */
+    /** Never true without someone having checked the FRN on the register. */
     verified: false,
-    registeredOffice: "",
+    registeredOffice: "Level39, One Canada Square, Canary Wharf, London, England, E14 5AB",
+    /** From the provider: needed by the privacy notice. */
     icoNumber: "",
     privacyEmail: "",
     dpoEmail: "",
