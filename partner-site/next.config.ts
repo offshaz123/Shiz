@@ -6,27 +6,33 @@ const nextConfig: NextConfig = {
   turbopack: { root: __dirname },
 
   /**
-   * Keep the production build inside a small container's memory.
+   * The production build runs on WEBPACK, not Turbopack — see the `--webpack`
+   * flag on the build script in package.json.
    *
-   * Builds that had been fine started failing on the host while the same
-   * commits built cleanly from a clean `npm ci` locally — which points at
-   * the build machine rather than the code. These settings cut the build's
-   * peak memory; none of them change what is produced, so the only cost is
-   * a slower build, which is a good trade against one that does not finish.
+   * Turbopack compiles CSS by spawning a SEPARATE NODE PROCESS to run
+   * PostCSS, which is how Tailwind is processed here. On the deployment
+   * container that child process died the moment it was created, and every
+   * build failed with:
    *
-   *  - `cpus: 1` is the big one. Static generation was spawning three
-   *    workers, and each is a Node process with its own heap.
-   *  - `memoryBasedWorkersCount` lets Next scale workers to the memory
-   *    actually available rather than to the core count, which on shared
-   *    hosting are very different numbers.
-   *  - Source maps are off explicitly rather than by default, because
-   *    generating them is a large allocation late in the build.
-   *  - `preloadEntriesOnStart: false` also lowers memory at RUNTIME, which
-   *    matters on a small instance serving the site.
+   *     Failed to write app endpoint /page
+   *     Caused by: src/app/globals.css (css)
+   *     - creating new process
+   *     - node process exited before we could connect to it
+   *
+   * Nine builds failed that way over four days while the same commits built
+   * cleanly elsewhere, because elsewhere was allowed to fork. Webpack runs
+   * PostCSS in-process, so nothing has to be spawned and the build has no
+   * opinion about the host's process limits. Dev still uses Turbopack, which
+   * is fine: the constraint is the deployment container, not this machine.
+   *
+   * The rest keeps the build's footprint small, since the container that
+   * would not let it fork is unlikely to be generous about memory either.
+   * None of it changes what is produced.
    */
   experimental: {
     cpus: 1,
     memoryBasedWorkersCount: true,
+    webpackMemoryOptimizations: true,
     serverSourceMaps: false,
     preloadEntriesOnStart: false,
   },
