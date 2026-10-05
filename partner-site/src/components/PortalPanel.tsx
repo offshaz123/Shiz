@@ -50,17 +50,6 @@ export function PortalPanel() {
           Send us a message
         </Link>
       </p>
-
-      {/* The website account is a different thing from the banking portal —
-          it is the signed-in area of this site, and the people who already
-          made one need a way back to it. Deliberately quiet: it is not what
-          anybody coming here is looking for. */}
-      <p className="mt-8 border-t border-border pt-6 text-center text-xs text-muted">
-        Looking for your {brand.url.replace("https://", "")} website account?{" "}
-        <Link href="/login/website" className="font-semibold text-accent-2 hover:underline">
-          Sign in here
-        </Link>
-      </p>
     </div>
   );
 }

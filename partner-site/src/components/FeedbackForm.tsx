@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { brand } from "@/lib/brand";
 import { SecurityCheck } from "@/components/SecurityCheck";
-import { useAccount } from "@/lib/useAccount";
 
 const field =
   "w-full rounded-xl border border-border bg-surface px-4 py-3 text-sm outline-none transition-shadow placeholder:text-muted/70 focus:border-accent focus:shadow-[var(--ring)]";
@@ -32,7 +31,6 @@ const topics = [
  * advantage of having an account here today.
  */
 export function FeedbackForm({ source = "Feedback page" }: { source?: string }) {
-  const account = useAccount();
   const [rating, setRating] = useState("");
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -145,8 +143,7 @@ export function FeedbackForm({ source = "Feedback page" }: { source?: string }) 
         />
       </div>
 
-      {!account && (
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+      <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <div>
             <label className={label} htmlFor="name">Name <span className="font-normal text-muted">(optional)</span></label>
             <input id="name" name="name" autoComplete="name" className={field} />
@@ -155,15 +152,7 @@ export function FeedbackForm({ source = "Feedback page" }: { source?: string }) 
             <label className={label} htmlFor="email">Email <span className="font-normal text-muted">(optional)</span></label>
             <input id="email" name="email" type="email" autoComplete="email" className={field} />
           </div>
-        </div>
-      )}
-
-      {account && (
-        <p className="mt-5 text-xs leading-relaxed text-muted">
-          Sending as <span className="font-semibold text-foreground">{account.email}</span>, so we can
-          reply. Log out first if you would rather it were anonymous.
-        </p>
-      )}
+      </div>
 
       <div className="mt-6">
         <SecurityCheck

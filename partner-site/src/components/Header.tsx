@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { HeaderAccount } from "@/components/HeaderAccount";
 import { useState } from "react";
 import { Logo } from "@/components/Logo";
 import { solutions } from "@/content/solutions";
@@ -98,7 +97,12 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <HeaderAccount />
+          <Link
+            href="/login"
+            className="hidden rounded-full px-4 py-2.5 text-sm font-semibold text-muted transition-colors hover:text-foreground sm:inline-flex"
+          >
+            Log in
+          </Link>
           <Link
             href="/contact"
             className="btn btn-primary hidden !px-5 !py-2.5 sm:inline-flex"
@@ -158,9 +162,9 @@ export function Header() {
             >
               Talk to us
             </Link>
-            {/* Was a hardcoded "Log in" that showed even when you already
-                were. The account control knows the difference. */}
-            <HeaderAccount variant="menu" onNavigate={() => setOpen(false)} />
+            <Link href="/login" onClick={() => setOpen(false)} className="btn btn-ghost mt-3">
+              Log in
+            </Link>
             <div className="mb-3" />
           </div>
         </nav>

@@ -19,9 +19,12 @@ export function AuthShell({ children }: { children: ReactNode }) {
       <div className="hero-blue relative hidden overflow-hidden lg:block">
         <GlobeBackdrop variant="panel" />
         <div className="relative flex h-full flex-col justify-between p-10">
-          <Link href="/" className="inline-flex" aria-label={`${brand.name} home`}>
-            <Logo className="h-9 w-auto" />
-          </Link>
+          {/* Logo is itself a link home, with its own aria-label. Wrapping it
+              in another one put an <a> inside an <a>: invalid HTML, which the
+              browser silently un-nests while parsing, so the DOM never matched
+              what the server sent and React threw out the whole page and
+              re-rendered it. */}
+          <Logo className="h-9 w-auto" />
 
           <div className="max-w-md">
             <h2 className="font-display text-4xl font-semibold leading-tight tracking-tight">
@@ -42,9 +45,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
 
       <div className="flex flex-col">
         <div className="flex items-center justify-between border-b border-border px-6 py-5 lg:hidden">
-          <Link href="/" aria-label={`${brand.name} home`}>
-            <Logo className="h-8 w-auto" />
-          </Link>
+          <Logo className="h-8 w-auto" />
           <Link href="/contact" className="text-sm font-semibold text-accent-2">
             Talk to us
           </Link>

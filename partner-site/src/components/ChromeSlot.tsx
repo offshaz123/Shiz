@@ -17,15 +17,10 @@ import { usePathname } from "next/navigation";
  * still whatever the server passed in — the footer stays a server component
  * and none of it ships to the browser on the pages that do render it.
  */
-const BARE_ROUTES = ["/login", "/forgot-password", "/reset-password"];
+const BARE_ROUTES = ["/login"];
 
 export function ChromeSlot({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  // Prefix, not equality: /login/website is the same kind of screen as
-  // /login and has to lose the chrome too.
-  const bare = BARE_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`),
-  );
-  if (bare) return null;
+  if (BARE_ROUTES.includes(pathname)) return null;
   return <>{children}</>;
 }

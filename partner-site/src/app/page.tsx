@@ -19,7 +19,6 @@ import { SpreadCalculator } from "@/components/SpreadCalculator";
 import { GetStarted } from "@/components/GetStarted";
 import { Flag } from "@/components/Flag";
 import { IconTile } from "@/components/IconTile";
-import { AccountGreeting } from "@/components/AccountGreeting";
 import { Illustration } from "@/components/Illustration";
 
 export const metadata: Metadata = {
@@ -65,7 +64,6 @@ export default function Home() {
         <div className="relative mx-auto max-w-6xl px-5 pt-16 pb-20 sm:pt-24 sm:pb-28">
           <div className="grid gap-16 lg:grid-cols-[1.05fr_1fr] lg:items-center lg:gap-10">
             <div>
-              <AccountGreeting />
               {/* CAREFUL. This badge cannot say "FCA regulated" on its own,
                   because OvaroPay is not: it introduces customers to the
                   provider, who holds the permission. Claiming authorisation you do
