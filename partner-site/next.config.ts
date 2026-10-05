@@ -5,6 +5,33 @@ const nextConfig: NextConfig = {
   // lockfiles are visible and Turbopack would otherwise guess the wrong root.
   turbopack: { root: __dirname },
 
+  /**
+   * Keep the production build inside a small container's memory.
+   *
+   * Builds that had been fine started failing on the host while the same
+   * commits built cleanly from a clean `npm ci` locally — which points at
+   * the build machine rather than the code. These settings cut the build's
+   * peak memory; none of them change what is produced, so the only cost is
+   * a slower build, which is a good trade against one that does not finish.
+   *
+   *  - `cpus: 1` is the big one. Static generation was spawning three
+   *    workers, and each is a Node process with its own heap.
+   *  - `memoryBasedWorkersCount` lets Next scale workers to the memory
+   *    actually available rather than to the core count, which on shared
+   *    hosting are very different numbers.
+   *  - Source maps are off explicitly rather than by default, because
+   *    generating them is a large allocation late in the build.
+   *  - `preloadEntriesOnStart: false` also lowers memory at RUNTIME, which
+   *    matters on a small instance serving the site.
+   */
+  experimental: {
+    cpus: 1,
+    memoryBasedWorkersCount: true,
+    serverSourceMaps: false,
+    preloadEntriesOnStart: false,
+  },
+  productionBrowserSourceMaps: false,
+
   async headers() {
     return [
       {
