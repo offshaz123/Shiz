@@ -79,7 +79,7 @@ const faqs = [
   {
     question: "How much does it cost?",
     answer:
-      "Management plans start from £400/month, with ad spend paid separately and directly to Meta. We'll go through exact numbers for your business on the call.",
+      "Management plans start from £499/month, with ad spend paid separately and directly to Meta. We'll go through exact numbers for your business on the call.",
   },
 ];
 

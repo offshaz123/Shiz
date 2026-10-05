@@ -19,7 +19,7 @@ const faqs = [
   {
     question: "How much do Meta & Instagram ads cost with Shaz Marketing Group?",
     answer:
-      "Our done-for-you Meta & Instagram ads management starts from £400/month on the Starter plan, with Growth (£700/month) and Scale (£1,400/month) plans adding a full CRM, automation and an AI receptionist. Google Ads is a flat £600/month including the landing page and CRM, and SEO starts at £350/month. Ad spend itself is separate and paid directly to Meta or Google.",
+      "Our done-for-you Meta & Instagram ads management starts from £499/month on the Starter plan, with Growth (£699/month) and Scale (£1,399/month) plans adding a full CRM, automation and an AI receptionist. Google Ads is a flat £600/month including the landing page and CRM, and SEO starts at £350/month. Ad spend itself is separate and paid directly to Meta or Google.",
   },
   {
     question: "Do you run Meta & Instagram ads for automotive businesses?",
@@ -97,7 +97,7 @@ export default function Home() {
           Prices on the page, not behind a form
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-muted">
-          Meta &amp; Instagram ads from £400 a month. Google Ads at one flat £600 a month with the
+          Meta &amp; Instagram ads from £499 a month. Google Ads at one flat £600 a month with the
           landing page, the tracking and the CRM included. SEO from £350 a month. Ad spend is
           always separate and paid straight to Meta or Google, so you can see what goes where.
         </p>

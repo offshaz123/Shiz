@@ -7,7 +7,7 @@ import { pricingGroups } from "@/content/pricing";
 import { ogImage } from "@/lib/seo";
 
 const description =
-  "Meta ads from £400/month, Google Ads at a flat £600 including the landing page and CRM, SEO from £350 and websites from £300. No setup fees, no hidden extras.";
+  "Meta ads from £499/month, Google Ads at a flat £600 including the landing page and CRM, SEO from £350 and websites from £300. No setup fees, no hidden extras.";
 
 export const metadata: Metadata = {
   title: "Pricing",

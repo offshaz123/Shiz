@@ -27,7 +27,7 @@ export const services: Service[] = [
     intro:
       "Most businesses have pressed Boost at some point and been disappointed. A real campaign is a different thing entirely: it optimises for enquiries rather than engagement, it can run lead forms, and it can test several versions and drop the ones that don't work.",
     metaDescription:
-      "Meta and Instagram ad campaigns for UK businesses, built and managed for qualified enquiries rather than likes. From £400 a month, ad spend separate.",
+      "Meta and Instagram ad campaigns for UK businesses, built and managed for qualified enquiries rather than likes. From £499 a month, ad spend separate.",
     keywords: ["Meta ads agency UK", "Instagram ads management", "Facebook ads for small business"],
     whoFor:
       "Service businesses who need a steady flow of enquiries and have someone able to answer them quickly.",
@@ -39,8 +39,8 @@ export const services: Service[] = [
       { title: "Category compliance", body: "Some sectors sit under restricted rules. We handle the declaration and the copy so your account stays safe." },
     ],
     pricing: {
-      headline: "From £400 a month",
-      note: "Three plans: £400, £700 and £1,400 a month depending on how many campaigns you want running and how much automation you need behind them. Ad spend is separate and paid directly to Meta. No long-term contract.",
+      headline: "From £499 a month",
+      note: "Three plans: £499, £699 and £1,399 a month depending on how many campaigns you want running and how much automation you need behind them. Ad spend is separate and paid directly to Meta. No long-term contract.",
       anchor: "meta-ads",
     },
     readMore: { label: "What makes ad creative actually convert", href: "/blog/what-makes-ad-creative-actually-convert" },

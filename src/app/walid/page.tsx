@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 const expect = [
   {
     title: "A straight answer on price",
-    body: "Plans start at £400 a month and ad spend is separate. You'll have the numbers on the first call, not the third.",
+    body: "Plans start at £499 a month and ad spend is separate. You'll have the numbers on the first call, not the third.",
   },
   {
     title: "What I'd actually run",

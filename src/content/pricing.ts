@@ -32,7 +32,7 @@ export const pricingGroups: PricingGroup[] = [
     plans: [
       {
         name: "Starter",
-        price: "£400",
+        price: "£499",
         priceSuffix: "/month",
         tagline: "For businesses ready to switch on Meta and Instagram lead generation.",
         features: [
@@ -47,7 +47,7 @@ export const pricingGroups: PricingGroup[] = [
       },
       {
         name: "Growth",
-        price: "£700",
+        price: "£699",
         priceSuffix: "/month",
         tagline: "Our most popular plan, built to turn ad spend into a real pipeline.",
         popular: true,
@@ -64,7 +64,7 @@ export const pricingGroups: PricingGroup[] = [
       },
       {
         name: "Scale",
-        price: "£1,400",
+        price: "£1,399",
         priceSuffix: "/month",
         tagline: "For businesses ready to dominate their market across every channel.",
         features: [
