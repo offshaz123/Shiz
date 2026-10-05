@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -9,13 +9,14 @@ import { CookieConsent } from "@/components/CookieConsent";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/StructuredData";
 import { brand } from "@/lib/brand";
 
-// Inter for body, Space Grotesk for headlines. Deliberately a geometric sans
-// rather than the serif our provider uses — same trade, different voice.
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
-const displaySans = Space_Grotesk({
-  variable: "--font-display-sans",
+// Inter throughout — body and headlines both. It used to pair Inter with
+// Space Grotesk for headlines; one family across the whole site is quieter
+// and loads one font file instead of two. The weights are the ones the
+// headlines and the wordmark actually use, so nothing is downloaded unused.
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
 });
 
 const defaultTitle = `${brand.name} — Business accounts for UK importers and wholesalers`;
@@ -68,7 +69,7 @@ export default function RootLayout({
   return (
     <html
       lang="en-GB"
-      className={`${inter.variable} ${displaySans.variable} h-full antialiased`}
+      className={`${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="flex min-h-full flex-col bg-background text-foreground">

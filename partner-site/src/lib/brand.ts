@@ -32,6 +32,19 @@ export const brand = {
    */
   url: "https://ovaropay.com",
 
+  /**
+   * The account portal, run on the provider's white-label platform.
+   *
+   * This is where people actually log in, and where both application forms
+   * live, so the header's "Log in" leaves this site for it rather than
+   * pointing at /login. The in-site account pages (/login, /dashboard,
+   * /account) still work for the website accounts already created, they are
+   * simply no longer the thing the header offers.
+   *
+   * A different host, so every link to it is a plain <a>, never next/link.
+   */
+  portalUrl: "https://online.ovaropay.com/site/home",
+
   description:
     "Business payment accounts in your own company name for UK importers, wholesalers and distributors. Collect from your retailers, convert at a proper rate, and pay suppliers in USD, AED, HKD and EUR the same day.",
 

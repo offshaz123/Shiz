@@ -53,7 +53,7 @@
   --color-gold-soft: var(--gold-soft);
   --color-on-accent: var(--on-accent);
   --font-sans: var(--font-inter);
-  --font-display: var(--font-display-sans);
+  --font-display: var(--font-inter);
 }
 
 html {
@@ -70,11 +70,13 @@ body {
   color: var(--on-accent);
 }
 
-/* Headlines take the geometric sans, tightened. No serif anywhere — that is
-   our provider's signature and we are not borrowing it. */
+/* Headlines are the same family as the body now — Inter, tightened. Inter's
+   default tracking is set for paragraphs, so at headline sizes it reads loose
+   without this. No serif anywhere — that is our provider's signature and we
+   are not borrowing it. */
 .font-display {
-  font-family: var(--font-display-sans), var(--font-inter), system-ui, sans-serif;
-  letter-spacing: -0.02em;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  letter-spacing: -0.022em;
 }
 
 .accent-gradient-text {
