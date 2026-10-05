@@ -17,7 +17,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
   return (
     <div className="grid min-h-dvh lg:grid-cols-2">
       <div className="hero-blue relative hidden overflow-hidden lg:block">
-        <GlobeBackdrop />
+        <GlobeBackdrop variant="panel" />
         <div className="relative flex h-full flex-col justify-between p-10">
           <Link href="/" className="inline-flex" aria-label={`${brand.name} home`}>
             <Logo className="h-9 w-auto" />

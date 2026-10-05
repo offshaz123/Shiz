@@ -21,6 +21,11 @@ const BARE_ROUTES = ["/login", "/forgot-password", "/reset-password"];
 
 export function ChromeSlot({ children }: { children: ReactNode }) {
   const pathname = usePathname();
-  if (BARE_ROUTES.includes(pathname)) return null;
+  // Prefix, not equality: /login/website is the same kind of screen as
+  // /login and has to lose the chrome too.
+  const bare = BARE_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
+  );
+  if (bare) return null;
   return <>{children}</>;
 }

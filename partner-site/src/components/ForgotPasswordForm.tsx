@@ -39,7 +39,7 @@ export function ForgotPasswordForm() {
           If that address has an account, a reset link is on its way. It is good for one
           hour, and once it has been used it will not work again.
         </p>
-        <Link href="/login" className="btn btn-ghost mt-7 w-full">
+        <Link href="/login/website" className="btn btn-ghost mt-7 w-full">
           Back to log in
         </Link>
       </div>
@@ -64,7 +64,7 @@ export function ForgotPasswordForm() {
 
       <p className="mt-6 text-center text-sm text-muted">
         Remembered it?{" "}
-        <Link href="/login" className="font-semibold text-accent-2 hover:underline">
+        <Link href="/login/website" className="font-semibold text-accent-2 hover:underline">
           Log in
         </Link>
       </p>

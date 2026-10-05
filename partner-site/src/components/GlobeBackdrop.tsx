@@ -27,12 +27,25 @@ const meridians = [R, R * 0.72, R * 0.42, R * 0.15];
 const ORBIT_ONE = "M-330 70C-210 -30 -60 -74 90 -66S330 -6 372 74";
 const ORBIT_TWO = "M-360 -40C-250 76 -80 128 80 112S330 30 366 -54";
 
-export function GlobeBackdrop() {
+/**
+ * "hero" is the full-width band on the home page, where the globe sits off
+ * to the right of the copy. "panel" is the narrow blue column on the account
+ * screens: at the hero's offsets the sphere hangs off that column's right
+ * edge and only an arc of it survives, so there it is centred and scaled to
+ * the column instead.
+ */
+export function GlobeBackdrop({ variant = "hero" }: { variant?: "hero" | "panel" }) {
+  const panel = variant === "panel";
+
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
       {/* The light the globe sits in. */}
       <div
-        className="hero-glow animate-drift-glow absolute left-1/2 top-[30%] h-[420px] w-[560px] -translate-x-1/2 rounded-full blur-3xl lg:left-[62%] lg:top-[6%] lg:h-[620px] lg:w-[820px]"
+        className={
+          panel
+            ? "hero-glow animate-drift-glow absolute left-1/2 top-[38%] h-[520px] w-[620px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
+            : "hero-glow animate-drift-glow absolute left-1/2 top-[30%] h-[420px] w-[560px] -translate-x-1/2 rounded-full blur-3xl lg:left-[62%] lg:top-[6%] lg:h-[620px] lg:w-[820px]"
+        }
         style={{
           backgroundImage:
             "radial-gradient(circle at 40% 45%, var(--accent), transparent 62%), radial-gradient(circle at 70% 60%, var(--accent-2), transparent 60%)",
@@ -44,7 +57,11 @@ export function GlobeBackdrop() {
           the headline, which is what made the words hard to read. */}
       <svg
         viewBox="-420 -300 840 600"
-        className="absolute -bottom-28 left-1/2 h-[460px] w-[640px] -translate-x-1/2 opacity-30 sm:-bottom-32 sm:h-[560px] sm:w-[780px] sm:opacity-40 lg:bottom-auto lg:left-[68%] lg:top-1/2 lg:h-[820px] lg:w-[1150px] lg:-translate-y-1/2 lg:opacity-80"
+        className={
+          panel
+            ? "absolute left-1/2 top-1/2 h-[640px] w-[900px] -translate-x-1/2 -translate-y-1/2 opacity-80"
+            : "absolute -bottom-28 left-1/2 h-[460px] w-[640px] -translate-x-1/2 opacity-30 sm:-bottom-32 sm:h-[560px] sm:w-[780px] sm:opacity-40 lg:bottom-auto lg:left-[68%] lg:top-1/2 lg:h-[820px] lg:w-[1150px] lg:-translate-y-1/2 lg:opacity-80"
+        }
         fill="none"
       >
         <defs>

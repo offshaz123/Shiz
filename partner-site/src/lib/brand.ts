@@ -36,14 +36,20 @@ export const brand = {
    * The account portal, run on the provider's white-label platform.
    *
    * This is where people actually log in, and where both application forms
-   * live, so the header's "Log in" leaves this site for it rather than
-   * pointing at /login. The in-site account pages (/login, /dashboard,
-   * /account) still work for the website accounts already created, they are
-   * simply no longer the thing the header offers.
+   * live. The header still goes to /login, which is ours and carries our
+   * branding, and /login hands over to this. The website account pages
+   * (/login/website, /dashboard, /account) still work for the accounts
+   * already created, they are just no longer the front door.
    *
    * A different host, so every link to it is a plain <a>, never next/link.
    */
   portalUrl: "https://online.ovaropay.com/site/home",
+  /**
+   * The application form on the same platform. Corporate rather than
+   * personal: this is a business account, and the personal form asks a
+   * sole trader for the wrong things.
+   */
+  portalApplyUrl: "https://online.ovaropay.com/onboarding/corporate",
 
   description:
     "Business payment accounts in your own company name for UK importers, wholesalers and distributors. Collect from your retailers, convert at a proper rate, and pay suppliers in USD, AED, HKD and EUR the same day.",

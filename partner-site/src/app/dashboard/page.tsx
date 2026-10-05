@@ -40,7 +40,7 @@ const money = (value: number) =>
  */
 export default async function DashboardPage() {
   const me = await currentUser();
-  if (!me) redirect("/login");
+  if (!me) redirect("/login/website");
 
   const address = me.address;
   const checklist = [

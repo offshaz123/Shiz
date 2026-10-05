@@ -18,7 +18,7 @@ export const metadata: Metadata = {
  */
 export default async function AccountPage() {
   const me = await currentUser();
-  if (!me) redirect("/login");
+  if (!me) redirect("/login/website");
 
   return (
     <Section>

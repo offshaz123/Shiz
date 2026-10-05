@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useAccount } from "@/lib/useAccount";
-import { brand } from "@/lib/brand";
 
 /**
  * The header's account control: "Log in" for a visitor, the person's name
@@ -43,30 +42,22 @@ export function HeaderAccount({
     );
   }
 
-  // Signed out, this leaves the site: logging in and applying both happen in
-  // the account portal, not here. A plain <a> rather than next/link — it is
-  // another host, so there is nothing for the router to prefetch and nothing
-  // for it to navigate to client-side. Same tab on purpose: somebody who
-  // presses "Log in" means to go and do something, not to open a reference.
+  // /login is ours and carries our branding; it is the page that hands over
+  // to the banking portal. Going straight to the portal from here meant the
+  // last thing somebody saw of this site was a nav bar.
   if (!account) {
     return variant === "menu" ? (
-      <a
-        href={brand.portalUrl}
-        onClick={onNavigate}
-        rel="noopener"
-        className="btn btn-ghost mt-3"
-      >
+      <Link href="/login" onClick={onNavigate} className="btn btn-ghost mt-3">
         Log in
-      </a>
+      </Link>
     ) : (
-      <a
-        href={brand.portalUrl}
+      <Link
+        href="/login"
         onClick={onNavigate}
-        rel="noopener"
         className="hidden rounded-full px-4 py-2.5 text-sm font-semibold text-muted transition-colors hover:text-foreground sm:inline-flex"
       >
         Log in
-      </a>
+      </Link>
     );
   }
 
