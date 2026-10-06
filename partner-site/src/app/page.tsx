@@ -295,12 +295,21 @@ export default function Home() {
 
       {/* Getting started */}
       <Section>
-        <SectionHeading
-          center
-          eyebrow="Getting started"
-          title="Three steps, and none of them are a surprise"
-          lede="No account is opened without proper checks. Knowing what they are up front is what makes them quick."
-        />
+        <div className="grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center">
+          <SectionHeading
+            eyebrow="Getting started"
+            title="Three steps, and none of them are a surprise"
+            lede="No account is opened without proper checks. Knowing what they are up front is what makes them quick."
+          />
+          <Image
+            src="/images/warehouse-aisle.webp"
+            alt="Stock being moved in a distribution warehouse."
+            width={1400}
+            height={952}
+            sizes="(min-width: 1024px) 32rem, 100vw"
+            className="w-full rounded-2xl border border-border object-cover"
+          />
+        </div>
         <div className="mt-14">
           <GetStarted />
         </div>
@@ -336,35 +345,42 @@ export default function Home() {
       {/* The ask. Was two sections — a centred ink panel saying "send us one
           real conversion" and then an enquiry form saying the same thing
           beside the box you say it in. One section, one ask. */}
-      <Section id="enquiry">
+      <Section
+        id="enquiry"
+        tone="ink"
+        backdrop={{ src: "/images/container-terminal.webp", position: "center 45%" }}
+      >
         <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
           <div>
             <Eyebrow>Get started</Eyebrow>
             <h2 className="font-display text-balance mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
               Send us one real conversion
             </h2>
-            <p className="mt-5 text-base leading-relaxed text-muted">
+            <p className="mt-5 text-base leading-relaxed text-on-ink/75">
               The amount, the currency and what you were charged. We will price the same
               transaction beside it, and you will know within a day whether this is worth your
               time.
             </p>
-            <p className="mt-4 text-base leading-relaxed text-muted">
+            <p className="mt-4 text-base leading-relaxed text-on-ink/75">
               Or just tell us the shape of the business: what you import, roughly what comes in
               each month, and what currency goes out.
             </p>
             <div className="mt-8 space-y-3 text-sm">
               <p>
-                <span className="text-muted">Email </span>
+                <span className="text-on-ink/60">Email </span>
                 <a href={`mailto:${brand.email}`} className="font-semibold hover:text-accent">
                   {brand.email}
                 </a>
               </p>
             </div>
-            <Link href="/business-accounts" className="btn btn-ghost mt-6">
+            <Link href="/business-accounts" className="btn btn-on-ink mt-6">
               See how it works
             </Link>
           </div>
-          <div className="card p-6 sm:p-8">
+          {/* text-foreground on purpose. The band is tone="ink", which sets
+              light type on everything inside it, and .card only changes the
+              background — so without this the form would be white-on-white. */}
+          <div className="card p-6 text-foreground sm:p-8">
             <EnquiryForm source="Home page" />
           </div>
         </div>
