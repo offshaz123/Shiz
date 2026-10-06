@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { StartProjectCta } from "@/components/StartProjectCta";
 import { ogImage } from "@/lib/seo";
@@ -62,21 +63,38 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-5 pb-20 sm:px-8">
-        <div className="rounded-3xl border border-border bg-surface p-8 sm:p-10">
-          <h2 className="text-2xl font-bold text-foreground">Our story</h2>
-          <p className="mt-4 leading-relaxed text-muted">
-            Too many businesses pour money into ads that generate clicks but not customers, or
-            generate leads that get lost in a messy inbox and never get followed up. We started
-            Shaz Marketing Group to fix both problems at once: we run the Meta &amp; Instagram
-            advertising that brings the leads in, and we hand you an all-in-one system — a shared
-            inbox, a CRM, automated follow-up and an AI receptionist — that makes sure every single
-            enquiry gets a response.
-          </p>
-          <p className="mt-4 leading-relaxed text-muted">
-            The result is simple: more of your ad spend turns into booked customers, and less of
-            your time gets spent chasing software and spreadsheets.
-          </p>
+      <section className="mx-auto max-w-6xl px-5 pb-20 sm:px-8">
+        <div className="grid items-center gap-10 lg:grid-cols-2">
+          {/* Planning photo — same gradient hairline frame as the office shot so the
+              two photo blocks on the site read as one treatment. */}
+          <div className="brand-gradient-bg rounded-[26px] p-[1.5px] shadow-2xl shadow-black/20">
+            <div className="overflow-hidden rounded-[25px] bg-background">
+              <Image
+                src="/images/strategy-session.webp"
+                alt="Marketing plan sketched out on paper beside a laptop showing campaign charts"
+                width={740}
+                height={483}
+                className="h-full w-full object-cover"
+                sizes="(min-width: 1024px) 560px, 100vw"
+              />
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-border bg-surface p-8 sm:p-10">
+            <h2 className="text-2xl font-bold text-foreground">Our story</h2>
+            <p className="mt-4 leading-relaxed text-muted">
+              Too many businesses pour money into ads that generate clicks but not customers, or
+              generate leads that get lost in a messy inbox and never get followed up. We started
+              Shaz Marketing Group to fix both problems at once: we run the Meta &amp; Instagram
+              advertising that brings the leads in, and we hand you an all-in-one system — a
+              shared inbox, a CRM, automated follow-up and an AI receptionist — that makes sure
+              every single enquiry gets a response.
+            </p>
+            <p className="mt-4 leading-relaxed text-muted">
+              The result is simple: more of your ad spend turns into booked customers, and less of
+              your time gets spent chasing software and spreadsheets.
+            </p>
+          </div>
         </div>
       </section>
 

@@ -15,6 +15,8 @@ export type Service = {
   pricing?: { headline: string; note: string; anchor: string };
   /** A related article, so each service page points into the blog. */
   readMore?: { label: string; href: string };
+  /** Optional illustration shown under the intro on the service's own page. */
+  image?: { src: string; alt: string; width: number; height: number };
 };
 
 export const services: Service[] = [
@@ -91,6 +93,12 @@ export const services: Service[] = [
       { title: "Missed-call text-back", body: "An automatic message when you can't pick up, so the enquiry doesn't go straight to a competitor." },
     ],
     readMore: { label: "CRM pipelines explained, without the jargon", href: "/blog/crm-pipelines-explained-for-business-owners" },
+    image: {
+      src: "/images/lead-inbox.webp",
+      alt: "Enquiries arriving from every channel into a single inbox on a laptop and phone",
+      width: 599,
+      height: 333,
+    },
   },
   {
     slug: "seo",

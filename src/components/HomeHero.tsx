@@ -3,6 +3,7 @@ import { featuredResult } from "@/content/case-studies";
 import { ReviewBadge } from "./ReviewBadge";
 import { HeroBackdrop } from "./HeroBackdrop";
 import { ClientLogo } from "./ClientLogo";
+import { PresenterBody, PresenterHands } from "./ResultPresenter";
 
 export function HomeHero() {
   return (
@@ -66,18 +67,27 @@ export function HomeHero() {
           <ReviewBadge />
         </div>
 
-        {/* Visual */}
-        <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
-          <div
-            aria-hidden
-            className="brand-gradient-bg absolute inset-0 rounded-[2.5rem] opacity-90"
-          />
-          <div
-            aria-hidden
-            className="absolute -right-6 -top-6 h-40 w-40 rounded-full bg-white/15 blur-2xl"
-          />
+        {/* Visual — the result card held up like a board by the illustrated
+            presenter. Her head and shoulders clear the top of the board, her
+            arms run down behind it, and only her hands come back over the top
+            edge in front. Both SVG layers share a viewBox and must carry the
+            same width and offset, which is what keeps the hands on the wrists;
+            the top padding is what reserves room for her above the board. */}
+        <div className="relative mx-auto w-full max-w-lg pt-32 sm:pt-40 lg:max-w-none">
+          <PresenterBody className="pointer-events-none absolute left-1/2 top-0 z-0 w-[260px] -translate-x-1/2 sm:w-[320px]" />
 
-          <div className="relative rounded-[2.5rem] p-5 sm:p-6">
+          {/* The board itself */}
+          <div className="relative">
+            <div
+              aria-hidden
+              className="brand-gradient-bg absolute inset-0 rounded-[2.5rem] opacity-90"
+            />
+            <div
+              aria-hidden
+              className="absolute -right-6 -top-6 h-40 w-40 rounded-full bg-white/15 blur-2xl"
+            />
+
+            <div className="relative rounded-[2.5rem] p-5 sm:p-6">
             <div className="rounded-3xl border border-white/20 bg-[#0b0a0f]/85 p-6 shadow-2xl shadow-black/30 backdrop-blur">
               <div className="flex items-center gap-2">
                 <span className="relative flex h-2.5 w-2.5">
@@ -130,16 +140,21 @@ export function HomeHero() {
                   </a>
                 )}
               </div>
+              </div>
+            </div>
+
+            {/* Projects badge, sitting over the corner like a sticker */}
+            <div className="absolute -bottom-5 -left-3 rounded-2xl bg-[#0b0a0f] px-5 py-3.5 shadow-xl shadow-black/30 ring-1 ring-white/10 sm:-left-5">
+              <p className="text-2xl font-bold leading-none text-white">200+</p>
+              <p className="mt-1 text-[11px] font-medium uppercase tracking-wider text-white/55">
+                Projects delivered
+              </p>
             </div>
           </div>
 
-          {/* Projects badge, sitting over the corner like a sticker */}
-          <div className="absolute -bottom-5 -left-3 rounded-2xl bg-[#0b0a0f] px-5 py-3.5 shadow-xl shadow-black/30 ring-1 ring-white/10 sm:-left-5">
-            <p className="text-2xl font-bold leading-none text-white">200+</p>
-            <p className="mt-1 text-[11px] font-medium uppercase tracking-wider text-white/55">
-              Projects delivered
-            </p>
-          </div>
+          {/* Her hands, back over the front of the board. Same width and offset
+              as the body layer above so the hands meet the wrists. */}
+          <PresenterHands className="pointer-events-none absolute left-1/2 top-0 z-20 w-[260px] -translate-x-1/2 sm:w-[320px]" />
         </div>
       </div>
     </section>

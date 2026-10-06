@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { services, getService } from "@/content/services";
@@ -99,6 +100,24 @@ export default async function ServicePage({
           </div>
         </div>
       </section>
+
+      {/* Capped at the asset's native width so it never upscales and softens. */}
+      {service.image && (
+        <section className="mx-auto max-w-xl px-5 pt-16 sm:px-8">
+          <div className="brand-gradient-bg rounded-[26px] p-[1.5px] shadow-2xl shadow-black/20">
+            <div className="overflow-hidden rounded-[25px] bg-background">
+              <Image
+                src={service.image.src}
+                alt={service.image.alt}
+                width={service.image.width}
+                height={service.image.height}
+                className="h-full w-full object-cover"
+                sizes="(min-width: 640px) 576px, 100vw"
+              />
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="mx-auto max-w-5xl px-5 py-20 sm:px-8">
         <div className="rounded-2xl border border-border bg-surface p-7 sm:p-9">

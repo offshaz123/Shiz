@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { RealResultsSection } from "@/components/RealResults";
 import { ServicesGrid } from "@/components/ServicesGrid";
@@ -166,8 +167,19 @@ export default function ServicesPage() {
       <RealResultsSection />
 
       {/* How it works */}
-      <section className="border-y border-border bg-surface">
-        <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
+      <section className="relative overflow-hidden border-y border-border bg-surface">
+        {/* Blurred photographic texture so this band has some depth behind the
+            numbered steps. Decorative only — heavily blurred and faded, so it
+            reads as atmosphere rather than as a picture competing with the copy. */}
+        <Image
+          src="/images/team-texture.webp"
+          alt=""
+          aria-hidden
+          fill
+          sizes="100vw"
+          className="pointer-events-none select-none object-cover opacity-[0.10] blur-2xl dark:opacity-[0.20]"
+        />
+        <div className="relative mx-auto max-w-7xl px-5 py-24 sm:px-8">
           <div className="mx-auto max-w-2xl text-center">
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
               How It Works
