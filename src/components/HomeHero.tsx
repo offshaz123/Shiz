@@ -68,19 +68,20 @@ export function HomeHero() {
         </div>
 
         {/* Visual — the result card presented like a board. The photo is cut
-            out and cropped to end just under her folded arms, and the top
-            padding here matches its height exactly, so the board's top edge
-            lands beneath her forearms and she reads as leaning on it. Change
-            one of the two and the arms float. */}
-        <div className="relative mx-auto w-full max-w-lg pt-[218px] sm:pt-[274px] lg:max-w-none">
+            out and cropped to end just below her fingertips, and the top
+            padding here is a few pixels under the image's height, so the
+            board's edge lands exactly where she's pointing. The two values are
+            a matched pair: change one without the other and she points at a
+            gap. */}
+        <div className="relative mx-auto w-full max-w-lg pt-[128px] sm:pt-[210px] lg:max-w-none">
           <Image
             src="/images/results-presenter.webp"
             alt=""
             aria-hidden
-            width={560}
-            height={820}
+            width={846}
+            height={365}
             priority
-            className="pointer-events-none absolute left-1/2 top-0 z-0 h-[230px] w-auto -translate-x-1/2 select-none sm:h-[290px]"
+            className="pointer-events-none absolute left-1/2 top-0 z-0 h-[132px] w-auto -translate-x-1/2 select-none sm:h-[215px]"
           />
 
           {/* The board itself */}
