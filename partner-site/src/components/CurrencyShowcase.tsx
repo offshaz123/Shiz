@@ -57,7 +57,7 @@ const NOTES: Record<string, string> = {
   RON: "Payroll run in Bucharest",
 };
 
-const SHOWN = currencies.filter((currency) => currency.code !== "GBP").slice(0, 6);
+export const SHOWN = currencies.filter((currency) => currency.code !== "GBP").slice(0, 6);
 
 function format(code: string, rates: Record<string, number>) {
   return new Intl.NumberFormat("en-GB", {
@@ -67,8 +67,21 @@ function format(code: string, rates: Record<string, number>) {
   }).format(AMOUNT_GBP * rates[code]);
 }
 
-export function CurrencyShowcase() {
-  const [index, setIndex] = useState(0);
+/**
+ * Uncontrolled by default; pass `index` and `onSelect` to drive it from
+ * outside. CurrencyLive does that, so the route globe beside the card knows
+ * which currency the card is showing.
+ */
+export function CurrencyShowcase({
+  index: controlledIndex,
+  onSelect,
+}: {
+  index?: number;
+  onSelect?: (next: number) => void;
+} = {}) {
+  const [ownIndex, setOwnIndex] = useState(0);
+  const controlled = controlledIndex !== undefined && onSelect !== undefined;
+  const index = controlled ? controlledIndex : ownIndex;
   const active = SHOWN[index];
 
   // Live rates when they land, the shipped figures until then. The component
@@ -79,14 +92,19 @@ export function CurrencyShowcase() {
     live && Object.keys(live.rates).length > 1 ? live.rates : FALLBACK;
 
   useEffect(() => {
+    // The owner of the state owns the cycle too.
+    if (controlled) return;
     const timer = setInterval(() => {
-      setIndex((current) => (current + 1) % SHOWN.length);
+      setOwnIndex((current) => (current + 1) % SHOWN.length);
     }, 3800);
     return () => clearInterval(timer);
     // Re-armed by `index` so a tap restarts the dwell rather than cutting it short.
-  }, [index]);
+  }, [index, controlled]);
 
-  const select = useCallback((next: number) => setIndex(next), []);
+  const select = useCallback(
+    (next: number) => (onSelect ? onSelect(next) : setOwnIndex(next)),
+    [onSelect],
+  );
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_1.05fr] lg:items-center">

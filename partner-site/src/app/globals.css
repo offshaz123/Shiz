@@ -696,3 +696,129 @@ body {
 .spread-slider:focus-visible {
   box-shadow: var(--ring);
 }
+
+/* --- The live route globe ------------------------------------------------
+   One cycle per currency change, started by React swapping the keyed group
+   rather than by a timer. The arc draws, the payment runs along it, the pin
+   lands, and the label comes up underneath.
+
+   `--route-len` is a generous over-estimate of the longest arc the sphere
+   can hold; a dash pattern longer than the path simply finishes early, which
+   is harmless, whereas one that is too short leaves a visible gap. */
+@keyframes route-draw {
+  from {
+    stroke-dasharray: var(--route-len) var(--route-len);
+    stroke-dashoffset: var(--route-len);
+  }
+  to {
+    stroke-dasharray: var(--route-len) var(--route-len);
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-route-draw {
+  --route-len: 900;
+  animation: route-draw 1.05s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes route-dot {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+.animate-route-dot {
+  animation: route-dot 1.05s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes route-land {
+  0%,
+  55% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-route-land {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: route-land 1.3s ease-out both;
+}
+
+@keyframes route-ping {
+  0%,
+  60% {
+    opacity: 0.5;
+    transform: scale(0.7);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.9);
+  }
+}
+
+.animate-route-ping {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: route-ping 1.9s ease-out infinite;
+}
+
+@keyframes route-label {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-route-label {
+  animation: route-label 0.5s ease-out 0.55s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-route-draw,
+  .animate-route-dot,
+  .animate-route-land,
+  .animate-route-ping,
+  .animate-route-label {
+    animation: none;
+  }
+
+  /* With the animations off the arc still has to be drawn and the pin still
+     has to be there — "both" would otherwise leave them at their start. */
+  .animate-route-draw {
+    stroke-dashoffset: 0;
+  }
+
+  .animate-route-dot {
+    offset-distance: 100%;
+  }
+
+  .animate-route-land,
+  .animate-route-label {
+    opacity: 1;
+    transform: none;
+  }
+}

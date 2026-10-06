@@ -54,7 +54,12 @@ export const brand = {
   description:
     "Business payment accounts in your own company name for UK importers, wholesalers and distributors. Collect from your retailers, convert at a proper rate, and pay suppliers in USD, AED, HKD and EUR the same day.",
 
-  email: "info@ovaropay.com",
+  /**
+   * The one address on the site. It is also where the enquiry and feedback
+   * forms deliver, and the From on anything the site sends — see .env.example,
+   * where SMTP_USER has to be this same mailbox.
+   */
+  email: "support@ovaropay.com",
   /**
    * There is deliberately no phone number. Enquiries come in by email and get
    * answered by the person who can actually answer them; a number nobody picks

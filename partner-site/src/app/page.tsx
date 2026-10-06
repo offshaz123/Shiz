@@ -7,7 +7,7 @@ import { pillars } from "@/content/site";
 import { tierSummary } from "@/content/pricing";
 import { GlobeBackdrop } from "@/components/GlobeBackdrop";
 import { RatePills } from "@/components/RatePills";
-import { CurrencyShowcase } from "@/components/CurrencyShowcase";
+import { CurrencyLive } from "@/components/CurrencyLive";
 import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { TrustBar } from "@/components/TrustBar";
@@ -187,18 +187,10 @@ export default function Home() {
           lede="Money in, the currency in between, and money out — with the rate shown before you commit rather than after."
         />
 
-        <div className="mt-14 grid gap-5 lg:grid-cols-[1.5fr_1fr] lg:items-center">
-          <div className="card reveal p-6 sm:p-8">
-            <CurrencyShowcase />
-          </div>
-          <Image
-            src="/images/globe-transfer.webp"
-            alt="A globe with a banknote folded into a paper plane flying across it."
-            width={909}
-            height={559}
-            sizes="(min-width: 1024px) 28rem, 100vw"
-            className="w-full rounded-2xl border border-border"
-          />
+        {/* The card and the globe beside it share one piece of state, so the
+            arc goes where the payment goes. */}
+        <div className="mt-14">
+          <CurrencyLive />
         </div>
       </Section>
 
