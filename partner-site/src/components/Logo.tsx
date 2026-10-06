@@ -51,7 +51,11 @@ export function Logo({ className = "" }: { className?: string }) {
       className={`group inline-flex items-center gap-2.5 ${className}`}
       aria-label={`${brand.name} home`}
     >
-      <Mark className="h-8 w-8 text-foreground transition-transform group-hover:rotate-45" />
+      {/* No colour class. The ink arc is currentColor, so the mark takes the
+          colour of whatever it is sitting on: ink on the white header, and the
+          light hero ink on the blue panel of the account pages, where
+          text-foreground used to leave a near-black arc on near-black. */}
+      <Mark className="h-8 w-8 transition-transform group-hover:rotate-45" />
       <span className="font-display text-[19px] font-semibold tracking-tight">
         {brand.shortName}
       </span>
