@@ -7,6 +7,7 @@ import { ProblemGrid } from "@/components/ProblemGrid";
 import { ServicesGrid } from "@/components/ServicesGrid";
 import { Deliverables } from "@/components/Deliverables";
 import { AuditFramework } from "@/components/AuditFramework";
+import { HomeScanner } from "@/components/HomeScanner";
 import { HowWeWork } from "@/components/HowWeWork";
 import { StartProjectCta } from "@/components/StartProjectCta";
 import { LondonOfficeSection } from "@/components/LondonOffice";
@@ -55,6 +56,7 @@ export default function Home() {
       <ServicesGrid />
       <Deliverables />
       <AuditFramework />
+      <HomeScanner />
       <HowWeWork />
       <StartProjectCta />
       <LondonOfficeSection />
