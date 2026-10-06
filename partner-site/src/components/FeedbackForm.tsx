@@ -18,7 +18,7 @@ const topics = [
   "The website itself",
   "Something I could not find",
   "Opening an account",
-  "The software for MSBs",
+  "Pricing",
   "Something else",
 ];
 

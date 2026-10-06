@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     "foreign exchange for importers",
     "business account declined by bank",
     "payments for mobile phone wholesalers",
-    "remittance software for MSBs",
+    "business account pricing UK",
   ],
   alternates: { canonical: "/" },
   robots: { index: true, follow: true },

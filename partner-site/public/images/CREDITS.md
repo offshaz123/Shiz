@@ -10,7 +10,13 @@ financial services site is not a small problem.
 | `warehouse-aisle.webp` | [https://www.rawpixel.com/image/8708508/photo-image-public-domain-person-food](https://www.rawpixel.com/image/8708508/photo-image-public-domain-person-food) | CC0 — public domain, no attribution required |
 | `container-terminal.webp` | [https://www.rawpixel.com/image/3305642/free-photo-image-shipping-cargo-transportation-containers](https://www.rawpixel.com/image/3305642/free-photo-image-shipping-cargo-transportation-containers) | CC0 — public domain, no attribution required |
 
+| `adviser-desk.webp` | [https://stocksnap.io/photo/business-man-SZCQC1QEW1](https://stocksnap.io/photo/business-man-SZCQC1QEW1) | CC0 — public domain, no attribution required |
+
 `payroll-review.webp` was supplied by the business owner.
+
+`warehouse-aisle.webp` is not currently used on any page. It is kept because
+it shows the customer this business is built around, which a page about who
+it is for would want.
 
 The remaining files (`demo-presentation.webp`, `globe-transfer.webp`,
 `sterling-notes.webp`, `team-meeting.webp`, `transfer-illustration.webp`)

@@ -1,0 +1,141 @@
+/**
+ * The published rate card.
+ *
+ * The figures here are the charges the business has set. The wording around
+ * them is ours — a competitor's prices are facts and can be matched, their
+ * copy is theirs and is not reproduced.
+ *
+ * Two rules this file exists to keep:
+ *
+ *  - Nothing says "TBA" on a customer-facing page. Where a charge is quoted
+ *    case by case it says so in words, because a price list with a blank in
+ *    it is worse than one that admits the number depends.
+ *  - Every figure is exclusive of VAT and subject to the account agreement.
+ *    Those two notes are not decoration; they are the difference between a
+ *    rate card and a promise nobody checked.
+ */
+
+export type PlanRow = { label: string; values: [string, string, string] };
+export type PlanGroup = { title: string; rows: PlanRow[] };
+
+export const tiers = ["Bronze", "Gold", "Platinum"] as const;
+
+export const tierSummary = [
+  { name: "Bronze", monthly: "£49", forWho: "Getting started", fx: "1.00%", faster: "£0.99" },
+  { name: "Gold", monthly: "£99", forWho: "Growing volume", fx: "0.75%", faster: "£0.79" },
+  { name: "Platinum", monthly: "£199", forWho: "Higher volume", fx: "Quoted", faster: "£0.49" },
+] as const;
+
+/** Businesses: GBP banking, international payments and conversion. */
+export const businessGroups: PlanGroup[] = [
+  {
+    title: "The account",
+    rows: [
+      { label: "Monthly account fee", values: ["£49", "£99", "£199"] },
+      { label: "Account opening", values: ["No charge", "No charge", "No charge"] },
+      {
+        label: "Margin on currency conversion",
+        values: ["1.00%", "0.75%", "Quoted before you commit"],
+      },
+    ],
+  },
+  {
+    title: "UK payments",
+    rows: [
+      { label: "Faster Payments in", values: ["£0.99", "£0.79", "£0.49"] },
+      { label: "Faster Payments out", values: ["£0.99", "£0.79", "£0.49"] },
+      { label: "Between two accounts on the platform", values: ["Free", "Free", "Free"] },
+      { label: "Bacs", values: ["£0.50", "£0.50", "£0.50"] },
+      { label: "CHAPS in", values: ["£25", "£22", "£20"] },
+      { label: "CHAPS out", values: ["£25", "£22", "£20"] },
+    ],
+  },
+  {
+    title: "International payments",
+    rows: [
+      { label: "GBP cross-border in", values: ["£25", "£25", "£25"] },
+      { label: "GBP cross-border out", values: ["£25", "£25", "£25"] },
+      { label: "SWIFT payment out", values: ["£50", "£35", "£25"] },
+    ],
+  },
+  {
+    title: "When a payment has to be chased",
+    rows: [
+      { label: "CHAPS investigation", values: ["£35", "£35", "£35"] },
+      { label: "SWIFT investigation", values: ["£50", "£50", "£50"] },
+    ],
+  },
+];
+
+/** Payroll bureaux: the same rails, priced per payout. */
+export const payrollGroups: PlanGroup[] = [
+  {
+    title: "Paying people",
+    rows: [
+      { label: "Faster Payments in", values: ["£0.99", "£0.79", "£0.49"] },
+      { label: "Faster Payments out, per person paid", values: ["£0.99", "£0.79", "£0.49"] },
+      { label: "Between two accounts on the platform", values: ["Free", "Free", "Free"] },
+      { label: "Bacs", values: ["£0.50", "£0.50", "£0.50"] },
+      { label: "CHAPS in or out", values: ["£25", "£22", "£20"] },
+    ],
+  },
+  {
+    title: "International payments",
+    rows: [
+      { label: "GBP cross-border in or out", values: ["£25", "£25", "£25"] },
+      { label: "SWIFT payment out", values: ["£50", "£35", "£25"] },
+    ],
+  },
+  {
+    title: "When a payment has to be chased",
+    rows: [
+      { label: "CHAPS investigation", values: ["£35", "£35", "£35"] },
+      { label: "SWIFT investigation", values: ["£50", "£50", "£50"] },
+    ],
+  },
+];
+
+/** Freelancers and small IT firms: no monthly fee, charged per payment. */
+export const freelanceRows = [
+  { label: "Account opening", value: "No charge", note: "Nothing to pay to open an eligible account." },
+  { label: "Monthly fee", value: "No charge", note: "No subscription. You pay when money moves." },
+  { label: "Money in", value: "1%", note: "On eligible incoming payments." },
+  { label: "Money out", value: "1%", note: "On eligible outgoing payments." },
+  { label: "SWIFT payment out", value: "£50", note: "To a supported international bank account." },
+  {
+    label: "Currency conversion",
+    value: "Quoted",
+    note: "The rate and the margin are both shown before you confirm.",
+  },
+] as const;
+
+export const pricingNotes = [
+  {
+    title: "VAT",
+    body: "Every figure on this page is exclusive of VAT. Where VAT applies it is added at the prevailing rate.",
+  },
+  {
+    title: "Moving between tiers",
+    body: "You can move up or down as your volume changes. A move up takes effect straight away and the new charges apply from your next payment.",
+  },
+  {
+    title: "Conversion",
+    body: "There is no separate fee for converting. The margin is in the rate, and you are shown the rate before you commit — not after.",
+  },
+  {
+    title: "Other banks' charges",
+    body: "Correspondent, intermediary and beneficiary-bank charges can apply to international payments. They are not ours and we do not mark them up.",
+  },
+  {
+    title: "When a payment goes wrong",
+    body: "An investigation charge applies only where a payment needs manual work to trace or correct — not as a matter of course.",
+  },
+  {
+    title: "Higher volume",
+    body: "Above the Platinum tier the pricing is built around your payment profile rather than taken from this page. Send us a month of real activity.",
+  },
+  {
+    title: "What this page is",
+    body: "A rate card, not a quote. What you actually pay depends on onboarding, the corridors you use and the configuration your account is approved for, and is set out in your account agreement.",
+  },
+] as const;

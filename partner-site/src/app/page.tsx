@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { brand, currencies } from "@/lib/brand";
 import { solutions } from "@/content/solutions";
 import { pillars } from "@/content/site";
+import { tierSummary } from "@/content/pricing";
 import { GlobeBackdrop } from "@/components/GlobeBackdrop";
 import { RatePills } from "@/components/RatePills";
 import { CurrencyShowcase } from "@/components/CurrencyShowcase";
@@ -127,6 +128,51 @@ export default function Home() {
       </section>
 
       <TrustBar />
+
+      {/* Pricing, high up on purpose. It used to be a page with no rate card
+          at all and an invitation to ask; it is now published, and the first
+          thing most people want from this page is the number. */}
+      <Section>
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.25fr] lg:items-center">
+          <div>
+            <Eyebrow>Pricing</Eyebrow>
+            <h2 className="font-display text-balance mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+              Three numbers, and they are all published
+            </h2>
+            <p className="mt-5 text-base leading-relaxed text-muted">
+              A monthly fee, a charge for each payment, and a margin on anything you convert. The
+              charges fall and the margin tightens as the volume goes up, and the whole rate card
+              is on one page rather than behind a conversation.
+            </p>
+            <Link href="/pricing" className="btn btn-primary mt-8">
+              See the full rate card
+              <span aria-hidden="true">&rarr;</span>
+            </Link>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            {tierSummary.map((tier) => (
+              <Card key={tier.name} className="p-5">
+                <p className="text-sm font-semibold">{tier.name}</p>
+                <p className="font-display mt-2 text-3xl font-semibold tracking-tight">
+                  {tier.monthly}
+                </p>
+                <p className="mt-1 text-xs text-muted">a month, ex VAT</p>
+                <dl className="mt-4 space-y-1.5 border-t border-border pt-4 text-xs">
+                  <div className="flex justify-between gap-2">
+                    <dt className="text-muted">Conversion</dt>
+                    <dd className="font-mono font-semibold">{tier.fx}</dd>
+                  </div>
+                  <div className="flex justify-between gap-2">
+                    <dt className="text-muted">Faster Payment</dt>
+                    <dd className="font-mono font-semibold">{tier.faster}</dd>
+                  </div>
+                </dl>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </Section>
 
 
       {/* Currencies — brought up from the middle of the page. It used to sit
@@ -301,12 +347,16 @@ export default function Home() {
             title="Three steps, and none of them are a surprise"
             lede="No account is opened without proper checks. Knowing what they are up front is what makes them quick."
           />
+          {/* The warehouse shot that was here showed the customer, not this
+              section: Getting started is about the conversation with us, so
+              it is a desk and a person rather than a loading aisle. It was
+              also dim and busy against a white band. */}
           <Image
-            src="/images/warehouse-aisle.webp"
-            alt="Stock being moved in a distribution warehouse."
-            width={1400}
-            height={952}
-            sizes="(min-width: 1024px) 32rem, 100vw"
+            src="/images/adviser-desk.webp"
+            alt="Someone going through the detail of an account application at a desk."
+            width={960}
+            height={640}
+            sizes="(min-width: 1024px) 34rem, 100vw"
             className="w-full rounded-2xl border border-border object-cover"
           />
         </div>
@@ -320,27 +370,6 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* Software. A separate line of business, so it stays on the home page,
-          but as one row rather than the half-section it was. */}
-      <Section tone="surface">
-        <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center">
-          <div>
-            <Eyebrow>The other side of the business</Eyebrow>
-            <h2 className="font-display mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Already licensed? We sell the platform to run on.
-            </h2>
-            <p className="mt-5 text-base leading-relaxed text-muted">
-              If you hold your own SPI or API permission you do not need our licence — you need the
-              technology. A customer portal, iOS and Android apps and an admin back end, shipped
-              already integrated with payment processing, KYC and payouts.
-            </p>
-            <Link href="/software" className="btn btn-ghost mt-7">
-              See the platform
-            </Link>
-          </div>
-          <Illustration name="platform" className="w-full" />
-        </div>
-      </Section>
 
       {/* The ask. Was two sections — a centred ink panel saying "send us one
           real conversion" and then an enquiry form saying the same thing

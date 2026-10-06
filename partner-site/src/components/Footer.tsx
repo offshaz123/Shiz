@@ -44,7 +44,7 @@ const socials = [
 const company = [
   { label: "About us", href: "/about" },
   { label: "How the account works", href: "/business-accounts" },
-  { label: "Software for MSBs", href: "/software" },
+  { label: "Pricing", href: "/pricing" },
   { label: "Contact", href: "/contact" },
 ];
 

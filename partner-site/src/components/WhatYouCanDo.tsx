@@ -57,13 +57,13 @@ const slides = [
     statLabel: "However many people are on it",
   },
   {
-    badge: "Software",
-    title: "Already licensed? Take the platform.",
-    body: "If you hold your own SPI or API permission you do not need our licence — you need the technology. Customer portal, iOS and Android apps, and an admin back end.",
-    href: "/software",
-    linkLabel: "See the platform",
-    statValue: "Web · iOS · Android",
-    statLabel: "Shipped already integrated",
+    badge: "Pricing",
+    title: "The whole rate card is published.",
+    body: "A monthly fee, a charge per payment and a margin on conversion. Three numbers, all of them on one page, and the rate is shown before you commit rather than after.",
+    href: "/pricing",
+    linkLabel: "See what it costs",
+    statValue: "From £49",
+    statLabel: "A month, excluding VAT",
   },
 ];
 

@@ -16,6 +16,11 @@ export const metadata: Metadata = {
     "SPI API licence software",
   ],
   alternates: { canonical: "/software" },
+  // Taken off the site: no nav link, no footer link, not in the sitemap, and
+  // noindex so search engines drop the page they already have. The files are
+  // still here because removing them is a separate decision — if the software
+  // line is coming back, this page comes back with it.
+  robots: { index: false, follow: false },
 };
 
 const modules = [

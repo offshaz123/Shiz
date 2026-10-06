@@ -36,20 +36,6 @@ const routes = [
     ),
   },
   {
-    name: "Partnerships & software",
-    subject: "Partnership / software enquiry",
-    body: "Licensed MSBs looking at the remittance platform, and anyone wanting to talk corridors or volume.",
-    include: "Your licence status, the corridors you run, and monthly volume.",
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6" stroke="currentColor" className={iconClass}>
-        <circle cx="6" cy="6.5" r="2.75" />
-        <circle cx="18" cy="6.5" r="2.75" />
-        <circle cx="12" cy="17.5" r="2.75" />
-        <path d="M8.75 6.5h6.5M7.4 8.9l3.2 6.3M16.6 8.9l-3.2 6.3" strokeLinecap="round" />
-      </svg>
-    ),
-  },
-  {
     name: "Compliance",
     subject: "Compliance enquiry",
     body: "Questions about how the account is regulated, who holds the licence, and how your money is safeguarded.",
@@ -67,7 +53,7 @@ const routes = [
 const elsewhere = [
   { label: "How the account works", href: "/business-accounts" },
   { label: "Opening an account", href: "/opening-an-account" },
-  { label: "Software for MSBs", href: "/software" },
+  { label: "Pricing", href: "/pricing" },
 ];
 
 export default function ContactPage() {
