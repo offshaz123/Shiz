@@ -73,15 +73,15 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-6 px-5 py-3 sm:px-8 lg:grid lg:grid-cols-[auto_1fr_auto]">
+      <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-6 px-5 py-3 sm:px-8 xl:grid xl:grid-cols-[auto_1fr_auto]">
         <Logo />
 
-        <nav className="hidden items-center justify-center gap-7 lg:flex">
+        <nav className="hidden items-center justify-center gap-5 xl:flex">
           {navLinks.map((link) => (
             <div key={link.href} className="group relative">
               <Link
                 href={link.href}
-                className={`flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium transition-colors ${
+                className={`flex items-center gap-1 whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-medium transition-colors ${
                   pathname === link.href || pathname?.startsWith(`${link.href}/`)
                     ? "border border-brand-pink/45 text-foreground"
                     : "border border-transparent text-muted hover:text-foreground"
@@ -114,7 +114,7 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-3 xl:flex">
           <ThemeToggle />
           <Link
             href="/free-audit"
@@ -124,7 +124,7 @@ export function Header() {
           </Link>
         </div>
 
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-2 xl:hidden">
           <ThemeToggle />
           <button
             type="button"
@@ -144,7 +144,7 @@ export function Header() {
       </div>
 
       {open && (
-        <div className="max-h-[75vh] overflow-y-auto border-t border-border bg-background px-5 py-4 lg:hidden">
+        <div className="max-h-[75vh] overflow-y-auto border-t border-border bg-background px-5 py-4 xl:hidden">
           <nav className="flex flex-col gap-4">
             {navLinks.map((link) => (
               <div key={link.href} className="flex flex-col gap-2">

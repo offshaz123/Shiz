@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
+import { SiteScanner } from "@/components/SiteScanner";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { whatsappHref } from "@/lib/site-config";
 import { ogImage } from "@/lib/seo";
@@ -81,9 +82,26 @@ export default function FreeAuditPage() {
           </div>
 
           <div className="rounded-3xl border border-border bg-surface p-7 shadow-xl shadow-black/5 sm:p-9">
-            <h2 className="text-xl font-bold text-foreground">Request your free audit</h2>
+            <h2 className="text-xl font-bold text-foreground">Scan your site now</h2>
             <p className="mt-2 text-sm text-muted">
-              Takes about a minute. We&apos;ll come back to you within one working day.
+              Put your address in and we&apos;ll check the tracking, how Google reads your pages
+              and how easy you are to contact. Results on screen in seconds.
+            </p>
+            <div className="mt-6">
+              <SiteScanner />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-border bg-surface">
+        <div className="mx-auto max-w-2xl px-5 py-20 sm:px-8">
+          <div className="rounded-3xl border border-border bg-background p-7 shadow-xl shadow-black/5 sm:p-9">
+            <h2 className="text-xl font-bold text-foreground">Or have us do it by hand</h2>
+            <p className="mt-2 text-sm text-muted">
+              The scanner reads your page code. This one covers the things it can&apos;t see:
+              your Google listing, where enquiries go, and what your competitors are running.
+              Takes about a minute and we come back within one working day.
             </p>
             <div className="mt-6">
               <LeadForm
