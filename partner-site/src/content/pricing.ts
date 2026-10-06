@@ -26,6 +26,66 @@ export const tierSummary = [
   { name: "Platinum", monthly: "£199", forWho: "Higher volume", fx: "Quoted", faster: "£0.49" },
 ] as const;
 
+/**
+ * The same three tiers as numbers, for the chooser.
+ *
+ * `fxMargin` is null on Platinum because that margin is quoted against your
+ * actual profile rather than published. The chooser says so rather than
+ * guessing: a comparison that invents the figure it is comparing is worse
+ * than one that admits the gap.
+ */
+export const tierMath = [
+  { name: "Bronze", monthly: 49, fxMargin: 0.01, fasterOut: 0.99, swiftOut: 50 },
+  { name: "Gold", monthly: 99, fxMargin: 0.0075, fasterOut: 0.79, swiftOut: 35 },
+  { name: "Platinum", monthly: 199, fxMargin: null, fasterOut: 0.49, swiftOut: 25 },
+] as const;
+
+/** What each tier is for, and the four figures that decide it. */
+export const plans = [
+  {
+    name: "Bronze",
+    monthly: "£49",
+    featured: false,
+    forWho: "A business opening its first account with us",
+    blurb:
+      "Everything the account does, at the entry charge. Most people start here and move up when the volume says to.",
+    highlights: [
+      { label: "Margin on conversion", value: "1.00%" },
+      { label: "Faster Payment, in or out", value: "£0.99" },
+      { label: "SWIFT payment out", value: "£50" },
+      { label: "CHAPS, in or out", value: "£25" },
+    ],
+  },
+  {
+    name: "Gold",
+    monthly: "£99",
+    featured: true,
+    forWho: "Converting six figures a month, paying suppliers weekly",
+    blurb:
+      "Where most importers end up. The extra £50 a month pays for itself at about £20,000 converted.",
+    highlights: [
+      { label: "Margin on conversion", value: "0.75%" },
+      { label: "Faster Payment, in or out", value: "£0.79" },
+      { label: "SWIFT payment out", value: "£35" },
+      { label: "CHAPS, in or out", value: "£22" },
+    ],
+  },
+  {
+    name: "Platinum",
+    monthly: "£199",
+    featured: false,
+    forWho: "High volume, where the margin is worth negotiating",
+    blurb:
+      "The lowest published payment charges. The conversion margin stops being a list price and gets quoted against your actual flow.",
+    highlights: [
+      { label: "Margin on conversion", value: "Quoted" },
+      { label: "Faster Payment, in or out", value: "£0.49" },
+      { label: "SWIFT payment out", value: "£25" },
+      { label: "CHAPS, in or out", value: "£20" },
+    ],
+  },
+] as const;
+
 /** Businesses: GBP banking, international payments and conversion. */
 export const businessGroups: PlanGroup[] = [
   {
