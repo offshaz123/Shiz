@@ -1,9 +1,9 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { onboardingChecklist } from "@/content/site";
+import { onboardingChecklist, faqs } from "@/content/site";
 import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
 import { EnquiryForm } from "@/components/EnquiryForm";
-import { BreadcrumbJsonLd } from "@/components/StructuredData";
+import { BreadcrumbJsonLd, FaqJsonLd } from "@/components/StructuredData";
 import { RegulatoryNote } from "@/components/RegulatoryNote";
 
 export const metadata: Metadata = {
@@ -35,6 +35,7 @@ const steps = [
 export default function OpeningAnAccountPage() {
   return (
     <>
+      <FaqJsonLd faqs={faqs} />
       <BreadcrumbJsonLd
         trail={[
           { name: "Home", path: "/" },
@@ -118,6 +119,31 @@ export default function OpeningAnAccountPage() {
             </p>
             <EnquiryForm source="Opening an account" submitLabel="Send the details" />
           </div>
+        </div>
+      </Section>
+
+      {/* Moved here from the home page. Every one of these questions is about
+          opening and running the account, which is this page, and on the home
+          page they were a wall of text between the product and the ask. The
+          FAQ structured data comes with them — it has to sit on the page the
+          answers are actually visible on. */}
+      <Section tone="surface">
+        <SectionHeading eyebrow="Questions" title="The ones we get asked first" />
+        <div className="mt-10 divide-y divide-border border-y border-border">
+          {faqs.map((faq) => (
+            <details key={faq.question} className="group py-5">
+              <summary className="flex cursor-pointer list-none items-start justify-between gap-6 text-base font-semibold">
+                {faq.question}
+                <span
+                  className="mt-1 shrink-0 text-muted transition-transform group-open:rotate-45"
+                  aria-hidden="true"
+                >
+                  +
+                </span>
+              </summary>
+              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted">{faq.answer}</p>
+            </details>
+          ))}
         </div>
       </Section>
 

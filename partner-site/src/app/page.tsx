@@ -3,13 +3,12 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { brand, currencies } from "@/lib/brand";
 import { solutions } from "@/content/solutions";
-import { pillars, faqs } from "@/content/site";
+import { pillars } from "@/content/site";
 import { GlobeBackdrop } from "@/components/GlobeBackdrop";
 import { RatePills } from "@/components/RatePills";
 import { CurrencyShowcase } from "@/components/CurrencyShowcase";
 import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
 import { EnquiryForm } from "@/components/EnquiryForm";
-import { FaqJsonLd } from "@/components/StructuredData";
 import { TrustBar } from "@/components/TrustBar";
 import { PaymentFlowCard } from "@/components/PaymentFlowCard";
 import { DashboardPreview } from "@/components/DashboardPreview";
@@ -28,34 +27,10 @@ export const metadata: Metadata = {
 
 
 
-const reasons = [
-  {
-    icon: "building",
-    title: "The account is in your company name",
-    body: "Named, not shared. Your retailers pay into your company, and your suppliers see who is paying them.",
-  },
-  {
-    icon: "shield",
-    title: "Onboarded properly, not waved through",
-    body: "Real due diligence at the start, on the understanding that yours is a legitimate trading business. That is what makes an account that stays open.",
-  },
-  {
-    icon: "chart",
-    title: "A rate you are quoted before you commit",
-    body: "You can price a purchase order against a rate you have been given. You cannot price one against a rate you find out afterwards.",
-  },
-  {
-    icon: "handshake",
-    title: "Someone who knows what you import",
-    body: "We deal with importers and wholesalers all day. Nobody here needs the trade explained from the beginning.",
-  },
-];
 
 export default function Home() {
   return (
     <>
-      <FaqJsonLd faqs={faqs} />
-
       {/* Hero */}
       <section className="hero-blue relative overflow-hidden">
         <GlobeBackdrop />
@@ -154,27 +129,57 @@ export default function Home() {
       <TrustBar />
 
 
-      {/* What you can do — one panel per line, turning on its own. */}
-      <Section>
+      {/* Currencies — brought up from the middle of the page. It used to sit
+          ninth, behind three sections of prose. It is the first thing anybody
+          actually wants to know and it is the section with the most to look
+          at, so it goes first. */}
+      <Section tone="surface">
         <SectionHeading
           center
-          title={`What you can do with ${brand.shortName}`}
+          eyebrow="Currencies"
+          title={`${currencies.length} currencies, one account`}
+          lede="Money in, the currency in between, and money out — with the rate shown before you commit rather than after."
         />
-        <div className="mt-12">
-          <WhatYouCanDo />
+
+        <div className="mt-14 grid gap-5 lg:grid-cols-[1.5fr_1fr] lg:items-center">
+          <div className="card reveal p-6 sm:p-8">
+            <CurrencyShowcase />
+          </div>
+          <Image
+            src="/images/globe-transfer.webp"
+            alt="A globe with a banknote folded into a paper plane flying across it."
+            width={909}
+            height={559}
+            sizes="(min-width: 1024px) 28rem, 100vw"
+            className="w-full rounded-2xl border border-border"
+          />
         </div>
       </Section>
 
-      {/* Pillars */}
+      {/* Its own white band. The marquee draws no background of its own, and
+          the sections either side are both tone="surface", so without this it
+          reads as one long grey block with a gap in it. */}
+      <div className="border-y border-border bg-background py-8">
+        <CurrencyMarquee />
+      </div>
+
+      {/* What the account does. This was two sections — "What you can do" and
+          "Pillars" — that opened with the same idea in different words. One
+          section, one heading, both pieces of evidence under it. */}
       <Section>
         <div className="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center">
           <SectionHeading
             eyebrow="What the account does"
             title="Three things, and they are your whole working week"
-            lede="Money in from your buyers, currency converted, money out to your suppliers. That is the product. Everything else on this page is detail underneath it."
+            lede="Money in from your buyers, currency converted, money out to your suppliers. That is the product."
           />
           <Illustration name="money-sending" className="w-full" />
         </div>
+
+        <div className="mt-12">
+          <WhatYouCanDo />
+        </div>
+
         <div className="mt-12 grid gap-5 md:grid-cols-3">
           {pillars.map((pillar, index) => (
             <Card key={pillar.title} className="flex flex-col">
@@ -187,58 +192,81 @@ export default function Home() {
             </Card>
           ))}
         </div>
+
         <div className="mt-8">
           <Link
             href="/business-accounts"
             className="text-sm font-semibold text-accent underline-offset-4 hover:underline"
           >
-            How the account works in practice →
+            How the account works in practice &rarr;
           </Link>
         </div>
       </Section>
 
-      {/* Solutions */}
-      <Section>
-        <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center">
-          <SectionHeading
-            eyebrow="Solutions"
-            title="Four lines, one account"
-            lede="Money in from your customers or your clients abroad, currency converted, money out to suppliers, contractors or staff. Each runs on the same account, in your own name."
-          />
-          {/* Drawn on transparency, so it sits on the section rather than in a
-              white box of its own. */}
+      {/* Money out. Replaces the four-card Solutions grid, which repeated on
+          the home page what the Solutions pages already say at length. A
+          photograph, four lines, and a link to the pages themselves. */}
+      <Section tone="surface">
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <Image
-            src="/images/transfer-illustration.webp"
-            alt="Money passing from one phone to another."
-            width={1000}
-            height={550}
-            sizes="(min-width: 1024px) 26rem, 80vw"
-            className="mx-auto w-full max-w-sm lg:max-w-none"
+            src="/images/payroll-review.webp"
+            alt="A payroll run being checked line by line."
+            width={1600}
+            height={1066}
+            sizes="(min-width: 1024px) 32rem, 100vw"
+            className="w-full rounded-2xl border border-border object-cover"
           />
-        </div>
-        <div className="mt-12 grid gap-5 sm:grid-cols-2">
-          {solutions.map((solution, index) => (
-            <Card key={solution.slug} className="flex flex-col">
-              <div className="flex items-center gap-3">
-                <IconTile name={solution.icon} tone={index + 2} />
-                <span className="font-mono text-xs text-muted">0{index + 1}</span>
-              </div>
-              <h3 className="font-display mt-5 text-xl font-semibold">{solution.name}</h3>
-              <p className="mt-2 text-sm font-medium text-accent-2">{solution.tagline}</p>
-              <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">{solution.intro}</p>
-              <Link
-                href={`/solutions/${solution.slug}`}
-                className="mt-6 text-sm font-semibold text-accent-2 underline-offset-4 hover:underline"
-              >
-                {solution.name} →
-              </Link>
-            </Card>
-          ))}
+          <div>
+            <Eyebrow>Money out</Eyebrow>
+            <h2 className="font-display text-balance mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+              Suppliers, contractors and the people on your payroll
+            </h2>
+            <p className="mt-5 text-base leading-relaxed text-muted">
+              The same account pays an invoice in Shenzhen, a contractor in Warsaw and a monthly
+              payroll run, in the currency each of them actually wants. One file, one set of
+              checks, one place to look afterwards when somebody asks whether it went.
+            </p>
+            <ul className="mt-7 grid gap-2.5 sm:grid-cols-2">
+              {solutions.map((solution) => (
+                <li key={solution.slug} className="flex items-start gap-2.5 text-sm">
+                  <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent" aria-hidden="true" />
+                  <Link
+                    href={`/solutions/${solution.slug}`}
+                    className="font-medium underline-offset-4 hover:text-accent-2 hover:underline"
+                  >
+                    {solution.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <Link href="/solutions" className="btn btn-ghost mt-8">
+              All four, in detail
+            </Link>
+          </div>
         </div>
       </Section>
 
-      {/* The cost of a bad rate, drawn */}
+      {/* Dashboard */}
       <Section>
+        <SectionHeading
+          center
+          eyebrow="The platform"
+          title={`See your ${brand.shortName} dashboard`}
+          lede="One place to track balances, send payments, convert between currencies and manage the account."
+        />
+        <div className="mt-12">
+          <DashboardPreview />
+        </div>
+        <p className="mx-auto mt-6 max-w-2xl text-center text-xs leading-relaxed text-muted">
+          Illustrative preview — figures and account details are placeholders, not a real customer
+          account.
+        </p>
+      </Section>
+
+      {/* The cost of a bad rate. The ink "Pricing" band that used to follow
+          this said the same thing a second time and ended in the same button,
+          so it has gone; its four pricing lines live on /business-accounts. */}
+      <Section tone="surface">
         <div className="grid gap-10 lg:grid-cols-[1fr_1.15fr] lg:items-center">
           <div>
             <Eyebrow>The cost of a bad rate</Eyebrow>
@@ -265,165 +293,6 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* Pricing posture, over the banknotes. The band was already ink, so
-          the photograph only had to sit behind copy that was light. */}
-      <Section tone="ink" backdrop={{ src: "/images/sterling-notes.webp", position: "center 60%" }}>
-        <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-          <div>
-            <Eyebrow>Pricing</Eyebrow>
-            <h2 className="font-display mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Tell us what you pay now, and we will price the same transaction next to it
-            </h2>
-            <p className="mt-5 text-base leading-relaxed text-on-ink/70">
-              There is no rate card on this page, and that is deliberate. The number that matters is
-              not ours in isolation — it is the difference between ours and what is coming out of your
-              account today. Most importers have never been shown that figure.
-            </p>
-            <p className="mt-4 text-base leading-relaxed text-on-ink/70">
-              Bring one real conversion. A recent supplier payment, the amount, the currency, and what
-              you were charged. We will quote the same one.
-            </p>
-            <Link
-              href="/contact"
-              className="mt-8 inline-flex rounded-full bg-accent px-6 py-3.5 text-sm font-semibold text-on-accent transition-colors hover:bg-accent-strong"
-            >
-              Price one transaction
-            </Link>
-          </div>
-          <ul className="space-y-4">
-            {[
-              "A fee on funds received, quoted up front.",
-              "A margin on conversion, quoted before you commit.",
-              "Payout fees per the current rate card, confirmed when we quote.",
-              "Reviewed at three months, when we both know what the real volume is.",
-            ].map((line) => (
-              <li
-                key={line}
-                className="flex gap-3 rounded-xl border border-white/10 bg-white/5 p-4 text-sm leading-relaxed text-on-ink/85"
-              >
-                <span className="mt-0.5 text-accent" aria-hidden="true">
-                  ✓
-                </span>
-                {line}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </Section>
-
-      {/* Why us */}
-      <Section>
-        <SectionHeading
-          eyebrow="Why this works"
-          title="What is different is the onboarding, not the marketing"
-        />
-        <div className="mt-12 grid gap-5 sm:grid-cols-2">
-          {reasons.map((reason, index) => (
-            <Card key={reason.title}>
-              <IconTile name={reason.icon} tone={index + 1} />
-              <h3 className="mt-5 text-lg font-semibold">{reason.title}</h3>
-              <p className="mt-2.5 text-sm leading-relaxed text-muted">{reason.body}</p>
-            </Card>
-          ))}
-        </div>
-      </Section>
-
-      {/* Software teaser */}
-      <Section tone="surface">
-        <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center">
-          <div>
-            <Eyebrow>The other side of the business</Eyebrow>
-            <h2 className="font-display mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Already licensed? We sell the platform to run on.
-            </h2>
-            <p className="mt-5 text-base leading-relaxed text-muted">
-              If you hold your own SPI or API permission, you do not need our licence — you need the
-              technology. A customer web portal, iOS and Android apps, and an admin back end, shipped
-              already integrated with payment processing, KYC and payouts.
-            </p>
-            <Link
-              href="/software"
-              className="mt-7 inline-flex rounded-full border border-border bg-background px-6 py-3.5 text-sm font-semibold transition-colors hover:border-accent"
-            >
-              See the platform
-            </Link>
-          </div>
-          <Illustration name="platform" className="w-full" />
-        </div>
-      </Section>
-
-      {/* Currencies. The cards that used to flank this restated Collect /
-          Convert / Pay and the Why-us grid almost word for word, so the
-          showcase now carries the section on its own and the marquee under it
-          does the countries. */}
-      <Section tone="surface">
-        <SectionHeading
-          center
-          eyebrow="Currencies"
-          title="Everything you need to move money across a border"
-          lede="One account for money in, the currency in between, and money out — with the rate shown before you commit rather than after."
-        />
-
-        <div className="mt-14 grid gap-5 lg:grid-cols-[1.5fr_1fr] lg:items-center">
-          <div className="card reveal p-6 sm:p-8">
-            <CurrencyShowcase />
-          </div>
-          <Image
-            src="/images/globe-transfer.webp"
-            alt="A globe with a banknote folded into a paper plane flying across it."
-            width={909}
-            height={559}
-            sizes="(min-width: 1024px) 28rem, 100vw"
-            className="w-full rounded-2xl border border-border"
-          />
-        </div>
-      </Section>
-
-      {/* Its own white band. The marquee draws no background of its own, and
-          the sections either side are both tone="surface", so without this it
-          reads as one long grey block with a gap in it. */}
-      <div className="border-y border-border bg-background py-8">
-        <CurrencyMarquee />
-      </div>
-
-      {/* Dashboard */}
-      <Section tone="surface">
-        <SectionHeading
-          center
-          eyebrow="The platform"
-          title={`See your ${brand.shortName} dashboard`}
-          lede="One place to track balances, send payments, convert between currencies and manage the account."
-        />
-        <div className="mt-12">
-          <DashboardPreview />
-        </div>
-        <p className="mx-auto mt-6 max-w-2xl text-center text-xs leading-relaxed text-muted">
-          Illustrative preview — figures and account details are placeholders, not a real customer
-          account.
-        </p>
-      </Section>
-
-      {/* FAQs */}
-      <Section>
-        <SectionHeading eyebrow="Questions" title="The ones we get asked first" />
-        <div className="mt-10 divide-y divide-border border-y border-border">
-          {faqs.map((faq) => (
-            <details key={faq.question} className="group py-5">
-              <summary className="flex cursor-pointer list-none items-start justify-between gap-6 text-base font-semibold">
-                {faq.question}
-                <span
-                  className="mt-1 shrink-0 text-muted transition-transform group-open:rotate-45"
-                  aria-hidden="true"
-                >
-                  +
-                </span>
-              </summary>
-              <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted">{faq.answer}</p>
-            </details>
-          ))}
-        </div>
-      </Section>
-
       {/* Getting started */}
       <Section>
         <SectionHeading
@@ -442,43 +311,46 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* The closing ask */}
-      <Section>
-        <div className="ink-tint relative overflow-hidden rounded-3xl px-6 py-16 text-center text-on-ink sm:px-12 sm:py-20">
-          <div className="ledger-grid pointer-events-none absolute inset-0 opacity-[0.12]" aria-hidden="true" />
-          <div className="relative mx-auto max-w-2xl">
-            <h2 className="font-display text-balance text-3xl font-semibold tracking-tight sm:text-4xl">
-              Send us one real conversion
+      {/* Software. A separate line of business, so it stays on the home page,
+          but as one row rather than the half-section it was. */}
+      <Section tone="surface">
+        <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+          <div>
+            <Eyebrow>The other side of the business</Eyebrow>
+            <h2 className="font-display mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+              Already licensed? We sell the platform to run on.
             </h2>
-            <p className="mt-5 text-base leading-relaxed text-on-ink/70">
-              The amount, the currency and what you were charged. We will price the same transaction
-              beside it, and you will know within a day whether this is worth your time.
+            <p className="mt-5 text-base leading-relaxed text-muted">
+              If you hold your own SPI or API permission you do not need our licence — you need the
+              technology. A customer portal, iOS and Android apps and an admin back end, shipped
+              already integrated with payment processing, KYC and payouts.
             </p>
-            <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
-              <Link href="/contact" className="btn btn-primary">
-                Talk to us about an account
-                <span aria-hidden="true">&rarr;</span>
-              </Link>
-              <Link href="/business-accounts" className="btn btn-on-ink">
-                See how it works
-              </Link>
-            </div>
+            <Link href="/software" className="btn btn-ghost mt-7">
+              See the platform
+            </Link>
           </div>
+          <Illustration name="platform" className="w-full" />
         </div>
       </Section>
 
-      {/* Enquiry */}
-      <Section tone="surface" id="enquiry">
-        <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr]">
+      {/* The ask. Was two sections — a centred ink panel saying "send us one
+          real conversion" and then an enquiry form saying the same thing
+          beside the box you say it in. One section, one ask. */}
+      <Section id="enquiry">
+        <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start">
           <div>
             <Eyebrow>Get started</Eyebrow>
-            <h2 className="font-display mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Send us the shape of the business
+            <h2 className="font-display text-balance mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+              Send us one real conversion
             </h2>
             <p className="mt-5 text-base leading-relaxed text-muted">
-              What you import, roughly what comes in each month, and what currency goes out. That is
-              enough for us to tell you whether we are the right fit and what it would cost — usually
-              the same day.
+              The amount, the currency and what you were charged. We will price the same
+              transaction beside it, and you will know within a day whether this is worth your
+              time.
+            </p>
+            <p className="mt-4 text-base leading-relaxed text-muted">
+              Or just tell us the shape of the business: what you import, roughly what comes in
+              each month, and what currency goes out.
             </p>
             <div className="mt-8 space-y-3 text-sm">
               <p>
@@ -488,6 +360,9 @@ export default function Home() {
                 </a>
               </p>
             </div>
+            <Link href="/business-accounts" className="btn btn-ghost mt-6">
+              See how it works
+            </Link>
           </div>
           <div className="card p-6 sm:p-8">
             <EnquiryForm source="Home page" />
