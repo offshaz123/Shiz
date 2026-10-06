@@ -10,10 +10,22 @@ import { useEffect, useState } from "react";
 const STAGES = [
   "Loading your website",
   "Checking tracking and pixels",
+  "Checking your advertising setup",
   "Checking how Google reads your pages",
+  "Checking your headings and content",
   "Checking how easy you are to contact",
+  "Looking for your social profiles",
   "Checking the technical basics",
+  "Checking your sitemap and robots file",
   "Putting your report together",
+];
+
+/** Shown under the bar so a longer scan doesn't feel like it has stalled. */
+const NOTES = [
+  "Hang tight, we're going through this properly rather than guessing.",
+  "Checking it from A to Z. Won't be long.",
+  "Still going. There's a lot to look at on a website.",
+  "Nearly there, just writing up what we found.",
 ];
 
 export function ScanProgress({ done }: { done: boolean }) {
@@ -30,16 +42,18 @@ export function ScanProgress({ done }: { done: boolean }) {
     const tick = setInterval(() => {
       // Creeps towards 92 and waits there, so the bar never claims to have
       // finished something that hasn't.
-      setPct((p) => (p >= 92 ? 92 : p + Math.max(0.6, (92 - p) / 22)));
+      setPct((p) => (p >= 94 ? 94 : p + Math.max(0.18, (94 - p) / 70)));
     }, 110);
     const steps = setInterval(() => {
       setStage((s) => (s >= STAGES.length - 2 ? s : s + 1));
-    }, 1100);
+    }, 1700);
     return () => {
       clearInterval(tick);
       clearInterval(steps);
     };
   }, [done]);
+
+  const note = NOTES[Math.min(NOTES.length - 1, Math.floor(shownStage / 3))];
 
   return (
     <div className="rounded-3xl border border-border bg-surface p-7 sm:p-9">
@@ -57,6 +71,12 @@ export function ScanProgress({ done }: { done: boolean }) {
           style={{ width: `${shownPct}%` }}
         />
       </div>
+
+      {!done && (
+        <p className="mt-4 rounded-xl border border-border bg-background px-4 py-3 text-sm text-muted">
+          {note}
+        </p>
+      )}
 
       <ul className="mt-6 space-y-2.5">
         {STAGES.map((label, i) => {

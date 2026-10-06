@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { lookup } from "node:dns/promises";
-import { runChecks, scoreChecks, type AuditResult } from "@/lib/site-audit";
+import { buildReport } from "@/lib/site-audit";
 
 export const runtime = "nodejs";
 
@@ -158,16 +158,14 @@ export async function POST(request: Request) {
       exists(finalUrl, "/sitemap.xml", controller.signal),
     ]);
 
-    const checks = runChecks(html, finalUrl.toString(), { robots, sitemap, ms });
-    const { counts, score } = scoreChecks(checks);
-
-    const result: AuditResult = {
-      url: target.toString(),
+    const result = buildReport({
+      html,
       finalUrl: finalUrl.toString(),
-      checks,
-      score,
-      counts,
-    };
+      robots,
+      sitemap,
+      ms,
+    });
+
     return NextResponse.json(result);
   } catch (err) {
     const reason = err instanceof Error ? err.message : "failed";

@@ -6,7 +6,6 @@ import { useSearchParams } from "next/navigation";
 import type { AuditResult, Severity } from "@/lib/site-audit";
 import { ScanProgress } from "./ScanProgress";
 import { ScanSupportButton } from "./ScanSupportButton";
-import { LeadForm } from "./LeadForm";
 
 const ERRORS: Record<string, string> = {
   invalid_url: "That doesn't look like a web address. Try something like yourbusiness.co.uk",
@@ -19,16 +18,68 @@ const ERRORS: Record<string, string> = {
   too_many_redirects: "That site redirected too many times for us to follow.",
 };
 
-const TONE: Record<Severity, { ring: string; dot: string; label: string }> = {
-  critical: { ring: "border-red-500/40", dot: "bg-red-500", label: "Needs fixing" },
-  warning: { ring: "border-amber-500/40", dot: "bg-amber-500", label: "Worth a look" },
-  good: { ring: "border-emerald-500/30", dot: "bg-emerald-500", label: "Fine" },
-};
+/** The scan returns far quicker than anyone can read what it's doing. */
+const MIN_RUN_MS = 17_000;
 
-const RANK = { critical: 0, warning: 1, good: 2 } as const;
+function StatusIcon({ severity }: { severity: Severity }) {
+  if (severity === "good") {
+    return (
+      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-500">
+        <svg viewBox="0 0 24 24" fill="none" className="h-3 w-3" aria-hidden="true">
+          <path d="M5 13l4 4L19 7" stroke="#fff" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </span>
+    );
+  }
+  if (severity === "warning") {
+    return (
+      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-amber-500">
+        <span className="text-[11px] font-bold leading-none text-white">!</span>
+      </span>
+    );
+  }
+  if (severity === "critical") {
+    return (
+      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-500">
+        <svg viewBox="0 0 24 24" fill="none" className="h-3 w-3" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" stroke="#fff" strokeWidth="3.2" strokeLinecap="round" />
+        </svg>
+      </span>
+    );
+  }
+  return (
+    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-muted/30">
+      <span className="text-[11px] font-bold leading-none text-muted">···</span>
+    </span>
+  );
+}
 
-/** Minimum time the progress runs for, so it reads as a scan rather than a flash. */
-const MIN_RUN_MS = 6500;
+function ScoreRing({ score, size = 56 }: { score: number; size?: number }) {
+  const pct = Math.max(0, Math.min(1, score / 10));
+  const r = size / 2 - 4;
+  const circ = 2 * Math.PI * r;
+  const colour = score >= 7 ? "#10b981" : score >= 4 ? "#f59e0b" : "#ef4444";
+  return (
+    <span className="relative inline-flex shrink-0" style={{ width: size, height: size }}>
+      <svg viewBox={`0 0 ${size} ${size}`} className="-rotate-90" width={size} height={size}>
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="currentColor" strokeWidth="4" className="text-border" />
+        <circle
+          cx={size / 2}
+          cy={size / 2}
+          r={r}
+          fill="none"
+          stroke={colour}
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeDasharray={`${circ * pct} ${circ}`}
+        />
+      </svg>
+      <span className="absolute inset-0 flex items-center justify-center text-sm font-bold text-foreground">
+        {score.toFixed(1)}
+      </span>
+    </span>
+  );
+}
 
 export function ScanRunner() {
   const params = useSearchParams();
@@ -72,16 +123,13 @@ export function ScanRunner() {
     };
   }, [target]);
 
-  const domain = (result?.finalUrl ?? target)
-    .replace(/^https?:\/\//, "")
-    .replace(/\/$/, "");
+  const domain = (result?.finalUrl ?? target).replace(/^https?:\/\//, "").replace(/\/$/, "");
 
-  // No address in the link at all: knowable without running anything.
-  if (!target) {
+  if (!target || (settled && (error || !result))) {
     return (
       <div className="rounded-3xl border border-border bg-surface p-8 text-center">
         <h1 className="text-2xl font-bold text-foreground">We couldn&apos;t scan that</h1>
-        <p className="mx-auto mt-3 max-w-md text-muted">{ERRORS.invalid_url}</p>
+        <p className="mx-auto mt-3 max-w-md text-muted">{error || ERRORS.invalid_url}</p>
         <Link
           href="/free-audit"
           className="brand-gradient-bg mt-7 inline-flex rounded-full px-6 py-3 text-sm font-semibold text-white"
@@ -92,13 +140,14 @@ export function ScanRunner() {
     );
   }
 
-  if (!settled) {
+  if (!settled || !result) {
     return (
       <div>
-        <p className="text-sm text-muted">Scanning</p>
-        <h1 className="mt-1 break-all text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+        <p className="text-sm text-muted">Scan in progress</p>
+        <h1 className="mt-1 break-all text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           {domain}
         </h1>
+        <p className="mt-2 text-sm text-muted">Takes about twenty seconds.</p>
         <div className="mt-8">
           <ScanProgress done={false} />
         </div>
@@ -106,115 +155,82 @@ export function ScanRunner() {
     );
   }
 
-  if (error || !result) {
-    return (
-      <div className="rounded-3xl border border-border bg-surface p-8 text-center">
-        <h1 className="text-2xl font-bold text-foreground">We couldn&apos;t scan that</h1>
-        <p className="mx-auto mt-3 max-w-md text-muted">{error}</p>
-        <Link
-          href="/free-audit"
-          className="brand-gradient-bg mt-7 inline-flex rounded-full px-6 py-3 text-sm font-semibold text-white"
-        >
-          Try another address
-        </Link>
-      </div>
-    );
-  }
-
-  const ordered = [...result.checks].sort((a, b) => RANK[a.severity] - RANK[b.severity]);
   const tone =
-    result.score >= 80 ? "text-emerald-500" : result.score >= 55 ? "text-amber-500" : "text-red-500";
+    result.score >= 7 ? "text-emerald-500" : result.score >= 4 ? "text-amber-500" : "text-red-500";
 
   return (
     <div>
-      <p className="text-sm text-muted">Report for</p>
-      <h1 className="mt-1 break-all text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-        {domain}
-      </h1>
-
-      <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_22rem] lg:items-start">
+      <div className="flex flex-wrap items-start justify-between gap-6">
         <div>
-          <div className="rounded-3xl border border-border bg-surface p-7">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <p className="text-sm text-muted">Overall score</p>
-                <div className="mt-1 flex items-baseline gap-2">
-                  <span className={`text-5xl font-bold tracking-tight ${tone}`}>
-                    {result.score}
-                  </span>
-                  <span className="text-lg text-muted">/ 100</span>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
-                <span className="text-muted">
-                  <strong className="text-foreground">{result.counts.critical}</strong> need fixing
-                </span>
-                <span className="text-muted">
-                  <strong className="text-foreground">{result.counts.warning}</strong> worth a look
-                </span>
-                <span className="text-muted">
-                  <strong className="text-foreground">{result.counts.good}</strong> fine
-                </span>
-              </div>
-            </div>
-          </div>
+          <p className="text-sm text-muted">Your report</p>
+          <h1 className="mt-1 break-all text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            {domain}
+          </h1>
+          <p className="mt-2 text-sm text-muted">
+            {result.pagesFound}+ pages found · checked just now
+          </p>
+        </div>
+        <div className="rounded-3xl border border-border bg-surface px-7 py-5 text-center">
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted">Overall</p>
+          <p className={`mt-1 text-5xl font-bold tracking-tight ${tone}`}>
+            {result.score.toFixed(1)}
+          </p>
+          <p className="text-sm text-muted">out of 10</p>
+        </div>
+      </div>
 
-          <ul className="mt-5 space-y-3">
-            {ordered.map((check) => (
-              <li
-                key={check.id}
-                className={`rounded-2xl border bg-surface p-5 ${TONE[check.severity].ring}`}
-              >
-                <div className="flex items-start gap-3">
-                  <span
-                    aria-hidden
-                    className={`mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full ${TONE[check.severity].dot}`}
-                  />
-                  <div>
-                    <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                      <h2 className="font-semibold text-foreground">{check.label}</h2>
-                      <span className="text-xs font-medium uppercase tracking-wide text-muted">
-                        {TONE[check.severity].label}
-                      </span>
+      <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm">
+        <span className="text-muted">
+          <strong className="text-foreground">{result.counts.critical}</strong> need fixing
+        </span>
+        <span className="text-muted">
+          <strong className="text-foreground">{result.counts.warning}</strong> worth a look
+        </span>
+        <span className="text-muted">
+          <strong className="text-foreground">{result.counts.good}</strong> fine
+        </span>
+      </div>
+
+      <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_21rem] lg:items-start">
+        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+          {result.categories.map((cat) => (
+            <section key={cat.id} className="overflow-hidden rounded-2xl border border-border bg-surface">
+              <header className="flex items-center justify-between gap-4 border-b border-border bg-background px-5 py-4">
+                <h2 className="font-semibold text-foreground">{cat.name}</h2>
+                {cat.score >= 0 && <ScoreRing score={cat.score} />}
+              </header>
+              <ul className="divide-y divide-border">
+                {cat.checks.map((check) => (
+                  <li key={check.id} className="px-5 py-4">
+                    <div className="flex items-start gap-3">
+                      <StatusIcon severity={check.severity} />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                          <span className="font-medium text-foreground">{check.label}</span>
+                          <span className="text-sm text-muted">{check.value}</span>
+                        </div>
+                        {check.why && (
+                          <p className="mt-1.5 text-sm leading-relaxed text-muted">{check.why}</p>
+                        )}
+                      </div>
                     </div>
-                    <p className="mt-1 text-sm text-muted">{check.detail}</p>
-                    {check.why && (
-                      <p className="mt-2 text-sm leading-relaxed text-foreground/80">{check.why}</p>
-                    )}
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
 
-          <p className="mt-5 text-xs leading-relaxed text-muted">
+        <aside className="space-y-5 lg:sticky lg:top-24">
+          <ScanSupportButton domain={domain} score={result.score} />
+          <p className="rounded-2xl border border-border bg-surface px-5 py-4 text-xs leading-relaxed text-muted">
             We read your page the way a browser first loads it. A tag that only fires after a
             cookie banner is accepted won&apos;t show up here, so if something says missing and
             you believe it&apos;s installed, it&apos;s worth checking rather than assuming either
             of us is right.
           </p>
-        </div>
-
-        <aside className="lg:sticky lg:top-24">
-          <ScanSupportButton domain={domain} score={result.score} />
         </aside>
       </div>
-
-      <section className="mt-16 rounded-3xl border border-brand-pink/35 bg-surface p-7 sm:p-9">
-        <div className="mx-auto max-w-xl text-center">
-          <h2 className="text-2xl font-bold tracking-tight text-foreground">
-            Want the parts a scanner can&apos;t see?
-          </h2>
-          <p className="mt-3 leading-relaxed text-muted">
-            This checked your page code. It can&apos;t tell you whether your Google listing is set
-            up properly, where your enquiries go once they arrive, or what your competitors are
-            already running. We go through that by hand and it&apos;s also free.
-          </p>
-        </div>
-        <div className="mx-auto mt-8 max-w-xl">
-          <LeadForm compact askWebsite source={`Website scan: ${domain}`} submitLabel="Get My Full Audit" />
-        </div>
-      </section>
     </div>
   );
 }

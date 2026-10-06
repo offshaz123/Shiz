@@ -5,7 +5,7 @@ import { siteConfig } from "@/lib/site-config";
  * and the score so the conversation starts with context rather than "hi".
  */
 export function ScanSupportButton({ domain, score }: { domain: string; score: number }) {
-  const message = `Hi, I've just run the website scan on ${domain} and it came back ${score}/100. What's next?`;
+  const message = `Hi, I've just run the website scan on ${domain} and it came back ${score.toFixed(1)} out of 10. What's next?`;
   const href = `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(message)}`;
 
   return (
