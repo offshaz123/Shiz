@@ -16,6 +16,85 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-for-removals-man-and-van",
+    title: "Meta & Instagram Ads for Removals and Man-and-Van Businesses",
+    description:
+      "Nobody picks a removals firm on price alone. They're handing strangers everything they own. Here's how to advertise that, and what to show them.",
+    publishedAt: "2026-10-06",
+    keywords: [
+      "Facebook ads removals company UK",
+      "marketing for man and van",
+      "how to get more removal jobs",
+      "advertising a removals business",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Removals is an unusual thing to sell. Most people buy it once every few years, they're stressed when they do, and the decision isn't really about money.",
+          "They are letting two people they've never met into their house, watching them carry everything they own down a flight of stairs, and then following a van containing their entire life across a city. The cheapest quote does not win that. The one that looks careful does.",
+          "Which changes what you advertise, because most removals advertising leads with a price and that's the weakest thing you've got.",
+        ],
+      },
+      {
+        heading: "What people are actually worried about",
+        paragraphs: [
+          "Worth naming, because every one of these is something you can answer in an advert:",
+        ],
+        bullets: [
+          "Will they break something, and what happens if they do",
+          "Will they turn up at all, and turn up on time, on a day that cannot move",
+          "Is the van big enough, or will this turn into two trips and a longer bill",
+          "Are these actual employees or whoever was available that morning",
+          "Will the quote I was given be the price I end up paying",
+        ],
+      },
+      {
+        heading: "Show the things that answer it",
+        paragraphs: [
+          "This is where most removals firms are sitting on their best material without realising it.",
+          "The branded van. Lads in hi-vis with ID badges. Furniture being wrapped properly in blankets rather than thrown in. A sofa coming down a tight staircase without touching the wall. Boxes stacked and labelled. The van packed tight and tidy at the end.",
+          "None of that is a marketing idea, it's just Tuesday. But it answers every single worry on that list without a word of copy, and the firms that look like two blokes and a hire van can't copy any of it.",
+          "If you've got insurance, say so plainly and say what it covers. Most people assume you don't.",
+        ],
+      },
+      {
+        heading: "Qualify in the ad, not on the phone",
+        paragraphs: [
+          "You cannot quote a removal without knowing what's being moved, from where, to where, and when. Four things, and until you have them an enquiry is just a question.",
+          "So get them in the first message. Run the ads into WhatsApp and write the pre-filled text so it starts the job: \"Hi, moving from [postcode] to [postcode] on\" and people finish it without thinking about it.",
+          "Now every enquiry arrives with the information you need, you can price it properly, and you can see instantly whether it's a job worth doing. Someone moving a studio flat two streets away and someone moving a four-bed across the country are completely different businesses, and you want to know which one you're talking to before you ring back.",
+          "Stairs and parking are the two that catch people out. Ask about both early or you'll quote a job and lose money on it.",
+        ],
+      },
+      {
+        heading: "Man-and-van and full removals are different customers",
+        paragraphs: [
+          "Worth separating if you do both, because they want opposite things.",
+          "Man-and-van is price led and decided quickly. A few items, a single room, a student move, something bought off Facebook Marketplace that won't fit in a car. Those people want a rate and availability, and they're comparing you on both.",
+          "A full house move is planned weeks ahead, costs ten times as much, and is bought on confidence. Somebody choosing a firm for that is reading reviews and looking at photographs, not hunting for the cheapest hourly rate.",
+          "Advertise them separately. The copy that wins a £60 job will actively lose you a £700 one, because it makes you look like the cheap option at the exact moment somebody wants reassurance.",
+        ],
+      },
+      {
+        heading: "Office moves are worth a campaign of their own",
+        paragraphs: [
+          "Commercial work is a different buyer again, and it's usually the better margin.",
+          "An office manager isn't worried about the price in the same way. They're worried about downtime, working evenings and weekends, insurance, and whether the IT kit arrives in one piece. Sell on that and the price conversation gets much easier.",
+          "It's a longer sell and fewer enquiries, but one office contract is worth a lot of house moves, and they tend to come back when they expand.",
+        ],
+      },
+      {
+        heading: "Don't generate more work than you can carry",
+        paragraphs: [
+          "This is the one that catches small firms out, and it's worth thinking about before you spend anything.",
+          "One van and a two-man crew can do one or two jobs a day. If the advertising works properly you'll be booked out within a fortnight, and then you're turning work away. Which sounds like a good problem until you notice you're turning away the good jobs because the cheap ones filled the diary first.",
+          "At that point the answer is not more advertising. It's putting your prices up, or taking on a second van, and knowing which one you want before it happens.",
+          "That's also why the quote questions matter so much. When you can only do twenty jobs a month, the ones you take should be the twenty worth taking.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "showing-up-in-ai-answers",
     title: "Showing Up in AI Answers, Not Just Google Results",
     description:

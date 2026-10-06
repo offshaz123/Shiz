@@ -74,6 +74,7 @@ keywords, dealership social strategy).
 - Why Rough Videos Often Beat Polished Ones (video & creative)
 - Reviews or Ads: Which Brings a Local Business More Work? (comparison/explainer)
 - Showing Up in AI Answers, Not Just Google Results (local search & AI)
+- Meta & Instagram Ads for Removals and Man-and-Van Businesses (industry-specific)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -264,7 +265,7 @@ keywords, dealership social strategy).
 ## Backlog — industry-specific (added 2026-09-29 research round)
 - [x] Meta & Instagram Ads for Accident Repair Centres and Bodyshops — target: "marketing for
       bodyshop UK", "Facebook ads accident repair"
-- [ ] Meta & Instagram Ads for Removals and Man-and-Van Businesses — target: "Facebook ads
+- [x] Meta & Instagram Ads for Removals and Man-and-Van Businesses — target: "Facebook ads
       removals company UK", "marketing for man and van"
 - [ ] Meta & Instagram Ads for Landscapers and Garden Services — target: "Facebook ads
       landscaping UK", "marketing for gardeners"
