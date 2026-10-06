@@ -1,9 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import { featuredResult } from "@/content/case-studies";
 import { ReviewBadge } from "./ReviewBadge";
 import { HeroBackdrop } from "./HeroBackdrop";
 import { ClientLogo } from "./ClientLogo";
-import { PresenterBody, PresenterHands } from "./ResultPresenter";
 
 export function HomeHero() {
   return (
@@ -67,14 +67,21 @@ export function HomeHero() {
           <ReviewBadge />
         </div>
 
-        {/* Visual — the result card held up like a board by the illustrated
-            presenter. Her head and shoulders clear the top of the board, her
-            arms run down behind it, and only her hands come back over the top
-            edge in front. Both SVG layers share a viewBox and must carry the
-            same width and offset, which is what keeps the hands on the wrists;
-            the top padding is what reserves room for her above the board. */}
-        <div className="relative mx-auto w-full max-w-lg pt-32 sm:pt-40 lg:max-w-none">
-          <PresenterBody className="pointer-events-none absolute left-1/2 top-0 z-0 w-[260px] -translate-x-1/2 sm:w-[320px]" />
+        {/* Visual — the result card presented like a board. The photo is cut
+            out and cropped to end just under her folded arms, and the top
+            padding here matches its height exactly, so the board's top edge
+            lands beneath her forearms and she reads as leaning on it. Change
+            one of the two and the arms float. */}
+        <div className="relative mx-auto w-full max-w-lg pt-[218px] sm:pt-[274px] lg:max-w-none">
+          <Image
+            src="/images/results-presenter.webp"
+            alt=""
+            aria-hidden
+            width={560}
+            height={820}
+            priority
+            className="pointer-events-none absolute left-1/2 top-0 z-0 h-[230px] w-auto -translate-x-1/2 select-none sm:h-[290px]"
+          />
 
           {/* The board itself */}
           <div className="relative">
@@ -152,9 +159,6 @@ export function HomeHero() {
             </div>
           </div>
 
-          {/* Her hands, back over the front of the board. Same width and offset
-              as the body layer above so the hands meet the wrists. */}
-          <PresenterHands className="pointer-events-none absolute left-1/2 top-0 z-20 w-[260px] -translate-x-1/2 sm:w-[320px]" />
         </div>
       </div>
     </section>
