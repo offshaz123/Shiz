@@ -16,6 +16,84 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "why-your-meta-ads-invoice-is-higher-than-your-budget",
+    title: "Why Your Meta Ads Invoice Is Higher Than the Budget You Set",
+    description:
+      "Four separate things sit between the budget you type in and the money that leaves your account: averaging, VAT, the location fee and billing thresholds.",
+    publishedAt: "2026-10-07",
+    keywords: [
+      "Facebook ads VAT UK",
+      "why is my Facebook ads bill higher than my budget",
+      "Meta ads billing threshold",
+      "VAT on Meta ads UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You set £20 a day, expected to pay somewhere near £600 for the month, and the invoice says £812. Nothing has gone wrong and you haven't been overcharged.",
+          "There are four separate things sitting between the number you type into Ads Manager and the number that leaves your bank account, and most people have never had any of them explained. Worth going through them in order, because the fix is different for each one.",
+        ],
+      },
+      {
+        heading: "Your daily budget is an average, not a ceiling",
+        paragraphs: [
+          "This is the one that causes the most panic, usually on about day three.",
+          "When you set a daily budget, Meta treats it as an average rather than a hard cap. If it sees a day where your audience is cheap to reach or converting well, it can spend up to 75% more than your daily number on that day.",
+          "It balances that out across the week. Your total spend over a calendar week won't exceed seven times your daily budget, assuming you haven't changed the budget partway through. So £20 a day can produce a £35 Tuesday, followed by quieter days to compensate.",
+          "Two practical consequences. A single day's spend tells you almost nothing, so don't judge anything by it. And if you change the budget mid-week, the weekly maths resets around the new number, which is one reason accounts that get fiddled with daily behave unpredictably.",
+          "If you genuinely need a hard ceiling rather than an average, that's what an account spending limit is for. It's a separate setting from your campaign budget and it does stop delivery when it's reached.",
+        ],
+      },
+      {
+        heading: "VAT, and the box nobody filled in",
+        paragraphs: [
+          "If there's 20% on top of your invoice that you weren't expecting, this is almost always why.",
+          "Where Meta doesn't have a valid UK VAT number on file for your ad account, it's generally required to charge UK VAT at the standard rate on your advertising. That's 20% straight onto the bill.",
+          "Add a valid UK VAT number in your billing settings and Meta will typically bill you net instead, with you accounting for the VAT yourself through the reverse charge on your return. For a VAT-registered business the end position is usually neutral, but the cash flow is completely different: you're not handing over an extra fifth every month and waiting to reclaim it.",
+          "Two things worth saying plainly. If you aren't VAT registered you can't do this, and that 20% is simply a real cost you need to build into your planning. And the exact treatment depends on which Meta entity invoices you and on your own VAT position, so confirm the detail with your accountant rather than taking a blog's word for it.",
+          "What we would say is go and look at whether that field is filled in. A lot of accounts have been running for years with it empty.",
+        ],
+      },
+      {
+        heading: "The location fee sits outside your budget too",
+        paragraphs: [
+          "Since 1 July, Meta adds a 2% location fee on ads delivered to UK audiences. It's based on where the ads are shown rather than where your business is, and it appears as its own line rather than coming out of the budget you set.",
+          "It's small next to VAT, but it stacks with everything else here. We've written about it separately if you want the detail on how it works and who it applies to.",
+        ],
+      },
+      {
+        heading: "Billing thresholds make the timing look wrong",
+        paragraphs: [
+          "This one doesn't change what you pay. It changes when, and it's behind most of the \"why have I been charged twice this month\" messages we get.",
+          "Meta charges you when your spend reaches your billing threshold, or on your monthly billing date, whichever comes first. New accounts start on a low threshold, and it rises as you spend more and build up a payment history.",
+          "So a month where you increase spend can trigger a threshold charge partway through, then the normal monthly bill on top. Two charges, same month, nothing wrong with either. It looks alarming on a bank statement when you're expecting one payment.",
+          "Before you worry, check the date range rather than the amount. Compare like for like inside the billing section of Ads Manager instead of comparing a single bank charge against your monthly budget.",
+        ],
+      },
+      {
+        heading: "Working out which one is hitting you",
+        paragraphs: [
+          "Open the billing section in Ads Manager and look at an actual invoice, not the campaign view. The invoice breaks out spend, fees and tax as separate lines. The campaign dashboard doesn't, which is why it never explains the gap.",
+          "From there it's usually obvious:",
+        ],
+        bullets: [
+          "Spend line higher than budget × days — budget averaging, or a budget you changed mid-flight",
+          "A 20% tax line — VAT, and probably a missing VAT number in your settings",
+          "A small separate fee line — the UK location fee",
+          "Total looks right but the dates don't — a billing threshold charge landing early",
+        ],
+      },
+      {
+        heading: "What this means for planning a budget",
+        paragraphs: [
+          "The upshot is that the number you type into Ads Manager is not your marketing cost, and planning as though it is will leave you short every month.",
+          "If you're VAT registered with your number on file, your real cost is roughly your budget plus the location fee. If you're not VAT registered, it's your budget plus 20% plus the fee, so a £500 budget is nearer £610 leaving the account.",
+          "Work backwards from what you can genuinely afford to leave your account, rather than forwards from the budget field. And if you're tracking cost per lead, decide once whether you're using gross or net spend and then stay consistent. The two numbers can differ by a fifth, which is more than enough to make a campaign look like it's failing when it isn't.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-for-removals-man-and-van",
     title: "Meta & Instagram Ads for Removals and Man-and-Van Businesses",
     description:

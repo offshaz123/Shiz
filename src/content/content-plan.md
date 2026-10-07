@@ -75,6 +75,7 @@ keywords, dealership social strategy).
 - Reviews or Ads: Which Brings a Local Business More Work? (comparison/explainer)
 - Showing Up in AI Answers, Not Just Google Results (local search & AI)
 - Meta & Instagram Ads for Removals and Man-and-Van Businesses (industry-specific)
+- Why Your Meta Ads Invoice Is Higher Than the Budget You Set (platform & policy changes)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -239,7 +240,7 @@ keywords, dealership social strategy).
 ## Backlog — platform & policy changes (added 2026-09-29 research round)
 - [x] Meta's 2% UK Location Fee: What It Means for Your Ad Budget — target: "Meta location fee
       UK", "Meta digital services tax advertisers"
-- [ ] Why Your Meta Ads Invoice Is Higher Than the Budget You Set — target: "Facebook ads VAT
+- [x] Why Your Meta Ads Invoice Is Higher Than the Budget You Set — target: "Facebook ads VAT
       UK", "why is my Facebook ads bill higher than my budget"
 
 ## Backlog — local search & AI (added 2026-09-29 research round)
