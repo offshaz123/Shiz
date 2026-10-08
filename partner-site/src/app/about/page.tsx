@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { brand } from "@/lib/brand";
 import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
+import { PhotoFigure } from "@/components/PhotoFigure";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { IconTile } from "@/components/IconTile";
 
@@ -129,6 +130,7 @@ export default function AboutPage() {
 
       {/* The one block about the arrangement. Three paragraphs, no names. */}
       <Section tone="surface">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
         <div className="max-w-3xl">
           <SectionHeading
             eyebrow="Our commitment"
@@ -153,6 +155,15 @@ export default function AboutPage() {
               in the footer of every page on this site.
             </p>
           </div>
+        </div>
+          <PhotoFigure
+            src="/images/client-meeting.webp"
+            alt="Two advisers shaking hands with a client across a desk, a laptop open between them"
+            width={451}
+            height={679}
+            caption="You deal with us. The regulated infrastructure sits behind the account."
+            className="hidden lg:block"
+          />
         </div>
       </Section>
 

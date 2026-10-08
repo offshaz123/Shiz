@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { onboardingChecklist, faqs } from "@/content/site";
 import { Section, SectionHeading, Eyebrow, Card } from "@/components/Section";
+import { PhotoFigure } from "@/components/PhotoFigure";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { BreadcrumbJsonLd, FaqJsonLd } from "@/components/StructuredData";
 import { RegulatoryNote } from "@/components/RegulatoryNote";
@@ -68,11 +69,20 @@ export default function OpeningAnAccountPage() {
       </Section>
 
       <Section tone="surface">
-        <SectionHeading
-          eyebrow="The checklist"
-          title="What to have ready"
-          lede="Gather all of it before you send anything. Seven items, and the last one matters more than people expect."
-        />
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+          <SectionHeading
+            eyebrow="The checklist"
+            title="What to have ready"
+            lede="Gather all of it before you send anything. Seven items, and the last one matters more than people expect."
+          />
+          <PhotoFigure
+            src="/images/adviser-phone.webp"
+            alt="A business owner checking her account on a phone in a cafe"
+            width={547}
+            height={365}
+            className="hidden lg:block"
+          />
+        </div>
         <ol className="mt-12 space-y-4">
           {onboardingChecklist.map((entry, index) => (
             <li
