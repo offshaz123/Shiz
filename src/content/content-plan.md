@@ -76,6 +76,7 @@ keywords, dealership social strategy).
 - Showing Up in AI Answers, Not Just Google Results (local search & AI)
 - Meta & Instagram Ads for Removals and Man-and-Van Businesses (industry-specific)
 - Why Your Meta Ads Invoice Is Higher Than the Budget You Set (platform & policy changes)
+- Keyword Stuffing Your Business Name Will Cost You (local search)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -248,7 +249,7 @@ keywords, dealership social strategy).
       "how to appear in AI search results UK"
 - [x] Why Google Suspended Your Business Profile, and How to Get It Back — target: "Google
       Business Profile suspended UK", "GBP reinstatement"
-- [ ] Keyword Stuffing Your Business Name Will Cost You — target: "Google Business Profile name
+- [x] Keyword Stuffing Your Business Name Will Cost You — target: "Google Business Profile name
       rules", "adding keywords to business name Google"
 
 ## Backlog — cost & expectation-setting (added 2026-09-29 research round)
@@ -274,6 +275,38 @@ keywords, dealership social strategy).
 ## Backlog — comparison/explainer (added 2026-09-29 research round)
 - [x] Reviews or Ads: Which Brings a Local Business More Work? — target: "do online reviews
       bring customers", "reviews vs advertising local business UK"
+
+## Backlog — Meta mechanics & platform change (added 2026-10-08 research round)
+- [ ] Advantage+ Audience: What Happened to Interest Targeting — target: "Advantage+ audience
+      explained", "Meta detailed targeting removed 2026"
+- [ ] Creative Fatigue: How to Tell an Ad Has Stopped Working — target: "Facebook ad creative
+      fatigue", "ad frequency too high"
+- [ ] Why Pausing the Wrong Thing Resets Your Campaign — target: "Facebook ads learning phase
+      reset", "pausing ad vs ad set"
+- [ ] What Happens to Your Ads When You Change the Budget Mid-Flight — target: "changing Facebook
+      ad budget resets learning"
+
+## Backlog — local search (added 2026-10-08 research round)
+- [ ] Choosing the Right Primary Category on Google Business Profile — target: "Google Business
+      Profile primary category", "which category should I choose Google"
+- [ ] Duplicate Google Listings, and How to Get Rid of Them — target: "duplicate Google Business
+      Profile", "merge Google listings UK"
+- [ ] Service Area Businesses: Should You Hide Your Address? — target: "service area business
+      Google", "hide address Google Business Profile"
+- [ ] Review Gating: The Shortcut That Gets Your Listing Suspended — target: "review gating Google
+      policy", "asking only happy customers for reviews" (note: also touches DMCC Act 2024)
+- [ ] How Long Google Business Profile Verification Actually Takes — target: "Google Business
+      Profile verification time UK", "video verification Google"
+
+## Backlog — practical how-to (added 2026-10-08 research round)
+- [ ] Writing Location Pages That Aren't Just the Town Name Swapped — target: "location pages
+      SEO", "service area pages thin content"
+- [ ] How Many Ad Creatives Do You Actually Need Each Month? — target: "how many Facebook ads to
+      run at once", "creative refresh cadence"
+
+## Backlog — comparison/explainer (added 2026-10-08 research round)
+- [ ] Broad Targeting vs Interests: Which Works for a Local Business Now? — target: "broad
+      targeting Facebook ads", "interest targeting vs broad audience"
 
 ## Notes for whoever (human or Routine) picks the next topic
 - Rotate categories — don't publish 3 industry guides in a row

@@ -16,6 +16,92 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "keyword-stuffing-your-business-name-will-cost-you",
+    title: "Keyword Stuffing Your Business Name Will Cost You",
+    description:
+      "Putting \"Builder Manchester\" in your Google listing name works, right up until it doesn't. Here is what Google's rules actually say and what happens when you break them.",
+    publishedAt: "2026-10-08",
+    keywords: [
+      "Google Business Profile name rules",
+      "adding keywords to business name Google",
+      "Google Business Profile suspended name",
+      "business name guidelines Google",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Somebody tells you that putting your trade and your town in your Google listing name helps you rank. You change \"Mahee Builders\" to \"Mahee Builders | Extensions & Loft Conversions Manchester\", and for a while the map rankings do move.",
+          "That is the problem. It works often enough that people keep recommending it, and the bill arrives later.",
+        ],
+      },
+      {
+        heading: "What the rule actually says",
+        paragraphs: [
+          "Google's guidelines are short and not ambiguous: your name should reflect your business's real-world name, the one on your signage, your website and your paperwork.",
+          "Then there's a list of what isn't allowed in it. Including unnecessary information in your business name isn't permitted, and the examples given are:",
+        ],
+        bullets: [
+          "Marketing taglines and slogans",
+          "Store or branch codes",
+          "Trademark and registered symbols",
+          "Fully capitalised words, unless that's genuinely how the brand is styled",
+          "Opening hours, or whether you're open now",
+          "Phone numbers and website addresses",
+          "Product or service descriptions, which is the one that catches most trades",
+          "Location details such as landmarks, exit numbers or \"near\" phrases",
+          "\"Inside\" or \"at\" another business",
+          "The same name repeated in more than one language or script",
+        ],
+      },
+      {
+        heading: "The bits people get wrong in both directions",
+        paragraphs: [
+          "A town in your name is fine when it's genuinely part of the brand. Google's own example is Holiday Inn Salem. If your company is actually called Salford Roofing Co, that is your name and nobody is going to argue. What isn't allowed is bolting a town on to a name that doesn't have one.",
+          "Ltd, LLC and similar need real-world proof that they're consistently part of the name, so you can't add one for authority if it isn't on your paperwork.",
+          "And there's a trap on the way out. If you change the name to something that isn't a genuine rebrand, Google treats it as a different business, which means the existing profile should be marked closed. That is not what you want happening to a listing carrying years of reviews.",
+        ],
+      },
+      {
+        heading: "What happens when you break it",
+        paragraphs: [
+          "The consequence written into the guidelines is plain: a non-compliant name could result in the suspension of your Business Profile, and Google reserves the right to suspend access for guideline violations generally. In some cases it goes as far as removing your business information from Google altogether.",
+          "In practice it usually starts smaller. The name gets quietly edited back. You might be asked to verify again. Visibility slips without an announcement.",
+          "The reason this is worse than it sounds is what a suspension takes with it. While a profile is suspended it is not in search and not on Maps, and for a local business that is most of the phone calls. Reviews, photos and the years of history sitting on that listing are all attached to the thing that just disappeared, over a few words you added to the name.",
+        ],
+      },
+      {
+        heading: "You're more likely to be reported than caught",
+        paragraphs: [
+          "People assume Google is scanning for this. Sometimes it is, but the usual route is simpler and more reliable: anyone can suggest an edit to your listing, and your competitors can see exactly what you've done.",
+          "If you're the only roofer in town with the word \"roofer\" in your name, you have not found a loophole, you have made yourself the obvious one to report. The businesses most likely to do it are the ones directly beneath you in the map pack.",
+          "Which means the risk isn't spread evenly. It rises the better the trick works.",
+        ],
+      },
+      {
+        heading: "Where the keywords are supposed to go",
+        paragraphs: [
+          "The irritating part is that the thing people are reaching for is available elsewhere on the same profile, through fields built for it.",
+        ],
+        bullets: [
+          "Your primary category. This carries real weight and takes about thirty seconds to change. Picking the wrong one is a far more common problem than a boring name",
+          "Secondary categories, for the other things you genuinely do",
+          "The services list, where you can name every job type in your own words",
+          "The business description",
+          "Your products, where they apply",
+          "Posts, which almost nobody uses and which let you write about specific work in specific places",
+        ],
+      },
+      {
+        heading: "If you've already done it",
+        paragraphs: [
+          "Change it back before somebody else decides for you. A name you corrected yourself is a non-event. A name Google corrected, or suspended you over, is a month of your phone not ringing.",
+          "One thing worth knowing if you're already suspended: don't carry on making edits while an appeal is open. A flurry of changes to a flagged profile reads as working around the problem rather than fixing it.",
+          "Then do the unglamorous version. Right category, services filled in, description written, a page on your site for each area you cover that says something real about working there. It is slower than a name change and it is not at risk of vanishing on a Tuesday because a competitor filled in a form.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "why-your-meta-ads-invoice-is-higher-than-your-budget",
     title: "Why Your Meta Ads Invoice Is Higher Than the Budget You Set",
     description:
