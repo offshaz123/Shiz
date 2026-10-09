@@ -2,6 +2,7 @@ import { site } from "./site";
 import type { StyleId } from "./plates";
 
 export const promos = [
+  "Premium plates, handcrafted in-house",
   "FREE tracked delivery on every order",
   `Same-day dispatch when you order before ${site.dispatchCutoff}`,
   "100% road legal · BS AU 145e",
@@ -29,7 +30,7 @@ export const products: {
       "Made to BS AU 145e on high-impact acrylic",
       "Legal Charles Wright font and spacing",
       "Optional flag badge, EV green flash and border",
-      "Great value for a straight replacement",
+      "A crisp, factory-fresh finish for a perfect replacement",
     ],
   },
   {

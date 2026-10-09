@@ -28,11 +28,11 @@ export const styles: {
   {
     id: "standard",
     name: "Standard",
-    blurb: "Classic flat print. Clean, crisp and great value.",
+    blurb: "Classic flat print with a crisp, factory-fresh finish.",
     look: "flat",
     depth: 0,
-    pair: 1999,
-    single: 1199,
+    pair: 2499,
+    single: 1499,
   },
   {
     id: "3d-gel",
@@ -40,8 +40,8 @@ export const styles: {
     blurb: "Raised, glossy resin gel letters that catch the light.",
     look: "gel",
     depth: 1,
-    pair: 2999,
-    single: 1799,
+    pair: 3699,
+    single: 2199,
   },
   {
     id: "4d-3mm",
@@ -49,8 +49,8 @@ export const styles: {
     blurb: "3mm laser-cut acrylic letters for a sharp, raised look.",
     look: "acrylic",
     depth: 1.6,
-    pair: 3499,
-    single: 2099,
+    pair: 3999,
+    single: 2399,
   },
   {
     id: "4d-5mm",
@@ -58,8 +58,8 @@ export const styles: {
     blurb: "Deeper 5mm laser-cut acrylic letters for a bolder finish.",
     look: "acrylic",
     depth: 2.6,
-    pair: 3999,
-    single: 2399,
+    pair: 4499,
+    single: 2699,
   },
   {
     id: "5mm-gel",
@@ -67,8 +67,8 @@ export const styles: {
     blurb: "5mm acrylic letters topped with glossy gel.",
     look: "gel",
     depth: 2.6,
-    pair: 4499,
-    single: 2699,
+    pair: 4999,
+    single: 2999,
   },
   {
     id: "7mm-gel",
@@ -76,8 +76,8 @@ export const styles: {
     blurb: "Our deepest 7mm gel letters. Maximum impact.",
     look: "gel",
     depth: 3.6,
-    pair: 4999,
-    single: 2999,
+    pair: 5999,
+    single: 3599,
   },
 ];
 
@@ -113,8 +113,8 @@ export const fixings: { id: FixingId; name: string; note: string; price: number 
 ];
 
 export const extrasPrice = {
-  badge: 299,
-  border: 299,
+  badge: 399,
+  border: 349,
 } as const;
 
 export const delivery: { id: DeliveryId; name: string; note: string; price: number }[] = [

@@ -447,7 +447,7 @@ Replace your plates if they're:
 - Peeling or delaminating
 - Hard to read from a distance
 
-New plates are quick and affordable. [Design a new set](/design) and we'll dispatch the same day if you order before 2pm on a working day.`,
+A fresh set of premium plates is quick and easy to order. [Design a new set](/design) and we'll dispatch the same day if you order before 2pm on a working day.`,
   },
   {
     slug: "bought-a-private-plate",
@@ -764,7 +764,7 @@ Ready to order? [Design your plates](/design) and see a live preview in seconds.
 
 You'll get the **V5C/2 new keeper supplement** while the DVLA sends you a new logbook. You can use it to order new plates straight away. See [which documents are accepted](/blog/documents-needed-to-buy-number-plates).
 
-Lots of people treat themselves to a fresh set to make a used car feel new. A set of [4D plates](/4d-plates) is one of the cheapest ways to transform how a car looks. [Start here](/design).`,
+Lots of people treat themselves to a fresh set to make a used car feel new. A set of [4D plates](/4d-plates) is one of the simplest ways to transform how a car looks. [Start here](/design).`,
   },
   {
     slug: "are-number-plate-borders-legal",
@@ -818,7 +818,7 @@ In our [plate builder](/design), open the **Additions** tab and choose **Black b
 
 ## Can I just tape or glue it?
 
-It's best not to. Repairs rarely last, can make the plate harder to read, and won't fix the problem for your MOT. A replacement is quick and affordable.
+It's best not to. Repairs rarely last, can make the plate harder to read, and won't fix the problem for your MOT. A new, properly made plate is the right fix, and it's quick to order.
 
 ## How to avoid it next time
 

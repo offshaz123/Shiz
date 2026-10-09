@@ -19,14 +19,14 @@ export default function AboutPage() {
   return (
     <>
       <PageHero eyebrow="Our story" title="About PlatedUp">
-        Premium number plates without the premium hassle.
+        Premium number plates, handcrafted with care.
       </PageHero>
       <div className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
         <div className="prose-plate mx-auto max-w-3xl">
           <p>
-            PlatedUp was started with one simple idea: getting great-looking number plates should be
-            quick, easy and fully legal. Whether you want a straight replacement or a bold set of 4D
-            plates, we make them to order on our own equipment and get them to you fast.
+            PlatedUp was started with one simple idea: your number plates should look as good as your
+            car. Whether you want a perfect replacement or a bold set of 4D plates, every plate is made
+            to order in our own workshop, finished by hand and checked before it leaves us.
           </p>
           <p>
             We&apos;re a DVLA registered number plate supplier, so every plate we sell is made to

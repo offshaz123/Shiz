@@ -9,18 +9,18 @@ import { site } from "@/lib/site";
 
 const features = [
   {
-    title: "FREE Delivery on all orders",
+    title: "Free Tracked Delivery",
     text: `Order before ${site.dispatchCutoff} for same day dispatch`,
     icon: "M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z",
   },
   {
-    title: "DVLA Compliant",
-    text: "All plates meet UK legal standards",
+    title: "Premium & Road Legal",
+    text: "Made to BS AU 145e by a DVLA registered supplier",
     icon: "M12 2 4 5v6c0 5 3.4 9.5 8 11 4.6-1.5 8-6 8-11V5l-8-3Z",
   },
   {
-    title: "Fast & Reliable",
-    text: "Made in the UK on our own equipment",
+    title: "Handcrafted In-House",
+    text: "Made and checked by hand in our Hornchurch workshop",
     icon: "M3 7h11v9H3zM14 10h4l3 3v3h-7zM7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z",
   },
 ];
@@ -68,7 +68,7 @@ export default function Home() {
         />
         <div className="relative mx-auto max-w-5xl px-4 py-16 text-center sm:px-6 sm:py-24">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-sm font-semibold">
-            ✦ FREE Delivery Available on all orders
+            ✦ Premium handcrafted plates · Free tracked delivery
           </span>
           <h1 className="mt-6 font-display text-5xl font-bold leading-[0.95] sm:text-7xl">
             UK Number Plates
@@ -76,7 +76,7 @@ export default function Home() {
             <span className="text-[#f6e6ae]">Built to Perfection</span>
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-lg text-white/90 sm:text-xl">
-            Road-legal 2D, 3D gel &amp; 4D registration plates made to the highest standards.
+            Premium road-legal 3D gel &amp; 4D number plates, handcrafted and finished by hand.
           </p>
 
           <div className="mx-auto mt-8 max-w-xl rounded-2xl border border-white/25 bg-white/10 p-5 text-white backdrop-blur sm:p-6">
