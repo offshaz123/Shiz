@@ -205,6 +205,87 @@ export function customerOrderEmail(o: Order, images: ImageMode = "web") {
   };
 }
 
+// Sent when the shop presses "Mark dispatched" in the admin.
+export function customerDispatchEmail(o: Order, images: ImageMode = "web") {
+  const first = o.customer_name.split(" ")[0] || "there";
+  const plates = o.items.reduce((n, i) => n + i.qty, 0);
+  const helpHref = whatsappHref.replace(
+    encodeURIComponent("I'm a customer and I need some help"),
+    encodeURIComponent(`I need some help with my order ${o.ref}`),
+  );
+  const hasLegal = o.items.some((i) => i.type !== "show");
+
+  const steps = [
+    ["Order placed", fmtDate(o.paid_at ?? o.created_at)],
+    ["Plates made", "Pressed and checked by hand"],
+    ["Dispatched", fmtDate(new Date())],
+  ]
+    .map(
+      ([label, sub]) => `<td width="33%" align="center" valign="top" style="padding:0 4px;">
+        <div style="width:30px;height:30px;line-height:30px;margin:0 auto;border-radius:999px;background:${GOLD};color:#ffffff;font:700 15px Arial,sans-serif;">&#10003;</div>
+        <p style="font:700 13px Arial,sans-serif;color:${INK};margin:8px 0 2px;">${label}</p>
+        <p style="font:12px Arial,sans-serif;color:${MUTED};margin:0;">${esc(sub)}</p>
+      </td>`,
+    )
+    .join("");
+
+  const html = layout(
+    `Your PlatedUp order ${o.ref} is on its way`,
+    `Good news ${first}! Your plates have been dispatched.`,
+    `
+    <p style="margin:0 0 10px;"><span style="display:inline-block;background:#e7f6ec;color:#1f7a3d;font:700 13px Arial,sans-serif;padding:6px 12px;border-radius:999px;">&#128666; Dispatched</span></p>
+    <p style="font:700 26px Arial,sans-serif;color:${INK};margin:0 0 6px;">Your plates are on their way, ${esc(first)}!</p>
+    <p style="font:15px/1.6 Arial,sans-serif;color:${MUTED};margin:0 0 20px;">Good news: we've finished making your ${plates === 1 ? "plate" : `${plates} plates`} and ${plates === 1 ? "it's" : "they're"} been sent out. Order <strong style="color:${INK};">${o.ref}</strong></p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 8px;background:${CREAM};border:1px solid ${LINE};border-radius:12px;">
+      <tr><td style="padding:18px 8px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${steps}</tr></table></td></tr>
+    </table>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${itemsHtml(o, 544, images)}</table>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:22px;background:${CREAM};border:1px solid ${LINE};border-radius:12px;">
+      <tr><td style="padding:16px 18px;">
+        <p style="font:700 14px Arial,sans-serif;color:${GOLD};letter-spacing:1px;text-transform:uppercase;margin:0 0 6px;">Sent to</p>
+        <p style="font:15px/1.5 Arial,sans-serif;color:${INK};margin:0;">${esc(o.customer_name)}<br />${esc(o.address1)}${o.address2 ? `<br />${esc(o.address2)}` : ""}<br />${esc(o.town)} ${esc(o.postcode)}</p>
+        <p style="font:14px Arial,sans-serif;color:${MUTED};margin:8px 0 0;">${esc(o.delivery_name)}</p>
+      </td></tr>
+    </table>
+
+    <p style="font:700 18px Arial,sans-serif;color:${INK};margin:24px 0 8px;">When your plates arrive</p>
+    <p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0 0 6px;">&#10003; Check the registration and style are exactly as you ordered.</p>
+    <p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0 0 6px;">&#10003; Peel off the protective film after fitting for a perfect finish.</p>
+    ${hasLegal ? `<p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0 0 6px;">&#10003; Fit them straight away: your plates are made to BS AU 145e and fully road legal.</p>` : ""}
+    <p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0;">&#10003; Not arrived after a few working days? Just message us.</p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:26px 0 8px;background:#f1faf3;border:1px solid #cfe6d4;border-radius:12px;">
+      <tr><td style="padding:16px 18px;">
+        <p style="font:700 16px Arial,sans-serif;color:${INK};margin:0 0 4px;">Any questions or issues?</p>
+        <p style="font:14px/1.5 Arial,sans-serif;color:${MUTED};margin:0 0 12px;">Message us on WhatsApp with your order number and a real person will help.</p>
+        ${button(helpHref, "Chat on WhatsApp", "#25D366")}
+      </td></tr>
+    </table>
+
+    <p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:20px 0 0;">Thanks for choosing ${site.name}. Enjoy your new plates!</p>
+    `,
+    images,
+  );
+
+  const text = [
+    `Your plates are on their way, ${first}!`,
+    `Order ${o.ref} has been dispatched.`,
+    "",
+    ...o.items.map((i) => `- "${i.reg}" × ${i.qty}: ${describe(i)}`),
+    "",
+    `Sent to: ${o.customer_name}, ${o.address1}${o.address2 ? `, ${o.address2}` : ""}, ${o.town} ${o.postcode}`,
+    `Delivery: ${o.delivery_name}`,
+    "",
+    "Not arrived after a few working days? Just message us.",
+    `Questions? WhatsApp us: ${helpHref}`,
+  ].join("\n");
+
+  return { subject: `Your order ${o.ref} has been dispatched 🚚`, html, text };
+}
+
 export function shopOrderEmail(o: Order, docCount: number, images: ImageMode = "web") {
   const paid = o.amount_paid !== null;
   const card = cardLine(o);

@@ -45,6 +45,10 @@ function Field({
   );
 }
 
+const GUEST_KEY = "platedup-guest-checkout";
+
+type Account = { name: string; email: string; phone: string; address1: string; address2: string; town: string; postcode: string };
+
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, ready, subtotal } = useCart();
@@ -54,23 +58,34 @@ export default function CheckoutPage() {
   const [error, setError] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
   const [savedAddress, setSavedAddress] = useState<{ address1: string; address2: string; town: string; postcode: string }>();
+  // undefined = still checking, null = not logged in.
+  const [account, setAccount] = useState<Account | null | undefined>(undefined);
+  const [guest, setGuest] = useState(false);
 
-  // Logged-in customers get their saved details filled in.
+  // Who's checking out? Logged-in customers skip straight to the form.
   useEffect(() => {
-    if (!ready || items.length === 0) return;
+    try {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- remember "continue as guest" for this visit
+      setGuest(sessionStorage.getItem(GUEST_KEY) === "1");
+    } catch {}
     fetch("/api/account")
       .then((r) => r.json())
-      .then(({ user }) => {
-        const form = formRef.current;
-        if (!user || !form) return;
-        for (const key of ["name", "email", "phone"]) {
-          const input = form.elements.namedItem(key) as HTMLInputElement | null;
-          if (input && !input.value && user[key]) input.value = user[key];
-        }
-        setSavedAddress({ address1: user.address1, address2: user.address2, town: user.town, postcode: user.postcode });
-      })
-      .catch(() => {});
-  }, [ready, items.length]);
+      .then(({ user }) => setAccount(user ?? null))
+      .catch(() => setAccount(null));
+  }, []);
+
+  const showForm = account !== undefined && (account !== null || guest);
+
+  // Fill in saved details once the form is on screen.
+  useEffect(() => {
+    const form = formRef.current;
+    if (!account || !form) return;
+    for (const key of ["name", "email", "phone"] as const) {
+      const input = form.elements.namedItem(key) as HTMLInputElement | null;
+      if (input && !input.value && account[key]) input.value = account[key];
+    }
+    setSavedAddress({ address1: account.address1, address2: account.address2, town: account.town, postcode: account.postcode });
+  }, [account, showForm]);
 
   if (!ready) return <div className="min-h-[50vh]" />;
   if (items.length === 0)
@@ -80,6 +95,54 @@ export default function CheckoutPage() {
         <Link href="/design" className="btn btn-gold mt-8">
           Design Your Plate
         </Link>
+      </div>
+    );
+
+  if (account === undefined) return <div className="min-h-[50vh]" />;
+
+  // Not logged in: offer log in, sign up, or guest checkout.
+  if (!showForm)
+    return (
+      <div className="bg-surface px-4 py-14">
+        <div className="mx-auto max-w-3xl">
+          <h1 className="text-center font-display text-4xl font-bold uppercase">Checkout</h1>
+          <p className="mt-2 text-center text-muted">How would you like to continue?</p>
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <div className="rounded-3xl border border-line bg-white p-6">
+              <h2 className="font-display text-2xl font-bold">Have an account?</h2>
+              <p className="mt-1 text-sm text-muted">
+                Log in or create one to track your order, see all your orders in one place and check out faster next time.
+              </p>
+              <div className="mt-5 grid gap-3">
+                <Link href="/login?next=/checkout" className="btn btn-gold rounded-lg">
+                  Log in
+                </Link>
+                <Link href="/signup?next=/checkout" className="btn btn-white rounded-lg">
+                  Create an account
+                </Link>
+              </div>
+            </div>
+            <div className="rounded-3xl border border-line bg-white p-6">
+              <h2 className="font-display text-2xl font-bold">Checkout as a guest</h2>
+              <p className="mt-1 text-sm text-muted">
+                No account needed. You&apos;ll still get your order confirmation and receipt by email, but you won&apos;t be able
+                to see the order in an account.
+              </p>
+              <button
+                type="button"
+                className="btn btn-dark mt-5 w-full rounded-lg"
+                onClick={() => {
+                  setGuest(true);
+                  try {
+                    sessionStorage.setItem(GUEST_KEY, "1");
+                  } catch {}
+                }}
+              >
+                Continue as guest
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     );
 
@@ -113,6 +176,20 @@ export default function CheckoutPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
       <h1 className="font-display text-4xl font-bold uppercase">Checkout</h1>
+      <p className="mt-2 text-sm text-muted">
+        {account ? (
+          <>
+            Checking out as <strong className="text-ink">{account.name}</strong> ({account.email})
+          </>
+        ) : (
+          <>
+            Checking out as a guest ·{" "}
+            <Link href="/login?next=/checkout" className="font-semibold text-gold underline">
+              Log in instead
+            </Link>
+          </>
+        )}
+      </p>
       <form ref={formRef} onSubmit={onSubmit} className="mt-8 grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
         <div className="space-y-6">
           <Section n={1} title="Your details">
@@ -191,7 +268,8 @@ export default function CheckoutPage() {
                 {needsDocs
                   ? "I confirm I am entitled to display these registration numbers"
                   : "I understand show plates are not road legal and won't use them on the road"}
-                , and I agree to the{" "}
+                . I&apos;ve checked my plate details are correct and understand personalised plates can&apos;t be refunded if
+                entered wrong. I agree to the{" "}
                 <Link href="/terms-conditions" className="underline" target="_blank">
                   terms &amp; conditions
                 </Link>

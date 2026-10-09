@@ -1,12 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const [error, setError] = useState("");
   const [sending, setSending] = useState(false);
   const signup = mode === "signup";
+  // Keep "where to go next" (e.g. back to checkout) when switching between log in and sign up.
+  const [next, setNext] = useState("");
+  useEffect(() => {
+    const n = new URLSearchParams(window.location.search).get("next") ?? "";
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- read the return address after hydration
+    setNext(n.startsWith("/") && !n.startsWith("//") ? n : "");
+  }, []);
+  const withNext = (path: string) => (next ? `${path}?next=${encodeURIComponent(next)}` : path);
 
   return (
     <form
@@ -24,9 +32,8 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
           });
           const json = await res.json().catch(() => ({}));
           if (!res.ok) throw new Error(json.error ?? "Something went wrong. Please try again.");
-          const next = new URLSearchParams(window.location.search).get("next");
           // Full page load so the header picks up the new login.
-          window.location.href = json.redirect === "/account" && next?.startsWith("/") && !next.startsWith("//") ? next : json.redirect;
+          window.location.href = json.redirect === "/account" && next ? next : json.redirect;
         } catch (err) {
           setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
           setSending(false);
@@ -73,14 +80,14 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         {signup ? (
           <>
             Already have an account?{" "}
-            <Link href="/login" className="font-semibold text-gold underline">
+            <Link href={withNext("/login")} className="font-semibold text-gold underline">
               Log in
             </Link>
           </>
         ) : (
           <>
             New to PlatedUp?{" "}
-            <Link href="/signup" className="font-semibold text-gold underline">
+            <Link href={withNext("/signup")} className="font-semibold text-gold underline">
               Create an account
             </Link>
           </>

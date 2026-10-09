@@ -80,12 +80,15 @@ function Radio({
   );
 }
 
-export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
+export function Builder({ initial, showPlateNotice = false }: { initial: Partial<PlateConfig>; showPlateNotice?: boolean }) {
   const router = useRouter();
   const { add } = useCart();
   const [c, setC] = useState<PlateConfig>({ ...defaultConfig, ...initial });
   const [tab, setTab] = useState(0);
   const [regError, setRegError] = useState("");
+  const [confirmed, setConfirmed] = useState(false);
+  const [confirmError, setConfirmError] = useState(false);
+  const [notice, setNotice] = useState(showPlateNotice);
 
   const set = (patch: Partial<PlateConfig>) => setC((prev) => ({ ...prev, ...patch }));
   const style = styles.find((s) => s.id === c.style)!;
@@ -111,6 +114,11 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
       );
       document.getElementById("reg")?.scrollIntoView({ behavior: "smooth", block: "center" });
       document.getElementById("reg")?.focus({ preventScroll: true });
+      return;
+    }
+    if (!confirmed) {
+      setConfirmError(true);
+      document.getElementById("confirm-details")?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
     add({ ...c, reg: plateText(c) });
@@ -201,6 +209,22 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
                   </p>
                 )}
               </div>
+
+              {notice && c.type === "show" && (
+                <div className="mt-4 rounded-xl border border-[#f1c9a5] bg-[#fff5ec] p-3 text-sm text-[#8a4a12]">
+                  <p>
+                    <strong>&ldquo;{plateText(c)}&rdquo; isn&apos;t a UK registration</strong>, so we&apos;ve set it up as a{" "}
+                    <strong>show plate</strong> (display / off-road only).
+                  </p>
+                  <p className="mt-1">
+                    If it&apos;s your car&apos;s real registration, choose <strong>Road Legal</strong> below and check it&apos;s typed
+                    correctly.
+                  </p>
+                  <button type="button" className="mt-2 font-semibold underline" onClick={() => setNotice(false)}>
+                    OK, got it
+                  </button>
+                </div>
+              )}
 
               <div role="tablist" aria-label="Plate options" className="mt-5 grid grid-cols-3 gap-2">
                 {tabs.map((t, i) => (
@@ -485,7 +509,33 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
                 <DispatchCountdown />
               </div>
 
-              <button type="button" onClick={addToBasket} className="btn btn-dark mt-5 w-full rounded-lg">
+              <label
+                id="confirm-details"
+                className={`mt-5 flex cursor-pointer items-start gap-3 rounded-xl border-2 p-4 text-sm ${
+                  confirmError && !confirmed ? "border-[#d92d20] bg-[#fdecec]" : "border-line bg-surface"
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={confirmed}
+                  onChange={(e) => {
+                    setConfirmed(e.target.checked);
+                    setConfirmError(false);
+                  }}
+                  className="mt-0.5 h-5 w-5 shrink-0 accent-[#8a6812]"
+                />
+                <span>
+                  <strong>I&apos;ve checked my {c.type === "show" ? "plate text" : "registration"} and details are correct.</strong>{" "}
+                  Plates are made to order, so they <strong>can&apos;t be refunded</strong> if they&apos;re entered wrong.
+                </span>
+              </label>
+              {confirmError && !confirmed && (
+                <p role="alert" className="mt-2 text-sm font-semibold text-[#b42318]">
+                  Please tick the box to confirm your details before adding to basket.
+                </p>
+              )}
+
+              <button type="button" onClick={addToBasket} className="btn btn-dark mt-4 w-full rounded-lg">
                 <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
                   <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" />
                 </svg>

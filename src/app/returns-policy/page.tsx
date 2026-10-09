@@ -13,7 +13,8 @@ export default function ReturnsPage() {
         <p>
           Number plates are personalised with your registration and made to order, so the usual
           14-day right to cancel does not apply once we have started making them. Please check your
-          registration and options carefully before ordering.
+          registration and options carefully before ordering: we can&apos;t refund or replace plates
+          made exactly as ordered if the registration, text or options were entered wrong.
         </p>
         <h2>Damaged or incorrect plates</h2>
         <p>

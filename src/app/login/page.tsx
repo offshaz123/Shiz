@@ -5,9 +5,11 @@ import { getCurrentUser, isAdmin } from "@/lib/auth";
 
 export const metadata: Metadata = { title: "Log in", robots: { index: false } };
 
-export default async function LoginPage() {
+export default async function LoginPage(props: PageProps<"/login">) {
   if (await isAdmin()) redirect("/admin");
-  if (await getCurrentUser()) redirect("/account");
+  const { next } = await props.searchParams;
+  const back = typeof next === "string" && next.startsWith("/") && !next.startsWith("//") ? next : "/account";
+  if (await getCurrentUser()) redirect(back);
   return (
     <div className="bg-surface px-4 py-16">
       <div className="mx-auto max-w-md rounded-3xl border border-line bg-white p-6 shadow-sm sm:p-8">

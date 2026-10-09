@@ -3,7 +3,7 @@ import { execute, query } from "./db";
 import { type CartItem, sanitiseItem } from "./plates";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { LOGO_CID, customerOrderEmail, plateCid, plateImageParams, shopOrderEmail } from "./emails";
+import { LOGO_CID, customerDispatchEmail, customerOrderEmail, plateCid, plateImageParams, shopOrderEmail } from "./emails";
 import { renderPlatePng } from "./plate-image";
 import { sendMail, sendToShop } from "./mail";
 import type { PaidSession } from "./stripe";
@@ -185,6 +185,20 @@ export async function sendOrderEmails(order: Order) {
     await sendMail({ to: order.email, subject: customer.subject, text: customer.text, html: customer.html, attachments: images ?? [] });
   } catch (err) {
     console.error(`Customer email for ${order.ref} failed`, err);
+  }
+}
+
+// Tells the customer their plates are on the way. Returns false if the
+// email couldn't be sent, so the admin can see it.
+export async function sendDispatchEmail(order: Order) {
+  const images = await emailImages(order);
+  const email = customerDispatchEmail(order, images ? "inline" : "web");
+  try {
+    await sendMail({ to: order.email, subject: email.subject, text: email.text, html: email.html, attachments: images ?? [] });
+    return true;
+  } catch (err) {
+    console.error(`Dispatch email for ${order.ref} failed`, err);
+    return false;
   }
 }
 

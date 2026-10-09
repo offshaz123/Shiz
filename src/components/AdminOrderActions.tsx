@@ -42,7 +42,15 @@ export function AdminOrderActions({ orderRef, status }: { orderRef: string; stat
               type="button"
               disabled={!!busy}
               onClick={() =>
-                post({ status: a.status }, a.status, a.status === "cancelled" ? "Cancel this order? (Refund it in Stripe separately.)" : undefined)
+                post(
+                  { status: a.status },
+                  a.status,
+                  a.status === "cancelled"
+                    ? "Cancel this order? (Refund it in Stripe separately.)"
+                    : a.status === "dispatched"
+                      ? "Mark as dispatched? The customer will get a \"your order is on its way\" email."
+                      : undefined,
+                )
               }
               className={`rounded-lg px-4 py-2.5 text-sm font-semibold disabled:opacity-50 ${
                 a.status === "cancelled" ? "border border-[#f1b4a5] bg-white text-[#b42318]" : "bg-ink text-white"
@@ -59,6 +67,16 @@ export function AdminOrderActions({ orderRef, status }: { orderRef: string; stat
         >
           {busy === "resend" ? "Sending…" : "Resend emails"}
         </button>
+        {status === "dispatched" && (
+          <button
+            type="button"
+            disabled={!!busy}
+            onClick={() => post({ action: "resend-dispatch" }, "resend-dispatch", "Send the dispatch email to the customer again?")}
+            className="rounded-lg border border-line bg-white px-4 py-2.5 text-sm font-semibold disabled:opacity-50"
+          >
+            {busy === "resend-dispatch" ? "Sending…" : "Resend dispatch email"}
+          </button>
+        )}
       </div>
       {msg && (
         <p role="status" className="text-sm font-semibold">

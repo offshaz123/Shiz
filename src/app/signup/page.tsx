@@ -5,8 +5,10 @@ import { getCurrentUser } from "@/lib/auth";
 
 export const metadata: Metadata = { title: "Create an account", robots: { index: false } };
 
-export default async function SignupPage() {
-  if (await getCurrentUser()) redirect("/account");
+export default async function SignupPage(props: PageProps<"/signup">) {
+  const { next } = await props.searchParams;
+  const back = typeof next === "string" && next.startsWith("/") && !next.startsWith("//") ? next : "/account";
+  if (await getCurrentUser()) redirect(back);
   return (
     <div className="bg-surface px-4 py-16">
       <div className="mx-auto max-w-md rounded-3xl border border-line bg-white p-6 shadow-sm sm:p-8">

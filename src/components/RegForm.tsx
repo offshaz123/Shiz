@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { cleanReg, formatReg, isValidReg } from "@/lib/plates";
+import { SHOW_MAX, cleanShowText, formatReg, isValidReg } from "@/lib/plates";
 
 export function RegForm({ buttonLabel = "Build Now", inline = false }: { buttonLabel?: string; inline?: boolean }) {
   const router = useRouter();
@@ -13,11 +13,14 @@ export function RegForm({ buttonLabel = "Build Now", inline = false }: { buttonL
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        if (!isValidReg(reg)) {
-          setError("Please enter a valid UK registration, e.g. AB12 CDE");
+        // Anything goes here: a real registration or show-plate text. The
+        // builder works out which and lets the customer choose.
+        const text = cleanShowText(reg).trim();
+        if (!text) {
+          setError("Please type your registration or the text you want on your plate");
           return;
         }
-        router.push(`/design?reg=${encodeURIComponent(cleanReg(reg))}`);
+        router.push(`/design?reg=${encodeURIComponent(text)}`);
       }}
     >
       <label htmlFor={inline ? "hero-reg" : "reg-start"} className={`mb-2 block text-sm font-semibold ${inline ? "text-left" : ""}`}>
@@ -32,9 +35,9 @@ export function RegForm({ buttonLabel = "Build Now", inline = false }: { buttonL
             setReg(e.target.value.toUpperCase());
             setError("");
           }}
-          onBlur={() => reg && setReg(formatReg(reg))}
+          onBlur={() => reg && isValidReg(reg) && setReg(formatReg(reg))}
           placeholder="AB12 CDE"
-          maxLength={9}
+          maxLength={SHOW_MAX}
           autoComplete="off"
           autoCapitalize="characters"
           spellCheck={false}
