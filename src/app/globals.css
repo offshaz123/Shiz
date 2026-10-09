@@ -1,0 +1,196 @@
+@import "tailwindcss";
+
+:root {
+  /* Gold & white, matching the Exclusive Tints look. */
+  --gold: #8a6812; /* solid gold for text and icons, dark enough to read on white */
+  --gold-hover: #6b4e0f;
+  --gold-soft: #f6efdc;
+  --ink: #14110b;
+  --ink-2: #2a2418;
+  --paper: #ffffff;
+  --surface: #faf7f0;
+  --surface-2: #f2ebdc;
+  --muted: #5f5647;
+  --line: #e6dcc6;
+  --plate-front: #f8f8f5;
+  --plate-rear: #f6c500;
+  /* Deep gold for full-width bands that carry white text. */
+  --gold-deep: linear-gradient(135deg, #5c430d 0%, #8a6812 45%, #6b4e0f 100%);
+  --metal: linear-gradient(135deg, #a37c18 0%, #f2dc93 22%, #c9a227 46%, #f6e6ae 70%, #b8901f 100%);
+}
+
+@theme inline {
+  --color-gold: var(--gold);
+  --color-gold-hover: var(--gold-hover);
+  --color-gold-soft: var(--gold-soft);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-paper: var(--paper);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-line: var(--line);
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-heading), ui-sans-serif, system-ui, sans-serif;
+  --font-plate: var(--font-plate-face), "Arial Narrow", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* In the components layer so Tailwind utilities on an element can still override them. */
+@layer components {
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0 1.75rem;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border-radius: 9999px;
+  transition: background-color 0.15s, color 0.15s, border-color 0.15s, filter 0.15s, transform 0.15s;
+}
+.btn-gold {
+  background-image: var(--metal);
+  color: var(--ink);
+  box-shadow: 0 8px 20px -10px rgb(107 78 15 / 0.6);
+}
+.btn-gold:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}
+.btn-white {
+  background: #fff;
+  color: var(--ink);
+  border: 1px solid var(--line);
+}
+.btn-white:hover {
+  border-color: #b8901f;
+}
+.btn-dark {
+  background: var(--ink);
+  color: #fff;
+}
+.btn-dark:hover {
+  background: #2a2a2e;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.field {
+  width: 100%;
+  min-height: 3rem;
+  border: 1px solid #cfcdc4;
+  border-radius: 4px;
+  background: #fff;
+  padding: 0.6rem 0.85rem;
+  font-size: 1rem;
+  color: var(--ink);
+}
+.field:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+  border-color: var(--gold-hover);
+}
+
+.option {
+  border: 2px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  padding: 0.75rem 0.9rem;
+  text-align: left;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+.option:hover {
+  border-color: #c9c6b8;
+}
+.option[aria-pressed="true"] {
+  border-color: #b8901f;
+  background: var(--gold-soft);
+  box-shadow: 0 0 0 1px #b8901f;
+}
+
+}
+
+.prose-plate h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.6rem;
+  margin: 2rem 0 0.6rem;
+}
+.prose-plate p,
+.prose-plate li {
+  color: #3a3b40;
+  line-height: 1.7;
+}
+.prose-plate ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin: 0.5rem 0 1rem;
+}
+.prose-plate p + p {
+  margin-top: 0.8rem;
+}
+
+::selection {
+  background: #d4af37;
+  color: var(--ink);
+}
+
+.gold-text {
+  background-image: linear-gradient(90deg, #6b4e0f, #9a7515 50%, #7a5a11);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.gold-bg {
+  background-image: var(--metal);
+  color: var(--ink);
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+/* Promo strip across the top of every page. */
+.marquee-viewport {
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, black 4%, black 96%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 22s linear infinite;
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track { animation: none; }
+}
+
+.gold-deep {
+  background-image: var(--gold-deep);
+  color: #fff;
+}
