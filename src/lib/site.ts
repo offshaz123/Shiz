@@ -6,7 +6,7 @@ export const site = {
   description:
     "Design and order fully road-legal 2D, 3D gel and 4D number plates. Premium materials, free tracked delivery and 100% DVLA compliant.",
   // TODO: real contact details
-  email: "info@platedup.com",
+  email: "info@platedup.co.uk",
   // WhatsApp number in international format without the + (447…).
   whatsapp: "447539559947",
   address: "PlatedUp, Unit 1, Your Street, Your Town",
