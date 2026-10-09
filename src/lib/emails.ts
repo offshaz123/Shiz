@@ -286,6 +286,67 @@ export function customerDispatchEmail(o: Order, images: ImageMode = "web") {
   return { subject: `Your order ${o.ref} has been dispatched 🚚`, html, text };
 }
 
+// Sent when the shop presses "Cancel order" in the admin. We don't give a
+// reason here: the customer is asked to get in touch so we can explain.
+export function customerCancelEmail(o: Order, images: ImageMode = "web") {
+  const first = o.customer_name.split(" ")[0] || "there";
+  const helpHref = whatsappHref.replace(
+    encodeURIComponent("I'm a customer and I need some help"),
+    encodeURIComponent(`Hi PlatedUp, my order ${o.ref} has been cancelled. Can you tell me why?`),
+  );
+  const paid = o.amount_paid !== null;
+  const card = cardLine(o);
+
+  const html = layout(
+    `Your PlatedUp order ${o.ref} has been cancelled`,
+    `Order ${o.ref} has been cancelled. Please get in touch with us.`,
+    `
+    <p style="margin:0 0 10px;"><span style="display:inline-block;background:#fdecec;color:#b42318;font:700 13px Arial,sans-serif;padding:6px 12px;border-radius:999px;">Order cancelled</span></p>
+    <p style="font:700 26px Arial,sans-serif;color:${INK};margin:0 0 6px;">Your order has been cancelled</p>
+    <p style="font:15px/1.6 Arial,sans-serif;color:${MUTED};margin:0 0 20px;">Hi ${esc(first)}, we're sorry to let you know that your order <strong style="color:${INK};">${o.ref}</strong> has been cancelled and won't be made or sent out.</p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 8px;background:#fff8e6;border:2px solid ${GOLD};border-radius:12px;">
+      <tr><td style="padding:18px 20px;">
+        <p style="font:700 18px Arial,sans-serif;color:${INK};margin:0 0 8px;">Please get in touch with us</p>
+        <p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0 0 14px;">Message us on WhatsApp with your order number <strong>${o.ref}</strong> and we'll explain what happened and help you put it right.</p>
+        ${button(helpHref, "Chat on WhatsApp", "#25D366")}
+        <p style="font:13px/1.5 Arial,sans-serif;color:${MUTED};margin:12px 0 0;">Or email us at <a href="mailto:${site.email}" style="color:${INK};">${site.email}</a></p>
+      </td></tr>
+    </table>
+
+    ${
+      paid
+        ? `<p style="font:700 18px Arial,sans-serif;color:${INK};margin:24px 0 8px;">Your payment</p>
+    <p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0;">If a refund is due, it will go back to the card you paid with${card ? ` (${esc(card)})` : ""}. Refunds usually show in your account within 5 to 10 working days, depending on your bank.</p>`
+        : ""
+    }
+
+    <p style="font:700 14px Arial,sans-serif;color:${GOLD};letter-spacing:1px;text-transform:uppercase;margin:26px 0 0;">Cancelled order</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${itemsHtml(o, 544, images)}</table>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;">
+      ${row(paid ? "Amount paid" : "Order total", money(o.amount_paid ?? o.total), true)}
+    </table>
+
+    <p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:24px 0 0;">Sorry for any trouble. We hope to make your plates soon.</p>
+    `,
+    images,
+  );
+
+  const text = [
+    `Hi ${first}, your order ${o.ref} has been cancelled and won't be made or sent out.`,
+    "",
+    `Please get in touch so we can explain what happened: ${helpHref}`,
+    `Or email ${site.email}`,
+    "",
+    paid
+      ? `If a refund is due, it will go back to the card you paid with${card ? ` (${card})` : ""}, usually within 5 to 10 working days.`
+      : "",
+    ...o.items.map((i) => `- "${i.reg}" × ${i.qty}: ${describe(i)}`),
+  ].join("\n");
+
+  return { subject: `Your order ${o.ref} has been cancelled`, html, text };
+}
+
 export function shopOrderEmail(o: Order, docCount: number, images: ImageMode = "web") {
   const paid = o.amount_paid !== null;
   const card = cardLine(o);

@@ -46,7 +46,7 @@ export function AdminOrderActions({ orderRef, status }: { orderRef: string; stat
                   { status: a.status },
                   a.status,
                   a.status === "cancelled"
-                    ? "Cancel this order? (Refund it in Stripe separately.)"
+                    ? "Cancel this order? The customer will get a cancellation email asking them to contact you. (Refund it in Stripe separately.)"
                     : a.status === "dispatched"
                       ? "Mark as dispatched? The customer will get a \"your order is on its way\" email."
                       : undefined,
@@ -67,14 +67,14 @@ export function AdminOrderActions({ orderRef, status }: { orderRef: string; stat
         >
           {busy === "resend" ? "Sending…" : "Resend emails"}
         </button>
-        {status === "dispatched" && (
+        {(status === "dispatched" || status === "cancelled") && (
           <button
             type="button"
             disabled={!!busy}
-            onClick={() => post({ action: "resend-dispatch" }, "resend-dispatch", "Send the dispatch email to the customer again?")}
+            onClick={() => post({ action: "resend-status" }, "resend-status", `Send the ${status === "dispatched" ? "dispatch" : "cancellation"} email to the customer again?`)}
             className="rounded-lg border border-line bg-white px-4 py-2.5 text-sm font-semibold disabled:opacity-50"
           >
-            {busy === "resend-dispatch" ? "Sending…" : "Resend dispatch email"}
+            {busy === "resend-status" ? "Sending…" : status === "dispatched" ? "Resend dispatch email" : "Resend cancellation email"}
           </button>
         )}
       </div>

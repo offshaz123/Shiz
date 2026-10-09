@@ -1,7 +1,12 @@
 import { isAdmin } from "@/lib/auth";
-import { type OrderStatus, getOrder, sendDispatchEmail, sendOrderEmails, setStatus, statusLabels } from "@/lib/orders";
+import { type OrderStatus, getOrder, sendOrderEmails, sendStatusEmail, setStatus, statusLabels } from "@/lib/orders";
 
 const allowed: OrderStatus[] = ["paid", "in_production", "dispatched", "cancelled", "unpaid"];
+// Moving an order to one of these emails the customer.
+const emailed = ["dispatched", "cancelled"] as const;
+type Emailed = (typeof emailed)[number];
+const isEmailed = (s: string): s is Emailed => (emailed as readonly string[]).includes(s);
+const emailName: Record<Emailed, string> = { dispatched: "Dispatch", cancelled: "Cancellation" };
 
 export async function POST(req: Request, ctx: RouteContext<"/api/admin/orders/[ref]">) {
   if (!(await isAdmin())) return Response.json({ error: "Please log in again." }, { status: 401 });
@@ -14,21 +19,22 @@ export async function POST(req: Request, ctx: RouteContext<"/api/admin/orders/[r
     await sendOrderEmails(order);
     return Response.json({ message: "Emails sent again" });
   }
-  if (body.action === "resend-dispatch") {
-    const sent = await sendDispatchEmail(order);
+  if (body.action === "resend-status") {
+    if (!isEmailed(order.status)) return Response.json({ error: "There's no email for this status" }, { status: 400 });
+    const sent = await sendStatusEmail(order, order.status);
     return sent
-      ? Response.json({ message: `Dispatch email sent again to ${order.email}` })
-      : Response.json({ error: "The dispatch email couldn't be sent. Check the email settings." }, { status: 502 });
+      ? Response.json({ message: `${emailName[order.status]} email sent again to ${order.email}` })
+      : Response.json({ error: "The email couldn't be sent. Check the email settings." }, { status: 502 });
   }
   const status = body.status as OrderStatus;
   if (!allowed.includes(status)) return Response.json({ error: "Unknown status" }, { status: 400 });
   await setStatus(ref, status);
   const marked = `Order marked as ${statusLabels[status].toLowerCase()}`;
-  // Let the customer know their plates are on the way (only the first time).
-  if (status === "dispatched" && order.status !== "dispatched") {
-    const sent = await sendDispatchEmail({ ...order, status });
+  // Let the customer know (only the first time it changes to this status).
+  if (isEmailed(status) && order.status !== status) {
+    const sent = await sendStatusEmail({ ...order, status }, status);
     return Response.json({
-      message: sent ? `${marked} · dispatch email sent to ${order.email}` : `${marked}, but the dispatch email couldn't be sent`,
+      message: sent ? `${marked} · customer emailed at ${order.email}` : `${marked}, but the customer email couldn't be sent`,
     });
   }
   return Response.json({ message: marked });
