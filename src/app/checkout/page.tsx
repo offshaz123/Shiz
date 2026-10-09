@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/lib/cart";
+import { AddressFields } from "@/components/AddressFields";
 import { type DeliveryId, delivery, describe, money, unitPrice } from "@/lib/plates";
 
 function Section({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
@@ -52,6 +53,7 @@ export default function CheckoutPage() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
+  const [savedAddress, setSavedAddress] = useState<{ address1: string; address2: string; town: string; postcode: string }>();
 
   // Logged-in customers get their saved details filled in.
   useEffect(() => {
@@ -61,10 +63,11 @@ export default function CheckoutPage() {
       .then(({ user }) => {
         const form = formRef.current;
         if (!user || !form) return;
-        for (const key of ["name", "email", "phone", "address1", "address2", "town", "postcode"]) {
+        for (const key of ["name", "email", "phone"]) {
           const input = form.elements.namedItem(key) as HTMLInputElement | null;
           if (input && !input.value && user[key]) input.value = user[key];
         }
+        setSavedAddress({ address1: user.address1, address2: user.address2, town: user.town, postcode: user.postcode });
       })
       .catch(() => {});
   }, [ready, items.length]);
@@ -121,12 +124,7 @@ export default function CheckoutPage() {
           </Section>
 
           <Section n={2} title="Delivery address">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Address line 1" name="address1" autoComplete="address-line1" className="sm:col-span-2" />
-              <Field label="Address line 2" name="address2" autoComplete="address-line2" required={false} className="sm:col-span-2" />
-              <Field label="Town / City" name="town" autoComplete="address-level2" />
-              <Field label="Postcode" name="postcode" autoComplete="postal-code" />
-            </div>
+            <AddressFields initial={savedAddress} />
             <fieldset className="mt-6">
               <legend className="mb-2 text-sm font-semibold">Delivery option</legend>
               <div className="grid gap-3 sm:grid-cols-2">

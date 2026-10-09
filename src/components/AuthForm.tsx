@@ -45,10 +45,8 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
       </label>
       {signup && (
         <label className="block">
-          <span className="mb-1.5 block text-sm font-semibold">
-            Mobile number <span className="font-normal text-muted">(optional)</span>
-          </span>
-          <input className="field" name="phone" type="tel" autoComplete="tel" />
+          <span className="mb-1.5 block text-sm font-semibold">Mobile number</span>
+          <input className="field" name="phone" type="tel" autoComplete="tel" required minLength={10} placeholder="07123 456789" />
         </label>
       )}
       <label className="block">

@@ -3,7 +3,7 @@ import { describe, delivery, money, sanitiseItem, unitPrice } from "@/lib/plates
 import { field, orderRef, readUploads, sendToShop } from "@/lib/mail";
 import { site } from "@/lib/site";
 import { isDbConfigured } from "@/lib/db";
-import { getCurrentUser } from "@/lib/auth";
+import { getCurrentUser, isValidPhone } from "@/lib/auth";
 import { createCheckoutSession, isStripeConfigured } from "@/lib/stripe";
 import { createOrder, getOrder, saveDocuments, sendOrderEmails, setStatus, setStripeSession } from "@/lib/orders";
 
@@ -26,6 +26,8 @@ export async function POST(req: Request) {
   };
   if (!customer.name || !/^\S+@\S+\.\S+$/.test(customer.email) || !customer.phone)
     return Response.json({ error: "Please fill in your name, email and phone number." }, { status: 400 });
+  if (!isValidPhone(customer.phone))
+    return Response.json({ error: "Please enter a valid UK phone number, e.g. 07123 456789." }, { status: 400 });
   if (!customer.address1 || !customer.town || !customer.postcode)
     return Response.json({ error: "Please fill in your delivery address." }, { status: 400 });
   if (!form.get("entitled"))

@@ -1,4 +1,4 @@
-import { getCurrentUser, hashPassword, isAdminEmail, isValidEmail, verifyPassword } from "@/lib/auth";
+import { getCurrentUser, hashPassword, isAdminEmail, isValidEmail, isValidPhone, verifyPassword } from "@/lib/auth";
 import { execute, query } from "@/lib/db";
 
 // The logged-in customer's details (used to fill in checkout).
@@ -16,6 +16,7 @@ export async function PATCH(req: Request) {
   const email = s("email", 190).toLowerCase();
   if (!name) return Response.json({ error: "Please enter your name." }, { status: 400 });
   if (!isValidEmail(email) || isAdminEmail(email)) return Response.json({ error: "Please enter a valid email address." }, { status: 400 });
+  if (!isValidPhone(s("phone", 40))) return Response.json({ error: "Please enter a valid UK phone number." }, { status: 400 });
   if (email !== user.email) {
     const taken = await query("SELECT id FROM users WHERE email = ? AND id <> ?", [email, user.id]);
     if (taken.length) return Response.json({ error: "Another account already uses that email." }, { status: 409 });

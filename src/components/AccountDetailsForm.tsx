@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { User } from "@/lib/auth";
+import { AddressFields } from "./AddressFields";
 
 export function AccountDetailsForm({ user }: { user: Omit<User, "id" | "created_at"> }) {
   const [state, setState] = useState<"idle" | "saving" | "saved">("idle");
@@ -43,18 +44,13 @@ export function AccountDetailsForm({ user }: { user: Omit<User, "id" | "created_
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="sm:col-span-2">{input("name", "Full name", "text", "name")}</div>
         {input("email", "Email", "email", "email")}
-        {input("phone", "Mobile number", "tel", "tel", true)}
+        {input("phone", "Mobile number", "tel", "tel")}
       </div>
 
       <fieldset>
         <legend className="mb-3 font-display text-xl font-bold">Delivery address</legend>
         <p className="-mt-2 mb-3 text-sm text-muted">Saved here, it&apos;s filled in for you at checkout.</p>
-        <div className="grid gap-4 sm:grid-cols-2">
-          <div className="sm:col-span-2">{input("address1", "Address line 1", "text", "address-line1", true)}</div>
-          <div className="sm:col-span-2">{input("address2", "Address line 2", "text", "address-line2", true)}</div>
-          {input("town", "Town / City", "text", "address-level2", true)}
-          {input("postcode", "Postcode", "text", "postal-code", true)}
-        </div>
+        <AddressFields initial={user} required={false} />
       </fieldset>
 
       <fieldset>

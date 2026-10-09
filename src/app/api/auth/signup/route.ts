@@ -1,4 +1,4 @@
-import { hashPassword, isAdminEmail, isValidEmail, startUserSession } from "@/lib/auth";
+import { hashPassword, isAdminEmail, isValidEmail, isValidPhone, startUserSession } from "@/lib/auth";
 import { execute, isDbConfigured, query } from "@/lib/db";
 
 export async function POST(req: Request) {
@@ -24,6 +24,7 @@ async function handle(req: Request) {
   const password = String(body.password ?? "");
   if (!name) return Response.json({ error: "Please enter your name." }, { status: 400 });
   if (!isValidEmail(email)) return Response.json({ error: "Please enter a valid email address." }, { status: 400 });
+  if (!isValidPhone(phone)) return Response.json({ error: "Please enter a valid UK phone number, e.g. 07123 456789." }, { status: 400 });
   if (password.length < 8) return Response.json({ error: "Your password needs at least 8 characters." }, { status: 400 });
   if (password.length > 200) return Response.json({ error: "That password is too long." }, { status: 400 });
   if (isAdminEmail(email)) return Response.json({ error: "That email can't be used. Please log in instead." }, { status: 400 });

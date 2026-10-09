@@ -138,6 +138,12 @@ export async function isAdmin() {
   }
 }
 
+// UK mobile or landline, with or without +44 and spaces.
+export function isValidPhone(phone: string) {
+  const digits = phone.replace(/[\s()-]/g, "");
+  return /^(\+44|0044|0)\d{9,10}$/.test(digits);
+}
+
 export function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 190;
 }
