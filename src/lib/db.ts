@@ -13,7 +13,9 @@ let ready: Promise<void> | null = null;
 function getPool() {
   if (!isDbConfigured()) throw new Error("Database is not configured");
   pool ??= mysql.createPool({
-    host: process.env.DB_HOST || "localhost",
+    // Node can resolve "localhost" to the IPv6 address ::1, while MySQL on
+    // shared hosting usually only listens on 127.0.0.1, so use that directly.
+    host: !process.env.DB_HOST || process.env.DB_HOST === "localhost" ? "127.0.0.1" : process.env.DB_HOST,
     port: Number(process.env.DB_PORT || 3306),
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
