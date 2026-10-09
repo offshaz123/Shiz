@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     return [
       {
         // Orders and enquiries must never be served from a cache.
-        source: "/api/:path*",
+        source: "/api/((?!plate-image).*)",
         headers: [{ key: "Cache-Control", value: "no-store, max-age=0" }],
       },
     ];

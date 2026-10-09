@@ -8,35 +8,51 @@ export function isMailConfigured() {
   return Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
 }
 
-// Sends an email to the shop. Without SMTP settings the message is printed
-// to the server log in development; in production that would silently lose
-// orders, so it throws instead.
-export async function sendToShop(opts: {
-  subject: string;
-  text: string;
-  replyTo?: string;
-  attachments?: Attachment[];
-}) {
-  if (!isMailConfigured()) {
-    if (process.env.NODE_ENV === "production") throw new Error("Email is not configured");
-    console.log(`\n[email not configured] ${opts.subject}\n${opts.text}\n`);
-    return;
-  }
+function transport() {
   const port = Number(process.env.SMTP_PORT ?? 465);
-  const transport = nodemailer.createTransport({
+  return nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port,
     secure: port === 465,
     auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
   });
-  await transport.sendMail({
-    from: `PlatedUp Website <${process.env.SMTP_USER}>`,
-    to: process.env.ORDERS_EMAIL ?? process.env.SMTP_USER,
-    replyTo: opts.replyTo,
-    subject: opts.subject,
-    text: opts.text,
-    attachments: opts.attachments,
+}
+
+type Mail = {
+  to: string;
+  subject: string;
+  text: string;
+  html?: string;
+  replyTo?: string;
+  attachments?: Attachment[];
+  fromName?: string;
+};
+
+// Without SMTP settings the message is printed to the server log in
+// development; in production that would silently lose orders, so it throws.
+export async function sendMail(m: Mail) {
+  if (!isMailConfigured()) {
+    if (process.env.NODE_ENV === "production") throw new Error("Email is not configured");
+    console.log(`\n[email not configured] to ${m.to}: ${m.subject}\n${m.text}\n`);
+    return;
+  }
+  await transport().sendMail({
+    from: `${m.fromName ?? "PlatedUp"} <${process.env.SMTP_USER}>`,
+    to: m.to,
+    replyTo: m.replyTo,
+    subject: m.subject,
+    text: m.text,
+    html: m.html,
+    attachments: m.attachments,
   });
+}
+
+export function shopAddress() {
+  return process.env.ORDERS_EMAIL || process.env.SMTP_USER || "";
+}
+
+export async function sendToShop(m: Omit<Mail, "to" | "fromName">) {
+  await sendMail({ ...m, to: shopAddress(), fromName: "PlatedUp Website" });
 }
 
 // Reads uploaded files from a form, rejecting anything too big or of a type

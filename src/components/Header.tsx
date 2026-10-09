@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
 import { nav, whatsappHref } from "@/lib/site";
 import { useCart } from "@/lib/cart";
@@ -29,6 +29,19 @@ export function Header() {
   const pathname = usePathname();
   const { count } = useCart();
   const [open, setOpen] = useState(false);
+  // "1" for a customer, "admin" for the shop owner, "" when logged out.
+  const [login, setLogin] = useState("");
+  useEffect(() => {
+    const m = document.cookie.match(/(?:^|; )pu_logged_in=([^;]*)/);
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- reading the login hint after hydration
+    setLogin(m ? decodeURIComponent(m[1]) : "");
+  }, [pathname]);
+  const account =
+    login === "admin"
+      ? { href: "/admin", label: "Admin" }
+      : login
+        ? { href: "/account", label: "My Account" }
+        : { href: "/login", label: "Log in / Sign up" };
   const isActive = (href: string) => pathname.startsWith(href);
 
   return (
@@ -54,6 +67,16 @@ export function Header() {
               className="gold-bg hidden items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold sm:inline-flex"
             >
               <UploadIcon /> Upload Documents
+            </Link>
+            <Link
+              href={account.href}
+              className="hidden items-center gap-2 rounded-lg border border-line px-3 py-2.5 text-sm font-semibold hover:bg-surface sm:inline-flex"
+            >
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+                <circle cx="12" cy="8" r="4" />
+                <path d="M4 21c0-4 4-6 8-6s8 2 8 6" />
+              </svg>
+              {account.label}
             </Link>
             <Link
               href="/basket"
@@ -119,6 +142,9 @@ export function Header() {
               </li>
             ))}
             <li className="grid gap-3 py-4">
+              <Link href={account.href} onClick={() => setOpen(false)} className="btn btn-dark w-full">
+                {account.label}
+              </Link>
               <Link href="/upload-documents" onClick={() => setOpen(false)} className="btn btn-gold w-full">
                 Upload Documents
               </Link>

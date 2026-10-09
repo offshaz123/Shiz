@@ -1,0 +1,236 @@
+import type { Attachment } from "nodemailer/lib/mailer";
+import { execute, query } from "./db";
+import { type CartItem, sanitiseItem } from "./plates";
+import { customerOrderEmail, shopOrderEmail } from "./emails";
+import { sendMail, sendToShop } from "./mail";
+import type { PaidSession } from "./stripe";
+
+export type OrderStatus = "pending" | "unpaid" | "paid" | "in_production" | "dispatched" | "expired" | "cancelled";
+export type DocsStatus = "not_needed" | "outstanding" | "received";
+
+export const statusLabels: Record<OrderStatus, string> = {
+  pending: "Awaiting payment",
+  unpaid: "Not paid (send payment link)",
+  paid: "Paid",
+  in_production: "In production",
+  dispatched: "Dispatched",
+  expired: "Payment not completed",
+  cancelled: "Cancelled",
+};
+
+export const docsLabels: Record<DocsStatus, string> = {
+  not_needed: "Not needed",
+  outstanding: "Outstanding",
+  received: "Received",
+};
+
+export type Order = {
+  id: number;
+  ref: string;
+  user_id: number | null;
+  status: OrderStatus;
+  customer_name: string;
+  email: string;
+  phone: string;
+  address1: string;
+  address2: string;
+  town: string;
+  postcode: string;
+  items: CartItem[];
+  delivery_name: string;
+  delivery_price: number;
+  subtotal: number;
+  total: number;
+  amount_paid: number | null;
+  card_brand: string | null;
+  card_last4: string | null;
+  stripe_session_id: string | null;
+  docs_status: DocsStatus;
+  created_at: Date;
+  paid_at: Date | null;
+};
+
+type Row = Omit<Order, "items"> & { items: string };
+
+function parse(row: Row): Order {
+  let items: CartItem[] = [];
+  try {
+    const raw = JSON.parse(row.items);
+    items = Array.isArray(raw) ? raw.map(sanitiseItem).filter((i): i is CartItem => i !== null) : [];
+  } catch {}
+  return { ...row, items };
+}
+
+const COLUMNS = `id, ref, user_id, status, customer_name, email, phone, address1, address2, town, postcode, items,
+  delivery_name, delivery_price, subtotal, total, amount_paid, card_brand, card_last4, stripe_session_id,
+  docs_status, created_at, paid_at`;
+
+export async function createOrder(o: Omit<Order, "id" | "created_at" | "paid_at" | "amount_paid" | "card_brand" | "card_last4" | "stripe_session_id">) {
+  const res = await execute(
+    `INSERT INTO orders (ref, user_id, status, customer_name, email, phone, address1, address2, town, postcode,
+      items, delivery_name, delivery_price, subtotal, total, docs_status)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      o.ref, o.user_id, o.status, o.customer_name, o.email, o.phone, o.address1, o.address2, o.town, o.postcode,
+      JSON.stringify(o.items), o.delivery_name, o.delivery_price, o.subtotal, o.total, o.docs_status,
+    ],
+  );
+  return res.insertId;
+}
+
+export async function saveDocuments(orderId: number, files: Attachment[], kinds: string[]) {
+  for (let i = 0; i < files.length; i++) {
+    const f = files[i];
+    await execute("INSERT INTO documents (order_id, kind, filename, mime, data) VALUES (?, ?, ?, ?, ?)", [
+      orderId,
+      kinds[i] ?? "document",
+      String(f.filename ?? "document").slice(0, 200),
+      String(f.contentType ?? "application/octet-stream").slice(0, 100),
+      f.content as Buffer,
+    ]);
+  }
+}
+
+export async function getDocuments(orderId: number) {
+  return query<{ id: number; kind: string; filename: string; mime: string; data: Buffer; created_at: Date }>(
+    "SELECT id, kind, filename, mime, data, created_at FROM documents WHERE order_id = ? ORDER BY id",
+    [orderId],
+  );
+}
+
+export async function listDocuments(orderId: number) {
+  return query<{ id: number; kind: string; filename: string; mime: string; created_at: Date }>(
+    "SELECT id, kind, filename, mime, created_at FROM documents WHERE order_id = ? ORDER BY id",
+    [orderId],
+  );
+}
+
+export async function getOrder(ref: string) {
+  const rows = await query<Row>(`SELECT ${COLUMNS} FROM orders WHERE ref = ?`, [ref]);
+  return rows[0] ? parse(rows[0]) : null;
+}
+
+export async function setStripeSession(ref: string, sessionId: string) {
+  await execute("UPDATE orders SET stripe_session_id = ? WHERE ref = ?", [sessionId, ref]);
+}
+
+export async function listOrders(opts: { status?: string; search?: string; limit?: number } = {}) {
+  const where: string[] = [];
+  const params: (string | number)[] = [];
+  if (opts.status === "active") where.push("status NOT IN ('expired', 'cancelled', 'pending')");
+  else if (opts.status && opts.status in statusLabels) {
+    where.push("status = ?");
+    params.push(opts.status);
+  }
+  if (opts.search) {
+    where.push("(ref LIKE ? OR email LIKE ? OR customer_name LIKE ? OR items LIKE ?)");
+    const like = `%${opts.search}%`;
+    params.push(like, like, like, like);
+  }
+  params.push(opts.limit ?? 200);
+  const rows = await query<Row>(
+    `SELECT ${COLUMNS} FROM orders ${where.length ? `WHERE ${where.join(" AND ")}` : ""} ORDER BY created_at DESC LIMIT ?`,
+    params,
+  );
+  return rows.map(parse);
+}
+
+export async function listOrdersForUser(userId: number) {
+  const rows = await query<Row>(
+    `SELECT ${COLUMNS} FROM orders WHERE user_id = ? AND status NOT IN ('expired', 'cancelled') ORDER BY created_at DESC`,
+    [userId],
+  );
+  return rows.map(parse);
+}
+
+export async function setStatus(ref: string, status: OrderStatus) {
+  await execute("UPDATE orders SET status = ? WHERE ref = ?", [status, ref]);
+}
+
+export async function markDocsReceived(orderId: number) {
+  await execute("UPDATE orders SET docs_status = 'received' WHERE id = ? AND docs_status = 'outstanding'", [orderId]);
+}
+
+export async function markExpired(ref: string) {
+  await execute("UPDATE orders SET status = 'expired' WHERE ref = ? AND status = 'pending'", [ref]);
+}
+
+// Sends the "new paid order" email to the shop (with documents) and the
+// receipt to the customer. Email problems are logged, never thrown: the
+// payment is already taken and the order is safe in the database.
+export async function sendOrderEmails(order: Order) {
+  const docs = await getDocuments(order.id);
+  const shop = shopOrderEmail(order, docs.length);
+  try {
+    await sendToShop({
+      subject: shop.subject,
+      text: shop.text,
+      html: shop.html,
+      replyTo: order.email,
+      attachments: docs.map((d) => ({ filename: d.filename, content: d.data, contentType: d.mime })),
+    });
+  } catch (err) {
+    console.error(`Shop email for ${order.ref} failed`, err);
+  }
+  const customer = customerOrderEmail(order);
+  try {
+    await sendMail({ to: order.email, subject: customer.subject, text: customer.text, html: customer.html });
+  } catch (err) {
+    console.error(`Customer email for ${order.ref} failed`, err);
+  }
+}
+
+// Marks an order paid once Stripe confirms it. Safe to call more than once
+// (from the webhook and from the thank-you page): only the first call
+// changes the order and sends the emails.
+export async function markPaid(s: PaidSession) {
+  if (!s.paid || !s.ref) return null;
+  const order = await getOrder(s.ref);
+  if (!order) return null;
+  if (order.stripe_session_id && order.stripe_session_id !== s.sessionId) return null;
+  const res = await execute(
+    `UPDATE orders SET status = 'paid', paid_at = NOW(), amount_paid = ?, card_brand = ?, card_last4 = ?, stripe_session_id = ?
+     WHERE ref = ? AND status IN ('pending', 'expired', 'unpaid')`,
+    [s.amount, s.cardBrand, s.cardLast4, s.sessionId, s.ref],
+  );
+  const updated = await getOrder(s.ref);
+  if (res.affectedRows === 1 && updated) await sendOrderEmails(updated);
+  return updated;
+}
+
+export async function listCustomers() {
+  return query<{
+    email: string;
+    name: string;
+    phone: string;
+    orders: number;
+    paid_orders: number;
+    spent: number;
+    first_order: Date;
+    last_order: Date;
+    has_account: number;
+  }>(
+    `SELECT o.email,
+            MAX(o.customer_name) AS name,
+            MAX(o.phone) AS phone,
+            COUNT(*) AS orders,
+            SUM(o.status IN ('paid', 'in_production', 'dispatched')) AS paid_orders,
+            COALESCE(SUM(CASE WHEN o.status IN ('paid', 'in_production', 'dispatched') THEN o.amount_paid ELSE 0 END), 0) AS spent,
+            MIN(o.created_at) AS first_order,
+            MAX(o.created_at) AS last_order,
+            MAX(u.id IS NOT NULL) AS has_account
+     FROM orders o LEFT JOIN users u ON u.email = o.email
+     WHERE o.status NOT IN ('expired', 'cancelled')
+     GROUP BY o.email
+     ORDER BY last_order DESC
+     LIMIT 500`,
+  );
+}
+
+export async function listAccounts() {
+  return query<{ id: number; email: string; name: string; phone: string; created_at: Date; orders: number }>(
+    `SELECT u.id, u.email, u.name, u.phone, u.created_at,
+            (SELECT COUNT(*) FROM orders o WHERE o.user_id = u.id AND o.status NOT IN ('expired', 'cancelled')) AS orders
+     FROM users u ORDER BY u.created_at DESC LIMIT 500`,
+  );
+}

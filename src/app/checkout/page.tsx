@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/lib/cart";
 import { type DeliveryId, delivery, describe, money, unitPrice } from "@/lib/plates";
 
@@ -51,6 +51,23 @@ export default function CheckoutPage() {
   const [later, setLater] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // Logged-in customers get their saved details filled in.
+  useEffect(() => {
+    if (!ready || items.length === 0) return;
+    fetch("/api/account")
+      .then((r) => r.json())
+      .then(({ user }) => {
+        const form = formRef.current;
+        if (!user || !form) return;
+        for (const key of ["name", "email", "phone", "address1", "address2", "town", "postcode"]) {
+          const input = form.elements.namedItem(key) as HTMLInputElement | null;
+          if (input && !input.value && user[key]) input.value = user[key];
+        }
+      })
+      .catch(() => {});
+  }, [ready, items.length]);
 
   if (!ready) return <div className="min-h-[50vh]" />;
   if (items.length === 0)
@@ -93,7 +110,7 @@ export default function CheckoutPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
       <h1 className="font-display text-4xl font-bold uppercase">Checkout</h1>
-      <form onSubmit={onSubmit} className="mt-8 grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
+      <form ref={formRef} onSubmit={onSubmit} className="mt-8 grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
         <div className="space-y-6">
           <Section n={1} title="Your details">
             <div className="grid gap-4 sm:grid-cols-2">
