@@ -91,7 +91,7 @@ export const faqs: { q: string; a: string }[] = [
   },
   {
     q: "Can I buy show plates?",
-    a: "We only make road-legal plates, so every plate we sell can go straight on your car.",
+    a: "Yes. Choose Show Plate in the plate builder. Show plates are for display and off-road use only (car shows, private land, photos). They are not road legal, so you can't fit them to a car used on the road. No documents are needed for show plates.",
   },
   {
     q: "What size plates do you offer?",

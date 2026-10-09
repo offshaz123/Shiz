@@ -8,6 +8,7 @@ import { DispatchCountdown } from "./DispatchCountdown";
 import { useCart } from "@/lib/cart";
 import {
   type PlateConfig,
+  type PlateType,
   badges,
   borders,
   defaultConfig,
@@ -22,7 +23,7 @@ import {
   whichPlates,
 } from "@/lib/plates";
 
-const tabs = ["Plates", "Style", "Extras"] as const;
+const tabs = ["Size", "Style", "Additions"] as const;
 
 const trust = [
   { title: "DVLA Compliant", text: "BS AU 145e certified", icon: "M12 2 4 5v6c0 5 3.4 9.5 8 11 4.6-1.5 8-6 8-11V5l-8-3Z" },
@@ -31,26 +32,49 @@ const trust = [
   { title: "Premium Materials", text: "High-impact acrylic, reflective", icon: "M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm-3.5 5.5L12 15l3.5 5.5L12 19l-3.5 1.5Z" },
 ];
 
-function Option({
-  selected,
-  onClick,
-  children,
-  className = "",
-}: {
-  selected: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-  className?: string;
-}) {
+const plateTypes: { id: PlateType; name: string; note: string; icon: string }[] = [
+  { id: "legal", name: "Road Legal", note: "DVLA compliant, BS AU 145e", icon: "M12 2 4 5v6c0 5 3.4 9.5 8 11 4.6-1.5 8-6 8-11V5l-8-3Zm-1 13-3.5-3.5 1.4-1.4 2.1 2.1 4.6-4.6 1.4 1.4L11 15Z" },
+  { id: "show", name: "Show Plate", note: "Display / off-road use only", icon: "M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm-3.5 5.5L12 15l3.5 5.5L12 19l-3.5 1.5Z" },
+];
+
+function Heading({ children, aside }: { children: React.ReactNode; aside?: React.ReactNode }) {
   return (
-    <button type="button" className={`option ${className}`} aria-pressed={selected} onClick={onClick}>
-      {children}
-    </button>
+    <div className="mb-3 mt-7 flex items-baseline justify-between gap-3 first:mt-0">
+      <h3 className="font-display text-xl font-bold">{children}</h3>
+      {aside && <span className="text-xs text-muted">{aside}</span>}
+    </div>
   );
 }
 
-function Heading({ children }: { children: React.ReactNode }) {
-  return <h3 className="mb-3 mt-6 font-display text-xl font-bold first:mt-0">{children}</h3>;
+// A row with a round radio button, label and price, like a classic order form.
+function Radio({
+  name,
+  checked,
+  onChange,
+  label,
+  price,
+  boxed = false,
+}: {
+  name: string;
+  checked: boolean;
+  onChange: () => void;
+  label: string;
+  price?: number;
+  boxed?: boolean;
+}) {
+  return (
+    <label
+      className={`flex cursor-pointer items-center gap-3 ${
+        boxed
+          ? `rounded-lg border px-3 py-2.5 text-sm ${checked ? "border-[#b8901f] bg-gold-soft" : "border-line bg-white hover:border-[#c9c6b8]"}`
+          : "py-1.5"
+      }`}
+    >
+      <input type="radio" name={name} checked={checked} onChange={onChange} className="h-5 w-5 shrink-0 accent-[#8a6812]" />
+      <span className="flex-1">{label}</span>
+      {price ? <span className={boxed ? "font-semibold text-gold" : ""}>+{money(price)}</span> : null}
+    </label>
+  );
 }
 
 export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
@@ -66,6 +90,14 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
   const badge = badges.find((b) => b.id === c.badge)!;
   const showFront = c.which !== "rear";
   const showRear = c.which !== "front";
+  const platesPrice = c.which === "pair" ? style.pair : style.single;
+
+  // "Tick if not required" for one side switches to the other side only.
+  // Unticking brings it back. Both can't be unticked at once.
+  const toggleNotRequired = (side: "front" | "rear", notRequired: boolean) => {
+    if (!notRequired) set({ which: "pair" });
+    else set({ which: side === "front" ? "rear" : "front" });
+  };
 
   const addToBasket = () => {
     if (!isValidReg(c.reg)) {
@@ -78,16 +110,19 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
     router.push("/basket");
   };
 
+  const sizeLabel = `${plateSize.name.replace(" Car", "")} (520mm x 111mm)`;
   const summary: [string, string][] = [
     ["Registration", formatReg(c.reg) || "-"],
-    ["Plate Type", "Road Legal"],
-    ["Size", `${plateSize.name} (${plateSize.mm})`],
+    ["Plate Type", c.type === "show" ? "Show Plate" : "Road Legal"],
+    ["Front Size", showFront ? sizeLabel : "Not required"],
+    ["Rear Size", showRear ? sizeLabel : "Not required"],
     ["Style", style.name],
-    ["Quantity", whichPlates.find((w) => w.id === c.which)!.name],
-    ["Border", c.border === "none" ? "None" : "Black"],
-    ["Badge", c.badge === "none" ? "None" : `${badge.name} (${badge.code})`],
-    ["EV Strip", c.ev ? "Yes" : "No"],
-    ["Fixing Kit", fixing.name],
+    ["Quantity", c.which === "pair" ? "Front and Rear" : whichPlates.find((w) => w.id === c.which)!.name],
+  ];
+  const addOns: [string, number][] = [
+    ...(c.border !== "none" ? [["Black Border", extrasPrice.border] as [string, number]] : []),
+    ...(c.badge !== "none" ? [[badge.name, extrasPrice.badge] as [string, number]] : []),
+    ...(c.fixing !== "none" ? [[fixing.name, fixing.price] as [string, number]] : []),
   ];
 
   return (
@@ -130,14 +165,14 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
                 </label>
                 <input
                   id="reg"
-                  className="field h-16 bg-[var(--plate-rear)] text-center font-[family-name:var(--font-plate)] text-4xl font-semibold uppercase tracking-widest placeholder:text-black/35"
+                  className="field h-14 text-center text-xl font-bold uppercase tracking-[0.15em] placeholder:font-semibold placeholder:tracking-wider placeholder:text-black/35"
                   value={c.reg}
                   onChange={(e) => {
                     set({ reg: e.target.value.toUpperCase() });
                     setRegError("");
                   }}
                   onBlur={() => c.reg && set({ reg: formatReg(c.reg) })}
-                  placeholder="AB12 CDE"
+                  placeholder="Enter registration"
                   maxLength={9}
                   autoComplete="off"
                   autoCapitalize="characters"
@@ -146,12 +181,12 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
                   aria-describedby={regError ? "reg-err" : "reg-hint"}
                 />
                 {regError ? (
-                  <p id="reg-err" className="mt-2 text-sm font-medium text-red-700">
+                  <p id="reg-err" className="mt-2 text-center text-sm font-medium text-red-700">
                     {regError}
                   </p>
                 ) : (
                   <p id="reg-hint" className="mt-2 text-center text-xs text-muted">
-                    We&apos;ll set the legal spacing for you
+                    Max 7 characters for selected plate size
                   </p>
                 )}
               </div>
@@ -166,7 +201,7 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
                     aria-selected={tab === i}
                     aria-controls={`panel-${i}`}
                     onClick={() => setTab(i)}
-                    className={`flex items-center justify-center gap-2 rounded-lg py-2.5 font-semibold transition-colors ${
+                    className={`flex items-center justify-center gap-2 rounded-lg py-3 font-semibold transition-colors ${
                       tab === i ? "gold-bg shadow-sm" : "bg-surface-2/70 text-muted hover:bg-surface-2"
                     }`}
                   >
@@ -182,39 +217,112 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
                 ))}
               </div>
 
-              <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`} className="mt-6">
+              <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`} className="mt-7">
                 {tab === 0 && (
                   <>
-                    <Heading>Select Your Plate</Heading>
-                    <div className="grid gap-3 sm:grid-cols-3">
-                      {whichPlates.map((w) => (
-                        <Option key={w.id} selected={c.which === w.id} onClick={() => set({ which: w.id })}>
-                          <span className="font-semibold">{w.name}</span>
-                        </Option>
+                    <Heading>Select Plate Type</Heading>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {plateTypes.map((t) => (
+                        <label
+                          key={t.id}
+                          className={`relative flex cursor-pointer flex-col rounded-xl border-2 p-4 transition-colors ${
+                            c.type === t.id ? "border-[#b8901f] bg-gold-soft" : "border-line bg-white hover:border-[#c9c6b8]"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="plate-type"
+                            checked={c.type === t.id}
+                            onChange={() => set({ type: t.id })}
+                            className="absolute right-3 top-3 h-5 w-5 accent-[#8a6812]"
+                          />
+                          <span className="flex items-center gap-2 font-display text-xl font-bold">
+                            <svg viewBox="0 0 24 24" className="h-5 w-5 text-gold" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+                              <path d={t.icon} />
+                            </svg>
+                            {t.name}
+                          </span>
+                          <span className="mt-1 text-sm text-muted">{t.note}</span>
+                        </label>
                       ))}
                     </div>
-                    <p className="mt-4 rounded-xl border border-[#cfe6d4] bg-[#f1faf3] p-3 text-sm text-[#1f5f33]">
-                      ✓ Road legal plates, BS AU 145e certified, in the standard car size ({plateSize.mm}).
-                      We check your documents after you order.
-                    </p>
+
+                    {c.type === "legal" ? (
+                      <p className="mt-4 rounded-xl border border-[#cfe6d4] bg-[#f1faf3] p-3 text-sm text-[#1f5f33]">
+                        ✅ Road legal plates are BS AU 145e certified and DVLA compliant. We will ensure correct
+                        spacing before production. Document verification is required after purchase.{" "}
+                        <Link href="/legal#documents" className="font-semibold underline">
+                          Learn more
+                        </Link>
+                      </p>
+                    ) : (
+                      <p className="mt-4 rounded-xl border border-[#f1c9a5] bg-[#fff5ec] p-3 text-sm text-[#8a4a12]">
+                        ⚠️ Show plates are for display and off-road use only (car shows, private land, photos).
+                        They are <strong>not road legal</strong> and must not be fitted to a vehicle used on the
+                        road. No documents are needed.{" "}
+                        <Link href="/legal" className="font-semibold underline">
+                          Learn more
+                        </Link>
+                      </p>
+                    )}
+
+                    <Heading>Select Plate Sizes</Heading>
+                    {(["front", "rear"] as const).map((side) => {
+                      const notRequired = side === "front" ? !showFront : !showRear;
+                      return (
+                        <div key={side} className="mb-4">
+                          <div className="mb-1.5 flex items-center justify-between">
+                            <label htmlFor={`size-${side}`} className="text-sm font-semibold capitalize">
+                              {side} Plate
+                            </label>
+                            <label className="flex cursor-pointer items-center gap-2 text-sm text-muted">
+                              <input
+                                type="checkbox"
+                                checked={notRequired}
+                                onChange={(e) => toggleNotRequired(side, e.target.checked)}
+                                className="h-4 w-4 accent-[#8a6812]"
+                              />
+                              Tick if not required
+                            </label>
+                          </div>
+                          <select id={`size-${side}`} className="field" disabled={notRequired} defaultValue="standard">
+                            <option value="standard">{sizeLabel}</option>
+                          </select>
+                        </div>
+                      );
+                    })}
                   </>
                 )}
 
                 {tab === 1 && (
                   <>
-                    <Heading>Plate Style</Heading>
+                    <Heading>Select Plate Style</Heading>
                     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                       {styles.map((s) => (
-                        <Option key={s.id} selected={c.style === s.id} onClick={() => set({ style: s.id })} className="text-center">
-                          <PlatePreview
-                            config={{ ...defaultConfig, style: s.id }}
-                            side="rear"
-                            label={s.name.split(" ")[0]}
-                            className="mx-auto w-full rounded"
+                        <label
+                          key={s.id}
+                          className={`relative cursor-pointer rounded-xl border-2 p-3 text-center transition-colors ${
+                            c.style === s.id ? "border-[#b8901f] bg-gold-soft" : "border-line bg-white hover:border-[#c9c6b8]"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="plate-style"
+                            checked={c.style === s.id}
+                            onChange={() => set({ style: s.id })}
+                            className="absolute right-2 top-2 z-10 h-5 w-5 accent-[#8a6812]"
                           />
+                          <span className="block rounded-lg bg-surface-2 p-2">
+                            <PlatePreview
+                              config={{ ...defaultConfig, style: s.id }}
+                              side="rear"
+                              label={s.name.split(" ")[0]}
+                              className="w-full"
+                            />
+                          </span>
                           <span className="mt-2 block font-semibold">{s.name}</span>
                           <span className="block text-xs text-muted">{money(s.pair)} pair</span>
-                        </Option>
+                        </label>
                       ))}
                     </div>
                     <p className="mt-3 text-sm text-muted">{style.blurb}</p>
@@ -224,57 +332,66 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
                 {tab === 2 && (
                   <>
                     <Heading>Plate Border</Heading>
-                    <div className="grid grid-cols-2 gap-3">
-                      {borders.map((b) => (
-                        <Option key={b.id} selected={c.border === b.id} onClick={() => set({ border: b.id })}>
-                          <span className="block font-semibold">{b.name}</span>
-                          <span className="block text-sm text-muted">{b.id === "none" ? "Free" : `+${money(extrasPrice.border)}`}</span>
-                        </Option>
-                      ))}
-                    </div>
+                    {borders.map((b) => (
+                      <Radio
+                        key={b.id}
+                        name="border"
+                        checked={c.border === b.id}
+                        onChange={() => set({ border: b.id })}
+                        label={b.id === "none" ? "None" : "Black"}
+                        price={b.id === "none" ? undefined : extrasPrice.border}
+                      />
+                    ))}
 
-                    <Heading>Flag Badge</Heading>
-                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                      {badges.map((b) => (
-                        <Option key={b.id} selected={c.badge === b.id} onClick={() => set({ badge: b.id })}>
-                          <span className="block font-semibold">{b.name}</span>
-                          <span className="block text-sm text-muted">
-                            {b.id === "none" ? "Free" : `${b.code} · +${money(extrasPrice.badge)}`}
-                          </span>
-                        </Option>
-                      ))}
+                    <Heading aside="Only one badge per plate">Badge / Flag Options</Heading>
+                    <Radio
+                      name="badge"
+                      boxed
+                      checked={c.badge === "none"}
+                      onChange={() => set({ badge: "none" })}
+                      label="No Badge"
+                    />
+                    <p className="mb-2 mt-4 text-xs font-semibold uppercase tracking-wider text-muted">Printed badges</p>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {badges
+                        .filter((b) => b.id !== "none")
+                        .map((b) => (
+                          <Radio
+                            key={b.id}
+                            name="badge"
+                            boxed
+                            checked={c.badge === b.id}
+                            onChange={() => set({ badge: b.id })}
+                            label={b.name}
+                            price={extrasPrice.badge}
+                          />
+                        ))}
                     </div>
+                    {badge.green && (
+                      <p className="mt-2 text-xs text-muted">The green strip is for zero-emission (fully electric) vehicles only.</p>
+                    )}
 
-                    <Heading>Electric Vehicle Strip</Heading>
-                    <div className="grid grid-cols-2 gap-3">
-                      <Option selected={!c.ev} onClick={() => set({ ev: false })}>
-                        <span className="font-semibold">No</span>
-                      </Option>
-                      <Option selected={c.ev} onClick={() => set({ ev: true })}>
-                        <span className="block font-semibold">Yes</span>
-                        <span className="block text-sm text-muted">+{money(extrasPrice.ev)} · EVs only</span>
-                      </Option>
-                    </div>
-
-                    <Heading>Add a Fixing Kit</Heading>
-                    <div className="grid grid-cols-2 gap-3">
-                      {fixings.map((f) => (
-                        <Option key={f.id} selected={c.fixing === f.id} onClick={() => set({ fixing: f.id })}>
-                          <span className="block font-semibold">{f.name}</span>
-                          <span className="block text-sm text-muted">{f.price ? `${f.note} · +${money(f.price)}` : "No fixings"}</span>
-                        </Option>
-                      ))}
-                    </div>
+                    <Heading>Plate Fixings</Heading>
+                    {fixings.map((f) => (
+                      <Radio
+                        key={f.id}
+                        name="fixing"
+                        checked={c.fixing === f.id}
+                        onChange={() => set({ fixing: f.id })}
+                        label={f.name}
+                        price={f.price || undefined}
+                      />
+                    ))}
                   </>
                 )}
               </div>
 
               {tab < tabs.length - 1 ? (
-                <button type="button" className="btn btn-gold mt-6 w-full rounded-lg" onClick={() => setTab(tab + 1)}>
-                  Next: {tab === 0 ? "Choose Style" : "Extras"} <span aria-hidden>›</span>
+                <button type="button" className="btn btn-gold mt-7 w-full rounded-lg" onClick={() => setTab(tab + 1)}>
+                  Next: {tab === 0 ? "Choose Style" : "Add Extras"} <span aria-hidden>›</span>
                 </button>
               ) : (
-                <button type="button" className="btn btn-gold mt-6 w-full rounded-lg" onClick={addToBasket}>
+                <button type="button" className="btn btn-gold mt-7 w-full rounded-lg" onClick={addToBasket}>
                   Add to Basket
                 </button>
               )}
@@ -304,12 +421,47 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
                 {summary.map(([k, v]) => (
                   <div key={k} className="flex justify-between gap-4">
                     <dt className="text-muted">{k}:</dt>
-                    <dd className={`text-right font-semibold ${k === "Plate Type" ? "text-[#1f7a3d]" : ""}`}>{v}</dd>
+                    <dd
+                      className={`text-right font-semibold ${
+                        k === "Plate Type" ? (c.type === "show" ? "text-[#b4580f]" : "text-[#1f7a3d]") : ""
+                      }`}
+                    >
+                      {v}
+                    </dd>
                   </div>
                 ))}
               </dl>
 
-              <div className="mt-5 flex items-center justify-between border-t border-line pt-5">
+              <div className="mt-5 border-t border-line pt-4">
+                <p className="text-muted">Add-ons:</p>
+                {addOns.length === 0 ? (
+                  <p className="mt-1 text-sm text-muted">None</p>
+                ) : (
+                  <ul className="mt-1 space-y-1 text-sm">
+                    {addOns.map(([name, price]) => (
+                      <li key={name} className="flex justify-between">
+                        <span>{name}</span>
+                        <span className="font-semibold">+{money(price)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+
+              <dl className="mt-4 space-y-1 border-t border-line pt-4">
+                <div className="flex justify-between">
+                  <dt className="text-muted">Plates Total:</dt>
+                  <dd className="font-semibold">{money(platesPrice)}</dd>
+                </div>
+                {addOns.length > 0 && (
+                  <div className="flex justify-between">
+                    <dt className="text-muted">Add-ons:</dt>
+                    <dd className="font-semibold">{money(unitPrice(c) - platesPrice)}</dd>
+                  </div>
+                )}
+              </dl>
+
+              <div className="mt-4 flex items-center justify-between border-t border-line pt-4">
                 <span className="font-display text-2xl font-bold">Total:</span>
                 <span className="gold-text font-display text-4xl font-bold">{money(unitPrice(c))}</span>
               </div>
@@ -319,6 +471,9 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
               </div>
 
               <button type="button" onClick={addToBasket} className="btn btn-dark mt-5 w-full rounded-lg">
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+                  <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" />
+                </svg>
                 Add to Basket
               </button>
             </div>

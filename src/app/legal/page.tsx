@@ -34,7 +34,7 @@ export default function LegalPage() {
         </ul>
         <p>
           3D gel and 4D raised characters are legal as long as they are solid black, which is how
-          we make them. We don&apos;t make show plates or alter spacing.
+          we make them. We never alter the legal spacing on road-legal plates.
         </p>
 
         <h2 id="documents">Documents we need</h2>
@@ -67,11 +67,20 @@ export default function LegalPage() {
           your order.
         </p>
 
+        <h2>Show plates</h2>
+        <p>
+          We also make show plates for display and off-road use, such as car shows, private land
+          and photos. Show plates are <strong>not road legal</strong> and must not be fitted to a
+          vehicle used on the road. Doing so can lead to a fine of up to £1,000, an MOT failure and
+          the registration being withdrawn. Show plates don&apos;t carry the British Standard mark
+          and don&apos;t need documents.
+        </p>
+
         <h2>Badges and flags</h2>
         <p>
           You can add the Union Flag (UK), Cross of St George (ENG), Saltire (SCO) or Red Dragon
-          of Wales (CYM) to the left of your plate. The green flash is only for zero-emission
-          vehicles.
+          of Wales (CYM) to the left of your plate. The green strip (on its own or with the UK
+          identifier) is only for zero-emission vehicles.
         </p>
 
         <h2 id="faqs">FAQs</h2>

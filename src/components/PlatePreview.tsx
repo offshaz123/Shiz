@@ -1,12 +1,12 @@
 import { useId } from "react";
 import { site } from "@/lib/site";
-import { type BadgeId, type PlateConfig, badges, formatReg, styles } from "@/lib/plates";
+import { type FlagId, type PlateConfig, badges, formatReg, styles } from "@/lib/plates";
 
 // Standard car plate, 520 × 111mm.
 const w = 520;
 const h = 111;
 
-function Flag({ badge, w, h }: { badge: BadgeId; w: number; h: number }) {
+function Flag({ badge, w, h }: { badge: FlagId; w: number; h: number }) {
   if (badge === "uk")
     return (
       <g>
@@ -61,8 +61,8 @@ export function PlatePreview({
   const reg = label ?? (formatReg(config.reg) || "YOUR REG");
   const style = styles.find((s) => s.id === config.style) ?? styles[0];
   const badge = badges.find((b) => b.id === config.badge) ?? badges[0];
-  const evW = config.ev ? 14 : 0;
-  const bandW = config.badge !== "none" ? 50 : 0;
+  const evW = badge.green ? 14 : 0;
+  const bandW = badge.flag ? 50 : 0;
   const left = evW + bandW;
   const cx = left + (w - left) / 2;
   const fontSize = 86;
@@ -101,13 +101,13 @@ export function PlatePreview({
       <rect width={w} height={h} rx="7" fill={side === "front" ? "var(--plate-front)" : "var(--plate-rear)"} />
       <rect width={w} height={h} rx="7" fill={`url(#sheen-${uid})`} />
 
-      {config.ev && <rect x="3" y="3" width={evW} height={h - 6} rx="4" fill="#00a651" />}
+      {badge.green && <rect x="3" y="3" width={evW} height={h - 6} rx="4" fill="#00a651" />}
 
-      {config.badge !== "none" && (
+      {badge.flag && (
         <g>
           <rect x={3 + evW} y="3" width={bandW - 3} height={h - 6} rx="5" fill="#0b3c91" />
           <g transform={`translate(${evW + bandW / 2 - 15} ${h / 2 - 32})`}>
-            <Flag badge={config.badge} w={30} h={20} />
+            <Flag badge={badge.flag} w={30} h={20} />
           </g>
           <text
             x={evW + bandW / 2 + 1.5}
@@ -149,7 +149,7 @@ export function PlatePreview({
         fontSize="6"
         fill="#444"
       >
-        {site.name.toUpperCase()} {site.postcode} · BS AU 145e
+        {config.type === "show" ? "SHOW PLATE · NOT FOR ROAD USE" : `${site.name.toUpperCase()} ${site.postcode} · BS AU 145e`}
       </text>
     </svg>
   );

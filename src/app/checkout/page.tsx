@@ -65,6 +65,8 @@ export default function CheckoutPage() {
 
   const deliveryPrice = delivery.find((d) => d.id === deliveryId)!.price;
   const total = subtotal + deliveryPrice;
+  // Only road-legal plates need documents; show plates don't.
+  const needsDocs = items.some((i) => i.type !== "show");
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -81,7 +83,7 @@ export default function CheckoutPage() {
         window.location.href = data.paymentUrl;
         return;
       }
-      router.push(`/order-confirmed?ref=${encodeURIComponent(data.ref)}${later ? "&docs=later" : ""}`);
+      router.push(`/order-confirmed?ref=${encodeURIComponent(data.ref)}${needsDocs && later ? "&docs=later" : ""}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       setSending(false);
@@ -130,10 +132,12 @@ export default function CheckoutPage() {
             </fieldset>
           </Section>
 
-          <Section n={3} title="Upload your documents">
+          <Section n={3} title={needsDocs ? "Upload your documents" : "Confirm your order"}>
+            {needsDocs ? (
+            <>
             <p className="text-muted">
-              By law we must see these before we make your plates. A clear photo from your phone
-              is perfect.
+              By law we must see these before we make your road-legal plates. A clear photo from
+              your phone is perfect.
             </p>
             {!later && (
               <div className="mt-5 grid gap-5 sm:grid-cols-2">
@@ -159,10 +163,20 @@ export default function CheckoutPage() {
               />
               <span>I&apos;ll upload them later (we can&apos;t make your plates until we have them)</span>
             </label>
+            </>
+            ) : (
+              <p className="rounded-xl border border-[#f1c9a5] bg-[#fff5ec] p-3 text-sm text-[#8a4a12]">
+                Your basket only has show plates, so no documents are needed. Show plates are for
+                display and off-road use only and are not road legal.
+              </p>
+            )}
             <label className="mt-4 flex cursor-pointer items-start gap-3 text-sm">
               <input type="checkbox" name="entitled" required className="mt-0.5 h-5 w-5 shrink-0 accent-[#8a6812]" />
               <span>
-                I confirm I am entitled to display these registration numbers, and I agree to the{" "}
+                {needsDocs
+                  ? "I confirm I am entitled to display these registration numbers"
+                  : "I understand show plates are not road legal and won't use them on the road"}
+                , and I agree to the{" "}
                 <Link href="/terms-conditions" className="underline" target="_blank">
                   terms &amp; conditions
                 </Link>

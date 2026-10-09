@@ -88,12 +88,8 @@ export default async function ProductPage(props: PageProps<"/[product]">) {
                   </tr>
                 ))}
                 <tr>
-                  <th className="p-4 font-semibold">Flag badge</th>
+                  <th className="p-4 font-semibold">Flag badge or EV green strip</th>
                   <td className="p-4 text-right">+{money(extrasPrice.badge)}</td>
-                </tr>
-                <tr>
-                  <th className="p-4 font-semibold">EV green strip</th>
-                  <td className="p-4 text-right">+{money(extrasPrice.ev)}</td>
                 </tr>
                 <tr>
                   <th className="p-4 font-semibold">Black border</th>

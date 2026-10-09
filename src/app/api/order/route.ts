@@ -57,7 +57,7 @@ export async function POST(req: Request) {
   if (!customer.address1 || !customer.town || !customer.postcode)
     return Response.json({ error: "Please fill in your delivery address." }, { status: 400 });
   if (!form.get("entitled"))
-    return Response.json({ error: "Please confirm you're entitled to the registration." }, { status: 400 });
+    return Response.json({ error: "Please tick the box to confirm your order." }, { status: 400 });
 
   let rawItems: unknown;
   try {
@@ -71,7 +71,9 @@ export async function POST(req: Request) {
   const plates = items.filter((i) => i !== null);
 
   const option = delivery.find((d) => d.id === field(form, "delivery")) ?? delivery[0];
-  const docsLater = Boolean(form.get("docsLater"));
+  // Show plates don't need documents; anything road legal does.
+  const needsDocs = plates.some((i) => i.type !== "show");
+  const docsLater = !needsDocs || Boolean(form.get("docsLater"));
   const uploads = await readUploads(form, [
     { name: "entitlement", label: "proof of entitlement", required: !docsLater },
     { name: "identity", label: "ID", required: !docsLater },
@@ -86,9 +88,11 @@ export async function POST(req: Request) {
   const text = [
     `New order ${ref}`,
     paying ? "Payment: sent to Stripe checkout. Check Stripe shows it as paid before making." : "Payment: NOT taken online. Send the customer a payment link.",
-    docsLater || uploads.attachments.length < 2
-      ? "DOCUMENTS OUTSTANDING: do not make until the customer uploads them."
-      : "Documents: attached. Check them before making.",
+    !needsDocs
+      ? "Documents: not needed (show plates only). Plates must NOT carry BS AU 145e marking."
+      : docsLater || uploads.attachments.length < 2
+        ? "DOCUMENTS OUTSTANDING: do not make road-legal plates until the customer uploads them."
+        : "Documents: attached. Check them before making.",
     "",
     "PLATES",
     ...plates.map(
@@ -131,7 +135,7 @@ export async function POST(req: Request) {
       qty: i.qty,
     }));
     if (option.price) lines.push({ name: option.name, amount: option.price, qty: 1 });
-    const paymentUrl = await createStripeSession({ ref, email: customer.email, docsLater: uploads.attachments.length < 2, lines });
+    const paymentUrl = await createStripeSession({ ref, email: customer.email, docsLater: needsDocs && uploads.attachments.length < 2, lines });
     return Response.json({ ref, paymentUrl });
   } catch (err) {
     console.error("Stripe session failed", err);

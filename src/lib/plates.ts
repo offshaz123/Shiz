@@ -3,8 +3,10 @@
 // all follow.
 
 export type StyleId = "standard" | "3d-gel" | "4d-3mm" | "4d-5mm" | "5mm-gel" | "7mm-gel";
+export type PlateType = "legal" | "show";
 export type WhichId = "pair" | "front" | "rear";
-export type BadgeId = "none" | "uk" | "eng" | "sco" | "cym";
+export type BadgeId = "none" | "green" | "green-uk" | "uk" | "eng" | "sco" | "cym";
+export type FlagId = "uk" | "eng" | "sco" | "cym";
 export type BorderId = "none" | "black";
 export type FixingId = "none" | "pads" | "screws" | "both";
 export type DeliveryId = "standard" | "nextday";
@@ -85,13 +87,16 @@ export const whichPlates: { id: WhichId; name: string }[] = [
   { id: "rear", name: "Rear Only" },
 ];
 
-// Flags allowed on UK plates since 2021.
-export const badges: { id: BadgeId; name: string; code: string }[] = [
-  { id: "none", name: "No badge", code: "" },
-  { id: "uk", name: "Union Flag", code: "UK" },
-  { id: "eng", name: "England", code: "ENG" },
-  { id: "sco", name: "Scotland", code: "SCO" },
-  { id: "cym", name: "Wales", code: "CYM" },
+// Badges allowed on UK plates since 2021. They all sit on the left, so only
+// one can be chosen. The green strip is for zero-emission vehicles only.
+export const badges: { id: BadgeId; name: string; code: string; flag: FlagId | null; green: boolean }[] = [
+  { id: "none", name: "No Badge", code: "", flag: null, green: false },
+  { id: "green", name: "Green Strip", code: "", flag: null, green: true },
+  { id: "green-uk", name: "Green Strip UK", code: "UK", flag: "uk", green: true },
+  { id: "uk", name: "UK Flag", code: "UK", flag: "uk", green: false },
+  { id: "eng", name: "England Flag", code: "ENG", flag: "eng", green: false },
+  { id: "sco", name: "Scotland Flag", code: "SCO", flag: "sco", green: false },
+  { id: "cym", name: "Wales Flag", code: "CYM", flag: "cym", green: false },
 ];
 
 export const borders: { id: BorderId; name: string }[] = [
@@ -101,15 +106,14 @@ export const borders: { id: BorderId; name: string }[] = [
 
 export const fixings: { id: FixingId; name: string; note: string; price: number }[] = [
   { id: "none", name: "None", note: "", price: 0 },
-  { id: "pads", name: "Pads", note: "Sticky fixing pads", price: 199 },
-  { id: "screws", name: "Screws kit", note: "Screws with matching caps", price: 249 },
-  { id: "both", name: "Both", note: "Pads and screws kit", price: 399 },
+  { id: "pads", name: "Sticky Pads", note: "Sticky fixing pads", price: 199 },
+  { id: "screws", name: "Screws", note: "Screws with matching caps", price: 249 },
+  { id: "both", name: "Sticky Pads & Screws", note: "Pads and screws kit", price: 399 },
 ];
 
 export const extrasPrice = {
   badge: 299,
   border: 299,
-  ev: 299,
 } as const;
 
 export const delivery: { id: DeliveryId; name: string; note: string; price: number }[] = [
@@ -118,24 +122,24 @@ export const delivery: { id: DeliveryId; name: string; note: string; price: numb
 ];
 
 export type PlateConfig = {
+  type: PlateType;
   reg: string;
   style: StyleId;
   which: WhichId;
   border: BorderId;
   badge: BadgeId;
-  ev: boolean;
   fixing: FixingId;
 };
 
 export type CartItem = PlateConfig & { id: string; qty: number };
 
 export const defaultConfig: PlateConfig = {
+  type: "legal",
   reg: "",
   style: "3d-gel",
   which: "pair",
   border: "none",
   badge: "none",
-  ev: false,
   fixing: "none",
 };
 
@@ -178,7 +182,6 @@ export function unitPrice(c: PlateConfig) {
   let p = c.which === "pair" ? style.pair : style.single;
   if (c.badge !== "none") p += extrasPrice.badge;
   if (c.border !== "none") p += extrasPrice.border;
-  if (c.ev) p += extrasPrice.ev;
   p += fixings.find((f) => f.id === c.fixing)?.price ?? 0;
   return p;
 }
@@ -186,11 +189,10 @@ export function unitPrice(c: PlateConfig) {
 export function describe(c: PlateConfig) {
   const style = styles.find((s) => s.id === c.style)!;
   const which = whichPlates.find((w) => w.id === c.which)!;
-  const parts = [style.name, which.name];
+  const parts = [c.type === "show" ? "SHOW PLATE (not road legal)" : "Road Legal", style.name, which.name];
   const badge = badges.find((b) => b.id === c.badge)!;
-  if (c.badge !== "none") parts.push(`${badge.code} badge`);
+  if (c.badge !== "none") parts.push(badge.name);
   if (c.border !== "none") parts.push("Black border");
-  if (c.ev) parts.push("EV strip");
   if (c.fixing !== "none") parts.push(`Fixing: ${fixings.find((f) => f.id === c.fixing)!.name}`);
   return parts.join(" · ");
 }
@@ -216,13 +218,13 @@ export function sanitiseItem(raw: unknown): CartItem | null {
   if (!style || !which || !badge || !border || !fixing) return null;
   if (!isValidReg(reg) || !Number.isInteger(qty) || qty < 1 || qty > 10) return null;
   return {
+    type: r.type === "show" ? "show" : "legal",
     id: typeof r.id === "string" ? r.id.slice(0, 40) : "",
     reg: formatReg(reg),
     style,
     which,
     badge,
     border,
-    ev: r.ev === true,
     fixing,
     qty,
   };
