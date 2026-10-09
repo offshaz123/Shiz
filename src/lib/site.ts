@@ -30,6 +30,7 @@ export const nav = [
   { href: "/3d-gel-plates", label: "3D Gel Plates" },
   { href: "/4d-plates", label: "4D Plates" },
   { href: "/faqs", label: "FAQs" },
+  { href: "/blog", label: "Blog" },
   { href: "/about", label: "About Us" },
   { href: "/legal", label: "Legal & Compliance" },
   { href: "/contact", label: "Contact Us" },

@@ -6,6 +6,7 @@ const quickLinks = [
   { href: "/design", label: "Plate Builder" },
   ...products.map((p) => ({ href: `/${p.slug}`, label: p.heading })),
   { href: "/faqs", label: "FAQs" },
+  { href: "/blog", label: "Blog" },
   { href: "/about", label: "About Us" },
   { href: "/upload-documents", label: "Upload Documents" },
 ];
