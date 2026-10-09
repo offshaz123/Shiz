@@ -1,7 +1,9 @@
-function Chip({ children, className = "bg-white" }: { children: React.ReactNode; className?: string }) {
+function Chip({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+  // Card logos always sit on white, in dark mode too.
+  const colours = `${className.includes("bg-") ? "" : "bg-[#fff]"} ${className.includes("text-") ? "" : "text-[#14110b]"}`;
   return (
     <span
-      className={`inline-flex h-7 items-center rounded border border-black/10 px-2 text-[11px] font-extrabold tracking-wide ${className}`}
+      className={`inline-flex h-7 items-center rounded border border-black/10 px-2 text-[11px] font-extrabold tracking-wide ${colours} ${className}`}
     >
       {children}
     </span>

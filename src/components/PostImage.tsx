@@ -13,7 +13,7 @@ export function PostImage({ post, priority = false, sizes }: { post: Post; prior
     );
   const { text, style = "4d-5mm", badge = "none", type = "legal" } = post.plate;
   return (
-    <div className="relative flex aspect-[16/9] items-center justify-center overflow-hidden rounded-3xl bg-ink">
+    <div className="relative flex aspect-[16/9] items-center justify-center overflow-hidden rounded-3xl bg-[#0d0b07]">
       <div aria-hidden className="gold-bg absolute -bottom-24 left-1/2 h-48 w-[80%] -translate-x-1/2 rounded-full opacity-30 blur-3xl" />
       <PlatePreview
         config={{ ...defaultConfig, type, style, badge, reg: text }}

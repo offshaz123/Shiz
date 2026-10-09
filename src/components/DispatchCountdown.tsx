@@ -24,7 +24,7 @@ function secondsLeft(now: Date) {
 }
 
 function Box({ children }: { children: React.ReactNode }) {
-  return <span className="rounded-md bg-[#f6e6ae] px-2 py-0.5 font-mono font-bold text-ink">{children}</span>;
+  return <span className="rounded-md bg-[#f6e6ae] px-2 py-0.5 font-mono font-bold text-[#14110b]">{children}</span>;
 }
 
 export function DispatchCountdown() {

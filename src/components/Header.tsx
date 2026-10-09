@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
+import { ThemeToggle } from "./ThemeToggle";
 import { nav, whatsappHref } from "@/lib/site";
 import { useCart } from "@/lib/cart";
 
@@ -78,6 +79,7 @@ export function Header() {
               </svg>
               {account.label}
             </Link>
+            <ThemeToggle />
             <Link
               href="/basket"
               className="relative flex h-11 w-11 items-center justify-center rounded-lg border border-line hover:bg-surface"

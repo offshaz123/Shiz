@@ -35,7 +35,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-GB" className={`${body.variable} ${heading.variable} ${plate.variable}`}>
+    <html lang="en-GB" className={`${body.variable} ${heading.variable} ${plate.variable}`} suppressHydrationWarning>
+      <head>
+        {/* Apply a saved dark-mode choice before the page paints, so it doesn't flash white. */}
+        <script dangerouslySetInnerHTML={{ __html: `try{if(localStorage.getItem("pu-theme")==="dark")document.documentElement.dataset.theme="dark"}catch(e){}` }} />
+      </head>
       <body className="flex min-h-screen flex-col">
         <CartProvider>
           <Header />

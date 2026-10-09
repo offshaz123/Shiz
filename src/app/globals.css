@@ -194,3 +194,47 @@ body {
   background-image: var(--gold-deep);
   color: #fff;
 }
+
+/* Dark mode: the sun/moon switch in the header sets data-theme="dark" on
+   <html>. Colours that use the tokens flip automatically; the rules below
+   cover the places that use fixed light colours. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --gold: #e0bd55;
+  --gold-hover: #f2d77f;
+  --gold-soft: #2b2416;
+  --ink: #f4efe3;
+  --ink-2: #ded6c4;
+  --paper: #0d0b07;
+  --surface: #17140e;
+  --surface-2: #221d14;
+  --muted: #b3a891;
+  --line: #3a3224;
+}
+[data-theme="dark"] .bg-white { background-color: var(--surface); }
+[data-theme="dark"] .bg-ink { background-color: var(--ink); }
+[data-theme="dark"] .bg-ink.text-white,
+[data-theme="dark"] .bg-ink .text-white { color: #14110b; }
+/* In the components layer, like the classes they change, so utilities such
+   as the yellow registration box still win. */
+@layer components {
+  [data-theme="dark"] .btn-white,
+  [data-theme="dark"] .field,
+  [data-theme="dark"] .option { background: var(--surface-2); }
+  [data-theme="dark"] .field { border-color: #4a4130; }
+  [data-theme="dark"] .btn-dark { background: var(--ink); color: #14110b; }
+  [data-theme="dark"] .btn-dark:hover { background: #fff; }
+}
+/* Pale gold notice boxes become deep gold. */
+[data-theme="dark"] .bg-\[\#fdf8e7\] { background-color: var(--gold-soft); }
+[data-theme="dark"] .border-\[\#e8d89a\],
+[data-theme="dark"] .border-\[\#d9c37a\] { border-color: #5a4a22; }
+[data-theme="dark"] .btn-gold,
+[data-theme="dark"] .gold-bg { color: #14110b; }
+[data-theme="dark"] .prose-plate p,
+[data-theme="dark"] .prose-plate li { color: #d9d2c3; }
+[data-theme="dark"] .gold-text { background-image: linear-gradient(90deg, #e9c766, #f6e6ae 50%, #d4af37); }
+[data-theme="dark"] .shadow-black\/5 { --tw-shadow-color: rgb(0 0 0 / 0.4); }
+.theme-sun { display: none; }
+[data-theme="dark"] .theme-sun { display: block; }
+[data-theme="dark"] .theme-moon { display: none; }
