@@ -61,9 +61,10 @@ export function PlatePreview({
   const reg = label ?? (formatReg(config.reg) || "YOUR REG");
   const style = styles.find((s) => s.id === config.style) ?? styles[0];
   const badge = badges.find((b) => b.id === config.badge) ?? badges[0];
-  const evW = badge.green ? 14 : 0;
-  const bandW = badge.flag ? 50 : 0;
-  const left = evW + bandW;
+  // One badge panel on the left: a thin green strip, a green strip with
+  // "UK", or a blue flag panel. Never more than one.
+  const bandW = badge.id === "none" ? 0 : badge.green && !badge.code ? 18 : 50;
+  const left = bandW;
   const cx = left + (w - left) / 2;
   const fontSize = 86;
   const baseline = h / 2 + fontSize * 0.36;
@@ -101,25 +102,27 @@ export function PlatePreview({
       <rect width={w} height={h} rx="7" fill={side === "front" ? "var(--plate-front)" : "var(--plate-rear)"} />
       <rect width={w} height={h} rx="7" fill={`url(#sheen-${uid})`} />
 
-      {badge.green && <rect x="3" y="3" width={evW} height={h - 6} rx="4" fill="#00a651" />}
-
-      {badge.flag && (
+      {bandW > 0 && (
         <g>
-          <rect x={3 + evW} y="3" width={bandW - 3} height={h - 6} rx="5" fill="#0b3c91" />
-          <g transform={`translate(${evW + bandW / 2 - 15} ${h / 2 - 32})`}>
-            <Flag badge={badge.flag} w={30} h={20} />
-          </g>
-          <text
-            x={evW + bandW / 2 + 1.5}
-            y={h / 2 + 26}
-            textAnchor="middle"
-            fontFamily="var(--font-plate)"
-            fontWeight="600"
-            fontSize={badge.code.length > 2 ? 15 : 19}
-            fill="#fff"
-          >
-            {badge.code}
-          </text>
+          <rect x="3" y="3" width={bandW - 3} height={h - 6} rx="5" fill={badge.green ? "#00a651" : "#0b3c91"} />
+          {badge.flag && (
+            <g transform={`translate(${bandW / 2 - 15} ${h / 2 - 32})`}>
+              <Flag badge={badge.flag} w={30} h={20} />
+            </g>
+          )}
+          {badge.code && (
+            <text
+              x={bandW / 2 + 1.5}
+              y={badge.flag ? h / 2 + 26 : h / 2 + 9}
+              textAnchor="middle"
+              fontFamily="var(--font-plate)"
+              fontWeight="600"
+              fontSize={badge.flag ? (badge.code.length > 2 ? 15 : 19) : 26}
+              fill="#fff"
+            >
+              {badge.code}
+            </text>
+          )}
         </g>
       )}
 

@@ -87,12 +87,13 @@ export const whichPlates: { id: WhichId; name: string }[] = [
   { id: "rear", name: "Rear Only" },
 ];
 
-// Badges allowed on UK plates since 2021. They all sit on the left, so only
-// one can be chosen. The green strip is for zero-emission vehicles only.
+// Badges allowed on UK plates since 2021. Each is a single panel on the left
+// of the plate, so only one can be chosen. The green strip (plain, or with
+// "UK" on it) is for zero-emission vehicles only.
 export const badges: { id: BadgeId; name: string; code: string; flag: FlagId | null; green: boolean }[] = [
   { id: "none", name: "No Badge", code: "", flag: null, green: false },
   { id: "green", name: "Green Strip", code: "", flag: null, green: true },
-  { id: "green-uk", name: "Green Strip UK", code: "UK", flag: "uk", green: true },
+  { id: "green-uk", name: "Green Strip UK", code: "UK", flag: null, green: true },
   { id: "uk", name: "UK Flag", code: "UK", flag: "uk", green: false },
   { id: "eng", name: "England Flag", code: "ENG", flag: "eng", green: false },
   { id: "sco", name: "Scotland Flag", code: "SCO", flag: "sco", green: false },

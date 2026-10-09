@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { type CartItem, unitPrice } from "./plates";
+import { type CartItem, sanitiseItem, unitPrice } from "./plates";
 
 type Cart = {
   items: CartItem[];
@@ -24,8 +24,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const saved = localStorage.getItem(KEY);
+      // Re-check saved items so anything from an older version of the site
+      // (an option we no longer sell) is dropped instead of breaking the page.
+      const parsed: unknown = saved ? JSON.parse(saved) : [];
+      const valid = Array.isArray(parsed)
+        ? parsed.map(sanitiseItem).filter((i): i is CartItem => i !== null && i.id !== "")
+        : [];
       // eslint-disable-next-line react-hooks/set-state-in-effect -- restoring the saved basket after hydration
-      if (saved) setItems(JSON.parse(saved));
+      setItems(valid);
     } catch {}
     setReady(true);
   }, []);
