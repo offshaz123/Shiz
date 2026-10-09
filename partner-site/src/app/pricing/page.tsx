@@ -7,7 +7,7 @@ import { PricingTables } from "@/components/PricingTables";
 import { TierCalculator } from "@/components/TierCalculator";
 import { RegulatoryNote } from "@/components/RegulatoryNote";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
-import { pricingNotes } from "@/content/pricing";
+import { msbPricing, pricingNotes } from "@/content/pricing";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -112,6 +112,67 @@ export default function PricingPage() {
         <div className="mt-12">
           <PricingTables />
         </div>
+      </Section>
+
+      {/* Payment institutions and MSBs. Deliberately its own section rather
+          than a fourth card: the charges are a different shape, and the
+          exclusions matter more than the price. */}
+      <Section tone="ink">
+        <div className="mx-auto max-w-3xl text-center">
+          <Eyebrow>Payment institutions and MSBs</Eyebrow>
+          <h2 className="font-display text-balance mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
+            A different rate card, because it is different work
+          </h2>
+          <p className="mt-5 text-base leading-relaxed text-on-ink/70">
+            The tiers above are for a trading business. If you are an authorised or registered
+            payment firm, the onboarding is heavier and the pricing reflects that. Here it is, in
+            the same detail.
+          </p>
+        </div>
+
+        <dl className="mx-auto mt-12 grid max-w-4xl gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {msbPricing.rows.map((row) => (
+            <div key={row.label} className="rounded-2xl border border-white/12 bg-white/[0.04] p-5">
+              <dt className="text-xs font-semibold uppercase tracking-[0.14em] text-on-ink/60">
+                {row.label}
+              </dt>
+              <dd className="font-display mt-2 text-3xl font-semibold tracking-tight">
+                {row.value}
+              </dd>
+              <dd className="mt-1.5 text-sm leading-relaxed text-on-ink/70">{row.note}</dd>
+            </div>
+          ))}
+        </dl>
+
+        <div className="mx-auto mt-10 grid max-w-4xl gap-5 sm:grid-cols-2">
+          <div className="rounded-2xl border border-white/12 p-6">
+            <h3 className="text-base font-semibold">What the account is</h3>
+            <ul className="mt-4 space-y-3">
+              {msbPricing.includes.map((item) => (
+                <li key={item} className="flex gap-3 text-sm leading-relaxed text-on-ink/70">
+                  <span aria-hidden="true" className="text-accent">&#10003;</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="rounded-2xl border border-white/12 p-6">
+            <h3 className="text-base font-semibold">What it is not</h3>
+            <ul className="mt-4 space-y-3">
+              {msbPricing.excludes.map((item) => (
+                <li key={item} className="flex gap-3 text-sm leading-relaxed text-on-ink/70">
+                  <span aria-hidden="true" className="text-on-ink/45">&times;</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <p className="mx-auto mt-8 max-w-3xl text-center text-sm leading-relaxed text-on-ink/70">
+          Every figure is exclusive of VAT. If a safeguarding or client account is what you need,
+          this is not it — and we would rather tell you that now than three weeks into a file.
+        </p>
       </Section>
 
       {/* The small print, up front */}

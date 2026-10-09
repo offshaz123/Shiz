@@ -199,3 +199,37 @@ export const pricingNotes = [
     body: "A rate card, not a quote. What you actually pay depends on onboarding, the corridors you use and the configuration your account is approved for, and is set out in your account agreement.",
   },
 ] as const;
+
+/**
+ * The separate rate card for payment institutions and money service
+ * businesses.
+ *
+ * It is not a fourth tier and must not be presented as one. The tiers above
+ * are for a trading business running its own money through an account. This
+ * is for a regulated firm that needs an operating account for its own costs,
+ * where the onboarding work is heavier and the charge reflects it.
+ *
+ * `excludes` is the most important field on this page. An API or SPI reading
+ * a page about business accounts assumes safeguarding, because that is the
+ * account they spend their life trying to open. Saying no here, in the same
+ * breath as the price, saves them a conversation and saves us an enquiry we
+ * cannot fulfil.
+ */
+export const msbPricing = {
+  rows: [
+    { label: "Onboarding", value: "£499", note: "One-off, on account opening" },
+    { label: "Monthly", value: "£299", note: "Flat, whatever the volume" },
+    { label: "Each payment", value: "£0.99", note: "In or out, same charge" },
+    { label: "Conversion", value: "from 0.65%", note: "Margin falls with volume" },
+  ],
+  includes: [
+    "A GBP account in the firm's own registered name, not a pooled one",
+    "Multi-currency: hold, convert and pay out from the same account",
+    "For the firm's own operating costs — payroll, suppliers, rent, software, VAT",
+  ],
+  excludes: [
+    "It cannot be used as a pooled or client account",
+    "It cannot receive funds belonging to your customers",
+    "It is not a safeguarding account and cannot be used to meet a safeguarding requirement",
+  ],
+} as const;
