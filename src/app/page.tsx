@@ -61,10 +61,20 @@ export default function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="gold-deep relative overflow-hidden">
+      <section className="relative overflow-hidden bg-[#0b0906] text-white">
+        <Image
+          src="/hero/supercar.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        {/* Darken the photo so the writing stays easy to read, with a warm gold glow. */}
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/85" />
         <div
           aria-hidden
-          className="pointer-events-none absolute -top-40 left-1/2 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-[#f2dc93] opacity-20 blur-3xl"
+          className="pointer-events-none absolute -top-40 left-1/2 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-[#f2dc93] opacity-15 blur-3xl"
         />
         <div className="relative mx-auto max-w-5xl px-4 py-16 text-center sm:px-6 sm:py-24">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-sm font-semibold">
