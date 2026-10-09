@@ -1,7 +1,10 @@
 import type { Attachment } from "nodemailer/lib/mailer";
 import { execute, query } from "./db";
 import { type CartItem, sanitiseItem } from "./plates";
-import { customerOrderEmail, shopOrderEmail } from "./emails";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { LOGO_CID, customerOrderEmail, plateCid, plateImageParams, shopOrderEmail } from "./emails";
+import { renderPlatePng } from "./plate-image";
 import { sendMail, sendToShop } from "./mail";
 import type { PaidSession } from "./stripe";
 
@@ -160,23 +163,50 @@ export async function markExpired(ref: string) {
 // payment is already taken and the order is safe in the database.
 export async function sendOrderEmails(order: Order) {
   const docs = await getDocuments(order.id);
-  const shop = shopOrderEmail(order, docs.length);
+  const images = await emailImages(order);
+  const mode = images ? "inline" : "web";
+  const shop = shopOrderEmail(order, docs.length, mode);
   try {
     await sendToShop({
       subject: shop.subject,
       text: shop.text,
       html: shop.html,
       replyTo: order.email,
-      attachments: docs.map((d) => ({ filename: d.filename, content: d.data, contentType: d.mime })),
+      attachments: [
+        ...(images ?? []),
+        ...docs.map((d) => ({ filename: d.filename, content: d.data, contentType: d.mime })),
+      ],
     });
   } catch (err) {
     console.error(`Shop email for ${order.ref} failed`, err);
   }
-  const customer = customerOrderEmail(order);
+  const customer = customerOrderEmail(order, mode);
   try {
-    await sendMail({ to: order.email, subject: customer.subject, text: customer.text, html: customer.html });
+    await sendMail({ to: order.email, subject: customer.subject, text: customer.text, html: customer.html, attachments: images ?? [] });
   } catch (err) {
     console.error(`Customer email for ${order.ref} failed`, err);
+  }
+}
+
+// The logo and a picture of each plate, attached to the email so they show
+// even when the email app blocks pictures from websites. Null if they can't
+// be made (the emails then link to the pictures on the website instead).
+async function emailImages(order: Order): Promise<Attachment[] | null> {
+  try {
+    const logo = await readFile(join(process.cwd(), "src/assets/email-logo.png"));
+    const plates = await Promise.all(order.items.map((i) => renderPlatePng(plateImageParams(i))));
+    return [
+      { filename: "platedup.png", content: logo, contentType: "image/png", cid: LOGO_CID },
+      ...plates.map((png, index) => ({
+        filename: `plate-${index + 1}.png`,
+        content: png,
+        contentType: "image/png",
+        cid: plateCid(index),
+      })),
+    ];
+  } catch (err) {
+    console.error(`Making email pictures for ${order.ref} failed`, err);
+    return null;
   }
 }
 

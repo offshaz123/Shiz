@@ -30,8 +30,8 @@ export function cardLine(o: Pick<Order, "card_brand" | "card_last4">) {
 }
 
 // PNG of the plate, drawn by /api/plate-image (email apps can't show SVG).
-export function plateImageUrl(i: CartItem, side: "front" | "rear" = i.which === "front" ? "front" : "rear") {
-  const q = new URLSearchParams({
+export function plateImageParams(i: CartItem, side: "front" | "rear" = i.which === "front" ? "front" : "rear") {
+  return new URLSearchParams({
     text: i.reg,
     type: i.type,
     style: i.style,
@@ -39,16 +39,26 @@ export function plateImageUrl(i: CartItem, side: "front" | "rear" = i.which === 
     border: i.border,
     side,
   });
-  return `${site.url}/api/plate-image?${q}`;
 }
 
-function itemsHtml(o: Order, imgWidth: number) {
+export function plateImageUrl(i: CartItem) {
+  return `${site.url}/api/plate-image?${plateImageParams(i)}`;
+}
+
+// Pictures are attached to the email itself ("cid:" links) when possible,
+// because Outlook and others block pictures loaded from websites until the
+// reader trusts the sender. If attaching fails, fall back to web links.
+export type ImageMode = "inline" | "web";
+export const LOGO_CID = "platedup-logo";
+export const plateCid = (index: number) => `plate-${index}`;
+
+function itemsHtml(o: Order, imgWidth: number, images: ImageMode) {
   return o.items
-    .map((i) => {
+    .map((i, index) => {
       return `
       <tr>
         <td style="padding:16px 0;border-bottom:1px solid ${LINE};">
-          <img src="${esc(plateImageUrl(i))}" width="${imgWidth}" alt="${esc(i.reg)} number plate" style="display:block;width:${imgWidth}px;max-width:100%;height:auto;border-radius:6px;" />
+          <img src="${images === "inline" ? `cid:${plateCid(index)}` : esc(plateImageUrl(i))}" width="${imgWidth}" alt="${esc(i.reg)} number plate" style="display:block;width:${imgWidth}px;max-width:100%;height:auto;border-radius:6px;" />
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:10px;">
             <tr>
               <td style="font:600 18px Arial,sans-serif;color:${INK};white-space:pre;">${esc(i.reg)}${i.qty > 1 ? ` &times; ${i.qty}` : ""}</td>
@@ -74,7 +84,7 @@ function button(href: string, label: string, bg: string, color = "#ffffff") {
   return `<a href="${esc(href)}" style="display:inline-block;background:${bg};color:${color};font:700 15px Arial,sans-serif;text-decoration:none;padding:13px 22px;border-radius:999px;">${label}</a>`;
 }
 
-function layout(title: string, preheader: string, body: string) {
+function layout(title: string, preheader: string, body: string, images: ImageMode) {
   return `<!doctype html>
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title></head>
 <body style="margin:0;padding:0;background:${CREAM};">
@@ -83,7 +93,7 @@ function layout(title: string, preheader: string, body: string) {
   <tr><td align="center" style="padding:24px 12px;">
     <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="width:600px;max-width:100%;background:#ffffff;border:1px solid ${LINE};border-radius:16px;overflow:hidden;">
       <tr><td align="center" style="background:${INK};padding:22px;">
-        <img src="${site.url}/email/logo.png" width="180" alt="PlatedUp" style="display:block;width:180px;height:auto;" />
+        <img src="${images === "inline" ? `cid:${LOGO_CID}` : `${site.url}/email/logo.png`}" width="180" alt="PlatedUp" style="display:block;width:180px;height:auto;" />
       </td></tr>
       <tr><td style="height:4px;background:linear-gradient(90deg,#a37c18,#f2dc93,#c9a227,#f6e6ae,#b8901f);background-color:${GOLD};font-size:0;line-height:0;">&nbsp;</td></tr>
       <tr><td style="padding:28px 28px 8px;">${body}</td></tr>
@@ -97,7 +107,7 @@ function layout(title: string, preheader: string, body: string) {
 </body></html>`;
 }
 
-export function customerOrderEmail(o: Order) {
+export function customerOrderEmail(o: Order, images: ImageMode = "web") {
   const first = o.customer_name.split(" ")[0] || "there";
   const paid = o.status === "paid" || o.amount_paid !== null;
   const card = cardLine(o);
@@ -137,7 +147,7 @@ export function customerOrderEmail(o: Order) {
     <p style="margin:0 0 6px;"><span style="display:inline-block;background:${paid ? "#e7f6ec" : "#fff5ec"};color:${paid ? "#1f7a3d" : "#8a4a12"};font:700 13px Arial,sans-serif;padding:6px 12px;border-radius:999px;">${paid ? "✓ Payment received" : "Order received · awaiting payment"}</span></p>
     ${docsWarning}
 
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${itemsHtml(o, 544)}</table>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${itemsHtml(o, 544, images)}</table>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;">
       ${row("Subtotal", money(o.subtotal))}
@@ -164,6 +174,7 @@ export function customerOrderEmail(o: Order) {
       </td></tr>
     </table>
     `,
+    images,
   );
 
   const text = [
@@ -194,7 +205,7 @@ export function customerOrderEmail(o: Order) {
   };
 }
 
-export function shopOrderEmail(o: Order, docCount: number) {
+export function shopOrderEmail(o: Order, docCount: number, images: ImageMode = "web") {
   const paid = o.amount_paid !== null;
   const card = cardLine(o);
   const docs =
@@ -236,7 +247,7 @@ export function shopOrderEmail(o: Order, docCount: number) {
     <p style="font:700 24px Arial,sans-serif;color:${INK};margin:0 0 4px;">New order ${o.ref}</p>
     <p style="font:14px Arial,sans-serif;color:${MUTED};margin:0 0 4px;">${fmtDate(o.paid_at ?? o.created_at)}${card ? ` · ${esc(card)}` : ""}</p>
     <p style="font:14px Arial,sans-serif;color:${o.docs_status === "outstanding" ? "#b42318" : INK};margin:0 0 8px;"><strong>Documents:</strong> ${esc(docs)}</p>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${itemsHtml(o, 420)}</table>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${itemsHtml(o, 420, images)}</table>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;">
       ${row(esc(o.delivery_name), o.delivery_price ? money(o.delivery_price) : "FREE")}
       ${row("Total", money(o.total), true)}
@@ -245,6 +256,7 @@ export function shopOrderEmail(o: Order, docCount: number) {
     <p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0;">${esc(o.customer_name)}<br /><a href="mailto:${esc(o.email)}" style="color:${GOLD};">${esc(o.email)}</a> · ${esc(o.phone)}<br />${esc(o.address1)}${o.address2 ? `, ${esc(o.address2)}` : ""}, ${esc(o.town)} ${esc(o.postcode)}</p>
     <p style="margin:20px 0 8px;">${button(`${site.url}/admin/orders/${o.ref}`, "Open in admin portal", INK)}</p>
     `,
+    images,
   );
 
   return {

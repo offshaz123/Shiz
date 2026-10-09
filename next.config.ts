@@ -1,10 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // The plate image route reads this font from disk; make sure it's copied
-  // into the standalone build Hostinger runs.
+  // The plate pictures and email logo are read from disk; make sure they're
+  // copied into the standalone build Hostinger runs (every route, since
+  // emails can be sent from several places).
   outputFileTracingIncludes: {
-    "/api/plate-image": ["./src/assets/**"],
+    "/**/*": ["./src/assets/**"],
   },
   async headers() {
     return [
