@@ -6,8 +6,10 @@ export async function POST(req: Request) {
     return await handle(req);
   } catch (err) {
     console.error("Login/signup failed", err);
+    // The short error code (e.g. ER_ACCESS_DENIED_ERROR) helps the shop fix settings; it reveals nothing private.
+    const code = (err as { code?: string })?.code ?? "UNKNOWN";
     return Response.json(
-      { error: "We couldn't connect to our database. Please try again shortly or message us on WhatsApp." },
+      { error: `We couldn't connect to our database (${code}). Please try again shortly or message us on WhatsApp.` },
       { status: 500 },
     );
   }
