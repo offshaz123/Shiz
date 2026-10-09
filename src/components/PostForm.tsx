@@ -26,7 +26,10 @@ export function PostForm({
     );
 
   return (
+    // POST so typed details never end up in the address bar if the page's
+    // JavaScript hasn't loaded yet.
     <form
+      method="post"
       className="space-y-4"
       onSubmit={async (e) => {
         e.preventDefault();
