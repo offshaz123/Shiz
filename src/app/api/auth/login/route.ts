@@ -2,6 +2,18 @@ import { checkAdminLogin, failDelay, isAdminEmail, startAdminSession, startUserS
 import { isDbConfigured, query } from "@/lib/db";
 
 export async function POST(req: Request) {
+  try {
+    return await handle(req);
+  } catch (err) {
+    console.error("Login/signup failed", err);
+    return Response.json(
+      { error: "We couldn't connect to our database. Please try again shortly or message us on WhatsApp." },
+      { status: 500 },
+    );
+  }
+}
+
+async function handle(req: Request) {
   if (!isDbConfigured()) return Response.json({ error: "Accounts aren't available yet." }, { status: 503 });
   const body = await req.json().catch(() => ({}));
   const email = String(body.email ?? "").trim().toLowerCase();
