@@ -96,7 +96,7 @@ export async function POST(req: Request) {
     "",
     "PLATES",
     ...plates.map(
-      (i) => `- ${i.reg} × ${i.qty}: ${describe(i)} (${money(unitPrice(i) * i.qty)})`,
+      (i) => `- "${i.reg}" × ${i.qty}: ${describe(i)} (${money(unitPrice(i) * i.qty)})`,
     ),
     "",
     `Delivery: ${option.name} (${option.price ? money(option.price) : "FREE"})`,

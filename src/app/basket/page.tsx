@@ -32,7 +32,7 @@ export default function BasketPage() {
             </div>
             <div className="flex flex-col justify-between gap-4">
               <div>
-                <p className="font-display text-2xl font-bold">{item.reg}</p>
+                <p className="whitespace-pre font-display text-2xl font-bold">{item.reg}</p>
                 <p className="text-sm text-muted">{describe(item)}</p>
               </div>
               <div className="flex flex-wrap items-center justify-between gap-3">

@@ -178,6 +178,31 @@ export function isValidReg(input: string) {
   return formats.some((f) => f.re.test(s));
 }
 
+// Show plates aren't road legal, so customers can type whatever they like:
+// letters, numbers, a few symbols, and spaces anywhere (kept exactly as typed).
+export const SHOW_MAX = 12;
+
+export function cleanShowText(input: string) {
+  return input
+    .toUpperCase()
+    .replace(/[^A-Z0-9 &!?'.\-]/g, "")
+    .slice(0, SHOW_MAX);
+}
+
+export function isValidShowText(input: string) {
+  return cleanShowText(input).trim().length > 0;
+}
+
+// The text that goes on the plate: free text for show plates, the legally
+// spaced registration for road-legal plates.
+export function plateText(c: Pick<PlateConfig, "type" | "reg">) {
+  return c.type === "show" ? cleanShowText(c.reg).trim() : formatReg(c.reg);
+}
+
+export function isValidPlateText(c: Pick<PlateConfig, "type" | "reg">) {
+  return c.type === "show" ? isValidShowText(c.reg) : isValidReg(c.reg);
+}
+
 export function unitPrice(c: PlateConfig) {
   const style = styles.find((s) => s.id === c.style) ?? styles[0];
   let p = c.which === "pair" ? style.pair : style.single;
@@ -215,13 +240,14 @@ export function sanitiseItem(raw: unknown): CartItem | null {
   const border = pick(r.border, borders);
   const fixing = pick(r.fixing, fixings);
   const reg = typeof r.reg === "string" ? r.reg : "";
+  const type: PlateType = r.type === "show" ? "show" : "legal";
   const qty = Number(r.qty);
   if (!style || !which || !badge || !border || !fixing) return null;
-  if (!isValidReg(reg) || !Number.isInteger(qty) || qty < 1 || qty > 10) return null;
+  if (!isValidPlateText({ type, reg }) || !Number.isInteger(qty) || qty < 1 || qty > 10) return null;
   return {
-    type: r.type === "show" ? "show" : "legal",
+    type,
     id: typeof r.id === "string" ? r.id.slice(0, 40) : "",
-    reg: formatReg(reg),
+    reg: plateText({ type, reg }),
     style,
     which,
     badge,

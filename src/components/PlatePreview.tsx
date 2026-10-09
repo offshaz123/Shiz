@@ -1,6 +1,6 @@
 import { useId } from "react";
 import { site } from "@/lib/site";
-import { type FlagId, type PlateConfig, badges, formatReg, styles } from "@/lib/plates";
+import { type FlagId, type PlateConfig, badges, plateText, styles } from "@/lib/plates";
 
 // Standard car plate, 520 × 111mm.
 const w = 520;
@@ -58,7 +58,7 @@ export function PlatePreview({
   className?: string;
 }) {
   const uid = useId().replace(/:/g, "");
-  const reg = label ?? (formatReg(config.reg) || "YOUR REG");
+  const reg = label ?? (plateText(config) || (config.type === "show" ? "YOUR TEXT" : "YOUR REG"));
   const style = styles.find((s) => s.id === config.style) ?? styles[0];
   const badge = badges.find((b) => b.id === config.badge) ?? badges[0];
   // One badge panel on the left: a thin green strip, a green strip with
@@ -66,7 +66,8 @@ export function PlatePreview({
   const bandW = badge.id === "none" ? 0 : badge.green && !badge.code ? 18 : 50;
   const left = bandW;
   const cx = left + (w - left) / 2;
-  const fontSize = 86;
+  // Long show-plate text shrinks to fit; registrations (max 8 incl. space) never need to.
+  const fontSize = Math.min(86, (86 * 8.5) / Math.max(reg.length, 1) * ((w - left) / 470));
   const baseline = h / 2 + fontSize * 0.36;
 
   const textFill = style.look === "gel" ? `url(#gel-${uid})` : "#111";
@@ -140,6 +141,8 @@ export function PlatePreview({
         letterSpacing="2"
         fill={textFill}
         filter={d > 0 ? `url(#raised-${uid})` : undefined}
+        // Keep every space the customer typed (SVG collapses them otherwise).
+        style={{ whiteSpace: "pre" }}
       >
         {reg}
       </text>

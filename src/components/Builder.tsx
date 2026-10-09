@@ -14,8 +14,11 @@ import {
   defaultConfig,
   extrasPrice,
   fixings,
+  SHOW_MAX,
+  cleanShowText,
   formatReg,
-  isValidReg,
+  isValidPlateText,
+  plateText,
   money,
   plateSize,
   styles,
@@ -100,19 +103,23 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
   };
 
   const addToBasket = () => {
-    if (!isValidReg(c.reg)) {
-      setRegError("Please enter a valid UK registration, e.g. AB12 CDE");
+    if (!isValidPlateText(c)) {
+      setRegError(
+        c.type === "show"
+          ? "Please type the text you want on your show plate"
+          : "Please enter a valid UK registration, e.g. AB12 CDE",
+      );
       document.getElementById("reg")?.scrollIntoView({ behavior: "smooth", block: "center" });
       document.getElementById("reg")?.focus({ preventScroll: true });
       return;
     }
-    add({ ...c, reg: formatReg(c.reg) });
+    add({ ...c, reg: plateText(c) });
     router.push("/basket");
   };
 
   const sizeLabel = `${plateSize.name.replace(" Car", "")} (520mm x 111mm)`;
   const summary: [string, string][] = [
-    ["Registration", formatReg(c.reg) || "-"],
+    [c.type === "show" ? "Plate Text" : "Registration", plateText(c) || "-"],
     ["Plate Type", c.type === "show" ? "Show Plate" : "Road Legal"],
     ["Front Size", showFront ? sizeLabel : "Not required"],
     ["Rear Size", showRear ? sizeLabel : "Not required"],
@@ -161,19 +168,21 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
             <div className="p-5 sm:p-6">
               <div className="rounded-xl border border-[#e8d89a] bg-[#fdf8e7] p-4">
                 <label htmlFor="reg" className="mb-2 block text-sm font-semibold">
-                  Registration Number
+                  {c.type === "show" ? "Show Plate Text" : "Registration Number"}
                 </label>
                 <input
                   id="reg"
                   className="field h-14 text-center text-xl font-bold uppercase tracking-[0.15em] placeholder:font-semibold placeholder:tracking-wider placeholder:text-black/35"
                   value={c.reg}
                   onChange={(e) => {
-                    set({ reg: e.target.value.toUpperCase() });
+                    const v = e.target.value.toUpperCase();
+                    set({ reg: c.type === "show" ? cleanShowText(v) : v });
                     setRegError("");
                   }}
-                  onBlur={() => c.reg && set({ reg: formatReg(c.reg) })}
-                  placeholder="Enter registration"
-                  maxLength={9}
+                  // Road-legal plates get the legal spacing; show plates keep it exactly as typed.
+                  onBlur={() => c.reg && c.type === "legal" && set({ reg: formatReg(c.reg) })}
+                  placeholder={c.type === "show" ? "Type anything" : "Enter registration"}
+                  maxLength={c.type === "show" ? SHOW_MAX : 9}
                   autoComplete="off"
                   autoCapitalize="characters"
                   spellCheck={false}
@@ -186,7 +195,9 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
                   </p>
                 ) : (
                   <p id="reg-hint" className="mt-2 text-center text-xs text-muted">
-                    Max 7 characters for selected plate size
+                    {c.type === "show"
+                      ? `Show plate: any text, spaces wherever you like (up to ${SHOW_MAX} characters)`
+                      : "Max 7 characters for selected plate size"}
                   </p>
                 )}
               </div>
@@ -233,7 +244,11 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
                             type="radio"
                             name="plate-type"
                             checked={c.type === t.id}
-                            onChange={() => set({ type: t.id })}
+                            onChange={() => {
+                              // Back to road legal: snap the text to the legal spacing.
+                              set(t.id === "legal" ? { type: t.id, reg: formatReg(c.reg) } : { type: t.id });
+                              setRegError("");
+                            }}
                             className="absolute right-3 top-3 h-5 w-5 accent-[#8a6812]"
                           />
                           <span className="flex items-center gap-2 font-display text-xl font-bold">
@@ -259,7 +274,7 @@ export function Builder({ initial }: { initial: Partial<PlateConfig> }) {
                       <p className="mt-4 rounded-xl border border-[#f1c9a5] bg-[#fff5ec] p-3 text-sm text-[#8a4a12]">
                         ⚠️ Show plates are for display and off-road use only (car shows, private land, photos).
                         They are <strong>not road legal</strong> and must not be fitted to a vehicle used on the
-                        road. No documents are needed.{" "}
+                        road. You can type any text and put spaces wherever you like. No documents are needed.{" "}
                         <Link href="/legal" className="font-semibold underline">
                           Learn more
                         </Link>

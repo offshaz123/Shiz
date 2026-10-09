@@ -194,7 +194,7 @@ export default function CheckoutPage() {
               <li key={i.id} className="flex justify-between gap-3 py-3">
                 <span>
                   <span className="block font-semibold">
-                    {i.reg} {i.qty > 1 && `× ${i.qty}`}
+                    <span className="whitespace-pre">{i.reg}</span> {i.qty > 1 && `× ${i.qty}`}
                   </span>
                   <span className="block text-xs text-muted">{describe(i)}</span>
                 </span>
