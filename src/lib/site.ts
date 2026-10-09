@@ -8,7 +8,7 @@ export const site = {
   // TODO: real contact details
   email: "info@platedup.com",
   // WhatsApp number in international format without the + (447…).
-  whatsapp: "447000000000",
+  whatsapp: "447539559947",
   address: "PlatedUp, Unit 1, Your Street, Your Town",
   // Printed on every plate alongside the business name (a legal requirement).
   postcode: "AB1 2CD",
