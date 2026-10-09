@@ -77,6 +77,7 @@ keywords, dealership social strategy).
 - Meta & Instagram Ads for Removals and Man-and-Van Businesses (industry-specific)
 - Why Your Meta Ads Invoice Is Higher Than the Budget You Set (platform & policy changes)
 - Keyword Stuffing Your Business Name Will Cost You (local search)
+- Advantage+ Audience: What Happened to Interest Targeting (Meta mechanics & platform change)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -277,7 +278,7 @@ keywords, dealership social strategy).
       bring customers", "reviews vs advertising local business UK"
 
 ## Backlog — Meta mechanics & platform change (added 2026-10-08 research round)
-- [ ] Advantage+ Audience: What Happened to Interest Targeting — target: "Advantage+ audience
+- [x] Advantage+ Audience: What Happened to Interest Targeting — target: "Advantage+ audience
       explained", "Meta detailed targeting removed 2026"
 - [ ] Creative Fatigue: How to Tell an Ad Has Stopped Working — target: "Facebook ad creative
       fatigue", "ad frequency too high"

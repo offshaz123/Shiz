@@ -16,6 +16,105 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "advantage-plus-audience-what-happened-to-interest-targeting",
+    title: "Advantage+ Audience: What Happened to Interest Targeting",
+    description:
+      "Meta turned most of your targeting into suggestions it is free to ignore. Here is which settings are still hard limits, and what that changes for a local business.",
+    publishedAt: "2026-10-09",
+    keywords: [
+      "Advantage+ audience explained",
+      "Meta detailed targeting removed",
+      "Facebook interest targeting not working",
+      "Meta audience controls vs suggestions",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You set the audience to women aged 30 to 45 interested in home improvement. A week later you look at the breakdown and half the spend went to men in their fifties.",
+          "Nothing is broken. Meta did what it now does by default, which is treat most of what you typed as a hint rather than an instruction.",
+        ],
+      },
+      {
+        heading: "Controls and suggestions",
+        paragraphs: [
+          "Meta now splits the audience settings into two kinds, and the difference is the whole thing. Some are controls, which are hard limits your ads cannot go outside. The rest are suggestions, which are a starting point the system is free to move past when it thinks it will do better elsewhere.",
+          "Controls, the ones Meta will honour:",
+        ],
+        bullets: [
+          "Locations",
+          "Minimum age",
+          "Languages",
+          "Custom audiences you exclude",
+        ],
+      },
+      {
+        paragraphs: [
+          "Suggestions, the ones it treats as a hint:",
+        ],
+        bullets: [
+          "Age range",
+          "Gender",
+          "Detailed targeting, meaning interests, demographics and behaviours",
+          "Custom audiences you include",
+          "Lookalike audiences",
+        ],
+      },
+      {
+        paragraphs: [
+          "So the delivery starts with roughly who you described, and then widens as the system finds people it expects to convert more cheaply. That is why you suggested women and men saw the advert. It is working as designed.",
+        ],
+      },
+      {
+        heading: "You can still pin things down",
+        paragraphs: [
+          "This is the part people miss. If precise reach genuinely matters more than cost per result, you can convert age, gender, detailed targeting or your included custom audiences into controls rather than suggestions, inside the same interface. The setting is there.",
+          "The honest caveat is that pinning everything down usually costs you. Narrowing hard on a small local audience tends to push the cost per result up, because you have taken away most of the room the system had to find somebody cheaper. For a builder covering five postcodes that room was never very large to begin with.",
+          "The exception worth defending is anything where showing the advert to the wrong person is a real problem rather than just inefficient.",
+        ],
+      },
+      {
+        heading: "The exclusion trap",
+        paragraphs: [
+          "Here is the one that actually costs people money, and it is easy to get wrong because both boxes look similar.",
+          "If you are excluding a list, for example your existing customers, it has to go in the audience controls section. Putting a list in as a suggestion does not exclude anybody. Your exclusion becomes a hint, and a hint to avoid someone is not an instruction to avoid them.",
+          "Worth going and checking on any campaign you set up before you understood the split, because an exclusion sitting in the wrong half has been quietly doing nothing.",
+        ],
+      },
+      {
+        heading: "If you are in a special ad category",
+        paragraphs: [
+          "Campaigns declared in a special ad category, which covers housing, employment, credit and financial products, and social and political issues, cannot use Advantage+ audience at all.",
+          "That is not a loophole or an oversight. Those categories have restricted targeting precisely so that advertising cannot be aimed at or away from particular groups, and an automated system that widens the audience on its own does not fit that. If your business is in one of them, you are on the older targeting with its own restrictions, and the right thing to do is declare the category properly rather than look for a way around it.",
+        ],
+      },
+      {
+        heading: "What this means for a local business",
+        paragraphs: [
+          "Two practical consequences.",
+          "First, location is still a hard limit, and for most local businesses that was always the targeting that mattered. A roofer does not really need to reach a particular age bracket. They need to reach people within half an hour of the van, and that part still works exactly as it did.",
+          "Second, your creative is now doing the job your interest targeting used to do. If the advert shows a loft conversion, people who have been thinking about a loft conversion are the ones who stop scrolling, and the system learns from who responds. The picture and the first line are the filter now, not a checkbox.",
+          "Which also means running five ad sets built on overlapping interests is worse than pointless. They compete against each other for the same people and split your budget across five learning phases instead of one. One ad set, a sensible radius, several pieces of creative tested against each other, and let the system do the part it is now going to do regardless.",
+        ],
+      },
+      {
+        heading: "What to go and check",
+        paragraphs: [
+          "Three things, and none of them take long.",
+        ],
+        bullets: [
+          "Open any campaign with an exclusion list and confirm the list is in the controls section, not the suggestions section",
+          "Check your location radius is what you think it is, since that is the setting with real teeth",
+          "Stop reading the age and gender breakdown as a mistake, and start reading it as information about who actually responds",
+        ],
+      },
+      {
+        paragraphs: [
+          "The last one is a genuine shift in habit. That breakdown used to tell you whether your targeting was set up right. Now it tells you who your creative appeals to, which is more useful once you stop being annoyed by it.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "keyword-stuffing-your-business-name-will-cost-you",
     title: "Keyword Stuffing Your Business Name Will Cost You",
     description:
