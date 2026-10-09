@@ -66,11 +66,14 @@ export default async function OrderConfirmed(props: PageProps<"/order-confirmed"
         Orders placed before {site.dispatchCutoff} on a working day are made and dispatched the same day.
       </p>
       {docsOutstanding && (
-        <div className="mt-8 rounded-3xl border border-line bg-surface p-6">
-          <p className="font-display text-2xl font-bold">One more step</p>
-          <p className="mt-2 text-muted">We can&apos;t make road-legal plates until we&apos;ve seen your documents.</p>
-          <Link href={`/upload-documents?ref=${orderRef}`} className="btn btn-gold mt-5">
-            Upload Documents
+        <div className="mt-8 rounded-3xl border-2 border-[#d92d20] bg-[#fdecec] p-6 text-left">
+          <p className="font-display text-2xl font-bold text-[#b42318]">⚠️ Action needed: upload your documents</p>
+          <p className="mt-2 text-[#7a271a]">
+            By law we must see proof you own the registration (V5C) and photo ID before we can make road-legal plates.{" "}
+            <strong>Until we receive them, your order can&apos;t go ahead and will be delayed.</strong>
+          </p>
+          <Link href={`/upload-documents?ref=${orderRef}`} className="btn mt-5 bg-[#d92d20] text-white hover:bg-[#b42318]">
+            Upload my documents now
           </Link>
         </div>
       )}

@@ -107,10 +107,25 @@ export function customerOrderEmail(o: Order) {
     encodeURIComponent(`I need some help with my order ${o.ref}`),
   );
 
+  const docsMissing = o.docs_status === "outstanding";
+  // Big red box near the top: road-legal plates can't be made without these.
+  // Show-plate-only orders never get it (their docs_status is "not_needed").
+  const docsWarning = docsMissing
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0 4px;background:#fdecec;border:2px solid #d92d20;border-radius:12px;">
+      <tr><td style="padding:18px 20px;">
+        <p style="font:700 18px Arial,sans-serif;color:#b42318;margin:0 0 8px;">⚠️ Action needed: please upload your documents</p>
+        <p style="font:15px/1.6 Arial,sans-serif;color:#7a271a;margin:0 0 6px;">By law we must see <strong>proof you own the registration</strong> (V5C logbook, new keeper slip, V750 or V778) and <strong>photo ID</strong> before we can make road-legal number plates.</p>
+        <p style="font:700 15px/1.6 Arial,sans-serif;color:#b42318;margin:0 0 14px;">Until we receive them, your order can't go ahead and will be delayed.</p>
+        <p style="margin:0 0 8px;">${button(uploadUrl, "Upload my documents now", "#d92d20")}</p>
+        <p style="font:13px/1.5 Arial,sans-serif;color:#7a271a;margin:8px 0 0;">It takes a minute. A clear photo from your phone is perfect. You'll need your order number: <strong>${o.ref}</strong></p>
+      </td></tr>
+    </table>`
+    : "";
+
   const next =
-    o.docs_status === "outstanding"
-      ? `<p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0 0 14px;"><strong>One more step:</strong> by law we must see your V5C (or other proof you own the registration) and photo ID before we can make road-legal plates. A photo from your phone is perfect.</p>
-         <p style="margin:0 0 8px;">${button(uploadUrl, "Upload my documents", INK)}</p>`
+    docsMissing
+      ? `<p style="font:15px/1.6 Arial,sans-serif;color:#b42318;margin:0 0 8px;"><strong>As soon as we have your documents</strong> we'll make your plates. Orders are dispatched the same working day when everything is in before ${site.dispatchCutoff}.</p>
+         <p style="margin:0 0 8px;">${button(uploadUrl, "Upload my documents", "#d92d20")}</p>`
       : `<p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0;">We're making your plates now. Orders placed before ${site.dispatchCutoff} on a working day are dispatched the same day, and we'll let you know when they're on the way.</p>`;
 
   const html = layout(
@@ -120,6 +135,7 @@ export function customerOrderEmail(o: Order) {
     <p style="font:700 26px Arial,sans-serif;color:${INK};margin:0 0 6px;">Thanks for your order, ${esc(first)}!</p>
     <p style="font:15px Arial,sans-serif;color:${MUTED};margin:0 0 18px;">Order <strong style="color:${INK};">${o.ref}</strong> · ${fmtDate(o.paid_at ?? o.created_at)}</p>
     <p style="margin:0 0 6px;"><span style="display:inline-block;background:${paid ? "#e7f6ec" : "#fff5ec"};color:${paid ? "#1f7a3d" : "#8a4a12"};font:700 13px Arial,sans-serif;padding:6px 12px;border-radius:999px;">${paid ? "✓ Payment received" : "Order received · awaiting payment"}</span></p>
+    ${docsWarning}
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${itemsHtml(o, 544)}</table>
 
@@ -151,6 +167,9 @@ export function customerOrderEmail(o: Order) {
   );
 
   const text = [
+    docsMissing
+      ? `ACTION NEEDED: please upload your V5C (or other proof you own the registration) and photo ID. Until we receive them your order can't go ahead and will be delayed. Upload here: ${uploadUrl}\n`
+      : "",
     `Thanks for your order, ${first}!`,
     `Order ${o.ref} · ${paid ? `Payment received (${money(o.amount_paid ?? o.total)})` : "Awaiting payment"}`,
     card && `Paid with ${card}`,
@@ -167,7 +186,9 @@ export function customerOrderEmail(o: Order) {
     .join("\n");
 
   return {
-    subject: paid ? `Order confirmed: ${o.ref} (${money(o.amount_paid ?? o.total)} paid)` : `Order received: ${o.ref}`,
+    subject:
+      (paid ? `Order confirmed: ${o.ref} (${money(o.amount_paid ?? o.total)} paid)` : `Order received: ${o.ref}`) +
+      (docsMissing ? " · Action needed: upload your documents" : ""),
     html,
     text,
   };
