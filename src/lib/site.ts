@@ -6,8 +6,7 @@ export const site = {
   description:
     "Design and order fully road-legal 2D, 3D gel and 4D number plates. Premium materials, free tracked delivery and 100% DVLA compliant.",
   // TODO: real contact details
-  phone: "07000 000000",
-  email: "hello@platedup.co.uk",
+  email: "info@platedup.com",
   // WhatsApp number in international format without the + (447…).
   whatsapp: "447000000000",
   address: "PlatedUp, Unit 1, Your Street, Your Town",
@@ -21,7 +20,7 @@ export const site = {
 } as const;
 
 export const whatsappHref = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(
-  "Hi PlatedUp, I'd like to order some number plates",
+  "Hi PlatedUp, I'm a customer and I need some help",
 )}`;
 
 export const nav = [

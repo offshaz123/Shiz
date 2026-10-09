@@ -11,7 +11,7 @@ Website for PlatedUp: road-legal number plates (Standard, 3D Gel, 4D 3MM, 4D 5MM
 
 ## Change your details and prices
 
-- Business details (phone, email, WhatsApp, address, **postcode printed on plates**, opening hours): `src/lib/site.ts`
+- Business details (email, WhatsApp, address, **postcode printed on plates**, opening hours): `src/lib/site.ts`
 - Plate styles, prices, extras and delivery prices: `src/lib/plates.ts` (prices in pence, so 2999 = £29.99)
 - FAQs and product page text: `src/lib/content.ts`
 - Logo: `src/components/Logo.tsx` draws the logo. To use your own artwork, put it at `public/logo.png` and swap the component for an `<img>`.

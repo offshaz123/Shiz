@@ -27,7 +27,7 @@ export default function ReturnsPage() {
         </p>
         <h2>How to contact us</h2>
         <p>
-          Call {site.phone}, email {site.email} or message us on WhatsApp with your order number.
+          Message us on WhatsApp or email {site.email} with your order number.
         </p>
       </div>
     </>

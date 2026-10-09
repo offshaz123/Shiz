@@ -19,12 +19,7 @@ export default function ContactPage() {
           <a href={whatsappHref} className="block rounded-3xl border border-line bg-surface p-6 hover:border-[#b8901f]">
             <p className="eyebrow">WhatsApp</p>
             <p className="mt-1 font-display text-2xl font-bold">Chat with us</p>
-            <p className="text-muted">Usually replies within the hour</p>
-          </a>
-          <a href={`tel:${site.phone.replace(/\s/g, "")}`} className="block rounded-3xl border border-line bg-surface p-6 hover:border-[#b8901f]">
-            <p className="eyebrow">Phone</p>
-            <p className="mt-1 font-display text-2xl font-bold">{site.phone}</p>
-            <p className="text-muted">{site.hours}</p>
+            <p className="text-muted">The quickest way to talk to someone · {site.hours}</p>
           </a>
           <a href={`mailto:${site.email}`} className="block rounded-3xl border border-line bg-surface p-6 hover:border-[#b8901f]">
             <p className="eyebrow">Email</p>

@@ -64,18 +64,13 @@ export function Footer() {
               </Link>
             </li>
             <li>
-              <a href={`tel:${site.phone.replace(/\s/g, "")}`} className="hover:text-white hover:underline">
-                {site.phone}
-              </a>
-            </li>
-            <li>
               <a href={`mailto:${site.email}`} className="hover:text-white hover:underline">
                 {site.email}
               </a>
             </li>
             <li>
               <a href={whatsappHref} className="hover:text-white hover:underline">
-                WhatsApp us
+                Chat on WhatsApp
               </a>
             </li>
             <li>{site.address}</li>

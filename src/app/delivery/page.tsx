@@ -35,7 +35,7 @@ export default function DeliveryPage() {
         <h2>Problems with delivery</h2>
         <p>
           If your plates haven&apos;t arrived within 5 working days or arrive damaged, contact us
-          on {site.phone} or {site.email} and we&apos;ll sort it out.
+          on WhatsApp or at {site.email} and we&apos;ll sort it out.
         </p>
       </div>
     </>

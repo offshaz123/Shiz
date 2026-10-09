@@ -1,8 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import { RegForm } from "@/components/RegForm";
 import { TrustBadges } from "@/components/TrustBadges";
 import { PlatePreview } from "@/components/PlatePreview";
-import { type PlateConfig, defaultConfig, money, styles } from "@/lib/plates";
+import { type PlateConfig, defaultConfig } from "@/lib/plates";
 import { products } from "@/lib/content";
 import { site } from "@/lib/site";
 
@@ -21,6 +22,31 @@ const features = [
     title: "Fast & Reliable",
     text: "Made in the UK on our own equipment",
     icon: "M3 7h11v9H3zM14 10h4l3 3v3h-7zM7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z",
+  },
+];
+
+// Lifestyle photos (AI-generated). Captions describe the plates only: these
+// aren't customers, so no names or quotes.
+const gallery = [
+  {
+    src: "/gallery/porsche-taycan-platedup.jpg",
+    alt: "Man holding a PlatedUp sign in front of a black Porsche Taycan with a UK flag number plate",
+    caption: "Porsche Taycan · UK flag plate",
+  },
+  {
+    src: "/gallery/porsche-taycan-charged.jpg",
+    alt: "Woman holding a PlatedUp sign beside a silver Porsche Taycan with a Green Strip UK show plate on a London rooftop",
+    caption: "Porsche Taycan · Green Strip UK show plate",
+  },
+  {
+    src: "/gallery/range-rover-green-strip.jpg",
+    alt: "Man holding a PlatedUp sign in front of a black Range Rover with a Green Strip UK show plate",
+    caption: "Range Rover · Green Strip UK show plate",
+  },
+  {
+    src: "/gallery/bmw-m4-hit-it.jpg",
+    alt: "Woman holding a PlatedUp sign beside a white BMW M4 with a show plate",
+    caption: "BMW M4 · Custom show plate",
   },
 ];
 
@@ -78,36 +104,41 @@ export default function Home() {
         <TrustBadges />
       </div>
 
-      {/* Styles */}
+      {/* Gallery */}
       <section className="bg-surface py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="text-center">
-            <span className="inline-block rounded-full bg-gold-soft px-4 py-1.5 text-sm font-semibold text-gold">Our Plates</span>
-            <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">Choose Your Style</h2>
-            <p className="mt-2 text-muted">Every style is road legal and made to BS AU 145e.</p>
+            <span className="inline-block rounded-full bg-gold-soft px-4 py-1.5 text-sm font-semibold text-gold">
+              Get Plated Up
+            </span>
+            <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">Plates That Turn Heads</h2>
+            <p className="mt-2 text-muted">From everyday cars to supercars, built your way.</p>
           </div>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {styles.map((s) => {
-              const product = products.find((p) => p.styles.includes(s.id))!;
-              return (
-                <div key={s.id} className="flex flex-col rounded-2xl border border-line bg-white p-5 shadow-sm">
-                  <PlatePreview config={{ ...defaultConfig, reg: "PL24 TED", style: s.id }} side="rear" className="w-full drop-shadow-md" />
-                  <h3 className="mt-4 font-display text-2xl font-bold">{s.name}</h3>
-                  <p className="mt-1 flex-1 text-sm text-muted">{s.blurb}</p>
-                  <p className="mt-3 font-semibold">
-                    {money(s.pair)} <span className="font-normal text-muted">a pair · {money(s.single)} single</span>
-                  </p>
-                  <div className="mt-4 flex gap-2">
-                    <Link href={`/design?style=${s.id}`} className="btn btn-gold flex-1 rounded-lg">
-                      Build Now
-                    </Link>
-                    <Link href={`/${product.slug}`} className="btn btn-white rounded-lg">
-                      Info
-                    </Link>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+            {gallery.map((g, i) => (
+              <figure key={g.src} className="overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
+                <Image
+                  src={g.src}
+                  alt={g.alt}
+                  width={900}
+                  height={900}
+                  sizes="(min-width: 1024px) 25vw, 50vw"
+                  priority={i < 2}
+                  className="aspect-square w-full object-cover"
+                />
+                <figcaption className="p-3 text-sm font-semibold sm:p-4">{g.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
+            <Link href="/design" className="btn btn-gold rounded-lg">
+              Design Your Plate
+            </Link>
+            {products.map((p) => (
+              <Link key={p.slug} href={`/${p.slug}`} className="btn btn-white rounded-lg">
+                {p.heading}
+              </Link>
+            ))}
           </div>
         </div>
       </section>

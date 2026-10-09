@@ -123,7 +123,7 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error("Order email failed", err);
     return Response.json(
-      { error: `We couldn't place your order. Please call us on ${site.phone}.` },
+      { error: `We couldn't place your order. Please message us on WhatsApp or email ${site.email}.` },
       { status: 500 },
     );
   }

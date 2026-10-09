@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Logo } from "./Logo";
-import { nav, site } from "@/lib/site";
+import { nav, whatsappHref } from "@/lib/site";
 import { useCart } from "@/lib/cart";
 
 function BasketIcon() {
@@ -41,13 +41,13 @@ export function Header() {
 
           <div className="flex items-center gap-2 sm:gap-4">
             <a
-              href={`tel:${site.phone.replace(/\s/g, "")}`}
-              className="hidden items-center gap-2 font-semibold text-gold md:flex"
+              href={whatsappHref}
+              className="hidden items-center gap-2 font-semibold text-[#128c4a] hover:underline md:flex"
             >
-              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-                <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" />
+              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden>
+                <path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z" />
               </svg>
-              {site.phone}
+              Chat on WhatsApp
             </a>
             <Link
               href="/upload-documents"
@@ -122,8 +122,8 @@ export function Header() {
               <Link href="/upload-documents" onClick={() => setOpen(false)} className="btn btn-gold w-full">
                 Upload Documents
               </Link>
-              <a href={`tel:${site.phone.replace(/\s/g, "")}`} className="btn btn-white w-full">
-                Call {site.phone}
+              <a href={whatsappHref} className="btn btn-white w-full">
+                Chat on WhatsApp
               </a>
             </li>
           </ul>
