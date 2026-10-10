@@ -59,6 +59,16 @@ export function AdminOrderActions({ orderRef, status }: { orderRef: string; stat
               {busy === a.status ? "Saving…" : a.label}
             </button>
           ))}
+        {(status === "pending" || status === "unpaid" || status === "expired") && (
+          <button
+            type="button"
+            disabled={!!busy}
+            onClick={() => post({ action: "check-payment" }, "check-payment")}
+            className="gold-bg rounded-lg px-4 py-2.5 text-sm font-semibold disabled:opacity-50"
+          >
+            {busy === "check-payment" ? "Checking…" : "Check payment with Stripe"}
+          </button>
+        )}
         <button
           type="button"
           disabled={!!busy}

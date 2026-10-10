@@ -3,7 +3,8 @@ import Link from "next/link";
 import { requireAdmin, fmtDateTime } from "@/lib/admin";
 import { AdminShell } from "@/components/AdminShell";
 import { StatusBadge } from "@/components/StatusBadge";
-import { listCustomers, listOrders, statusLabels } from "@/lib/orders";
+import { listCustomers, listOrders, refreshPendingPayments, statusLabels } from "@/lib/orders";
+import { isStripeConfigured } from "@/lib/stripe";
 import { listAccounts } from "@/lib/orders";
 import { money } from "@/lib/plates";
 import { cardLine } from "@/lib/emails";
@@ -28,6 +29,9 @@ export default async function AdminPage(props: PageProps<"/admin">) {
   const sp = await props.searchParams;
   const status = typeof sp.status === "string" && filters.some((f) => f.id === sp.status) ? sp.status : "active";
   const search = typeof sp.q === "string" ? sp.q.trim().slice(0, 100) : "";
+
+  // Catch any payment whose Stripe message didn't reach us before showing totals.
+  if (isStripeConfigured()) await refreshPendingPayments(await listOrders({ status: "pending", limit: 5 }));
 
   const [orders, everything, customers, accounts] = await Promise.all([
     listOrders({ status: status === "all" ? undefined : status, search }),

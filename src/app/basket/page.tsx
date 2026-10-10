@@ -74,7 +74,7 @@ export default function BasketPage() {
           <span className="text-muted">Subtotal</span>
           <span className="font-display text-2xl font-bold">{money(subtotal)}</span>
         </div>
-        <p className="mt-1 text-sm text-muted">Free tracked delivery. Next day available at checkout.</p>
+        <p className="mt-1 text-sm text-muted">Free tracked delivery on orders over £70. Next day delivery available at checkout.</p>
         <Link href="/checkout" className="btn btn-gold mt-5 w-full">
           Checkout
         </Link>

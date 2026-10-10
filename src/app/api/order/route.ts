@@ -1,10 +1,10 @@
 import type { Attachment } from "nodemailer/lib/mailer";
-import { describe, delivery, money, sanitiseItem, unitPrice } from "@/lib/plates";
+import { describe, delivery, deliveryPrice, money, sanitiseItem, unitPrice } from "@/lib/plates";
 import { field, orderRef, readUploads, sendToShop } from "@/lib/mail";
 import { site } from "@/lib/site";
 import { isDbConfigured } from "@/lib/db";
 import { getCurrentUser, isValidPhone } from "@/lib/auth";
-import { createCheckoutSession, isStripeConfigured } from "@/lib/stripe";
+import { createCheckoutSession, isStripeConfigured, requestBaseUrl } from "@/lib/stripe";
 import { createOrder, getOrder, saveDocuments, sendOrderEmails, setStatus, setStripeSession } from "@/lib/orders";
 
 export async function POST(req: Request) {
@@ -56,11 +56,13 @@ export async function POST(req: Request) {
   const hasDocs = uploads.attachments.length >= 2;
 
   const subtotal = plates.reduce((n, i) => n + unitPrice(i) * i.qty, 0);
-  const total = subtotal + option.price;
+  const shipping = deliveryPrice(option.id, subtotal);
+  const total = subtotal + shipping;
   const lines = plates.map((i) => ({ name: `${i.reg}: ${describe(i)}`, amount: unitPrice(i), qty: i.qty }));
-  if (option.price) lines.push({ name: option.name, amount: option.price, qty: 1 });
+  if (shipping) lines.push({ name: option.name, amount: shipping, qty: 1 });
+  const baseUrl = requestBaseUrl(req);
 
-  if (!isDbConfigured()) return legacyOrder({ customer, plates, option, total, needsDocs, hasDocs, uploads: uploads.attachments, lines });
+  if (!isDbConfigured()) return legacyOrder({ customer, plates, option, total, needsDocs, hasDocs, uploads: uploads.attachments, lines, baseUrl });
 
   // Save the order first. Nothing is emailed until Stripe confirms payment
   // (see /api/stripe/webhook and the thank-you page).
@@ -86,7 +88,7 @@ export async function POST(req: Request) {
       postcode: customer.postcode,
       items: plates,
       delivery_name: option.name,
-      delivery_price: option.price,
+      delivery_price: shipping,
       subtotal,
       total,
       docs_status: !needsDocs ? "not_needed" : hasDocs ? "received" : "outstanding",
@@ -102,7 +104,7 @@ export async function POST(req: Request) {
 
   if (paying) {
     try {
-      const session = await createCheckoutSession({ ref, email: customer.email, lines });
+      const session = await createCheckoutSession({ ref, email: customer.email, lines, baseUrl });
       await setStripeSession(ref, session.id);
       return Response.json({ ref, paymentUrl: session.url });
     } catch (err) {
@@ -128,6 +130,7 @@ async function legacyOrder(o: {
   hasDocs: boolean;
   uploads: Attachment[];
   lines: { name: string; amount: number; qty: number }[];
+  baseUrl: string;
 }) {
   const ref = orderRef();
   const c = o.customer;
@@ -154,7 +157,7 @@ async function legacyOrder(o: {
   }
   if (!isStripeConfigured()) return Response.json({ ref, paymentUrl: null });
   try {
-    const session = await createCheckoutSession({ ref, email: c.email, lines: o.lines });
+    const session = await createCheckoutSession({ ref, email: c.email, lines: o.lines, baseUrl: o.baseUrl });
     return Response.json({ ref, paymentUrl: session.url });
   } catch (err) {
     console.error("Stripe session failed", err);

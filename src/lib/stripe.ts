@@ -17,6 +17,8 @@ async function stripe(path: string, init?: { method?: string; body?: URLSearchPa
     },
     body: init?.body,
     cache: "no-store",
+    // Never leave a customer waiting on a slow connection to Stripe.
+    signal: AbortSignal.timeout(15000),
   });
   const data = await res.json();
   if (!res.ok) throw new Error(data?.error?.message ?? `Stripe error ${res.status}`);
@@ -27,7 +29,11 @@ export async function createCheckoutSession(opts: {
   ref: string;
   email: string;
   lines: { name: string; amount: number; qty: number }[];
+  // The website address the customer is using, so Stripe sends them back to
+  // the same one (with or without www) after paying.
+  baseUrl?: string;
 }) {
+  const base = opts.baseUrl ?? site.url;
   const body = new URLSearchParams({
     mode: "payment",
     customer_email: opts.email,
@@ -35,8 +41,8 @@ export async function createCheckoutSession(opts: {
     "metadata[order_ref]": opts.ref,
     "payment_intent_data[metadata][order_ref]": opts.ref,
     // Stripe fills in {CHECKOUT_SESSION_ID} so the thank-you page can check the payment.
-    success_url: `${site.url}/order-confirmed?ref=${opts.ref}&session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${site.url}/checkout`,
+    success_url: `${base}/order-confirmed?ref=${opts.ref}&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${base}/checkout`,
   });
   opts.lines.forEach((l, i) => {
     body.set(`line_items[${i}][quantity]`, String(l.qty));
@@ -93,4 +99,12 @@ export function verifyWebhook(payload: string, header: string | null, secret: st
       const sig = Buffer.from(p.slice(3), "hex");
       return sig.length === expected.length && timingSafeEqual(sig, expected);
     });
+}
+
+// The address (with or without www) a request came in on, if it's ours.
+export function requestBaseUrl(req: Request) {
+  const own = new URL(site.url).host.replace(/^www\./, "");
+  const host = (req.headers.get("x-forwarded-host") ?? req.headers.get("host") ?? "").split(",")[0].trim().toLowerCase();
+  if (host !== own && host !== `www.${own}`) return site.url;
+  return `https://${host}`;
 }

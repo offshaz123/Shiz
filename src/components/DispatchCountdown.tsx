@@ -58,7 +58,7 @@ export function DispatchCountdown() {
             Order now for dispatch next working day (same day before {site.dispatchCutoff})
           </p>
         )}
-        <p className="mt-1 text-muted">FREE tracked delivery · Next day upgrade available at checkout</p>
+        <p className="mt-1 text-muted">FREE tracked delivery over £70 · Next day delivery available at checkout</p>
       </div>
     </div>
   );

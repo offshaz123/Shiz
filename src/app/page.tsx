@@ -9,8 +9,8 @@ import { site } from "@/lib/site";
 
 const features = [
   {
-    title: "Free Tracked Delivery",
-    text: `Order before ${site.dispatchCutoff} for same day dispatch`,
+    title: "Free Delivery Over £70",
+    text: `Tracked UK delivery · same day dispatch before ${site.dispatchCutoff}`,
     icon: "M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z",
   },
   {
@@ -78,7 +78,7 @@ export default function Home() {
         />
         <div className="relative mx-auto max-w-5xl px-4 py-16 text-center sm:px-6 sm:py-24">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-sm font-semibold">
-            ✦ Premium handcrafted plates · Free tracked delivery
+            ✦ Premium handcrafted plates · Free delivery over £70
           </span>
           <h1 className="mt-6 font-display text-5xl font-bold leading-[0.95] sm:text-7xl">
             UK Number Plates

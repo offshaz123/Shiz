@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
-import { delivery, money } from "@/lib/plates";
+import { FREE_DELIVERY_FROM, delivery, money } from "@/lib/plates";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Delivery Policy" };
@@ -14,7 +14,8 @@ export default function DeliveryPage() {
         <ul>
           {delivery.map((d) => (
             <li key={d.id}>
-              <strong>{d.name}</strong> ({d.price ? money(d.price) : "free"}): {d.note}
+              <strong>{d.name}</strong> ({money(d.price)}
+              {d.id === "standard" && `, or FREE on orders over ${money(FREE_DELIVERY_FROM)}`}): {d.note}
             </li>
           ))}
         </ul>
@@ -34,7 +35,7 @@ export default function DeliveryPage() {
         <p>Every order is sent tracked. We&apos;ll email you the tracking details once your plates are on their way.</p>
         <h2>Problems with delivery</h2>
         <p>
-          If your plates haven&apos;t arrived within 5 working days or arrive damaged, contact us
+          If your plates haven&apos;t arrived within 5 working days (or the next working day for Next Day Delivery) or arrive damaged, contact us
           on WhatsApp or at {site.email} and we&apos;ll sort it out.
         </p>
       </div>

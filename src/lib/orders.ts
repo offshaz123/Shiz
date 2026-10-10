@@ -1,3 +1,4 @@
+import { after } from "next/server";
 import type { Attachment } from "nodemailer/lib/mailer";
 import { execute, query } from "./db";
 import { type CartItem, sanitiseItem } from "./plates";
@@ -6,7 +7,7 @@ import { join } from "node:path";
 import { LOGO_CID, customerCancelEmail, customerDispatchEmail, customerOrderEmail, plateCid, plateImageParams, shopOrderEmail } from "./emails";
 import { renderPlatePng } from "./plate-image";
 import { sendMail, sendToShop } from "./mail";
-import type { PaidSession } from "./stripe";
+import { type PaidSession, getCheckoutSession } from "./stripe";
 
 export type OrderStatus = "pending" | "unpaid" | "paid" | "in_production" | "dispatched" | "expired" | "cancelled";
 export type DocsStatus = "not_needed" | "outstanding" | "received";
@@ -226,8 +227,9 @@ async function emailImages(order: Order): Promise<Attachment[] | null> {
 }
 
 // Marks an order paid once Stripe confirms it. Safe to call more than once
-// (from the webhook and from the thank-you page): only the first call
-// changes the order and sends the emails.
+// (from the webhook, the thank-you page and the admin): only the first call
+// changes the order and sends the emails. The emails go out after the
+// response, so the customer's thank-you page loads straight away.
 export async function markPaid(s: PaidSession) {
   if (!s.paid || !s.ref) return null;
   const order = await getOrder(s.ref);
@@ -239,8 +241,28 @@ export async function markPaid(s: PaidSession) {
     [s.amount, s.cardBrand, s.cardLast4, s.sessionId, s.ref],
   );
   const updated = await getOrder(s.ref);
-  if (res.affectedRows === 1 && updated) await sendOrderEmails(updated);
+  if (res.affectedRows === 1 && updated) after(() => sendOrderEmails(updated));
   return updated;
+}
+
+// Asks Stripe about any of these orders still waiting for payment, in case
+// Stripe's "payment received" message never reached us. Gives up after a few
+// seconds so the page never hangs. Returns true if any order changed.
+export async function refreshPendingPayments(orders: Order[]) {
+  const pending = orders.filter((o) => o.status === "pending" && o.stripe_session_id).slice(0, 5);
+  if (pending.length === 0) return false;
+  const check = Promise.all(
+    pending.map(async (o) => {
+      try {
+        const session = await getCheckoutSession(o.stripe_session_id!);
+        return Boolean(session.paid && (await markPaid(session)));
+      } catch (err) {
+        console.error(`Checking payment for ${o.ref} failed`, err);
+        return false;
+      }
+    }),
+  ).then((r) => r.some(Boolean));
+  return Promise.race([check, new Promise<boolean>((resolve) => setTimeout(() => resolve(false), 4000))]);
 }
 
 export async function listCustomers() {

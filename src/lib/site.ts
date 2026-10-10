@@ -4,7 +4,7 @@ export const site = {
   name: "PlatedUp",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://platedup.co.uk",
   description:
-    "Design and order fully road-legal 2D, 3D gel and 4D number plates. Premium materials, free tracked delivery and 100% DVLA compliant.",
+    "Design and order fully road-legal 2D, 3D gel and 4D number plates. Premium materials, free tracked delivery over £70 and 100% DVLA compliant.",
   // TODO: real contact details
   email: "info@platedup.co.uk",
   // WhatsApp number in international format without the + (447…).

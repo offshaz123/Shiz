@@ -30,7 +30,7 @@ const tabs = ["Size", "Style", "Additions"] as const;
 
 const trust = [
   { title: "DVLA Compliant", text: "BS AU 145e certified", icon: "M12 2 4 5v6c0 5 3.4 9.5 8 11 4.6-1.5 8-6 8-11V5l-8-3Z" },
-  { title: "FREE Delivery", text: "Order before 2pm for same day dispatch", icon: "M3 7h11v9H3zM14 10h4l3 3v3h-7zM7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z", highlight: true },
+  { title: "FREE Delivery over £70", text: "Order before 2pm for same day dispatch", icon: "M3 7h11v9H3zM14 10h4l3 3v3h-7zM7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z", highlight: true },
   { title: "Made in UK", text: "Made to order in-house", icon: "M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Zm0-8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" },
   { title: "Premium Materials", text: "High-impact acrylic, reflective", icon: "M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm-3.5 5.5L12 15l3.5 5.5L12 19l-3.5 1.5Z" },
 ];

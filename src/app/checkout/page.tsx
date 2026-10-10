@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/lib/cart";
 import { AddressFields } from "@/components/AddressFields";
-import { type DeliveryId, delivery, describe, money, unitPrice } from "@/lib/plates";
+import { type DeliveryId, FREE_DELIVERY_FROM, delivery, deliveryPrice as priceFor, describe, money, unitPrice } from "@/lib/plates";
 
 function Section({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
   return (
@@ -146,7 +146,7 @@ export default function CheckoutPage() {
       </div>
     );
 
-  const deliveryPrice = delivery.find((d) => d.id === deliveryId)!.price;
+  const deliveryPrice = priceFor(deliveryId, subtotal);
   const total = subtotal + deliveryPrice;
   // Only road-legal plates need documents; show plates don't.
   const needsDocs = items.some((i) => i.type !== "show");
@@ -215,12 +215,17 @@ export default function CheckoutPage() {
                   >
                     <span className="flex justify-between font-semibold">
                       {d.name}
-                      <span>{d.price ? money(d.price) : "FREE"}</span>
+                      <span>{priceFor(d.id, subtotal) ? money(priceFor(d.id, subtotal)) : "FREE"}</span>
                     </span>
                     <span className="block text-sm text-muted">{d.note}</span>
                   </button>
                 ))}
               </div>
+              <p className="mt-2 text-sm text-muted">
+                {subtotal >= FREE_DELIVERY_FROM
+                  ? "Your order qualifies for FREE tracked delivery."
+                  : `Free tracked delivery on orders over ${money(FREE_DELIVERY_FROM)}. Spend ${money(FREE_DELIVERY_FROM - subtotal)} more to qualify.`}
+              </p>
             </fieldset>
           </Section>
 

@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser, isAdmin } from "@/lib/auth";
-import { listOrdersForUser } from "@/lib/orders";
+import { listOrdersForUser, refreshPendingPayments } from "@/lib/orders";
+import { isStripeConfigured } from "@/lib/stripe";
 import { describe, money, unitPrice } from "@/lib/plates";
 import { whatsappHref } from "@/lib/site";
 import { PlatePreview } from "@/components/PlatePreview";
@@ -22,7 +23,8 @@ export default async function AccountPage(props: PageProps<"/account">) {
   if (!user) redirect("/login?next=/account");
   const { tab } = await props.searchParams;
   const showDetails = tab === "details";
-  const orders = showDetails ? [] : await listOrdersForUser(user.id);
+  let orders = showDetails ? [] : await listOrdersForUser(user.id);
+  if (isStripeConfigured() && (await refreshPendingPayments(orders))) orders = await listOrdersForUser(user.id);
 
   const tabClass = (on: boolean) =>
     `rounded-lg px-4 py-2.5 font-semibold transition-colors ${on ? "gold-bg shadow-sm" : "bg-surface-2/70 text-muted hover:bg-surface-2"}`;

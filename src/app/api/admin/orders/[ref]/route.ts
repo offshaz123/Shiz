@@ -1,5 +1,6 @@
 import { isAdmin } from "@/lib/auth";
-import { type OrderStatus, getOrder, sendOrderEmails, sendStatusEmail, setStatus, statusLabels } from "@/lib/orders";
+import { type OrderStatus, getOrder, markPaid, sendOrderEmails, sendStatusEmail, setStatus, statusLabels } from "@/lib/orders";
+import { getCheckoutSession } from "@/lib/stripe";
 
 const allowed: OrderStatus[] = ["paid", "in_production", "dispatched", "cancelled", "unpaid"];
 // Moving an order to one of these emails the customer.
@@ -18,6 +19,24 @@ export async function POST(req: Request, ctx: RouteContext<"/api/admin/orders/[r
   if (body.action === "resend") {
     await sendOrderEmails(order);
     return Response.json({ message: "Emails sent again" });
+  }
+  if (body.action === "check-payment") {
+    // Asks Stripe directly, for when its "payment received" message didn't arrive.
+    if (!order.stripe_session_id) return Response.json({ error: "This order never went to Stripe checkout." }, { status: 400 });
+    try {
+      const session = await getCheckoutSession(order.stripe_session_id);
+      if (!session.paid) return Response.json({ message: "Stripe says this order hasn't been paid yet." });
+      const updated = await markPaid(session);
+      return Response.json({
+        message:
+          updated && order.status !== updated.status
+            ? "Payment confirmed by Stripe · order marked paid and emails sent"
+            : "Stripe confirms this order is paid",
+      });
+    } catch (err) {
+      console.error(`Checking payment for ${ref} failed`, err);
+      return Response.json({ error: "Couldn't reach Stripe. Please try again in a minute." }, { status: 502 });
+    }
   }
   if (body.action === "resend-status") {
     if (!isEmailed(order.status)) return Response.json({ error: "There's no email for this status" }, { status: 400 });

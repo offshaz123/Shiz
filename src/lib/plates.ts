@@ -117,10 +117,21 @@ export const extrasPrice = {
   border: 349,
 } as const;
 
+// Tracked delivery is free once the plates come to this much (£70).
+export const FREE_DELIVERY_FROM = 7000;
+
 export const delivery: { id: DeliveryId; name: string; note: string; price: number }[] = [
-  { id: "standard", name: "Free Tracked Delivery", note: "1–2 working days", price: 0 },
-  { id: "nextday", name: "Next Day Delivery", note: "Order before 2pm Mon–Fri", price: 499 },
+  { id: "standard", name: "Tracked Delivery", note: "2–5 working days", price: 399 },
+  { id: "nextday", name: "Next Day Delivery", note: "Next working day · order before 2pm Mon–Fri", price: 699 },
 ];
+
+// What a delivery option costs for a basket of plates worth `subtotal`.
+export function deliveryPrice(id: DeliveryId, subtotal: number) {
+  const option = delivery.find((d) => d.id === id) ?? delivery[0];
+  if (option.id === "standard" && subtotal >= FREE_DELIVERY_FROM) return 0;
+  return option.price;
+}
+
 
 export type PlateConfig = {
   type: PlateType;

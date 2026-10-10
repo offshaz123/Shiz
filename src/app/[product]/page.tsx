@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PlatePreview } from "@/components/PlatePreview";
 import { RegForm } from "@/components/RegForm";
-import { defaultConfig, extrasPrice, fixings, money, styles } from "@/lib/plates";
+import { FREE_DELIVERY_FROM, defaultConfig, delivery, extrasPrice, fixings, money, styles } from "@/lib/plates";
 import { products } from "@/lib/content";
 
 export const dynamicParams = false;
@@ -100,8 +100,21 @@ export default async function ProductPage(props: PageProps<"/[product]">) {
                   <td className="p-4 text-right">from +{money(fixings[1].price)}</td>
                 </tr>
                 <tr>
-                  <th className="p-4 font-semibold">Tracked delivery</th>
-                  <td className="p-4 text-right font-semibold text-gold">FREE</td>
+                  <th className="p-4 font-semibold">
+                    Tracked delivery
+                    <span className="block text-sm font-normal text-muted">{delivery[0].note}</span>
+                  </th>
+                  <td className="p-4 text-right">
+                    {money(delivery[0].price)}
+                    <span className="block text-sm font-semibold text-gold">FREE over {money(FREE_DELIVERY_FROM)}</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th className="p-4 font-semibold">
+                    Next Day Delivery
+                    <span className="block text-sm font-normal text-muted">{delivery[1].note}</span>
+                  </th>
+                  <td className="p-4 text-right">{money(delivery[1].price)}</td>
                 </tr>
               </tbody>
             </table>
