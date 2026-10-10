@@ -1,5 +1,6 @@
 import { useId } from "react";
 import { site } from "@/lib/site";
+import { CHAR_W, LEGAL_FONT, MARGIN, legalLayout, showFontSize } from "@/lib/plate-layout";
 import { type FlagId, type PlateConfig, badges, plateText, styles } from "@/lib/plates";
 
 // Standard car plate, 520 × 111mm.
@@ -50,12 +51,14 @@ export function PlatePreview({
   side,
   label,
   className = "",
+  style: css,
 }: {
   config: PlateConfig;
   side: "front" | "rear";
   // Show this text exactly as given instead of the formatted registration.
   label?: string;
   className?: string;
+  style?: React.CSSProperties;
 }) {
   const uid = useId().replace(/:/g, "");
   const reg = label ?? (plateText(config) || (config.type === "show" ? "YOUR TEXT" : "YOUR REG"));
@@ -66,9 +69,15 @@ export function PlatePreview({
   const bandW = badge.id === "none" ? 0 : badge.green && !badge.code ? 18 : 50;
   const left = bandW;
   const cx = left + (w - left) / 2;
-  // Long show-plate text shrinks to fit; registrations (max 8 incl. space) never need to.
-  const fontSize = Math.min(86, (86 * 8.5) / Math.max(reg.length, 1) * ((w - left) / 470));
-  const baseline = h / 2 + fontSize * 0.36;
+  const available = w - left - MARGIN * 2;
+  // Road-legal plates use the real layout (79mm characters in 50mm spaces);
+  // show plates keep the customer's spacing, shrunk if needed to fit.
+  const legal = config.type !== "show";
+  const layout = legal ? legalLayout(reg) : null;
+  const scale = layout ? Math.min(1, available / layout.width) : 1;
+  const fontSize = layout ? LEGAL_FONT * scale : showFontSize(reg, available, 2);
+  const start = layout ? cx - (layout.width * scale) / 2 : 0;
+  const baseline = h / 2 + fontSize * 0.35;
 
   const textFill = style.look === "gel" ? `url(#gel-${uid})` : "#111";
   const d = style.depth;
@@ -77,6 +86,7 @@ export function PlatePreview({
     <svg
       viewBox={`0 0 ${w} ${h}`}
       className={className}
+      style={css}
       role="img"
       aria-label={`${side === "front" ? "Front" : "Rear"} plate preview: ${reg}`}
     >
@@ -131,21 +141,40 @@ export function PlatePreview({
         <rect x="5" y="5" width={w - 10} height={h - 10} rx="5" fill="none" stroke="#111" strokeWidth="3" />
       )}
 
-      <text
-        x={cx}
-        y={baseline}
-        textAnchor="middle"
-        fontFamily="var(--font-plate)"
-        fontWeight="600"
-        fontSize={fontSize}
-        letterSpacing="2"
-        fill={textFill}
-        filter={d > 0 ? `url(#raised-${uid})` : undefined}
-        // Keep every space the customer typed (SVG collapses them otherwise).
-        style={{ whiteSpace: "pre" }}
-      >
-        {reg}
-      </text>
+      {layout ? (
+        <g fill={textFill} filter={d > 0 ? `url(#raised-${uid})` : undefined}>
+          {layout.cells.map((cell, i) => (
+            <text
+              key={i}
+              x={start + cell.centre * scale}
+              y={baseline}
+              textAnchor="middle"
+              fontFamily="var(--font-plate)"
+              fontWeight="600"
+              fontSize={fontSize}
+              {...(cell.squeeze < 1 && { textLength: CHAR_W * scale, lengthAdjust: "spacingAndGlyphs" })}
+            >
+              {cell.ch}
+            </text>
+          ))}
+        </g>
+      ) : (
+        <text
+          x={cx}
+          y={baseline}
+          textAnchor="middle"
+          fontFamily="var(--font-plate)"
+          fontWeight="600"
+          fontSize={fontSize}
+          letterSpacing="2"
+          fill={textFill}
+          filter={d > 0 ? `url(#raised-${uid})` : undefined}
+          // Keep every space the customer typed (SVG collapses them otherwise).
+          style={{ whiteSpace: "pre" }}
+        >
+          {reg}
+        </text>
+      )}
 
       <text
         x={cx}

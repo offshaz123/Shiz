@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { type BadgeId, type BorderId, type FlagId, type StyleId, badges, borders, cleanShowText, formatReg, styles } from "@/lib/plates";
 import { site } from "@/lib/site";
+import { CHAR_W, LEGAL_FONT, MARGIN, legalLayout, showFontSize } from "@/lib/plate-layout";
 
 // Draws a plate as a PNG for emails (email apps can't show the SVG preview).
 // Used by /api/plate-image and attached straight into order emails.
@@ -37,7 +38,13 @@ export async function renderPlate(q: URLSearchParams) {
   const fontData = await font;
 
   const bandW = badge.id === "none" ? 0 : badge.green && !badge.code ? 36 : 100;
-  const fontSize = Math.min(172, ((172 * 8.5) / Math.max(text.length, 1)) * ((W - bandW * 2) / 940));
+  // The same layout as the website preview (PlatePreview), at 2px per mm.
+  const px = W / 520;
+  const available = (W - bandW) / px - MARGIN * 2;
+  const layout = type === "legal" ? legalLayout(text) : null;
+  const scale = layout ? Math.min(1, available / layout.width) : 1;
+  const fontSize = (layout ? LEGAL_FONT * scale : showFontSize(text, available, 2)) * px;
+  const startX = layout ? bandW + ((W - bandW) - layout.width * scale * px) / 2 : 0;
   const depth = style.depth * 2;
   const shadow =
     depth > 0
@@ -89,26 +96,51 @@ export async function renderPlate(q: URLSearchParams) {
         {border === "black" && (
           <div style={{ position: "absolute", left: 10, top: 10, right: 10, bottom: 10, border: "6px solid #111", borderRadius: 10 }} />
         )}
-        <div
-          style={{
-            position: "absolute",
-            left: bandW,
-            right: 0,
-            top: 0,
-            bottom: 14,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontFamily: "Plate",
-            fontSize,
-            letterSpacing: 4,
-            color: "#111",
-            whiteSpace: "pre",
-            textShadow: shadow,
-          }}
-        >
-          {text}
-        </div>
+        {layout ? (
+          layout.cells.map((cell, i) => (
+            <div
+              key={i}
+              style={{
+                position: "absolute",
+                left: startX + (cell.centre - CHAR_W / 2) * scale * px,
+                width: CHAR_W * scale * px,
+                top: 0,
+                bottom: 34,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontFamily: "Plate",
+                fontSize,
+                color: "#111",
+                textShadow: shadow,
+                ...(cell.squeeze < 1 && { transform: `scaleX(${cell.squeeze})` }),
+              }}
+            >
+              {cell.ch}
+            </div>
+          ))
+        ) : (
+          <div
+            style={{
+              position: "absolute",
+              left: bandW,
+              right: 0,
+              top: 0,
+              bottom: 34,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontFamily: "Plate",
+              fontSize,
+              letterSpacing: 4,
+              color: "#111",
+              whiteSpace: "pre",
+              textShadow: shadow,
+            }}
+          >
+            {text}
+          </div>
+        )}
         <div
           style={{
             position: "absolute",
