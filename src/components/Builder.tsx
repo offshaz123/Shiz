@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { CarPreview } from "./CarPreview";
 import { PlatePreview } from "./PlatePreview";
 import { DispatchCountdown } from "./DispatchCountdown";
 import { useCart } from "@/lib/cart";
@@ -457,8 +456,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
           <section className="overflow-hidden rounded-2xl border border-line bg-white shadow-sm lg:sticky lg:top-36">
             <h2 className="gold-bg px-6 py-5 font-display text-2xl font-bold">Preview &amp; Summary</h2>
             <div className="p-5 sm:p-6">
-              <CarPreview config={c} />
-              <div className="mt-5 grid gap-4">
+              <div className="grid gap-4">
                 {showFront && (
                   <div>
                     <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted">Front</p>
