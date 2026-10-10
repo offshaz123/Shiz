@@ -93,13 +93,19 @@ export function verifyWebhook(payload: string, header: string | null, secret: st
   );
   const t = Number(parts.t);
   if (!t || Math.abs(Date.now() / 1000 - t) > toleranceSec) return false;
-  const expected = createHmac("sha256", secret).update(`${t}.${payload}`).digest();
-  return header
+  // Several secrets can be given, comma separated: one per Stripe webhook
+  // endpoint (e.g. one for platedup.co.uk and one for www.platedup.co.uk).
+  const sigs = header
     .split(",")
     .filter((p) => p.startsWith("v1="))
-    .some((p) => {
-      const sig = Buffer.from(p.slice(3), "hex");
-      return sig.length === expected.length && timingSafeEqual(sig, expected);
+    .map((p) => Buffer.from(p.slice(3), "hex"));
+  return secret
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .some((s) => {
+      const expected = createHmac("sha256", s).update(`${t}.${payload}`).digest();
+      return sigs.some((sig) => sig.length === expected.length && timingSafeEqual(sig, expected));
     });
 }
 

@@ -33,7 +33,7 @@ See `.env.example` for the full list:
 
 - **Database:** `DB_HOST` (usually `localhost`), `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`. Tables are created automatically.
 - **Email:** `ORDERS_EMAIL`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`
-- **Stripe:** `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` (Stripe → Developers → Webhooks → endpoint `https://YOUR-SITE/api/stripe/webhook`, events `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.expired`)
+- **Stripe:** `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` (Stripe → Developers → Webhooks → endpoint `https://YOUR-SITE/api/stripe/webhook`, events `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.expired`). For endpoints on both `platedup.co.uk` and `www.platedup.co.uk`, put both signing secrets in `STRIPE_WEBHOOK_SECRET`, separated by a comma.
 - **Admin:** `ADMIN_EMAIL`, `ADMIN_PASSWORD`
 - **Address suggestions (optional):** `GOOGLE_MAPS_API_KEY` with Places API (New) enabled. Without it, typing a postcode still fills in the town (free postcodes.io lookup).
 - `NEXT_PUBLIC_SITE_URL`, e.g. `https://platedup.co.uk`
