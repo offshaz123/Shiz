@@ -9,7 +9,7 @@ import { renderPlatePng } from "./plate-image";
 import { sendMail, sendToShop } from "./mail";
 import { type PaidSession, getCheckoutSession } from "./stripe";
 
-export type OrderStatus = "pending" | "unpaid" | "paid" | "in_production" | "dispatched" | "expired" | "cancelled";
+export type OrderStatus = "pending" | "unpaid" | "paid" | "in_production" | "dispatched" | "expired" | "cancelled" | "refunded";
 export type DocsStatus = "not_needed" | "outstanding" | "received";
 
 export const statusLabels: Record<OrderStatus, string> = {
@@ -20,6 +20,7 @@ export const statusLabels: Record<OrderStatus, string> = {
   dispatched: "Dispatched",
   expired: "Payment not completed",
   cancelled: "Cancelled",
+  refunded: "Cancelled & refunded",
 };
 
 export const docsLabels: Record<DocsStatus, string> = {
@@ -191,10 +192,10 @@ export async function sendOrderEmails(order: Order) {
 
 // Tells the customer their order has been dispatched or cancelled. Returns
 // false if the email couldn't be sent, so the admin can see it.
-export async function sendStatusEmail(order: Order, kind: "dispatched" | "cancelled") {
+export async function sendStatusEmail(order: Order, kind: "dispatched" | "cancelled" | "refunded") {
   const images = await emailImages(order);
   const mode = images ? "inline" : "web";
-  const email = kind === "dispatched" ? customerDispatchEmail(order, mode) : customerCancelEmail(order, mode);
+  const email = kind === "dispatched" ? customerDispatchEmail(order, mode) : customerCancelEmail({ ...order, status: kind }, mode);
   try {
     await sendMail({ to: order.email, subject: email.subject, text: email.text, html: email.html, attachments: images ?? [] });
     return true;

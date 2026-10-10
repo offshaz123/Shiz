@@ -7,13 +7,15 @@ export function isStripeConfigured() {
   return Boolean(process.env.STRIPE_SECRET_KEY);
 }
 
-async function stripe(path: string, init?: { method?: string; body?: URLSearchParams }) {
+async function stripe(path: string, init?: { method?: string; body?: URLSearchParams; idempotencyKey?: string }) {
   // STRIPE_API_BASE is only for local testing against a fake Stripe.
   const res = await fetch(`${process.env.STRIPE_API_BASE ?? "https://api.stripe.com/v1"}/${path}`, {
     method: init?.method ?? "GET",
     headers: {
       Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`,
       ...(init?.body && { "Content-Type": "application/x-www-form-urlencoded" }),
+      // Stops a double-click refunding twice: Stripe repeats the first answer.
+      ...(init?.idempotencyKey && { "Idempotency-Key": init.idempotencyKey }),
     },
     body: init?.body,
     cache: "no-store",
@@ -107,4 +109,15 @@ export function requestBaseUrl(req: Request) {
   const host = (req.headers.get("x-forwarded-host") ?? req.headers.get("host") ?? "").split(",")[0].trim().toLowerCase();
   if (host !== own && host !== `www.${own}`) return site.url;
   return `https://${host}`;
+}
+
+// Refunds the full payment for a checkout session, back to the customer's card.
+export async function refundCheckout(sessionId: string) {
+  const session = await stripe(`checkout/sessions/${encodeURIComponent(sessionId)}`);
+  const pi = typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id;
+  if (!pi) throw new Error("There's no card payment on this order to refund.");
+  const body = new URLSearchParams({ payment_intent: pi });
+  if (session.metadata?.order_ref) body.set("metadata[order_ref]", session.metadata.order_ref);
+  const refund = await stripe("refunds", { method: "POST", body, idempotencyKey: `refund-${sessionId}` });
+  return { id: refund.id as string, amount: refund.amount as number, status: refund.status as string };
 }

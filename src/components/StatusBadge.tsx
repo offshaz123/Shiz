@@ -8,6 +8,7 @@ const colours: Record<OrderStatus, string> = {
   dispatched: "bg-[#f1e9ff] text-[#6b21a8]",
   expired: "bg-[#f3f3f3] text-[#555]",
   cancelled: "bg-[#fdecec] text-[#b42318]",
+  refunded: "bg-[#fdecec] text-[#b42318]",
 };
 
 export function StatusBadge({ status, customer = false }: { status: OrderStatus; customer?: boolean }) {

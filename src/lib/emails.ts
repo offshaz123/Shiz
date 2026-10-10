@@ -295,7 +295,11 @@ export function customerCancelEmail(o: Order, images: ImageMode = "web") {
     encodeURIComponent(`Hi PlatedUp, my order ${o.ref} has been cancelled. Can you tell me why?`),
   );
   const paid = o.amount_paid !== null;
+  const refunded = o.status === "refunded";
   const card = cardLine(o);
+  const refundLine = refunded
+    ? `We've refunded ${money(o.amount_paid ?? o.total)} to the card you paid with${card ? ` (${card})` : ""}. It usually shows in your account within 5 to 10 working days, depending on your bank.`
+    : `If a refund is due, it will go back to the card you paid with${card ? ` (${card})` : ""}. Refunds usually show in your account within 5 to 10 working days, depending on your bank.`;
 
   const html = layout(
     `Your PlatedUp order ${o.ref} has been cancelled`,
@@ -317,7 +321,7 @@ export function customerCancelEmail(o: Order, images: ImageMode = "web") {
     ${
       paid
         ? `<p style="font:700 18px Arial,sans-serif;color:${INK};margin:24px 0 8px;">Your payment</p>
-    <p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0;">If a refund is due, it will go back to the card you paid with${card ? ` (${esc(card)})` : ""}. Refunds usually show in your account within 5 to 10 working days, depending on your bank.</p>`
+    <p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0;">${esc(refundLine)}</p>`
         : ""
     }
 
@@ -338,13 +342,11 @@ export function customerCancelEmail(o: Order, images: ImageMode = "web") {
     `Please get in touch so we can explain what happened: ${helpHref}`,
     `Or email ${site.email}`,
     "",
-    paid
-      ? `If a refund is due, it will go back to the card you paid with${card ? ` (${card})` : ""}, usually within 5 to 10 working days.`
-      : "",
+    paid ? refundLine : "",
     ...o.items.map((i) => `- "${i.reg}" × ${i.qty}: ${describe(i)}`),
   ].join("\n");
 
-  return { subject: `Your order ${o.ref} has been cancelled`, html, text };
+  return { subject: `Your order ${o.ref} has been cancelled${refunded ? " and refunded" : ""}`, html, text };
 }
 
 export function shopOrderEmail(o: Order, docCount: number, images: ImageMode = "web") {

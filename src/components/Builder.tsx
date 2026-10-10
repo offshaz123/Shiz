@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { CarPreview } from "./CarPreview";
 import { PlatePreview } from "./PlatePreview";
 import { DispatchCountdown } from "./DispatchCountdown";
 import { useCart } from "@/lib/cart";
@@ -129,8 +130,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
   const summary: [string, string][] = [
     [c.type === "show" ? "Plate Text" : "Registration", plateText(c) || "-"],
     ["Plate Type", c.type === "show" ? "Show Plate" : "Road Legal"],
-    ["Front Size", showFront ? sizeLabel : "Not required"],
-    ["Rear Size", showRear ? sizeLabel : "Not required"],
+    ["Size", sizeLabel],
     ["Style", style.name],
     ["Quantity", c.which === "pair" ? "Front and Rear" : whichPlates.find((w) => w.id === c.which)!.name],
   ];
@@ -146,9 +146,9 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
         <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold hover:text-gold">
           <span aria-hidden>←</span> Back to Home
         </Link>
-        <h1 className="mt-4 text-center font-display text-4xl font-bold sm:text-5xl">Build Your Number Plates</h1>
+        <h1 className="mt-3 text-center font-display text-3xl font-bold sm:mt-4 sm:text-5xl">Build Your Number Plates</h1>
 
-        <ul className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <ul className="mt-8 hidden grid-cols-2 gap-3 sm:grid lg:grid-cols-4">
           {trust.map((t) => (
             <li
               key={t.title}
@@ -169,7 +169,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
           ))}
         </ul>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-2 lg:items-start">
+        <div className="mt-5 grid gap-6 sm:mt-6 lg:grid-cols-2 lg:items-start">
           {/* Configure */}
           <section className="overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
             <h2 className="gold-deep px-6 py-5 font-display text-2xl font-bold">Configure Your Plate</h2>
@@ -288,48 +288,64 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
 
                     {c.type === "legal" ? (
                       <p className="mt-4 rounded-xl border border-[#cfe6d4] bg-[#f1faf3] p-3 text-sm text-[#1f5f33]">
-                        ✅ Road legal plates are BS AU 145e certified and DVLA compliant. We will ensure correct
-                        spacing before production. Document verification is required after purchase.{" "}
+                        ✅ BS AU 145e certified and DVLA compliant. We&apos;ll need your V5C and ID after you order.{" "}
                         <Link href="/legal#documents" className="font-semibold underline">
                           Learn more
                         </Link>
                       </p>
                     ) : (
                       <p className="mt-4 rounded-xl border border-[#f1c9a5] bg-[#fff5ec] p-3 text-sm text-[#8a4a12]">
-                        ⚠️ Show plates are for display and off-road use only (car shows, private land, photos).
-                        They are <strong>not road legal</strong> and must not be fitted to a vehicle used on the
-                        road. You can type any text and put spaces wherever you like. No documents are needed.{" "}
+                        ⚠️ For display and off-road use only, <strong>not road legal</strong>. Any text and spacing you
+                        like, and no documents needed.{" "}
                         <Link href="/legal" className="font-semibold underline">
                           Learn more
                         </Link>
                       </p>
                     )}
 
-                    <Heading>Select Plate Sizes</Heading>
-                    {(["front", "rear"] as const).map((side) => {
-                      const notRequired = side === "front" ? !showFront : !showRear;
-                      return (
-                        <div key={side} className="mb-4">
-                          <div className="mb-1.5 flex items-center justify-between">
-                            <label htmlFor={`size-${side}`} className="text-sm font-semibold capitalize">
-                              {side} Plate
-                            </label>
-                            <label className="flex cursor-pointer items-center gap-2 text-sm text-muted">
-                              <input
-                                type="checkbox"
-                                checked={notRequired}
-                                onChange={(e) => toggleNotRequired(side, e.target.checked)}
-                                className="h-4 w-4 accent-[#8a6812]"
-                              />
-                              Tick if not required
-                            </label>
-                          </div>
-                          <select id={`size-${side}`} className="field" disabled={notRequired} defaultValue="standard">
-                            <option value="standard">{sizeLabel}</option>
-                          </select>
+                    <Heading>Plate Size</Heading>
+                    <div className="flex items-center gap-4 rounded-xl border border-line bg-surface p-4">
+                      {/* A little plate outline with its measurements. */}
+                      <div className="w-28 shrink-0 text-center sm:w-36" aria-hidden>
+                        <div className="relative h-7 rounded border-2 border-ink/70 bg-[#f6c500] sm:h-8">
+                          <span className="absolute inset-0 flex items-center justify-center font-[family-name:var(--font-plate)] text-[11px] font-semibold tracking-wider text-[#14110b] sm:text-xs">
+                            520 × 111
+                          </span>
                         </div>
-                      );
-                    })}
+                        <div className="mt-1 flex items-center gap-1 text-[10px] text-muted">
+                          <span className="h-px flex-1 bg-current" />
+                          520mm
+                          <span className="h-px flex-1 bg-current" />
+                        </div>
+                      </div>
+                      <div>
+                        <p className="font-semibold">Standard UK car plate</p>
+                        <p className="text-sm text-muted">520mm × 111mm. Fits most cars.</p>
+                      </div>
+                    </div>
+
+                    <p className="mb-2 mt-5 text-sm font-semibold">Which plates do you need?</p>
+                    <div className="grid grid-cols-2 gap-3">
+                      {(["front", "rear"] as const).map((side) => {
+                        const on = side === "front" ? showFront : showRear;
+                        return (
+                          <label
+                            key={side}
+                            className={`flex cursor-pointer items-center gap-3 rounded-xl border-2 p-3 transition-colors ${
+                              on ? "border-[#b8901f] bg-gold-soft" : "border-line bg-white"
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={on}
+                              onChange={(e) => toggleNotRequired(side, !e.target.checked)}
+                              className="h-5 w-5 accent-[#8a6812]"
+                            />
+                            <span className="font-semibold capitalize">{side} plate</span>
+                          </label>
+                        );
+                      })}
+                    </div>
                   </>
                 )}
 
@@ -441,7 +457,8 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
           <section className="overflow-hidden rounded-2xl border border-line bg-white shadow-sm lg:sticky lg:top-36">
             <h2 className="gold-bg px-6 py-5 font-display text-2xl font-bold">Preview &amp; Summary</h2>
             <div className="p-5 sm:p-6">
-              <div className="grid gap-4">
+              <CarPreview config={c} />
+              <div className="mt-5 grid gap-4">
                 {showFront && (
                   <div>
                     <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted">Front</p>

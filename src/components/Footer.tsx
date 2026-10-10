@@ -14,8 +14,8 @@ const quickLinks = [
 export function Footer() {
   return (
     <footer className="gold-deep">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4">
-        <div>
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-8 px-4 py-10 sm:px-6 sm:py-14 md:gap-10 lg:grid-cols-4">
+        <div className="col-span-2 lg:col-span-1">
           <h2 className="font-display text-2xl font-bold">{site.name}</h2>
           <p className="mt-3 text-sm leading-relaxed text-white/85">
             Premium, handcrafted number plates. Fully road legal, with free UK tracked delivery on orders over £70.
@@ -56,7 +56,7 @@ export function Footer() {
           </ul>
         </div>
 
-        <div>
+        <div className="col-span-2 md:col-span-1">
           <h2 className="font-display text-xl font-bold">Contact Us</h2>
           <ul className="mt-4 space-y-2 text-sm text-white/85">
             <li>

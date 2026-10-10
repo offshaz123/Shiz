@@ -76,7 +76,7 @@ export default function Home() {
           aria-hidden
           className="pointer-events-none absolute -top-40 left-1/2 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-[#f2dc93] opacity-15 blur-3xl"
         />
-        <div className="relative mx-auto max-w-5xl px-4 py-16 text-center sm:px-6 sm:py-24">
+        <div className="relative mx-auto max-w-5xl px-4 py-10 text-center sm:px-6 sm:py-24">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-sm font-semibold">
             ✦ Premium handcrafted plates · Free delivery over £70
           </span>
@@ -93,16 +93,17 @@ export default function Home() {
             <RegForm inline />
           </div>
 
-          <div className="mx-auto mt-12 grid max-w-4xl gap-4 sm:grid-cols-3">
+          {/* Three small badges on phones, full cards on bigger screens. */}
+          <div className="mx-auto mt-8 grid max-w-4xl grid-cols-3 gap-2 sm:mt-12 sm:gap-4">
             {features.map((f) => (
-              <div key={f.title} className="rounded-2xl border border-white/20 bg-white/10 p-6">
-                <span className="gold-bg mx-auto flex h-12 w-12 items-center justify-center rounded-xl">
-                  <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" aria-hidden>
+              <div key={f.title} className="rounded-xl border border-white/20 bg-white/10 p-3 sm:rounded-2xl sm:p-6">
+                <span className="gold-bg mx-auto flex h-9 w-9 items-center justify-center rounded-lg sm:h-12 sm:w-12 sm:rounded-xl">
+                  <svg viewBox="0 0 24 24" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" aria-hidden>
                     <path d={f.icon} />
                   </svg>
                 </span>
-                <h2 className="mt-4 font-display text-xl font-bold">{f.title}</h2>
-                <p className="mt-1 text-sm text-white/80">{f.text}</p>
+                <h2 className="mt-2 font-display text-sm font-bold leading-tight sm:mt-4 sm:text-xl">{f.title}</h2>
+                <p className="mt-1 hidden text-sm text-white/80 sm:block">{f.text}</p>
               </div>
             ))}
           </div>
@@ -115,7 +116,7 @@ export default function Home() {
       </div>
 
       {/* Gallery */}
-      <section className="bg-surface py-16 sm:py-20">
+      <section className="bg-surface py-12 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="text-center">
             <span className="inline-block rounded-full bg-gold-soft px-4 py-1.5 text-sm font-semibold text-gold">
@@ -154,7 +155,7 @@ export default function Home() {
       </section>
 
       {/* Showcase */}
-      <section className="bg-white py-16 sm:py-20">
+      <section className="bg-white py-12 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="text-center">
             <span className="inline-block rounded-full bg-gold-soft px-4 py-1.5 text-sm font-semibold text-gold">
@@ -163,13 +164,13 @@ export default function Home() {
             <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">Plates That Stand Out</h2>
             <p className="mt-2 text-muted">A few of the combinations our customers love.</p>
           </div>
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-8 grid grid-cols-2 gap-3 sm:mt-10 sm:gap-5 lg:grid-cols-4">
             {showcase.map(({ caption, ...c }) => (
               <div key={c.reg} className="overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
-                <div className="bg-surface p-5">
+                <div className="bg-surface p-3 sm:p-5">
                   <PlatePreview config={{ ...defaultConfig, ...c }} side="rear" className="w-full drop-shadow-md" />
                 </div>
-                <p className="p-4 text-sm font-semibold">{caption}</p>
+                <p className="p-3 text-xs font-semibold sm:p-4 sm:text-sm">{caption}</p>
               </div>
             ))}
           </div>

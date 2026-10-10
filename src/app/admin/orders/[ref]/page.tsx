@@ -75,7 +75,7 @@ export default async function AdminOrderPage(props: PageProps<"/admin/orders/[re
           </Card>
 
           <Card title="Update order">
-            <AdminOrderActions orderRef={order.ref} status={order.status} />
+            <AdminOrderActions orderRef={order.ref} status={order.status} amountPaid={order.amount_paid} canRefund={Boolean(order.stripe_session_id)} />
           </Card>
         </div>
 
