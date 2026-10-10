@@ -16,6 +16,97 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-for-driving-instructors",
+    title: "Meta & Instagram Ads for Driving Instructors and Driving Schools",
+    description:
+      "Most instructors don't need more enquiries, they need better ones. How to advertise when you are already booked and the waiting list is the real problem.",
+    publishedAt: "2026-10-10",
+    keywords: [
+      "Facebook ads driving school UK",
+      "marketing for driving instructors",
+      "how to get more pupils driving instructor",
+      "driving school advertising",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Driving instruction is an odd one to advertise, because most instructors we speak to are not short of enquiries. They are short of hours.",
+          "That makes the usual pitch useless. Telling somebody with a six-week waiting list that you will bring them more leads is not an offer, it is a nuisance.",
+        ],
+      },
+      {
+        heading: "So why advertise at all",
+        paragraphs: [
+          "Four reasons, and none of them is volume for its own sake.",
+        ],
+        bullets: [
+          "Filling the gaps. A cancellation at two on a Tuesday is an hour you never get back. A warm list you can message is worth more than a cold advert",
+          "Choosing better pupils. When more people want you than you have slots for, you can take the ones who turn up, pay on time and live on a sensible route",
+          "Charging what you are worth. It is a lot easier to raise your hourly rate when the list is full than when you are hoping the phone rings",
+          "Cover for the quiet stretch. Demand is not flat across the year, and a name people already recognise fills up faster when it dips",
+        ],
+      },
+      {
+        heading: "Nobody is choosing you on price",
+        paragraphs: [
+          "Worth being honest about what the decision actually turns on, because it is not your hourly rate and it is rarely your pass rate either.",
+          "A seventeen-year-old is nervous and does not want to look stupid. Their parent is paying and wants to know this is a safe adult who will turn up. Both of them are choosing on whether you seem patient.",
+          "So an advert built around pounds per hour is competing on the one thing people care least about, against every other instructor in town doing the same.",
+        ],
+      },
+      {
+        heading: "What to actually show",
+        paragraphs: [
+          "The material that works here is the material instructors already have and think is unremarkable.",
+        ],
+        bullets: [
+          "Pass photos, with the pupil holding the certificate by your car. This is the single strongest thing you own, and you get a new one every week",
+          "You, talking. Thirty seconds on what the first lesson involves settles more nerves than any amount of copy",
+          "The car itself, clean, with the dual controls visible",
+          "The areas and test centres you cover, named. People search for the test centre they are dreading",
+          "Something genuinely useful: how to pass a parallel park, what the examiner actually marks, what happens on the day",
+        ],
+      },
+      {
+        paragraphs: [
+          "One thing to get right before you post any of it. Get written permission to use a pupil's photo, and if they are under eighteen get it from a parent or guardian. Most will happily say yes on the day they pass. Asking afterwards, or not asking at all, is the kind of mistake that is easy to avoid and unpleasant to fix.",
+        ],
+      },
+      {
+        heading: "The waiting list is not an apology",
+        paragraphs: [
+          "Instructors tend to bury the wait, as if it were bad news. It is the opposite, and saying it plainly does three useful things at once.",
+          "It filters out the people who wanted to start tomorrow and would have messaged you and vanished. It tells everyone else you are in demand, which is the only social proof in this trade that cannot be faked. And it sets the expectation honestly, so nobody books in feeling misled.",
+          "\"Currently booking from mid-January, three slots left\" is a better advert than anything about competitive rates.",
+        ],
+      },
+      {
+        heading: "Where the enquiry lands matters more than usual here",
+        paragraphs: [
+          "This trade has a problem most do not. You are in a car with a learner for most of the working day, which means you genuinely cannot answer the phone, and the enquiries arrive while you are teaching.",
+          "People ring three instructors. The first to answer usually gets the pupil, and if all three are mid-lesson it comes down to who replies first that evening, by which point two of them have forgotten.",
+          "Which is why the thing worth fixing before the advertising is where the message lands. Enquiries from your advert, your Instagram, your website and your missed calls arriving in one place, with an automatic reply that says you are teaching and will come back tonight. That alone keeps pupils who would otherwise have booked with somebody who picked up.",
+        ],
+      },
+      {
+        heading: "Two things not to do",
+        paragraphs: [
+          "Do not invent a pass rate. The DVSA holds this data and parents do look it up. A number you made up is both a false claim and a trivially checkable one, which is the worst combination.",
+          "Do not promise a test date. You do not control DVSA availability, waits vary enormously from one test centre to the next, and an advert implying you can jump the queue will produce angry pupils who were told something untrue.",
+          "Neither is necessary. A full diary, real pass photos and a plain description of what the first lesson is like will out-convert any claim you would have to be careful about.",
+        ],
+      },
+      {
+        heading: "If you are a school rather than a sole instructor",
+        paragraphs: [
+          "The maths changes. You are advertising for two audiences at once and the second one is usually the bottleneck.",
+          "Pupils, obviously. But also instructors, because a school with pupils and nobody to teach them has a recruitment problem wearing a marketing costume. Those are different adverts with different creative, and running them as one campaign serves neither.",
+          "Worth working out which of the two is actually holding you back before spending anything, because the answer decides the whole campaign.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "advantage-plus-audience-what-happened-to-interest-targeting",
     title: "Advantage+ Audience: What Happened to Interest Targeting",
     description:

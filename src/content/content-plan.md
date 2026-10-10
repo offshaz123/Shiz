@@ -78,6 +78,7 @@ keywords, dealership social strategy).
 - Why Your Meta Ads Invoice Is Higher Than the Budget You Set (platform & policy changes)
 - Keyword Stuffing Your Business Name Will Cost You (local search)
 - Advantage+ Audience: What Happened to Interest Targeting (Meta mechanics & platform change)
+- Meta & Instagram Ads for Driving Instructors and Driving Schools (industry-specific)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -199,7 +200,7 @@ keywords, dealership social strategy).
 ## Backlog — industry-specific (added 2026-09-02 research round)
 - [x] Meta & Instagram Ads for Cleaning Companies — target: "Facebook ads for cleaning business
       UK", "domestic cleaning marketing"
-- [ ] Meta & Instagram Ads for Driving Instructors and Driving Schools — target: "Facebook ads
+- [x] Meta & Instagram Ads for Driving Instructors and Driving Schools — target: "Facebook ads
       driving school UK", "marketing for driving instructors"
 
 ## Backlog — video & creative (added 2026-09-16 research round)
