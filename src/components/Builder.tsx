@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PlatePreview } from "./PlatePreview";
 import { DispatchCountdown } from "./DispatchCountdown";
 import { useCart } from "@/lib/cart";
+import { trackAddToCart, trackViewBuilder } from "@/lib/track";
 import {
   type PlateConfig,
   type PlateType,
@@ -81,6 +82,7 @@ function Radio({
 
 export function Builder({ initial, showPlateNotice = false }: { initial: Partial<PlateConfig>; showPlateNotice?: boolean }) {
   const router = useRouter();
+  useEffect(() => trackViewBuilder(), []);
   const { add } = useCart();
   const [c, setC] = useState<PlateConfig>({ ...defaultConfig, ...initial });
   const [tab, setTab] = useState(0);
@@ -120,7 +122,9 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
       document.getElementById("confirm-details")?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
-    add({ ...c, reg: plateText(c) });
+    const item = { ...c, reg: plateText(c) };
+    add(item);
+    trackAddToCart({ ...item, id: "", qty: 1 });
     router.push("/basket");
   };
 

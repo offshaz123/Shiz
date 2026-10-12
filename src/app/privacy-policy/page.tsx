@@ -36,9 +36,26 @@ export default function PrivacyPage() {
         </p>
         <h2>Who we share it with</h2>
         <p>
-          Our payment provider and delivery company, only as needed to complete your order. We may
+          Our payment provider and delivery company, only as needed to complete your order. If you accept
+          advertising cookies, Meta and Google as described under Cookies. We may
           share records with the DVLA, police or Trading Standards when the law requires it. We
           never sell your data.
+        </p>
+        <h2 id="cookies">Cookies</h2>
+        <p>
+          <strong>Essential cookies</strong> are always on. They keep your basket, log you in and remember your
+          cookie choice. The site doesn&apos;t work properly without them.
+        </p>
+        <p>
+          <strong>Analytics and advertising cookies</strong> are only used if you press &ldquo;Accept&rdquo;. They
+          let Google Analytics show us how people use the site, and let Meta (Facebook and Instagram) and Google
+          Ads tell us which adverts lead to orders, so we can show them to people likely to be interested. If you
+          accept and then place an order, we also send Meta your order value and a scrambled (hashed) copy of your
+          email, phone, name and postcode, so it can match the order to its advert. Meta and Google handle this
+          under their own privacy policies.
+        </p>
+        <p>
+          You can change your mind at any time with &ldquo;Cookie settings&rdquo; at the bottom of every page.
         </p>
         <h2>Your rights</h2>
         <p>

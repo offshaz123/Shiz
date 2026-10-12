@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { policyLinks, site, whatsappHref } from "@/lib/site";
 import { products } from "@/lib/content";
+import { CookieSettingsLink } from "./Tracking";
 
 const quickLinks = [
   { href: "/design", label: "Plate Builder" },
@@ -87,6 +88,9 @@ export function Footer() {
           </p>
           <p>DVLA registered supplier | BS AU 145e compliant plates</p>
           {site.companyNumber && <p>Company No: {site.companyNumber}</p>}
+          <p>
+            <CookieSettingsLink className="underline hover:text-white" />
+          </p>
         </div>
       </div>
     </footer>

@@ -37,6 +37,9 @@ See `.env.example` for the full list:
 - **Admin:** `ADMIN_EMAIL`, `ADMIN_PASSWORD`
 - **Address suggestions (optional):** `GOOGLE_MAPS_API_KEY` with Places API (New) enabled. Without it, typing a postcode still fills in the town (free postcodes.io lookup).
 - `NEXT_PUBLIC_SITE_URL`, e.g. `https://platedup.co.uk`
+- **Meta Conversions API (optional):** `META_CAPI_TOKEN`, and `META_TEST_EVENT_CODE` only while testing.
+
+**Advert tags:** the Meta Pixel, Google Analytics and Google Ads IDs go in `tracking` in `src/lib/site.ts`. They only load after a visitor accepts the cookie banner, which only appears once an ID is filled in.
 
 ## Run it
 

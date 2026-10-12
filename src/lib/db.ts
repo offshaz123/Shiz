@@ -130,6 +130,8 @@ const schema = [
 const addedColumns: [table: string, column: string, definition: string][] = [
   ["orders", "discount_code", "VARCHAR(40) NULL"],
   ["orders", "discount", "INT NOT NULL DEFAULT 0"],
+  // Advert cookies from checkout, kept only if the customer accepted them.
+  ["orders", "ad_tracking", "TEXT NULL"],
 ];
 
 async function ensureSchema() {

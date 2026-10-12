@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/lib/cart";
+import { trackBeginCheckout } from "@/lib/track";
 import { AddressFields } from "@/components/AddressFields";
 import { type DeliveryId, FREE_DELIVERY_FROM, delivery, deliveryPrice as priceFor, describe, money, unitPrice } from "@/lib/plates";
 
@@ -78,6 +79,14 @@ export default function CheckoutPage() {
       .then(({ user }) => setAccount(user ?? null))
       .catch(() => setAccount(null));
   }, []);
+
+  // Count the start of checkout once, when the basket has loaded.
+  const counted = useRef(false);
+  useEffect(() => {
+    if (!ready || items.length === 0 || counted.current) return;
+    counted.current = true;
+    trackBeginCheckout(items, subtotal);
+  }, [ready, items, subtotal]);
 
   const showForm = account !== undefined && (account !== null || guest);
 

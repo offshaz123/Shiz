@@ -6,6 +6,7 @@ import { isDbConfigured } from "@/lib/db";
 import { getCurrentUser, isValidPhone } from "@/lib/auth";
 import { clientIp, rateLimited } from "@/lib/places";
 import { checkDiscount } from "@/lib/discounts";
+import { adTrackingFrom, saveAdTracking } from "@/lib/meta-capi";
 import { createCheckoutSession, isStripeConfigured, requestBaseUrl } from "@/lib/stripe";
 import { createOrder, getOrder, saveDocuments, sendOrderEmails, setStatus, setStripeSession } from "@/lib/orders";
 
@@ -116,6 +117,7 @@ export async function POST(req: Request) {
       total: total - discount,
       docs_status: !needsDocs ? "not_needed" : hasDocs ? "received" : "outstanding",
     });
+    await saveAdTracking(ref, adTrackingFrom(req, clientIp(req)));
     if (uploads.attachments.length) await saveDocuments(orderId, uploads.attachments, ["entitlement", "identity"]);
   } catch (err) {
     console.error("Saving order failed", err);

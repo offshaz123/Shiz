@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { site } from "@/lib/site";
+import { trackLead } from "@/lib/track";
 
 const businessTypes = ["Car dealership", "Garage / MOT centre", "Body shop", "Detailer / wrap shop", "Fleet / lease company", "Other"];
 const volumes = ["1–10 a month", "10–50 a month", "50–100 a month", "100+ a month"];
@@ -33,7 +34,10 @@ export function TradeForm() {
         ]
           .filter((l) => l !== "")
           .join("\n");
-        window.location.href = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
+        trackLead("Trade enquiry");
+        // A moment for the advert tags to send before leaving for WhatsApp.
+        const href = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(text)}`;
+        setTimeout(() => (window.location.href = href), 300);
       }}
     >
       <h2 className="font-display text-2xl font-bold">Trade enquiry</h2>

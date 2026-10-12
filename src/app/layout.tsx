@@ -5,6 +5,7 @@ import { CartProvider } from "@/lib/cart";
 import { AnnouncementBar } from "@/components/AnnouncementBar";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { Tracking } from "@/components/Tracking";
 import { site, whatsappHref } from "@/lib/site";
 
 const body = Inter({ variable: "--font-body", subsets: ["latin"] });
@@ -57,6 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </svg>
             <span className="hidden sm:inline">Chat with us</span>
           </a>
+          <Tracking />
         </CartProvider>
       </body>
     </html>

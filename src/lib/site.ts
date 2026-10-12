@@ -57,3 +57,16 @@ export const announcement: { text: string; code: string } | null = {
   text: "10% OFF your first order",
   code: "WELCOME10",
 };
+
+// Advert and analytics tags. These IDs are public (they show in every page),
+// so they live here rather than in the Hostinger settings. Leave one empty
+// to switch that tag off. Nothing loads until a visitor accepts cookies.
+export const tracking = {
+  // Meta (Facebook/Instagram) Pixel ID: Events Manager → Data sources, 15–16 digits.
+  metaPixelId: "",
+  // Google Analytics 4 measurement ID, e.g. "G-ABC123XYZ".
+  googleAnalyticsId: "",
+  // Google Ads: conversion ID ("AW-123456789") and the label of the purchase conversion.
+  googleAdsId: "",
+  googleAdsPurchaseLabel: "",
+};

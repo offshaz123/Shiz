@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AutoRefresh } from "@/components/AutoRefresh";
 import { ClearBasket } from "@/components/ClearBasket";
+import { PurchaseTracker } from "@/components/PurchaseTracker";
 import { site, whatsappHref } from "@/lib/site";
 import { isDbConfigured } from "@/lib/db";
 import { getCurrentUser, isAdmin } from "@/lib/auth";
@@ -46,6 +47,13 @@ export default async function OrderConfirmed(props: PageProps<"/order-confirmed"
     <div className="mx-auto max-w-2xl px-4 py-20 text-center">
       <ClearBasket />
       {order?.status === "pending" && <AutoRefresh />}
+      {order && paid && (
+        <PurchaseTracker
+          orderRef={order.ref}
+          value={order.amount_paid ?? order.total}
+          items={order.items.map((i) => ({ type: i.type, style: i.style, qty: i.qty }))}
+        />
+      )}
       <span className="gold-bg mx-auto flex h-16 w-16 items-center justify-center rounded-full">
         <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
           <path d="m5 12 5 5L20 7" />

@@ -7,6 +7,7 @@ import { join } from "node:path";
 import { LOGO_CID, customerCancelEmail, customerDispatchEmail, customerOrderEmail, plateCid, plateImageParams, shopOrderEmail } from "./emails";
 import { renderPlatePng } from "./plate-image";
 import { countDiscountUse } from "./discounts";
+import { sendMetaPurchase } from "./meta-capi";
 import { sendMail, sendToShop, shopAddress } from "./mail";
 import { logEmail, logOrderEvent, newToken, withOpenTracker } from "./email-log";
 import { type PaidSession, getCheckoutSession } from "./stripe";
@@ -260,6 +261,7 @@ export async function markPaid(s: PaidSession) {
   if (res.affectedRows === 1 && updated) {
     if (updated.discount_code) await countDiscountUse(updated.discount_code);
     after(() => sendOrderEmails(updated));
+    after(() => sendMetaPurchase(updated));
   }
   return updated;
 }
