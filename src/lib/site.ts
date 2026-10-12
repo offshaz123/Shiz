@@ -17,8 +17,8 @@ export const site = {
   // When someone replies on WhatsApp. The shop itself takes orders 24/7.
   hours: "Mon–Fri 9am–6pm, Sat 10am–2pm",
   dispatchCutoff: "2pm",
-  instagram: "https://www.instagram.com/platedup",
-  instagramHandle: "@platedup",
+  instagram: "https://www.instagram.com/platedupltd",
+  instagramHandle: "@platedupltd",
 } as const;
 
 export const whatsappHref = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(
