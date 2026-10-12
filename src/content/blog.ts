@@ -16,6 +16,86 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "location-pages-that-arent-just-the-town-name-swapped",
+    title: "Writing Location Pages That Aren't Just the Town Name Swapped",
+    description:
+      "Twenty pages with the town name changed is a doorway page by Google's own definition. What actually belongs on a location page, and how many you need.",
+    publishedAt: "2026-10-12",
+    keywords: [
+      "location pages SEO",
+      "service area pages thin content",
+      "doorway pages Google",
+      "local landing pages for service businesses",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Somebody tells you that to rank in the towns you cover, you need a page for each one. That part is true.",
+          "So you write one page, duplicate it twenty times, and change the town name in the heading, the first paragraph and the title tag. Twenty pages in an afternoon. Then nothing happens, or something worse does.",
+        ],
+      },
+      {
+        heading: "Google has a name for this, and it isn't flattering",
+        paragraphs: [
+          "Their spam policies define doorway abuse as pages created to rank for specific, similar search queries, which lead users to intermediate pages that aren't as useful as the final destination.",
+          "One of the examples given is creating multiple domains or pages aimed at specific regions or cities that all funnel users to one page. That is the template approach described exactly. It isn't a grey area or a risk somebody invented to sell you something, it is written down as an example of the thing not to do.",
+          "There's a second policy worth knowing if you had the pages generated rather than written. Scaled content abuse covers many pages generated for the primary purpose of manipulating search rankings, and it names using generative AI or similar tools to produce many pages that add nothing for users. A folder of near-identical town pages spun out in one go sits squarely in both.",
+        ],
+      },
+      {
+        heading: "Why it stops working anyway",
+        paragraphs: [
+          "Leave the policy aside for a second, because there's a simpler problem.",
+          "Twenty pages that say the same thing compete with each other. Google has to pick one to show for your business, and you have given it twenty equally weak candidates instead of one strong one. You have split whatever authority the site had across pages that each say nothing.",
+          "And the person who lands on it can tell. They searched for a builder in their town, arrived at a page that mentions their town four times and says nothing about it, and left. That bounce is information too.",
+        ],
+      },
+      {
+        heading: "What actually belongs on one",
+        paragraphs: [
+          "The test is whether somebody who lives there would believe you had worked there. Which means the page has to contain things only true of that place.",
+        ],
+        bullets: [
+          "Jobs you've actually done there, with photos and the street or area named where the customer is happy for it to be",
+          "Reviews from customers in that town, quoted properly",
+          "What the housing stock is actually like. Victorian terraces with no rear access, 1930s semis, a new estate where everyone wants the same extension. A builder knows this and nobody else writing the page does",
+          "Local constraints that affect the job: conservation areas, a council with a reputation for slow planning, parking restrictions that change how you quote",
+          "How long it takes you to get there, and whether there's a call-out difference",
+          "The neighbourhoods and postcodes within that town, because that's how people describe where they live",
+        ],
+      },
+      {
+        paragraphs: [
+          "None of that can be templated, which is the point. The pages that work are the ones that couldn't have been written by somebody who'd never been.",
+        ],
+      },
+      {
+        heading: "How many you actually need",
+        paragraphs: [
+          "Fewer than you think, and far fewer than an agency selling location pages by the dozen will tell you.",
+          "Start with the places you genuinely want more work in and could write three hundred honest words about today. For most trades that's three to six towns, not twenty. A handful of real pages will out-rank twenty hollow ones, and they'll convert the visitor when they arrive, which the hollow ones never do.",
+          "Add one when you've done enough work somewhere to have something to say. That's a slower schedule and it's the one that compounds.",
+        ],
+      },
+      {
+        heading: "The service-area problem",
+        paragraphs: [
+          "There's an honest tension here for anyone who covers a wide area. You might genuinely work across thirty towns and want to be found in all of them, and you can't write thirty substantial pages.",
+          "The way through is to stop treating every place as a page. Write proper pages for the places that matter most, and cover the rest in one honest coverage page that lists the full area, with a map, travel times and a line about where you'll go. That page is useful, it's true, and it isn't pretending to be thirty things.",
+          "You'll rank less well in a town you've written forty words about than one you've written four hundred about. That's the correct outcome, and the fix is doing work there rather than publishing another page.",
+        ],
+      },
+      {
+        heading: "If you already have twenty of them",
+        paragraphs: [
+          "Don't panic and don't delete the lot in an afternoon.",
+          "Work out which towns actually bring you enquiries. Build those pages out properly with real jobs, real reviews and real local detail. For the rest, either merge them into one coverage page and redirect, or leave them while you improve them one at a time.",
+          "What you shouldn't do is add more. If the twenty aren't working, twenty-five won't be the answer, and the direction of travel on Google's side has been consistently against this for years.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-for-driving-instructors",
     title: "Meta & Instagram Ads for Driving Instructors and Driving Schools",
     description:

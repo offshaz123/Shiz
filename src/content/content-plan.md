@@ -79,6 +79,7 @@ keywords, dealership social strategy).
 - Keyword Stuffing Your Business Name Will Cost You (local search)
 - Advantage+ Audience: What Happened to Interest Targeting (Meta mechanics & platform change)
 - Meta & Instagram Ads for Driving Instructors and Driving Schools (industry-specific)
+- Writing Location Pages That Aren't Just the Town Name Swapped (practical how-to)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -301,7 +302,7 @@ keywords, dealership social strategy).
       Profile verification time UK", "video verification Google"
 
 ## Backlog — practical how-to (added 2026-10-08 research round)
-- [ ] Writing Location Pages That Aren't Just the Town Name Swapped — target: "location pages
+- [x] Writing Location Pages That Aren't Just the Town Name Swapped — target: "location pages
       SEO", "service area pages thin content"
 - [ ] How Many Ad Creatives Do You Actually Need Each Month? — target: "how many Facebook ads to
       run at once", "creative refresh cadence"
