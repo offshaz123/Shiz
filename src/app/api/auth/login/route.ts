@@ -1,7 +1,10 @@
 import { checkAdminLogin, failDelay, isAdminEmail, startAdminSession, startUserSession, verifyPassword } from "@/lib/auth";
 import { isDbConfigured, query } from "@/lib/db";
+import { clientIp, rateLimited } from "@/lib/places";
 
 export async function POST(req: Request) {
+  // Slows down anyone guessing passwords (including the admin one).
+  if (rateLimited(`login:${clientIp(req)}`, 10)) return Response.json({ error: "Too many attempts. Please wait a minute and try again." }, { status: 429 });
   try {
     return await handle(req);
   } catch (err) {

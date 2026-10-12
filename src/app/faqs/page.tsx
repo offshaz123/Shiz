@@ -5,8 +5,10 @@ import { PageHero } from "@/components/PageHero";
 import { whatsappHref } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "FAQs",
-  description: "Answers about road-legal number plates, documents, delivery and returns.",
+  title: "Number Plate FAQs",
+  description:
+    "Answers to common questions about road-legal number plates, 4D and 3D gel plates, the documents you need, delivery and returns.",
+  alternates: { canonical: "/faqs" },
 };
 
 export default function FaqsPage() {

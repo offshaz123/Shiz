@@ -1,10 +1,14 @@
 import { hashPassword, isAdminEmail, isValidEmail, isValidPhone, startUserSession } from "@/lib/auth";
 import { execute, isDbConfigured, query } from "@/lib/db";
+import { clientIp, rateLimited } from "@/lib/places";
 
 export async function POST(req: Request) {
+  if (rateLimited(`signup:${clientIp(req)}`, 5)) return Response.json({ error: "Too many attempts. Please wait a minute and try again." }, { status: 429 });
   try {
     return await handle(req);
   } catch (err) {
+    if ((err as { code?: string })?.code === "ER_DUP_ENTRY")
+      return Response.json({ error: "There's already an account with that email. Please log in." }, { status: 409 });
     console.error("Login/signup failed", err);
     // The short error code (e.g. ER_ACCESS_DENIED_ERROR) helps the shop fix settings; it reveals nothing private.
     const code = (err as { code?: string })?.code ?? "UNKNOWN";

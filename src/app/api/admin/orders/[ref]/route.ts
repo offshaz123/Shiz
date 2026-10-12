@@ -48,13 +48,9 @@ export async function POST(req: Request, ctx: RouteContext<"/api/admin/orders/[r
     }
     if (!REFUNDABLE.includes(order.status) || !order.stripe_session_id)
       return Response.json({ error: "Only orders paid by card through the website can be refunded here." }, { status: 400 });
+    let refund: Awaited<ReturnType<typeof refundCheckout>>;
     try {
-      const refund = await refundCheckout(order.stripe_session_id);
-      await setStatus(ref, "refunded");
-      const sent = await sendStatusEmail({ ...order, status: "refunded" }, "refunded");
-      return Response.json({
-        message: `Refunded £${(refund.amount / 100).toFixed(2)} to the customer's card · order cancelled${sent ? " · customer emailed" : ", but the email couldn't be sent"}`,
-      });
+      refund = await refundCheckout(order.stripe_session_id);
     } catch (err) {
       console.error(`Refund for ${ref} failed`, err);
       const reason = err instanceof Error ? err.message : "";
@@ -63,6 +59,19 @@ export async function POST(req: Request, ctx: RouteContext<"/api/admin/orders/[r
         { status: 502 },
       );
     }
+    // The money has gone back. Record it; if that fails, say so plainly.
+    const refunded = `Refunded £${(refund.amount / 100).toFixed(2)} to the customer's card`;
+    try {
+      await setStatus(ref, "refunded");
+    } catch (err) {
+      console.error(`Refund for ${ref} done but saving failed`, err);
+      return Response.json(
+        { error: `${refunded}, but the order couldn't be updated. Don't make or send it. Press the button again to finish (it won't refund twice).` },
+        { status: 500 },
+      );
+    }
+    const sent = await sendStatusEmail({ ...order, status: "refunded" }, "refunded");
+    return Response.json({ message: `${refunded} · order cancelled${sent ? " · customer emailed" : ", but the email couldn't be sent"}` });
   }
   if (body.action === "resend-status") {
     if (!isEmailed(order.status)) return Response.json({ error: "There's no email for this status" }, { status: 400 });

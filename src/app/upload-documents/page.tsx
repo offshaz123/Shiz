@@ -5,7 +5,8 @@ import { PageHero } from "@/components/PageHero";
 
 export const metadata: Metadata = {
   title: "Upload Documents",
-  description: "Upload your V5C and ID so we can make your number plates.",
+  description: "Upload your V5C (or other proof of entitlement) and photo ID so we can make your road-legal number plates.",
+  alternates: { canonical: "/upload-documents" },
 };
 
 export default async function UploadDocuments(props: PageProps<"/upload-documents">) {
@@ -41,12 +42,12 @@ export default async function UploadDocuments(props: PageProps<"/upload-document
           <label className="block rounded-2xl border-2 border-dashed border-line bg-surface p-5">
             <span className="block font-semibold">Proof you own the reg</span>
             <span className="mb-3 block text-sm text-muted">V5C logbook, V5C/2 new keeper slip, V750 or V778 certificate, or lease agreement</span>
-            <input name="entitlement" type="file" accept="image/*,application/pdf" required className="block w-full text-sm" />
+            <input name="entitlement" type="file" accept="image/*,application/pdf" required className="block w-full text-sm file:mr-3 file:min-h-11 file:cursor-pointer file:rounded-lg file:border-0 file:bg-gold-soft file:px-4 file:font-semibold" />
           </label>
           <label className="block rounded-2xl border-2 border-dashed border-line bg-surface p-5">
             <span className="block font-semibold">ID in your name</span>
             <span className="mb-3 block text-sm text-muted">Driving licence, passport, or a utility bill / bank statement from the last 6 months</span>
-            <input name="identity" type="file" accept="image/*,application/pdf" required className="block w-full text-sm" />
+            <input name="identity" type="file" accept="image/*,application/pdf" required className="block w-full text-sm file:mr-3 file:min-h-11 file:cursor-pointer file:rounded-lg file:border-0 file:bg-gold-soft file:px-4 file:font-semibold" />
           </label>
           <p className="text-sm text-muted">
             Not sure which documents count? See the{" "}

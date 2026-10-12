@@ -6,7 +6,9 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Legal & DVLA Compliance",
-  description: "How PlatedUp makes road-legal number plates and which documents we need.",
+  description:
+    "How PlatedUp makes road-legal number plates to BS AU 145e as a DVLA registered supplier, and which documents you need to order.",
+  alternates: { canonical: "/legal" },
 };
 
 export default function LegalPage() {

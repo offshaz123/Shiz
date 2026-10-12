@@ -4,10 +4,12 @@ import { field, orderRef, readUploads, sendToShop } from "@/lib/mail";
 import { site } from "@/lib/site";
 import { isDbConfigured } from "@/lib/db";
 import { getCurrentUser, isValidPhone } from "@/lib/auth";
+import { clientIp, rateLimited } from "@/lib/places";
 import { createCheckoutSession, isStripeConfigured, requestBaseUrl } from "@/lib/stripe";
 import { createOrder, getOrder, saveDocuments, sendOrderEmails, setStatus, setStripeSession } from "@/lib/orders";
 
 export async function POST(req: Request) {
+  if (rateLimited(`order:${clientIp(req)}`, 10)) return Response.json({ error: "Too many attempts. Please wait a minute and try again." }, { status: 429 });
   let form: FormData;
   try {
     form = await req.formData();
@@ -68,13 +70,13 @@ export async function POST(req: Request) {
   // (see /api/stripe/webhook and the thank-you page).
   const paying = isStripeConfigured();
   let ref = orderRef();
-  for (let tries = 0; await getOrder(ref); tries++) {
-    if (tries > 5) throw new Error("Could not create an order number");
-    ref = orderRef();
-  }
-  const user = await getCurrentUser();
   let orderId: number;
   try {
+    for (let tries = 0; await getOrder(ref); tries++) {
+      if (tries > 5) throw new Error("Could not create an order number");
+      ref = orderRef();
+    }
+    const user = await getCurrentUser();
     orderId = await createOrder({
       ref,
       user_id: user?.id ?? null,

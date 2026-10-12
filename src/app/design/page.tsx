@@ -3,8 +3,10 @@ import { Builder } from "@/components/Builder";
 import { type StyleId, cleanShowText, formatReg, isValidReg, styles } from "@/lib/plates";
 
 export const metadata: Metadata = {
-  title: "Design Your Plate",
-  description: "Build your road-legal 2D, 3D gel or 4D number plates with a live preview.",
+  title: "Number Plate Builder: Design Your Plates Online",
+  description:
+    "Design road-legal 2D, 3D gel and 4D number plates or show plates with a live preview. Made in Hornchurch, dispatched same day before 2pm.",
+  alternates: { canonical: "/design" },
 };
 
 export default async function DesignPage(props: PageProps<"/design">) {

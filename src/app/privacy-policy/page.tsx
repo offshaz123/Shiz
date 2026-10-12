@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Privacy Policy" };
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description: "How PlatedUp collects, uses and protects your personal information and documents.",
+  alternates: { canonical: "/privacy-policy" },
+};
 
 export default function PrivacyPage() {
   return (

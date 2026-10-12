@@ -8,6 +8,7 @@ const quickLinks = [
   { href: "/faqs", label: "FAQs" },
   { href: "/blog", label: "Blog" },
   { href: "/about", label: "About Us" },
+  { href: "/number-plates-essex", label: "Number Plates in Essex" },
   { href: "/upload-documents", label: "Upload Documents" },
 ];
 
@@ -20,7 +21,7 @@ export function Footer() {
           <p className="mt-3 text-sm leading-relaxed text-white/85">
             Premium, handcrafted number plates. Fully road legal, with free UK tracked delivery on orders over £70.
           </p>
-          <a href={site.instagram} className="mt-4 inline-flex items-center gap-2 text-sm font-semibold hover:underline">
+          <a href={site.instagram} className="mt-3 inline-flex items-center gap-2 py-2 text-sm font-semibold hover:underline">
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
               <rect x="3" y="3" width="18" height="18" rx="5" />
               <circle cx="12" cy="12" r="4" />

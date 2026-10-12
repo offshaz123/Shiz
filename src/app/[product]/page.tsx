@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { JsonLd } from "@/components/JsonLd";
 import { PlatePreview } from "@/components/PlatePreview";
 import { RegForm } from "@/components/RegForm";
 import { FREE_DELIVERY_FROM, defaultConfig, delivery, extrasPrice, fixings, money, styles } from "@/lib/plates";
 import { products } from "@/lib/content";
+import { site } from "@/lib/site";
 
 export const dynamicParams = false;
 
@@ -16,7 +18,7 @@ export async function generateMetadata(props: PageProps<"/[product]">): Promise<
   const { product } = await props.params;
   const p = products.find((x) => x.slug === product);
   if (!p) return {};
-  return { title: p.title, description: p.intro };
+  return { title: p.title, description: p.intro, alternates: { canonical: `/${p.slug}` } };
 }
 
 export default async function ProductPage(props: PageProps<"/[product]">) {
@@ -25,9 +27,27 @@ export default async function ProductPage(props: PageProps<"/[product]">) {
   if (!p) notFound();
   const range = styles.filter((s) => p.styles.includes(s.id));
   const from = range[0];
+  const productData = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: p.title,
+    description: p.intro,
+    brand: { "@type": "Brand", name: site.name },
+    image: `${site.url}/api/plate-image?text=PL24%20TED&type=legal&style=${from.id}&badge=none&border=none&side=rear`,
+    offers: {
+      "@type": "AggregateOffer",
+      priceCurrency: "GBP",
+      lowPrice: (Math.min(...range.map((s) => s.single)) / 100).toFixed(2),
+      highPrice: (Math.max(...range.map((s) => s.pair)) / 100).toFixed(2),
+      offerCount: range.length * 2,
+      availability: "https://schema.org/InStock",
+      url: `${site.url}/${p.slug}`,
+    },
+  };
 
   return (
     <>
+      <JsonLd data={productData} />
       <section className="relative overflow-hidden">
         <div
           aria-hidden

@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/faqs",
     "/blog",
     ...publishedPosts().map((p) => `/blog/${p.slug}`),
+    "/number-plates-essex",
     "/about",
     "/contact",
     "/legal",
@@ -23,5 +24,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/terms-conditions",
     "/privacy-policy",
   ];
-  return paths.map((p) => ({ url: `${site.url}${p}` }));
+  const posts = new Map(publishedPosts().map((p) => [`/blog/${p.slug}`, p.date]));
+  return paths.map((p) => ({
+    url: `${site.url}${p}`,
+    ...(posts.has(p) && { lastModified: posts.get(p) }),
+    priority: p === "" ? 1 : p === "/design" || products.some((x) => `/${x.slug}` === p) ? 0.9 : p.startsWith("/blog/") ? 0.6 : 0.7,
+  }));
 }

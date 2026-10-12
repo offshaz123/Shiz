@@ -22,19 +22,20 @@ export async function PATCH(req: Request) {
     if (taken.length) return Response.json({ error: "Another account already uses that email." }, { status: 409 });
   }
 
-  await execute(
-    "UPDATE users SET name = ?, email = ?, phone = ?, address1 = ?, address2 = ?, town = ?, postcode = ? WHERE id = ?",
-    [name, email, s("phone", 40), s("address1", 200), s("address2", 200), s("town", 100), s("postcode", 12).toUpperCase(), user.id],
-  );
-
-  // Optional password change.
+  // Optional password change: check it first, so nothing is saved if it's wrong.
   const newPassword = String(b.newPassword ?? "");
   if (newPassword) {
     if (newPassword.length < 8) return Response.json({ error: "Your new password needs at least 8 characters." }, { status: 400 });
     const rows = await query<{ password_hash: string }>("SELECT password_hash FROM users WHERE id = ?", [user.id]);
     if (!(await verifyPassword(String(b.currentPassword ?? ""), rows[0].password_hash)))
       return Response.json({ error: "Your current password isn't right." }, { status: 400 });
-    await execute("UPDATE users SET password_hash = ? WHERE id = ?", [await hashPassword(newPassword), user.id]);
   }
+
+  await execute(
+    "UPDATE users SET name = ?, email = ?, phone = ?, address1 = ?, address2 = ?, town = ?, postcode = ? WHERE id = ?",
+    [name, email, s("phone", 40), s("address1", 200), s("address2", 200), s("town", 100), s("postcode", 12).toUpperCase(), user.id],
+  );
+
+  if (newPassword) await execute("UPDATE users SET password_hash = ? WHERE id = ?", [await hashPassword(newPassword), user.id]);
   return Response.json({ ok: true });
 }

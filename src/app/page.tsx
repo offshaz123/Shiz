@@ -1,4 +1,6 @@
+import type { Metadata } from "next";
 import Image from "next/image";
+import { JsonLd } from "@/components/JsonLd";
 import Link from "next/link";
 import { RegForm } from "@/components/RegForm";
 import { TrustBadges } from "@/components/TrustBadges";
@@ -57,9 +59,44 @@ const showcase: (Partial<PlateConfig> & { caption: string })[] = [
   { reg: "SC07 UPS", style: "3d-gel", badge: "sco", caption: "3D Gel with Scotland flag" },
 ];
 
+export const metadata: Metadata = {
+  title: { absolute: "Premium 3D Gel & 4D Number Plates | PlatedUp" },
+  description:
+    "Design premium road-legal 3D gel and 4D number plates and show plates online. Handcrafted in Hornchurch, Essex. Same day dispatch, free delivery over £70.",
+  alternates: { canonical: "/" },
+};
+
+// Tells Google who we are and where the workshop is.
+const business = {
+  "@context": "https://schema.org",
+  "@type": "Store",
+  "@id": `${site.url}/#business`,
+  name: site.name,
+  description: site.description,
+  url: site.url,
+  logo: `${site.url}/email/logo.png`,
+  image: `${site.url}/hero/supercar.jpg`,
+  email: site.email,
+  telephone: `+${site.whatsapp}`,
+  priceRange: "££",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "10–12 Roneo Corner",
+    addressLocality: "Hornchurch",
+    addressRegion: "Essex",
+    postalCode: site.postcode,
+    addressCountry: "GB",
+  },
+  areaServed: { "@type": "Country", name: "United Kingdom" },
+  sameAs: [site.instagram],
+};
+const website = { "@context": "https://schema.org", "@type": "WebSite", name: site.name, url: site.url };
+
 export default function Home() {
   return (
     <>
+      <JsonLd data={business} />
+      <JsonLd data={website} />
       {/* Hero */}
       <section className="relative overflow-hidden bg-[#0b0906] text-white">
         <Image

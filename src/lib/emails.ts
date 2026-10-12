@@ -136,7 +136,9 @@ export function customerOrderEmail(o: Order, images: ImageMode = "web") {
     docsMissing
       ? `<p style="font:15px/1.6 Arial,sans-serif;color:#b42318;margin:0 0 8px;"><strong>As soon as we have your documents</strong> we'll make your plates. Orders are dispatched the same working day when everything is in before ${site.dispatchCutoff}.</p>
          <p style="margin:0 0 8px;">${button(uploadUrl, "Upload my documents", "#d92d20")}</p>`
-      : `<p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0;">We're making your plates now. Orders placed before ${site.dispatchCutoff} on a working day are dispatched the same day, and we'll let you know when they're on the way.</p>`;
+      : paid
+        ? `<p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0;">We're making your plates now. Orders placed before ${site.dispatchCutoff} on a working day are dispatched the same day, and we'll let you know when they're on the way.</p>`
+        : `<p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0;">We'll send you a secure link to pay for your order. As soon as it's paid we'll start making your plates.</p>`;
 
   const html = layout(
     `Your PlatedUp order ${o.ref}`,
@@ -189,7 +191,7 @@ export function customerOrderEmail(o: Order, images: ImageMode = "web") {
     `Delivery: ${o.delivery_name} (${o.delivery_price ? money(o.delivery_price) : "FREE"})`,
     `Total: ${money(o.amount_paid ?? o.total)}`,
     "",
-    o.docs_status === "outstanding" ? `Please upload your V5C and photo ID: ${uploadUrl}` : "We're making your plates now.",
+    o.docs_status === "outstanding" ? `Please upload your V5C and photo ID: ${uploadUrl}` : paid ? "We're making your plates now." : "We'll send you a secure link to pay. We'll start making your plates once it's paid.",
     "",
     `Questions? WhatsApp us: ${helpHref}`,
   ]

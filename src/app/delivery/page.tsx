@@ -3,7 +3,11 @@ import { PageHero } from "@/components/PageHero";
 import { FREE_DELIVERY_FROM, delivery, money } from "@/lib/plates";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Delivery Policy" };
+export const metadata: Metadata = {
+  title: "Delivery Policy",
+  description: "Tracked UK delivery in 2–5 working days, free on orders over £70, or next day delivery. Same day dispatch before 2pm.",
+  alternates: { canonical: "/delivery" },
+};
 
 export default function DeliveryPage() {
   return (

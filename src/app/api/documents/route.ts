@@ -1,8 +1,10 @@
 import { field, readUploads, sendToShop } from "@/lib/mail";
 import { isDbConfigured } from "@/lib/db";
 import { getOrder, markDocsReceived, saveDocuments } from "@/lib/orders";
+import { clientIp, rateLimited } from "@/lib/places";
 
 export async function POST(req: Request) {
+  if (rateLimited(`docs:${clientIp(req)}`, 10)) return Response.json({ error: "Too many attempts. Please wait a minute and try again." }, { status: 429 });
   let form: FormData;
   try {
     form = await req.formData();

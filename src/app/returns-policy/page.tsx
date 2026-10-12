@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Returns Policy" };
+export const metadata: Metadata = {
+  title: "Returns Policy",
+  description: "Our returns policy for made-to-order number plates, including damaged or incorrect plates.",
+  alternates: { canonical: "/returns-policy" },
+};
 
 export default function ReturnsPage() {
   return (

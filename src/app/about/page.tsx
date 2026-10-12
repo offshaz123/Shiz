@@ -5,7 +5,9 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About Us",
-  description: "PlatedUp makes premium, road-legal number plates in the UK.",
+  description:
+    "PlatedUp handcrafts premium, road-legal 3D gel and 4D number plates in our Hornchurch workshop. DVLA registered and made to BS AU 145e.",
+  alternates: { canonical: "/about" },
 };
 
 const values = [

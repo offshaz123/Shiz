@@ -43,3 +43,9 @@ export const policyLinks = [
   { href: "/terms-conditions", label: "Terms & Conditions" },
   { href: "/privacy-policy", label: "Privacy Policy" },
 ] as const;
+
+// A "next" address to return to after logging in, only if it's a page on
+// this site ("/checkout"). Blocks tricks like "//evil.com" or "/\evil.com".
+export function safeNext(next: unknown) {
+  return typeof next === "string" && /^\/(?![\/\\])[^\\\s]*$/.test(next) ? next : "";
+}

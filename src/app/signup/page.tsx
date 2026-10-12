@@ -1,3 +1,4 @@
+import { safeNext } from "@/lib/site";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AuthForm } from "@/components/AuthForm";
@@ -7,7 +8,7 @@ export const metadata: Metadata = { title: "Create an account", robots: { index:
 
 export default async function SignupPage(props: PageProps<"/signup">) {
   const { next } = await props.searchParams;
-  const back = typeof next === "string" && next.startsWith("/") && !next.startsWith("//") ? next : "/account";
+  const back = safeNext(next) || "/account";
   if (await getCurrentUser()) redirect(back);
   return (
     <div className="bg-surface px-4 py-16">

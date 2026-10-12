@@ -1,3 +1,4 @@
+import { safeNext } from "@/lib/site";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AuthForm } from "@/components/AuthForm";
@@ -8,7 +9,7 @@ export const metadata: Metadata = { title: "Log in", robots: { index: false } };
 export default async function LoginPage(props: PageProps<"/login">) {
   if (await isAdmin()) redirect("/admin");
   const { next } = await props.searchParams;
-  const back = typeof next === "string" && next.startsWith("/") && !next.startsWith("//") ? next : "/account";
+  const back = safeNext(next) || "/account";
   if (await getCurrentUser()) redirect(back);
   return (
     <div className="bg-surface px-4 py-16">

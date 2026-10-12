@@ -238,7 +238,8 @@ export async function markPaid(s: PaidSession) {
   if (order.stripe_session_id && order.stripe_session_id !== s.sessionId) return null;
   const res = await execute(
     `UPDATE orders SET status = 'paid', paid_at = NOW(), amount_paid = ?, card_brand = ?, card_last4 = ?, stripe_session_id = ?
-     WHERE ref = ? AND status IN ('pending', 'expired', 'unpaid')`,
+     WHERE ref = ? AND (status IN ('pending', 'expired', 'unpaid')
+       OR (status IN ('paid', 'in_production', 'dispatched') AND amount_paid IS NULL))`,
     [s.amount, s.cardBrand, s.cardLast4, s.sessionId, s.ref],
   );
   const updated = await getOrder(s.ref);

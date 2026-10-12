@@ -2,7 +2,11 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import { site } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Terms & Conditions" };
+export const metadata: Metadata = {
+  title: "Terms & Conditions",
+  description: "The terms for buying number plates from PlatedUp.",
+  alternates: { canonical: "/terms-conditions" },
+};
 
 export default function TermsPage() {
   return (

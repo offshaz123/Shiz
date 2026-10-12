@@ -1,5 +1,6 @@
 "use client";
 
+import { safeNext } from "@/lib/site";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -12,7 +13,7 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   useEffect(() => {
     const n = new URLSearchParams(window.location.search).get("next") ?? "";
     // eslint-disable-next-line react-hooks/set-state-in-effect -- read the return address after hydration
-    setNext(n.startsWith("/") && !n.startsWith("//") ? n : "");
+    setNext(safeNext(n));
   }, []);
   const withNext = (path: string) => (next ? `${path}?next=${encodeURIComponent(next)}` : path);
 
@@ -83,14 +84,14 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         {signup ? (
           <>
             Already have an account?{" "}
-            <Link href={withNext("/login")} className="font-semibold text-gold underline">
+            <Link href={withNext("/login")} className="inline-block py-2 font-semibold text-gold underline">
               Log in
             </Link>
           </>
         ) : (
           <>
             New to PlatedUp?{" "}
-            <Link href={withNext("/signup")} className="font-semibold text-gold underline">
+            <Link href={withNext("/signup")} className="inline-block py-2 font-semibold text-gold underline">
               Create an account
             </Link>
           </>

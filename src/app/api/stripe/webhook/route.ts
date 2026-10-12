@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       // Re-read the session from Stripe so we get the card details and the
       // definite payment status rather than trusting the event body alone.
       await markPaid(await getCheckoutSession(session.id));
-    } else if (event.type === "checkout.session.expired" && session.metadata?.order_ref) {
+    } else if ((event.type === "checkout.session.expired" || event.type === "checkout.session.async_payment_failed") && session.metadata?.order_ref) {
       await markExpired(session.metadata.order_ref);
     }
   } catch (err) {

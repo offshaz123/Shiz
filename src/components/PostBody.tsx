@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { getPost } from "@/lib/blog";
 
 // Turns **bold** and [text](/link) into elements.
 function inline(text: string, key: string): ReactNode[] {
@@ -11,6 +12,8 @@ function inline(text: string, key: string): ReactNode[] {
     if (m.index > last) out.push(text.slice(last, m.index));
     const k = `${key}-${m.index}`;
     if (m[1]) out.push(<strong key={k}>{inline(m[1], k)}</strong>);
+    // A link to a blog post that isn't out yet stays plain text until its day.
+    else if (m[3].startsWith("/blog/") && !getPost(m[3].slice(6))) out.push(m[2]);
     else if (m[3].startsWith("/"))
       out.push(
         <Link key={k} href={m[3]} className="font-semibold text-[#8a6a12] underline underline-offset-2">

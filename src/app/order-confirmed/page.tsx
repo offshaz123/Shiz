@@ -4,6 +4,7 @@ import { AutoRefresh } from "@/components/AutoRefresh";
 import { ClearBasket } from "@/components/ClearBasket";
 import { site, whatsappHref } from "@/lib/site";
 import { isDbConfigured } from "@/lib/db";
+import { getCurrentUser, isAdmin } from "@/lib/auth";
 import { getCheckoutSession, isStripeConfigured } from "@/lib/stripe";
 import { type Order, getOrder, markPaid } from "@/lib/orders";
 import { money } from "@/lib/plates";
@@ -18,7 +19,15 @@ async function loadOrder(ref: string, sessionId: string): Promise<Order | null> 
       const session = await getCheckoutSession(sessionId);
       if (session.ref === ref) await markPaid(session);
     }
-    return await getOrder(ref);
+    const order = await getOrder(ref);
+    if (!order) return null;
+    // Only show the details to the person who placed it: they came back from
+    // Stripe with its session, or they're logged in to the account, or admin.
+    const own =
+      (sessionId && order.stripe_session_id === sessionId) ||
+      (order.user_id !== null && (await getCurrentUser())?.id === order.user_id) ||
+      (await isAdmin());
+    return own ? order : null;
   } catch (err) {
     console.error("Loading order failed", err);
     return null;

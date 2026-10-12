@@ -23,8 +23,7 @@ import {
   plateSize,
   styles,
   unitPrice,
-  whichPlates,
-} from "@/lib/plates";
+  whichPlates, isValidReg } from "@/lib/plates";
 
 const tabs = ["Size", "Style", "Additions"] as const;
 
@@ -142,7 +141,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
   return (
     <div className="bg-surface">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-        <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold hover:text-gold">
+        <Link href="/" className="inline-flex items-center gap-2 py-2 text-sm font-semibold hover:text-gold">
           <span aria-hidden>←</span> Back to Home
         </Link>
         <h1 className="mt-3 text-center font-display text-3xl font-bold sm:mt-4 sm:text-5xl">Build Your Number Plates</h1>
@@ -204,7 +203,9 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                   <p id="reg-hint" className="mt-2 text-center text-xs text-muted">
                     {c.type === "show"
                       ? `Show plate: any text, spaces wherever you like (up to ${SHOW_MAX} characters)`
-                      : "Max 7 characters for selected plate size"}
+                      : isValidReg(c.reg) && !/^[A-Z]{2}\d{2}[A-Z]{3}$/.test(c.reg.replace(/\s/g, ""))
+                        ? "✓ Private registration recognised, spaced to DVLA rules"
+                        : "Max 7 characters for selected plate size"}
                   </p>
                 )}
               </div>
@@ -219,7 +220,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                     If it&apos;s your car&apos;s real registration, choose <strong>Road Legal</strong> below and check it&apos;s typed
                     correctly.
                   </p>
-                  <button type="button" className="mt-2 font-semibold underline" onClick={() => setNotice(false)}>
+                  <button type="button" className="mt-1 py-2 font-semibold underline" onClick={() => setNotice(false)}>
                     OK, got it
                   </button>
                 </div>
