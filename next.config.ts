@@ -4,6 +4,8 @@ import type { NextConfig } from "next";
 const PERSONAL = "account|admin|checkout|order-confirmed|login|signup|basket|upload-documents";
 
 const nextConfig: NextConfig = {
+  // Don't advertise what the site is built with.
+  poweredByHeader: false,
   // The plate pictures and email logo are read from disk; make sure they're
   // copied into the standalone build Hostinger runs (every route, since
   // emails can be sent from several places).
@@ -12,6 +14,25 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
+      {
+        // Browser protections on every page.
+        source: "/:path*",
+        headers: [
+          // Always use HTTPS.
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
+          // Don't let other sites show ours inside a frame (click-jacking).
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
+          {
+            key: "Content-Security-Policy",
+            value: "frame-ancestors 'self'; base-uri 'self'; object-src 'none'; form-action 'self'; upgrade-insecure-requests",
+          },
+          // Don't let the browser guess file types (e.g. an upload pretending to be a page).
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          // Only send our address, not full page addresses, to other sites.
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), payment=()" },
+        ],
+      },
       {
         // Pages: let Hostinger's CDN keep them for a minute only. Each deploy
         // renames the JavaScript files, so a page cached for longer can point
