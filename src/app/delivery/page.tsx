@@ -5,7 +5,7 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Delivery Policy",
-  description: "Tracked UK delivery in 2–5 working days, free on orders over £70, or next day delivery. Same day dispatch before 2pm.",
+  description: "Tracked UK delivery in 2–5 working days, free on orders of £34.99 or more, or next day delivery. Same day dispatch before 2pm.",
   alternates: { canonical: "/delivery" },
 };
 
@@ -19,7 +19,7 @@ export default function DeliveryPage() {
           {delivery.map((d) => (
             <li key={d.id}>
               <strong>{d.name}</strong> ({money(d.price)}
-              {d.id === "standard" && `, or FREE on orders over ${money(FREE_DELIVERY_FROM)}`}): {d.note}
+              {d.id === "standard" && `, or FREE on orders of ${money(FREE_DELIVERY_FROM)} or more`}): {d.note}
             </li>
           ))}
         </ul>

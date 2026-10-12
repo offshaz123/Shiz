@@ -117,11 +117,11 @@ export const extrasPrice = {
   border: 349,
 } as const;
 
-// Tracked delivery is free once the plates come to this much (£70).
-export const FREE_DELIVERY_FROM = 7000;
+// Tracked delivery is free once the plates come to this much (£34.99).
+export const FREE_DELIVERY_FROM = 3499;
 
 export const delivery: { id: DeliveryId; name: string; note: string; price: number }[] = [
-  { id: "standard", name: "Tracked Delivery", note: "2–5 working days", price: 399 },
+  { id: "standard", name: "Tracked Delivery", note: "2–5 working days", price: 299 },
   { id: "nextday", name: "Next Day Delivery", note: "Next working day · order before 2pm Mon–Fri", price: 699 },
 ];
 

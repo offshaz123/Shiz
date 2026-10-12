@@ -23,7 +23,7 @@ const reasons = [
   { title: "Made locally", text: "Every plate is made by hand in our workshop at Roneo Corner, Hornchurch." },
   { title: "Same day dispatch", text: `Order before ${site.dispatchCutoff} on a working day and your plates are made and sent the same day.` },
   { title: "Fully road legal", text: "DVLA registered supplier. Every road-legal plate is made to BS AU 145e." },
-  { title: `Free delivery over ${money(FREE_DELIVERY_FROM)}`, text: "Tracked delivery to your door, or next day delivery if you need them fast." },
+  { title: `Free delivery from ${money(FREE_DELIVERY_FROM)}`, text: "Tracked delivery to your door, or next day delivery if you need them fast." },
 ];
 
 const faqs = [

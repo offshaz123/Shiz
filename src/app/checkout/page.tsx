@@ -263,7 +263,7 @@ export default function CheckoutPage() {
               <p className="mt-2 text-sm text-muted">
                 {subtotal >= FREE_DELIVERY_FROM
                   ? "Your order qualifies for FREE tracked delivery."
-                  : `Free tracked delivery on orders over ${money(FREE_DELIVERY_FROM)}. Spend ${money(FREE_DELIVERY_FROM - subtotal)} more to qualify.`}
+                  : `Free tracked delivery on orders of ${money(FREE_DELIVERY_FROM)} or more. Spend ${money(FREE_DELIVERY_FROM - subtotal)} more to qualify.`}
               </p>
             </fieldset>
           </Section>

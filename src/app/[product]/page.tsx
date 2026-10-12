@@ -126,7 +126,7 @@ export default async function ProductPage(props: PageProps<"/[product]">) {
                   </th>
                   <td className="p-4 text-right">
                     {money(delivery[0].price)}
-                    <span className="block text-sm font-semibold text-gold">FREE over {money(FREE_DELIVERY_FROM)}</span>
+                    <span className="block text-sm font-semibold text-gold">FREE from {money(FREE_DELIVERY_FROM)}</span>
                   </td>
                 </tr>
                 <tr>
