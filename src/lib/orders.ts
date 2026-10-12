@@ -7,7 +7,8 @@ import { join } from "node:path";
 import { LOGO_CID, customerCancelEmail, customerDispatchEmail, customerOrderEmail, plateCid, plateImageParams, shopOrderEmail } from "./emails";
 import { renderPlatePng } from "./plate-image";
 import { countDiscountUse } from "./discounts";
-import { sendMail, sendToShop } from "./mail";
+import { sendMail, sendToShop, shopAddress } from "./mail";
+import { logEmail, logOrderEvent, newToken, withOpenTracker } from "./email-log";
 import { type PaidSession, getCheckoutSession } from "./stripe";
 
 export type OrderStatus = "pending" | "unpaid" | "paid" | "in_production" | "dispatched" | "expired" | "cancelled" | "refunded";
@@ -154,6 +155,7 @@ export async function listOrdersForUser(userId: number) {
 
 export async function setStatus(ref: string, status: OrderStatus) {
   await execute("UPDATE orders SET status = ? WHERE ref = ?", [status, ref]);
+  await logOrderEvent(ref, status);
 }
 
 export async function markDocsReceived(orderId: number) {
@@ -183,14 +185,19 @@ export async function sendOrderEmails(order: Order) {
         ...docs.map((d) => ({ filename: d.filename, content: d.data, contentType: d.mime })),
       ],
     });
+    await logEmail({ orderId: order.id, kind: "shop", recipient: shopAddress(), ok: true });
   } catch (err) {
     console.error(`Shop email for ${order.ref} failed`, err);
+    await logEmail({ orderId: order.id, kind: "shop", recipient: shopAddress(), ok: false, error: err });
   }
   const customer = customerOrderEmail(order, mode);
+  const token = newToken();
   try {
-    await sendMail({ to: order.email, subject: customer.subject, text: customer.text, html: customer.html, attachments: images ?? [] });
+    await sendMail({ to: order.email, subject: customer.subject, text: customer.text, html: withOpenTracker(customer.html, token), attachments: images ?? [] });
+    await logEmail({ orderId: order.id, kind: "receipt", recipient: order.email, ok: true, token });
   } catch (err) {
     console.error(`Customer email for ${order.ref} failed`, err);
+    await logEmail({ orderId: order.id, kind: "receipt", recipient: order.email, ok: false, error: err });
   }
 }
 
@@ -200,11 +207,14 @@ export async function sendStatusEmail(order: Order, kind: "dispatched" | "cancel
   const images = await emailImages(order);
   const mode = images ? "inline" : "web";
   const email = kind === "dispatched" ? customerDispatchEmail(order, mode) : customerCancelEmail({ ...order, status: kind }, mode);
+  const token = newToken();
   try {
-    await sendMail({ to: order.email, subject: email.subject, text: email.text, html: email.html, attachments: images ?? [] });
+    await sendMail({ to: order.email, subject: email.subject, text: email.text, html: withOpenTracker(email.html, token), attachments: images ?? [] });
+    await logEmail({ orderId: order.id, kind, recipient: order.email, ok: true, token });
     return true;
   } catch (err) {
     console.error(`${kind} email for ${order.ref} failed`, err);
+    await logEmail({ orderId: order.id, kind, recipient: order.email, ok: false, error: err });
     return false;
   }
 }

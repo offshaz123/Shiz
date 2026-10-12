@@ -9,6 +9,8 @@ import { PlatePreview } from "@/components/PlatePreview";
 import { docsLabels, getOrder, listDocuments } from "@/lib/orders";
 import { describe, money, unitPrice } from "@/lib/plates";
 import { cardLine } from "@/lib/emails";
+import { listEmailLog, listOrderEvents } from "@/lib/email-log";
+import { OrderTimeline } from "@/components/OrderTimeline";
 
 export const metadata: Metadata = { title: "Order", robots: { index: false } };
 
@@ -26,7 +28,7 @@ export default async function AdminOrderPage(props: PageProps<"/admin/orders/[re
   const { ref } = await props.params;
   const order = await getOrder(ref);
   if (!order) notFound();
-  const docs = await listDocuments(order.id);
+  const [docs, emails, events] = await Promise.all([listDocuments(order.id), listEmailLog(order.id), listOrderEvents(order.id)]);
   const waText = encodeURIComponent(`Hi ${order.customer_name.split(" ")[0]}, it's PlatedUp about your order ${order.ref}.`);
   const waPhone = order.phone.replace(/\D/g, "").replace(/^0/, "44");
 
@@ -40,6 +42,10 @@ export default async function AdminOrderPage(props: PageProps<"/admin/orders/[re
         <StatusBadge status={order.status} />
       </div>
       <p className="text-sm text-muted">Placed {fmtDateTime(order.created_at)}</p>
+
+      <div className="mt-5">
+        <OrderTimeline order={order} emails={emails} events={events} />
+      </div>
 
       <div className="mt-6 grid gap-5 lg:grid-cols-[1.4fr_1fr]">
         <div className="space-y-5">

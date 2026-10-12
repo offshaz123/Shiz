@@ -5,6 +5,7 @@ import { AdminShell } from "@/components/AdminShell";
 import { StatusBadge } from "@/components/StatusBadge";
 import { listCustomers, listOrders, refreshPendingPayments, statusLabels } from "@/lib/orders";
 import { isStripeConfigured } from "@/lib/stripe";
+import { receiptSummary } from "@/lib/email-log";
 import { listAccounts } from "@/lib/orders";
 import { money } from "@/lib/plates";
 import { cardLine } from "@/lib/emails";
@@ -40,6 +41,7 @@ export default async function AdminPage(props: PageProps<"/admin">) {
     listAccounts(),
   ]);
 
+  const emailed = await receiptSummary(orders.map((o) => o.id));
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
   const paidOrders = everything.filter((o) => PAID.includes(o.status));
@@ -107,6 +109,7 @@ export default async function AdminPage(props: PageProps<"/admin">) {
               <th className="p-3">Plates</th>
               <th className="p-3">Status</th>
               <th className="p-3">Documents</th>
+              <th className="p-3">Email</th>
               <th className="p-3">Payment</th>
               <th className="p-3 text-right">Total</th>
             </tr>
@@ -114,7 +117,7 @@ export default async function AdminPage(props: PageProps<"/admin">) {
           <tbody className="divide-y divide-line">
             {orders.length === 0 && (
               <tr>
-                <td colSpan={8} className="p-10 text-center text-muted">
+                <td colSpan={9} className="p-10 text-center text-muted">
                   No orders here yet.
                 </td>
               </tr>
@@ -145,6 +148,14 @@ export default async function AdminPage(props: PageProps<"/admin">) {
                 </td>
                 <td className={`p-3 text-xs font-semibold ${o.docs_status === "outstanding" ? "text-[#b42318]" : "text-muted"}`}>
                   {o.docs_status === "outstanding" ? "Missing" : o.docs_status === "received" ? "Received" : "Not needed"}
+                </td>
+                <td className="whitespace-nowrap p-3 text-xs font-semibold">
+                  {(() => {
+                    const e = emailed.get(o.id);
+                    if (!e) return <span className="text-muted">-</span>;
+                    if (e.status === "failed") return <span className="text-[#b42318]">✗ Failed</span>;
+                    return <span className="text-[#1f7a3d]">{e.opened_at ? "✓ Opened" : "✓ Sent"}</span>;
+                  })()}
                 </td>
                 <td className="p-3 text-xs text-muted">
                   {o.paid_at ? (

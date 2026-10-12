@@ -98,6 +98,27 @@ const schema = [
     active TINYINT NOT NULL DEFAULT 1,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   ) CHARACTER SET utf8mb4`,
+  // Every email sent about an order, so the admin can see it went (or didn't).
+  `CREATE TABLE IF NOT EXISTS email_log (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    kind VARCHAR(20) NOT NULL,
+    recipient VARCHAR(190) NOT NULL,
+    status VARCHAR(10) NOT NULL,
+    error VARCHAR(300) NULL,
+    token CHAR(32) NULL UNIQUE,
+    opened_at DATETIME NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX (order_id)
+  ) CHARACTER SET utf8mb4`,
+  // When an order moved to each stage (in production, dispatched, ...).
+  `CREATE TABLE IF NOT EXISTS order_events (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT NOT NULL,
+    event VARCHAR(20) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX (order_id)
+  ) CHARACTER SET utf8mb4`,
   // The welcome offer advertised in the banner, added once when the table is
   // new (so it stays deleted if the shop removes it).
   `INSERT INTO discount_codes (code, title, kind, value, first_order_only)
@@ -129,7 +150,8 @@ async function ensureSchema() {
   return ready;
 }
 
-type Params = (string | number | boolean | Date | Buffer | null)[];
+// An array value becomes a list, e.g. "IN (?)" with [1, 2, 3].
+type Params = (string | number | boolean | Date | Buffer | null | (string | number)[])[];
 
 export async function query<T = mysql.RowDataPacket>(sql: string, params: Params = []) {
   await ensureSchema();
