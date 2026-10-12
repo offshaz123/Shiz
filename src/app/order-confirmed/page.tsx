@@ -84,6 +84,10 @@ export default async function OrderConfirmed(props: PageProps<"/order-confirmed"
           : "We'll be in touch by email. "}
         Orders placed before {site.dispatchCutoff} on a working day are made and dispatched the same day.
       </p>
+      <p className="mt-2 text-sm text-muted">
+        Can&apos;t see our email? Check your junk or spam folder, and mark it &ldquo;Not junk&rdquo; so our dispatch update
+        reaches your inbox.
+      </p>
       {docsOutstanding && (
         <div className="mt-8 rounded-3xl border-2 border-[#d92d20] bg-[#fdecec] p-6 text-left">
           <p className="font-display text-2xl font-bold text-[#b42318]">⚠️ Action needed: upload your documents</p>
