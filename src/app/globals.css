@@ -186,8 +186,21 @@ body {
   from { transform: translateX(0); }
   to { transform: translateX(-50%); }
 }
+/* Customer reviews gliding past in one row (homepage, more than 3 reviews).
+   Stops while someone hovers or taps to read one. */
+.reviews-track {
+  display: flex;
+  width: max-content;
+  animation: marquee var(--reviews-duration, 60s) linear infinite;
+}
+.reviews-viewport:hover .reviews-track,
+.reviews-viewport:focus-within .reviews-track { animation-play-state: paused; }
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation: none; }
+  /* No movement: people swipe through the reviews instead. */
+  .reviews-viewport { overflow-x: auto; }
+  .reviews-track { animation: none; }
+  .reviews-track > [aria-hidden] { display: none; }
 }
 
 .gold-deep {

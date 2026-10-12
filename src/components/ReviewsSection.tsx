@@ -6,7 +6,7 @@ import { Stars } from "./Stars";
 async function load(): Promise<{ reviews: Review[]; count: number; average: number }> {
   if (!isDbConfigured()) return { reviews: [], count: 0, average: 0 };
   try {
-    const [reviews, summary] = await Promise.all([listApprovedReviews(6), reviewSummary()]);
+    const [reviews, summary] = await Promise.all([listApprovedReviews(20), reviewSummary()]);
     return { reviews, ...summary };
   } catch (err) {
     console.error("Loading reviews failed", err);
@@ -34,29 +34,49 @@ export async function ReviewsSection() {
             <p className="mt-2 text-muted">Bought plates from us? We&apos;d love to hear what you think.</p>
           )}
         </div>
-        {reviews.length > 0 && (
-          <div className="mt-8 grid gap-4 sm:mt-10 md:grid-cols-2 lg:grid-cols-3">
-            {reviews.map((r) => (
-              <figure key={r.id} className="flex flex-col rounded-2xl border border-line bg-white p-5 shadow-sm">
-                <Stars rating={r.rating} />
-                <blockquote className="mt-3 flex-1 whitespace-pre-line text-sm leading-relaxed">{r.body}</blockquote>
-                <figcaption className="mt-4 flex flex-wrap items-center gap-2 text-sm">
-                  <span className="font-semibold">{r.name}</span>
-                  {Boolean(r.verified) && (
-                    <span className="rounded-full bg-[#e7f6ec] px-2 py-0.5 text-xs font-bold text-[#1f7a3d]">✓ Verified buyer</span>
-                  )}
-                  <span className="text-xs text-muted">
-                    {new Date(r.created_at).toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "Europe/London" })}
-                  </span>
-                </figcaption>
-              </figure>
-            ))}
+        {reviews.length > 3 ? (
+          // More than 3: one row that glides slowly past (pauses on hover).
+          <div className="reviews-viewport marquee-viewport mt-8 sm:mt-10" aria-label="Customer reviews">
+            <div className="reviews-track py-2" style={{ "--reviews-duration": `${reviews.length * 8}s` } as React.CSSProperties}>
+              {/* Two copies back to back, so the row loops without a gap. */}
+              {[0, 1].map((copy) => (
+                <div key={copy} className="flex shrink-0 gap-4 pr-4" aria-hidden={copy === 1 || undefined}>
+                  {reviews.map((r) => (
+                    <ReviewCard key={r.id} r={r} className="w-[300px] sm:w-[360px]" />
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
+        ) : (
+          reviews.length > 0 && (
+            <div className="mt-8 grid gap-4 sm:mt-10 md:grid-cols-2 lg:grid-cols-3">
+              {reviews.map((r) => (
+                <ReviewCard key={r.id} r={r} />
+              ))}
+            </div>
+          )
         )}
         <div className="mt-8">
           <ReviewForm />
         </div>
       </div>
     </section>
+  );
+}
+
+function ReviewCard({ r, className = "" }: { r: Review; className?: string }) {
+  return (
+    <figure className={`flex flex-col rounded-2xl border border-line bg-white p-5 shadow-sm ${className}`}>
+      <Stars rating={r.rating} />
+      <blockquote className="mt-3 line-clamp-6 flex-1 whitespace-pre-line text-sm leading-relaxed">{r.body}</blockquote>
+      <figcaption className="mt-4 flex flex-wrap items-center gap-2 text-sm">
+        <span className="font-semibold">{r.name}</span>
+        {Boolean(r.verified) && <span className="rounded-full bg-[#e7f6ec] px-2 py-0.5 text-xs font-bold text-[#1f7a3d]">✓ Verified buyer</span>}
+        <span className="text-xs text-muted">
+          {new Date(r.created_at).toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "Europe/London" })}
+        </span>
+      </figcaption>
+    </figure>
   );
 }
