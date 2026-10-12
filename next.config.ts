@@ -6,6 +6,14 @@ const PERSONAL = "account|admin|checkout|order-confirmed|login|signup|basket|upl
 const nextConfig: NextConfig = {
   // Don't advertise what the site is built with.
   poweredByHeader: false,
+  // Hostinger's shared plan limits how many processes and threads the
+  // account can run. Next.js otherwise sizes these by the server's CPU count
+  // (dozens on a shared machine): one build worker per CPU, and image
+  // resizing threads for half of them.
+  experimental: {
+    cpus: 1,
+    imgOptConcurrency: 1,
+  },
   // The plate pictures and email logo are read from disk; make sure they're
   // copied into the standalone build Hostinger runs (every route, since
   // emails can be sent from several places).
