@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/JsonLd";
 import Link from "next/link";
 import { RegForm } from "@/components/RegForm";
 import { TrustBadges } from "@/components/TrustBadges";
+import { ReviewsSection } from "@/components/ReviewsSection";
 import { PlatePreview } from "@/components/PlatePreview";
 import { type PlateConfig, defaultConfig } from "@/lib/plates";
 import { products } from "@/lib/content";
@@ -33,22 +34,22 @@ const gallery = [
   {
     src: "/gallery/porsche-taycan-platedup.jpg",
     alt: "Man holding a PlatedUp sign in front of a black Porsche Taycan with a UK flag number plate",
-    caption: "Porsche Taycan · UK flag plate",
+    caption: "Porsche Taycan · 3D Gel plates",
   },
   {
     src: "/gallery/porsche-taycan-charged.jpg",
     alt: "Woman holding a PlatedUp sign beside a silver Porsche Taycan with a Green Strip UK show plate on a London rooftop",
-    caption: "Porsche Taycan · Green Strip UK show plate",
+    caption: "Porsche Taycan · 2D Printed plates",
   },
   {
     src: "/gallery/range-rover-green-strip.jpg",
     alt: "Man holding a PlatedUp sign in front of a black Range Rover with a Green Strip UK show plate",
-    caption: "Range Rover · Green Strip UK show plate",
+    caption: "Range Rover · 7MM Gel plates",
   },
   {
     src: "/gallery/bmw-m4-hit-it.jpg",
     alt: "Woman holding a PlatedUp sign beside a white BMW M4 with a show plate",
-    caption: "BMW M4 · Custom show plate",
+    caption: "BMW M4 · 4D 5MM plates",
   },
 ];
 
@@ -58,6 +59,9 @@ const showcase: (Partial<PlateConfig> & { caption: string })[] = [
   { reg: "EV24 VLT", style: "4d-3mm", badge: "green-uk", caption: "4D 3MM with Green Strip UK" },
   { reg: "SC07 UPS", style: "3d-gel", badge: "sco", caption: "3D Gel with Scotland flag" },
 ];
+
+// Re-check for newly approved reviews every few minutes.
+export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: { absolute: "Premium 3D Gel & 4D Number Plates | PlatedUp" },
@@ -196,10 +200,10 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
           <div className="text-center">
             <span className="inline-block rounded-full bg-gold-soft px-4 py-1.5 text-sm font-semibold text-gold">
-              Customer Showcase
+              Popular Styles
             </span>
             <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">Plates That Stand Out</h2>
-            <p className="mt-2 text-muted">A few of the combinations our customers love.</p>
+            <p className="mt-2 text-muted">A few of our most popular combinations.</p>
           </div>
           <div className="mt-8 grid grid-cols-2 gap-3 sm:mt-10 sm:gap-5 lg:grid-cols-4">
             {showcase.map(({ caption, ...c }) => (
@@ -220,6 +224,8 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      <ReviewsSection />
     </>
   );
 }

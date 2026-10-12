@@ -12,6 +12,7 @@ const emailNames: Record<EmailKind, string> = {
   dispatched: "\"On its way\" email",
   cancelled: "Cancellation email",
   refunded: "Refund email",
+  reminder: "Checkout reminder",
 };
 
 function lastEmail(emails: EmailLog[], kind: EmailKind) {

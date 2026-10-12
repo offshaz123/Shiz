@@ -23,11 +23,14 @@ export default function PrivacyPage() {
           <li>The registration numbers you order</li>
           <li>Copies of your entitlement and identity documents</li>
           <li>Messages you send us</li>
+          <li>Reviews you leave on our website (your name and review are shown; your email is not)</li>
         </ul>
         <h2>Why we collect it</h2>
         <p>
           To make and deliver your order, to reply to you, and to meet our legal duty as a DVLA
-          registered number plate supplier to verify and record every plate we supply.
+          registered number plate supplier to verify and record every plate we supply. If you start an
+          order but don&apos;t finish paying, we send you one reminder email with a link to complete it,
+          and no more.
         </p>
         <h2>How long we keep it</h2>
         <p>

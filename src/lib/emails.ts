@@ -269,6 +269,14 @@ export function customerDispatchEmail(o: Order, images: ImageMode = "web") {
       </td></tr>
     </table>
 
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:16px 0 8px;background:${CREAM};border:1px solid ${LINE};border-radius:12px;">
+      <tr><td style="padding:16px 18px;">
+        <p style="font:700 16px Arial,sans-serif;color:${INK};margin:0 0 4px;">Love your plates?</p>
+        <p style="font:14px/1.5 Arial,sans-serif;color:${MUTED};margin:0 0 12px;">Once they're on, we'd really appreciate a quick review. It takes a minute and helps other drivers find us.</p>
+        ${button(`${site.url}/#reviews`, "Leave a review", GOLD)}
+      </td></tr>
+    </table>
+
     <p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:20px 0 0;">Thanks for choosing ${site.name}. Enjoy your new plates!</p>
     `,
     images,
@@ -285,6 +293,8 @@ export function customerDispatchEmail(o: Order, images: ImageMode = "web") {
     "",
     "Not arrived after a few working days? Just message us.",
     `Questions? WhatsApp us: ${helpHref}`,
+    "",
+    `Love your plates? Leave a quick review: ${site.url}/#reviews`,
   ].join("\n");
 
   return { subject: `Your order ${o.ref} has been dispatched 🚚`, html, text };
@@ -414,4 +424,65 @@ export function shopOrderEmail(o: Order, docCount: number, images: ImageMode = "
     text,
     html,
   };
+}
+
+// Sent once when someone reached payment but didn't finish (their Stripe
+// checkout expired). The button starts a fresh payment for the same order.
+export function customerReminderEmail(o: Order, resumeUrl: string, images: ImageMode = "web") {
+  const first = o.customer_name.split(" ")[0] || "there";
+  const plates = o.items.reduce((n, i) => n + i.qty, 0);
+  const helpHref = whatsappHref.replace(
+    encodeURIComponent("I'm a customer and I need some help"),
+    encodeURIComponent(`I started an order (${o.ref}) and have a question`),
+  );
+
+  const html = layout(
+    "Your plates are still waiting",
+    `${first}, your ${plates === 1 ? "plate is" : "plates are"} saved and ready to order.`,
+    `
+    <p style="font:700 26px Arial,sans-serif;color:${INK};margin:0 0 6px;">Your plates are still waiting, ${esc(first)}</p>
+    <p style="font:15px/1.6 Arial,sans-serif;color:${MUTED};margin:0 0 20px;">You started an order on ${site.name} but didn't get as far as paying. We've saved your ${plates === 1 ? "plate" : "plates"} exactly as you designed ${plates === 1 ? "it" : "them"}, so you can finish in one click.</p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${itemsHtml(o, 544, images)}</table>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:14px;">
+      ${o.discount ? row(`Discount${o.discount_code ? ` (${esc(o.discount_code)})` : ""}`, `-${money(o.discount)}`) : ""}
+      ${row(esc(o.delivery_name), o.delivery_price ? money(o.delivery_price) : "Free")}
+      ${row("Total", money(o.total), true)}
+    </table>
+
+    <p style="margin:24px 0 8px;text-align:center;">${button(resumeUrl, "Complete my order", GOLD)}</p>
+    <p style="font:13px/1.5 Arial,sans-serif;color:${MUTED};margin:0 0 20px;text-align:center;">Secure payment by Stripe${o.discount_code ? `. Your ${esc(o.discount_code)} discount is still applied` : ""}. Orders before ${site.dispatchCutoff} on a working day are dispatched the same day.</p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:8px 0;background:#f1faf3;border:1px solid #cfe6d4;border-radius:12px;">
+      <tr><td style="padding:16px 18px;">
+        <p style="font:700 16px Arial,sans-serif;color:${INK};margin:0 0 4px;">Something not right, or a question?</p>
+        <p style="font:14px/1.5 Arial,sans-serif;color:${MUTED};margin:0 0 12px;">Message us on WhatsApp and a real person will help.</p>
+        ${button(helpHref, "Chat on WhatsApp", "#25D366")}
+      </td></tr>
+    </table>
+
+    <p style="font:12px/1.5 Arial,sans-serif;color:${MUTED};margin:20px 0 0;">We've sent this one reminder because you started an order on our website. We won't email you about it again.</p>
+    `,
+    images,
+  );
+
+  const text = [
+    `Your plates are still waiting, ${first}`,
+    `You started an order on ${site.name} but didn't finish paying. We've saved it for you:`,
+    "",
+    ...o.items.map((i) => `- "${i.reg}" × ${i.qty}: ${describe(i)} (${money(unitPrice(i) * i.qty)})`),
+    o.discount ? `Discount${o.discount_code ? ` (${o.discount_code})` : ""}: -${money(o.discount)}` : "",
+    `${o.delivery_name}: ${o.delivery_price ? money(o.delivery_price) : "Free"}`,
+    `Total: ${money(o.total)}`,
+    "",
+    `Complete your order: ${resumeUrl}`,
+    "",
+    `Questions? WhatsApp us: ${helpHref}`,
+    "We've sent this one reminder because you started an order on our website. We won't email you about it again.",
+  ]
+    .filter((l, i, a) => l !== "" || a[i - 1] !== "")
+    .join("\n");
+
+  return { subject: `${first}, your plates are still waiting`, html, text };
 }

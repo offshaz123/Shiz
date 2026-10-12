@@ -1,5 +1,6 @@
 import { getCheckoutSession, verifyWebhook } from "@/lib/stripe";
-import { markExpired, markPaid } from "@/lib/orders";
+import { after } from "next/server";
+import { markExpired, markPaid, sendCheckoutReminder } from "@/lib/orders";
 import { isDbConfigured } from "@/lib/db";
 
 // Stripe calls this when a payment goes through (or a checkout expires).
@@ -22,7 +23,9 @@ export async function POST(req: Request) {
       // definite payment status rather than trusting the event body alone.
       await markPaid(await getCheckoutSession(session.id));
     } else if ((event.type === "checkout.session.expired" || event.type === "checkout.session.async_payment_failed") && session.metadata?.order_ref) {
-      await markExpired(session.metadata.order_ref);
+      const ref = session.metadata.order_ref;
+      // Left without paying: one "your plates are still waiting" email.
+      if ((await markExpired(ref)) && event.type === "checkout.session.expired") after(() => sendCheckoutReminder(ref));
     }
   } catch (err) {
     console.error("Stripe webhook failed", err);

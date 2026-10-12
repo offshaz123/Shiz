@@ -1,10 +1,12 @@
 import { after } from "next/server";
 import type { Attachment } from "nodemailer/lib/mailer";
 import { execute, query } from "./db";
-import { type CartItem, sanitiseItem } from "./plates";
+import { type CartItem, describe, sanitiseItem, unitPrice } from "./plates";
+import { randomBytes, timingSafeEqual } from "node:crypto";
+import { site } from "./site";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { LOGO_CID, customerCancelEmail, customerDispatchEmail, customerOrderEmail, plateCid, plateImageParams, shopOrderEmail } from "./emails";
+import { LOGO_CID, customerCancelEmail, customerDispatchEmail, customerOrderEmail, customerReminderEmail, plateCid, plateImageParams, shopOrderEmail } from "./emails";
 import { renderPlatePng } from "./plate-image";
 import { countDiscountUse } from "./discounts";
 import { sendMetaPurchase } from "./meta-capi";
@@ -163,8 +165,54 @@ export async function markDocsReceived(orderId: number) {
   await execute("UPDATE orders SET docs_status = 'received' WHERE id = ? AND docs_status = 'outstanding'", [orderId]);
 }
 
+// Returns true when this call changed it (so the reminder is sent only once).
 export async function markExpired(ref: string) {
-  await execute("UPDATE orders SET status = 'expired' WHERE ref = ? AND status = 'pending'", [ref]);
+  const res = await execute("UPDATE orders SET status = 'expired' WHERE ref = ? AND status = 'pending'", [ref]);
+  return res.affectedRows === 1;
+}
+
+// The Stripe checkout lines for an order already saved.
+export function checkoutLines(o: Pick<Order, "items" | "delivery_name" | "delivery_price">) {
+  const lines = o.items.map((i) => ({ name: `${i.reg}: ${describe(i)}`, amount: unitPrice(i), qty: i.qty }));
+  if (o.delivery_price) lines.push({ name: o.delivery_name, amount: o.delivery_price, qty: 1 });
+  return lines;
+}
+
+// One "your plates are still waiting" email when a checkout expires unpaid.
+// Skipped if they've since paid for another order, or already had a
+// reminder in the last day (several abandoned tries shouldn't mean several emails).
+export async function sendCheckoutReminder(ref: string) {
+  const order = await getOrder(ref);
+  if (!order || order.status !== "expired" || order.items.length === 0) return;
+  const recent = await query(
+    `SELECT 1 FROM orders o WHERE LOWER(o.email) = ? AND (
+        (o.status IN ('paid', 'in_production', 'dispatched') AND o.created_at >= ?)
+        OR EXISTS (SELECT 1 FROM email_log e WHERE e.order_id = o.id AND e.kind = 'reminder' AND e.created_at > NOW() - INTERVAL 1 DAY)
+      ) LIMIT 1`,
+    [order.email.toLowerCase(), order.created_at],
+  );
+  if (recent.length) return;
+  const token = randomBytes(16).toString("hex");
+  await execute("UPDATE orders SET resume_token = ? WHERE id = ?", [token, order.id]);
+  const resumeUrl = `${site.url}/api/order/resume?ref=${encodeURIComponent(order.ref)}&t=${token}`;
+  const images = await emailImages(order);
+  const email = customerReminderEmail(order, resumeUrl, images ? "inline" : "web");
+  const openToken = newToken();
+  try {
+    await sendMail({ to: order.email, subject: email.subject, text: email.text, html: withOpenTracker(email.html, openToken), attachments: images ?? [] });
+    await logEmail({ orderId: order.id, kind: "reminder", recipient: order.email, ok: true, token: openToken });
+  } catch (err) {
+    console.error(`Checkout reminder for ${order.ref} failed`, err);
+    await logEmail({ orderId: order.id, kind: "reminder", recipient: order.email, ok: false, error: err });
+  }
+}
+
+// The resume link's secret, checked without leaking timing.
+export async function resumeTokenMatches(ref: string, token: string) {
+  const rows = await query<{ resume_token: string | null }>("SELECT resume_token FROM orders WHERE ref = ?", [ref]);
+  const saved = rows[0]?.resume_token;
+  if (!saved || token.length !== saved.length) return false;
+  return timingSafeEqual(Buffer.from(saved), Buffer.from(token));
 }
 
 // Sends the "new paid order" email to the shop (with documents) and the

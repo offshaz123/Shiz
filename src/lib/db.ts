@@ -98,6 +98,18 @@ const schema = [
     active TINYINT NOT NULL DEFAULT 1,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
   ) CHARACTER SET utf8mb4`,
+  // Reviews customers leave on the website. Shown only once the shop approves them.
+  `CREATE TABLE IF NOT EXISTS reviews (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(80) NOT NULL,
+    email VARCHAR(190) NOT NULL,
+    rating TINYINT NOT NULL,
+    body TEXT NOT NULL,
+    verified TINYINT NOT NULL DEFAULT 0,
+    status VARCHAR(10) NOT NULL DEFAULT 'pending',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX (status)
+  ) CHARACTER SET utf8mb4`,
   // Every email sent about an order, so the admin can see it went (or didn't).
   `CREATE TABLE IF NOT EXISTS email_log (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -132,6 +144,8 @@ const addedColumns: [table: string, column: string, definition: string][] = [
   ["orders", "discount", "INT NOT NULL DEFAULT 0"],
   // Advert cookies from checkout, kept only if the customer accepted them.
   ["orders", "ad_tracking", "TEXT NULL"],
+  // Secret for the "complete your order" link in the checkout reminder email.
+  ["orders", "resume_token", "CHAR(32) NULL"],
 ];
 
 async function ensureSchema() {
