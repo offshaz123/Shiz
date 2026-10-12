@@ -5,6 +5,7 @@ import { site } from "@/lib/site";
 import { isDbConfigured } from "@/lib/db";
 import { getCurrentUser, isValidPhone } from "@/lib/auth";
 import { clientIp, rateLimited } from "@/lib/places";
+import { checkDiscount } from "@/lib/discounts";
 import { createCheckoutSession, isStripeConfigured, requestBaseUrl } from "@/lib/stripe";
 import { createOrder, getOrder, saveDocuments, sendOrderEmails, setStatus, setStripeSession } from "@/lib/orders";
 
@@ -66,6 +67,25 @@ export async function POST(req: Request) {
 
   if (!isDbConfigured()) return legacyOrder({ customer, plates, option, total, needsDocs, hasDocs, uploads: uploads.attachments, lines, baseUrl });
 
+  // A discount code takes money off the plates (checked again here, never
+  // trusted from the browser).
+  const user = await getCurrentUser();
+  const codeInput = field(form, "discount", 40);
+  let discount = 0;
+  let discountCode: string | null = null;
+  if (codeInput) {
+    let check: Awaited<ReturnType<typeof checkDiscount>>;
+    try {
+      check = await checkDiscount(codeInput, { email: customer.email, userId: user?.id ?? null }, subtotal);
+    } catch (err) {
+      console.error("Checking discount failed", err);
+      return Response.json({ error: `We couldn't check your discount code. Please try again or message us on WhatsApp.` }, { status: 500 });
+    }
+    if (!check.ok) return Response.json({ error: `Discount code: ${check.error}` }, { status: 400 });
+    discount = check.discount;
+    discountCode = check.code;
+  }
+
   // Save the order first. Nothing is emailed until Stripe confirms payment
   // (see /api/stripe/webhook and the thank-you page).
   const paying = isStripeConfigured();
@@ -76,7 +96,6 @@ export async function POST(req: Request) {
       if (tries > 5) throw new Error("Could not create an order number");
       ref = orderRef();
     }
-    const user = await getCurrentUser();
     orderId = await createOrder({
       ref,
       user_id: user?.id ?? null,
@@ -92,7 +111,9 @@ export async function POST(req: Request) {
       delivery_name: option.name,
       delivery_price: shipping,
       subtotal,
-      total,
+      discount_code: discountCode,
+      discount,
+      total: total - discount,
       docs_status: !needsDocs ? "not_needed" : hasDocs ? "received" : "outstanding",
     });
     if (uploads.attachments.length) await saveDocuments(orderId, uploads.attachments, ["entitlement", "identity"]);
@@ -106,7 +127,13 @@ export async function POST(req: Request) {
 
   if (paying) {
     try {
-      const session = await createCheckoutSession({ ref, email: customer.email, lines, baseUrl });
+      const session = await createCheckoutSession({
+        ref,
+        email: customer.email,
+        lines,
+        baseUrl,
+        ...(discountCode && { discount: { amount: discount, code: discountCode } }),
+      });
       await setStripeSession(ref, session.id);
       return Response.json({ ref, paymentUrl: session.url });
     } catch (err) {

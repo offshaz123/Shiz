@@ -63,6 +63,12 @@ export default async function AdminOrderPage(props: PageProps<"/admin/orders/[re
               ))}
             </ul>
             <dl className="mt-3 space-y-1 border-t border-line pt-3 text-sm">
+              {order.discount > 0 && (
+                <div className="flex justify-between text-[#1f7a3d]">
+                  <dt>Discount code {order.discount_code}</dt>
+                  <dd>−{money(order.discount)}</dd>
+                </div>
+              )}
               <div className="flex justify-between">
                 <dt className="text-muted">Delivery: {order.delivery_name}</dt>
                 <dd>{order.delivery_price ? money(order.delivery_price) : "FREE"}</dd>

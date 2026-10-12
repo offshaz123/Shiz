@@ -31,6 +31,7 @@ export const nav = [
   { href: "/4d-plates", label: "4D Plates" },
   { href: "/faqs", label: "FAQs" },
   { href: "/blog", label: "Blog" },
+  { href: "/trade", label: "Trade" },
   { href: "/about", label: "About Us" },
   { href: "/legal", label: "Legal & Compliance" },
   { href: "/contact", label: "Contact Us" },
@@ -49,3 +50,10 @@ export const policyLinks = [
 export function safeNext(next: unknown) {
   return typeof next === "string" && /^\/(?![\/\\])[^\\\s]*$/.test(next) ? next : "";
 }
+
+// The offer in the gold bar at the top of every page. Set to null to hide it.
+// The code itself is managed in Admin → Discount codes.
+export const announcement: { text: string; code: string } | null = {
+  text: "10% OFF your first order",
+  code: "WELCOME10",
+};

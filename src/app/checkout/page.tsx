@@ -61,6 +61,11 @@ export default function CheckoutPage() {
   // undefined = still checking, null = not logged in.
   const [account, setAccount] = useState<Account | null | undefined>(undefined);
   const [guest, setGuest] = useState(false);
+  // Discount code: what's typed, and the code once it's been accepted.
+  const [codeInput, setCodeInput] = useState("");
+  const [applied, setApplied] = useState<{ code: string; label: string; discount: number } | null>(null);
+  const [codeError, setCodeError] = useState("");
+  const [checkingCode, setCheckingCode] = useState(false);
 
   // Who's checking out? Logged-in customers skip straight to the form.
   useEffect(() => {
@@ -147,7 +152,31 @@ export default function CheckoutPage() {
     );
 
   const deliveryPrice = priceFor(deliveryId, subtotal);
-  const total = subtotal + deliveryPrice;
+  const discount = applied?.discount ?? 0;
+  const total = subtotal - discount + deliveryPrice;
+
+  async function applyCode() {
+    if (!codeInput.trim()) return;
+    setCheckingCode(true);
+    setCodeError("");
+    const email = (formRef.current?.elements.namedItem("email") as HTMLInputElement | null)?.value ?? "";
+    try {
+      const res = await fetch("/api/discount", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: codeInput, email, items }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error ?? "That code isn't valid.");
+      setApplied({ code: data.code, label: data.label, discount: data.discount });
+      setCodeInput("");
+    } catch (err) {
+      setApplied(null);
+      setCodeError(err instanceof Error ? err.message : "That code isn't valid.");
+    } finally {
+      setCheckingCode(false);
+    }
+  }
   // Only road-legal plates need documents; show plates don't.
   const needsDocs = items.some((i) => i.type !== "show");
 
@@ -158,6 +187,7 @@ export default function CheckoutPage() {
     const form = new FormData(e.currentTarget);
     form.set("items", JSON.stringify(items));
     form.set("delivery", deliveryId);
+    form.set("discount", applied?.code ?? "");
     try {
       const res = await fetch("/api/order", { method: "POST", body: form });
       const data = await res.json();
@@ -300,7 +330,62 @@ export default function CheckoutPage() {
               </li>
             ))}
           </ul>
-          <dl className="mt-2 space-y-1 border-t border-line pt-3">
+          <div className="mt-2 border-t border-line pt-3">
+            {applied ? (
+              <div className="flex items-center justify-between gap-2 rounded-xl bg-[#e7f6ec] px-3 py-2 text-sm text-[#1f7a3d]">
+                <span>
+                  ✓ <strong>{applied.code}</strong> applied · {applied.label}
+                </span>
+                <button type="button" className="py-1 font-semibold underline" onClick={() => setApplied(null)}>
+                  Remove
+                </button>
+              </div>
+            ) : (
+              <>
+                <label htmlFor="discount-code" className="text-sm font-semibold">
+                  Discount code
+                </label>
+                <div className="mt-1 flex gap-2">
+                  <input
+                    id="discount-code"
+                    className="field uppercase"
+                    value={codeInput}
+                    onChange={(e) => {
+                      setCodeInput(e.target.value.toUpperCase());
+                      setCodeError("");
+                    }}
+                    onKeyDown={(e) => {
+                      // Enter applies the code instead of placing the order.
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        applyCode();
+                      }
+                    }}
+                    placeholder="e.g. WELCOME10"
+                    autoComplete="off"
+                    maxLength={40}
+                    aria-invalid={!!codeError}
+                    aria-describedby={codeError ? "code-error" : undefined}
+                  />
+                  <button type="button" className="btn btn-white shrink-0 px-5" onClick={applyCode} disabled={checkingCode || !codeInput.trim()}>
+                    {checkingCode ? "…" : "Apply"}
+                  </button>
+                </div>
+                {codeError && (
+                  <p id="code-error" className="mt-1 text-sm font-medium text-red-700">
+                    {codeError}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
+          <dl className="mt-3 space-y-1 border-t border-line pt-3">
+            {applied && (
+              <div className="flex justify-between text-[#1f7a3d]">
+                <dt>Discount ({applied.code})</dt>
+                <dd>−{money(discount)}</dd>
+              </div>
+            )}
             <div className="flex justify-between">
               <dt className="text-muted">Delivery</dt>
               <dd>{deliveryPrice ? money(deliveryPrice) : "FREE"}</dd>

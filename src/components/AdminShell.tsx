@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { LogoutButton } from "./LogoutButton";
 
-export function AdminShell({ active, children }: { active: "orders" | "customers"; children: React.ReactNode }) {
+export function AdminShell({ active, children }: { active: "orders" | "customers" | "discounts"; children: React.ReactNode }) {
   const tab = (on: boolean) =>
     `rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${on ? "gold-bg shadow-sm" : "bg-white text-ink hover:bg-surface-2"}`;
   return (
@@ -18,6 +18,9 @@ export function AdminShell({ active, children }: { active: "orders" | "customers
             </Link>
             <Link href="/admin/customers" className={tab(active === "customers")}>
               Customers
+            </Link>
+            <Link href="/admin/discounts" className={tab(active === "discounts")}>
+              Discount codes
             </Link>
             <LogoutButton className="rounded-lg border border-line bg-white px-4 py-2.5 text-sm font-semibold hover:bg-surface-2" />
           </div>

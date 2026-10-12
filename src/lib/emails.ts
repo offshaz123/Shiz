@@ -153,6 +153,7 @@ export function customerOrderEmail(o: Order, images: ImageMode = "web") {
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;">
       ${row("Subtotal", money(o.subtotal))}
+      ${o.discount ? row(`Discount (${esc(o.discount_code ?? "")})`, `−${money(o.discount)}`) : ""}
       ${row(esc(o.delivery_name), o.delivery_price ? money(o.delivery_price) : "FREE")}
       ${row(paid ? "Total paid" : "Total", money(o.amount_paid ?? o.total), true)}
       ${card ? `<tr><td colspan="2" style="font:14px Arial,sans-serif;color:${MUTED};padding-top:2px;">Paid with ${esc(card)}</td></tr>` : ""}
@@ -188,6 +189,7 @@ export function customerOrderEmail(o: Order, images: ImageMode = "web") {
     card && `Paid with ${card}`,
     "",
     ...o.items.map((i) => `- "${i.reg}" × ${i.qty}: ${describe(i)} (${money(unitPrice(i) * i.qty)})`),
+    o.discount ? `Discount (${o.discount_code}): −${money(o.discount)}` : "",
     `Delivery: ${o.delivery_name} (${o.delivery_price ? money(o.delivery_price) : "FREE"})`,
     `Total: ${money(o.amount_paid ?? o.total)}`,
     "",
@@ -369,6 +371,7 @@ export function shopOrderEmail(o: Order, docCount: number, images: ImageMode = "
     "",
     "PLATES",
     ...o.items.map((i) => `- "${i.reg}" × ${i.qty}: ${describe(i)} (${money(unitPrice(i) * i.qty)})`),
+    o.discount ? `Discount (${o.discount_code}): −${money(o.discount)}` : "",
     `Delivery: ${o.delivery_name} (${o.delivery_price ? money(o.delivery_price) : "FREE"})`,
     `TOTAL: ${money(o.total)}`,
     "",
@@ -395,6 +398,7 @@ export function shopOrderEmail(o: Order, docCount: number, images: ImageMode = "
     <p style="font:14px Arial,sans-serif;color:${o.docs_status === "outstanding" ? "#b42318" : INK};margin:0 0 8px;"><strong>Documents:</strong> ${esc(docs)}</p>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${itemsHtml(o, 420, images)}</table>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;">
+      ${o.discount ? row(`Discount (${esc(o.discount_code ?? "")})`, `−${money(o.discount)}`) : ""}
       ${row(esc(o.delivery_name), o.delivery_price ? money(o.delivery_price) : "FREE")}
       ${row("Total", money(o.total), true)}
     </table>

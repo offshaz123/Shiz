@@ -84,12 +84,44 @@ const schema = [
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     INDEX (order_id)
   ) CHARACTER SET utf8mb4`,
+  `CREATE TABLE IF NOT EXISTS discount_codes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(40) NOT NULL UNIQUE,
+    title VARCHAR(200) NOT NULL,
+    kind VARCHAR(10) NOT NULL,
+    value INT NOT NULL,
+    first_order_only TINYINT NOT NULL DEFAULT 0,
+    min_spend INT NOT NULL DEFAULT 0,
+    max_uses INT NULL,
+    uses INT NOT NULL DEFAULT 0,
+    expires_at DATETIME NULL,
+    active TINYINT NOT NULL DEFAULT 1,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  ) CHARACTER SET utf8mb4`,
+  // The welcome offer advertised in the banner, added once when the table is
+  // new (so it stays deleted if the shop removes it).
+  `INSERT INTO discount_codes (code, title, kind, value, first_order_only)
+   SELECT 'WELCOME10', '10% off your first order', 'percent', 10, 1 FROM DUAL
+   WHERE NOT EXISTS (SELECT 1 FROM discount_codes)`,
+];
+
+// Columns added after the first launch, so existing databases get them too.
+const addedColumns: [table: string, column: string, definition: string][] = [
+  ["orders", "discount_code", "VARCHAR(40) NULL"],
+  ["orders", "discount", "INT NOT NULL DEFAULT 0"],
 ];
 
 async function ensureSchema() {
   ready ??= (async () => {
     const p = getPool();
     for (const sql of schema) await p.query(sql);
+    for (const [table, column, definition] of addedColumns) {
+      const [rows] = await p.query(
+        "SELECT 1 FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?",
+        [table, column],
+      );
+      if (!(rows as unknown[]).length) await p.query(`ALTER TABLE ${table} ADD COLUMN ${column} ${definition}`);
+    }
   })().catch((err) => {
     ready = null;
     throw err;

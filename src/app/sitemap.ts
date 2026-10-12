@@ -15,6 +15,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/blog",
     ...publishedPosts().map((p) => `/blog/${p.slug}`),
     "/number-plates-essex",
+    "/trade",
     "/about",
     "/contact",
     "/legal",

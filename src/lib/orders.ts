@@ -6,6 +6,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { LOGO_CID, customerCancelEmail, customerDispatchEmail, customerOrderEmail, plateCid, plateImageParams, shopOrderEmail } from "./emails";
 import { renderPlatePng } from "./plate-image";
+import { countDiscountUse } from "./discounts";
 import { sendMail, sendToShop } from "./mail";
 import { type PaidSession, getCheckoutSession } from "./stripe";
 
@@ -45,6 +46,9 @@ export type Order = {
   delivery_name: string;
   delivery_price: number;
   subtotal: number;
+  // Discount code used and how much it took off the plates (pence).
+  discount_code: string | null;
+  discount: number;
   total: number;
   amount_paid: number | null;
   card_brand: string | null;
@@ -67,17 +71,17 @@ function parse(row: Row): Order {
 }
 
 const COLUMNS = `id, ref, user_id, status, customer_name, email, phone, address1, address2, town, postcode, items,
-  delivery_name, delivery_price, subtotal, total, amount_paid, card_brand, card_last4, stripe_session_id,
+  delivery_name, delivery_price, subtotal, discount_code, discount, total, amount_paid, card_brand, card_last4, stripe_session_id,
   docs_status, created_at, paid_at`;
 
 export async function createOrder(o: Omit<Order, "id" | "created_at" | "paid_at" | "amount_paid" | "card_brand" | "card_last4" | "stripe_session_id">) {
   const res = await execute(
     `INSERT INTO orders (ref, user_id, status, customer_name, email, phone, address1, address2, town, postcode,
-      items, delivery_name, delivery_price, subtotal, total, docs_status)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      items, delivery_name, delivery_price, subtotal, discount_code, discount, total, docs_status)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       o.ref, o.user_id, o.status, o.customer_name, o.email, o.phone, o.address1, o.address2, o.town, o.postcode,
-      JSON.stringify(o.items), o.delivery_name, o.delivery_price, o.subtotal, o.total, o.docs_status,
+      JSON.stringify(o.items), o.delivery_name, o.delivery_price, o.subtotal, o.discount_code, o.discount, o.total, o.docs_status,
     ],
   );
   return res.insertId;
@@ -243,7 +247,10 @@ export async function markPaid(s: PaidSession) {
     [s.amount, s.cardBrand, s.cardLast4, s.sessionId, s.ref],
   );
   const updated = await getOrder(s.ref);
-  if (res.affectedRows === 1 && updated) after(() => sendOrderEmails(updated));
+  if (res.affectedRows === 1 && updated) {
+    if (updated.discount_code) await countDiscountUse(updated.discount_code);
+    after(() => sendOrderEmails(updated));
+  }
   return updated;
 }
 

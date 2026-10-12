@@ -34,6 +34,8 @@ export async function createCheckoutSession(opts: {
   // The website address the customer is using, so Stripe sends them back to
   // the same one (with or without www) after paying.
   baseUrl?: string;
+  // Money off the plates from a discount code.
+  discount?: { amount: number; code: string };
 }) {
   const base = opts.baseUrl ?? site.url;
   const body = new URLSearchParams({
@@ -52,6 +54,20 @@ export async function createCheckoutSession(opts: {
     body.set(`line_items[${i}][price_data][unit_amount]`, String(l.amount));
     body.set(`line_items[${i}][price_data][product_data][name]`, l.name.slice(0, 250));
   });
+  if (opts.discount && opts.discount.amount > 0) {
+    // A one-off coupon for this payment, named after the code.
+    const coupon = await stripe("coupons", {
+      method: "POST",
+      body: new URLSearchParams({
+        amount_off: String(opts.discount.amount),
+        currency: "gbp",
+        duration: "once",
+        max_redemptions: "1",
+        name: opts.discount.code.slice(0, 40),
+      }),
+    });
+    body.set("discounts[0][coupon]", coupon.id);
+  }
   const data = await stripe("checkout/sessions", { method: "POST", body });
   return { id: data.id as string, url: data.url as string };
 }
