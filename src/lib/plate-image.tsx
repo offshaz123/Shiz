@@ -46,11 +46,15 @@ export async function renderPlate(q: URLSearchParams) {
   const fontSize = (layout ? LEGAL_FONT * scale : showFontSize(text, available, 2)) * px;
   const startX = layout ? bandW + ((W - bandW) - layout.width * scale * px) / 2 : 0;
   const depth = style.depth * 2;
+  // Blurring a shadow takes a lot of memory, and on the shared hosting a
+  // blur over about 3px made the thicker styles (4D, 5mm/7mm gel) fail to
+  // draw at all. The solid offset gives the raised look; the blur only softens it.
+  const blur = (b: number) => Math.min(b, 3);
   const shadow =
     depth > 0
       ? style.look === "acrylic"
-        ? `${depth * 0.6}px ${depth}px 0px #4a4a4a, ${depth * 0.8}px ${depth * 2}px ${depth * 2}px rgba(0,0,0,0.45)`
-        : `${depth * 0.4}px ${depth * 1.2}px ${1 + depth}px rgba(0,0,0,0.5)`
+        ? `${depth * 0.6}px ${depth}px 0px #4a4a4a, ${depth * 0.8}px ${depth * 2}px ${blur(depth * 2)}px rgba(0,0,0,0.45)`
+        : `${depth * 0.4}px ${depth * 1.2}px ${blur(1 + depth)}px rgba(0,0,0,0.5)`
       : "none";
 
   return new ImageResponse(
