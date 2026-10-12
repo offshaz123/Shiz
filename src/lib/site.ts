@@ -65,7 +65,7 @@ export const tracking = {
   // Meta (Facebook/Instagram) Pixel ID: Events Manager → Data sources, 15–16 digits.
   metaPixelId: "1088838000391366",
   // Google Analytics 4 measurement ID, e.g. "G-ABC123XYZ".
-  googleAnalyticsId: "",
+  googleAnalyticsId: "G-4K6ZCCYTQ9",
   // Google Ads: conversion ID ("AW-123456789") and the label of the purchase conversion.
   googleAdsId: "",
   googleAdsPurchaseLabel: "",
