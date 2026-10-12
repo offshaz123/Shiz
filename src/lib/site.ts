@@ -14,7 +14,8 @@ export const site = {
   // Printed on every plate alongside the business name (a legal requirement).
   postcode: "RM12 4TN",
   companyNumber: "",
-  hours: "Mon–Fri 9am–5pm, Sat 10am–2pm",
+  // When someone replies on WhatsApp. The shop itself takes orders 24/7.
+  hours: "Mon–Fri 9am–6pm, Sat 10am–2pm",
   dispatchCutoff: "2pm",
   instagram: "https://www.instagram.com/platedup",
   instagramHandle: "@platedup",

@@ -21,7 +21,11 @@ export default function ContactPage() {
           <a href={whatsappHref} className="block rounded-3xl border border-line bg-surface p-6 hover:border-[#b8901f]">
             <p className="eyebrow">WhatsApp</p>
             <p className="mt-1 font-display text-2xl font-bold">Chat with us</p>
-            <p className="text-muted">The quickest way to talk to someone · {site.hours}</p>
+            <p className="text-muted">The quickest way to talk to someone. Support hours: {site.hours}</p>
+            <p className="mt-2 text-sm text-muted">
+              You can order online any time, 24/7. Orders placed before {site.dispatchCutoff} on a working day are dispatched the
+              same day, so with Next Day Delivery they arrive the next working day.
+            </p>
           </a>
           <a href={`mailto:${site.email}`} className="block rounded-3xl border border-line bg-surface p-6 hover:border-[#b8901f]">
             <p className="eyebrow">Email</p>
