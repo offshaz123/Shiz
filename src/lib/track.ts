@@ -3,6 +3,7 @@
 // fbq and gtag don't exist on the page and these calls do nothing.
 
 import { type CartItem, describe, unitPrice } from "./plates";
+import { site } from "./site";
 
 export const CONSENT_COOKIE = "pu-consent";
 
@@ -21,8 +22,18 @@ export function readConsent(): "yes" | "no" | null {
   return m ? (m[1] as "yes" | "no") : null;
 }
 
+// The shop answers on both platedup.co.uk and www.platedup.co.uk; remember
+// the choice for both, so accepting on one counts on the other.
+function cookieDomain() {
+  const base = new URL(site.url).hostname.replace(/^www\./, "");
+  const host = window.location.hostname;
+  return host === base || host.endsWith(`.${base}`) ? `; Domain=${base}` : "";
+}
+
 export function saveConsent(choice: "yes" | "no") {
-  document.cookie = `${CONSENT_COOKIE}=${choice}; Max-Age=${60 * 60 * 24 * 365}; Path=/; SameSite=Lax; Secure`;
+  // Clear any older copy saved for this address only, so it can't hide the new choice.
+  document.cookie = `${CONSENT_COOKIE}=; Max-Age=0; Path=/`;
+  document.cookie = `${CONSENT_COOKIE}=${choice}; Max-Age=${60 * 60 * 24 * 365}; Path=/${cookieDomain()}; SameSite=Lax; Secure`;
   window.dispatchEvent(new Event(CONSENT_COOKIE));
 }
 
