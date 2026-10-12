@@ -63,7 +63,7 @@ export const announcement: { text: string; code: string } | null = {
 // to switch that tag off. Nothing loads until a visitor accepts cookies.
 export const tracking = {
   // Meta (Facebook/Instagram) Pixel ID: Events Manager → Data sources, 15–16 digits.
-  metaPixelId: "",
+  metaPixelId: "1088838000391366",
   // Google Analytics 4 measurement ID, e.g. "G-ABC123XYZ".
   googleAnalyticsId: "",
   // Google Ads: conversion ID ("AW-123456789") and the label of the purchase conversion.
