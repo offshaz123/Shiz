@@ -7,6 +7,7 @@ import { useCart } from "@/lib/cart";
 import { trackBeginCheckout } from "@/lib/track";
 import { AddressFields } from "@/components/AddressFields";
 import { type DeliveryId, FREE_DELIVERY_FROM, delivery, deliveryPrice as priceFor, describe, money, unitPrice } from "@/lib/plates";
+import { KlarnaNote } from "@/components/Klarna";
 
 function Section({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
   return (
@@ -409,10 +410,11 @@ export default function CheckoutPage() {
               {error}
             </p>
           )}
+          <KlarnaNote amount={total} className="mt-4" />
           <button type="submit" className="btn btn-gold mt-5 w-full" disabled={sending}>
             {sending ? "Placing order…" : `Pay ${money(total)}`}
           </button>
-          <p className="mt-3 text-center text-xs text-muted">Secure checkout. Your documents are only used to verify your order.</p>
+          <p className="mt-3 text-center text-xs text-muted">Secure checkout. Choose card, Apple Pay, Google Pay or Klarna on the next page. Your documents are only used to verify your order.</p>
         </aside>
       </form>
     </div>

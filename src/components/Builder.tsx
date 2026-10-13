@@ -7,6 +7,7 @@ import { PlatePreview } from "./PlatePreview";
 import { DispatchCountdown } from "./DispatchCountdown";
 import { useCart } from "@/lib/cart";
 import { trackAddToCart, trackViewBuilder } from "@/lib/track";
+import { KlarnaNote } from "./Klarna";
 import {
   type PlateConfig,
   type PlateType,
@@ -524,6 +525,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                 <span className="font-display text-2xl font-bold">Total:</span>
                 <span className="gold-text font-display text-4xl font-bold">{money(unitPrice(c))}</span>
               </div>
+              <KlarnaNote amount={unitPrice(c)} className="mt-3" />
 
               <div className="mt-5">
                 <DispatchCountdown />

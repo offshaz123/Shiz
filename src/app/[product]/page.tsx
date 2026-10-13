@@ -7,6 +7,7 @@ import { RegForm } from "@/components/RegForm";
 import { FREE_DELIVERY_FROM, defaultConfig, delivery, extrasPrice, fixings, money, styles } from "@/lib/plates";
 import { products } from "@/lib/content";
 import { site } from "@/lib/site";
+import { KlarnaNote } from "@/components/Klarna";
 
 export const dynamicParams = false;
 
@@ -63,6 +64,7 @@ export default async function ProductPage(props: PageProps<"/[product]">) {
               <span className="gold-text">{money(from.pair)}</span>
               <span className="text-lg font-medium text-muted"> a pair</span>
             </p>
+            <KlarnaNote amount={from.pair} className="mt-3" />
             <ul className="mt-6 space-y-2">
               {p.points.map((pt) => (
                 <li key={pt} className="flex gap-3">

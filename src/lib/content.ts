@@ -115,6 +115,10 @@ export const faqs: { q: string; a: string }[] = [
     a: "No. Changing the spacing is illegal, so we always use the legal spacing for your registration.",
   },
   {
+    q: "Can I pay in instalments?",
+    a: "Yes. Choose Klarna at checkout to split your order into 3 interest-free payments: the first when you order, then one every 30 days. Klarna runs a quick check when you choose it. 18+, UK residents only. Credit subject to status. T&Cs apply. Late payments may affect your credit score.",
+  },
+  {
     q: "Do you offer returns?",
     a: "Plates are made to order with your registration, so we can't take them back if you change your mind. If anything arrives damaged or we've made a mistake, we'll replace it free. See our Returns Policy.",
   },

@@ -33,7 +33,7 @@ export function TrustBadges() {
           <span className="text-xs font-medium text-muted">Registered</span>
         </span>
       </div>
-      <div className="flex gap-1.5" aria-label="We accept Visa, Mastercard, American Express and Apple Pay">
+      <div className="flex gap-1.5" aria-label="We accept Visa, Mastercard, American Express, Apple Pay and Klarna">
         <Chip className="text-[#1a1f71]">VISA</Chip>
         <Chip>
           <span className="flex" aria-hidden>
@@ -43,6 +43,7 @@ export function TrustBadges() {
         </Chip>
         <Chip className="bg-[#2e77bc] text-white">AMEX</Chip>
         <Chip>Apple Pay</Chip>
+        <Chip className="border-transparent bg-[#ffb3c7] text-[#17120f]">Klarna.</Chip>
       </div>
     </div>
   );
