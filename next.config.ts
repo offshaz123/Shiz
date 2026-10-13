@@ -1,6 +1,26 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      {
+        // /number-plates was a service page back when plates could be made up
+        // at the unit. They are mail-order only now, so the page is gone and
+        // anything still pointing at it — old links, Google's index, the cards
+        // we handed out — goes straight to the store instead of a 404.
+        source: "/number-plates",
+        destination: "https://platedup.co.uk",
+        permanent: true,
+      },
+      {
+        // The 3D/4D/5D explainer went the same way — plates are sold on the
+        // store now, and the store carries its own descriptions.
+        source: "/blog/3d-vs-4d-vs-5d-number-plates",
+        destination: "https://platedup.co.uk",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {

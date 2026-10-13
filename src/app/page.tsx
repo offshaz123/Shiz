@@ -218,7 +218,8 @@ export default function Home() {
       </section>
 
       {/* Number plates — the third thing we sell, and the only one people can
-          buy without ringing. Kept short: the detail lives on /number-plates. */}
+          buy without ringing. Plates are made to order and posted, so every
+          route here goes straight out to the PlatedUp store. */}
       <section>
         <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
           <div className="rounded-3xl border border-border bg-surface p-8 sm:p-12">
@@ -232,7 +233,7 @@ export default function Home() {
                 </h2>
                 <p className="mt-4 text-muted">
                   Flat printed through to raised, gel-domed digits — in short, hexagon or standard
-                  shapes. All road legal, all made to BS AU 145e.
+                  shapes. All road legal, all made to BS AU 145e, all posted out to you.
                 </p>
                 <div className="mt-7 flex flex-col gap-3 sm:flex-row">
                   <a
@@ -246,15 +247,10 @@ export default function Home() {
                       <path d="M7 17 17 7M9 7h8v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                   </a>
-                  <Link
-                    href="/number-plates"
-                    className="inline-flex items-center justify-center rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-foreground transition-colors hover:border-brand/60"
-                  >
-                    See the finishes
-                  </Link>
                 </div>
                 <p className="mt-4 text-xs text-muted">
-                  Ordering online goes to {siteConfig.plateStore.name}, our own plate workshop.
+                  Ordering goes to {siteConfig.plateStore.name}, our own plate workshop. Plates
+                  are posted out — there&apos;s no collection at the unit.
                 </p>
               </div>
 

@@ -359,7 +359,7 @@ export const repairServices: RepairService[] = [
     name: "Number Plates",
     tagline: "Standard, 3D, 4D & 5D — gel or standard, in any shape",
     description:
-      "From standard printed plates through to raised 3D, 4D and 5D gel plates, in short, hexagon or normal shapes — see the full range and how they compare.",
+      "From standard printed plates through to raised 3D, 4D and 5D gel plates, in short, hexagon or normal shapes. Made to order and posted out — build yours on our PlatedUp store.",
     features: [
       "Standard printed plates",
       "3D & 3D Gel plates",
@@ -368,8 +368,8 @@ export const repairServices: RepairService[] = [
       "Short, hexagon & normal plate shapes",
     ],
     fromPrice: "",
-    ctaLabel: "View Options →",
-    ctaHref: "/number-plates",
+    ctaLabel: "Order Online →",
+    ctaHref: "https://platedup.co.uk",
   },
 ];
 

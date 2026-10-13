@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { ThemeToggle } from "./ThemeToggle";
@@ -51,16 +51,15 @@ export function Header() {
 
         <nav className="hidden items-center gap-5 whitespace-nowrap lg:flex xl:gap-7">
           {navLinks.map((link) => (
-            <Fragment key={link.href}>
-              <Link
-                href={link.href}
-                className="text-sm font-medium text-muted transition-colors hover:text-foreground"
-              >
-                {link.label}
-              </Link>
-              {link.href === "/repairs" && <PlateTab />}
-            </Fragment>
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-sm font-medium text-muted transition-colors hover:text-foreground"
+            >
+              {link.label}
+            </Link>
           ))}
+          <PlateTab />
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
@@ -104,19 +103,16 @@ export function Header() {
         <div className="border-t border-border bg-background px-5 py-4 lg:hidden">
           <nav className="flex flex-col gap-4">
             {navLinks.map((link) => (
-              <Fragment key={link.href}>
-                <Link
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="text-sm font-medium text-muted transition-colors hover:text-foreground"
-                >
-                  {link.label}
-                </Link>
-                {link.href === "/repairs" && (
-                  <PlateTab className="self-start" onClick={() => setOpen(false)} />
-                )}
-              </Fragment>
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className="text-sm font-medium text-muted transition-colors hover:text-foreground"
+              >
+                {link.label}
+              </Link>
             ))}
+            <PlateTab className="self-start" onClick={() => setOpen(false)} />
             <a
               href={whatsappHref}
               target="_blank"

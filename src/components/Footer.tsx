@@ -67,9 +67,14 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/number-plates" className="hover:text-foreground">
+                <a
+                  href={siteConfig.plateStore.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground"
+                >
                   Number Plates
-                </Link>
+                </a>
               </li>
               <li>
                 <Link href="/pricing" className="hover:text-foreground">
