@@ -80,9 +80,8 @@ export default function LegalPage() {
 
         <h2>Badges and flags</h2>
         <p>
-          You can add the Union Flag (UK), Cross of St George (ENG), Saltire (SCO) or Red Dragon
-          of Wales (CYM) to the left of your plate. The green strip (on its own or with the UK
-          identifier) is only for zero-emission vehicles.
+          You can add the Union Flag (UK) or Cross of St George (ENG) to the left of your plate, or
+          a green strip. The green strip is only for zero-emission vehicles.
         </p>
 
         <h2 id="faqs">FAQs</h2>

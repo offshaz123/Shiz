@@ -88,17 +88,19 @@ export const whichPlates: { id: WhichId; name: string }[] = [
 ];
 
 // Badges allowed on UK plates since 2021. Each is a single panel on the left
-// of the plate, so only one can be chosen. The green strip (plain, or with
-// "UK" on it) is for zero-emission vehicles only.
-export const badges: { id: BadgeId; name: string; code: string; flag: FlagId | null; green: boolean }[] = [
-  { id: "none", name: "No Badge", code: "", flag: null, green: false },
-  { id: "green", name: "Green Strip", code: "", flag: null, green: true },
-  { id: "green-uk", name: "Green Strip UK", code: "UK", flag: null, green: true },
-  { id: "uk", name: "UK Flag", code: "UK", flag: "uk", green: false },
-  { id: "eng", name: "England Flag", code: "ENG", flag: "eng", green: false },
-  { id: "sco", name: "Scotland Flag", code: "SCO", flag: "sco", green: false },
-  { id: "cym", name: "Wales Flag", code: "CYM", flag: "cym", green: false },
+// of the plate, so only one can be chosen. The green strip is for
+// zero-emission vehicles only. Badges we no longer sell (offered: false) stay
+// listed so older orders still show what was ordered.
+export const badges: { id: BadgeId; name: string; code: string; flag: FlagId | null; green: boolean; offered: boolean }[] = [
+  { id: "none", name: "No Badge", code: "", flag: null, green: false, offered: true },
+  { id: "green", name: "Green Strip", code: "", flag: null, green: true, offered: true },
+  { id: "uk", name: "UK Flag", code: "UK", flag: "uk", green: false, offered: true },
+  { id: "eng", name: "England Flag", code: "ENG", flag: "eng", green: false, offered: true },
+  { id: "green-uk", name: "Green Strip UK", code: "UK", flag: null, green: true, offered: false },
+  { id: "sco", name: "Scotland Flag", code: "SCO", flag: "sco", green: false, offered: false },
+  { id: "cym", name: "Wales Flag", code: "CYM", flag: "cym", green: false, offered: false },
 ];
+export const offeredBadges = badges.filter((b) => b.offered);
 
 export const borders: { id: BorderId; name: string }[] = [
   { id: "none", name: "No border" },
@@ -241,13 +243,23 @@ export function money(pence: number) {
 // Re-checks anything that came from the browser so a tampered basket can't
 // change prices or sneak in an option we don't sell.
 export function sanitiseItem(raw: unknown): CartItem | null {
+  return checkItem(raw, offeredBadges);
+}
+
+// The same check for orders already placed, which may have an option we've
+// since stopped selling.
+export function sanitiseSavedItem(raw: unknown): CartItem | null {
+  return checkItem(raw, badges);
+}
+
+function checkItem(raw: unknown, badgeList: { id: BadgeId }[]): CartItem | null {
   if (!raw || typeof raw !== "object") return null;
   const r = raw as Record<string, unknown>;
   const pick = <T extends string>(v: unknown, list: { id: T }[]) =>
     list.find((x) => x.id === v)?.id;
   const style = pick(r.style, styles);
   const which = pick(r.which, whichPlates);
-  const badge = pick(r.badge, badges);
+  const badge = pick(r.badge, badgeList);
   const border = pick(r.border, borders);
   const fixing = pick(r.fixing, fixings);
   const reg = typeof r.reg === "string" ? r.reg : "";

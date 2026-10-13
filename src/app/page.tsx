@@ -56,8 +56,8 @@ const gallery = [
 const showcase: (Partial<PlateConfig> & { caption: string })[] = [
   { reg: "PL24 TED", style: "4d-5mm", badge: "uk", caption: "4D 5MM with UK Flag" },
   { reg: "G0 LDY", style: "7mm-gel", border: "black", caption: "7MM Gel with black border" },
-  { reg: "EV24 VLT", style: "4d-3mm", badge: "green-uk", caption: "4D 3MM with Green Strip UK" },
-  { reg: "SC07 UPS", style: "3d-gel", badge: "sco", caption: "3D Gel with Scotland flag" },
+  { reg: "EV24 VLT", style: "4d-3mm", badge: "green", caption: "4D 3MM with Green Strip" },
+  { reg: "EN07 UPS", style: "3d-gel", badge: "eng", caption: "3D Gel with England flag" },
 ];
 
 // Re-check for newly approved reviews every few minutes.

@@ -199,7 +199,7 @@ Type anything into the box on our [homepage](/) or [plate builder](/design). If 
       "Drive a zero-emission car? You can add a green flash to your number plates. Here's who qualifies, what it means and how to order.",
     date: "2026-10-10",
     category: "Electric Cars",
-    plate: { text: "EV22 ZAP", style: "4d-3mm", badge: "green-uk" },
+    plate: { text: "EV22 ZAP", style: "4d-3mm", badge: "green" },
     body: `Since December 2020, drivers of **zero-emission vehicles** in the UK have been able to add a **green flash** to their number plates: a green strip on the left-hand side of the plate.
 
 ## Who can have a green flash?
@@ -212,7 +212,7 @@ No, it's completely optional. Many EV drivers choose it because it shows the car
 
 ## Can I have a flag with a green flash?
 
-Yes. You can choose a plain **Green Strip**, or a **Green Strip with "UK"** on it. Because there's only room for one badge on the left of the plate, you choose either the green strip or a national flag, not both.
+No. There's only room for one badge on the left of the plate, so you choose either the green strip or a flag, not both.
 
 ## Does it work with 3D and 4D plates?
 
@@ -220,7 +220,7 @@ Absolutely. You can add a green strip to any of our styles, from standard printe
 
 ## How to add one
 
-In our [plate builder](/design), go to the **Additions** tab and choose **Green Strip** or **Green Strip UK**. You'll see it on the live preview straight away.`,
+In our [plate builder](/design), go to the **Additions** tab and choose **Green Strip**. You'll see it on the live preview straight away.`,
   },
   {
     slug: "bs-au-145e-explained",
@@ -370,6 +370,10 @@ The flag can sit above a national identifier, such as:
 ## Driving abroad
 
 Since September 2021, cars from the UK driving abroad need to show **UK** rather than GB. A plate showing the UK identifier with a Union flag usually covers this, but rules vary from country to country, so always check the latest GOV.UK advice before you travel.
+
+## Flags we offer
+
+At PlatedUp you can add the **UK flag** or the **England flag** to any of our plates.
 
 ## Flag or green strip?
 

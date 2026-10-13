@@ -11,7 +11,7 @@ import { KlarnaNote } from "./Klarna";
 import {
   type PlateConfig,
   type PlateType,
-  badges,
+  offeredBadges,
   borders,
   defaultConfig,
   extrasPrice,
@@ -103,7 +103,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
   const set = (patch: Partial<PlateConfig>) => setC((prev) => ({ ...prev, ...patch }));
   const style = styles.find((s) => s.id === c.style)!;
   const fixing = fixings.find((f) => f.id === c.fixing)!;
-  const badge = badges.find((b) => b.id === c.badge)!;
+  const badge = offeredBadges.find((b) => b.id === c.badge) ?? offeredBadges[0];
   const showFront = c.which !== "rear";
   const showRear = c.which !== "front";
   const platesPrice = c.which === "pair" ? style.pair : style.single;
@@ -434,7 +434,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                     />
                     <p className="mb-2 mt-4 text-xs font-semibold uppercase tracking-wider text-muted">Printed badges</p>
                     <div className="grid gap-2 sm:grid-cols-2">
-                      {badges
+                      {offeredBadges
                         .filter((b) => b.id !== "none")
                         .map((b) => (
                           <Radio

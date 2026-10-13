@@ -1,7 +1,7 @@
 import { after } from "next/server";
 import type { Attachment } from "nodemailer/lib/mailer";
 import { execute, query } from "./db";
-import { type CartItem, describe, sanitiseItem, unitPrice } from "./plates";
+import { type CartItem, describe, sanitiseSavedItem, unitPrice } from "./plates";
 import { randomBytes, timingSafeEqual } from "node:crypto";
 import { site } from "./site";
 import { readFile } from "node:fs/promises";
@@ -71,7 +71,7 @@ function parse(row: Row): Order {
   let items: CartItem[] = [];
   try {
     const raw = JSON.parse(row.items);
-    items = Array.isArray(raw) ? raw.map(sanitiseItem).filter((i): i is CartItem => i !== null) : [];
+    items = Array.isArray(raw) ? raw.map(sanitiseSavedItem).filter((i): i is CartItem => i !== null) : [];
   } catch {}
   return { ...row, items };
 }

@@ -37,7 +37,7 @@ export async function renderPlate(q: URLSearchParams) {
   font ??= readFile(join(process.cwd(), "src/assets/BarlowCondensed-SemiBold.ttf"));
   const fontData = await font;
 
-  const bandW = badge.id === "none" ? 0 : badge.green && !badge.code ? 36 : 100;
+  const bandW = badge.id === "none" ? 0 : 100;
   // The same layout as the website preview (PlatePreview), at 2px per mm.
   const px = W / 520;
   const available = (W - bandW) / px - MARGIN * 2;
@@ -56,6 +56,54 @@ export async function renderPlate(q: URLSearchParams) {
         ? `${depth * 0.6}px ${depth}px 0px #4a4a4a, ${depth * 0.8}px ${depth * 2}px ${blur(depth * 2)}px rgba(0,0,0,0.45)`
         : `${depth * 0.4}px ${depth * 1.2}px ${blur(1 + depth)}px rgba(0,0,0,0.5)`
       : "none";
+
+  const gel = style.look === "gel";
+
+  // The registration, drawn once for the letters and again (gel only) for their shine.
+  const letters = (look: React.CSSProperties) =>
+    layout ? (
+      layout.cells.map((cell, i) => (
+        <div
+          key={i}
+          style={{
+            position: "absolute",
+            left: startX + (cell.centre - CHAR_W / 2) * scale * px,
+            width: CHAR_W * scale * px,
+            top: 0,
+            height: H - 34,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontFamily: "Plate",
+            fontSize,
+            ...look,
+            ...(cell.squeeze < 1 && { transform: `scaleX(${cell.squeeze})` }),
+          }}
+        >
+          {cell.ch}
+        </div>
+      ))
+    ) : (
+      <div
+        style={{
+          position: "absolute",
+          left: bandW,
+          right: 0,
+          top: 0,
+          height: H - 34,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontFamily: "Plate",
+          fontSize,
+          letterSpacing: 4,
+          whiteSpace: "pre",
+          ...look,
+        }}
+      >
+        {text}
+      </div>
+    );
 
   return new ImageResponse(
     (
@@ -100,51 +148,20 @@ export async function renderPlate(q: URLSearchParams) {
         {border === "black" && (
           <div style={{ position: "absolute", left: 10, top: 10, right: 10, bottom: 10, border: "6px solid #111", borderRadius: 10 }} />
         )}
-        {layout ? (
-          layout.cells.map((cell, i) => (
-            <div
-              key={i}
-              style={{
-                position: "absolute",
-                left: startX + (cell.centre - CHAR_W / 2) * scale * px,
-                width: CHAR_W * scale * px,
-                top: 0,
-                bottom: 34,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontFamily: "Plate",
-                fontSize,
-                color: "#111",
-                textShadow: shadow,
-                ...(cell.squeeze < 1 && { transform: `scaleX(${cell.squeeze})` }),
-              }}
-            >
-              {cell.ch}
+        {letters({ color: "#111", textShadow: shadow })}
+        {/* Gel letters are domed resin: a shine across the top half of each one. */}
+        {/* Gel letters are domed, glossy resin: a soft sheen on the upper part of */}
+        {/* each letter and a bright streak where the light catches it. Images */}
+        {/* can't fill text with a gradient, so these are bands of the letters cut out in white. */}
+        {gel &&
+          [
+            { top: 20, height: 80, alpha: 0.09 },
+            { top: 42, height: 8, alpha: 0.24 },
+          ].map(({ top, height, alpha }) => (
+            <div key={top} style={{ position: "absolute", left: 0, top, width: W, height, overflow: "hidden", display: "flex" }}>
+              {letters({ color: `rgba(255,255,255,${alpha})`, top: -top, textShadow: "none" })}
             </div>
-          ))
-        ) : (
-          <div
-            style={{
-              position: "absolute",
-              left: bandW,
-              right: 0,
-              top: 0,
-              bottom: 34,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontFamily: "Plate",
-              fontSize,
-              letterSpacing: 4,
-              color: "#111",
-              whiteSpace: "pre",
-              textShadow: shadow,
-            }}
-          >
-            {text}
-          </div>
-        )}
+          ))}
         <div
           style={{
             position: "absolute",

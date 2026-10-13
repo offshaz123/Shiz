@@ -64,9 +64,9 @@ export function PlatePreview({
   const reg = label ?? (plateText(config) || (config.type === "show" ? "YOUR TEXT" : "YOUR REG"));
   const style = styles.find((s) => s.id === config.style) ?? styles[0];
   const badge = badges.find((b) => b.id === config.badge) ?? badges[0];
-  // One badge panel on the left: a thin green strip, a green strip with
-  // "UK", or a blue flag panel. Never more than one.
-  const bandW = badge.id === "none" ? 0 : badge.green && !badge.code ? 18 : 50;
+  // One badge panel on the left, the same width whether it's the green
+  // strip or a flag. Never more than one.
+  const bandW = badge.id === "none" ? 0 : 50;
   const left = bandW;
   const cx = left + (w - left) / 2;
   const available = w - left - MARGIN * 2;
@@ -79,8 +79,46 @@ export function PlatePreview({
   const start = layout ? cx - (layout.width * scale) / 2 : 0;
   const baseline = h / 2 + fontSize * 0.35;
 
-  const textFill = style.look === "gel" ? `url(#gel-${uid})` : "#111";
+  const gel = style.look === "gel";
+  const textFill = gel ? `url(#gel-${uid})` : "#111";
   const d = style.depth;
+
+  // The registration, drawn once for the letters and again (gel only) for their shine.
+  const lettering = (fill: string, filter?: string) =>
+    layout ? (
+      <g fill={fill} filter={filter}>
+        {layout.cells.map((cell, i) => (
+          <text
+            key={i}
+            x={start + cell.centre * scale}
+            y={baseline}
+            textAnchor="middle"
+            fontFamily="var(--font-plate)"
+            fontWeight="600"
+            fontSize={fontSize}
+            {...(cell.squeeze < 1 && { textLength: CHAR_W * scale, lengthAdjust: "spacingAndGlyphs" })}
+          >
+            {cell.ch}
+          </text>
+        ))}
+      </g>
+    ) : (
+      <text
+        x={cx}
+        y={baseline}
+        textAnchor="middle"
+        fontFamily="var(--font-plate)"
+        fontWeight="600"
+        fontSize={fontSize}
+        letterSpacing="2"
+        fill={fill}
+        filter={filter}
+        // Keep every space the customer typed (SVG collapses them otherwise).
+        style={{ whiteSpace: "pre" }}
+      >
+        {reg}
+      </text>
+    );
 
   return (
     <svg
@@ -100,7 +138,31 @@ export function PlatePreview({
           <stop offset="0" stopColor="#fff" stopOpacity="0.35" />
           <stop offset="0.5" stopColor="#fff" stopOpacity="0" />
         </linearGradient>
-        {d > 0 && (
+        <linearGradient id={`gel-hi-${uid}`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#fff" stopOpacity="0.28" />
+          <stop offset="0.42" stopColor="#fff" stopOpacity="0.1" />
+          <stop offset="0.46" stopColor="#fff" stopOpacity="0" />
+        </linearGradient>
+        {gel && (
+          // Resin gel is domed: light it like a rounded, glossy surface, then add the shadow.
+          <filter id={`gloss-${uid}`} x="-5%" y="-10%" width="115%" height="140%" colorInterpolationFilters="sRGB">
+            <feGaussianBlur in="SourceAlpha" stdDeviation={1.2 + d * 0.5} result="dome" />
+            <feSpecularLighting
+              in="dome"
+              surfaceScale={3 + d * 1.5}
+              specularConstant="1.5"
+              specularExponent="16"
+              lightingColor="#fff"
+              result="spec"
+            >
+              <feDistantLight azimuth="255" elevation="50" />
+            </feSpecularLighting>
+            <feComposite in="spec" in2="SourceAlpha" operator="in" result="shine" />
+            <feComposite in="SourceGraphic" in2="shine" operator="arithmetic" k2="1" k3="0.9" result="lit" />
+            <feDropShadow in="lit" dx={d * 0.4} dy={d * 1.2} stdDeviation={0.6 + d * 0.5} floodOpacity="0.45" />
+          </filter>
+        )}
+        {d > 0 && !gel && (
           <filter id={`raised-${uid}`} x="-5%" y="-5%" width="115%" height="140%">
             {style.look === "acrylic" && (
               <feDropShadow dx={d * 0.6} dy={d} stdDeviation="0" floodColor="#4a4a4a" floodOpacity="1" />
@@ -141,40 +203,9 @@ export function PlatePreview({
         <rect x="5" y="5" width={w - 10} height={h - 10} rx="5" fill="none" stroke="#111" strokeWidth="3" />
       )}
 
-      {layout ? (
-        <g fill={textFill} filter={d > 0 ? `url(#raised-${uid})` : undefined}>
-          {layout.cells.map((cell, i) => (
-            <text
-              key={i}
-              x={start + cell.centre * scale}
-              y={baseline}
-              textAnchor="middle"
-              fontFamily="var(--font-plate)"
-              fontWeight="600"
-              fontSize={fontSize}
-              {...(cell.squeeze < 1 && { textLength: CHAR_W * scale, lengthAdjust: "spacingAndGlyphs" })}
-            >
-              {cell.ch}
-            </text>
-          ))}
-        </g>
-      ) : (
-        <text
-          x={cx}
-          y={baseline}
-          textAnchor="middle"
-          fontFamily="var(--font-plate)"
-          fontWeight="600"
-          fontSize={fontSize}
-          letterSpacing="2"
-          fill={textFill}
-          filter={d > 0 ? `url(#raised-${uid})` : undefined}
-          // Keep every space the customer typed (SVG collapses them otherwise).
-          style={{ whiteSpace: "pre" }}
-        >
-          {reg}
-        </text>
-      )}
+      {lettering(textFill, d > 0 ? `url(#${gel ? "gloss" : "raised"}-${uid})` : undefined)}
+      {/* The light catching the top of the domed gel. */}
+      {gel && lettering(`url(#gel-hi-${uid})`)}
 
       <text
         x={cx}
