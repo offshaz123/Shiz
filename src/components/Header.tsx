@@ -10,7 +10,8 @@ import { siteConfig, whatsappHref } from "@/lib/site-config";
 
 const navLinks = [
   { href: "/tints", label: "Window Tints" },
-  { href: "/repairs", label: "Repairs & Servicing" },
+  { href: "/repairs", label: "Repairs" },
+  { href: "/number-plates", label: "Number Plates" },
   { href: "/pricing", label: "Pricing" },
   { href: "/about", label: "About" },
   { href: "/blog", label: "Blog" },
@@ -48,7 +49,7 @@ export function Header() {
       <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-4 px-5 py-3 sm:px-8">
         <Logo />
 
-        <nav className="hidden items-center gap-7 lg:flex">
+        <nav className="hidden items-center gap-5 whitespace-nowrap lg:flex xl:gap-7">
           {navLinks.map((link) => (
             <Link
               key={link.href}
@@ -66,7 +67,7 @@ export function Header() {
             href={whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-brand/60"
+            className="hidden rounded-full border border-border px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:border-brand/60 xl:inline-flex"
           >
             WhatsApp Us
           </a>

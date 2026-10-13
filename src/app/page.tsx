@@ -6,7 +6,7 @@ import { FindUs } from "@/components/FindUs";
 import { StickyCallBar } from "@/components/StickyCallBar";
 import { ReviewBadge, ReviewSlideshow } from "@/components/Reviews";
 import { FaqJsonLd } from "@/components/StructuredData";
-import { whatsappHref, tintServices, repairServices } from "@/lib/site-config";
+import { siteConfig, whatsappHref, tintServices, repairServices } from "@/lib/site-config";
 import { blogPosts } from "@/content/blog";
 
 const faqs = [
@@ -214,6 +214,65 @@ export default function Home() {
           <Link href="/repairs" className="mt-8 block text-center text-sm font-semibold text-brand hover:underline sm:hidden">
             See all repairs →
           </Link>
+        </div>
+      </section>
+
+      {/* Number plates — the third thing we sell, and the only one people can
+          buy without ringing. Kept short: the detail lives on /number-plates. */}
+      <section>
+        <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
+          <div className="rounded-3xl border border-border bg-surface p-8 sm:p-12">
+            <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
+              <div>
+                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+                  Number Plates
+                </span>
+                <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+                  Standard, 3D, 4D &amp; 5D gel plates
+                </h2>
+                <p className="mt-4 text-muted">
+                  Flat printed through to raised, gel-domed digits — in short, hexagon or standard
+                  shapes. All road legal, all made to BS AU 145e.
+                </p>
+                <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                  <a
+                    href={siteConfig.plateStore.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="brand-gradient-bg inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-bold shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
+                  >
+                    Order plates online
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden className="h-4 w-4">
+                      <path d="M7 17 17 7M9 7h8v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </a>
+                  <Link
+                    href="/number-plates"
+                    className="inline-flex items-center justify-center rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-foreground transition-colors hover:border-brand/60"
+                  >
+                    See the finishes
+                  </Link>
+                </div>
+                <p className="mt-4 text-xs text-muted">
+                  Ordering online goes to {siteConfig.plateStore.name}, our own plate workshop.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  ["Standard", "Flat printed, road legal"],
+                  ["3D Gel", "Domed resin digits"],
+                  ["4D", "Laser-cut acrylic, raised"],
+                  ["5D Gel", "Cut acrylic under gel"],
+                ].map(([name, desc]) => (
+                  <div key={name} className="rounded-2xl border border-border bg-background p-5">
+                    <h3 className="text-sm font-semibold text-foreground">{name}</h3>
+                    <p className="mt-1.5 text-xs leading-relaxed text-muted">{desc}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

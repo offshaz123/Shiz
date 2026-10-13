@@ -67,6 +67,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/number-plates" className="hover:text-foreground">
+                  Number Plates
+                </Link>
+              </li>
+              <li>
                 <Link href="/pricing" className="hover:text-foreground">
                   Pricing
                 </Link>

@@ -63,6 +63,16 @@ export const siteConfig = {
     facebook: "",
     tiktok: "",
   },
+  // The sister plate workshop. Same owners, separate brand and separate site,
+  // with its own plate builder and DVLA-registered supply. We link out rather
+  // than rebuilding ordering here: the store already works, and the money
+  // lands in the same place either way. Always say whose it is — an unexplained
+  // jump to another brand reads as a bait and switch.
+  plateStore: {
+    name: "PlatedUp",
+    url: "https://platedup.co.uk",
+    blurb: "Build your plate online, pay, and we post it out — free UK delivery on orders over £34.99.",
+  },
   // Public review rating, shown as a star badge and published in the
   // Organization schema. Fill these in ONLY from reviews genuinely received on
   // a real profile — the count and average must match what's publicly visible

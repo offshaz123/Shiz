@@ -116,22 +116,63 @@ export default function NumberPlatesPage() {
         </p>
       </section>
 
+      {/* Two routes: order online for delivery, or have them made at the unit.
+          The online store is a separate brand under the same ownership, so say
+          so — an unexplained jump to another name reads as a bait and switch. */}
       <section className="border-t border-border bg-surface">
-        <div className="mx-auto max-w-4xl px-5 py-20 text-center sm:px-8">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">
-            Ready to order your plates?
+        <div className="mx-auto max-w-4xl px-5 py-20 sm:px-8">
+          <h2 className="text-center text-3xl font-bold tracking-tight text-foreground">
+            Two ways to get your plates
           </h2>
-          <p className="mt-4 text-muted">
-            Send us your registration and choice of finish and shape, and we&apos;ll confirm the price.
-          </p>
-          <Link
-            href="/quote?service=Number Plates"
-            className="brand-gradient-bg mt-8 inline-flex rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
-          >
-            Get a Free Quote →
-          </Link>
+
+          <div className="mt-10 grid gap-5 sm:grid-cols-2">
+            <div className="flex flex-col rounded-3xl border-2 border-brand/40 bg-background p-7">
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">
+                Order online
+              </span>
+              <h3 className="mt-3 text-xl font-bold text-foreground">
+                Build them yourself, posted out
+              </h3>
+              <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">
+                {siteConfig.plateStore.blurb} {siteConfig.plateStore.name} is our own plate
+                workshop — same people, same plates, its own shop so you can design and pay
+                online.
+              </p>
+              <a
+                href={siteConfig.plateStore.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="brand-gradient-bg mt-6 inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-bold shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
+              >
+                Build your plate at {siteConfig.plateStore.name}
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden className="h-4 w-4">
+                  <path d="M7 17 17 7M9 7h8v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
+            </div>
+
+            <div className="flex flex-col rounded-3xl border border-border bg-background p-7">
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+                Or come to us
+              </span>
+              <h3 className="mt-3 text-xl font-bold text-foreground">
+                Made up at the unit
+              </h3>
+              <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">
+                Prefer to sort it in person, or having tints done anyway? Send your registration
+                and the finish you want and we&apos;ll confirm the price.
+              </p>
+              <Link
+                href="/quote?service=Number Plates"
+                className="mt-6 inline-flex items-center justify-center rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-foreground transition-colors hover:border-brand/60"
+              >
+                Get a price →
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
+
     </div>
   );
 }
