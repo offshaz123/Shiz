@@ -86,7 +86,15 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
   useEffect(() => trackViewBuilder(), []);
   const { add } = useCart();
   const [c, setC] = useState<PlateConfig>({ ...defaultConfig, ...initial });
-  const [tab, setTab] = useState(0);
+  const [tab, setTabState] = useState(0);
+  // Every step has to be looked at before the plate can go in the basket.
+  const [visited, setVisited] = useState<number[]>([0]);
+  const [stepError, setStepError] = useState("");
+  const setTab = (i: number) => {
+    setTabState(i);
+    setVisited((v) => (v.includes(i) ? v : [...v, i]));
+    setStepError("");
+  };
   const [regError, setRegError] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [confirmError, setConfirmError] = useState(false);
@@ -116,6 +124,13 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
       );
       document.getElementById("reg")?.scrollIntoView({ behavior: "smooth", block: "center" });
       document.getElementById("reg")?.focus({ preventScroll: true });
+      return;
+    }
+    const missed = tabs.findIndex((_, i) => !visited.includes(i));
+    if (missed !== -1) {
+      setTab(missed);
+      setStepError(missed === 1 ? "Choose your plate style first" : "Check your extras first (border, badge and fixings)");
+      document.getElementById("plate-steps")?.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
     if (!confirmed) {
@@ -231,7 +246,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                 </div>
               )}
 
-              <div role="tablist" aria-label="Plate options" className="mt-5 grid grid-cols-3 gap-2">
+              <div id="plate-steps" role="tablist" aria-label="Plate options" className="mt-5 grid scroll-mt-36 grid-cols-3 gap-2">
                 {tabs.map((t, i) => (
                   <button
                     key={t}
@@ -256,6 +271,12 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                   </button>
                 ))}
               </div>
+
+              {stepError && (
+                <p role="alert" className="mt-3 rounded-lg border border-[#f1c9a5] bg-[#fff5ec] p-3 text-sm font-semibold text-[#8a4a12]">
+                  {stepError}, then press Add to Basket.
+                </p>
+              )}
 
               <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`} className="mt-7">
                 {tab === 0 && (

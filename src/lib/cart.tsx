@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { type CartItem, sanitiseItem, unitPrice } from "./plates";
+import { type CartItem, type FixingId, sanitiseItem, unitPrice } from "./plates";
 
 type Cart = {
   items: CartItem[];
@@ -11,6 +11,7 @@ type Cart = {
   add: (item: Omit<CartItem, "id" | "qty">) => void;
   setQty: (id: string, qty: number) => void;
   remove: (id: string) => void;
+  setFixing: (id: string, fixing: FixingId) => void;
   clear: () => void;
 };
 
@@ -54,6 +55,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const remove = useCallback((id: string) => {
     setItems((prev) => prev.filter((i) => i.id !== id));
   }, []);
+  const setFixing = useCallback((id: string, fixing: FixingId) => {
+    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, fixing } : i)));
+  }, []);
   const clear = useCallback(() => setItems([]), []);
 
   const value = useMemo(
@@ -65,9 +69,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       add,
       setQty,
       remove,
+      setFixing,
       clear,
     }),
-    [items, ready, add, setQty, remove, clear],
+    [items, ready, add, setQty, remove, setFixing, clear],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

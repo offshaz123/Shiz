@@ -5,12 +5,14 @@ import { useState } from "react";
 import { CarPreview } from "@/components/CarPreview";
 import { PlatePreview } from "@/components/PlatePreview";
 import { useCart } from "@/lib/cart";
-import { describe, money, unitPrice } from "@/lib/plates";
+import { describe, fixings, money, unitPrice } from "@/lib/plates";
 import { KlarnaNote } from "@/components/Klarna";
 
 export default function BasketPage() {
-  const { items, ready, subtotal, setQty, remove } = useCart();
+  const { items, ready, subtotal, setQty, remove, setFixing } = useCart();
   const [shownId, setShownId] = useState<string>();
+  // Plates without fixings the customer has said "no thanks" to.
+  const [noFixings, setNoFixings] = useState<string[]>([]);
 
   if (!ready) return <div className="min-h-[50vh]" />;
 
@@ -63,6 +65,35 @@ export default function BasketPage() {
                 <p className="whitespace-pre font-display text-2xl font-bold">{item.reg}</p>
                 <p className="text-sm text-muted">{describe(item)}</p>
               </div>
+              {item.fixing === "none" && !noFixings.includes(item.id) && (
+                <div className="rounded-2xl border border-[#e8d89a] bg-[#fdf8e7] p-4">
+                  <p className="font-semibold">Need something to fit them?</p>
+                  <p className="mt-0.5 text-sm text-muted">
+                    These plates come without fixings. Add them now so you can fit your plates the day they arrive.
+                  </p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {fixings
+                      .filter((f) => f.id !== "none")
+                      .map((f) => (
+                        <button
+                          key={f.id}
+                          type="button"
+                          className="btn btn-white px-3 py-2 text-sm"
+                          onClick={() => setFixing(item.id, f.id)}
+                        >
+                          + {f.name} {money(f.price)}
+                        </button>
+                      ))}
+                    <button
+                      type="button"
+                      className="px-2 py-2 text-sm text-muted underline"
+                      onClick={() => setNoFixings((n) => [...n, item.id])}
+                    >
+                      No thanks
+                    </button>
+                  </div>
+                </div>
+              )}
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div className="flex items-center rounded-full border border-line">
                   <button
