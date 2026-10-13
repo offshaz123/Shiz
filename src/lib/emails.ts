@@ -1,5 +1,6 @@
 import { describe, money, unitPrice, type CartItem } from "./plates";
 import { site, whatsappHref } from "./site";
+import { trackingLink } from "./tracking";
 import type { Order } from "./orders";
 
 // Email templates. Email apps only understand simple, old-style HTML
@@ -168,6 +169,7 @@ export function customerOrderEmail(o: Order, images: ImageMode = "web") {
 
     <p style="font:700 18px Arial,sans-serif;color:${INK};margin:24px 0 8px;">What happens next</p>
     ${next}
+    <p style="font:14px/1.6 Arial,sans-serif;color:${MUTED};margin:12px 0 0;">Check your order status any time: <a href="${esc(`${site.url}/track?ref=${encodeURIComponent(o.ref)}`)}" style="color:${GOLD};font-weight:700;">Track my order</a></p>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:26px 0 8px;background:#f1faf3;border:1px solid #cfe6d4;border-radius:12px;">
       <tr><td style="padding:16px 18px;">
@@ -194,6 +196,7 @@ export function customerOrderEmail(o: Order, images: ImageMode = "web") {
     `Total: ${money(o.amount_paid ?? o.total)}`,
     "",
     o.docs_status === "outstanding" ? `Please upload your V5C and photo ID: ${uploadUrl}` : paid ? "We're making your plates now." : "We'll send you a secure link to pay. We'll start making your plates once it's paid.",
+    `Check your order status any time: ${site.url}/track?ref=${encodeURIComponent(o.ref)}`,
     "",
     `Questions? WhatsApp us: ${helpHref}`,
   ]
@@ -218,6 +221,8 @@ export function customerDispatchEmail(o: Order, images: ImageMode = "web") {
     encodeURIComponent(`I need some help with my order ${o.ref}`),
   );
   const hasLegal = o.items.some((i) => i.type !== "show");
+  const tracking = trackingLink(o);
+  const trackHref = `${site.url}/track?ref=${encodeURIComponent(o.ref)}`;
 
   const steps = [
     ["Order placed", fmtDate(o.paid_at ?? o.created_at)],
@@ -245,6 +250,18 @@ export function customerDispatchEmail(o: Order, images: ImageMode = "web") {
       <tr><td style="padding:18px 8px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>${steps}</tr></table></td></tr>
     </table>
 
+    ${
+      tracking
+        ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:14px 0 8px;background:#f1faf3;border:1px solid #cfe6d4;border-radius:12px;">
+      <tr><td style="padding:16px 18px;">
+        <p style="font:700 16px Arial,sans-serif;color:${INK};margin:0 0 4px;">Track your parcel</p>
+        <p style="font:14px/1.5 Arial,sans-serif;color:${MUTED};margin:0 0 12px;">${esc(tracking.carrier)} tracking number: <strong style="color:${INK};">${esc(tracking.number)}</strong></p>
+        ${button(tracking.url, "Track my parcel", "#1f7a3d")}
+      </td></tr>
+    </table>`
+        : ""
+    }
+
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${itemsHtml(o, 544, images)}</table>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:22px;background:${CREAM};border:1px solid ${LINE};border-radius:12px;">
@@ -259,7 +276,7 @@ export function customerDispatchEmail(o: Order, images: ImageMode = "web") {
     <p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0 0 6px;">&#10003; Check the registration and style are exactly as you ordered.</p>
     <p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0 0 6px;">&#10003; Peel off the protective film after fitting for a perfect finish.</p>
     ${hasLegal ? `<p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0 0 6px;">&#10003; Fit them straight away: your plates are made to BS AU 145e and fully road legal.</p>` : ""}
-    <p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0;">&#10003; Not arrived after a few working days? Just message us.</p>
+    <p style="font:15px/1.6 Arial,sans-serif;color:${INK};margin:0;">&#10003; Not arrived after a few working days? <a href="${esc(trackHref)}" style="color:${GOLD};font-weight:700;">Check your order</a> or just message us.</p>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:26px 0 8px;background:#f1faf3;border:1px solid #cfe6d4;border-radius:12px;">
       <tr><td style="padding:16px 18px;">
@@ -290,7 +307,9 @@ export function customerDispatchEmail(o: Order, images: ImageMode = "web") {
     "",
     `Sent to: ${o.customer_name}, ${o.address1}${o.address2 ? `, ${o.address2}` : ""}, ${o.town} ${o.postcode}`,
     `Delivery: ${o.delivery_name}`,
+    ...(tracking ? ["", `${tracking.carrier} tracking number: ${tracking.number}`, `Track your parcel: ${tracking.url}`] : []),
     "",
+    `Check your order any time: ${trackHref}`,
     "Not arrived after a few working days? Just message us.",
     `Questions? WhatsApp us: ${helpHref}`,
     "",

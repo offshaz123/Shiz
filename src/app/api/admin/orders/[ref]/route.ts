@@ -1,5 +1,6 @@
 import { checkAdminLogin, failDelay, isAdmin } from "@/lib/auth";
-import { type OrderStatus, getOrder, markPaid, sendOrderEmails, sendStatusEmail, setStatus, statusLabels } from "@/lib/orders";
+import { type OrderStatus, getOrder, markPaid, sendOrderEmails, sendStatusEmail, setStatus, setTracking, statusLabels } from "@/lib/orders";
+import { cleanTrackingNumber, isCarrier } from "@/lib/tracking";
 import { getCheckoutSession, refundCheckout } from "@/lib/stripe";
 
 const allowed: OrderStatus[] = ["paid", "in_production", "dispatched", "cancelled", "unpaid"];
@@ -73,6 +74,17 @@ export async function POST(req: Request, ctx: RouteContext<"/api/admin/orders/[r
     const sent = await sendStatusEmail({ ...order, status: "refunded" }, "refunded");
     return Response.json({ message: `${refunded} · order cancelled${sent ? " · customer emailed" : ", but the email couldn't be sent"}` });
   }
+  if (body.action === "tracking") {
+    // Add or change the tracking number on a dispatched order.
+    const number = cleanTrackingNumber(body.tracking) || null;
+    const carrier = isCarrier(body.carrier) ? body.carrier : "royalmail";
+    await setTracking(ref, number, carrier);
+    if (!body.email || order.status !== "dispatched") return Response.json({ message: number ? "Tracking number saved" : "Tracking number removed" });
+    const sent = await sendStatusEmail({ ...order, tracking_number: number, tracking_carrier: number ? carrier : null }, "dispatched");
+    return sent
+      ? Response.json({ message: `Tracking number saved · dispatch email sent again to ${order.email}` })
+      : Response.json({ error: "Tracking number saved, but the email couldn't be sent." }, { status: 502 });
+  }
   if (body.action === "resend-status") {
     if (!isEmailed(order.status)) return Response.json({ error: "There's no email for this status" }, { status: 400 });
     const sent = await sendStatusEmail(order, order.status);
@@ -82,11 +94,19 @@ export async function POST(req: Request, ctx: RouteContext<"/api/admin/orders/[r
   }
   const status = body.status as OrderStatus;
   if (!allowed.includes(status)) return Response.json({ error: "Unknown status" }, { status: 400 });
+  // Dispatching can include the parcel's tracking number for the email.
+  let updated = order;
+  if (status === "dispatched" && cleanTrackingNumber(body.tracking)) {
+    const number = cleanTrackingNumber(body.tracking);
+    const carrier = isCarrier(body.carrier) ? body.carrier : "royalmail";
+    await setTracking(ref, number, carrier);
+    updated = { ...order, tracking_number: number, tracking_carrier: carrier };
+  }
   await setStatus(ref, status);
   const marked = `Order marked as ${statusLabels[status].toLowerCase()}`;
   // Let the customer know (only the first time it changes to this status).
   if (isEmailed(status) && order.status !== status) {
-    const sent = await sendStatusEmail({ ...order, status }, status);
+    const sent = await sendStatusEmail({ ...updated, status }, status);
     return Response.json({
       message: sent ? `${marked} · customer emailed at ${order.email}` : `${marked}, but the customer email couldn't be sent`,
     });

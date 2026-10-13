@@ -59,6 +59,8 @@ export type Order = {
   card_last4: string | null;
   stripe_session_id: string | null;
   docs_status: DocsStatus;
+  tracking_number: string | null;
+  tracking_carrier: string | null;
   created_at: Date;
   paid_at: Date | null;
 };
@@ -76,9 +78,11 @@ function parse(row: Row): Order {
 
 const COLUMNS = `id, ref, user_id, status, customer_name, email, phone, address1, address2, town, postcode, items,
   delivery_name, delivery_price, subtotal, discount_code, discount, total, amount_paid, card_brand, card_last4, stripe_session_id,
-  docs_status, created_at, paid_at`;
+  docs_status, tracking_number, tracking_carrier, created_at, paid_at`;
 
-export async function createOrder(o: Omit<Order, "id" | "created_at" | "paid_at" | "amount_paid" | "card_brand" | "card_last4" | "stripe_session_id">) {
+export async function createOrder(
+  o: Omit<Order, "id" | "created_at" | "paid_at" | "amount_paid" | "card_brand" | "card_last4" | "stripe_session_id" | "tracking_number" | "tracking_carrier">,
+) {
   const res = await execute(
     `INSERT INTO orders (ref, user_id, status, customer_name, email, phone, address1, address2, town, postcode,
       items, delivery_name, delivery_price, subtotal, discount_code, discount, total, docs_status)
@@ -159,6 +163,10 @@ export async function listOrdersForUser(userId: number) {
 export async function setStatus(ref: string, status: OrderStatus) {
   await execute("UPDATE orders SET status = ? WHERE ref = ?", [status, ref]);
   await logOrderEvent(ref, status);
+}
+
+export async function setTracking(ref: string, number: string | null, carrier: string | null) {
+  await execute("UPDATE orders SET tracking_number = ?, tracking_carrier = ? WHERE ref = ?", [number, number ? carrier : null, ref]);
 }
 
 export async function markDocsReceived(orderId: number) {

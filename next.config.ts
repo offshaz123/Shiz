@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 // Pages with a customer's details, basket, orders or the admin portal.
-const PERSONAL = "account|admin|checkout|order-confirmed|login|signup|basket|upload-documents";
+const PERSONAL = "account|admin|checkout|order-confirmed|login|signup|basket|upload-documents|track";
 
 const nextConfig: NextConfig = {
   // Don't advertise what the site is built with.

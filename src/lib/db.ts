@@ -146,6 +146,9 @@ const addedColumns: [table: string, column: string, definition: string][] = [
   ["orders", "ad_tracking", "TEXT NULL"],
   // Secret for the "complete your order" link in the checkout reminder email.
   ["orders", "resume_token", "CHAR(32) NULL"],
+  // Parcel tracking, added when the order is dispatched.
+  ["orders", "tracking_number", "VARCHAR(40) NULL"],
+  ["orders", "tracking_carrier", "VARCHAR(20) NULL"],
 ];
 
 async function ensureSchema() {

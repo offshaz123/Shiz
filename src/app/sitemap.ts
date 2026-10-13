@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/contact",
     "/legal",
     "/upload-documents",
+    "/track",
     "/delivery",
     "/returns-policy",
     "/terms-conditions",

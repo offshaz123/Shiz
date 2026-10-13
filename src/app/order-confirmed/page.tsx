@@ -85,7 +85,11 @@ export default async function OrderConfirmed(props: PageProps<"/order-confirmed"
         Orders placed before {site.dispatchCutoff} on a working day are made and dispatched the same day.
       </p>
       <p className="mt-2 text-sm text-muted">
-        Can&apos;t see our email? Check your junk or spam folder, and mark it &ldquo;Not junk&rdquo; so our dispatch update
+        You can check your order any time on our{" "}
+        <Link href={`/track${orderRef ? `?ref=${orderRef}` : ""}`} className="font-semibold underline">
+          Track My Order
+        </Link>{" "}
+        page. Can&apos;t see our email? Check your junk or spam folder, and mark it &ldquo;Not junk&rdquo; so our dispatch update
         reaches your inbox.
       </p>
       {docsOutstanding && (
