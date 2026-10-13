@@ -12,13 +12,6 @@ const nextConfig: NextConfig = {
         destination: "https://platedup.co.uk",
         permanent: true,
       },
-      {
-        // The 3D/4D/5D explainer went the same way — plates are sold on the
-        // store now, and the store carries its own descriptions.
-        source: "/blog/3d-vs-4d-vs-5d-number-plates",
-        destination: "https://platedup.co.uk",
-        permanent: true,
-      },
     ];
   },
   async headers() {

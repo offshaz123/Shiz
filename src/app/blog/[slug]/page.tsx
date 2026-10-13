@@ -120,28 +120,54 @@ export default async function BlogPostPage({
         ))}
       </div>
 
-      <div className="mt-14 rounded-3xl border border-border bg-surface p-8 text-center">
-        <h2 className="text-xl font-semibold text-foreground">
-          Ready to book your car in?
-        </h2>
-        <p className="mx-auto mt-3 max-w-md text-sm text-muted">
-          See{" "}
-          <Link href="/tints" className="text-brand hover:underline">
-            our window tints
-          </Link>{" "}
-          and{" "}
-          <Link href="/pricing" className="text-brand hover:underline">
-            our pricing
+      {/* Plates are ordered and posted, never booked in, so that post ends at
+          the store rather than the quote form. */}
+      {post.slug === "3d-vs-4d-vs-5d-number-plates" ? (
+        <div className="mt-14 rounded-3xl border border-border bg-surface p-8 text-center">
+          <h2 className="text-xl font-semibold text-foreground">
+            Ready to order your plates?
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-sm text-muted">
+            Build them on {siteConfig.plateStore.name}, our own plate workshop — pick the finish,
+            shape and registration, pay online, and we post them out. Free UK delivery over
+            £34.99.
+          </p>
+          <a
+            href={siteConfig.plateStore.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="brand-gradient-bg mt-6 inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
+          >
+            Order your plates
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden className="h-4 w-4">
+              <path d="M7 17 17 7M9 7h8v8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
+        </div>
+      ) : (
+        <div className="mt-14 rounded-3xl border border-border bg-surface p-8 text-center">
+          <h2 className="text-xl font-semibold text-foreground">
+            Ready to book your car in?
+          </h2>
+          <p className="mx-auto mt-3 max-w-md text-sm text-muted">
+            See{" "}
+            <Link href="/tints" className="text-brand hover:underline">
+              our window tints
+            </Link>{" "}
+            and{" "}
+            <Link href="/pricing" className="text-brand hover:underline">
+              our pricing
+            </Link>
+            , or get a free, no-obligation quote for your vehicle.
+          </p>
+          <Link
+            href="/quote"
+            className="brand-gradient-bg mt-6 inline-flex rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
+          >
+            Get a Free Quote
           </Link>
-          , or get a free, no-obligation quote for your vehicle.
-        </p>
-        <Link
-          href="/quote"
-          className="brand-gradient-bg mt-6 inline-flex rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
-        >
-          Get a Free Quote
-        </Link>
-      </div>
+        </div>
+      )}
 
       <script
         type="application/ld+json"

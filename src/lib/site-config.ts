@@ -411,56 +411,6 @@ export const detailingBundle = {
   price: "£400",
 };
 
-export type NumberPlateFinish = {
-  id: string;
-  name: string;
-  description: string;
-};
-
-export const numberPlateFinishes: NumberPlateFinish[] = [
-  {
-    id: "standard",
-    name: "Standard",
-    description: "Flat, printed digits — road legal and the most affordable option.",
-  },
-  {
-    id: "3d",
-    name: "3D",
-    description: "Raised, resin-built digits that stand proud of the plate for a sharper look.",
-  },
-  {
-    id: "3d-gel",
-    name: "3D Gel",
-    description: "3D digits finished with a domed gel overlay for extra depth and shine.",
-  },
-  {
-    id: "4d",
-    name: "4D",
-    description: "Laser-cut acrylic digits, taller and glossier than 3D for a premium look.",
-  },
-  {
-    id: "4d-gel",
-    name: "4D Gel",
-    description: "4D acrylic digits with a gel-domed finish for maximum depth and gloss.",
-  },
-  {
-    id: "5d",
-    name: "5D",
-    description: "Our top-tier finish — thicker, glossier acrylic digits with crisp, precise edges.",
-  },
-  {
-    id: "5d-gel",
-    name: "5D Gel",
-    description: "5D digits finished with a gel dome — the deepest, glossiest finish we offer.",
-  },
-];
-
-export const numberPlateShapes = [
-  { name: "Normal", description: "Standard rectangular plate shape." },
-  { name: "Short", description: "Compact plate for cars with a smaller plate recess." },
-  { name: "Hexagon", description: "Angled hexagon-cut corners for a sportier look." },
-];
-
 // Ad-tracking IDs for the London PPC landing page. Leave empty to disable —
 // each tracking component renders nothing until its ID is filled in.
 export const trackingConfig = {
