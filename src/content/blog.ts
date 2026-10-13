@@ -16,6 +16,92 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "review-gating-the-shortcut-that-gets-your-listing-suspended",
+    title: "Review Gating: The Shortcut That Gets Your Listing Suspended",
+    description:
+      "Sending unhappy customers to a private form instead of Google breaks Google's rules and, since April 2025, UK law. What you can and can't do when asking.",
+    publishedAt: "2026-10-13",
+    keywords: [
+      "review gating Google policy",
+      "asking only happy customers for reviews",
+      "fake reviews law UK",
+      "how to ask for Google reviews legally",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Somebody sells you a review system. It texts every customer after the job and asks how it went. Happy ones get a link straight to your Google listing. Unhappy ones get a private feedback form that goes to your inbox instead.",
+          "It sounds sensible. Catch the complaint, fix it quietly, only the good ones end up public. Plenty of software is sold on exactly this, and plenty of businesses are running it without knowing it's a problem.",
+          "It is called review gating, and it breaks Google's rules and UK law at the same time.",
+        ],
+      },
+      {
+        heading: "Google's position, in their words",
+        paragraphs: [
+          "Their contribution policies are specific about this. Merchants may not discourage or prohibit negative reviews, and may not selectively solicit positive reviews from customers.",
+          "That second phrase is the whole thing. A system that routes people down two different paths based on how they rated you is selective solicitation by design. It isn't a grey area that depends how you word the text message.",
+          "A few others on the same list that catch people out:",
+        ],
+        bullets: [
+          "Offering incentives, meaning payment, discounts, free goods or services, in exchange for reviews, revisions, or the removal of a negative one",
+          "Asking staff to hit a quota of reviews",
+          "Pressuring customers to leave a rating while they're still on the premises",
+        ],
+        
+      },
+      {
+        paragraphs: [
+          "The consequence is that the reviews get removed, and a pattern of it puts the profile itself at risk. Losing reviews you did earn, because of how you asked for them, is a bad trade.",
+        ],
+      },
+      {
+        heading: "Since April 2025 it is also illegal",
+        paragraphs: [
+          "This is the part most businesses have not caught up with. The Digital Markets, Competition and Consumers Act 2024 brought in consumer rules that have been in force since 6 April 2025, and several review practices are now banned outright, meaning automatically unfair with no argument about context.",
+          "The banned list includes posting fake reviews, commissioning somebody else to write them, publishing incentivised reviews without disclosing the incentive, presenting misleading star ratings, and concealing negative reviews.",
+          "Concealing negative reviews is what gating is. The quiet private feedback form was the point of the exercise.",
+          "The CMA can now enforce consumer law directly rather than going to court first, with fines reaching up to 10% of global turnover. That ceiling is aimed at large companies, and a sole trader is not the target of the enforcement programme. But the rule applies to you the same way it applies to everyone, and \"the software did it\" is not a defence when you bought the software.",
+        ],
+      },
+      {
+        heading: "The incentive trap",
+        paragraphs: [
+          "The other common one is a discount for leaving a review. Ten percent off your next service, a free coffee, entry into a prize draw.",
+          "Google prohibits it. UK law bans undisclosed incentivised reviews specifically, which means if an incentive exists it has to be disclosed in the review itself, and in practice almost nobody does that, so the review ends up non-compliant either way.",
+          "There's also a quieter problem. A review bought with a discount is worth less than a review somebody wrote because the job went well, because the person reading it can usually tell. Enthusiasm doesn't read the same as obligation.",
+        ],
+      },
+      {
+        heading: "What you are actually allowed to do",
+        paragraphs: [
+          "Quite a lot, which is the frustrating bit, because the compliant version works better anyway.",
+        ],
+        bullets: [
+          "Ask every customer, not a filtered subset. Google explicitly permits soliciting content that represents a genuine experience",
+          "Ask at the right moment, which is when the job is finished and they're pleased, not a fortnight later",
+          "Make it easy. One link straight to the review box, not instructions involving searching for you",
+          "Ask in person and follow up with the link, which works better than either alone",
+          "Ask again, once, if they said they would and forgot",
+          "Reply to every review you get, good and bad",
+        ],
+      },
+      {
+        paragraphs: [
+          "You can also absolutely ask for private feedback. What you cannot do is use the answer to decide who gets shown the public link. Send everyone the review link and offer a way to raise a problem directly, in the same message, to everybody. That is a feedback route, not a filter.",
+        ],
+      },
+      {
+        heading: "What to do with a bad review instead",
+        paragraphs: [
+          "Gating exists because business owners are frightened of one-star reviews, and that fear is worse than the reality.",
+          "A profile with nothing but five stars reads as suspicious to anybody who has shopped online in the last decade. A handful of fours and the occasional three, with a measured reply underneath, reads as a real business.",
+          "The reply is the part that does the work, and it isn't written for the person complaining. It's written for the next customer, who is reading the argument to see how you behave when something goes wrong. A calm, specific, non-defensive reply to a bad review sells better than the five stars above it.",
+          "Which is the honest summary: the thing gating was built to prevent is an asset, handled properly. And the system that does it legally is the same system, minus the branch in the middle.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "location-pages-that-arent-just-the-town-name-swapped",
     title: "Writing Location Pages That Aren't Just the Town Name Swapped",
     description:
