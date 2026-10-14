@@ -81,6 +81,7 @@ keywords, dealership social strategy).
 - Meta & Instagram Ads for Driving Instructors and Driving Schools (industry-specific)
 - Writing Location Pages That Aren't Just the Town Name Swapped (practical how-to)
 - Review Gating: The Shortcut That Gets Your Listing Suspended (local search)
+- Meta & Instagram Ads for Landscapers and Garden Services (industry-specific)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -273,7 +274,7 @@ keywords, dealership social strategy).
       bodyshop UK", "Facebook ads accident repair"
 - [x] Meta & Instagram Ads for Removals and Man-and-Van Businesses — target: "Facebook ads
       removals company UK", "marketing for man and van"
-- [ ] Meta & Instagram Ads for Landscapers and Garden Services — target: "Facebook ads
+- [x] Meta & Instagram Ads for Landscapers and Garden Services — target: "Facebook ads
       landscaping UK", "marketing for gardeners"
 
 ## Backlog — comparison/explainer (added 2026-09-29 research round)

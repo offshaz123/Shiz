@@ -16,6 +16,98 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-for-landscapers-and-garden-services",
+    title: "Meta & Instagram Ads for Landscapers and Garden Services",
+    description:
+      "Nobody is thinking about their garden in January, and everybody is in April. How to advertise a seasonal business, and why the real money is in the contracts.",
+    publishedAt: "2026-10-14",
+    keywords: [
+      "Facebook ads landscaping UK",
+      "marketing for gardeners",
+      "how to get landscaping clients",
+      "garden maintenance contracts advertising",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Landscaping has a problem most trades don't. The work does not arrive evenly, it arrives in a wave, and the wave is the same week for everybody in your area.",
+          "The first warm weekend comes, the whole country looks at its garden at once, and every landscaper within thirty miles is suddenly quoting. Then October arrives and the phone stops.",
+          "Which means the advertising question for this trade is not really how to get enquiries. It is when, and for what.",
+        ],
+      },
+      {
+        heading: "Advertise before the season, not during it",
+        paragraphs: [
+          "The instinct is to spend when demand is high, because that is when people are looking. The problem is that everybody else has the same instinct, so you are bidding against every competitor at once for attention that was going to be plentiful anyway.",
+          "The weeks before the rush are cheaper and emptier, and the person who books in February has already decided by the time the warm weekend arrives. By April you are not competing for their attention, you are on their calendar.",
+          "The practical version: start advertising while it still feels too early, take bookings for work that happens later, and treat the spring rush as the thing you have already captured rather than the thing you are chasing.",
+        ],
+      },
+      {
+        heading: "The quiet months are not dead, they are different",
+        paragraphs: [
+          "Winter kills the mow-and-go work. It does not kill everything, and the jobs that survive are often the bigger ones.",
+        ],
+        bullets: [
+          "Hard landscaping. Patios, paths, walls, drainage, decking. None of it needs the grass to be growing",
+          "Tree work and heavy pruning, much of which is better done in the dormant season anyway",
+          "Clearances and overgrown gardens, which people tackle when the leaves are off and they can see the state of it",
+          "Design and planning for work starting in spring, which is a sale you can make in January",
+          "Fencing, usually right after the first storm takes a panel out",
+        ],
+      },
+      {
+        paragraphs: [
+          "So the advert changes with the calendar rather than stopping. Running the same \"garden maintenance\" creative in December is why people conclude advertising does not work in winter.",
+        ],
+      },
+      {
+        heading: "One-off jobs are a treadmill. Contracts are a business.",
+        paragraphs: [
+          "This is the one worth thinking hardest about, because it changes what the advertising is for.",
+          "A one-off patio is good money once. A fortnightly maintenance round is money every fortnight, through the season, year after year, with no selling attached. One of those is a job and the other is an asset, and the advertising that produces them is not the same advertising.",
+          "A landscaper with a full maintenance round has a predictable income and can be choosy about the big jobs. One living entirely on one-offs starts every January at zero and takes whatever comes.",
+          "If you are spending money on advertising, it is worth deciding deliberately which of the two you are buying. Both is fine, but drifting into whichever enquiry arrives is how people end up busy and broke.",
+        ],
+      },
+      {
+        heading: "What to show",
+        paragraphs: [
+          "This trade is unusually lucky on creative, because the work is visual and the change is dramatic.",
+        ],
+        bullets: [
+          "Before and after, which is the strongest thing you own. An overgrown mess becoming a finished garden sells with no copy at all, and Meta allows it for landscaping",
+          "Time-lapse of a day's work, filmed on a phone propped against a wheelbarrow",
+          "The kit. A proper mini digger and a tipper say something a laminated van sticker cannot",
+          "The crew working, tidily, with sheets down and the path swept",
+          "The job finished and cleared up, because the fear is being left with a mess",
+          "Plants you actually like, in flower, in gardens you built",
+        ],
+      },
+      {
+        paragraphs: [
+          "The last one matters more than it sounds. People hire a landscaper partly on taste, and a feed showing gardens you have genuinely made attracts the clients who want gardens like that. It filters as much as it sells.",
+        ],
+      },
+      {
+        heading: "Say what you cost, roughly",
+        paragraphs: [
+          "Quoting is where this trade loses most of its time. A landscaper can spend a Saturday driving to five gardens, measuring up, writing quotes, and win one.",
+          "An advert that gives a sense of scale cuts most of that out before it starts. Not a fixed price, which is impossible when every garden is different, but a floor. Something like typical patios starting from a figure, or a minimum visit charge, or that you do not take maintenance rounds under a certain size.",
+          "You will get fewer enquiries. The ones you get will be from people who have already accepted roughly what this costs, which is the only kind worth driving to.",
+        ],
+      },
+      {
+        heading: "The weather problem nobody mentions",
+        paragraphs: [
+          "One practical thing. A week of rain can leave you with a full diary you cannot work and a quiet week you did not plan for.",
+          "That is a good argument for keeping a warm list rather than relying on fresh advertising. People who enquired and did not book, past customers due another job, anyone who asked about maintenance in the spring. A message to that list fills a wet-week gap faster and cheaper than switching a campaign on and waiting for it to learn.",
+          "Which is the same lesson as everywhere else in this trade. The advertising brings people in once. What you do with the ones who did not book the first time is where the money actually is.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "review-gating-the-shortcut-that-gets-your-listing-suspended",
     title: "Review Gating: The Shortcut That Gets Your Listing Suspended",
     description:
