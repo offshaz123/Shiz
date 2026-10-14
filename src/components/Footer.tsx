@@ -12,6 +12,7 @@ const quickLinks = [
   { href: "/about", label: "About Us" },
   { href: "/number-plates-essex", label: "Number Plates in Essex" },
   { href: "/track", label: "Track My Order" },
+  { href: "/refund-request", label: "Request a Refund" },
   { href: "/upload-documents", label: "Upload Documents" },
 ];
 

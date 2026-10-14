@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PostForm } from "@/components/PostForm";
 import { PageHero } from "@/components/PageHero";
 import { site, whatsappHref } from "@/lib/site";
@@ -27,6 +28,11 @@ export default function ContactPage() {
               same day, so with Next Day Delivery they arrive the next working day.
             </p>
           </a>
+          <Link href="/refund-request" className="block rounded-3xl border border-line bg-surface p-6 hover:border-[#b8901f]">
+            <p className="eyebrow">Refunds</p>
+            <p className="mt-1 font-display text-2xl font-bold">Request a refund</p>
+            <p className="text-muted">Damaged, wrong or missing plates, or need to cancel? Tell us here.</p>
+          </Link>
           <a href={`mailto:${site.email}`} className="block rounded-3xl border border-line bg-surface p-6 hover:border-[#b8901f]">
             <p className="eyebrow">Email</p>
             <p className="mt-1 break-all font-display text-2xl font-bold">{site.email}</p>

@@ -121,6 +121,9 @@ export function TrackOrder({ initialRef }: { initialRef: string }) {
           <a href={whatsappHref} className="btn btn-gold">
             Questions? WhatsApp us
           </a>
+          <Link href={`/refund-request?ref=${result.ref}`} className="btn btn-white">
+            Request a refund
+          </Link>
           <button type="button" className="btn btn-white" onClick={() => setResult(null)}>
             Check another order
           </button>

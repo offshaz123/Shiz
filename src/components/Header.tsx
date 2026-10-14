@@ -18,6 +18,16 @@ function BasketIcon() {
   );
 }
 
+function TruckIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" aria-hidden>
+      <path d="M2 6h12v10H2zM14 10h4l3 3v3h-7" />
+      <circle cx="6.5" cy="17.5" r="1.8" fill="white" />
+      <circle cx="17" cy="17.5" r="1.8" fill="white" />
+    </svg>
+  );
+}
+
 function UploadIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden>
@@ -63,6 +73,14 @@ export function Header() {
               </svg>
               Chat on WhatsApp
             </a>
+            <Link
+              href="/track"
+              className="flex h-11 items-center gap-2 rounded-lg border border-line px-3 text-sm font-semibold hover:bg-surface"
+              aria-label="Track your order"
+            >
+              <TruckIcon />
+              <span className="hidden xl:inline">Track Order</span>
+            </Link>
             <Link
               href="/upload-documents"
               className="gold-bg hidden items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold sm:inline-flex"
@@ -144,6 +162,9 @@ export function Header() {
               </li>
             ))}
             <li className="grid gap-3 py-4">
+              <Link href="/track" onClick={() => setOpen(false)} className="btn btn-white w-full">
+                Track My Order
+              </Link>
               <Link href={account.href} onClick={() => setOpen(false)} className="btn btn-dark w-full">
                 {account.label}
               </Link>

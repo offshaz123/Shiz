@@ -21,6 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/legal",
     "/upload-documents",
     "/track",
+    "/refund-request",
     "/delivery",
     "/returns-policy",
     "/terms-conditions",

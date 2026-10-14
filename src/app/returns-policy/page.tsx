@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
+import Link from "next/link";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -30,9 +31,11 @@ export default function ReturnsPage() {
           If you need to change or cancel, contact us as soon as possible. If we haven&apos;t
           started making your plates, we&apos;ll give you a full refund.
         </p>
-        <h2>How to contact us</h2>
+        <h2>How to ask for a refund</h2>
         <p>
-          Message us on WhatsApp or email {site.email} with your order number.
+          Fill in our <Link href="/refund-request">refund request form</Link> with your order number and
+          what happened (add photos if your plates are damaged or wrong). We&apos;ll look into it and reply by
+          email, usually within 1 working day. You can also message us on WhatsApp or email {site.email}.
         </p>
       </div>
     </>
