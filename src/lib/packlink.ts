@@ -14,8 +14,11 @@ const API = process.env.PACKLINK_API_URL || "https://api.packlink.com/v1/";
 // default parcel size saved.
 const FALLBACK_BOX = { width: 16, height: 3, length: 56, weight: 0.6 };
 
+// Pasted keys sometimes pick up spaces, a line break or quote marks.
+const apiKey = () => (process.env.PACKLINK_API_KEY ?? "").trim().replace(/^["']|["']$/g, "");
+
 export function isPacklinkConfigured() {
-  return Boolean(process.env.PACKLINK_API_KEY);
+  return Boolean(apiKey());
 }
 
 async function call<T>(method: "GET" | "POST", path: string, body?: unknown): Promise<T> {
@@ -24,12 +27,14 @@ async function call<T>(method: "GET" | "POST", path: string, body?: unknown): Pr
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: process.env.PACKLINK_API_KEY ?? "",
+      Authorization: apiKey(),
     },
     body: body === undefined ? undefined : JSON.stringify(body),
     signal: AbortSignal.timeout(15_000),
   });
   const text = await res.text();
+  if (res.status === 401 || res.status === 403)
+    throw new Error("Packlink didn't accept the API key. Copy the current key from Packlink → Settings → Packlink PRO API key into PACKLINK_API_KEY in Hostinger, then redeploy.");
   if (!res.ok) throw new Error(`Packlink said ${res.status}: ${text.slice(0, 300) || res.statusText}`);
   return (text ? JSON.parse(text) : {}) as T;
 }
