@@ -64,6 +64,7 @@ async function draftFor(order: Order) {
     call<Parcel[]>("GET", "users/parcels").catch(() => []),
   ]);
   const from = pickDefault<Warehouse>(warehouses);
+  if (!from?.postal_code) throw new Error("Packlink has no sender address. Add your workshop in Packlink → Settings → Address book and make it the default.");
   const parcel = pickDefault<Parcel>(parcels);
   const box = parcel?.length && parcel.width && parcel.height && parcel.weight ? parcel : FALLBACK_BOX;
   // One box holds two pairs; each further pair adds a little height and weight.
@@ -74,15 +75,15 @@ async function draftFor(order: Order) {
   return {
     platform: "PRO",
     platform_country: "GB",
-    source: "PRO",
     shipment_custom_reference: order.ref,
-    content: order.items.map((i) => `${i.qty} x number plates ${i.reg}`),
+    // One line of text, at most 60 characters and without symbols Packlink rejects.
+    content: `Number plates ${order.ref}`.replace(/[;:%&/()=?!\\'`^*@#$€]/g, "").slice(0, 60),
     contentvalue: Math.round(order.subtotal) / 100,
     contentValue_currency: "GBP",
     content_second_hand: false,
     priority: false,
     has_customs: false,
-    from: from && {
+    from: {
       name: from.name ?? "",
       surname: from.surname ?? "",
       company: from.company || site.name,
