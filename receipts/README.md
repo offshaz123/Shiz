@@ -22,6 +22,6 @@ PDF.
 
 ## Issued
 
-| No.  | Date        | Reg      | Work           | Amount  |
-| ---- | ----------- | -------- | -------------- | ------- |
-| 1041 | 14 Oct 2026 | EK22 KHW | Window tinting | £150.00 |
+| No.  | Date        | Reg      | Work           | Amount  | Payment                |
+| ---- | ----------- | -------- | -------------- | ------- | ---------------------- |
+| 1041 | 14 Oct 2026 | EK22 KHW | Window tinting | £150.00 | Cash, received by Shaz |
