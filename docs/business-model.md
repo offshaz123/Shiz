@@ -313,3 +313,59 @@ The model above is built entirely on costs. These are the missing halves:
 
 Questions 1, 5 and 6 together decide whether the next pound goes into
 advertising or into fixing the phone.
+
+
+## Actual trading, 1-14 October 2026
+
+From the paper daily log. 14 days.
+
+| | Sept (9-30) | Oct (1-14) |
+|---|---|---|
+| Jobs | 19 | 11 |
+| Revenue | £2,325 | £1,395 |
+| **Average job** | £122 | **£127** |
+| Cars per week | 6.0 | 5.5 |
+| Result | -£402/wk | **-£355/wk** |
+
+The average moved £122 → £127 across the month, but **within October it fell**:
+£133 in week 1, £119 in week 2, against plan targets of £150 and £165.
+
+| Date | Vehicle | Amount |
+|---|---|---|
+| 01-10 | BM sports | £100 |
+| 02-10 | BM class | £180 |
+| 03-10 | Ford | £140 |
+| 04-10 | BMW | £160 |
+| 07-10 | Toyota Yaris (one glass) | £40 |
+| 07-10 | 4x4 Range | £180 |
+| 08-10 | Audi | £150 |
+| 08-10 | Mercedes | £120 |
+| 10-10 | Vauxhall | £145 |
+| 11-10 | Bike | £30 |
+| 14-10 | Wax Wagon | £150 |
+
+**The £80 minimum is not being applied.** The £40 and £30 jobs are both below
+it. Excluding them the average is £147 — still £33 under the £180 ceramic list
+price, and no job in the fortnight cleared £180.
+
+### Break-even from here
+
+| | |
+|---|---|
+| Hold 5.5 cars/week → average must reach | **£191** |
+| Hold the £127 average → volume must reach | **9.5 cars/week** |
+
+Both sit inside the ~13/week capacity ceiling, so either works arithmetically.
+The price route is cheaper: it costs nothing, while the volume route needs
+roughly 70% more ad spend and four more cars through the bay every week.
+
+### The finding
+
+Google Ads delivered **one lead a day at £26.65** through the same fortnight,
+with the cheapest clicks yet (£1.62) and a 9.24% CTR. The channel is healthy
+and under-spent relative to what a customer is worth (£111.50 of contribution
+at today's average, £164.50 at £180).
+
+**Lead supply is not the constraint. What happens after the phone rings is.**
+Three consecutive weeks of plan have now asked for the average job to rise and
+it has not. Until it does, more ad spend buys more £119 jobs.

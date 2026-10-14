@@ -717,3 +717,72 @@ phone, device and domain as well as by name. Make these changes because the
 current details are wrong, not as a shield. Accurate client details are
 easier to defend in a review than mismatched ones — but they are not a
 firewall.
+
+## 1-13 October: the account is not the problem
+
+| | 24-29 Sept | 1-13 Oct | |
+|---|---|---|---|
+| Spend/day | £25.17 | £26.65 | full budget |
+| Avg CPC | £1.72 | **£1.62** | -6%, lowest yet |
+| Clicks/day | 14.7 | **16.5** | +12% |
+| CTR | — | **9.24%** | strong for the trade |
+| Conv. rate | 8.0% | 6.07% | -24% |
+| Cost/conv | £21.57 | £26.65 | +24% |
+
+13 conversions in 13 days — **one lead a day**, every day, at £26.65. Google's
+own panel reports 8 conversions in the last 7 days, +45% on the week before,
+so the trend inside the period is up.
+
+The 8.0% conversion rate it is being measured against was a six-day, seven-
+conversion sample taken the week the call bar went live. 6.07% over thirteen
+days is the more trustworthy figure, and £26.65 a lead is still a quarter of
+what a lead is worth.
+
+Full-month run rate: **£826 spend, ~31 leads.**
+
+### Against the daily log
+
+The shop floor over the same fortnight: **11 jobs, £1,395, £127 average.**
+
+| Week | Target | Actual | Target avg | Actual avg |
+|---|---|---|---|---|
+| 1-7 Oct | £1,000 | £800 | £150 | £133 |
+| 8-14 Oct | £1,200 | £595 | £165 | **£119** |
+
+**The average job is falling, not rising.** The October plan required £150
+then £165; the business delivered £133 then £119. Two jobs breached the agreed
+£80 minimum — a £40 single-glass fit and a £30 bike. Without those two the
+average is £147.
+
+Result for the fortnight: **-£710, or -£355/week** (Sept: -£402/week).
+
+### Break-even has two routes, and only one is being worked
+
+| | |
+|---|---|
+| Hold 5.5 cars/week → raise the average to | **£191** |
+| Hold the £127 average → raise volume to | **9.5 cars/week** |
+
+Both are inside capacity (~13/week). Google currently supplies roughly one
+lead a day and could supply more. But at £127 a job, every extra car bought
+with ad money carries only £111.50 of contribution, so volume alone is the
+slow road.
+
+### Decision, 14 October: do not raise the budget to £35/day
+
+The plan scheduled the increase for 15 October on the condition that the
+average job had moved. It has moved **down**, from £133 to £119. Raising
+spend now buys more £119 jobs.
+
+Revisit when two consecutive weeks show an average above £160.
+
+### Still outstanding in the account
+
+1. **No image assets.** The old campaign ran 20; this one has none, and 97% of
+   traffic is mobile where images make the ad physically bigger. Photos are on
+   the site already (Lexus, BMW, Golf R, Range Rover).
+2. **Ceramic-led RSA** — written, never added. Every live ad leads on price.
+3. **"Calls from ads" value is £1.00** — should be £30.
+4. **"Ad group 1"** → rename to Tints.
+5. **Conversion breakdown still unknown** — calls vs button taps, open since
+   23 September.
