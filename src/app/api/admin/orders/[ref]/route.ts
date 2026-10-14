@@ -2,6 +2,7 @@ import { checkAdminLogin, failDelay, isAdmin } from "@/lib/auth";
 import { type OrderStatus, getOrder, markPaid, sendOrderEmails, sendStatusEmail, setStatus, setTracking, statusLabels } from "@/lib/orders";
 import { cleanTrackingNumber, isCarrier } from "@/lib/tracking";
 import { getCheckoutSession, refundCheckout } from "@/lib/stripe";
+import { sendToPacklink } from "@/lib/packlink";
 
 const allowed: OrderStatus[] = ["paid", "in_production", "dispatched", "cancelled", "unpaid"];
 // Moving an order to one of these emails the customer.
@@ -84,6 +85,13 @@ export async function POST(req: Request, ctx: RouteContext<"/api/admin/orders/[r
     return sent
       ? Response.json({ message: `Tracking number saved · dispatch email sent again to ${order.email}` })
       : Response.json({ error: "Tracking number saved, but the email couldn't be sent." }, { status: 502 });
+  }
+  if (body.action === "packlink") {
+    if (!REFUNDABLE.includes(order.status)) return Response.json({ error: "Only paid orders can be sent to Packlink." }, { status: 400 });
+    const result = await sendToPacklink(order);
+    return result.ok
+      ? Response.json({ message: `Sent to Packlink (${result.reference}). Open Packlink to choose a courier.` })
+      : Response.json({ error: result.error }, { status: 502 });
   }
   if (body.action === "resend-status") {
     if (!isEmailed(order.status)) return Response.json({ error: "There's no email for this status" }, { status: 400 });

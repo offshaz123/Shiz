@@ -149,6 +149,9 @@ const addedColumns: [table: string, column: string, definition: string][] = [
   // Parcel tracking, added when the order is dispatched.
   ["orders", "tracking_number", "VARCHAR(40) NULL"],
   ["orders", "tracking_carrier", "VARCHAR(20) NULL"],
+  // Packlink draft shipment made for the order, or why sending it failed.
+  ["orders", "packlink_ref", "VARCHAR(40) NULL"],
+  ["orders", "packlink_error", "VARCHAR(500) NULL"],
 ];
 
 async function ensureSchema() {

@@ -5,6 +5,8 @@ import { requireAdmin, fmtDateTime } from "@/lib/admin";
 import { AdminShell } from "@/components/AdminShell";
 import { StatusBadge } from "@/components/StatusBadge";
 import { AdminOrderActions } from "@/components/AdminOrderActions";
+import { PacklinkSend } from "@/components/PacklinkSend";
+import { isPacklinkConfigured } from "@/lib/packlink";
 import { PlatePreview } from "@/components/PlatePreview";
 import { docsLabels, getOrder, listDocuments } from "@/lib/orders";
 import { describe, money, unitPrice } from "@/lib/plates";
@@ -130,6 +132,27 @@ export default async function AdminOrderPage(props: PageProps<"/admin/orders/[re
               </p>
             )}
           </Card>
+
+          {order.paid_at && order.status !== "cancelled" && order.status !== "refunded" && (
+            <Card title="Shipping label (Packlink)">
+              {!isPacklinkConfigured() ? (
+                <p className="text-sm text-muted">Packlink isn&apos;t connected. Add PACKLINK_API_KEY in the Hostinger settings.</p>
+              ) : order.packlink_ref ? (
+                <p className="text-sm">
+                  <span className="font-semibold text-[#1f7a3d]">✓ In Packlink</span> as {order.packlink_ref}. Open{" "}
+                  <a href="https://pro.packlink.com/private/shipments/all" target="_blank" rel="noopener noreferrer" className="text-gold underline">
+                    Packlink
+                  </a>{" "}
+                  to choose a courier and print the label.
+                </p>
+              ) : order.packlink_error ? (
+                <p className="text-sm font-semibold text-[#b42318]">Not sent to Packlink: {order.packlink_error}</p>
+              ) : (
+                <p className="text-sm text-muted">Not sent to Packlink yet.</p>
+              )}
+              {isPacklinkConfigured() && <PacklinkSend orderRef={order.ref} sent={Boolean(order.packlink_ref)} />}
+            </Card>
+          )}
 
           <Card title="Customer">
             <p className="font-semibold">{order.customer_name}</p>

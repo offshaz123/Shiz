@@ -10,6 +10,7 @@ import { LOGO_CID, customerCancelEmail, customerDispatchEmail, customerOrderEmai
 import { renderPlatePng } from "./plate-image";
 import { countDiscountUse } from "./discounts";
 import { sendMetaPurchase } from "./meta-capi";
+import { sendToPacklink } from "./packlink";
 import { sendMail, sendToShop, shopAddress } from "./mail";
 import { logEmail, logOrderEvent, newToken, withOpenTracker } from "./email-log";
 import { type PaidSession, getCheckoutSession } from "./stripe";
@@ -61,6 +62,8 @@ export type Order = {
   docs_status: DocsStatus;
   tracking_number: string | null;
   tracking_carrier: string | null;
+  packlink_ref: string | null;
+  packlink_error: string | null;
   created_at: Date;
   paid_at: Date | null;
 };
@@ -78,10 +81,10 @@ function parse(row: Row): Order {
 
 const COLUMNS = `id, ref, user_id, status, customer_name, email, phone, address1, address2, town, postcode, items,
   delivery_name, delivery_price, subtotal, discount_code, discount, total, amount_paid, card_brand, card_last4, stripe_session_id,
-  docs_status, tracking_number, tracking_carrier, created_at, paid_at`;
+  docs_status, tracking_number, tracking_carrier, packlink_ref, packlink_error, created_at, paid_at`;
 
 export async function createOrder(
-  o: Omit<Order, "id" | "created_at" | "paid_at" | "amount_paid" | "card_brand" | "card_last4" | "stripe_session_id" | "tracking_number" | "tracking_carrier">,
+  o: Omit<Order, "id" | "created_at" | "paid_at" | "amount_paid" | "card_brand" | "card_last4" | "stripe_session_id" | "tracking_number" | "tracking_carrier" | "packlink_ref" | "packlink_error">,
 ) {
   const res = await execute(
     `INSERT INTO orders (ref, user_id, status, customer_name, email, phone, address1, address2, town, postcode,
@@ -318,6 +321,7 @@ export async function markPaid(s: PaidSession) {
     if (updated.discount_code) await countDiscountUse(updated.discount_code);
     after(() => sendOrderEmails(updated));
     after(() => sendMetaPurchase(updated));
+    after(() => sendToPacklink(updated));
   }
   return updated;
 }
