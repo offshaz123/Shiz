@@ -39,18 +39,13 @@ async function call<T>(method: "GET" | "POST", path: string, body?: unknown): Pr
   return (text ? JSON.parse(text) : {}) as T;
 }
 
-type Warehouse = {
-  name?: string;
-  surname?: string;
-  company?: string;
-  address?: string;
-  postal_code?: string;
-  city?: string;
-  country?: string;
-  phone?: string;
-  email?: string;
-  default_selection?: boolean;
+// Packlink's saved addresses, with the field names it has used over time.
+type Warehouse = Record<string, unknown> & { default_selection?: boolean };
+const text = (w: Warehouse, ...keys: string[]) => {
+  for (const k of keys) if (typeof w[k] === "string" && w[k]) return (w[k] as string).trim();
+  return "";
 };
+
 type Parcel = { weight?: number; width?: number; length?: number; height?: number; default_selection?: boolean };
 
 const pickDefault = <T extends { default_selection?: boolean }>(list: unknown) =>
@@ -60,11 +55,23 @@ const pickDefault = <T extends { default_selection?: boolean }>(list: unknown) =
 // address and parcel from the Packlink account, and our order number.
 async function draftFor(order: Order) {
   const [warehouses, parcels] = await Promise.all([
-    call<Warehouse[]>("GET", "clients/warehouses").catch(() => []),
+    call<unknown>("GET", "clients/warehouses"),
     call<Parcel[]>("GET", "users/parcels").catch(() => []),
   ]);
-  const from = pickDefault<Warehouse>(warehouses);
-  if (!from?.postal_code) throw new Error("Packlink has no sender address. Add your workshop in Packlink → Settings → Address book and make it the default.");
+  // Sometimes a list, sometimes wrapped in an object.
+  const list = Array.isArray(warehouses)
+    ? warehouses
+    : warehouses && typeof warehouses === "object"
+      ? (Object.values(warehouses).find(Array.isArray) ?? [warehouses])
+      : [];
+  const from = pickDefault<Warehouse>(list);
+  const fromZip = from ? text(from, "postal_code", "zip_code", "postalCode", "zipCode", "postcode") : "";
+  if (!from || !fromZip)
+    throw new Error(
+      list.length
+        ? `Packlink's sender address has no postcode we could read (fields: ${Object.keys(from ?? {}).join(", ").slice(0, 200)}).`
+        : "Packlink has no sender address. Add your workshop in Packlink → Settings → Address book and make it the default.",
+    );
   const parcel = pickDefault<Parcel>(parcels);
   const box = parcel?.length && parcel.width && parcel.height && parcel.weight ? parcel : FALLBACK_BOX;
   // One box holds two pairs; each further pair adds a little height and weight.
@@ -84,16 +91,16 @@ async function draftFor(order: Order) {
     priority: false,
     has_customs: false,
     from: {
-      name: from.name ?? "",
-      surname: from.surname ?? "",
-      company: from.company || site.name,
-      street1: from.address ?? "",
-      street2: "",
-      zip_code: from.postal_code ?? "",
-      city: from.city ?? "",
-      country: from.country || "GB",
-      phone: from.phone ?? "",
-      email: from.email ?? "",
+      name: text(from, "name", "first_name"),
+      surname: text(from, "surname", "last_name"),
+      company: text(from, "company") || site.name,
+      street1: text(from, "address", "street1", "street"),
+      street2: text(from, "address2", "street2"),
+      zip_code: fromZip,
+      city: text(from, "city", "town"),
+      country: text(from, "country", "country_code") || "GB",
+      phone: text(from, "phone"),
+      email: text(from, "email"),
     },
     to: {
       name: first ?? "",
