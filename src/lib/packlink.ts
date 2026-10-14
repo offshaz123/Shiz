@@ -10,9 +10,12 @@ import { site } from "./site";
 // PACKLINK_API_URL is only for testing against a pretend Packlink.
 const API = process.env.PACKLINK_API_URL || "https://api.packlink.com/v1/";
 
-// A pair of plates in a plate box. Used when the Packlink account has no
+// A pair of plates in a plate envelope, weighed as the heaviest style (7mm
+// gel) so no order is ever underweight. Used when the Packlink account has no
 // default parcel size saved.
-const FALLBACK_BOX = { width: 16, height: 3, length: 56, weight: 0.6 };
+const FALLBACK_BOX = { width: 16, height: 3, length: 56, weight: 2 };
+// Added for every pair after the first (same envelope, stacked).
+const EXTRA_PAIR = { height: 3, weight: 1.5 };
 
 // Pasted keys sometimes pick up spaces, a line break or quote marks.
 const apiKey = () => (process.env.PACKLINK_API_KEY ?? "").trim().replace(/^["']|["']$/g, "");
@@ -74,7 +77,7 @@ async function draftFor(order: Order) {
     );
   const parcel = pickDefault<Parcel>(parcels);
   const box = parcel?.length && parcel.width && parcel.height && parcel.weight ? parcel : FALLBACK_BOX;
-  // One box holds two pairs; each further pair adds a little height and weight.
+  // Each pair after the first adds height and weight to the same envelope.
   const pairs = order.items.reduce((n, i) => n + i.qty * (i.which === "pair" ? 1 : 0.5), 0);
   const extra = Math.max(0, Math.ceil(pairs) - 1);
   const [first, ...rest] = order.customer_name.trim().split(/\s+/);
@@ -117,9 +120,9 @@ async function draftFor(order: Order) {
     packages: [
       {
         width: Math.ceil(box.width!),
-        height: Math.ceil(box.height! + extra * 2),
+        height: Math.ceil(box.height! + extra * EXTRA_PAIR.height),
         length: Math.ceil(box.length!),
-        weight: Math.round((box.weight! + extra * 0.5) * 100) / 100,
+        weight: Math.round((box.weight! + extra * EXTRA_PAIR.weight) * 100) / 100,
       },
     ],
   };
