@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Receipt EK22 KHW</title>
+<style>
+  :root {
+    --ink: #14110c;
+    --muted: #6b6559;
+    --line: #ded7c9;
+    --gold: #9a7b2e;
+    --paper: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 28px 16px 56px;
+    background: #ece8e0;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+  }
+  .sheet {
+    max-width: 640px;
+    margin: 0 auto;
+    background: var(--paper);
+    padding: 44px 44px 36px;
+    border-radius: 4px;
+    box-shadow: 0 4px 28px rgba(0,0,0,.13);
+  }
+
+  header { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
+  .brand-name {
+    font-size: 19px; font-weight: 700; letter-spacing: .22em;
+    text-transform: uppercase; color: var(--gold); line-height: 1.2;
+  }
+  .brand-sub {
+    margin-top: 5px; font-size: 9.5px; letter-spacing: .3em;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .brand-contact { margin-top: 15px; font-size: 11.5px; line-height: 1.75; color: var(--muted); }
+  .brand-contact strong { color: var(--ink); font-weight: 600; }
+
+  .doc-type {
+    text-align: right; font-size: 25px; font-weight: 700;
+    letter-spacing: .13em; text-transform: uppercase; white-space: nowrap;
+  }
+  .doc-meta { margin-top: 12px; text-align: right; font-size: 11.5px; line-height: 1.85; color: var(--muted); }
+  .doc-meta b { display: inline-block; min-width: 74px; text-align: left; color: var(--ink); font-weight: 600; }
+
+  .rule { height: 2px; background: var(--ink); margin: 26px 0 0; }
+
+  .parties { display: flex; gap: 32px; margin-top: 26px; }
+  .parties > div { flex: 1; }
+  .label {
+    font-size: 9.5px; font-weight: 700; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 8px;
+  }
+  .value { font-size: 14px; line-height: 1.6; }
+  .fill { display: inline-block; min-width: 170px; border-bottom: 1px solid var(--line); height: 17px; }
+  .reg {
+    display: inline-block; background: #ffd400; color: #000;
+    border: 2px solid #000; border-radius: 4px;
+    padding: 5px 12px; font-size: 17px; font-weight: 800; letter-spacing: .09em;
+  }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+  thead th {
+    font-size: 9.5px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--muted); text-align: left; padding: 0 0 10px;
+    border-bottom: 1px solid var(--ink);
+  }
+  thead th.num { text-align: right; }
+  tbody td { padding: 17px 0; border-bottom: 1px solid var(--line); font-size: 14px; vertical-align: top; }
+  tbody td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  tbody .desc-note { display: block; margin-top: 5px; font-size: 11.5px; color: var(--muted); }
+
+  .totals { margin-top: 20px; display: flex; justify-content: flex-end; }
+  .totals table { width: 270px; margin: 0; }
+  .totals td { padding: 7px 0; border: 0; font-size: 13px; }
+  .totals td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .totals tr.grand td {
+    border-top: 2px solid var(--ink); padding-top: 13px;
+    font-size: 19px; font-weight: 700;
+  }
+
+  .paid {
+    margin-top: 28px; display: flex; align-items: center; justify-content: space-between;
+    gap: 20px; padding: 15px 18px; border: 1px solid var(--line); border-radius: 3px;
+    background: #faf8f4;
+  }
+  .paid-stamp {
+    font-size: 14px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--gold); border: 2px solid var(--gold); border-radius: 3px; padding: 7px 14px;
+    white-space: nowrap;
+  }
+  .paid-detail { font-size: 12px; line-height: 1.7; color: var(--muted); }
+  .paid-detail b { color: var(--ink); font-weight: 600; }
+
+  footer { margin-top: 30px; padding-top: 18px; border-top: 1px solid var(--line); }
+  footer p { margin: 0 0 7px; font-size: 11px; line-height: 1.7; color: var(--muted); }
+  footer .thanks { font-size: 12.5px; color: var(--ink); font-weight: 600; margin-bottom: 11px; }
+
+  .print-bar { max-width: 640px; margin: 0 auto 18px; text-align: right; }
+  .print-bar button {
+    font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+    background: var(--ink); color: #fff; border: 0; border-radius: 999px; padding: 9px 20px;
+  }
+  .print-bar span { font-size: 12px; color: #6b6559; margin-right: 12px; }
+
+  @media print {
+    body { background: #fff; padding: 0; }
+    .sheet { box-shadow: none; max-width: none; padding: 0; }
+    .print-bar { display: none; }
+    @page { size: A4; margin: 18mm; }
+  }
+  @media (max-width: 560px) {
+    .sheet { padding: 28px 22px; }
+    header, .parties { flex-direction: column; gap: 18px; }
+    .doc-type, .doc-meta { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="print-bar">
+  <span>Print, or save as PDF from the print dialog</span>
+  <button onclick="window.print()">Print receipt</button>
+</div>
+
+<div class="sheet">
+  <header>
+    <div>
+      <div class="brand-name">Executive</div>
+      <div class="brand-sub">Tints &amp; Repairs</div>
+      <div class="brand-contact">
+        15 Cecil Road, London E17 5DH<br>
+        <strong>07300 303538</strong><br>
+        executivetints.ontop@gmail.com<br>
+        executiveontop.com
+      </div>
+    </div>
+    <div>
+      <div class="doc-type">Receipt</div>
+      <div class="doc-meta">
+        <b>No.</b> 1041<br>
+        <b>Date</b> 14 October 2026
+      </div>
+    </div>
+  </header>
+
+  <div class="rule"></div>
+
+  <div class="parties">
+    <div>
+      <div class="label">Received from</div>
+      <div class="value"><span class="fill"></span></div>
+    </div>
+    <div>
+      <div class="label">Vehicle</div>
+      <div class="value">
+        <span class="reg">EK22 KHW</span>
+      </div>
+    </div>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Description</th>
+        <th class="num">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          Window tinting
+          <span class="desc-note">Supplied and fitted at our Walthamstow unit.</span>
+        </td>
+        <td class="num">£150.00</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="totals">
+    <table>
+      <tr>
+        <td>Subtotal</td>
+        <td class="num">£150.00</td>
+      </tr>
+      <tr class="grand">
+        <td>Total paid</td>
+        <td class="num">£150.00</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="paid">
+    <div class="paid-stamp">Paid in full</div>
+    <div class="paid-detail">
+      <b>Method:</b> <span class="fill" style="min-width:120px"></span><br>
+      <b>Received by:</b> <span class="fill" style="min-width:120px"></span>
+    </div>
+  </div>
+
+  <footer>
+    <p class="thanks">Thank you for your business.</p>
+    <p>Prices are not subject to VAT. This receipt confirms payment in full for the work described above.</p>
+    <p>Any questions about this receipt, call 07300 303538 or email executivetints.ontop@gmail.com.</p>
+  </footer>
+</div>
+
+</body>
+</html>
