@@ -46,6 +46,22 @@ const plateTypes: { id: PlateType; name: string; note: string; icon: string }[] 
   { id: "show", name: "Show Plate", note: "Display / off-road use only", icon: "M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm-3.5 5.5L12 15l3.5 5.5L12 19l-3.5 1.5Z" },
 ];
 
+// A small outline of a plate size, drawn to scale (standard = 62px wide).
+function SizeShape({ size }: { size: (typeof sizes)[number] }) {
+  const w = size.width / 10;
+  const h = 11.1;
+  const t = 2.8;
+  return (
+    <svg viewBox={`0 0 ${w} ${h}`} width={w * 1.2} height={h * 1.2} aria-hidden>
+      {size.hex ? (
+        <polygon points={`${t},0.4 ${w - t},0.4 ${w - 0.4},${h / 2} ${w - t},${h - 0.4} ${t},${h - 0.4} 0.4,${h / 2}`} fill="#f6c500" stroke="#8a6812" strokeWidth="0.6" strokeLinejoin="round" />
+      ) : (
+        <rect x="0.3" y="0.3" width={w - 0.6} height={h - 0.6} rx="1" fill="#f6c500" stroke="#8a6812" strokeWidth="0.6" />
+      )}
+    </svg>
+  );
+}
+
 // Keeps at most `max` letters and numbers (spaces don't count).
 function limitChars(text: string, max: number) {
   let n = 0;
@@ -258,6 +274,56 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                 )}
               </div>
 
+              {/* Plate size first: it changes the shape, so customers pick it before anything else. */}
+              <div className="mt-5">
+                <p className="mb-2 text-sm font-semibold">Plate Size</p>
+                <div role="radiogroup" aria-label="Plate size" className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+                  {sizes.map((s) => {
+                    const on = c.size === s.id;
+                    return (
+                      <button
+                        key={s.id}
+                        type="button"
+                        role="radio"
+                        aria-checked={on}
+                        onClick={() => {
+                          // Hex plates have no room for a flag or border.
+                          set(s.hex ? { size: s.id, badge: "none", border: "none" } : { size: s.id });
+                          setStepError("");
+                        }}
+                        className={`flex flex-col items-center rounded-xl border-2 px-1 py-2.5 text-center transition-colors ${
+                          on ? "border-[#b8901f] bg-gold-soft" : "border-line bg-white hover:border-[#c9c6b8]"
+                        }`}
+                      >
+                        <SizeShape size={s} />
+                        <span className="mt-1.5 text-sm font-bold">{s.short}</span>
+                        <span className="text-[11px] leading-tight text-muted">
+                          {s.hex ? `${s.chars === 4 ? "up to 4" : s.chars} characters` : "up to 7 characters"}
+                        </span>
+                        <span className={`text-[11px] font-semibold ${s.hex ? "text-gold" : "text-muted"}`}>
+                          {s.hex ? `+${money(HEX_EXTRA)}` : "Included"}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="mt-2 text-xs text-muted">
+                  {size.hex
+                    ? `Hex plate, ${size.width} × ${size.height}mm, cut to fit your registration with pointed ends. Road legal, with no room for a flag or border.`
+                    : "Standard UK car plate, 520 × 111mm. Fits most cars."}
+                </p>
+                {sizeError && (
+                  <p role="alert" className="mt-2 rounded-lg border border-[#f1c9a5] bg-[#fff5ec] p-3 text-sm font-semibold text-[#8a4a12]">
+                    {sizeError}
+                  </p>
+                )}
+              </div>
+
+              {/* On phones the full preview is further down the page, so show the plate here too. */}
+              <div className="mt-4 rounded-xl bg-surface-2/60 p-3 lg:hidden" aria-hidden>
+                <PlatePreview config={c} side="rear" className="w-full drop-shadow-md" />
+              </div>
+
               {notice && c.type === "show" && (
                 <div className="mt-4 rounded-xl border border-[#f1c9a5] bg-[#fff5ec] p-3 text-sm text-[#8a4a12]">
                   <p>
@@ -354,38 +420,6 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                         <Link href="/legal" className="font-semibold underline">
                           Learn more
                         </Link>
-                      </p>
-                    )}
-
-                    <Heading>Plate Size</Heading>
-                    <label htmlFor="plate-size" className="sr-only">
-                      Plate size
-                    </label>
-                    <select
-                      id="plate-size"
-                      className="field"
-                      value={c.size}
-                      onChange={(e) => {
-                        const next = sizes.find((s) => s.id === e.target.value) ?? sizes[0];
-                        // Hex plates have no room for a flag or border.
-                        set(next.hex ? { size: next.id, badge: "none", border: "none" } : { size: next.id });
-                        setStepError("");
-                      }}
-                    >
-                      {sizes.map((s) => (
-                        <option key={s.id} value={s.id}>
-                          {s.name} ({s.width} × {s.height}mm){s.hex ? ` · +${money(HEX_EXTRA)}` : ""}
-                        </option>
-                      ))}
-                    </select>
-                    <p className="mt-2 text-sm text-muted">
-                      {size.hex
-                        ? `A hex plate is cut to fit your registration (${size.width} × ${size.height}mm), with pointed ends. Road legal, with no room for a flag or border.`
-                        : "Standard UK car plate, 520 × 111mm. Fits most cars."}
-                    </p>
-                    {sizeError && (
-                      <p role="alert" className="mt-2 rounded-lg border border-[#f1c9a5] bg-[#fff5ec] p-3 text-sm font-semibold text-[#8a4a12]">
-                        {sizeError}
                       </p>
                     )}
 
@@ -560,7 +594,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                 {showFront && (
                   <div>
                     <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted">Front</p>
-                    <PlatePreview config={c} side="front" className="w-full rounded-lg border border-line drop-shadow-md" />
+                    <PlatePreview config={c} side="front" className={`w-full drop-shadow-md ${size.hex ? "" : "rounded-lg border border-line"}`} />
                   </div>
                 )}
                 {showRear && (
