@@ -5,6 +5,7 @@ import { clientIp, rateLimited } from "@/lib/places";
 import { describe } from "@/lib/plates";
 import { failDelay } from "@/lib/auth";
 import { trackingLink } from "@/lib/tracking";
+import { syncTrackingFromPacklink } from "@/lib/packlink";
 
 // "Track my order": a customer looks up their order with its number and the
 // email it was placed with. Only shows progress, never the address or payment.
@@ -21,8 +22,9 @@ export async function POST(req: Request) {
     return Response.json({ error: "We couldn't find an order with that number and email. Check both match your order confirmation email." }, { status: 404 });
   };
   try {
-    const order = await getOrder(ref.startsWith("PU-") ? ref : `PU-${ref}`);
-    if (!order || order.email.toLowerCase() !== email) return notFound();
+    const found = await getOrder(ref.startsWith("PU-") ? ref : `PU-${ref}`);
+    if (!found || found.email.toLowerCase() !== email) return notFound();
+    const order = await syncTrackingFromPacklink(found);
     const events = await listOrderEvents(order.id);
     const at = (e: string) => [...events].reverse().find((x) => x.event === e)?.created_at ?? null;
     return Response.json({

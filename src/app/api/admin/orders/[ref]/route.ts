@@ -2,7 +2,7 @@ import { checkAdminLogin, failDelay, isAdmin } from "@/lib/auth";
 import { type OrderStatus, getOrder, markPaid, sendOrderEmails, sendStatusEmail, setStatus, setTracking, statusLabels } from "@/lib/orders";
 import { cleanTrackingNumber, isCarrier } from "@/lib/tracking";
 import { getCheckoutSession, refundCheckout } from "@/lib/stripe";
-import { sendToPacklink } from "@/lib/packlink";
+import { courierTracking, isPacklinkRef, sendToPacklink } from "@/lib/packlink";
 
 const allowed: OrderStatus[] = ["paid", "in_production", "dispatched", "cancelled", "unpaid"];
 // Moving an order to one of these emails the customer.
@@ -18,6 +18,19 @@ export async function POST(req: Request, ctx: RouteContext<"/api/admin/orders/[r
   const order = await getOrder(ref);
   if (!order) return Response.json({ error: "Order not found" }, { status: 404 });
   const body = await req.json().catch(() => ({}));
+  // A Packlink shipment number typed in as the tracking number is swapped for the courier's own.
+  let packlinkNote = "";
+  const typed = cleanTrackingNumber(body.tracking);
+  if (isPacklinkRef(typed)) {
+    const found = await courierTracking(typed);
+    if (found) {
+      body.tracking = found.number;
+      if (found.carrier) body.carrier = found.carrier;
+      packlinkNote = ` · swapped Packlink's reference for the courier tracking number ${found.number}`;
+    } else {
+      packlinkNote = " · that looks like Packlink's reference, not the courier's tracking number. We'll swap it automatically once Packlink has it";
+    }
+  }
 
   if (body.action === "resend") {
     await sendOrderEmails(order);
@@ -80,10 +93,11 @@ export async function POST(req: Request, ctx: RouteContext<"/api/admin/orders/[r
     const number = cleanTrackingNumber(body.tracking) || null;
     const carrier = isCarrier(body.carrier) ? body.carrier : "royalmail";
     await setTracking(ref, number, carrier);
-    if (!body.email || order.status !== "dispatched") return Response.json({ message: number ? "Tracking number saved" : "Tracking number removed" });
+    if (!body.email || order.status !== "dispatched")
+      return Response.json({ message: (number ? "Tracking number saved" : "Tracking number removed") + packlinkNote });
     const sent = await sendStatusEmail({ ...order, tracking_number: number, tracking_carrier: number ? carrier : null }, "dispatched");
     return sent
-      ? Response.json({ message: `Tracking number saved · dispatch email sent again to ${order.email}` })
+      ? Response.json({ message: `Tracking number saved · dispatch email sent again to ${order.email}${packlinkNote}` })
       : Response.json({ error: "Tracking number saved, but the email couldn't be sent." }, { status: 502 });
   }
   if (body.action === "packlink") {
@@ -116,7 +130,7 @@ export async function POST(req: Request, ctx: RouteContext<"/api/admin/orders/[r
   if (isEmailed(status) && order.status !== status) {
     const sent = await sendStatusEmail({ ...updated, status }, status);
     return Response.json({
-      message: sent ? `${marked} · customer emailed at ${order.email}` : `${marked}, but the customer email couldn't be sent`,
+      message: (sent ? `${marked} · customer emailed at ${order.email}` : `${marked}, but the customer email couldn't be sent`) + packlinkNote,
     });
   }
   return Response.json({ message: marked });

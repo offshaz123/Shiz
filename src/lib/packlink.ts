@@ -1,5 +1,6 @@
 import { execute } from "./db";
-import type { Order } from "./orders";
+import { type CarrierId, carrierFromName } from "./tracking";
+import { type Order, setTracking } from "./orders";
 import { site } from "./site";
 
 // Packlink PRO: every paid order is sent to Packlink as a draft shipment, so
@@ -143,4 +144,37 @@ export async function sendToPacklink(order: Order): Promise<{ ok: true; referenc
     await execute("UPDATE orders SET packlink_error = ? WHERE id = ?", [error.slice(0, 500), order.id]).catch(() => {});
     return { ok: false, error };
   }
+}
+
+// Packlink's own shipment number (e.g. UN2026PRO0003678502). Not a courier
+// tracking number: customers can't track a parcel with it.
+export function isPacklinkRef(v: string | null | undefined) {
+  return Boolean(v && /^[A-Z]{2}\d{4}PRO\d{5,}$/.test(v));
+}
+
+// The courier's tracking number for a Packlink shipment, once its label has been bought.
+export async function courierTracking(reference: string): Promise<{ number: string; carrier: CarrierId | null } | null> {
+  if (!isPacklinkConfigured()) return null;
+  try {
+    const s = await call<{ trackings?: unknown; tracking_codes?: unknown; carrier?: string }>("GET", `shipments/${encodeURIComponent(reference)}`);
+    const codes = [s.trackings, s.tracking_codes].find(Array.isArray) as unknown[] | undefined;
+    const number = codes?.map((c) => String(c ?? "").toUpperCase().replace(/[^A-Z0-9]/g, "")).find(Boolean);
+    return number ? { number: number.slice(0, 40), carrier: carrierFromName(s.carrier) } : null;
+  } catch (err) {
+    console.error(`Getting tracking for Packlink ${reference} failed`, err instanceof Error ? err.message : err);
+    return null;
+  }
+}
+
+// Fills in (or corrects) the order's tracking number from Packlink: when it
+// has none yet but went through Packlink, or when Packlink's own reference was
+// saved by mistake. Gives up after a few seconds so pages never hang.
+export async function syncTrackingFromPacklink(order: Order): Promise<Order> {
+  const reference = isPacklinkRef(order.tracking_number) ? order.tracking_number : !order.tracking_number ? order.packlink_ref : null;
+  if (!reference || !isPacklinkConfigured()) return order;
+  const found = await Promise.race([courierTracking(reference), new Promise<null>((r) => setTimeout(() => r(null), 5000))]);
+  if (!found) return order;
+  const carrier = found.carrier ?? order.tracking_carrier ?? "royalmail";
+  await setTracking(order.ref, found.number, carrier);
+  return { ...order, tracking_number: found.number, tracking_carrier: carrier };
 }

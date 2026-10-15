@@ -6,7 +6,7 @@ import { AdminShell } from "@/components/AdminShell";
 import { StatusBadge } from "@/components/StatusBadge";
 import { AdminOrderActions } from "@/components/AdminOrderActions";
 import { PacklinkSend } from "@/components/PacklinkSend";
-import { isPacklinkConfigured } from "@/lib/packlink";
+import { isPacklinkConfigured, syncTrackingFromPacklink } from "@/lib/packlink";
 import { PlatePreview } from "@/components/PlatePreview";
 import { docsLabels, getOrder, listDocuments } from "@/lib/orders";
 import { describe, money, unitPrice } from "@/lib/plates";
@@ -28,8 +28,9 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
 export default async function AdminOrderPage(props: PageProps<"/admin/orders/[ref]">) {
   await requireAdmin();
   const { ref } = await props.params;
-  const order = await getOrder(ref);
-  if (!order) notFound();
+  const found = await getOrder(ref);
+  if (!found) notFound();
+  const order = await syncTrackingFromPacklink(found);
   const [docs, emails, events] = await Promise.all([listDocuments(order.id), listEmailLog(order.id), listOrderEvents(order.id)]);
   const waText = encodeURIComponent(`Hi ${order.customer_name.split(" ")[0]}, it's PlatedUp about your order ${order.ref}.`);
   const waPhone = order.phone.replace(/\D/g, "").replace(/^0/, "44");
