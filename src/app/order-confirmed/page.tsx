@@ -35,19 +35,29 @@ async function loadOrder(ref: string, sessionId: string): Promise<Order | null> 
   }
 }
 
+// Paid in the last few hours (3 hours leaves room for the database clock
+// being an hour out in summer time).
+function justPaid(order: Order | null) {
+  return Boolean(order?.paid_at) && Date.now() - new Date(order!.paid_at!).getTime() < 3 * 60 * 60 * 1000;
+}
+
 export default async function OrderConfirmed(props: PageProps<"/order-confirmed">) {
   const { ref, docs, session_id } = await props.searchParams;
   const orderRef = typeof ref === "string" ? ref.replace(/[^A-Z0-9-]/gi, "").slice(0, 20) : "";
   const sessionId = typeof session_id === "string" ? session_id.slice(0, 255) : "";
   const order = await loadOrder(orderRef, sessionId);
   const paid = order ? ["paid", "in_production", "dispatched"].includes(order.status) : false;
+  // Tell Meta and Google about the purchase only straight after paying, and
+  // never when the shop owner views the page, so reopening the page later (on
+  // another device, or from the Klarna app) can't count the same order twice.
+  const freshPurchase = paid && Boolean(sessionId) && justPaid(order) && !(await isAdmin());
   const docsOutstanding = order ? order.docs_status === "outstanding" : docs === "later";
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-20 text-center">
       <ClearBasket />
       {order?.status === "pending" && <AutoRefresh />}
-      {order && paid && (
+      {order && freshPurchase && (
         <PurchaseTracker
           orderRef={order.ref}
           value={order.amount_paid ?? order.total}
