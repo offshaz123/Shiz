@@ -14,6 +14,10 @@ async function load(): Promise<{ reviews: Review[]; count: number; average: numb
   }
 }
 
+// Show when each review was written. Off while there are only a few reviews;
+// set to true to show the month and year again.
+const SHOW_REVIEW_DATES = false;
+
 // Approved customer reviews and the "Write a review" form (homepage).
 export async function ReviewsSection() {
   const { reviews, count, average } = await load();
@@ -73,9 +77,11 @@ function ReviewCard({ r, className = "" }: { r: Review; className?: string }) {
       <figcaption className="mt-4 flex flex-wrap items-center gap-2 text-sm">
         <span className="font-semibold">{r.name}</span>
         {Boolean(r.verified) && <span className="rounded-full bg-[#e7f6ec] px-2 py-0.5 text-xs font-bold text-[#1f7a3d]">✓ Verified buyer</span>}
-        <span className="text-xs text-muted">
-          {new Date(r.created_at).toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "Europe/London" })}
-        </span>
+        {SHOW_REVIEW_DATES && (
+          <span className="text-xs text-muted">
+            {new Date(r.created_at).toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "Europe/London" })}
+          </span>
+        )}
       </figcaption>
     </figure>
   );
