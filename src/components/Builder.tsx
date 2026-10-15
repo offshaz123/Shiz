@@ -246,7 +246,10 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                   onChange={(e) => {
                     const v = e.target.value.toUpperCase();
                     // A hex plate only fits so many characters: stop typing there.
-                    set({ reg: limitChars(c.type === "show" ? cleanShowText(v) : v, size.hex ? size.chars : Infinity) });
+                    const text = limitChars(c.type === "show" ? cleanShowText(v) : v, size.hex ? size.chars : Infinity);
+                    // Road legal: put the DVLA space in as soon as it's a real registration.
+                    // Show plates keep the spacing exactly as typed.
+                    set({ reg: c.type === "legal" && isValidReg(text) ? formatReg(text) : text });
                     setRegError("");
                   }}
                   // Road-legal plates get the legal spacing; show plates keep it exactly as typed.
