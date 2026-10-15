@@ -82,6 +82,7 @@ keywords, dealership social strategy).
 - Writing Location Pages That Aren't Just the Town Name Swapped (practical how-to)
 - Review Gating: The Shortcut That Gets Your Listing Suspended (local search)
 - Meta & Instagram Ads for Landscapers and Garden Services (industry-specific)
+- Choosing the Right Primary Category on Google Business Profile (local search)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -292,7 +293,7 @@ keywords, dealership social strategy).
       ad budget resets learning"
 
 ## Backlog — local search (added 2026-10-08 research round)
-- [ ] Choosing the Right Primary Category on Google Business Profile — target: "Google Business
+- [x] Choosing the Right Primary Category on Google Business Profile — target: "Google Business
       Profile primary category", "which category should I choose Google"
 - [ ] Duplicate Google Listings, and How to Get Rid of Them — target: "duplicate Google Business
       Profile", "merge Google listings UK"

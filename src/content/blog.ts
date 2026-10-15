@@ -16,6 +16,77 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "choosing-the-right-primary-category-google-business-profile",
+    title: "Choosing the Right Primary Category on Google Business Profile",
+    description:
+      "It is the fastest fix in local search and most businesses pick it once at signup and never look again. Google's own test for getting it right is one sentence.",
+    publishedAt: "2026-10-15",
+    keywords: [
+      "Google Business Profile primary category",
+      "which category should I choose Google",
+      "GBP category list",
+      "local SEO categories",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You set it in about four seconds when you first claimed the listing, picked whatever was closest in the dropdown, and have not looked at it since.",
+          "For a lot of local businesses that one field is doing more to decide whether they appear in the map results than anything else on the profile, and it takes under a minute to change.",
+        ],
+      },
+      {
+        heading: "Google's test is one sentence",
+        paragraphs: [
+          "Their guidelines put it better than any SEO blog manages. Choose categories that complete the sentence \"this business IS a\", rather than \"this business HAS a\".",
+          "That one distinction clears up most of the confusion. A garden centre with a coffee shop in it IS a garden centre, it HAS a cafe. A builder who also fits kitchens IS a builder. A gym with a sauna IS a gym.",
+          "Google says the point is to describe the business holistically, not to list every service, product or amenity you offer. The temptation is always the opposite, because every service feels like a chance to be found for something. The services list exists for that. Categories are for what you are.",
+        ],
+      },
+      {
+        heading: "Specific beats broad",
+        paragraphs: [
+          "The guidance is to focus primarily on the most specific categories for your business, and this is where people reach for the safe general option instead.",
+          "If \"roofing contractor\" exists, that beats \"contractor\". If there is a category for your exact trade, take it rather than the parent.",
+          "The reason it costs you nothing is that Google adds the broader categories automatically. Picking the specific one gets you the general one as well, so you can skip anything that is redundant with something more specific you already chose. Choosing broad to be safe just throws away the precision and gains you nothing.",
+        ],
+      },
+      {
+        heading: "Then use as few as you can",
+        paragraphs: [
+          "This is the instruction that goes against everyone's instinct. Google asks you to use as few categories as possible to describe your overall core business.",
+          "Not as many as the limit allows. As few as describe what you actually are.",
+          "A profile with nine categories is telling Google it is nine things, which usually means it ranks convincingly as none of them. Your primary plus two or three genuinely accurate others is almost always a stronger profile than one with the list filled to the top.",
+          "And one more line from the same guidance that catches people: do not use categories solely as keywords, or to describe attributes of your business. A category is not a place to put a search term you want to rank for, which is the same mistake as putting one in your business name.",
+        ],
+      },
+      {
+        heading: "Finding out what actually works in your area",
+        paragraphs: [
+          "You do not have to guess. The businesses already ranking where you want to rank have made this decision, and their primary category is visible on their profile.",
+          "Search the term you want to show up for, look at the three businesses in the map pack, and look at the category printed on each listing. If all three say the same thing and you say something else, that is your answer and it took two minutes to find.",
+          "Worth doing for each of the main things you do, because the answer is sometimes different from what you would have picked. Trades in particular often find the obvious category is not the one that ranks.",
+        ],
+      },
+      {
+        heading: "Changing it",
+        paragraphs: [
+          "Change one thing at a time and leave it alone afterwards.",
+          "The usual mistake is to rewrite the primary category, add four secondaries, rewrite the description and change the service area all in one sitting, then have no idea which change caused what. A profile that suddenly changes in several ways at once also invites a closer look, and rapid repeated edits are a known trigger for a profile being flagged.",
+          "So pick the one category that is most obviously wrong, change it, and give it a few weeks before touching anything else. Note the date somewhere, because you will not remember when you changed it and that is the only way to tell whether it worked.",
+        ],
+      },
+      {
+        heading: "Two things that are not category problems",
+        paragraphs: [
+          "Before you spend a morning on this, worth knowing what categories cannot fix.",
+          "They will not get you ranking in a town you have no presence in. Proximity to the searcher is a large part of how local results work, and no category choice overrides geography.",
+          "And they will not rescue a profile with four reviews and half the fields empty. The category decides which races you are entered in. What decides whether you place is everything else: the reviews, the photos, the completed services list, the hours being right, and whether the business genuinely looks active.",
+          "Get the category right because it is the cheapest thing on the list, then go and do the slower work.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-for-landscapers-and-garden-services",
     title: "Meta & Instagram Ads for Landscapers and Garden Services",
     description:
