@@ -1,4 +1,4 @@
-import { describe, money, unitPrice, type CartItem } from "./plates";
+import { describe, money, sizeOf, unitPrice, type CartItem } from "./plates";
 import { site, whatsappHref } from "./site";
 import { trackingLink } from "./tracking";
 import type { Order } from "./orders";
@@ -57,10 +57,12 @@ export const plateCid = (index: number) => `plate-${index}`;
 function itemsHtml(o: Order, imgWidth: number, images: ImageMode) {
   return o.items
     .map((i, index) => {
+      // Short hex plates are drawn narrower, to scale with a standard plate.
+      const w = Math.round((imgWidth * sizeOf(i).width) / 520);
       return `
       <tr>
         <td style="padding:16px 0;border-bottom:1px solid ${LINE};">
-          <img src="${images === "inline" ? `cid:${plateCid(index)}` : esc(plateImageUrl(i))}" width="${imgWidth}" alt="${esc(i.reg)} number plate" style="display:block;width:${imgWidth}px;max-width:100%;height:auto;border-radius:6px;" />
+          <img src="${images === "inline" ? `cid:${plateCid(index)}` : esc(plateImageUrl(i))}" width="${w}" alt="${esc(i.reg)} number plate" style="display:block;width:${w}px;max-width:100%;height:auto;border-radius:6px;" />
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:10px;">
             <tr>
               <td style="font:600 18px Arial,sans-serif;color:${INK};white-space:pre;">${esc(i.reg)}${i.qty > 1 ? ` &times; ${i.qty}` : ""}</td>
