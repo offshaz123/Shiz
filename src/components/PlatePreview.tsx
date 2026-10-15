@@ -1,11 +1,7 @@
 import { useId } from "react";
 import { site } from "@/lib/site";
-import { CHAR_W, LEGAL_FONT, MARGIN, legalLayout, showFontSize } from "@/lib/plate-layout";
-import { type FlagId, type PlateConfig, badges, plateText, styles } from "@/lib/plates";
-
-// Standard car plate, 520 × 111mm.
-const w = 520;
-const h = 111;
+import { CHAR_W, HEX_INSET, LEGAL_FONT, MARGIN, hexPoints, legalLayout, showFontSize } from "@/lib/plate-layout";
+import { type FlagId, type PlateConfig, badges, plateText, sizeOf, styles } from "@/lib/plates";
 
 function Flag({ badge, w, h }: { badge: FlagId; w: number; h: number }) {
   if (badge === "uk")
@@ -63,13 +59,21 @@ export function PlatePreview({
   const uid = useId().replace(/:/g, "");
   const reg = label ?? (plateText(config) || (config.type === "show" ? "YOUR TEXT" : "YOUR REG"));
   const style = styles.find((s) => s.id === config.style) ?? styles[0];
-  const badge = badges.find((b) => b.id === config.badge) ?? badges[0];
+  // Drawn in millimetres: 520 × 111 for a standard plate, shorter for small hex plates.
+  const size = sizeOf(config);
+  const { width: w, height: h, hex } = size;
+  // Hex plates have no flag or border.
+  const badge = hex ? badges[0] : (badges.find((b) => b.id === config.badge) ?? badges[0]);
+  const border = !hex && config.border === "black";
   // One badge panel on the left, the same width whether it's the green
   // strip or a flag. Never more than one.
   const bandW = badge.id === "none" ? 0 : 50;
   const left = bandW;
   const cx = left + (w - left) / 2;
-  const available = w - left - MARGIN * 2;
+  const available = w - left - MARGIN * 2 - (hex ? HEX_INSET * 2 : 0);
+  // Drawn 3mm in with a 6mm rounded edge, so the corners are softened but the
+  // plate still fills its full size.
+  const outline = hex ? hexPoints(w - 6, h - 6).map(([x, y]) => `${x + 3},${y + 3}`).join(" ") : "";
   // Road-legal plates use the real layout (79mm characters in 50mm spaces);
   // show plates keep the customer's spacing, shrunk if needed to fit.
   const legal = config.type !== "show";
@@ -124,7 +128,8 @@ export function PlatePreview({
     <svg
       viewBox={`0 0 ${w} ${h}`}
       className={className}
-      style={css}
+      // A short hex plate is drawn narrower than a standard one, to scale.
+      style={w < 520 ? { maxWidth: `${(w / 520) * 100}%`, marginInline: "auto", display: "block", ...css } : css}
       role="img"
       aria-label={`${side === "front" ? "Front" : "Rear"} plate preview: ${reg}`}
     >
@@ -172,8 +177,19 @@ export function PlatePreview({
         )}
       </defs>
 
-      <rect width={w} height={h} rx="7" fill={side === "front" ? "var(--plate-front)" : "var(--plate-rear)"} />
-      <rect width={w} height={h} rx="7" fill={`url(#sheen-${uid})`} />
+      {hex ? (
+        <>
+          <polygon points={outline} strokeLinejoin="round" strokeWidth="6" stroke={side === "front" ? "var(--plate-front)" : "var(--plate-rear)"} fill={side === "front" ? "var(--plate-front)" : "var(--plate-rear)"} />
+          <polygon points={outline} fill={`url(#sheen-${uid})`} />
+          {/* A faint edge so the pointed ends show against a white page. */}
+          <polygon points={hexPoints(w - 1, h - 1).map(([x, y]) => `${x + 0.5},${y + 0.5}`).join(" ")} fill="none" stroke="rgba(0,0,0,0.18)" strokeWidth="1" strokeLinejoin="round" />
+        </>
+      ) : (
+        <>
+          <rect width={w} height={h} rx="7" fill={side === "front" ? "var(--plate-front)" : "var(--plate-rear)"} />
+          <rect width={w} height={h} rx="7" fill={`url(#sheen-${uid})`} />
+        </>
+      )}
 
       {bandW > 0 && (
         <g>
@@ -199,7 +215,7 @@ export function PlatePreview({
         </g>
       )}
 
-      {config.border === "black" && (
+      {border && (
         <rect x="5" y="5" width={w - 10} height={h - 10} rx="5" fill="none" stroke="#111" strokeWidth="3" />
       )}
 

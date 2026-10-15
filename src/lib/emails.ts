@@ -35,6 +35,7 @@ export function plateImageParams(i: CartItem, side: "front" | "rear" = i.which =
   return new URLSearchParams({
     text: i.reg,
     type: i.type,
+    size: i.size,
     style: i.style,
     badge: i.badge,
     border: i.border,

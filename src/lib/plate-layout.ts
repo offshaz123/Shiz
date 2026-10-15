@@ -59,3 +59,21 @@ export function showFontSize(text: string, available: number, letterSpacing: num
   const em = [...text].reduce((n, ch) => n + advance(ch), 0) || 1;
   return Math.min(LEGAL_FONT, (available - letterSpacing * Math.max(text.length - 1, 0)) / em);
 }
+
+// Hex plates: the ends come to a point halfway down. HEX_TIP is how far in the
+// top and bottom corners are cut; HEX_INSET is how far in the cut reaches at
+// the top of the characters, so they always keep their 11mm margin.
+export const HEX_TIP = 28;
+const CHAR_TOP = (111 - CHAR_H) / 2;
+export const HEX_INSET = Math.ceil(HEX_TIP * (1 - CHAR_TOP / (111 / 2)));
+
+export function hexPoints(w: number, h: number) {
+  return [
+    [HEX_TIP, 0],
+    [w - HEX_TIP, 0],
+    [w, h / 2],
+    [w - HEX_TIP, h],
+    [HEX_TIP, h],
+    [0, h / 2],
+  ];
+}

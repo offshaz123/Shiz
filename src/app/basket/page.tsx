@@ -133,7 +133,7 @@ export default function BasketPage() {
           <span className="text-muted">Subtotal</span>
           <span className="font-display text-2xl font-bold">{money(subtotal)}</span>
         </div>
-        <p className="mt-1 text-sm text-muted">Free tracked delivery on orders of £34.99 or more. Next day delivery available at checkout.</p>
+        <p className="mt-1 text-sm text-muted">Free tracked delivery on orders of £100 or more. Next day delivery available at checkout.</p>
         <KlarnaNote amount={subtotal} className="mt-4" />
         <Link href="/checkout" className="btn btn-gold mt-5 w-full">
           Checkout

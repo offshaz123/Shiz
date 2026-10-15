@@ -10,10 +10,44 @@ export type FlagId = "uk" | "eng" | "sco" | "cym";
 export type BorderId = "none" | "black";
 export type FixingId = "none" | "pads" | "screws" | "both";
 export type DeliveryId = "standard" | "nextday";
+export type SizeId = "standard" | "hex4" | "hex5" | "hex6" | "hex7";
+export type MaterialId = "standard" | "premium";
 
-// Everything here is what we stock. Plates are standard car size only
-// (520 × 111mm).
-export const plateSize = { name: "Standard Car", mm: "520 × 111mm" };
+// Everything here is what we stock: the standard car plate (520 × 111mm) and
+// hex plates cut to the length of the registration. A hex plate's ends come
+// to a point, so it's a little longer than the characters need; `chars` is
+// the most characters (not counting the space) that fit. Hex plates have no
+// room for a flag or border.
+export const sizes: { id: SizeId; name: string; short: string; width: number; height: number; chars: number; hex: boolean }[] = [
+  { id: "standard", name: "Standard", short: "Standard", width: 520, height: 111, chars: 7, hex: false },
+  { id: "hex4", name: "Hex Plate – up to 4 characters", short: "Hex 4", width: 330, height: 111, chars: 4, hex: true },
+  { id: "hex5", name: "Hex Plate – 5 characters", short: "Hex 5", width: 390, height: 111, chars: 5, hex: true },
+  { id: "hex6", name: "Hex Plate – 6 characters", short: "Hex 6", width: 450, height: 111, chars: 6, hex: true },
+  { id: "hex7", name: "Hex Plate – 7 characters", short: "Hex 7", width: 520, height: 111, chars: 7, hex: true },
+];
+// Hex plates cost this much more than the same style in the standard shape.
+export const HEX_EXTRA = 1500;
+
+export const materials: { id: MaterialId; name: string; note: string; price: number }[] = [
+  { id: "standard", name: "Standard Acrylic", note: "Our everyday road-legal acrylic", price: 0 },
+  { id: "premium", name: "Premium Acrylic", note: "Thicker, high-gloss acrylic for a more premium finish", price: 399 },
+];
+
+export const sizeOf = (c: Pick<PlateConfig, "size">) => sizes.find((s) => s.id === c.size) ?? sizes[0];
+
+// Characters on the plate, not counting spaces (what decides the hex size).
+export const charCount = (text: string) => text.replace(/\s/g, "").length;
+
+// The smallest plate size that fits this text (hex only).
+export function hexSizeFor(text: string) {
+  const n = charCount(text);
+  return sizes.find((s) => s.hex && n <= s.chars) ?? null;
+}
+
+// Whether the text fits the chosen size.
+export function fitsSize(c: Pick<PlateConfig, "size" | "type" | "reg">) {
+  return charCount(plateText(c)) <= sizeOf(c).chars || !sizeOf(c).hex;
+}
 
 export const styles: {
   id: StyleId;
@@ -110,17 +144,17 @@ export const borders: { id: BorderId; name: string }[] = [
 export const fixings: { id: FixingId; name: string; note: string; price: number }[] = [
   { id: "none", name: "None", note: "", price: 0 },
   { id: "pads", name: "Sticky Pads", note: "Sticky fixing pads", price: 199 },
-  { id: "screws", name: "Screws", note: "Screws with matching caps", price: 249 },
+  { id: "screws", name: "Screws", note: "Screws with matching caps", price: 299 },
   { id: "both", name: "Sticky Pads & Screws", note: "Pads and screws kit", price: 399 },
 ];
 
 export const extrasPrice = {
   badge: 399,
-  border: 349,
+  border: 399,
 } as const;
 
-// Tracked delivery is free once the plates come to this much (£34.99).
-export const FREE_DELIVERY_FROM = 3499;
+// Tracked delivery is free once the plates come to this much (£100).
+export const FREE_DELIVERY_FROM = 10000;
 
 export const delivery: { id: DeliveryId; name: string; note: string; price: number }[] = [
   { id: "standard", name: "Tracked Delivery", note: "2–5 working days", price: 299 },
@@ -138,6 +172,8 @@ export function deliveryPrice(id: DeliveryId, subtotal: number) {
 export type PlateConfig = {
   type: PlateType;
   reg: string;
+  size: SizeId;
+  material: MaterialId;
   style: StyleId;
   which: WhichId;
   border: BorderId;
@@ -150,6 +186,8 @@ export type CartItem = PlateConfig & { id: string; qty: number };
 export const defaultConfig: PlateConfig = {
   type: "legal",
   reg: "",
+  size: "standard",
+  material: "standard",
   style: "3d-gel",
   which: "pair",
   border: "none",
@@ -219,8 +257,11 @@ export function isValidPlateText(c: Pick<PlateConfig, "type" | "reg">) {
 export function unitPrice(c: PlateConfig) {
   const style = styles.find((s) => s.id === c.style) ?? styles[0];
   let p = c.which === "pair" ? style.pair : style.single;
-  if (c.badge !== "none") p += extrasPrice.badge;
-  if (c.border !== "none") p += extrasPrice.border;
+  if (sizeOf(c).hex) p += HEX_EXTRA;
+  p += materials.find((m) => m.id === c.material)?.price ?? 0;
+  // Hex plates can't have a flag or border.
+  if (c.badge !== "none" && !sizeOf(c).hex) p += extrasPrice.badge;
+  if (c.border !== "none" && !sizeOf(c).hex) p += extrasPrice.border;
   p += fixings.find((f) => f.id === c.fixing)?.price ?? 0;
   return p;
 }
@@ -228,7 +269,11 @@ export function unitPrice(c: PlateConfig) {
 export function describe(c: PlateConfig) {
   const style = styles.find((s) => s.id === c.style)!;
   const which = whichPlates.find((w) => w.id === c.which)!;
-  const parts = [c.type === "show" ? "SHOW PLATE (not road legal)" : "Road Legal", style.name, which.name];
+  const parts = [c.type === "show" ? "SHOW PLATE (not road legal)" : "Road Legal"];
+  if (sizeOf(c).hex) parts.push(sizeOf(c).short);
+  parts.push(style.name);
+  if (c.material === "premium") parts.push("Premium Acrylic");
+  parts.push(which.name);
   const badge = badges.find((b) => b.id === c.badge)!;
   if (c.badge !== "none") parts.push(badge.name);
   if (c.border !== "none") parts.push("Black border");
@@ -262,19 +307,26 @@ function checkItem(raw: unknown, badgeList: { id: BadgeId }[]): CartItem | null 
   const badge = pick(r.badge, badgeList);
   const border = pick(r.border, borders);
   const fixing = pick(r.fixing, fixings);
+  // Older baskets and orders were all standard size and material.
+  const size = r.size === undefined ? "standard" : pick(r.size, sizes);
+  const material = r.material === undefined ? "standard" : pick(r.material, materials);
+  const hex = sizes.find((s) => s.id === size)?.hex ?? false;
   const reg = typeof r.reg === "string" ? r.reg : "";
   const type: PlateType = r.type === "show" ? "show" : "legal";
   const qty = Number(r.qty);
-  if (!style || !which || !badge || !border || !fixing) return null;
+  if (!style || !which || !badge || !border || !fixing || !size || !material) return null;
   if (!isValidPlateText({ type, reg }) || !Number.isInteger(qty) || qty < 1 || qty > 10) return null;
+  if (!fitsSize({ size, type, reg })) return null;
   return {
     type,
     id: typeof r.id === "string" ? r.id.slice(0, 40) : "",
     reg: plateText({ type, reg }),
+    size,
+    material,
     style,
     which,
-    badge,
-    border,
+    badge: hex ? "none" : badge,
+    border: hex ? "none" : border,
     fixing,
     qty,
   };

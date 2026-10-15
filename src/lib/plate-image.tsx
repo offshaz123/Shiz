@@ -1,15 +1,15 @@
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { ImageResponse } from "next/og";
-import { type BadgeId, type BorderId, type FlagId, type StyleId, badges, borders, cleanShowText, formatReg, styles } from "@/lib/plates";
+import { type BadgeId, type BorderId, type FlagId, type StyleId, badges, borders, cleanShowText, formatReg, sizes, styles } from "@/lib/plates";
 import { site } from "@/lib/site";
-import { CHAR_W, LEGAL_FONT, MARGIN, legalLayout, showFontSize } from "@/lib/plate-layout";
+import { CHAR_W, HEX_INSET, LEGAL_FONT, hexPoints, MARGIN, legalLayout, showFontSize } from "@/lib/plate-layout";
 
 // Draws a plate as a PNG for emails (email apps can't show the SVG preview).
 // Used by /api/plate-image and attached straight into order emails.
 
-const W = 1040;
-const H = 222;
+// 2 pixels per millimetre: a standard plate is 1040 × 222.
+const PX = 2;
 
 const flagSvg: Record<FlagId, string> = {
   uk: `<rect width="30" height="20" fill="#012169"/><path d="M0 0L30 20M30 0L0 20" stroke="#fff" stroke-width="4"/><path d="M0 0L30 20M30 0L0 20" stroke="#C8102E" stroke-width="1.4"/><path d="M15 0V20M0 10H30" stroke="#fff" stroke-width="6.4"/><path d="M15 0V20M0 10H30" stroke="#C8102E" stroke-width="3.6"/>`,
@@ -30,17 +30,27 @@ export async function renderPlate(q: URLSearchParams) {
   const raw = q.get("text") ?? "";
   const text = (type === "show" ? cleanShowText(raw).trim() : formatReg(raw)) || "YOUR REG";
   const style = styles.find((s) => s.id === (q.get("style") as StyleId)) ?? styles[0];
-  const badge = badges.find((b) => b.id === (q.get("badge") as BadgeId)) ?? badges[0];
-  const border = borders.find((b) => b.id === (q.get("border") as BorderId))?.id ?? "none";
+  const size = sizes.find((s) => s.id === q.get("size")) ?? sizes[0];
+  const { hex } = size;
+  // Hex plates have no flag or border.
+  const badge = hex ? badges[0] : (badges.find((b) => b.id === (q.get("badge") as BadgeId)) ?? badges[0]);
+  const border = hex ? "none" : (borders.find((b) => b.id === (q.get("border") as BorderId))?.id ?? "none");
   const rear = q.get("side") !== "front";
+  const W = size.width * PX;
+  const H = size.height * PX;
+  const plateColour = rear ? "#f6c500" : "#f8f8f5";
+  // The hex outline in pixels, 2px in so its edge isn't cut off.
+  const hexOutline = hexPoints(size.width - 2, size.height - 2)
+    .map(([x, y]) => `${(x + 1) * PX},${(y + 1) * PX}`)
+    .join(" ");
 
   font ??= readFile(join(process.cwd(), "src/assets/BarlowCondensed-SemiBold.ttf"));
   const fontData = await font;
 
   const bandW = badge.id === "none" ? 0 : 100;
   // The same layout as the website preview (PlatePreview), at 2px per mm.
-  const px = W / 520;
-  const available = (W - bandW) / px - MARGIN * 2;
+  const px = PX;
+  const available = (W - bandW) / px - MARGIN * 2 - (hex ? HEX_INSET * 2 : 0);
   const layout = type === "legal" ? legalLayout(text) : null;
   const scale = layout ? Math.min(1, available / layout.width) : 1;
   const fontSize = (layout ? LEGAL_FONT * scale : showFontSize(text, available, 2)) * px;
@@ -113,12 +123,29 @@ export async function renderPlate(q: URLSearchParams) {
           height: H,
           display: "flex",
           position: "relative",
-          borderRadius: 14,
-          background: rear ? "#f6c500" : "#f8f8f5",
-          backgroundImage: `linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 50%), linear-gradient(0deg, ${rear ? "#f6c500" : "#f8f8f5"}, ${rear ? "#f6c500" : "#f8f8f5"})`,
-          border: "2px solid rgba(0,0,0,0.15)",
+          // A hex plate is drawn as a shape underneath, with see-through corners.
+          ...(hex
+            ? {}
+            : {
+                borderRadius: 14,
+                border: "2px solid rgba(0,0,0,0.15)",
+                background: plateColour,
+                backgroundImage: `linear-gradient(180deg, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 50%), linear-gradient(0deg, ${plateColour}, ${plateColour})`,
+              }),
         }}
       >
+        {hex && (
+          <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ position: "absolute", left: 0, top: 0 }}>
+            <defs>
+              <linearGradient id="sheen" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stopColor="#fff" stopOpacity="0.35" />
+                <stop offset="0.5" stopColor="#fff" stopOpacity="0" />
+              </linearGradient>
+            </defs>
+            <polygon points={hexOutline} fill={plateColour} stroke="rgba(0,0,0,0.15)" strokeWidth="2" strokeLinejoin="round" />
+            <polygon points={hexOutline} fill="url(#sheen)" />
+          </svg>
+        )}
         {bandW > 0 && (
           <div
             style={{

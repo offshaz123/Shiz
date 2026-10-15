@@ -5,7 +5,7 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Delivery Policy",
-  description: "Tracked UK delivery in 2–5 working days, free on orders of £34.99 or more, or next day delivery. Same day dispatch before 2pm.",
+  description: "Tracked UK delivery in 2–5 working days, free on orders of £100 or more, or next day delivery. Same day dispatch before 2pm.",
   alternates: { canonical: "/delivery" },
 };
 

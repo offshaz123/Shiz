@@ -22,7 +22,12 @@ import {
   isValidPlateText,
   plateText,
   money,
-  plateSize,
+  HEX_EXTRA,
+  charCount,
+  fitsSize,
+  materials,
+  sizeOf,
+  sizes,
   styles,
   unitPrice,
   whichPlates, isValidReg } from "@/lib/plates";
@@ -31,7 +36,7 @@ const tabs = ["Size", "Style", "Additions"] as const;
 
 const trust = [
   { title: "DVLA Compliant", text: "BS AU 145e certified", icon: "M12 2 4 5v6c0 5 3.4 9.5 8 11 4.6-1.5 8-6 8-11V5l-8-3Z" },
-  { title: "FREE Delivery from £34.99", text: "Order before 2pm for same day dispatch", icon: "M3 7h11v9H3zM14 10h4l3 3v3h-7zM7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z", highlight: true },
+  { title: "FREE Delivery from £100", text: "Order before 2pm for same day dispatch", icon: "M3 7h11v9H3zM14 10h4l3 3v3h-7zM7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z", highlight: true },
   { title: "Made in UK", text: "Made to order in-house", icon: "M12 21s7-6 7-11a7 7 0 1 0-14 0c0 5 7 11 7 11Zm0-8a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" },
   { title: "Premium Materials", text: "High-impact acrylic, reflective", icon: "M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm-3.5 5.5L12 15l3.5 5.5L12 19l-3.5 1.5Z" },
 ];
@@ -40,6 +45,12 @@ const plateTypes: { id: PlateType; name: string; note: string; icon: string }[] 
   { id: "legal", name: "Road Legal", note: "DVLA compliant, BS AU 145e", icon: "M12 2 4 5v6c0 5 3.4 9.5 8 11 4.6-1.5 8-6 8-11V5l-8-3Zm-1 13-3.5-3.5 1.4-1.4 2.1 2.1 4.6-4.6 1.4 1.4L11 15Z" },
   { id: "show", name: "Show Plate", note: "Display / off-road use only", icon: "M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12Zm-3.5 5.5L12 15l3.5 5.5L12 19l-3.5 1.5Z" },
 ];
+
+// Keeps at most `max` letters and numbers (spaces don't count).
+function limitChars(text: string, max: number) {
+  let n = 0;
+  return [...text].filter((ch) => /\s/.test(ch) || ++n <= max).join("");
+}
 
 function Heading({ children, aside }: { children: React.ReactNode; aside?: React.ReactNode }) {
   return (
@@ -58,6 +69,7 @@ function Radio({
   label,
   price,
   boxed = false,
+  disabled = false,
 }: {
   name: string;
   checked: boolean;
@@ -65,16 +77,17 @@ function Radio({
   label: string;
   price?: number;
   boxed?: boolean;
+  disabled?: boolean;
 }) {
   return (
     <label
-      className={`flex cursor-pointer items-center gap-3 ${
+      className={`flex items-center gap-3 ${disabled ? "cursor-not-allowed opacity-45" : "cursor-pointer"} ${
         boxed
           ? `rounded-lg border px-3 py-2.5 text-sm ${checked ? "border-[#b8901f] bg-gold-soft" : "border-line bg-white hover:border-[#c9c6b8]"}`
           : "py-1.5"
       }`}
     >
-      <input type="radio" name={name} checked={checked} onChange={onChange} className="h-5 w-5 shrink-0 accent-[#8a6812]" />
+      <input type="radio" name={name} checked={checked} onChange={onChange} disabled={disabled} className="h-5 w-5 shrink-0 accent-[#8a6812]" />
       <span className="flex-1">{label}</span>
       {price ? <span className={boxed ? "font-semibold text-gold" : ""}>+{money(price)}</span> : null}
     </label>
@@ -104,6 +117,11 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
   const style = styles.find((s) => s.id === c.style)!;
   const fixing = fixings.find((f) => f.id === c.fixing)!;
   const badge = offeredBadges.find((b) => b.id === c.badge) ?? offeredBadges[0];
+  const size = sizeOf(c);
+  const material = materials.find((m) => m.id === c.material) ?? materials[0];
+  const fits = fitsSize(c);
+  const chars = charCount(plateText(c));
+  const sizeError = fits ? "" : `${plateText(c)} has ${chars} characters, too many for a ${size.short} plate. Choose a bigger size.`;
   const showFront = c.which !== "rear";
   const showRear = c.which !== "front";
   const platesPrice = c.which === "pair" ? style.pair : style.single;
@@ -126,6 +144,12 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
       document.getElementById("reg")?.focus({ preventScroll: true });
       return;
     }
+    if (!fits) {
+      setTab(0);
+      setStepError(sizeError.replace(/\.$/, ""));
+      document.getElementById("plate-steps")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
     const missed = tabs.findIndex((_, i) => !visited.includes(i));
     if (missed !== -1) {
       setTab(missed);
@@ -144,17 +168,20 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
     router.push("/basket");
   };
 
-  const sizeLabel = `${plateSize.name.replace(" Car", "")} (520mm x 111mm)`;
+  const sizeLabel = `${size.hex ? size.short : size.name} (${size.width}mm x ${size.height}mm)`;
   const summary: [string, string][] = [
     [c.type === "show" ? "Plate Text" : "Registration", plateText(c) || "-"],
     ["Plate Type", c.type === "show" ? "Show Plate" : "Road Legal"],
     ["Size", sizeLabel],
     ["Style", style.name],
+    ["Material", material.name],
     ["Quantity", c.which === "pair" ? "Front and Rear" : whichPlates.find((w) => w.id === c.which)!.name],
   ];
   const addOns: [string, number][] = [
-    ...(c.border !== "none" ? [["Black Border", extrasPrice.border] as [string, number]] : []),
-    ...(c.badge !== "none" ? [[badge.name, extrasPrice.badge] as [string, number]] : []),
+    ...(size.hex ? [["Hex shape", HEX_EXTRA] as [string, number]] : []),
+    ...(material.price ? [[material.name, material.price] as [string, number]] : []),
+    ...(c.border !== "none" && !size.hex ? [["Black Border", extrasPrice.border] as [string, number]] : []),
+    ...(c.badge !== "none" && !size.hex ? [[badge.name, extrasPrice.badge] as [string, number]] : []),
     ...(c.fixing !== "none" ? [[fixing.name, fixing.price] as [string, number]] : []),
   ];
 
@@ -202,13 +229,14 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                   value={c.reg}
                   onChange={(e) => {
                     const v = e.target.value.toUpperCase();
-                    set({ reg: c.type === "show" ? cleanShowText(v) : v });
+                    // A hex plate only fits so many characters: stop typing there.
+                    set({ reg: limitChars(c.type === "show" ? cleanShowText(v) : v, size.hex ? size.chars : Infinity) });
                     setRegError("");
                   }}
                   // Road-legal plates get the legal spacing; show plates keep it exactly as typed.
                   onBlur={() => c.reg && c.type === "legal" && set({ reg: formatReg(c.reg) })}
                   placeholder={c.type === "show" ? "Type anything" : "Enter registration"}
-                  maxLength={c.type === "show" ? SHOW_MAX : 9}
+                  maxLength={c.type === "show" ? SHOW_MAX : size.hex ? size.chars + 1 : 9}
                   autoComplete="off"
                   autoCapitalize="characters"
                   spellCheck={false}
@@ -225,7 +253,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                       ? `Show plate: any text, spaces wherever you like (up to ${SHOW_MAX} characters)`
                       : isValidReg(c.reg) && !/^[A-Z]{2}\d{2}[A-Z]{3}$/.test(c.reg.replace(/\s/g, ""))
                         ? "✓ Private registration recognised, spaced to DVLA rules"
-                        : "Max 7 characters for selected plate size"}
+                        : `Max ${size.chars} characters for selected plate size`}
                   </p>
                 )}
               </div>
@@ -330,25 +358,36 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                     )}
 
                     <Heading>Plate Size</Heading>
-                    <div className="flex items-center gap-4 rounded-xl border border-line bg-surface p-4">
-                      {/* A little plate outline with its measurements. */}
-                      <div className="w-28 shrink-0 text-center sm:w-36" aria-hidden>
-                        <div className="relative h-7 rounded border-2 border-ink/70 bg-[#f6c500] sm:h-8">
-                          <span className="absolute inset-0 flex items-center justify-center font-[family-name:var(--font-plate)] text-[11px] font-semibold tracking-wider text-[#14110b] sm:text-xs">
-                            520 × 111
-                          </span>
-                        </div>
-                        <div className="mt-1 flex items-center gap-1 text-[10px] text-muted">
-                          <span className="h-px flex-1 bg-current" />
-                          520mm
-                          <span className="h-px flex-1 bg-current" />
-                        </div>
-                      </div>
-                      <div>
-                        <p className="font-semibold">Standard UK car plate</p>
-                        <p className="text-sm text-muted">520mm × 111mm. Fits most cars.</p>
-                      </div>
-                    </div>
+                    <label htmlFor="plate-size" className="sr-only">
+                      Plate size
+                    </label>
+                    <select
+                      id="plate-size"
+                      className="field"
+                      value={c.size}
+                      onChange={(e) => {
+                        const next = sizes.find((s) => s.id === e.target.value) ?? sizes[0];
+                        // Hex plates have no room for a flag or border.
+                        set(next.hex ? { size: next.id, badge: "none", border: "none" } : { size: next.id });
+                        setStepError("");
+                      }}
+                    >
+                      {sizes.map((s) => (
+                        <option key={s.id} value={s.id}>
+                          {s.name} ({s.width} × {s.height}mm){s.hex ? ` · +${money(HEX_EXTRA)}` : ""}
+                        </option>
+                      ))}
+                    </select>
+                    <p className="mt-2 text-sm text-muted">
+                      {size.hex
+                        ? `A hex plate is cut to fit your registration (${size.width} × ${size.height}mm), with pointed ends. Road legal, with no room for a flag or border.`
+                        : "Standard UK car plate, 520 × 111mm. Fits most cars."}
+                    </p>
+                    {sizeError && (
+                      <p role="alert" className="mt-2 rounded-lg border border-[#f1c9a5] bg-[#fff5ec] p-3 text-sm font-semibold text-[#8a4a12]">
+                        {sizeError}
+                      </p>
+                    )}
 
                     <p className="mb-2 mt-5 text-sm font-semibold">Which plates do you need?</p>
                     <div className="grid grid-cols-2 gap-3">
@@ -402,16 +441,48 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                             />
                           </span>
                           <span className="mt-2 block font-semibold">{s.name}</span>
-                          <span className="block text-xs text-muted">{money(s.pair)} pair</span>
+                          <span className="block text-xs text-muted">{money(s.pair + (size.hex ? HEX_EXTRA : 0))} pair</span>
                         </label>
                       ))}
                     </div>
                     <p className="mt-3 text-sm text-muted">{style.blurb}</p>
+
+                    <Heading>Plate Material</Heading>
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      {materials.map((m) => (
+                        <label
+                          key={m.id}
+                          className={`flex cursor-pointer items-start gap-3 rounded-xl border-2 p-3 ${
+                            c.material === m.id ? "border-[#b8901f] bg-gold-soft" : "border-line bg-white hover:border-[#c9c6b8]"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="material"
+                            checked={c.material === m.id}
+                            onChange={() => set({ material: m.id })}
+                            className="mt-0.5 h-5 w-5 shrink-0 accent-[#8a6812]"
+                          />
+                          <span className="flex-1">
+                            <span className="flex justify-between gap-2 font-semibold">
+                              {m.name}
+                              <span className={m.price ? "text-gold" : "text-muted"}>{m.price ? `+${money(m.price)}` : "Included"}</span>
+                            </span>
+                            <span className="block text-sm text-muted">{m.note}</span>
+                          </span>
+                        </label>
+                      ))}
+                    </div>
                   </>
                 )}
 
                 {tab === 2 && (
                   <>
+                    {size.hex && (
+                      <p className="mb-4 rounded-lg border border-line bg-surface p-3 text-sm text-muted">
+                        Hex plates have no room for a border or flag, so those options are switched off.
+                      </p>
+                    )}
                     <Heading>Plate Border</Heading>
                     {borders.map((b) => (
                       <Radio
@@ -419,6 +490,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                         name="border"
                         checked={c.border === b.id}
                         onChange={() => set({ border: b.id })}
+                        disabled={size.hex && b.id !== "none"}
                         label={b.id === "none" ? "None" : "Black"}
                         price={b.id === "none" ? undefined : extrasPrice.border}
                       />
@@ -443,6 +515,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                             boxed
                             checked={c.badge === b.id}
                             onChange={() => set({ badge: b.id })}
+                            disabled={size.hex}
                             label={b.name}
                             price={extrasPrice.badge}
                           />

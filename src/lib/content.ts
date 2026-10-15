@@ -3,7 +3,7 @@ import type { StyleId } from "./plates";
 
 export const promos = [
   "Premium plates, handcrafted in-house",
-  "FREE tracked delivery on orders of £34.99 or more",
+  "FREE tracked delivery on orders of £100 or more",
   `Same-day dispatch when you order before ${site.dispatchCutoff}`,
   "100% road legal · BS AU 145e",
   "DVLA registered number plate supplier",
@@ -80,7 +80,7 @@ export const faqs: { q: string; a: string }[] = [
   },
   {
     q: "How long does delivery take?",
-    a: `Orders placed before ${site.dispatchCutoff} on a working day (once we have your documents) are made and dispatched the same day. Tracked delivery takes 2–5 working days and is free on orders of £34.99 or more (£2.99 below that), or choose Next Day Delivery for £6.99.`,
+    a: `Orders placed before ${site.dispatchCutoff} on a working day (once we have your documents) are made and dispatched the same day. Tracked delivery takes 2–5 working days and is free on orders of £100 or more (£2.99 below that), or choose Next Day Delivery for £6.99.`,
   },
   {
     q: "Are 3D gel and 4D plates legal?",
@@ -96,7 +96,19 @@ export const faqs: { q: string; a: string }[] = [
   },
   {
     q: "What size plates do you offer?",
-    a: "We make standard UK car plates (520 × 111mm), which fit the vast majority of cars.",
+    a: "Standard UK car plates (520 × 111mm), which fit the vast majority of cars, and hex plates cut to the length of your registration: up to 4 characters (330mm), 5 characters (390mm), 6 characters (450mm) and 7 characters (520mm). All are 111mm tall.",
+  },
+  {
+    q: "Are hex number plates road legal?",
+    a: "Yes. UK law sets the size, font and spacing of the characters, the margins around them and the BS AU 145e standard, not the shape of the plate. Our hex plates use the same legal characters, spacing and 11mm margins as a standard plate, with our name and BS AU 145e marked on every plate, so they're fully road legal. The only difference is the pointed ends, which leave no room for a flag or border, so hex plates come without them. They're very popular on short and private registrations, and the shorter sizes suit cars with a small plate recess.",
+  },
+  {
+    q: "Which hex plate size do I need?",
+    a: "Count the letters and numbers in your registration, not the space. AB12 CDE has 7, so it needs the 7-character hex plate. A private plate like K1 NGS has 5, so the 5-character hex plate fits it perfectly. The plate builder tells you if your registration is too long for the size you've picked.",
+  },
+  {
+    q: "What's the difference between standard and premium acrylic?",
+    a: "Both are road legal and BS AU 145e certified. Premium acrylic is thicker with a high-gloss finish, for a more premium look and feel. You choose it in the plate builder after picking your style, for £3.99 extra.",
   },
   {
     q: "Do the plates come with fittings?",

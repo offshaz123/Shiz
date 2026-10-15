@@ -12,7 +12,7 @@ import { site } from "@/lib/site";
 
 const features = [
   {
-    title: "Free Delivery From £34.99",
+    title: "Free Delivery From £100",
     text: `Tracked UK delivery · same day dispatch before ${site.dispatchCutoff}`,
     icon: "M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z",
   },
@@ -60,13 +60,20 @@ const showcase: (Partial<PlateConfig> & { caption: string })[] = [
   { reg: "EN07 UPS", style: "3d-gel", badge: "eng", caption: "3D Gel with England flag" },
 ];
 
+const hexShowcase: (Partial<PlateConfig> & { caption: string })[] = [
+  { reg: "MAX 1", size: "hex4", style: "4d-3mm", caption: "Hex 4 · 4D 3MM" },
+  { reg: "K1 NGS", size: "hex5", style: "7mm-gel", caption: "Hex 5 · 7MM Gel" },
+  { reg: "B16 BOY", size: "hex6", style: "3d-gel", caption: "Hex 6 · 3D Gel" },
+  { reg: "PL24 TED", size: "hex7", style: "4d-5mm", caption: "Hex 7 · 4D 5MM" },
+];
+
 // Re-check for newly approved reviews every few minutes.
 export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: { absolute: "Premium 3D Gel & 4D Number Plates | PlatedUp" },
   description:
-    "Design premium road-legal 3D gel and 4D number plates and show plates online. Handcrafted in Hornchurch, Essex. Same day dispatch, free delivery from £34.99.",
+    "Design premium road-legal 3D gel and 4D number plates and show plates online. Handcrafted in Hornchurch, Essex. Same day dispatch, free delivery from £100.",
   alternates: { canonical: "/" },
 };
 
@@ -119,7 +126,7 @@ export default function Home() {
         />
         <div className="relative mx-auto max-w-5xl px-4 py-10 text-center sm:px-6 sm:py-24">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-sm font-semibold">
-            ✦ Premium handcrafted plates · Free delivery from £34.99
+            ✦ Premium handcrafted plates · Free delivery from £100
           </span>
           <h1 className="mt-6 font-display text-5xl font-bold leading-[0.95] sm:text-7xl">
             UK Number Plates
@@ -191,6 +198,38 @@ export default function Home() {
                 {p.heading}
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Hex plates */}
+      <section className="bg-surface py-12 sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="text-center">
+            <span className="inline-block rounded-full bg-gold-soft px-4 py-1.5 text-sm font-semibold text-gold">New</span>
+            <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">Hex Number Plates</h2>
+            <p className="mx-auto mt-2 max-w-2xl text-muted">
+              Pointed ends and a plate cut to the length of your registration. Fully road legal, in every style from
+              printed to 7mm gel. Perfect for short and private plates.
+            </p>
+          </div>
+          <div className="mt-8 grid grid-cols-1 gap-4 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4">
+            {hexShowcase.map(({ caption, ...c }) => (
+              <div key={c.reg} className="flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
+                <div className="flex flex-1 items-center bg-surface-2/60 p-4 sm:p-5">
+                  <PlatePreview config={{ ...defaultConfig, ...c }} side="rear" className="w-full drop-shadow-md" />
+                </div>
+                <p className="p-3 text-sm font-semibold sm:p-4">{caption}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link href="/design?size=hex6" className="btn btn-gold">
+              Design Your Hex Plate
+            </Link>
+            <Link href="/faqs" className="btn btn-white">
+              Are hex plates legal?
+            </Link>
           </div>
         </div>
       </section>
