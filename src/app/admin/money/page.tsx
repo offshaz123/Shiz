@@ -5,6 +5,7 @@ import { isStripeConfigured } from "@/lib/stripe";
 import { type Movement, type Payout, balance, payoutMovements, recentMovements, recentPayouts } from "@/lib/stripe-money";
 import { type OrderMoney, dayString, orderMoney, parseDay } from "@/lib/order-money";
 import { statusLabels } from "@/lib/orders";
+import { type AdSpend, adSpend, isMetaAdsConfigured } from "@/lib/meta-ads";
 
 const DAY = 24 * 60 * 60 * 1000;
 
@@ -14,13 +15,30 @@ export const metadata = { title: "Money" };
 const gbp = (p: number) => `${p < 0 ? "−" : ""}£${(Math.abs(p) / 100).toFixed(2)}`;
 const day = (d: Date) => d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/London" });
 
+// Meta ad spend for the dates, or why it isn't showing.
+async function loadAds(from: Date, toDay: Date): Promise<AdSpend | { error: string }> {
+  if (!isMetaAdsConfigured()) return { error: "Not connected yet (add META_ADS_TOKEN in Hostinger)" };
+  try {
+    return await adSpend(from, toDay);
+  } catch (err) {
+    console.error("Loading Meta ad spend failed", err);
+    return { error: err instanceof Error ? err.message : "Couldn't reach Meta" };
+  }
+}
+
 async function load(from: Date, to: Date) {
-  const [bal, movements, payouts, perOrder] = await Promise.all([balance(), recentMovements(100), recentPayouts(6), orderMoney(from, to)]);
+  const [bal, movements, payouts, perOrder, ads] = await Promise.all([
+    balance(),
+    recentMovements(100),
+    recentPayouts(6),
+    orderMoney(from, to),
+    loadAds(from, new Date(to.getTime() - DAY)),
+  ]);
   const breakdowns = await Promise.all(payouts.map((p) => payoutMovements(p.id).catch(() => [] as Movement[])));
   // Refunds in a payout may refund a payment from an earlier one: match them to orders too.
   const orderOf = new Map(movements.filter((m) => m.orderRef).map((m) => [m.chargeId, m.orderRef]));
   const withOrders = (list: Movement[]) => list.map((m) => (m.orderRef ? m : { ...m, orderRef: orderOf.get(m.chargeId) ?? null }));
-  return { bal, movements, perOrder, payouts: payouts.map((p, i) => ({ ...p, items: withOrders(breakdowns[i]) })) };
+  return { bal, movements, perOrder, ads, payouts: payouts.map((p, i) => ({ ...p, items: withOrders(breakdowns[i]) })) };
 }
 
 function Stat({ label, value, note }: { label: string; value: string; note: string }) {
@@ -225,7 +243,7 @@ export default async function MoneyPage(props: PageProps<"/admin/money">) {
       </AdminShell>
     );
   }
-  const { bal, movements, payouts, perOrder } = data;
+  const { bal, movements, payouts, perOrder, ads } = data;
   // Totals for the chosen dates, from the per-order figures, plus anything Stripe
   // charged that isn't tied to an order (e.g. a paid Stripe feature).
   const end = new Date(toDay.getTime() + DAY);
@@ -241,7 +259,7 @@ export default async function MoneyPage(props: PageProps<"/admin/money">) {
 
   return (
     <AdminShell active="money">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         <Stat label="Waiting to clear" value={gbp(bal.pending)} note="Recent payments Stripe is still holding" />
         <Stat label="Ready for your bank" value={gbp(bal.available)} note="Goes out in your next payout" />
         <Stat
@@ -250,6 +268,22 @@ export default async function MoneyPage(props: PageProps<"/admin/money">) {
           note={`${rangeText} · Stripe fees ${gbp(-(stripeFees + otherCharges))} · Refunds ${gbp(-refunds)} · Packlink ${gbp(-delivery)}`}
         />
         <Stat label="You keep" value={gbp(kept)} note={`${rangeText} · after Stripe fees, refunds and Packlink delivery`} />
+        {"error" in ads ? (
+          <Stat label="Spent on Meta ads" value="-" note={ads.error} />
+        ) : (
+          <Stat
+            label="Spent on Meta ads"
+            value={gbp(ads.spend)}
+            note={`${rangeText} · ${ads.clicks} clicks · ${ads.purchases} purchase${ads.purchases === 1 ? "" : "s"}${
+              ads.purchases ? ` · ${gbp(Math.round(ads.spend / ads.purchases))} per purchase` : ""
+            }`}
+          />
+        )}
+        <Stat
+          label="Profit after ads"
+          value={"error" in ads ? "-" : gbp(kept - ads.spend)}
+          note={"error" in ads ? "Shows once Meta ads are connected" : `${rangeText} · what you keep minus ad spend (before the cost of making the plates)`}
+        />
       </div>
 
       <h2 className="mt-10 font-display text-2xl font-bold">What you keep from each order</h2>

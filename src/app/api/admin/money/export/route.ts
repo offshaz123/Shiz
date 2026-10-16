@@ -2,6 +2,7 @@ import { isAdmin } from "@/lib/auth";
 import { statusLabels } from "@/lib/orders";
 import { dayString, orderMoney, parseDay } from "@/lib/order-money";
 import { movementsBetween } from "@/lib/stripe-money";
+import { adSpend, isMetaAdsConfigured } from "@/lib/meta-ads";
 
 const DAY = 24 * 60 * 60 * 1000;
 const pounds = (p: number | null) => (p === null ? "" : (p / 100).toFixed(2));
@@ -19,7 +20,12 @@ export async function GET(req: Request) {
   // "To" includes that whole day.
   const to = new Date(parseDay(q.get("to"), now).getTime() + DAY);
   try {
-    const [orders, moves] = await Promise.all([orderMoney(from, to), movementsBetween(from, to)]);
+    const [orders, moves, ads] = await Promise.all([
+      orderMoney(from, to),
+      movementsBetween(from, to),
+      isMetaAdsConfigured() ? adSpend(from, new Date(to.getTime() - DAY)).catch(() => null) : Promise.resolve(null),
+    ]);
+    const kept = orders.reduce((n, o) => n + o.keep, 0);
     const lines = [
       row([`PlatedUp money, ${dayString(from)} to ${dayString(new Date(to.getTime() - DAY))}`]),
       "",
@@ -49,6 +55,9 @@ export async function GET(req: Request) {
         pounds(orders.reduce((n, o) => n + (o.delivery ?? 0), 0)),
         pounds(orders.reduce((n, o) => n + o.keep, 0)),
       ]),
+      "",
+      row(["Meta ad spend (£)", ads ? pounds(ads.spend) : "not connected"]),
+      row(["Profit after ads (£)", ads ? pounds(kept - ads.spend) : ""]),
       "",
       row(["EVERY STRIPE MOVEMENT"]),
       row(["Date", "What", "Why", "Order", "Amount (£)", "Stripe fee (£)", "Net (£)", "Clears"]),

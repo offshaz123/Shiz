@@ -65,6 +65,9 @@ export const announcement: { text: string; code: string } | null = {
 export const tracking = {
   // Meta (Facebook/Instagram) Pixel ID: Events Manager → Data sources, 15–16 digits.
   metaPixelId: "1088838000391366",
+  // Meta ad account (the number after "act=" in Ads Manager). Used to show ad
+  // spend on the admin Money page; needs META_ADS_TOKEN in the Hostinger settings.
+  metaAdAccountId: "1077776095076022",
   // Google Analytics 4 measurement ID, e.g. "G-ABC123XYZ".
   googleAnalyticsId: "G-4K6ZCCYTQ9",
   // Google Ads: conversion ID ("AW-123456789") and the label of the purchase conversion.
