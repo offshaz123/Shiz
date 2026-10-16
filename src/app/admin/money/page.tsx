@@ -251,7 +251,8 @@ export default async function MoneyPage(props: PageProps<"/admin/money">) {
         <DateRange from={fromText} to={toText} label="Download Excel sheet" />
       </div>
       <div className="mt-4 overflow-hidden rounded-2xl border border-line bg-white">
-        <OrdersTable rows={perOrder} />
+        {/* Newest orders first. */}
+        <OrdersTable rows={[...perOrder].reverse()} />
       </div>
 
       <h2 className="mt-10 font-display text-2xl font-bold">Payouts to your bank</h2>
