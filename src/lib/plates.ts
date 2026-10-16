@@ -157,7 +157,7 @@ export const extrasPrice = {
 export const FREE_DELIVERY_FROM = 10000;
 
 export const delivery: { id: DeliveryId; name: string; note: string; price: number }[] = [
-  { id: "standard", name: "Tracked Delivery", note: "2–5 working days", price: 299 },
+  { id: "standard", name: "Tracked Delivery", note: "2–5 working days", price: 499 },
   { id: "nextday", name: "Next Day Delivery", note: "Next working day · order before 2pm Mon–Fri", price: 699 },
 ];
 

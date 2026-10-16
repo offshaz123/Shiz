@@ -80,7 +80,7 @@ export const faqs: { q: string; a: string }[] = [
   },
   {
     q: "How long does delivery take?",
-    a: `Orders placed before ${site.dispatchCutoff} on a working day (once we have your documents) are made and dispatched the same day. Tracked delivery takes 2–5 working days and is free on orders of £100 or more (£2.99 below that), or choose Next Day Delivery for £6.99.`,
+    a: `Orders placed before ${site.dispatchCutoff} on a working day (once we have your documents) are made and dispatched the same day. Tracked delivery takes 2–5 working days and is free on orders of £100 or more (£4.99 below that), or choose Next Day Delivery for £6.99.`,
   },
   {
     q: "Are 3D gel and 4D plates legal?",
