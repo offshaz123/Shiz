@@ -6,7 +6,7 @@ import { AdminShell } from "@/components/AdminShell";
 import { StatusBadge } from "@/components/StatusBadge";
 import { AdminOrderActions } from "@/components/AdminOrderActions";
 import { PacklinkSend } from "@/components/PacklinkSend";
-import { isPacklinkConfigured, syncTrackingFromPacklink } from "@/lib/packlink";
+import { courierTracking, isPacklinkConfigured, syncTrackingFromPacklink } from "@/lib/packlink";
 import { PlatePreview } from "@/components/PlatePreview";
 import { docsLabels, getOrder, listDocuments } from "@/lib/orders";
 import { describe, money, unitPrice } from "@/lib/plates";
@@ -31,6 +31,11 @@ export default async function AdminOrderPage(props: PageProps<"/admin/orders/[re
   const found = await getOrder(ref);
   if (!found) notFound();
   const order = await syncTrackingFromPacklink(found);
+  // Once the label is bought in Packlink, its tracking number is ready to fill in when dispatching.
+  const packlinkTracking =
+    order.packlink_ref && !order.tracking_number && ["paid", "in_production"].includes(order.status)
+      ? await Promise.race([courierTracking(order.packlink_ref), new Promise<null>((r) => setTimeout(() => r(null), 5000))])
+      : null;
   const [docs, emails, events] = await Promise.all([listDocuments(order.id), listEmailLog(order.id), listOrderEvents(order.id)]);
   const waText = encodeURIComponent(`Hi ${order.customer_name.split(" ")[0]}, it's PlatedUp about your order ${order.ref}.`);
   const waPhone = order.phone.replace(/\D/g, "").replace(/^0/, "44");
@@ -97,6 +102,7 @@ export default async function AdminOrderPage(props: PageProps<"/admin/orders/[re
               canRefund={Boolean(order.stripe_session_id)}
               trackingNumber={order.tracking_number}
               trackingCarrier={order.tracking_carrier}
+              packlinkTracking={packlinkTracking}
             />
           </Card>
         </div>

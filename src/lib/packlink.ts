@@ -166,11 +166,17 @@ export async function courierTracking(reference: string): Promise<{ number: stri
   }
 }
 
-// Fills in (or corrects) the order's tracking number from Packlink: when it
-// has none yet but went through Packlink, or when Packlink's own reference was
-// saved by mistake. Gives up after a few seconds so pages never hang.
+// Fills in (or corrects) a dispatched order's tracking number from Packlink:
+// when it has none but went through Packlink, or when Packlink's own reference
+// was saved by mistake. Gives up after a few seconds so pages never hang.
 export async function syncTrackingFromPacklink(order: Order): Promise<Order> {
-  const reference = isPacklinkRef(order.tracking_number) ? order.tracking_number : !order.tracking_number ? order.packlink_ref : null;
+  // Before dispatch nothing is saved: the admin page offers Packlink's number
+  // when the order is marked dispatched instead.
+  const reference = isPacklinkRef(order.tracking_number)
+    ? order.tracking_number
+    : !order.tracking_number && order.status === "dispatched"
+      ? order.packlink_ref
+      : null;
   if (!reference || !isPacklinkConfigured()) return order;
   const found = await Promise.race([courierTracking(reference), new Promise<null>((r) => setTimeout(() => r(null), 5000))]);
   if (!found) return order;

@@ -22,6 +22,7 @@ export function AdminOrderActions({
   canRefund,
   trackingNumber,
   trackingCarrier,
+  packlinkTracking = null,
 }: {
   orderRef: string;
   status: OrderStatus;
@@ -31,6 +32,8 @@ export function AdminOrderActions({
   canRefund: boolean;
   trackingNumber: string | null;
   trackingCarrier: string | null;
+  // The courier tracking number Packlink has for this order, once its label is bought.
+  packlinkTracking?: { number: string; carrier: string | null } | null;
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState("");
@@ -39,9 +42,12 @@ export function AdminOrderActions({
   const [password, setPassword] = useState("");
   // The "dispatched" panel, with the parcel's tracking number.
   const [dispatching, setDispatching] = useState(false);
-  const [tracking, setTracking] = useState(trackingNumber ?? "");
+  // Filled in from Packlink when there's no tracking number yet.
+  const fromPacklink = !trackingNumber && packlinkTracking ? packlinkTracking : null;
+  const [tracking, setTracking] = useState(trackingNumber ?? fromPacklink?.number ?? "");
+  const startCarrier = trackingNumber ? trackingCarrier : (fromPacklink?.carrier ?? trackingCarrier);
   const [carrier, setCarrier] = useState<CarrierId>(
-    trackingCarrier && trackingCarrier in carriers ? (trackingCarrier as CarrierId) : "royalmail",
+    startCarrier && startCarrier in carriers ? (startCarrier as CarrierId) : "royalmail",
   );
   const refundable = canRefund && REFUNDABLE.includes(status);
   const amount = amountPaid !== null ? `£${(amountPaid / 100).toFixed(2)}` : "the payment";
@@ -148,6 +154,9 @@ export function AdminOrderActions({
             The customer gets the &ldquo;on its way&rdquo; email{tracking.trim() ? " with a Track my parcel button" : ""}. The tracking
             number is optional.
           </p>
+          {fromPacklink && tracking === fromPacklink.number && (
+            <p className="mt-2 text-sm font-semibold text-[#1f7a3d]">✓ Tracking number filled in from Packlink. Check it and press dispatch.</p>
+          )}
           <div className="mt-3 grid gap-2 sm:grid-cols-[160px_1fr]">
             <select className="field" value={carrier} onChange={(e) => setCarrier(e.target.value as CarrierId)} aria-label="Courier">
               {Object.entries(carriers).map(([id, c]) => (
