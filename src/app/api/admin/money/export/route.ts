@@ -30,7 +30,7 @@ export async function GET(req: Request) {
       row([`PlatedUp money, ${dayString(from)} to ${dayString(new Date(to.getTime() - DAY))}`]),
       "",
       row(["ORDERS"]),
-      row(["Date paid", "Order", "Customer", "Status", "Customer paid (£)", "Stripe fee (£)", "Refunded (£)", "Packlink delivery (£)", "You keep (£)"]),
+      row(["Date paid", "Order", "Customer", "Status", "Customer paid (£)", "Stripe fee (£)", "Refunded (£)", "Delivery option", "Customer paid for delivery (£)", "Packlink delivery (£)", "You keep (£)"]),
       ...orders.map((o) =>
         row([
           o.paidAt.toLocaleString("en-GB", { timeZone: "Europe/London" }),
@@ -40,6 +40,8 @@ export async function GET(req: Request) {
           pounds(o.paid),
           pounds(o.stripeFee),
           pounds(o.refunded),
+          o.deliveryName,
+          pounds(o.deliveryCharged),
           o.delivery === null ? (o.viaPacklink ? "label not bought yet" : "not sent via Packlink") : pounds(o.delivery),
           pounds(o.keep),
         ]),
@@ -52,6 +54,8 @@ export async function GET(req: Request) {
         pounds(orders.reduce((n, o) => n + o.paid, 0)),
         pounds(orders.reduce((n, o) => n + (o.stripeFee ?? 0), 0)),
         pounds(orders.reduce((n, o) => n + o.refunded, 0)),
+        "",
+        pounds(orders.reduce((n, o) => n + o.deliveryCharged, 0)),
         pounds(orders.reduce((n, o) => n + (o.delivery ?? 0), 0)),
         pounds(orders.reduce((n, o) => n + o.keep, 0)),
       ]),

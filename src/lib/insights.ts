@@ -1,0 +1,237 @@
+import { query } from "./db";
+import { type AdRow, type AdSpend, adSpend, adsByAd, isMetaAdsConfigured } from "./meta-ads";
+import { type Order, listOpenOrders, listOrdersCreatedBetween } from "./orders";
+import { orderMoney } from "./order-money";
+import { badges, sizeOf, styles } from "./plates";
+import type { OrderMoney } from "./order-money";
+
+// How the shop is doing over a period, compared with the period before, and
+// what to do about it. Read live from the orders, Stripe, Packlink and Meta.
+// Used by the admin Insights page and the Monday email.
+
+const DAY = 24 * 60 * 60 * 1000;
+const PAID = ["paid", "in_production", "dispatched"];
+const gbp = (p: number) => `£${(p / 100).toFixed(2)}`;
+
+export type Advice = { level: "good" | "warn" | "tip"; title: string; text: string };
+
+export type PeriodTotals = {
+  orders: number;
+  revenue: number;
+  keep: number;
+  adSpend: number | null;
+  costPerSale: number | null;
+  profit: number | null;
+};
+
+export type Insights = {
+  from: Date;
+  to: Date;
+  days: number;
+  now: PeriodTotals;
+  before: PeriodTotals;
+  avgOrder: number | null;
+  ads: AdSpend | null;
+  adsError: string | null;
+  perAd: AdRow[];
+  sellers: { styles: [string, number][]; hexShare: number; premiumShare: number; fixingShare: number; flagShare: number; plates: number };
+  abandoned: { ref: string; name: string; phone: string; email: string; total: number; when: Date }[];
+  docsWaiting: Order[];
+  noLabel: Order[];
+  askReview: { ref: string; name: string; phone: string; email: string; dispatched: Date }[];
+  approvedReviews: number;
+  deliveryLoss: number | null;
+  advice: Advice[];
+};
+
+async function totals(from: Date, to: Date, ads: AdSpend | null): Promise<PeriodTotals & { money: OrderMoney[] }> {
+  const money = await orderMoney(from, to);
+  const real = money.filter((o) => PAID.includes(o.status));
+  const revenue = real.reduce((n, o) => n + o.paid, 0);
+  const keep = money.reduce((n, o) => n + o.keep, 0);
+  const spend = ads ? ads.spend : null;
+  return {
+    orders: real.length,
+    revenue,
+    keep,
+    adSpend: spend,
+    costPerSale: spend !== null && real.length ? Math.round(spend / real.length) : null,
+    profit: spend !== null ? keep - spend : null,
+    money,
+  };
+}
+
+async function safeAds(from: Date, to: Date) {
+  if (!isMetaAdsConfigured()) return { ads: null, error: "Meta ads aren't connected (META_ADS_TOKEN)." };
+  try {
+    return { ads: await adSpend(from, new Date(to.getTime() - DAY)), error: null };
+  } catch (err) {
+    return { ads: null, error: err instanceof Error ? err.message : "Couldn't reach Meta" };
+  }
+}
+
+export async function getInsights(days: number, end = new Date()): Promise<Insights> {
+  // Whole days, ending today (UK date).
+  const to = new Date(Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate()) + DAY);
+  const from = new Date(to.getTime() - days * DAY);
+  const prevFrom = new Date(from.getTime() - days * DAY);
+
+  const [adsNow, adsBefore, perAd] = await Promise.all([
+    safeAds(from, to),
+    safeAds(prevFrom, from),
+    isMetaAdsConfigured() ? adsByAd(from, new Date(to.getTime() - DAY)).catch(() => [] as AdRow[]) : Promise.resolve([] as AdRow[]),
+  ]);
+  const [nowAll, beforeAll, started, open] = await Promise.all([
+    totals(from, to, adsNow.ads),
+    totals(prevFrom, from, adsBefore.ads),
+    listOrdersCreatedBetween(from, to),
+    listOpenOrders(),
+  ]);
+  const { money: nowMoney, ...now } = nowAll;
+  const before: PeriodTotals = { orders: beforeAll.orders, revenue: beforeAll.revenue, keep: beforeAll.keep, adSpend: beforeAll.adSpend, costPerSale: beforeAll.costPerSale, profit: beforeAll.profit };
+  const paid = started.filter((o) => PAID.includes(o.status));
+
+  // What sells.
+  const styleCount = new Map<string, number>();
+  let plates = 0;
+  let hex = 0;
+  let premium = 0;
+  let fixing = 0;
+  let flag = 0;
+  for (const o of paid)
+    for (const i of o.items) {
+      plates += i.qty;
+      const name = `${styles.find((s) => s.id === i.style)?.name ?? i.style}${sizeOf(i).hex ? ` (${sizeOf(i).short})` : ""}`;
+      styleCount.set(name, (styleCount.get(name) ?? 0) + i.qty);
+      if (sizeOf(i).hex) hex += i.qty;
+      if (i.material === "premium") premium += i.qty;
+      if (i.fixing !== "none") fixing += i.qty;
+      if (i.badge !== "none" && badges.some((b) => b.id === i.badge)) flag += i.qty;
+    }
+  const share = (n: number) => (plates ? n / plates : 0);
+
+  // Checkouts that weren't finished, unless the same person paid for another order since.
+  const paidEmails = new Set(
+    (await query<{ email: string }>("SELECT DISTINCT LOWER(email) AS email FROM orders WHERE status IN ('paid','in_production','dispatched') AND created_at >= ?", [from])).map((r) => r.email),
+  );
+  const abandoned = started
+    .filter((o) => (o.status === "expired" || (o.status === "pending" && Date.now() - new Date(o.created_at).getTime() > 2 * 60 * 60 * 1000)) && !paidEmails.has(o.email.toLowerCase()))
+    .map((o) => ({ ref: o.ref, name: o.customer_name, phone: o.phone, email: o.email, total: o.total, when: o.created_at }));
+
+  const docsWaiting = open.filter((o) => o.docs_status === "outstanding");
+  const noLabel = open.filter((o) => o.docs_status !== "outstanding" && !o.tracking_number && o.paid_at && Date.now() - new Date(o.paid_at).getTime() > DAY);
+
+  // Dispatched 3 to 21 days ago, from customers who haven't left a review.
+  const askReview = await query<{ ref: string; name: string; phone: string; email: string; dispatched: Date }>(
+    `SELECT o.ref, o.customer_name AS name, o.phone, o.email, d.dispatched
+     FROM orders o
+     JOIN (SELECT order_id, MAX(created_at) AS dispatched FROM order_events WHERE event = 'dispatched' GROUP BY order_id) d ON d.order_id = o.id
+     WHERE o.status = 'dispatched'
+       AND d.dispatched BETWEEN DATE_SUB(NOW(), INTERVAL 21 DAY) AND DATE_SUB(NOW(), INTERVAL 3 DAY)
+       AND LOWER(o.email) NOT IN (SELECT LOWER(email) FROM reviews)
+     ORDER BY d.dispatched DESC LIMIT 20`,
+  );
+  const approvedReviews = (await query<{ n: number }>("SELECT COUNT(*) AS n FROM reviews WHERE status = 'approved'"))[0]?.n ?? 0;
+
+  // Delivery: what customers paid for it against what Packlink charged.
+  const labelled = nowMoney.filter((o) => o.delivery !== null && PAID.includes(o.status));
+  const charged = labelled.reduce((n, o) => n + (paid.find((p) => p.ref === o.ref)?.delivery_price ?? 0), 0);
+  const deliveryLoss = labelled.length ? labelled.reduce((n, o) => n + (o.delivery ?? 0), 0) - charged : null;
+
+  const avgOrder = now.orders ? Math.round(now.revenue / now.orders) : null;
+  const sellers = {
+    styles: [...styleCount.entries()].sort((a, b) => b[1] - a[1]),
+    hexShare: share(hex),
+    premiumShare: share(premium),
+    fixingShare: share(fixing),
+    flagShare: share(flag),
+    plates,
+  };
+
+  const insights: Insights = {
+    from,
+    to,
+    days,
+    now,
+    before,
+    avgOrder,
+    ads: adsNow.ads,
+    adsError: adsNow.error,
+    perAd,
+    sellers,
+    abandoned,
+    docsWaiting,
+    noLabel,
+    askReview,
+    approvedReviews: Number(approvedReviews),
+    deliveryLoss,
+    advice: [],
+  };
+  insights.advice = advise(insights);
+  return insights;
+}
+
+// Plain-English advice from the figures, most important first.
+function advise(x: Insights): Advice[] {
+  const out: Advice[] = [];
+  const { now, before, ads } = x;
+  const period = x.days === 7 ? "this week" : `in the last ${x.days} days`;
+
+  // Things to do today come first.
+  if (x.docsWaiting.length)
+    out.push({ level: "warn", title: `${x.docsWaiting.length} paid order${x.docsWaiting.length > 1 ? "s are" : " is"} waiting for documents`, text: "You can't make road-legal plates without their V5C and ID. WhatsApp them a reminder (links below)." });
+  if (x.noLabel.length)
+    out.push({ level: "warn", title: `${x.noLabel.length} paid order${x.noLabel.length > 1 ? "s haven't" : " hasn't"} been dispatched after a day`, text: "Make them, buy the label in Packlink and mark them dispatched, so customers get their tracking." });
+  if (x.abandoned.length)
+    out.push({ level: "tip", title: `${x.abandoned.length} people started checkout but didn't pay (${gbp(x.abandoned.reduce((n, a) => n + a.total, 0))})`, text: "They already got one reminder email. A friendly WhatsApp (\"any questions about your plates?\") often wins a few back." });
+
+  // Sales.
+  if (now.orders === 0) out.push({ level: "warn", title: `No paid orders ${period}`, text: "Check the ads are running and the site works on your phone. Post a couple of TikTok or Instagram videos of your plates for free reach." });
+  else if (before.orders > 0) {
+    const change = Math.round(((now.revenue - before.revenue) / Math.max(before.revenue, 1)) * 100);
+    out.push(
+      change >= 0
+        ? { level: "good", title: `Sales up ${change}% on the period before`, text: `${now.orders} orders worth ${gbp(now.revenue)}, against ${before.orders} worth ${gbp(before.revenue)}.` }
+        : { level: "warn", title: `Sales down ${-change}% on the period before`, text: `${now.orders} orders worth ${gbp(now.revenue)}, against ${before.orders} worth ${gbp(before.revenue)}. Look at the ads below.` },
+    );
+  }
+
+  // Ads.
+  if (ads && now.costPerSale !== null) {
+    if (now.costPerSale > 2500)
+      out.push({ level: "warn", title: `Ads cost ${gbp(now.costPerSale)} per sale`, text: "That's too much for £40–£60 orders. Turn off the weakest ad (see the table), try a new one (hex plates are a fresh hook) or narrow the audience. Aim for under £15." });
+    else if (now.costPerSale <= 1500) out.push({ level: "good", title: `Ads cost ${gbp(now.costPerSale)} per sale`, text: "That's healthy. If it stays like this for a week, try raising the daily budget by about 20%." });
+    else out.push({ level: "tip", title: `Ads cost ${gbp(now.costPerSale)} per sale`, text: "Okay but not great. Aim for under £15 by keeping the best ad and replacing the weakest." });
+  } else if (ads && ads.spend > 2000 && now.orders === 0)
+    out.push({ level: "warn", title: `${gbp(ads.spend)} spent on ads with no sales`, text: "Something's off. Check the ads send people to platedup.co.uk and test buying on your phone." });
+  if (ads && ads.linkClicks > 30) {
+    const toCart = ads.addToCart / ads.linkClicks;
+    if (ads.addToCart === 0 || toCart < 0.05)
+      out.push({ level: "warn", title: "People click the ads but don't add plates to the basket", text: `${ads.linkClicks} clicks, ${ads.addToCart} added to basket. The ad may promise something the page doesn't show. Send ads straight to the plate builder and make sure prices match.` });
+    else if (ads.checkouts > 0 && ads.purchases / ads.checkouts < 0.3)
+      out.push({ level: "warn", title: "People reach checkout but don't pay", text: `${ads.checkouts} reached checkout, ${ads.purchases} paid. Delivery costs and the documents step are the usual reasons. The WhatsApp follow-ups help here.` });
+  }
+  for (const ad of x.perAd)
+    if (ad.spend >= 2000 && ad.purchases === 0 && ad.addToCart === 0)
+      out.push({ level: "tip", title: `Turn off "${ad.name}"`, text: `It has spent ${gbp(ad.spend)} with no sales or baskets. Let the money go to the ads that work.` });
+  const best = [...x.perAd].filter((a) => a.purchases > 0).sort((a, b) => a.spend / a.purchases - b.spend / b.purchases)[0];
+  if (best) out.push({ level: "good", title: `Best ad: "${best.name}"`, text: `${best.purchases} sale${best.purchases > 1 ? "s" : ""} at ${gbp(Math.round(best.spend / best.purchases))} each. Make more ads like it.` });
+
+  // Order value and what sells.
+  if (x.avgOrder !== null && x.avgOrder < 5000)
+    out.push({ level: "tip", title: `Average order is ${gbp(x.avgOrder)}`, text: "Raise it with the extras: premium acrylic, fixings and hex plates. Show a 4D or gel plate first in your ads; they're the higher-priced styles." });
+  if (x.sellers.styles[0]) out.push({ level: "tip", title: `Best seller: ${x.sellers.styles[0][0]}`, text: "Use it as the main picture in your next ad and on social media." });
+  if (x.sellers.plates >= 4 && x.sellers.fixingShare < 0.3)
+    out.push({ level: "tip", title: `Only ${Math.round(x.sellers.fixingShare * 100)}% of plates come with fixings`, text: "The basket already offers them. Mentioning \"fit them the day they arrive\" in posts helps too." });
+  if (x.deliveryLoss !== null && x.deliveryLoss > 0)
+    out.push({ level: "tip", title: `Delivery cost you ${gbp(x.deliveryLoss)} more than customers paid`, text: "Pick the cheapest courier in Packlink, or put more orders in the free delivery range." });
+
+  // Reviews.
+  if (x.askReview.length)
+    out.push({ level: "tip", title: `Ask ${x.askReview.length} customer${x.askReview.length > 1 ? "s" : ""} for a review`, text: "Their plates arrived a few days ago. Reviews make every ad and post work better (WhatsApp links below)." });
+  else if (x.approvedReviews < 5) out.push({ level: "tip", title: `You have ${x.approvedReviews} review${x.approvedReviews === 1 ? "" : "s"} on the site`, text: "Aim for 10. Ask every happy customer, and approve them in Admin → Reviews." });
+
+  const order = { warn: 0, tip: 1, good: 2 };
+  return out.sort((a, b) => order[a.level] - order[b.level]);
+}
+

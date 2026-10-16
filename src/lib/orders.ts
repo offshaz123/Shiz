@@ -156,6 +156,18 @@ export async function listOrders(opts: { status?: string; search?: string; limit
   return rows.map(parse);
 }
 
+// Every order started between two dates, whatever happened to it.
+export async function listOrdersCreatedBetween(from: Date, to: Date) {
+  const rows = await query<Row>(`SELECT ${COLUMNS} FROM orders WHERE created_at >= ? AND created_at < ? ORDER BY created_at DESC`, [from, to]);
+  return rows.map(parse);
+}
+
+// Orders still waiting on the shop: paid but not dispatched yet.
+export async function listOpenOrders() {
+  const rows = await query<Row>(`SELECT ${COLUMNS} FROM orders WHERE status IN ('paid', 'in_production') ORDER BY paid_at ASC`);
+  return rows.map(parse);
+}
+
 // Orders paid between two dates (including ones later refunded), oldest first.
 export async function listPaidOrdersBetween(from: Date, to: Date) {
   const rows = await query<Row>(`SELECT ${COLUMNS} FROM orders WHERE paid_at >= ? AND paid_at < ? ORDER BY paid_at ASC`, [from, to]);

@@ -131,6 +131,11 @@ const schema = [
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     INDEX (order_id)
   ) CHARACTER SET utf8mb4`,
+  // Monday report emails already sent, one row per week, so a restart never sends two.
+  `CREATE TABLE IF NOT EXISTS weekly_reports (
+    week CHAR(10) PRIMARY KEY,
+    sent_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  ) CHARACTER SET utf8mb4`,
   // The welcome offer advertised in the banner, added once when the table is
   // new (so it stays deleted if the shop removes it).
   `INSERT INTO discount_codes (code, title, kind, value, first_order_only)

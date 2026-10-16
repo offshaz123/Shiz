@@ -15,6 +15,9 @@ export type OrderMoney = {
   stripeFee: number | null;
   refunded: number;
   delivery: number | null;
+  // What the customer paid us for delivery, and which option they chose.
+  deliveryCharged: number;
+  deliveryName: string;
   // False when the order was never sent to Packlink (e.g. posted another way).
   viaPacklink: boolean;
   keep: number;
@@ -63,6 +66,8 @@ export async function orderMoney(from: Date, to: Date): Promise<OrderMoney[]> {
       stripeFee,
       refunded,
       delivery: delivery[i],
+      deliveryCharged: o.delivery_price,
+      deliveryName: o.delivery_name,
       viaPacklink: Boolean(o.packlink_ref),
       keep: paid - (stripeFee ?? 0) - refunded - (delivery[i] ?? 0),
     };

@@ -195,6 +195,70 @@ function OrdersTable({ rows }: { rows: OrderMoney[] }) {
   );
 }
 
+// Delivery money only: what customers paid for it against what Packlink charged.
+function DeliveryTable({ rows }: { rows: OrderMoney[] }) {
+  const list = rows.filter((o) => o.deliveryCharged > 0 || o.delivery !== null || o.viaPacklink);
+  const charged = list.reduce((n, o) => n + o.deliveryCharged, 0);
+  const labels = list.filter((o) => o.delivery !== null);
+  const cost = labels.reduce((n, o) => n + (o.delivery ?? 0), 0);
+  const chargedOnLabelled = labels.reduce((n, o) => n + o.deliveryCharged, 0);
+  const diff = chargedOnLabelled - cost;
+  return (
+    <>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <Stat label="Customers paid for delivery" value={gbp(charged)} note={`${list.length} order${list.length === 1 ? "" : "s"}`} />
+        <Stat label="Packlink charged you" value={gbp(-cost)} note={`${labels.length} label${labels.length === 1 ? "" : "s"} bought`} />
+        <Stat label="Average label" value={labels.length ? gbp(Math.round(cost / labels.length)) : "-"} note="What one Packlink label costs you" />
+        <Stat
+          label={diff >= 0 ? "Delivery profit" : "Delivery loss"}
+          value={gbp(diff)}
+          note={diff >= 0 ? "Customers paid more than the labels cost" : "Labels cost more than customers paid (free delivery counts here)"}
+        />
+      </div>
+      <div className="mt-4 overflow-x-auto rounded-2xl border border-line bg-white">
+        {list.length === 0 ? (
+          <p className="p-4 text-sm text-muted">No deliveries in these dates.</p>
+        ) : (
+          <table className="w-full min-w-[640px] text-sm">
+            <thead className="bg-surface text-left text-xs uppercase tracking-wider text-muted">
+              <tr>
+                <th className="p-3 font-semibold">Order</th>
+                <th className="p-3 font-semibold">Delivery chosen</th>
+                <th className="p-3 text-right font-semibold">Customer paid</th>
+                <th className="p-3 text-right font-semibold">Packlink charged</th>
+                <th className="p-3 text-right font-semibold">Difference</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...list].reverse().map((o) => {
+                const d = o.delivery === null ? null : o.deliveryCharged - o.delivery;
+                return (
+                  <tr key={o.ref} className="border-t border-line">
+                    <td className="p-3">
+                      <Link href={`/admin/orders/${o.ref}`} className="font-mono font-semibold text-gold underline">
+                        {o.ref}
+                      </Link>
+                      <span className="block text-xs text-muted">{day(o.paidAt)}</span>
+                    </td>
+                    <td className="p-3">{o.deliveryName}</td>
+                    <td className="whitespace-nowrap p-3 text-right">{o.deliveryCharged ? gbp(o.deliveryCharged) : "FREE"}</td>
+                    <td className="whitespace-nowrap p-3 text-right">
+                      {o.delivery === null ? <span className="text-xs text-muted">{o.viaPacklink ? "Label not bought yet" : "Not sent via Packlink"}</span> : gbp(-o.delivery)}
+                    </td>
+                    <td className={`whitespace-nowrap p-3 text-right font-bold ${d === null ? "text-muted" : d < 0 ? "text-[#b42318]" : "text-[#1f7a3d]"}`}>
+                      {d === null ? "-" : gbp(d)}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </>
+  );
+}
+
 function DateRange({ from, to, label }: { from: string; to: string; label: string }) {
   return (
     <form method="get" className="flex flex-wrap items-end gap-3">
@@ -296,6 +360,14 @@ export default async function MoneyPage(props: PageProps<"/admin/money">) {
       <div className="mt-4 overflow-hidden rounded-2xl border border-line bg-white">
         {/* Newest orders first. */}
         <OrdersTable rows={[...perOrder].reverse()} />
+      </div>
+
+      <h2 id="delivery" className="mt-10 font-display text-2xl font-bold">Delivery</h2>
+      <p className="mt-1 text-sm text-muted">
+        All delivery money for the same dates: what customers paid for delivery against what Packlink charged for each label.
+      </p>
+      <div className="mt-4">
+        <DeliveryTable rows={perOrder} />
       </div>
 
       <h2 className="mt-10 font-display text-2xl font-bold">Payouts to your bank</h2>
