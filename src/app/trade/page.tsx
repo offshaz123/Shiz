@@ -5,7 +5,7 @@ import { TradeForm } from "@/components/TradeForm";
 export const metadata: Metadata = {
   title: "Trade Number Plates for Dealers & Garages",
   description:
-    "Trade number plates for car dealers, garages, body shops and fleets. Trade prices, same day dispatch and road-legal plates made in Hornchurch. Enquire on WhatsApp.",
+    "Trade number plates for car dealers, garages, body shops and fleets. Trade prices, same day dispatch and road-legal plates made in Barking. Enquire on WhatsApp.",
   alternates: { canonical: "/trade" },
 };
 

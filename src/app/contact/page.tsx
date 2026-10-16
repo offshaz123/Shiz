@@ -7,7 +7,7 @@ import { site, whatsappHref } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Contact Us",
   description:
-    "Questions about your number plates? Message PlatedUp on WhatsApp or email us. Workshop at 10–12 Roneo Corner, Hornchurch RM12 4TN.",
+    "Questions about your number plates? Message PlatedUp on WhatsApp or email us. Based in Barking, IG11 9XY.",
   alternates: { canonical: "/contact" },
 };
 

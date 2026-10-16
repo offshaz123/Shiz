@@ -710,13 +710,13 @@ The best way to choose is to compare them side by side. Open the [plate builder]
   },
   {
     slug: "number-plates-hornchurch-romford",
-    title: "Number Plates in Hornchurch, Romford and East London",
+    title: "Number Plates in Barking, Ilford, Romford and East London",
     description:
-      "Need number plates in Hornchurch, Romford or East London? PlatedUp makes road-legal 3D gel and 4D plates at Roneo Corner, RM12.",
+      "Need number plates in Barking, Ilford, Romford or East London? PlatedUp makes road-legal 3D gel, 4D and hex plates in Barking, IG11.",
     date: "2026-10-24",
     category: "Local",
-    plate: { text: "RM12 4TN", style: "4d-5mm", badge: "eng", type: "show" },
-    body: `PlatedUp is based at **10–12 Roneo Corner, Hornchurch RM12 4TN**, where we make every plate ourselves on our own equipment. If you're local to Hornchurch, Romford, Upminster, Dagenham, Rainham, Elm Park or anywhere in East London and Essex, we've got you covered.
+    plate: { text: "IG11 9XY", style: "4d-5mm", badge: "eng", type: "show" },
+    body: `PlatedUp is based in **Barking, IG11 9XY**, where we make every plate ourselves on our own equipment. If you're local to Barking, Ilford, Hornchurch, Romford, Upminster, Dagenham, Rainham, Elm Park or anywhere in East London and Essex, we've got you covered.
 
 ## What we make
 
@@ -1060,11 +1060,11 @@ Order before 2pm on a working day and we'll make and dispatch your plates the **
     slug: "how-platedup-plates-are-made",
     title: "Behind the Scenes: How We Make Your Number Plates",
     description:
-      "Ever wondered how a 4D or gel number plate is made? Take a look inside the PlatedUp workshop in Hornchurch.",
+      "Ever wondered how a 4D or gel number plate is made? Take a look inside the PlatedUp workshop in Barking.",
     date: "2026-11-03",
     category: "Behind the Scenes",
     plate: { text: "PLATEDUP", style: "7mm-gel", type: "show" },
-    body: `Every PlatedUp plate is made to order in our workshop at **Roneo Corner in Hornchurch**. Here's what happens after you press "Pay".
+    body: `Every PlatedUp plate is made to order in our workshop in **Barking (IG11 9XY)**. Here's what happens after you press "Pay".
 
 ## 1. Checking your order
 

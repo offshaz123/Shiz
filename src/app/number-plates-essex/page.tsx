@@ -8,9 +8,9 @@ import { site, whatsappHref } from "@/lib/site";
 
 // Local page for people searching "number plates near me" around the workshop.
 export const metadata: Metadata = {
-  title: "Number Plates in Hornchurch, Romford & Essex",
+  title: "Number Plates in Barking, Ilford, Romford & Essex",
   description:
-    "Premium road-legal number plates made in Hornchurch. 3D gel, 4D and show plates for Romford, Upminster, Dagenham, Brentwood, East London and across Essex.",
+    "Premium road-legal number plates made in Barking (IG11). 3D gel, 4D, hex and show plates for Ilford, Dagenham, Romford, Hornchurch, East London and across Essex.",
   alternates: { canonical: "/number-plates-essex" },
 };
 
@@ -20,7 +20,7 @@ const areas = [
 ];
 
 const reasons = [
-  { title: "Made locally", text: "Every plate is made by hand in our workshop at Roneo Corner, Hornchurch." },
+  { title: "Made locally", text: "Every plate is made by hand in our workshop in Barking, IG11 9XY." },
   { title: "Same day dispatch", text: `Order before ${site.dispatchCutoff} on a working day and your plates are made and sent the same day.` },
   { title: "Fully road legal", text: "DVLA registered supplier. Every road-legal plate is made to BS AU 145e." },
   { title: `Free delivery from ${money(FREE_DELIVERY_FROM)}`, text: "Tracked delivery to your door, or next day delivery if you need them fast." },
@@ -32,7 +32,7 @@ const faqs = [
     a: `Our workshop is at ${site.address}. We make every plate there and send it out by tracked delivery.`,
   },
   {
-    q: "How quickly can I get number plates in Romford or Hornchurch?",
+    q: "How quickly can I get number plates in Barking, Ilford or Romford?",
     a: `Order before ${site.dispatchCutoff} on a working day and we dispatch the same day. Choose Next Day Delivery at checkout for the fastest service.`,
   },
   {
@@ -52,7 +52,7 @@ export default function EssexPage() {
     "@id": `${site.url}/#business`,
     name: site.name,
     url: `${site.url}/number-plates-essex`,
-    address: { "@type": "PostalAddress", streetAddress: "10–12 Roneo Corner", addressLocality: "Hornchurch", addressRegion: "Essex", postalCode: site.postcode, addressCountry: "GB" },
+    address: { "@type": "PostalAddress", addressLocality: "Barking", addressRegion: "Essex", postalCode: site.postcode, addressCountry: "GB" },
     areaServed: areas.map((name) => ({ "@type": "Place", name })),
   };
   const faqData = {
@@ -65,8 +65,8 @@ export default function EssexPage() {
     <>
       <JsonLd data={local} />
       <JsonLd data={faqData} />
-      <PageHero eyebrow="Hornchurch · Romford · Essex" title="Number Plates Near You">
-        Premium road-legal 3D gel and 4D number plates, handcrafted in our Hornchurch workshop.
+      <PageHero eyebrow="Barking · Ilford · Romford · Essex" title="Number Plates Near You">
+        Premium road-legal 3D gel and 4D number plates, handcrafted in our Barking workshop.
       </PageHero>
       <div className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
         <div className="mx-auto max-w-xl rounded-3xl border border-line bg-white p-5 shadow-xl shadow-black/5 sm:p-6">
@@ -85,9 +85,9 @@ export default function EssexPage() {
 
         <div className="mt-12 grid gap-8 lg:grid-cols-2">
           <div className="prose-plate">
-            <h2>Number plates for Hornchurch, Romford and beyond</h2>
+            <h2>Number plates for Barking, Ilford, Romford and beyond</h2>
             <p>
-              PlatedUp is a DVLA registered number plate supplier based at <strong>10–12 Roneo Corner, Hornchurch RM12 4TN</strong>.
+              PlatedUp is a DVLA registered number plate supplier based in <strong>Barking, IG11 9XY</strong>.
               We make premium plates for drivers across Havering, East London and Essex, from straight replacements to bold{" "}
               <Link href="/4d-plates" className="font-semibold text-[#8a6a12] underline">4D plates</Link>{" "}and glossy{" "}
               <Link href="/3d-gel-plates" className="font-semibold text-[#8a6a12] underline">3D gel plates</Link>.
@@ -110,7 +110,7 @@ export default function EssexPage() {
           <div className="overflow-hidden rounded-3xl border border-line">
             <iframe
               title="PlatedUp workshop on Google Maps"
-              src={`https://maps.google.com/maps?q=${encodeURIComponent("10-12 Roneo Corner, Hornchurch RM12 4TN")}&z=15&output=embed`}
+              src={`https://maps.google.com/maps?q=${encodeURIComponent("IG11 9XY")}&z=15&output=embed`}
               className="h-80 w-full lg:h-full lg:min-h-96"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"

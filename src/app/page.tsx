@@ -23,7 +23,7 @@ const features = [
   },
   {
     title: "Handcrafted In-House",
-    text: "Made and checked by hand in our Hornchurch workshop",
+    text: "Made and checked by hand in our Barking workshop",
     icon: "M3 7h11v9H3zM14 10h4l3 3v3h-7zM7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z",
   },
 ];
@@ -73,7 +73,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: { absolute: "Premium 3D Gel & 4D Number Plates | PlatedUp" },
   description:
-    "Design premium road-legal 3D gel and 4D number plates and show plates online. Handcrafted in Hornchurch, Essex. Same day dispatch, free delivery from £100.",
+    "Design premium road-legal 3D gel and 4D number plates and show plates online. Handcrafted in Barking, Essex. Same day dispatch, free delivery from £100.",
   alternates: { canonical: "/" },
 };
 
@@ -92,8 +92,7 @@ const business = {
   priceRange: "££",
   address: {
     "@type": "PostalAddress",
-    streetAddress: "10–12 Roneo Corner",
-    addressLocality: "Hornchurch",
+    addressLocality: "Barking",
     addressRegion: "Essex",
     postalCode: site.postcode,
     addressCountry: "GB",

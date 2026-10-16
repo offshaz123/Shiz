@@ -5,7 +5,7 @@ import { type SizeId, type StyleId, cleanShowText, formatReg, isValidReg, sizes,
 export const metadata: Metadata = {
   title: "Number Plate Builder: Design Your Plates Online",
   description:
-    "Design road-legal 2D, 3D gel and 4D number plates or show plates with a live preview. Made in Hornchurch, dispatched same day before 2pm.",
+    "Design road-legal 2D, 3D gel and 4D number plates or show plates with a live preview. Made in Barking, dispatched same day before 2pm.",
   alternates: { canonical: "/design" },
 };
 

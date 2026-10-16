@@ -10,9 +10,9 @@ export const site = {
   // WhatsApp number in international format without the + (447…).
   whatsapp: "447539559947",
   // Workshop address (shown publicly; not a home address).
-  address: "PlatedUp, 10–12 Roneo Corner, Hornchurch RM12 4TN",
+  address: "PlatedUp, Barking IG11 9XY",
   // Printed on every plate alongside the business name (a legal requirement).
-  postcode: "RM12 4TN",
+  postcode: "IG11 9XY",
   companyNumber: "",
   // When someone replies on WhatsApp. The shop itself takes orders 24/7.
   hours: "Mon–Fri 9am–6pm, Sat 10am–2pm",
