@@ -223,10 +223,15 @@ export async function sendCheckoutReminder(ref: string) {
   );
   if (recent.length) return;
   const token = randomBytes(16).toString("hex");
-  await execute("UPDATE orders SET resume_token = ? WHERE id = ?", [token, order.id]);
+  // Free delivery if they finish within 24 hours (the resume link applies it).
+  const freeDelivery = order.delivery_price > 0;
+  await execute(
+    `UPDATE orders SET resume_token = ?, free_delivery_until = ${freeDelivery ? "NOW() + INTERVAL 24 HOUR" : "NULL"} WHERE id = ?`,
+    [token, order.id],
+  );
   const resumeUrl = `${site.url}/api/order/resume?ref=${encodeURIComponent(order.ref)}&t=${token}`;
   const images = await emailImages(order);
-  const email = customerReminderEmail(order, resumeUrl, images ? "inline" : "web");
+  const email = customerReminderEmail(order, resumeUrl, images ? "inline" : "web", freeDelivery);
   const openToken = newToken();
   try {
     await sendMail({ to: order.email, subject: email.subject, text: email.text, html: withOpenTracker(email.html, openToken), attachments: images ?? [] });
@@ -235,6 +240,20 @@ export async function sendCheckoutReminder(ref: string) {
     console.error(`Checkout reminder for ${order.ref} failed`, err);
     await logEmail({ orderId: order.id, kind: "reminder", recipient: order.email, ok: false, error: err });
   }
+}
+
+// Takes the delivery charge off an unpaid order if the reminder email's
+// free delivery offer hasn't run out yet. Returns the order as it now stands.
+export async function applyFreeDeliveryOffer(order: Order) {
+  if (order.delivery_price === 0) return order;
+  const res = await execute(
+    `UPDATE orders SET total = total - delivery_price, delivery_price = 0
+     WHERE id = ? AND status IN ('pending', 'expired') AND delivery_price > 0 AND free_delivery_until > NOW()`,
+    [order.id],
+  );
+  if (res.affectedRows !== 1) return order;
+  await logOrderEvent(order.ref, "free_delivery");
+  return (await getOrder(order.ref)) ?? order;
 }
 
 // The resume link's secret, checked without leaking timing.

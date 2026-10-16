@@ -227,6 +227,66 @@ export default async function InsightsPage(props: PageProps<"/admin/insights">) 
         </div>
       </Section>
 
+      <Section
+        title="Reminder emails"
+        note="One hour after someone leaves checkout, they get an email offering free delivery if they finish within 24 hours."
+      >
+        <div className="grid gap-3 sm:grid-cols-4">
+          <Card label="Sent" value={String(x.reminders.length)}>
+            <span className="text-muted">people reminded</span>
+          </Card>
+          <Card label="Opened" value={String(x.reminders.filter((r) => r.opened).length)}>
+            <span className="text-muted">read the email</span>
+          </Card>
+          <Card label="Came back" value={String(x.reminders.filter((r) => r.clicked).length)}>
+            <span className="text-muted">pressed the link</span>
+          </Card>
+          <Card label="Paid" value={String(x.reminders.filter((r) => r.paid).length)}>
+            <span className="font-semibold text-[#1f7a3d]">{gbp(x.reminders.filter((r) => r.paid).reduce((n, r) => n + r.total, 0))} won back</span>
+          </Card>
+        </div>
+        {x.reminders.length > 0 && (
+          <div className="mt-4 overflow-x-auto rounded-2xl border border-line bg-white">
+            <table className="w-full text-sm">
+              <thead className="text-left text-xs uppercase tracking-wider text-muted">
+                <tr>
+                  <th className="p-3">Customer</th>
+                  <th className="p-3">Order</th>
+                  <th className="p-3">Emailed</th>
+                  <th className="p-3">What happened</th>
+                  <th className="p-3 text-right">Value</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-line">
+                {x.reminders.map((r) => (
+                  <tr key={r.ref}>
+                    <td className="p-3 font-semibold">{r.name}</td>
+                    <td className="p-3">
+                      <Link href={`/admin/orders/${r.ref}`} className="text-gold underline">
+                        {r.ref}
+                      </Link>
+                    </td>
+                    <td className="p-3">{day(r.sent)}</td>
+                    <td className="p-3">
+                      {r.paid ? (
+                        <span className="font-semibold text-[#1f7a3d]">{r.clicked ? "✓ Came back through the link and paid" : "✓ Paid after the reminder"}</span>
+                      ) : r.clicked ? (
+                        "Pressed the link, didn't pay"
+                      ) : r.opened ? (
+                        "Opened, didn't press the link"
+                      ) : (
+                        <span className="text-muted">Not opened yet</span>
+                      )}
+                    </td>
+                    <td className="p-3 text-right">{gbp(r.total)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Section>
+
       <Section title="Follow up today" note="One tap opens WhatsApp with a message ready to send.">
         <div className="grid gap-3 lg:grid-cols-3">
           <FollowUp

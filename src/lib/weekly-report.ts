@@ -26,6 +26,11 @@ export function weeklyReportEmail(x: Insights) {
     ["Ad spend", gbp(now.adSpend), x.ads ? `${x.ads.linkClicks} clicks · ${x.ads.purchases} purchases` : (x.adsError ?? "")],
     ["Ad cost per sale", gbp(now.costPerSale), change(now.costPerSale, before.costPerSale, true)],
     ["Profit after ads", gbp(now.profit), "after Stripe, refunds, Packlink and ads"],
+    [
+      "Reminder emails",
+      `${x.reminders.filter((r) => r.paid).length} of ${x.reminders.length} paid`,
+      `${x.reminders.filter((r) => r.clicked).length} came back · ${gbp(x.reminders.filter((r) => r.paid).reduce((n, r) => n + r.total, 0))} won back`,
+    ],
   ];
   const todo = x.advice.slice(0, 6);
   const range = `${x.from.toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "Europe/London" })} – ${new Date(x.to.getTime() - 1).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "Europe/London" })}`;

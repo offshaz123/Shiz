@@ -40,6 +40,9 @@ export type Insights = {
   noLabel: Order[];
   askReview: { ref: string; name: string; phone: string; email: string; dispatched: Date }[];
   approvedReviews: number;
+  // Reminder emails (with the 24-hour free delivery offer) sent in the period,
+  // and who opened them, clicked through, and paid.
+  reminders: { ref: string; name: string; phone: string; total: number; sent: Date; opened: boolean; clicked: boolean; paid: boolean }[];
   deliveryLoss: number | null;
   advice: Advice[];
 };
@@ -131,6 +134,16 @@ export async function getInsights(days: number, end = new Date()): Promise<Insig
        AND LOWER(o.email) NOT IN (SELECT LOWER(email) FROM reviews)
      ORDER BY d.dispatched DESC LIMIT 20`,
   );
+  const reminders = (
+    await query<{ ref: string; name: string; phone: string; status: string; total: number; sent: Date; opened_at: Date | null; clicked: number }>(
+      `SELECT o.ref, o.customer_name AS name, o.phone, o.status, COALESCE(o.amount_paid, o.total) AS total, e.created_at AS sent, e.opened_at,
+         EXISTS (SELECT 1 FROM order_events v WHERE v.order_id = o.id AND v.event = 'resumed') AS clicked
+       FROM email_log e JOIN orders o ON o.id = e.order_id
+       WHERE e.kind = 'reminder' AND e.status = 'sent' AND e.created_at >= ? AND e.created_at < ?
+       ORDER BY e.created_at DESC`,
+      [from, to],
+    )
+  ).map((r) => ({ ref: r.ref, name: r.name, phone: r.phone, total: Number(r.total), sent: r.sent, opened: Boolean(r.opened_at), clicked: Boolean(Number(r.clicked)), paid: PAID.includes(r.status) }));
   const approvedReviews = (await query<{ n: number }>("SELECT COUNT(*) AS n FROM reviews WHERE status = 'approved'"))[0]?.n ?? 0;
 
   // Delivery: what customers paid for it against what Packlink charged.
@@ -164,6 +177,7 @@ export async function getInsights(days: number, end = new Date()): Promise<Insig
     noLabel,
     askReview,
     approvedReviews: Number(approvedReviews),
+    reminders,
     deliveryLoss,
     advice: [],
   };
@@ -184,6 +198,10 @@ function advise(x: Insights): Advice[] {
     out.push({ level: "warn", title: `${x.noLabel.length} paid order${x.noLabel.length > 1 ? "s haven't" : " hasn't"} been dispatched after a day`, text: "Make them, buy the label in Packlink and mark them dispatched, so customers get their tracking." });
   if (x.abandoned.length)
     out.push({ level: "tip", title: `${x.abandoned.length} people started checkout but didn't pay (${gbp(x.abandoned.reduce((n, a) => n + a.total, 0))})`, text: "They already got one reminder email. A friendly WhatsApp (\"any questions about your plates?\") often wins a few back." });
+
+  const won = x.reminders.filter((r) => r.paid);
+  if (won.length)
+    out.push({ level: "good", title: `The reminder email won back ${won.length} order${won.length > 1 ? "s" : ""} (${gbp(won.reduce((n, r) => n + r.total, 0))})`, text: "People who left checkout came back through the free delivery link and paid." });
 
   // Sales.
   if (now.orders === 0) out.push({ level: "warn", title: `No paid orders ${period}`, text: "Check the ads are running and the site works on your phone. Post a couple of TikTok or Instagram videos of your plates for free reach." });

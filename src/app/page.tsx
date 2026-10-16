@@ -173,7 +173,7 @@ export default function Home() {
             <p className="mt-2 text-muted">From everyday cars to supercars, built your way.</p>
           </div>
           <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
-            {gallery.map((g, i) => (
+            {gallery.map((g) => (
               <figure key={g.src} className="overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
                 <Image
                   src={g.src}
@@ -181,7 +181,6 @@ export default function Home() {
                   width={900}
                   height={900}
                   sizes="(min-width: 1024px) 25vw, 50vw"
-                  priority={i < 2}
                   className="aspect-square w-full object-cover"
                 />
                 <figcaption className="p-3 text-sm font-semibold sm:p-4">{g.caption}</figcaption>

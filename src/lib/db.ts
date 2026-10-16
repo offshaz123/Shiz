@@ -159,6 +159,8 @@ const addedColumns: [table: string, column: string, definition: string][] = [
   ["orders", "packlink_error", "VARCHAR(500) NULL"],
   // What Packlink charged for the label (pence, with VAT), saved once it's bought.
   ["orders", "packlink_cost", "INT NULL"],
+  // Free delivery offered in the checkout reminder email, until this time.
+  ["orders", "free_delivery_until", "DATETIME NULL"],
 ];
 
 async function ensureSchema() {

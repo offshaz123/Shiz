@@ -52,9 +52,9 @@ export async function createCheckoutSession(opts: {
     // Stripe fills in {CHECKOUT_SESSION_ID} so the thank-you page can check the payment.
     success_url: `${base}/order-confirmed?ref=${opts.ref}&session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${base}/checkout`,
-    // An unpaid checkout closes after 2 hours; Stripe then tells us
+    // An unpaid checkout closes after 1 hour; Stripe then tells us
     // (checkout.session.expired) and we send the customer one reminder.
-    expires_at: String(Math.floor(Date.now() / 1000) + 2 * 60 * 60),
+    expires_at: String(Math.floor(Date.now() / 1000) + 60 * 60),
   });
   opts.lines.forEach((l, i) => {
     body.set(`line_items[${i}][quantity]`, String(l.qty));
