@@ -27,6 +27,11 @@ async function stripe(path: string, init?: { method?: string; body?: URLSearchPa
   return data;
 }
 
+// Read-only requests (balance, payouts, transactions) for the admin Money page.
+export function stripeGet(path: string) {
+  return stripe(path);
+}
+
 export async function createCheckoutSession(opts: {
   ref: string;
   email: string;
