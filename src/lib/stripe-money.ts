@@ -42,6 +42,9 @@ function paymentWhy(charge: Obj) {
   const pm = obj(charge.payment_method_details);
   const type = str(pm.type);
   if (type === "klarna") return "Paid with Klarna. Klarna payments cost more than cards (see Stripe → Settings → Pricing).";
+  if (type === "link")
+    return "Paid with Link, Stripe's one-click checkout using a card the customer saved with Stripe. Charged at the normal card rate (UK cards: 1.5% + 20p).";
+  if (type === "paypal") return "Paid with PayPal (see Stripe → Settings → Pricing for the rate).";
   const card = obj(pm.card);
   const country = str(card.country);
   const name = `${COUNTRY[country] ?? (country ? `${country}` : "")} ${brandName(str(card.brand))}${card.last4 ? ` ending ${str(card.last4)}` : ""}`.trim();
