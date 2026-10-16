@@ -83,6 +83,7 @@ keywords, dealership social strategy).
 - Review Gating: The Shortcut That Gets Your Listing Suspended (local search)
 - Meta & Instagram Ads for Landscapers and Garden Services (industry-specific)
 - Choosing the Right Primary Category on Google Business Profile (local search)
+- How Many Ad Creatives Do You Actually Need Each Month? (practical how-to)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -307,12 +308,14 @@ keywords, dealership social strategy).
 ## Backlog — practical how-to (added 2026-10-08 research round)
 - [x] Writing Location Pages That Aren't Just the Town Name Swapped — target: "location pages
       SEO", "service area pages thin content"
-- [ ] How Many Ad Creatives Do You Actually Need Each Month? — target: "how many Facebook ads to
+- [x] How Many Ad Creatives Do You Actually Need Each Month? — target: "how many Facebook ads to
       run at once", "creative refresh cadence"
 
 ## Backlog — comparison/explainer (added 2026-10-08 research round)
-- [ ] Broad Targeting vs Interests: Which Works for a Local Business Now? — target: "broad
-      targeting Facebook ads", "interest targeting vs broad audience"
+- [~] Broad Targeting vs Interests: Which Works for a Local Business Now? — DROPPED 2026-10-16.
+      "Advantage+ Audience: What Happened to Interest Targeting" already answers this, including
+      that detailed targeting is now a suggestion and creative does the filtering. A second page
+      would compete with it for the same searches.
 
 ## Notes for whoever (human or Routine) picks the next topic
 - Rotate categories — don't publish 3 industry guides in a row

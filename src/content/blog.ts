@@ -16,6 +16,89 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "how-many-ad-creatives-do-you-need-each-month",
+    title: "How Many Ad Creatives Do You Actually Need Each Month?",
+    description:
+      "The honest answer depends on your budget, not on a number from a blog post. Here is the arithmetic that tells you how many ads you can genuinely test.",
+    publishedAt: "2026-10-16",
+    keywords: [
+      "how many Facebook ads to run at once",
+      "creative refresh cadence",
+      "how many ad creatives do I need",
+      "testing Facebook ad creative small budget",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Everybody asks this and everybody gets given a number. Three a week. Five a month. Fifteen, if whoever is answering sells creative production.",
+          "None of those answers can be right, because the question has a missing variable. How many creatives you need depends almost entirely on how much you are spending, and the arithmetic takes about ten seconds.",
+        ],
+      },
+      {
+        heading: "The sum nobody does",
+        paragraphs: [
+          "Take your monthly ad budget and divide it by the number of adverts you are running. That is roughly what each one gets.",
+          "On £500 a month with five adverts live, each gets about £100 over a month, which is three pounds a day. Three pounds a day does not buy enough clicks and enquiries to tell you anything. At the end of the month one of them will have two enquiries and another will have none, and you will not know whether that is a better advert or a coin landing heads twice.",
+          "The same £500 behind two adverts gives each £250. Still not lavish, but now the difference between them might mean something.",
+          "So the real constraint is not how many creatives you can make. It is how many you can afford to give enough spend to produce a readable answer. Running more than that does not test faster, it just makes the results noisier.",
+        ],
+      },
+      {
+        heading: "What actually counts as a different creative",
+        paragraphs: [
+          "This is where most testing goes wrong, and it is why people conclude testing does not work.",
+          "Changing the headline font, swapping the button colour, moving the logo. These are not tests. They are near-identical adverts, and the difference between them is smaller than the random variation in who happens to see them.",
+          "A real test changes the argument.",
+        ],
+        bullets: [
+          "A finished job versus a person talking to camera",
+          "Leading on price versus leading on speed versus leading on not making a mess",
+          "A before-and-after versus a customer saying why they called you",
+          "A specific service versus a general one",
+          "A problem the customer recognises versus an offer",
+        ],
+      },
+      {
+        paragraphs: [
+          "Two adverts making genuinely different arguments will separate on a small budget. Five near-identical ones will not separate on any budget, because there is nothing there to find.",
+        ],
+      },
+      {
+        heading: "So, a number",
+        paragraphs: [
+          "With that said, here is a working rule rather than a law. For a local business on a few hundred pounds a month, two or three genuinely different concepts live at once, and one or two new ones introduced a month, is a sensible rhythm.",
+          "Spending more buys the room to run more at once. Spending less means fewer, not the same number spread thinner.",
+          "And if you are at the very bottom of the range, the honest answer is that you are not really in a position to test at all. Put everything behind the one advert you believe in most, get it working, and start testing when there is budget to learn from.",
+        ],
+      },
+      {
+        heading: "Making them without a studio",
+        paragraphs: [
+          "The reason people run near-identical adverts is that making genuinely different ones sounds like work. It is less than it sounds if you batch it.",
+          "One afternoon on site with a phone produces more than a month of posting. The finished job from three angles, thirty seconds of you explaining what was involved, a clip of the work happening, the van and the kit, the customer saying one sentence if they are willing.",
+          "That is five or six distinct starting points from one visit, and they are different in the way that matters, because they make different arguments rather than restyling the same one.",
+          "Film it as you go rather than setting aside a day for it. The day never happens.",
+        ],
+      },
+      {
+        heading: "When to replace one",
+        paragraphs: [
+          "Refresh on evidence, not on a calendar. Swapping out an advert because it has been four weeks is how people kill the one thing that was working.",
+          "What you are looking for is a clear, sustained rise in what each enquiry is costing you, over enough days that it is not just a quiet week. Not one bad Tuesday. Not a single day's figures.",
+          "And be careful about the diagnosis. Cost per enquiry rising is sometimes the advert tiring, and sometimes it is a seasonal shift, a competitor arriving, or something broken on the page it sends people to. Replacing the creative does not fix any of those, and you will have thrown away a good advert for nothing.",
+        ],
+      },
+      {
+        heading: "Leave the one that works alone",
+        paragraphs: [
+          "The last thing, and the one people find hardest.",
+          "When an advert is working, the urge is to improve it. Make a nicer version. Tidy the copy. Recut the video with better music. Then the new version does not perform as well as the one you replaced, and the original is gone or has lost its history.",
+          "If you want to try a better version, run it alongside rather than instead of. Most businesses do not have a creative problem, they have a problem leaving things alone long enough to find out whether they worked.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "choosing-the-right-primary-category-google-business-profile",
     title: "Choosing the Right Primary Category on Google Business Profile",
     description:
