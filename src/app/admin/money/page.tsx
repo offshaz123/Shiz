@@ -226,21 +226,30 @@ export default async function MoneyPage(props: PageProps<"/admin/money">) {
     );
   }
   const { bal, movements, payouts, perOrder } = data;
-  const now = new Date();
-  const month = movements.filter((m) => m.created.getMonth() === now.getMonth() && m.created.getFullYear() === now.getFullYear() && m.kind !== "payout");
-  const taken = month.filter((m) => m.kind === "payment").reduce((n, m) => n + m.amount, 0);
-  const fees = month.reduce((n, m) => n + m.fee, 0) + month.filter((m) => m.kind === "fee").reduce((n, m) => n - m.net, 0);
-  const refunds = month.filter((m) => m.kind === "refund" || m.kind === "dispute").reduce((n, m) => n - m.amount, 0);
-  const kept = month.reduce((n, m) => n + m.net, 0);
-  const monthName = now.toLocaleDateString("en-GB", { month: "long", timeZone: "Europe/London" });
+  // Totals for the chosen dates, from the per-order figures, plus anything Stripe
+  // charged that isn't tied to an order (e.g. a paid Stripe feature).
+  const end = new Date(toDay.getTime() + DAY);
+  const taken = perOrder.reduce((n, o) => n + o.paid, 0);
+  const stripeFees = perOrder.reduce((n, o) => n + (o.stripeFee ?? 0), 0);
+  const refunds = perOrder.reduce((n, o) => n + o.refunded, 0);
+  const delivery = perOrder.reduce((n, o) => n + (o.delivery ?? 0), 0);
+  const otherCharges = movements
+    .filter((m) => !m.orderRef && (m.kind === "fee" || m.kind === "dispute") && m.created >= from && m.created < end)
+    .reduce((n, m) => n - m.net, 0);
+  const kept = perOrder.reduce((n, o) => n + o.keep, 0) - otherCharges;
+  const rangeText = `${day(from)} – ${day(toDay)}`;
 
   return (
     <AdminShell active="money">
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Stat label="Waiting to clear" value={gbp(bal.pending)} note="Recent payments Stripe is still holding" />
         <Stat label="Ready for your bank" value={gbp(bal.available)} note="Goes out in your next payout" />
-        <Stat label={`Customers paid in ${monthName}`} value={gbp(taken)} note={`Stripe fees ${gbp(-fees)} · Refunds ${gbp(-refunds)}`} />
-        <Stat label={`You keep from ${monthName}`} value={gbp(kept)} note="After Stripe's fees and refunds" />
+        <Stat
+          label="Customers paid"
+          value={gbp(taken)}
+          note={`${rangeText} · Stripe fees ${gbp(-(stripeFees + otherCharges))} · Refunds ${gbp(-refunds)} · Packlink ${gbp(-delivery)}`}
+        />
+        <Stat label="You keep" value={gbp(kept)} note={`${rangeText} · after Stripe fees, refunds and Packlink delivery`} />
       </div>
 
       <h2 className="mt-10 font-display text-2xl font-bold">What you keep from each order</h2>
