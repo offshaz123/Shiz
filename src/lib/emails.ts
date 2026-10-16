@@ -487,7 +487,7 @@ export function customerReminderEmail(o: Order, resumeUrl: string, images: Image
       ${row("Total", money(offerTotal), true)}
     </table>
 
-    <p style="margin:24px 0 8px;text-align:center;">${button(resumeUrl, freeDelivery ? "Complete my order with free delivery" : "Complete my order", GOLD)}</p>
+    <p style="margin:24px 0 8px;text-align:center;">${button(resumeUrl, freeDelivery ? "Claim my free delivery" : "Complete my order", GOLD)}</p>
     <p style="font:13px/1.5 Arial,sans-serif;color:${MUTED};margin:0 0 20px;text-align:center;">Secure payment by Stripe${freeDelivery ? ". Free delivery applies for 24 hours from this email" : ""}${o.discount_code ? `. Your ${esc(o.discount_code)} discount is still applied` : ""}. Orders before ${site.dispatchCutoff} on a working day are dispatched the same day.</p>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:8px 0;background:#f1faf3;border:1px solid #cfe6d4;border-radius:12px;">
@@ -512,7 +512,7 @@ export function customerReminderEmail(o: Order, resumeUrl: string, images: Image
     `${o.delivery_name}: ${freeDelivery ? `FREE (was ${money(o.delivery_price)})` : o.delivery_price ? money(o.delivery_price) : "Free"}`,
     `Total: ${money(offerTotal)}`,
     "",
-    freeDelivery ? "FREE delivery if you check out in the next 24 hours:" : "",
+    freeDelivery ? "Claim FREE delivery (for the next 24 hours):" : "",
     `Complete your order: ${resumeUrl}`,
     "",
     `Questions? WhatsApp us: ${helpHref}`,

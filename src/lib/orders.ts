@@ -229,7 +229,7 @@ export async function sendCheckoutReminder(ref: string) {
     `UPDATE orders SET resume_token = ?, free_delivery_until = ${freeDelivery ? "NOW() + INTERVAL 24 HOUR" : "NULL"} WHERE id = ?`,
     [token, order.id],
   );
-  const resumeUrl = `${site.url}/api/order/resume?ref=${encodeURIComponent(order.ref)}&t=${token}`;
+  const resumeUrl = `${site.url}/complete-order?ref=${encodeURIComponent(order.ref)}&t=${token}`;
   const images = await emailImages(order);
   const email = customerReminderEmail(order, resumeUrl, images ? "inline" : "web", freeDelivery);
   const openToken = newToken();
@@ -243,17 +243,19 @@ export async function sendCheckoutReminder(ref: string) {
 }
 
 // Takes the delivery charge off an unpaid order if the reminder email's
-// free delivery offer hasn't run out yet. Returns the order as it now stands.
-export async function applyFreeDeliveryOffer(order: Order) {
-  if (order.delivery_price === 0) return order;
+// free delivery offer hasn't run out yet. Says whether the order now has the
+// offer ("claimed"), it ran out first ("ended"), or none was made.
+export async function claimFreeDelivery(order: Order) {
+  const rows = await query<{ until: Date | null }>("SELECT free_delivery_until AS until FROM orders WHERE id = ?", [order.id]);
+  if (!rows[0]?.until) return { order, offer: "none" as const };
   const res = await execute(
     `UPDATE orders SET total = total - delivery_price, delivery_price = 0
      WHERE id = ? AND status IN ('pending', 'expired') AND delivery_price > 0 AND free_delivery_until > NOW()`,
     [order.id],
   );
-  if (res.affectedRows !== 1) return order;
-  await logOrderEvent(order.ref, "free_delivery");
-  return (await getOrder(order.ref)) ?? order;
+  if (res.affectedRows === 1) await logOrderEvent(order.ref, "free_delivery");
+  const now = res.affectedRows === 1 ? ((await getOrder(order.ref)) ?? order) : order;
+  return { order: now, offer: now.delivery_price === 0 ? ("claimed" as const) : ("ended" as const) };
 }
 
 // The resume link's secret, checked without leaking timing.
