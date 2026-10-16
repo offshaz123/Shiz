@@ -154,3 +154,19 @@ export async function balance() {
     (Array.isArray(list) ? list : []).map(obj).filter((b) => str(b.currency) === "gbp").reduce((n, b) => n + num(b.amount), 0);
   return { pending: gbp(data.pending), available: gbp(data.available) };
 }
+
+// Every movement between two dates (oldest Stripe allows per page is 100, so
+// this pages through; capped so a huge range can't hang the page).
+export async function movementsBetween(from: Date, to: Date, max = 2000): Promise<Movement[]> {
+  const all: Movement[] = [];
+  let after = "";
+  const range = `created[gte]=${Math.floor(from.getTime() / 1000)}&created[lt]=${Math.floor(to.getTime() / 1000)}`;
+  while (all.length < max) {
+    const data = obj(await stripeGet(`balance_transactions?limit=100&${range}&${EXPAND}${after ? `&starting_after=${after}` : ""}`));
+    const page = (Array.isArray(data.data) ? data.data : []).map((t) => toMovement(obj(t)));
+    all.push(...page);
+    if (!data.has_more || page.length === 0) break;
+    after = page[page.length - 1].id;
+  }
+  return matchRefunds(all);
+}

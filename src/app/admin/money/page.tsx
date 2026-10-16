@@ -3,6 +3,10 @@ import { AdminShell } from "@/components/AdminShell";
 import { fmtDateTime, requireAdmin } from "@/lib/admin";
 import { isStripeConfigured } from "@/lib/stripe";
 import { type Movement, type Payout, balance, payoutMovements, recentMovements, recentPayouts } from "@/lib/stripe-money";
+import { type OrderMoney, dayString, orderMoney, parseDay } from "@/lib/order-money";
+import { statusLabels } from "@/lib/orders";
+
+const DAY = 24 * 60 * 60 * 1000;
 
 export const metadata = { title: "Money" };
 
@@ -10,13 +14,13 @@ export const metadata = { title: "Money" };
 const gbp = (p: number) => `${p < 0 ? "−" : ""}£${(Math.abs(p) / 100).toFixed(2)}`;
 const day = (d: Date) => d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/London" });
 
-async function load() {
-  const [bal, movements, payouts] = await Promise.all([balance(), recentMovements(100), recentPayouts(6)]);
+async function load(from: Date, to: Date) {
+  const [bal, movements, payouts, perOrder] = await Promise.all([balance(), recentMovements(100), recentPayouts(6), orderMoney(from, to)]);
   const breakdowns = await Promise.all(payouts.map((p) => payoutMovements(p.id).catch(() => [] as Movement[])));
   // Refunds in a payout may refund a payment from an earlier one: match them to orders too.
   const orderOf = new Map(movements.filter((m) => m.orderRef).map((m) => [m.chargeId, m.orderRef]));
   const withOrders = (list: Movement[]) => list.map((m) => (m.orderRef ? m : { ...m, orderRef: orderOf.get(m.chargeId) ?? null }));
-  return { bal, movements, payouts: payouts.map((p, i) => ({ ...p, items: withOrders(breakdowns[i]) })) };
+  return { bal, movements, perOrder, payouts: payouts.map((p, i) => ({ ...p, items: withOrders(breakdowns[i]) })) };
 }
 
 function Stat({ label, value, note }: { label: string; value: string; note: string }) {
@@ -119,8 +123,89 @@ function PayoutCard({ p }: { p: Payout & { items: Movement[] } }) {
   );
 }
 
-export default async function MoneyPage() {
+function OrdersTable({ rows }: { rows: OrderMoney[] }) {
+  if (rows.length === 0) return <p className="p-4 text-sm text-muted">No paid orders in these dates.</p>;
+  const sum = (f: (o: OrderMoney) => number) => rows.reduce((n, o) => n + f(o), 0);
+  return (
+    <div className="overflow-x-auto">
+      <table className="w-full min-w-[820px] text-sm">
+        <thead className="bg-surface text-left text-xs uppercase tracking-wider text-muted">
+          <tr>
+            <th className="p-3 font-semibold">Order</th>
+            <th className="p-3 font-semibold">Customer</th>
+            <th className="p-3 text-right font-semibold">Customer paid</th>
+            <th className="p-3 text-right font-semibold">Stripe fee</th>
+            <th className="p-3 text-right font-semibold">Refunded</th>
+            <th className="p-3 text-right font-semibold">Packlink delivery</th>
+            <th className="p-3 text-right font-semibold">You keep</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((o) => (
+            <tr key={o.ref} className="border-t border-line align-top">
+              <td className="p-3">
+                <Link href={`/admin/orders/${o.ref}`} className="font-mono font-semibold text-gold underline">
+                  {o.ref}
+                </Link>
+                <span className="block text-xs text-muted">
+                  {day(o.paidAt)} · {statusLabels[o.status]}
+                </span>
+              </td>
+              <td className="p-3">{o.customer}</td>
+              <td className="whitespace-nowrap p-3 text-right">{gbp(o.paid)}</td>
+              <td className="whitespace-nowrap p-3 text-right text-[#b42318]">{o.stripeFee === null ? <span className="text-muted">-</span> : gbp(-o.stripeFee)}</td>
+              <td className="whitespace-nowrap p-3 text-right text-[#b42318]">{o.refunded ? gbp(-o.refunded) : <span className="text-muted">-</span>}</td>
+              <td className="whitespace-nowrap p-3 text-right">
+                {o.delivery === null ? <span className="text-xs text-muted">{o.viaPacklink ? "Label not bought yet" : "Not sent via Packlink"}</span> : <span className="text-[#b42318]">{gbp(-o.delivery)}</span>}
+              </td>
+              <td className={`whitespace-nowrap p-3 text-right font-bold ${o.keep < 0 ? "text-[#b42318]" : "text-[#1f7a3d]"}`}>{gbp(o.keep)}</td>
+            </tr>
+          ))}
+          <tr className="border-t-2 border-line bg-surface font-bold">
+            <td className="p-3" colSpan={2}>
+              Total · {rows.length} order{rows.length === 1 ? "" : "s"}
+            </td>
+            <td className="whitespace-nowrap p-3 text-right">{gbp(sum((o) => o.paid))}</td>
+            <td className="whitespace-nowrap p-3 text-right text-[#b42318]">{gbp(-sum((o) => o.stripeFee ?? 0))}</td>
+            <td className="whitespace-nowrap p-3 text-right text-[#b42318]">{gbp(-sum((o) => o.refunded))}</td>
+            <td className="whitespace-nowrap p-3 text-right text-[#b42318]">{gbp(-sum((o) => o.delivery ?? 0))}</td>
+            <td className="whitespace-nowrap p-3 text-right text-[#1f7a3d]">{gbp(sum((o) => o.keep))}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function DateRange({ from, to, label }: { from: string; to: string; label: string }) {
+  return (
+    <form method="get" className="flex flex-wrap items-end gap-3">
+      <label className="block text-sm font-semibold">
+        From
+        <input type="date" name="from" defaultValue={from} className="field mt-1" />
+      </label>
+      <label className="block text-sm font-semibold">
+        To
+        <input type="date" name="to" defaultValue={to} className="field mt-1" />
+      </label>
+      <button type="submit" className="btn btn-white">
+        Show
+      </button>
+      <button type="submit" formAction="/api/admin/money/export" className="btn btn-gold">
+        {label}
+      </button>
+    </form>
+  );
+}
+
+export default async function MoneyPage(props: PageProps<"/admin/money">) {
   await requireAdmin();
+  const sp = await props.searchParams;
+  const today = new Date();
+  const from = parseDay(sp.from, new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1)));
+  const toDay = parseDay(sp.to, today);
+  const fromText = dayString(from);
+  const toText = dayString(toDay);
   if (!isStripeConfigured())
     return (
       <AdminShell active="money">
@@ -129,7 +214,7 @@ export default async function MoneyPage() {
     );
   let data: Awaited<ReturnType<typeof load>>;
   try {
-    data = await load();
+    data = await load(from, new Date(toDay.getTime() + DAY));
   } catch (err) {
     console.error("Loading Stripe money failed", err);
     return (
@@ -140,7 +225,7 @@ export default async function MoneyPage() {
       </AdminShell>
     );
   }
-  const { bal, movements, payouts } = data;
+  const { bal, movements, payouts, perOrder } = data;
   const now = new Date();
   const month = movements.filter((m) => m.created.getMonth() === now.getMonth() && m.created.getFullYear() === now.getFullYear() && m.kind !== "payout");
   const taken = month.filter((m) => m.kind === "payment").reduce((n, m) => n + m.amount, 0);
@@ -156,6 +241,17 @@ export default async function MoneyPage() {
         <Stat label="Ready for your bank" value={gbp(bal.available)} note="Goes out in your next payout" />
         <Stat label={`Customers paid in ${monthName}`} value={gbp(taken)} note={`Stripe fees ${gbp(-fees)} · Refunds ${gbp(-refunds)}`} />
         <Stat label={`You keep from ${monthName}`} value={gbp(kept)} note="After Stripe's fees and refunds" />
+      </div>
+
+      <h2 className="mt-10 font-display text-2xl font-bold">What you keep from each order</h2>
+      <p className="mt-1 text-sm text-muted">
+        What the customer paid, minus Stripe&apos;s fee, any refund and what Packlink charged for the label. Live from Stripe and Packlink.
+      </p>
+      <div className="mt-4">
+        <DateRange from={fromText} to={toText} label="Download Excel sheet" />
+      </div>
+      <div className="mt-4 overflow-hidden rounded-2xl border border-line bg-white">
+        <OrdersTable rows={perOrder} />
       </div>
 
       <h2 className="mt-10 font-display text-2xl font-bold">Payouts to your bank</h2>
@@ -177,6 +273,15 @@ export default async function MoneyPage() {
       </p>
       <div className="mt-4 overflow-hidden rounded-2xl border border-line bg-white">
         <Rows items={movements} showStatus />
+      </div>
+
+      <div className="mt-10 rounded-2xl border border-line bg-white p-5">
+        <h2 className="font-display text-2xl font-bold">Download a spreadsheet</h2>
+        <p className="mb-4 mt-1 text-sm text-muted">
+          Pick the dates and download every order (with Stripe fees, refunds, Packlink delivery and what you keep) and every Stripe movement.
+          Opens in Excel, Numbers or Google Sheets.
+        </p>
+        <DateRange from={fromText} to={toText} label="Download Excel sheet" />
       </div>
     </AdminShell>
   );

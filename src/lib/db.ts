@@ -152,6 +152,8 @@ const addedColumns: [table: string, column: string, definition: string][] = [
   // Packlink draft shipment made for the order, or why sending it failed.
   ["orders", "packlink_ref", "VARCHAR(40) NULL"],
   ["orders", "packlink_error", "VARCHAR(500) NULL"],
+  // What Packlink charged for the label (pence, with VAT), saved once it's bought.
+  ["orders", "packlink_cost", "INT NULL"],
 ];
 
 async function ensureSchema() {

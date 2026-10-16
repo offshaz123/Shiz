@@ -64,6 +64,7 @@ export type Order = {
   tracking_carrier: string | null;
   packlink_ref: string | null;
   packlink_error: string | null;
+  packlink_cost: number | null;
   created_at: Date;
   paid_at: Date | null;
 };
@@ -81,10 +82,10 @@ function parse(row: Row): Order {
 
 const COLUMNS = `id, ref, user_id, status, customer_name, email, phone, address1, address2, town, postcode, items,
   delivery_name, delivery_price, subtotal, discount_code, discount, total, amount_paid, card_brand, card_last4, stripe_session_id,
-  docs_status, tracking_number, tracking_carrier, packlink_ref, packlink_error, created_at, paid_at`;
+  docs_status, tracking_number, tracking_carrier, packlink_ref, packlink_error, packlink_cost, created_at, paid_at`;
 
 export async function createOrder(
-  o: Omit<Order, "id" | "created_at" | "paid_at" | "amount_paid" | "card_brand" | "card_last4" | "stripe_session_id" | "tracking_number" | "tracking_carrier" | "packlink_ref" | "packlink_error">,
+  o: Omit<Order, "id" | "created_at" | "paid_at" | "amount_paid" | "card_brand" | "card_last4" | "stripe_session_id" | "tracking_number" | "tracking_carrier" | "packlink_ref" | "packlink_error" | "packlink_cost">,
 ) {
   const res = await execute(
     `INSERT INTO orders (ref, user_id, status, customer_name, email, phone, address1, address2, town, postcode,
@@ -152,6 +153,12 @@ export async function listOrders(opts: { status?: string; search?: string; limit
     `SELECT ${COLUMNS} FROM orders ${where.length ? `WHERE ${where.join(" AND ")}` : ""} ORDER BY created_at DESC LIMIT ?`,
     params,
   );
+  return rows.map(parse);
+}
+
+// Orders paid between two dates (including ones later refunded), oldest first.
+export async function listPaidOrdersBetween(from: Date, to: Date) {
+  const rows = await query<Row>(`SELECT ${COLUMNS} FROM orders WHERE paid_at >= ? AND paid_at < ? ORDER BY paid_at ASC`, [from, to]);
   return rows.map(parse);
 }
 

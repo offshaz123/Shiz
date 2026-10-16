@@ -184,3 +184,29 @@ export async function syncTrackingFromPacklink(order: Order): Promise<Order> {
   await setTracking(order.ref, found.number, carrier);
   return { ...order, tracking_number: found.number, tracking_carrier: carrier };
 }
+
+// What Packlink charged for an order's label, in pence with VAT. Saved on the
+// order once the label is bought (it doesn't change after that); null while
+// the shipment is still a draft or the order didn't go through Packlink.
+export async function packlinkCost(order: Order): Promise<number | null> {
+  if (order.packlink_cost !== null) return order.packlink_cost;
+  if (!order.packlink_ref || !isPacklinkConfigured()) return null;
+  try {
+    const s = await call<Record<string, unknown>>("GET", `shipments/${encodeURIComponent(order.packlink_ref)}`);
+    const n = (v: unknown) => (typeof v === "number" ? v : typeof v === "string" && v.trim() !== "" ? Number(v) : NaN);
+    const price = s.price && typeof s.price === "object" ? (s.price as Record<string, unknown>) : null;
+    // Packlink has sent the price a few ways: a total, or a price plus VAT.
+    const total = price
+      ? (n(price.total_price) || n(price.base_price) + (n(price.total_taxes) || 0))
+      : n(s.price) || n(s.base_price) + (n(s.total_taxes) || 0);
+    const codes = [s.trackings, s.tracking_codes].find(Array.isArray) as unknown[] | undefined;
+    // Only a bought label has a final price (and a tracking number).
+    if (!codes?.length || !Number.isFinite(total) || total <= 0) return null;
+    const pence = Math.round(total * 100);
+    await execute("UPDATE orders SET packlink_cost = ? WHERE id = ?", [pence, order.id]);
+    return pence;
+  } catch (err) {
+    console.error(`Getting the Packlink price for ${order.ref} failed`, err instanceof Error ? err.message : err);
+    return null;
+  }
+}
