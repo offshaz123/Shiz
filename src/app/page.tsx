@@ -6,7 +6,7 @@ import { RegForm } from "@/components/RegForm";
 import { TrustBadges } from "@/components/TrustBadges";
 import { ReviewsSection } from "@/components/ReviewsSection";
 import { PlatePreview } from "@/components/PlatePreview";
-import { type PlateConfig, defaultConfig } from "@/lib/plates";
+import { PRICE_RISE, type PlateConfig, defaultConfig, money, styles, upcomingPrice } from "@/lib/plates";
 import { products } from "@/lib/content";
 import { site } from "@/lib/site";
 
@@ -103,6 +103,10 @@ const business = {
 const website = { "@context": "https://schema.org", "@type": "WebSite", name: site.name, url: site.url };
 
 export default function Home() {
+  const launchStyles = styles.flatMap((style) => {
+    const next = upcomingPrice(style.id);
+    return next ? [{ style, next }] : [];
+  });
   return (
     <>
       <JsonLd data={business} />
@@ -161,6 +165,42 @@ export default function Home() {
       <div className="border-b border-line bg-white py-5">
         <TrustBadges />
       </div>
+
+      {/* Launch prices, until the day they go up. */}
+      {launchStyles.length > 0 && (
+        <section className="border-b border-line bg-white py-10 sm:py-14">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6">
+            <div className="text-center">
+              <span className="inline-block rounded-full bg-[#fdecec] px-4 py-1.5 text-sm font-bold text-[#b42318]">
+                Launch prices until {PRICE_RISE.lastDay}
+              </span>
+              <h2 className="mt-3 font-display text-3xl font-bold sm:text-4xl">Get Our Launch Prices While They Last</h2>
+              <p className="mx-auto mt-2 max-w-2xl text-muted">
+                These plates go up on {PRICE_RISE.label}. Order by {PRICE_RISE.lastDay} to pay today&apos;s price.
+              </p>
+            </div>
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              {launchStyles.map(({ style, next }) => (
+                <Link
+                  key={style.id}
+                  href={`/design?style=${style.id}`}
+                  className="rounded-2xl border border-line bg-surface p-5 text-center transition-colors hover:border-[#b8901f]"
+                >
+                  <PlatePreview config={{ ...defaultConfig, reg: "PL24 TED", style: style.id }} side="rear" className="w-full drop-shadow-md" />
+                  <p className="mt-4 font-display text-2xl font-bold">{style.name}</p>
+                  <p className="mt-1">
+                    <span className="gold-text font-display text-3xl font-bold">{money(style.pair)}</span>
+                    <span className="text-muted"> a pair</span>
+                  </p>
+                  <p className="mt-1 text-sm font-semibold text-[#b42318]">
+                    Goes up to {money(next.pair)} on {PRICE_RISE.label}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Gallery */}
       <section className="bg-surface py-12 sm:py-20">

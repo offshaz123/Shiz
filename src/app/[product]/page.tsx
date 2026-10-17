@@ -8,8 +8,11 @@ import { FREE_DELIVERY_FROM, defaultConfig, delivery, extrasPrice, fixings, mone
 import { products } from "@/lib/content";
 import { site } from "@/lib/site";
 import { KlarnaNote } from "@/components/Klarna";
+import { LaunchPrice } from "@/components/LaunchPrice";
 
 export const dynamicParams = false;
+// Rebuilt hourly so launch prices switch over on the day they rise.
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return products.map((p) => ({ product: p.slug }));
@@ -64,6 +67,7 @@ export default async function ProductPage(props: PageProps<"/[product]">) {
               <span className="gold-text">{money(from.pair)}</span>
               <span className="text-lg font-medium text-muted"> a pair</span>
             </p>
+            <LaunchPrice id={from.id} className="mt-1 text-sm" />
             <KlarnaNote amount={from.pair} className="mt-3" />
             <ul className="mt-6 space-y-2">
               {p.points.map((pt) => (
@@ -106,6 +110,7 @@ export default async function ProductPage(props: PageProps<"/[product]">) {
                     <td className="p-4 text-right">
                       {money(st.pair)} pair
                       <span className="block text-sm text-muted">{money(st.single)} single</span>
+                      <LaunchPrice id={st.id} />
                     </td>
                   </tr>
                 ))}

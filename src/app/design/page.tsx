@@ -3,6 +3,9 @@ import { Suspense } from "react";
 import { Builder } from "@/components/Builder";
 import { DesignFromLink } from "@/components/DesignFromLink";
 
+// Rebuilt hourly so launch prices switch over on the day they rise.
+export const revalidate = 3600;
+
 export const metadata: Metadata = {
   title: "Number Plate Builder: Design Your Plates Online",
   description:

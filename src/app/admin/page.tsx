@@ -6,6 +6,8 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { listCustomers, listOrders, refreshPendingPayments, statusLabels } from "@/lib/orders";
 import { isStripeConfigured } from "@/lib/stripe";
 import { receiptSummary } from "@/lib/email-log";
+import { daysUntilPriceRise, priceRiseSummary } from "@/lib/price-rise";
+import { PRICE_RISE } from "@/lib/plates";
 import { listAccounts } from "@/lib/orders";
 import { money } from "@/lib/plates";
 import { cardLine } from "@/lib/emails";
@@ -60,8 +62,22 @@ export default async function AdminPage(props: PageProps<"/admin">) {
     { label: "Customers", value: String(customers.length), note: `${accounts.length} with accounts` },
   ];
 
+  const riseDays = daysUntilPriceRise(now);
+
   return (
     <AdminShell active="orders">
+      {riseDays !== null && riseDays <= 7 && (
+        <div className="mb-6 rounded-2xl border border-[#e8d89a] bg-[#fdf8e7] p-4">
+          <p className="font-semibold">
+            Launch prices go up on {PRICE_RISE.label} ({riseDays === 1 ? "tomorrow" : `in ${riseDays} days`}). These go up automatically:
+          </p>
+          <ul className="mt-1 list-disc pl-5 text-sm">
+            {priceRiseSummary().map((l) => (
+              <li key={l}>{l}</li>
+            ))}
+          </ul>
+        </div>
+      )}
       <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
         {stats.map((s) => (
           <div key={s.label} className={`rounded-2xl border bg-white p-4 ${s.warn ? "border-[#f1b4a5]" : "border-line"}`}>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PlatePreview } from "./PlatePreview";
+import { LaunchPrice } from "./LaunchPrice";
 import { DispatchCountdown } from "./DispatchCountdown";
 import { useCart } from "@/lib/cart";
 import { trackAddToCart, trackViewBuilder } from "@/lib/track";
@@ -479,6 +480,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                           </span>
                           <span className="mt-2 block font-semibold">{s.name}</span>
                           <span className="block text-xs text-muted">{money(s.pair + (size.hex ? HEX_EXTRA : 0))} pair</span>
+                          <LaunchPrice id={s.id} extra={size.hex ? HEX_EXTRA : 0} className="mt-0.5 text-[11px] leading-tight" />
                         </label>
                       ))}
                     </div>

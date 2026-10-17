@@ -49,6 +49,36 @@ export function fitsSize(c: Pick<PlateConfig, "size" | "type" | "reg">) {
   return charCount(plateText(c)) <= sizeOf(c).chars || !sizeOf(c).hex;
 }
 
+// Launch prices: these styles go up on PRICE_RISE.at. Until then the site
+// shows "Launch price, goes up to £X on 10 November" next to them; from
+// then on the higher price is charged everywhere, automatically.
+export const PRICE_RISE = {
+  at: new Date("2026-11-10T00:00:00Z"), // midnight UK time (GMT in November)
+  label: "10 November",
+  // The last day customers can order at the launch price.
+  lastDay: "Sunday 9 November",
+  prices: {
+    "3d-gel": { pair: 4999, single: 2899 },
+    "4d-3mm": { pair: 5499, single: 3199 },
+    "4d-5mm": { pair: 5999, single: 3499 },
+  } as Partial<Record<StyleId, { pair: number; single: number }>>,
+};
+
+export function pricesHaveRisen(now = new Date()) {
+  return now >= PRICE_RISE.at;
+}
+
+// The price a style is going up to, while it's still on its launch price.
+export function upcomingPrice(id: StyleId, now = new Date()) {
+  return pricesHaveRisen(now) ? null : (PRICE_RISE.prices[id] ?? null);
+}
+
+// A style's price today: the launch price, or the new price once it has risen.
+function priceNow(id: StyleId, launch: { pair: number; single: number }) {
+  const risen = pricesHaveRisen() ? PRICE_RISE.prices[id] : undefined;
+  return risen ?? launch;
+}
+
 export const styles: {
   id: StyleId;
   name: string;
@@ -74,8 +104,12 @@ export const styles: {
     blurb: "Raised, glossy resin gel letters that catch the light.",
     look: "gel",
     depth: 1,
-    pair: 3999,
-    single: 2399,
+    get pair() {
+      return priceNow("3d-gel", { pair: 3999, single: 2399 }).pair;
+    },
+    get single() {
+      return priceNow("3d-gel", { pair: 3999, single: 2399 }).single;
+    },
   },
   {
     id: "4d-3mm",
@@ -83,8 +117,12 @@ export const styles: {
     blurb: "3mm laser-cut acrylic letters for a sharp, raised look.",
     look: "acrylic",
     depth: 1.6,
-    pair: 4499,
-    single: 2699,
+    get pair() {
+      return priceNow("4d-3mm", { pair: 4499, single: 2699 }).pair;
+    },
+    get single() {
+      return priceNow("4d-3mm", { pair: 4499, single: 2699 }).single;
+    },
   },
   {
     id: "4d-5mm",
@@ -92,8 +130,12 @@ export const styles: {
     blurb: "Deeper 5mm laser-cut acrylic letters for a bolder finish.",
     look: "acrylic",
     depth: 2.6,
-    pair: 4999,
-    single: 2999,
+    get pair() {
+      return priceNow("4d-5mm", { pair: 4999, single: 2999 }).pair;
+    },
+    get single() {
+      return priceNow("4d-5mm", { pair: 4999, single: 2999 }).single;
+    },
   },
   {
     id: "5mm-gel",
