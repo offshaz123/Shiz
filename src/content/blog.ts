@@ -16,6 +16,89 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-for-wedding-and-event-businesses",
+    title: "Meta & Instagram Ads for Wedding and Event Businesses",
+    description:
+      "You are advertising to people who will pay you in eighteen months. That changes what you measure, when you spend, and what your follow-up has to survive.",
+    publishedAt: "2026-10-17",
+    keywords: [
+      "Facebook ads for wedding venues UK",
+      "Instagram ads event planners",
+      "marketing for wedding suppliers",
+      "how to get wedding bookings",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Weddings break most of the normal rules of local advertising, and the reason is time.",
+          "Somebody enquires in February about a date eighteen months away. They will not decide this week. They are comparing you against six others, half of whom they found the same day, and the money does not arrive for over a year.",
+          "Almost everything that makes advertising measurable falls apart over that distance, which is why so many wedding suppliers conclude it does not work.",
+        ],
+      },
+      {
+        heading: "Your booking season is not your wedding season",
+        paragraphs: [
+          "The most common mistake is spending in the summer, because that is when you are busy and weddings are on your mind.",
+          "By then the couples getting married that year booked you long ago. The people worth reaching in August are the ones getting married the summer after next.",
+          "Proposals cluster around Christmas and New Year, and the newly engaged start looking almost immediately. The weeks after the festive period are when a large share of the year's enquiries get made, which means the budget should be heaviest at exactly the point your diary looks quiet.",
+          "Spending while you are run off your feet in July and going quiet in January is backwards, and it is what most of the industry does.",
+        ],
+      },
+      {
+        heading: "What you measure has to change",
+        paragraphs: [
+          "If your reporting only counts bookings, an advert that generated forty enquiries this month looks like it failed, because none of them have paid yet. Some of them will pay next year.",
+          "So the honest measure for this trade is cost per enquiry now, and cost per booking tracked separately over a much longer window. You need both, and you need to resist judging the first by the second too early.",
+          "This is also why the tracking has to be right from the start. If an enquiry arrives in February and books in November, nothing will connect the two unless you set it up deliberately. Most wedding suppliers genuinely do not know which adverts produced their bookings, because by the time the money arrived the trail was cold.",
+        ],
+      },
+      {
+        heading: "The follow-up is the whole business",
+        paragraphs: [
+          "A couple enquires with eight suppliers in one evening. Most will hear back from four, and two of those will be a price list with no name on it.",
+          "What happens over the following eighteen months decides this, not the advert. Which means the thing worth building before you spend anything is the system that keeps the conversation alive.",
+        ],
+        bullets: [
+          "A reply the same day, ideally within the hour, because the comparison is happening right now",
+          "A diary note for every enquiry that did not book, with the date they are planning for",
+          "Something to send them months later that is not a chase. An availability update, a gallery from a wedding like theirs, a genuine deadline",
+          "A record of what they told you. Remembering their date and their venue a year later is the most impressive thing you can do, and it is a database field, not a talent",
+        ],
+      },
+      {
+        paragraphs: [
+          "Suppliers lose most of their money in the gap between enquiry and decision, not in the advertising.",
+        ],
+      },
+      {
+        heading: "Say what you cost",
+        paragraphs: [
+          "The industry is unusually coy about price and it costs everyone time.",
+          "A couple with a six thousand pound budget who cannot find out whether you start at two thousand or twelve will enquire anyway, because they have to. Then you spend an hour writing a quote for somebody who was never going to afford it, and they feel awkward and stop replying.",
+          "A starting price, or a typical range, filters that out before it starts. You will get fewer enquiries and more of them will be real. For a business where every enquiry costs you an hour of correspondence, that trade is overwhelmingly worth it.",
+        ],
+      },
+      {
+        heading: "What to show, and the permission part",
+        paragraphs: [
+          "Real weddings, obviously. The thing that sells here is a couple seeing themselves in what you have already done, which is why styled shoots convert less well than a real Saturday with real people enjoying it.",
+          "But this is the trade with the most serious consent question in it, and it gets skated over constantly.",
+          "Wedding photographs contain identifiable people who are not your customer. Guests, children, the other half of the couple. Get written permission from the couple before using their photographs in advertising, be clear that advertising is what you mean rather than a post on your own feed, and honour it if somebody later asks you to take an image down.",
+          "Your contract is the place to handle this, with a clear opt-in rather than a line buried in the terms. Couples who are happy usually say yes. Assuming they would have is where the trouble starts.",
+        ],
+      },
+      {
+        heading: "Venues and suppliers are not the same business",
+        paragraphs: [
+          "Worth separating, because the advertising looks different.",
+          "A venue sells dates, and a date is finite. That gives you something no other supplier has: a real, honest scarcity. Naming the dates actually left for next year is the strongest advert a venue can run, and it requires no persuasion technique at all because it is simply true.",
+          "A supplier sells themselves, and is usually one of several the couple will book. The job is being memorable and easy rather than scarce, and the best route in is often the venues and the other suppliers rather than the couple directly. A photographer recommended by the venue has skipped the whole comparison.",
+          "Which is a reminder that the advertising is not the only channel here, and for some suppliers it is not even the main one. It is what you do while the relationships build.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-many-ad-creatives-do-you-need-each-month",
     title: "How Many Ad Creatives Do You Actually Need Each Month?",
     description:

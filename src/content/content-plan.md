@@ -84,6 +84,7 @@ keywords, dealership social strategy).
 - Meta & Instagram Ads for Landscapers and Garden Services (industry-specific)
 - Choosing the Right Primary Category on Google Business Profile (local search)
 - How Many Ad Creatives Do You Actually Need Each Month? (practical how-to)
+- Meta & Instagram Ads for Wedding and Event Businesses (industry-specific)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -165,7 +166,7 @@ keywords, dealership social strategy).
 ## Backlog — industry-specific (added 2026-08-21 research round)
 - [x] Meta & Instagram Ads for Gyms and Personal Trainers — target: "Facebook ads for gyms UK",
       "Instagram ads personal trainer"
-- [ ] Meta & Instagram Ads for Wedding and Event Businesses — target: "Facebook ads for wedding
+- [x] Meta & Instagram Ads for Wedding and Event Businesses — target: "Facebook ads for wedding
       venues UK", "Instagram ads event planners"
 
 ## Backlog — feature deep-dive (added 2026-08-21 research round)
