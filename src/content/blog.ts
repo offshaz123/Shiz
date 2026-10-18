@@ -16,6 +16,88 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "service-area-businesses-should-you-hide-your-address",
+    title: "Service Area Businesses: Should You Hide Your Address?",
+    description:
+      "If customers never come to you, Google's answer is yes, take it off. Here is what that changes, and the service area rules most tradespeople get wrong.",
+    publishedAt: "2026-10-18",
+    keywords: [
+      "service area business Google",
+      "hide address Google Business Profile",
+      "Google Business Profile no storefront",
+      "service area business vs storefront",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Nearly every tradesperson works from home, and nearly every one of them worries that taking the home address off their Google listing will make them disappear.",
+          "So the address stays up, the listing shows a residential street, and strangers now know where the van is parked overnight.",
+          "Google's own guidance on this is short and not remotely ambiguous.",
+        ],
+      },
+      {
+        heading: "The rule, in their words",
+        paragraphs: [
+          "If you don't serve customers at your business address, remove your address from your Business Profile.",
+          "A service area business is defined as one that visits or delivers to customers directly but doesn't serve customers at their business address. That is a builder, a plumber, a mobile valeter, a dog groomer who comes to the house, a driving instructor.",
+          "It is not a judgement call or an optimisation choice. If nobody knocks on your door for the service, the address comes off and you list the areas you cover instead.",
+        ],
+      },
+      {
+        heading: "You cannot set a radius",
+        paragraphs: [
+          "This is the one that catches most people, because a radius is how every trade describes their own patch. Twenty miles of the yard, anything within the M25, half an hour's drive.",
+          "Google is explicit that you can't set your service area as a radius distance around your business. You list actual places: cities, towns, postal codes.",
+          "You can add up to twenty of them, and the guidance is to keep the whole area within about two hours' driving time from your base, and to make the areas as specific and accurate as you can.",
+          "Which means the list is a real decision rather than a formality. Twenty vague entries covering half a county is worse than eight accurate ones covering where you genuinely go.",
+        ],
+      },
+      {
+        heading: "One profile, not one per town",
+        paragraphs: [
+          "The other persistent idea is that if you cover eight towns you should have eight listings, one per town, each with a local-sounding address.",
+          "Google's position is that a service area business can have only one profile for the whole area it serves. One business, one listing, however many places you drive to.",
+          "Extra listings built on virtual offices or a friend's address are among the quickest ways to lose the profile you actually rely on. It is the same instinct behind stuffing keywords into a business name, and it fails the same way: it works for a while, then a competitor reports it.",
+        ],
+      },
+      {
+        heading: "The hybrid test is signage",
+        paragraphs: [
+          "Some businesses genuinely are both. A tile shop with a showroom that also fits bathrooms. A groomer with a salon who also does home visits. Those can keep the address and set service areas too.",
+          "The test Google applies is simple and physical: if there is no permanent on-site signage, the business isn't eligible as a storefront and should be listed as a service area business.",
+          "So a converted garage with no sign is not a storefront, whatever you would like it to be. A unit with your name above the door is.",
+          "Worth knowing too that some trades have no choice. Businesses selling alcohol, cannabis or weapons need to have a storefront, so the service area route is not available to them at all.",
+        ],
+      },
+      {
+        heading: "What hiding it actually costs you",
+        paragraphs: [
+          "Here is the honest part, because the fear is not completely unfounded.",
+          "Removing the address does not remove your location from the equation. Google still knows where you are based, and how near you are to the person searching remains a large factor in local results. Listing twenty service areas does not make you appear in twenty towns, any more than writing twenty location pages does.",
+          "So you will show up more strongly near your base and more weakly at the edges of your patch, and that is simply how it works. The thing to understand is that keeping the address up does not fix this. The address being visible or hidden is not what is driving it.",
+          "What you get in exchange is a compliant listing, your home address off the internet, and no risk of the whole profile being pulled over something that was never helping.",
+        ],
+      },
+      {
+        heading: "What to do this week",
+        paragraphs: [
+          "Four things, and none of them takes long.",
+        ],
+        bullets: [
+          "If customers never visit you, take the address off and set your service areas instead",
+          "Replace any radius thinking with a real list of towns and postcodes you actually travel to",
+          "Delete any extra listings you created for other towns, rather than leaving them running",
+          "Check the areas still match where you work now, because most people set them once years ago and have since stopped going that far",
+        ],
+      },
+      {
+        paragraphs: [
+          "The last one is worth a diary note. Service areas drift. People take on a bigger patch, or quietly stop crossing the city, and the listing goes on advertising a version of the business that stopped being true two years ago.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-for-wedding-and-event-businesses",
     title: "Meta & Instagram Ads for Wedding and Event Businesses",
     description:

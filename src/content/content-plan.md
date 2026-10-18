@@ -85,6 +85,7 @@ keywords, dealership social strategy).
 - Choosing the Right Primary Category on Google Business Profile (local search)
 - How Many Ad Creatives Do You Actually Need Each Month? (practical how-to)
 - Meta & Instagram Ads for Wedding and Event Businesses (industry-specific)
+- Service Area Businesses: Should You Hide Your Address? (local search)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -299,7 +300,7 @@ keywords, dealership social strategy).
       Profile primary category", "which category should I choose Google"
 - [ ] Duplicate Google Listings, and How to Get Rid of Them — target: "duplicate Google Business
       Profile", "merge Google listings UK"
-- [ ] Service Area Businesses: Should You Hide Your Address? — target: "service area business
+- [x] Service Area Businesses: Should You Hide Your Address? — target: "service area business
       Google", "hide address Google Business Profile"
 - [x] Review Gating: The Shortcut That Gets Your Listing Suspended — target: "review gating Google
       policy", "asking only happy customers for reviews" (note: also touches DMCC Act 2024)
