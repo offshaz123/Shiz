@@ -43,6 +43,11 @@ async function call<T>(method: "GET" | "POST", path: string, body?: unknown): Pr
   return (text ? JSON.parse(text) : {}) as T;
 }
 
+// A light request that only works with a valid key (for the admin status bar).
+export async function checkPacklink() {
+  await call("GET", "clients/warehouses");
+}
+
 // Packlink's saved addresses, with the field names it has used over time.
 type Warehouse = Record<string, unknown> & { default_selection?: boolean };
 const text = (w: Warehouse, ...keys: string[]) => {

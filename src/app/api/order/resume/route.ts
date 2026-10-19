@@ -1,3 +1,4 @@
+import { loadPriceChanges } from "@/lib/prices";
 import { isDbConfigured } from "@/lib/db";
 import { logOrderEvent } from "@/lib/email-log";
 import { checkoutLines, claimFreeDelivery, getOrder, resumeTokenMatches, setStatus, setStripeSession } from "@/lib/orders";
@@ -19,6 +20,7 @@ export async function GET(req: Request) {
 // (counted on Insights); otherwise the Pay button opens a fresh Stripe payment
 // for the order they left, with the same discount and any free delivery.
 export async function POST(req: Request) {
+  await loadPriceChanges();
   const base = requestBaseUrl(req);
   const to = (path: string) => Response.redirect(`${base}${path}`, 303);
   if (rateLimited(`resume:${clientIp(req)}`, 20)) return to("/basket");

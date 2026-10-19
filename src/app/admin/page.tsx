@@ -6,8 +6,7 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { listCustomers, listOrders, refreshPendingPayments, statusLabels } from "@/lib/orders";
 import { isStripeConfigured } from "@/lib/stripe";
 import { receiptSummary } from "@/lib/email-log";
-import { daysUntilPriceRise, priceRiseSummary } from "@/lib/price-rise";
-import { PRICE_RISE } from "@/lib/plates";
+import { daysUntilPriceRise, upcomingRises } from "@/lib/price-rise";
 import { listAccounts } from "@/lib/orders";
 import { money } from "@/lib/plates";
 import { cardLine } from "@/lib/emails";
@@ -62,18 +61,18 @@ export default async function AdminPage(props: PageProps<"/admin">) {
     { label: "Customers", value: String(customers.length), note: `${accounts.length} with accounts` },
   ];
 
-  const riseDays = daysUntilPriceRise(now);
+  const riseDays = daysUntilPriceRise(now.getTime());
 
   return (
     <AdminShell active="orders">
       {riseDays !== null && riseDays <= 7 && (
         <div className="mb-6 rounded-2xl border border-[#e8d89a] bg-[#fdf8e7] p-4">
           <p className="font-semibold">
-            Launch prices go up on {PRICE_RISE.label} ({riseDays === 1 ? "tomorrow" : `in ${riseDays} days`}). These go up automatically:
+            Prices go up {riseDays === 1 ? "tomorrow" : `in ${riseDays} days`}. These change automatically (see Prices):
           </p>
           <ul className="mt-1 list-disc pl-5 text-sm">
-            {priceRiseSummary().map((l) => (
-              <li key={l}>{l}</li>
+            {upcomingRises().map((r) => (
+              <li key={r.line}>{r.line}</li>
             ))}
           </ul>
         </div>
@@ -163,7 +162,7 @@ export default async function AdminPage(props: PageProps<"/admin">) {
                   <StatusBadge status={o.status} />
                 </td>
                 <td className={`p-3 text-xs font-semibold ${o.docs_status === "outstanding" ? "text-[#b42318]" : "text-muted"}`}>
-                  {o.docs_status === "outstanding" ? "Missing" : o.docs_status === "received" ? "Received" : "Not needed"}
+                  {o.docs_status === "outstanding" ? "Missing" : o.docs_status === "received" ? "Not checked" : o.docs_status === "approved" ? "Checked ✓" : "Not needed"}
                 </td>
                 <td className="whitespace-nowrap p-3 text-xs font-semibold">
                   {(() => {

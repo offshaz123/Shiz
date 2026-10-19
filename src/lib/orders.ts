@@ -6,17 +6,18 @@ import { randomBytes, timingSafeEqual } from "node:crypto";
 import { site } from "./site";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { LOGO_CID, customerCancelEmail, customerDispatchEmail, customerOrderEmail, customerReminderEmail, plateCid, plateImageParams, shopOrderEmail } from "./emails";
+import { LOGO_CID, customerCancelEmail, customerDocsEmail, customerDispatchEmail, customerOrderEmail, customerReminderEmail, plateCid, plateImageParams, shopOrderEmail } from "./emails";
 import { renderPlatePng } from "./plate-image";
 import { countDiscountUse } from "./discounts";
 import { sendMetaPurchase } from "./meta-capi";
 import { sendToPacklink } from "./packlink";
+import { notifyNewOrder } from "./push";
 import { sendMail, sendToShop, shopAddress } from "./mail";
 import { logEmail, logOrderEvent, newToken, withOpenTracker } from "./email-log";
 import { type PaidSession, getCheckoutSession } from "./stripe";
 
 export type OrderStatus = "pending" | "unpaid" | "paid" | "in_production" | "dispatched" | "expired" | "cancelled" | "refunded";
-export type DocsStatus = "not_needed" | "outstanding" | "received";
+export type DocsStatus = "not_needed" | "outstanding" | "received" | "approved";
 
 export const statusLabels: Record<OrderStatus, string> = {
   pending: "Awaiting payment",
@@ -32,7 +33,8 @@ export const statusLabels: Record<OrderStatus, string> = {
 export const docsLabels: Record<DocsStatus, string> = {
   not_needed: "Not needed",
   outstanding: "Outstanding",
-  received: "Received",
+  received: "Received, not checked yet",
+  approved: "Checked ✓",
 };
 
 export type Order = {
@@ -266,6 +268,47 @@ export async function resumeTokenMatches(ref: string, token: string) {
   return timingSafeEqual(Buffer.from(saved), Buffer.from(token));
 }
 
+// The admin checked the documents: "approved", or back to "outstanding" when
+// a new photo is needed.
+export async function setDocsStatus(order: Order, status: "approved" | "outstanding") {
+  await execute("UPDATE orders SET docs_status = ? WHERE id = ?", [status, order.id]);
+  await logOrderEvent(order.ref, status === "approved" ? "docs_approved" : "docs_retake");
+}
+
+// Asks the customer for their documents: a reminder when they haven't sent
+// them, or a request for a new photo with the reason. Returns true if sent.
+export async function sendDocsEmail(order: Order, kind: "docs_reminder" | "docs_retake", reason = "") {
+  const email = customerDocsEmail(order, kind === "docs_retake" ? reason : null);
+  const token = newToken();
+  try {
+    await sendMail({ to: order.email, subject: email.subject, text: email.text, html: withOpenTracker(email.html, token) });
+    await logEmail({ orderId: order.id, kind, recipient: order.email, ok: true, token });
+    return true;
+  } catch (err) {
+    console.error(`${kind} email for ${order.ref} failed`, err);
+    await logEmail({ orderId: order.id, kind, recipient: order.email, ok: false, error: err });
+    return false;
+  }
+}
+
+// Paid orders still waiting for documents get a reminder a day after paying,
+// and one more after three days. Checked by the half-hourly timer.
+export async function sendDueDocsReminders() {
+  const due = await query<{ ref: string }>(
+    `SELECT o.ref FROM orders o
+     WHERE o.status IN ('paid', 'in_production') AND o.docs_status = 'outstanding' AND o.paid_at > NOW() - INTERVAL 14 DAY
+       AND NOT EXISTS (SELECT 1 FROM email_log e WHERE e.order_id = o.id AND e.kind IN ('docs_reminder', 'docs_retake') AND e.created_at > NOW() - INTERVAL 1 DAY)
+       AND (
+         (o.paid_at < NOW() - INTERVAL 1 DAY AND NOT EXISTS (SELECT 1 FROM email_log e WHERE e.order_id = o.id AND e.kind = 'docs_reminder' AND e.status = 'sent'))
+         OR (o.paid_at < NOW() - INTERVAL 3 DAY AND (SELECT COUNT(*) FROM email_log e WHERE e.order_id = o.id AND e.kind = 'docs_reminder' AND e.status = 'sent') = 1)
+       )`,
+  );
+  for (const { ref } of due) {
+    const order = await getOrder(ref);
+    if (order) await sendDocsEmail(order, "docs_reminder");
+  }
+}
+
 // Sends the "new paid order" email to the shop (with documents) and the
 // receipt to the customer. Email problems are logged, never thrown: the
 // payment is already taken and the order is safe in the database.
@@ -362,6 +405,7 @@ export async function markPaid(s: PaidSession) {
     after(() => sendOrderEmails(updated));
     after(() => sendMetaPurchase(updated));
     after(() => sendToPacklink(updated));
+    after(() => notifyNewOrder(updated).catch((err) => console.error("New order notification failed", err)));
   }
   return updated;
 }

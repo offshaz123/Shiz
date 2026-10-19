@@ -1,5 +1,5 @@
 import { checkAdminLogin, failDelay, isAdmin } from "@/lib/auth";
-import { type OrderStatus, getOrder, markPaid, sendOrderEmails, sendStatusEmail, setStatus, setTracking, statusLabels } from "@/lib/orders";
+import { type OrderStatus, getOrder, markPaid, sendDocsEmail, sendOrderEmails, sendStatusEmail, setDocsStatus, setStatus, setTracking, statusLabels } from "@/lib/orders";
 import { cleanTrackingNumber, isCarrier } from "@/lib/tracking";
 import { getCheckoutSession, refundCheckout } from "@/lib/stripe";
 import { courierTracking, isPacklinkRef, sendToPacklink } from "@/lib/packlink";
@@ -32,6 +32,23 @@ export async function POST(req: Request, ctx: RouteContext<"/api/admin/orders/[r
     }
   }
 
+  if (body.action === "docs-approve") {
+    await setDocsStatus(order, "approved");
+    return Response.json({ message: "Documents marked as checked ✓" });
+  }
+  if (body.action === "docs-remind") {
+    const sent = await sendDocsEmail(order, "docs_reminder");
+    return sent ? Response.json({ message: `Reminder emailed to ${order.email}` }) : Response.json({ error: "The email didn't send. WhatsApp the customer instead." }, { status: 502 });
+  }
+  if (body.action === "docs-retake") {
+    const reason = typeof body.reason === "string" ? body.reason.trim().slice(0, 400) : "";
+    if (!reason) return Response.json({ error: "Choose or type the reason first." }, { status: 400 });
+    await setDocsStatus(order, "outstanding");
+    const sent = await sendDocsEmail({ ...order, docs_status: "outstanding" }, "docs_retake", reason);
+    return sent
+      ? Response.json({ message: `Asked ${order.email} for a new photo` })
+      : Response.json({ error: "Marked as needing new documents, but the email didn't send. WhatsApp the customer instead." }, { status: 502 });
+  }
   if (body.action === "resend") {
     await sendOrderEmails(order);
     return Response.json({ message: "Emails sent again" });

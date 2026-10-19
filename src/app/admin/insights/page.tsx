@@ -113,8 +113,8 @@ export default async function InsightsPage(props: PageProps<"/admin/insights">) 
         <Card label="Ad cost per sale" value={gbp(now.costPerSale)}>
           {now.costPerSale === null ? <span className="text-muted">{x.adsError ?? "No sales yet"}</span> : <Change now={now.costPerSale} before={before.costPerSale} lowerIsBetter />}
         </Card>
-        <Card label="Profit after ads" value={gbp(now.profit)}>
-          <span className="text-muted">After Stripe, refunds, Packlink and ads</span>
+        <Card label="Profit after everything" value={gbp(now.profit)}>
+          <span className="text-muted">After Stripe, refunds, Packlink, ads and materials</span>
         </Card>
       </div>
 

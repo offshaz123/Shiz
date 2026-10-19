@@ -1,3 +1,4 @@
+import { loadPriceChanges } from "@/lib/prices";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -31,6 +32,7 @@ async function load(ref: string, token: string): Promise<Loaded> {
 // Where the reminder email's button lands: their saved plates, the free
 // delivery they've claimed, and a Pay button that goes on to Stripe.
 export default async function CompleteOrder(props: PageProps<"/complete-order">) {
+  await loadPriceChanges();
   const sp = await props.searchParams;
   const ref = (typeof sp.ref === "string" ? sp.ref : "").replace(/[^A-Z0-9-]/gi, "").slice(0, 20);
   const token = (typeof sp.t === "string" ? sp.t : "").slice(0, 64);

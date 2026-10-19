@@ -49,46 +49,65 @@ export function fitsSize(c: Pick<PlateConfig, "size" | "type" | "reg">) {
   return charCount(plateText(c)) <= sizeOf(c).chars || !sizeOf(c).hex;
 }
 
-// Launch prices: these styles go up on PRICE_RISE.at. Until then the site
-// shows "Launch price, goes up to £X on 10 November" next to them; from
-// then on the higher price is charged everywhere, automatically.
-export const PRICE_RISE = {
-  at: new Date("2026-11-10T00:00:00Z"), // midnight UK time (GMT in November)
-  label: "10 November",
-  // The last day customers can order at the launch price.
-  lastDay: "Sunday 9 November",
-  prices: {
-    "3d-gel": { pair: 4999, single: 2899 },
-    "4d-3mm": { pair: 5499, single: 3199 },
-    "4d-5mm": { pair: 5999, single: 3499 },
-  } as Partial<Record<StyleId, { pair: number; single: number }>>,
-};
+// Price changes set in the admin (Admin → Prices), loaded from the database
+// on the server and handed to the browser with each page. A change with a
+// future date is shown to customers as "goes up to £X on <date>" and starts
+// automatically on that date. Until the database has been read, the launch
+// price rise below is used.
+export type PriceChange = { id?: number; style: StyleId; pair: number; single: number; startsAt: number };
 
-export function pricesHaveRisen(now = new Date()) {
-  return now >= PRICE_RISE.at;
+export const LAUNCH_RISE: PriceChange[] = [
+  { style: "3d-gel", pair: 4999, single: 2899, startsAt: Date.parse("2026-11-10T00:00:00Z") },
+  { style: "4d-3mm", pair: 5499, single: 3199, startsAt: Date.parse("2026-11-10T00:00:00Z") },
+  { style: "4d-5mm", pair: 5999, single: 3499, startsAt: Date.parse("2026-11-10T00:00:00Z") },
+];
+
+let priceChanges: PriceChange[] = LAUNCH_RISE;
+
+export function setPriceChanges(list: PriceChange[]) {
+  priceChanges = list;
 }
 
-// The price a style is going up to, while it's still on its launch price.
-export function upcomingPrice(id: StyleId, now = new Date()) {
-  return pricesHaveRisen(now) ? null : (PRICE_RISE.prices[id] ?? null);
+export function getPriceChanges() {
+  return priceChanges;
 }
 
-// A style's price today: the launch price, or the new price once it has risen.
-function priceNow(id: StyleId, launch: { pair: number; single: number }) {
-  const risen = pricesHaveRisen() ? PRICE_RISE.prices[id] : undefined;
-  return risen ?? launch;
+// A style's price today: its latest change that has started, or its base price.
+function priceOf(id: StyleId, base: { pair: number; single: number }, now = Date.now()) {
+  let current: PriceChange | null = null;
+  for (const c of priceChanges) if (c.style === id && c.startsAt <= now && (!current || c.startsAt > current.startsAt)) current = c;
+  return current ?? base;
 }
 
-export const styles: {
+// The next change for a style, when it's a rise customers should be told about.
+export function upcomingPrice(id: StyleId, now = Date.now()) {
+  const style = styles.find((s) => s.id === id);
+  let next: PriceChange | null = null;
+  for (const c of priceChanges) if (c.style === id && c.startsAt > now && (!next || c.startsAt < next.startsAt)) next = c;
+  return next && style && next.pair > style.pair ? next : null;
+}
+
+// "10 November", and the day before it ("Sunday 9 November"), in UK time.
+export function changeDay(startsAt: number) {
+  return new Date(startsAt).toLocaleDateString("en-GB", { day: "numeric", month: "long", timeZone: "Europe/London" });
+}
+export function lastDayBefore(startsAt: number) {
+  return new Date(startsAt - 1).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "Europe/London" });
+}
+
+type StyleDef = {
   id: StyleId;
   name: string;
   blurb: string;
   // How the characters are drawn in the preview.
   look: "flat" | "gel" | "acrylic";
   depth: number;
-  pair: number;
-  single: number;
-}[] = [
+  // Today's prices (pence), after any price change.
+  readonly pair: number;
+  readonly single: number;
+};
+
+const baseStyles: (Omit<StyleDef, "pair" | "single"> & { pair: number; single: number })[] = [
   {
     id: "standard",
     name: "Standard",
@@ -104,12 +123,8 @@ export const styles: {
     blurb: "Raised, glossy resin gel letters that catch the light.",
     look: "gel",
     depth: 1,
-    get pair() {
-      return priceNow("3d-gel", { pair: 3999, single: 2399 }).pair;
-    },
-    get single() {
-      return priceNow("3d-gel", { pair: 3999, single: 2399 }).single;
-    },
+    pair: 3999,
+    single: 2399,
   },
   {
     id: "4d-3mm",
@@ -117,12 +132,8 @@ export const styles: {
     blurb: "3mm laser-cut acrylic letters for a sharp, raised look.",
     look: "acrylic",
     depth: 1.6,
-    get pair() {
-      return priceNow("4d-3mm", { pair: 4499, single: 2699 }).pair;
-    },
-    get single() {
-      return priceNow("4d-3mm", { pair: 4499, single: 2699 }).single;
-    },
+    pair: 4499,
+    single: 2699,
   },
   {
     id: "4d-5mm",
@@ -130,12 +141,8 @@ export const styles: {
     blurb: "Deeper 5mm laser-cut acrylic letters for a bolder finish.",
     look: "acrylic",
     depth: 2.6,
-    get pair() {
-      return priceNow("4d-5mm", { pair: 4999, single: 2999 }).pair;
-    },
-    get single() {
-      return priceNow("4d-5mm", { pair: 4999, single: 2999 }).single;
-    },
+    pair: 4999,
+    single: 2999,
   },
   {
     id: "5mm-gel",
@@ -156,6 +163,21 @@ export const styles: {
     single: 3899,
   },
 ];
+
+// The styles with their prices worked out live (base price, or the latest change).
+export const styles: StyleDef[] = baseStyles.map((base) => {
+  const style = { ...base };
+  Object.defineProperties(style, {
+    pair: { get: () => priceOf(base.id, base).pair, enumerable: true },
+    single: { get: () => priceOf(base.id, base).single, enumerable: true },
+  });
+  return style;
+});
+
+export const basePrices = (id: StyleId) => {
+  const b = baseStyles.find((s) => s.id === id)!;
+  return { pair: b.pair, single: b.single };
+};
 
 export const whichPlates: { id: WhichId; name: string }[] = [
   { id: "pair", name: "Both Plates" },

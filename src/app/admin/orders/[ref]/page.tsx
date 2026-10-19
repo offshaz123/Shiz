@@ -1,3 +1,4 @@
+import { loadPriceChanges } from "@/lib/prices";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -9,6 +10,7 @@ import { PacklinkSend } from "@/components/PacklinkSend";
 import { courierTracking, isPacklinkConfigured, syncTrackingFromPacklink } from "@/lib/packlink";
 import { PlatePreview } from "@/components/PlatePreview";
 import { docsLabels, getOrder, listDocuments } from "@/lib/orders";
+import { DocsChecker } from "@/components/DocsChecker";
 import { describe, money, unitPrice } from "@/lib/plates";
 import { cardLine } from "@/lib/emails";
 import { listEmailLog, listOrderEvents } from "@/lib/email-log";
@@ -26,6 +28,7 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
 }
 
 export default async function AdminOrderPage(props: PageProps<"/admin/orders/[ref]">) {
+  await loadPriceChanges();
   await requireAdmin();
   const { ref } = await props.params;
   const found = await getOrder(ref);
@@ -185,26 +188,11 @@ export default async function AdminOrderPage(props: PageProps<"/admin/orders/[re
           </Card>
 
           <Card title={`Documents: ${docsLabels[order.docs_status]}`}>
-            {docs.length === 0 ? (
-              <p className={`text-sm ${order.docs_status === "outstanding" ? "font-semibold text-[#b42318]" : "text-muted"}`}>
-                {order.docs_status === "not_needed"
-                  ? "Show plates only, so no documents needed."
-                  : "No documents yet. Don't make road-legal plates until the customer uploads them."}
-              </p>
-            ) : (
-              <ul className="space-y-2">
-                {docs.map((d) => (
-                  <li key={d.id}>
-                    <a href={`/api/admin/documents/${d.id}`} target="_blank" className="text-sm font-semibold text-gold underline">
-                      {d.kind === "entitlement" ? "Proof of entitlement (V5C etc.)" : d.kind === "identity" ? "Photo ID" : d.filename}
-                    </a>
-                    <span className="block text-xs text-muted">
-                      {d.filename} · {fmtDateTime(d.created_at)}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <DocsChecker
+              orderRef={order.ref}
+              status={order.docs_status}
+              docs={docs.map((d) => ({ id: d.id, kind: d.kind, filename: d.filename, mime: d.mime, uploaded: fmtDateTime(d.created_at) }))}
+            />
           </Card>
         </div>
       </div>

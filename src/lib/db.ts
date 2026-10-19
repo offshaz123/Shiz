@@ -132,6 +132,32 @@ const schema = [
     INDEX (order_id)
   ) CHARACTER SET utf8mb4`,
   // Monday report emails already sent, one row per week, so a restart never sends two.
+  // Price changes made in Admin → Prices (pence). A future starts_at is a
+  // scheduled change; the latest one that has started is the current price.
+  `CREATE TABLE IF NOT EXISTS price_changes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    style VARCHAR(20) NOT NULL,
+    pair INT NOT NULL,
+    single INT NOT NULL,
+    starts_at DATETIME NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX (style, starts_at)
+  ) CHARACTER SET utf8mb4`,
+  // Phones that get a notification for each new order (Admin → Notifications).
+  `CREATE TABLE IF NOT EXISTS push_subscriptions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    endpoint VARCHAR(600) NOT NULL,
+    p256dh VARCHAR(200) NOT NULL,
+    auth VARCHAR(100) NOT NULL,
+    label VARCHAR(100) NOT NULL DEFAULT '',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY (endpoint(255))
+  ) CHARACTER SET utf8mb4`,
+  // Settings the site creates for itself (e.g. the notification keys).
+  `CREATE TABLE IF NOT EXISTS app_settings (
+    name VARCHAR(50) PRIMARY KEY,
+    value TEXT NOT NULL
+  ) CHARACTER SET utf8mb4`,
   `CREATE TABLE IF NOT EXISTS weekly_reports (
     week CHAR(10) PRIMARY KEY,
     sent_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP

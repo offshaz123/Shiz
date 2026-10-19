@@ -4,7 +4,8 @@ import { fmtDateTime, requireAdmin } from "@/lib/admin";
 import { isStripeConfigured } from "@/lib/stripe";
 import { type Movement, type Payout, balance, payoutMovements, recentMovements, recentPayouts } from "@/lib/stripe-money";
 import { type OrderMoney, dayString, orderMoney, parseDay } from "@/lib/order-money";
-import { statusLabels } from "@/lib/orders";
+import { listPaidOrdersBetween, statusLabels } from "@/lib/orders";
+import { costHistory, costsOn, orderCost } from "@/lib/costs";
 import { type AdSpend, adSpend, isMetaAdsConfigured } from "@/lib/meta-ads";
 
 const DAY = 24 * 60 * 60 * 1000;
@@ -320,6 +321,11 @@ export default async function MoneyPage(props: PageProps<"/admin/money">) {
     .reduce((n, m) => n - m.net, 0);
   const kept = perOrder.reduce((n, o) => n + o.keep, 0) - otherCharges;
   const rangeText = `${day(from)} – ${day(toDay)}`;
+  // What the plates cost to make (Admin → Costs), for orders that weren't refunded or cancelled.
+  const costs = await costHistory();
+  const materials = (await listPaidOrdersBetween(from, end))
+    .filter((o) => ["paid", "in_production", "dispatched"].includes(o.status))
+    .reduce((n, o) => n + orderCost(o.items, costsOn(costs, o.paid_at ?? o.created_at)), 0);
 
   return (
     <AdminShell active="money">
@@ -344,9 +350,9 @@ export default async function MoneyPage(props: PageProps<"/admin/money">) {
           />
         )}
         <Stat
-          label="Profit after ads"
-          value={"error" in ads ? "-" : gbp(kept - ads.spend)}
-          note={"error" in ads ? "Shows once Meta ads are connected" : `${rangeText} · what you keep minus ad spend (before the cost of making the plates)`}
+          label="Profit after everything"
+          value={"error" in ads ? gbp(kept - materials) : gbp(kept - ads.spend - materials)}
+          note={`${rangeText} · what you keep${"error" in ads ? "" : ` minus ${gbp(ads.spend)} ads`} minus ${gbp(materials)} materials (see Costs)`}
         />
       </div>
 

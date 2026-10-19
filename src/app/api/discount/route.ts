@@ -1,3 +1,4 @@
+import { loadPriceChanges } from "@/lib/prices";
 import { getCurrentUser } from "@/lib/auth";
 import { isDbConfigured } from "@/lib/db";
 import { checkDiscount } from "@/lib/discounts";
@@ -7,6 +8,7 @@ import { sanitiseItem, unitPrice } from "@/lib/plates";
 // Checks a discount code at checkout so the customer sees the new total.
 // The order itself checks it again before taking payment.
 export async function POST(req: Request) {
+  await loadPriceChanges();
   if (rateLimited(`discount:${clientIp(req)}`, 20))
     return Response.json({ error: "Too many attempts. Please wait a minute and try again." }, { status: 429 });
   if (!isDbConfigured()) return Response.json({ error: "Discount codes aren't available right now." }, { status: 503 });

@@ -1,3 +1,4 @@
+import { loadPriceChanges } from "@/lib/prices";
 import { FREE_DELIVERY_FROM, delivery, styles } from "@/lib/plates";
 import { site } from "@/lib/site";
 
@@ -12,7 +13,8 @@ export const revalidate = 3600;
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const gbp = (pence: number) => `${(pence / 100).toFixed(2)} GBP`;
 
-export function GET() {
+export async function GET() {
+  await loadPriceChanges();
   const standard = delivery.find((d) => d.id === "standard")!;
   const items = styles.map((s) => {
     const image = `${site.url}/api/plate-image?${new URLSearchParams({ text: "PL24 TED", type: "legal", style: s.id, badge: "none", border: "none", side: "rear" })}`;

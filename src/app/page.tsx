@@ -1,3 +1,4 @@
+import { loadPriceChanges } from "@/lib/prices";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { JsonLd } from "@/components/JsonLd";
@@ -6,7 +7,7 @@ import { RegForm } from "@/components/RegForm";
 import { TrustBadges } from "@/components/TrustBadges";
 import { ReviewsSection } from "@/components/ReviewsSection";
 import { PlatePreview } from "@/components/PlatePreview";
-import { PRICE_RISE, type PlateConfig, defaultConfig, money, styles, upcomingPrice } from "@/lib/plates";
+import { type PlateConfig, changeDay, defaultConfig, lastDayBefore, money, styles, upcomingPrice } from "@/lib/plates";
 import { products } from "@/lib/content";
 import { site } from "@/lib/site";
 
@@ -102,11 +103,13 @@ const business = {
 };
 const website = { "@context": "https://schema.org", "@type": "WebSite", name: site.name, url: site.url };
 
-export default function Home() {
+export default async function Home() {
+  await loadPriceChanges();
   const launchStyles = styles.flatMap((style) => {
     const next = upcomingPrice(style.id);
     return next ? [{ style, next }] : [];
   });
+  const firstRise = Math.min(...launchStyles.map((l) => l.next.startsAt));
   return (
     <>
       <JsonLd data={business} />
@@ -172,11 +175,11 @@ export default function Home() {
           <div className="mx-auto max-w-5xl px-4 sm:px-6">
             <div className="text-center">
               <span className="inline-block rounded-full bg-[#fdecec] px-4 py-1.5 text-sm font-bold text-[#b42318]">
-                Launch prices until {PRICE_RISE.lastDay}
+                Today&apos;s prices until {lastDayBefore(firstRise)}
               </span>
-              <h2 className="mt-3 font-display text-3xl font-bold sm:text-4xl">Get Our Launch Prices While They Last</h2>
+              <h2 className="mt-3 font-display text-3xl font-bold sm:text-4xl">Order Before Prices Go Up</h2>
               <p className="mx-auto mt-2 max-w-2xl text-muted">
-                These plates go up on {PRICE_RISE.label}. Order by {PRICE_RISE.lastDay} to pay today&apos;s price.
+                These plates go up on {changeDay(firstRise)}. Order by {lastDayBefore(firstRise)} to pay today&apos;s price.
               </p>
             </div>
             <div className="mt-8 grid gap-4 sm:grid-cols-3">
@@ -193,7 +196,7 @@ export default function Home() {
                     <span className="text-muted"> a pair</span>
                   </p>
                   <p className="mt-1 text-sm font-semibold text-[#b42318]">
-                    Goes up to {money(next.pair)} on {PRICE_RISE.label}
+                    Goes up to {money(next.pair)} on {changeDay(next.startsAt)}
                   </p>
                 </Link>
               ))}

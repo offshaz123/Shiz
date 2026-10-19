@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import { StatusBar } from "./StatusBar";
 import { LogoutButton } from "./LogoutButton";
 
-export function AdminShell({ active, children }: { active: "orders" | "customers" | "discounts" | "reviews" | "money" | "insights"; children: React.ReactNode }) {
+export function AdminShell({ active, children }: { active: "orders" | "customers" | "discounts" | "reviews" | "money" | "insights" | "prices" | "costs" | "notifications"; children: React.ReactNode }) {
   const tab = (on: boolean) =>
     `rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors ${on ? "gold-bg shadow-sm" : "bg-white text-ink hover:bg-surface-2"}`;
   return (
@@ -31,10 +33,24 @@ export function AdminShell({ active, children }: { active: "orders" | "customers
             <Link href="/admin/insights" className={tab(active === "insights")}>
               Insights
             </Link>
+            <Link href="/admin/prices" className={tab(active === "prices")}>
+              Prices
+            </Link>
+            <Link href="/admin/costs" className={tab(active === "costs")}>
+              Costs
+            </Link>
+            <Link href="/admin/notifications" className={tab(active === "notifications")}>
+              Notifications
+            </Link>
             <LogoutButton className="rounded-lg border border-line bg-white px-4 py-2.5 text-sm font-semibold hover:bg-surface-2" />
           </div>
         </div>
-        <div className="mt-6">{children}</div>
+        <div className="mt-6">
+          <Suspense fallback={null}>
+            <StatusBar />
+          </Suspense>
+          {children}
+        </div>
       </div>
     </div>
   );

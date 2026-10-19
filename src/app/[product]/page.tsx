@@ -1,3 +1,4 @@
+import { loadPriceChanges } from "@/lib/prices";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -26,6 +27,7 @@ export async function generateMetadata(props: PageProps<"/[product]">): Promise<
 }
 
 export default async function ProductPage(props: PageProps<"/[product]">) {
+  await loadPriceChanges();
   const { product } = await props.params;
   const p = products.find((x) => x.slug === product);
   if (!p) notFound();

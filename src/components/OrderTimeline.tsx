@@ -13,6 +13,8 @@ const emailNames: Record<EmailKind, string> = {
   cancelled: "Cancellation email",
   refunded: "Refund email",
   reminder: "Checkout reminder",
+  docs_reminder: "Documents reminder",
+  docs_retake: "New photo request",
 };
 
 function lastEmail(emails: EmailLog[], kind: EmailKind) {

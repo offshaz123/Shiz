@@ -21,6 +21,11 @@ function transport() {
   });
 }
 
+// Logs in to the email server without sending anything (for the admin status bar).
+export async function verifyMail() {
+  await transport().verify();
+}
+
 type Mail = {
   to: string;
   subject: string;

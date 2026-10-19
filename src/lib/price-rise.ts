@@ -1,43 +1,45 @@
 import { execute } from "./db";
 import { sendToShop } from "./mail";
-import { PRICE_RISE, money, styles } from "./plates";
+import { changeDay, money, styles, upcomingPrice } from "./plates";
 
 const DAY = 24 * 60 * 60 * 1000;
 
-// The launch prices ending: which styles go up, from what to what.
-export function priceRiseSummary() {
-  return styles.flatMap((s) => {
-    const next = PRICE_RISE.prices[s.id];
-    return next ? [`${s.name}: ${money(s.pair)} → ${money(next.pair)} a pair (single ${money(s.single)} → ${money(next.single)})`] : [];
-  });
+// Price rises coming up (scheduled in Admin → Prices), soonest first.
+export function upcomingRises(now = Date.now()) {
+  return styles
+    .flatMap((s) => {
+      const next = upcomingPrice(s.id, now);
+      return next ? [{ style: s, next, line: `${s.name}: ${money(s.pair)} → ${money(next.pair)} a pair (single ${money(s.single)} → ${money(next.single)}) on ${changeDay(next.startsAt)}` }] : [];
+    })
+    .sort((a, b) => a.next.startsAt - b.next.startsAt);
 }
 
-// Days until the launch prices end (shown on the admin dashboard in the last week).
-export function daysUntilPriceRise(now = new Date()) {
-  const left = PRICE_RISE.at.getTime() - now.getTime();
-  return left > 0 ? Math.ceil(left / DAY) : null;
+// Days until the next price rise, or null if none is scheduled.
+export function daysUntilPriceRise(now = Date.now()) {
+  const first = upcomingRises(now)[0];
+  return first ? Math.ceil((first.next.startsAt - now) / DAY) : null;
 }
 
-// One email to the shop 4 days before the prices go up. Checked by the same
-// timer as the Monday report; INSERT IGNORE makes sure it's only sent once.
-export async function maybeSendPriceRiseReminder(now = new Date()) {
-  const days = daysUntilPriceRise(now);
-  if (days === null || days > 4) return;
-  const res = await execute("INSERT IGNORE INTO weekly_reports (week) VALUES (?)", ["price-rise"]);
+// One email to the shop 4 days before prices go up. Checked by the
+// half-hourly timer; INSERT IGNORE makes sure each rise is only mentioned once.
+export async function maybeSendPriceRiseReminder(now = Date.now()) {
+  const rises = upcomingRises(now).filter((r) => r.next.startsAt - now <= 4 * DAY);
+  if (!rises.length) return;
+  const key = `rise${new Date(rises[0].next.startsAt).toISOString().slice(2, 10).replace(/-/g, "")}`;
+  const res = await execute("INSERT IGNORE INTO weekly_reports (week) VALUES (?)", [key]);
   if (res.affectedRows !== 1) return;
-  const lines = priceRiseSummary();
+  const lines = rises.map((r) => r.line);
   await sendToShop({
-    subject: `Reminder: launch prices go up on ${PRICE_RISE.label}`,
+    subject: `Reminder: prices go up on ${changeDay(rises[0].next.startsAt)}`,
     text: [
-      `Your launch prices end soon. On ${PRICE_RISE.label} (midnight) these go up automatically:`,
+      "These prices go up automatically at midnight:",
       "",
       ...lines.map((l) => `- ${l}`),
       "",
-      "The website has been telling customers this date, so the prices need to go up as planned.",
-      "If you want different new prices, let Claude know before then.",
+      "The website has been telling customers these dates, so they need to go up as planned. You can see them in Admin → Prices.",
     ].join("\n"),
-    html: `<p>Your launch prices end soon. On <b>${PRICE_RISE.label}</b> (midnight) these go up automatically:</p>
+    html: `<p>These prices go up automatically at midnight:</p>
 <ul>${lines.map((l) => `<li>${l}</li>`).join("")}</ul>
-<p>The website has been telling customers this date, so the prices need to go up as planned. If you want different new prices, let Claude know before then.</p>`,
+<p>The website has been telling customers these dates, so they need to go up as planned. You can see them in Admin → Prices.</p>`,
   });
 }

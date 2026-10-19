@@ -73,6 +73,12 @@ async function insights(from: Date, to: Date, level: "account" | "ad") {
   return (Array.isArray(json.data) ? json.data : []) as Record<string, unknown>[];
 }
 
+// A light request that only works with a valid token (for the admin status bar).
+export async function checkMetaAds() {
+  const today = new Date();
+  await insights(today, today, "account");
+}
+
 // Spend between two days (both included).
 export async function adSpend(from: Date, to: Date): Promise<AdSpend> {
   const rows = await insights(from, to, "account");

@@ -5,7 +5,7 @@ import { site } from "./site";
 // Keeps a record of every email sent about an order, and when the customer
 // opened it, for the order timeline in the admin.
 
-export type EmailKind = "receipt" | "shop" | "dispatched" | "cancelled" | "refunded" | "reminder";
+export type EmailKind = "receipt" | "shop" | "dispatched" | "cancelled" | "refunded" | "reminder" | "docs_reminder" | "docs_retake";
 
 export type EmailLog = {
   id: number;

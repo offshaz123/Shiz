@@ -25,7 +25,7 @@ export function weeklyReportEmail(x: Insights) {
     ["Average order", gbp(x.avgOrder), ""],
     ["Ad spend", gbp(now.adSpend), x.ads ? `${x.ads.linkClicks} clicks · ${x.ads.purchases} purchases` : (x.adsError ?? "")],
     ["Ad cost per sale", gbp(now.costPerSale), change(now.costPerSale, before.costPerSale, true)],
-    ["Profit after ads", gbp(now.profit), "after Stripe, refunds, Packlink and ads"],
+    ["Profit after everything", gbp(now.profit), "after Stripe, refunds, Packlink, ads and materials"],
     [
       "Reminder emails",
       `${x.reminders.filter((r) => r.paid).length} of ${x.reminders.length} paid`,
@@ -36,7 +36,7 @@ export function weeklyReportEmail(x: Insights) {
   const range = `${x.from.toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "Europe/London" })} – ${new Date(x.to.getTime() - 1).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "Europe/London" })}`;
   const link = `${site.url}/admin/insights`;
   const subject = `PlatedUp weekly: ${now.orders} order${now.orders === 1 ? "" : "s"}, ${gbp(now.revenue)} sales, ${
-    now.profit === null ? `${gbp(now.keep)} kept` : `${gbp(now.profit)} profit after ads`
+    now.profit === null ? `${gbp(now.keep)} kept` : `${gbp(now.profit)} profit`
   }`;
 
   const text = [

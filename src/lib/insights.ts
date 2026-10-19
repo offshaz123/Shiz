@@ -1,6 +1,7 @@
 import { query } from "./db";
 import { type AdRow, type AdSpend, adSpend, adsByAd, isMetaAdsConfigured } from "./meta-ads";
-import { type Order, listOpenOrders, listOrdersCreatedBetween } from "./orders";
+import { type Order, listOpenOrders, listOrdersCreatedBetween, listPaidOrdersBetween } from "./orders";
+import { costHistory, costsOn, orderCost } from "./costs";
 import { orderMoney } from "./order-money";
 import { badges, sizeOf, styles } from "./plates";
 import type { OrderMoney } from "./order-money";
@@ -51,7 +52,12 @@ async function totals(from: Date, to: Date, ads: AdSpend | null): Promise<Period
   const money = await orderMoney(from, to);
   const real = money.filter((o) => PAID.includes(o.status));
   const revenue = real.reduce((n, o) => n + o.paid, 0);
-  const keep = money.reduce((n, o) => n + o.keep, 0);
+  // What the plates cost to make (Admin → Costs) comes off what's kept.
+  const costs = await costHistory();
+  const materials = (await listPaidOrdersBetween(from, to))
+    .filter((o) => PAID.includes(o.status))
+    .reduce((n, o) => n + orderCost(o.items, costsOn(costs, o.paid_at ?? o.created_at)), 0);
+  const keep = money.reduce((n, o) => n + o.keep, 0) - materials;
   const spend = ads ? ads.spend : null;
   return {
     orders: real.length,

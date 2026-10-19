@@ -527,3 +527,59 @@ export function customerReminderEmail(o: Order, resumeUrl: string, images: Image
     text,
   };
 }
+
+// Asks for the V5C and ID: a friendly reminder when they haven't been sent
+// (reason null), or a request for a new photo with the shop's reason.
+export function customerDocsEmail(o: Order, reason: string | null) {
+  const first = o.customer_name.split(" ")[0] || "there";
+  const uploadUrl = `${site.url}/upload-documents?ref=${encodeURIComponent(o.ref)}`;
+  const regs = o.items.filter((i) => i.type !== "show").map((i) => i.reg).join(", ");
+  const helpHref = whatsappHref.replace(
+    encodeURIComponent("I'm a customer and I need some help"),
+    encodeURIComponent(`I have a question about the documents for my order ${o.ref}`),
+  );
+  const retake = reason !== null;
+  const title = retake ? "We need a new photo of your documents" : "Upload your documents and we'll make your plates";
+  const intro = retake
+    ? `Thanks for sending your documents for order ${o.ref}. We need a new photo before we can make your plates:`
+    : `Your order ${o.ref} is paid and ready to make. We just need a photo of your V5C (or new keeper slip) and your ID, which the law requires before we can make road-legal plates.`;
+
+  const html = layout(
+    title,
+    retake ? `${first}, we need a clearer photo for order ${o.ref}.` : `${first}, one quick step and we'll start making your plates.`,
+    `
+    <p style="font:700 24px Arial,sans-serif;color:${INK};margin:0 0 8px;">${esc(retake ? `${first}, we need a new photo` : `${first}, your plates are waiting`)}</p>
+    <p style="font:15px/1.6 Arial,sans-serif;color:${MUTED};margin:0 0 14px;">${esc(intro)}</p>
+    ${retake ? `<p style="font:700 15px/1.6 Arial,sans-serif;color:#b42318;background:#fdecec;border-radius:10px;padding:12px 14px;margin:0 0 14px;">${esc(reason)}</p>` : ""}
+    ${regs ? `<p style="font:14px Arial,sans-serif;color:${INK};margin:0 0 14px;"><strong>Registration:</strong> ${esc(regs)}</p>` : ""}
+    <p style="font:14px/1.6 Arial,sans-serif;color:${MUTED};margin:0 0 6px;">You'll need:</p>
+    <ul style="font:14px/1.7 Arial,sans-serif;color:${INK};margin:0 0 16px;padding-left:20px;">
+      <li>Proof you own the reg: V5C logbook, new keeper slip, V750 or V778</li>
+      <li>ID in your name: driving licence, passport or a recent utility bill</li>
+    </ul>
+    <p style="margin:20px 0 8px;text-align:center;">${button(uploadUrl, retake ? "Upload a new photo" : "Upload my documents", GOLD)}</p>
+    <p style="font:13px/1.5 Arial,sans-serif;color:${MUTED};margin:0 0 20px;text-align:center;">A clear photo from your phone is perfect. Use the email address you ordered with.</p>
+    <p style="font:14px Arial,sans-serif;color:${MUTED};margin:0 0 4px;">Questions? <a href="${helpHref}" style="color:#1f7a3d;font-weight:700;">WhatsApp us</a> and a real person will help.</p>
+    `,
+    "web",
+  );
+  const text = [
+    retake ? `${first}, we need a new photo` : `${first}, your plates are waiting`,
+    "",
+    intro,
+    ...(retake ? ["", reason] : []),
+    "",
+    "You'll need:",
+    "- Proof you own the reg: V5C logbook, new keeper slip, V750 or V778",
+    "- ID in your name: driving licence, passport or a recent utility bill",
+    "",
+    `Upload them here: ${uploadUrl}`,
+    "",
+    `Questions? WhatsApp us: ${helpHref}`,
+  ].join("\n");
+  return {
+    subject: retake ? `Order ${o.ref}: we need a new photo of your documents` : `Order ${o.ref}: upload your documents so we can make your plates`,
+    html,
+    text,
+  };
+}

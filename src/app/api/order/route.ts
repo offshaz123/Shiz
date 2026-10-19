@@ -1,3 +1,4 @@
+import { loadPriceChanges } from "@/lib/prices";
 import type { Attachment } from "nodemailer/lib/mailer";
 import { describe, delivery, deliveryPrice, money, sanitiseItem, unitPrice } from "@/lib/plates";
 import { field, orderRef, readUploads, sendToShop } from "@/lib/mail";
@@ -11,6 +12,7 @@ import { createCheckoutSession, isStripeConfigured, requestBaseUrl } from "@/lib
 import { createOrder, getOrder, saveDocuments, sendOrderEmails, setStatus, setStripeSession } from "@/lib/orders";
 
 export async function POST(req: Request) {
+  await loadPriceChanges();
   if (rateLimited(`order:${clientIp(req)}`, 10)) return Response.json({ error: "Too many attempts. Please wait a minute and try again." }, { status: 429 });
   let form: FormData;
   try {
