@@ -104,7 +104,7 @@ export default async function OrderConfirmed(props: PageProps<"/order-confirmed"
       </p>
       {docsOutstanding && (
         <div className="mt-8 rounded-3xl border-2 border-[#d92d20] bg-[#fdecec] p-6 text-left">
-          <p className="font-display text-2xl font-bold text-[#b42318]">⚠️ Action needed: upload your documents</p>
+          <p className="font-display text-2xl font-bold text-[#b42318]">📄 Last step: upload your documents</p>
           <p className="mt-2 text-[#7a271a]">
             By law we must see proof you own the registration (V5C) and photo ID before we can make road-legal plates.{" "}
             <strong>Until we receive them, your order can&apos;t go ahead and will be delayed.</strong>

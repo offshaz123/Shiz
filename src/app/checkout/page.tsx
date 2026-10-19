@@ -47,34 +47,29 @@ function Field({
   );
 }
 
-const GUEST_KEY = "platedup-guest-checkout";
-
 type Account = { name: string; email: string; phone: string; address1: string; address2: string; town: string; postcode: string };
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { items, ready, subtotal } = useCart();
   const [deliveryId, setDeliveryId] = useState<DeliveryId>("standard");
-  const [later, setLater] = useState(false);
+  // Documents are uploaded after paying unless the customer chooses to add them now.
+  const [later, setLater] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
   const [savedAddress, setSavedAddress] = useState<{ address1: string; address2: string; town: string; postcode: string }>();
   // undefined = still checking, null = not logged in.
   const [account, setAccount] = useState<Account | null | undefined>(undefined);
-  const [guest, setGuest] = useState(false);
   // Discount code: what's typed, and the code once it's been accepted.
   const [codeInput, setCodeInput] = useState("");
   const [applied, setApplied] = useState<{ code: string; label: string; discount: number } | null>(null);
   const [codeError, setCodeError] = useState("");
   const [checkingCode, setCheckingCode] = useState(false);
 
-  // Who's checking out? Logged-in customers skip straight to the form.
+  // Logged-in customers get their saved details filled in; everyone else
+  // checks out as a guest straight away (logging in is optional).
   useEffect(() => {
-    try {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- remember "continue as guest" for this visit
-      setGuest(sessionStorage.getItem(GUEST_KEY) === "1");
-    } catch {}
     fetch("/api/account")
       .then((r) => r.json())
       .then(({ user }) => setAccount(user ?? null))
@@ -89,8 +84,6 @@ export default function CheckoutPage() {
     trackBeginCheckout(items, subtotal);
   }, [ready, items, subtotal]);
 
-  const showForm = account !== undefined && (account !== null || guest);
-
   // Fill in saved details once the form is on screen.
   useEffect(() => {
     const form = formRef.current;
@@ -100,7 +93,7 @@ export default function CheckoutPage() {
       if (input && !input.value && account[key]) input.value = account[key];
     }
     setSavedAddress({ address1: account.address1, address2: account.address2, town: account.town, postcode: account.postcode });
-  }, [account, showForm]);
+  }, [account]);
 
   if (!ready) return <div className="min-h-[50vh]" />;
   if (items.length === 0)
@@ -114,52 +107,6 @@ export default function CheckoutPage() {
     );
 
   if (account === undefined) return <div className="min-h-[50vh]" />;
-
-  // Not logged in: offer log in, sign up, or guest checkout.
-  if (!showForm)
-    return (
-      <div className="bg-surface px-4 py-14">
-        <div className="mx-auto max-w-3xl">
-          <h1 className="text-center font-display text-4xl font-bold uppercase">Checkout</h1>
-          <p className="mt-2 text-center text-muted">How would you like to continue?</p>
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            <div className="rounded-3xl border border-line bg-white p-6">
-              <h2 className="font-display text-2xl font-bold">Have an account?</h2>
-              <p className="mt-1 text-sm text-muted">
-                Log in or create one to track your order, see all your orders in one place and check out faster next time.
-              </p>
-              <div className="mt-5 grid gap-3">
-                <Link href="/login?next=/checkout" className="btn btn-gold rounded-lg">
-                  Log in
-                </Link>
-                <Link href="/signup?next=/checkout" className="btn btn-white rounded-lg">
-                  Create an account
-                </Link>
-              </div>
-            </div>
-            <div className="rounded-3xl border border-line bg-white p-6">
-              <h2 className="font-display text-2xl font-bold">Checkout as a guest</h2>
-              <p className="mt-1 text-sm text-muted">
-                No account needed. You&apos;ll still get your order confirmation and receipt by email, but you won&apos;t be able
-                to see the order in an account.
-              </p>
-              <button
-                type="button"
-                className="btn btn-dark mt-5 w-full rounded-lg"
-                onClick={() => {
-                  setGuest(true);
-                  try {
-                    sessionStorage.setItem(GUEST_KEY, "1");
-                  } catch {}
-                }}
-              >
-                Continue as guest
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
 
   const deliveryPrice = priceFor(deliveryId, subtotal);
   const discount = applied?.discount ?? 0;
@@ -223,9 +170,9 @@ export default function CheckoutPage() {
           </>
         ) : (
           <>
-            Checking out as a guest ·{" "}
+            No account needed. Have one?{" "}
             <Link href="/login?next=/checkout" className="font-semibold text-gold underline">
-              Log in instead
+              Log in
             </Link>
           </>
         )}
@@ -269,13 +216,27 @@ export default function CheckoutPage() {
             </fieldset>
           </Section>
 
-          <Section n={3} title={needsDocs ? "Upload your documents" : "Confirm your order"}>
+          <Section n={3} title="Confirm your order">
             {needsDocs ? (
             <>
-            <p className="text-muted">
-              By law we must see these before we make your road-legal plates. A clear photo from
-              your phone is perfect.
-            </p>
+            <div className="rounded-2xl border border-[#cfe6d4] bg-[#f1faf3] p-4">
+              <p className="font-semibold">📄 Documents: after you pay</p>
+              <p className="mt-1 text-sm text-muted">
+                Road-legal plates need a photo of your V5C logbook (or new keeper slip) and your ID. You&apos;ll upload them
+                on the next page after paying. It takes a minute from your phone, and we make your plates as soon as we
+                have them.
+              </p>
+              {later ? (
+                <button type="button" className="mt-2 text-sm font-semibold text-gold underline" onClick={() => setLater(false)}>
+                  Got them to hand? Upload now instead
+                </button>
+              ) : (
+                <button type="button" className="mt-2 text-sm font-semibold text-gold underline" onClick={() => setLater(true)}>
+                  Upload them after paying instead
+                </button>
+              )}
+            </div>
+            {later && <input type="hidden" name="docsLater" value="1" />}
             {!later && (
               <div className="mt-5 grid gap-5 sm:grid-cols-2">
                 <label className="block rounded-2xl border-2 border-dashed border-line bg-surface p-4">
@@ -290,16 +251,6 @@ export default function CheckoutPage() {
                 </label>
               </div>
             )}
-            <label className="mt-4 flex cursor-pointer items-center gap-3 text-sm">
-              <input
-                type="checkbox"
-                name="docsLater"
-                className="h-5 w-5 accent-[#8a6812]"
-                checked={later}
-                onChange={(e) => setLater(e.target.checked)}
-              />
-              <span>I&apos;ll upload them later (we can&apos;t make your plates until we have them)</span>
-            </label>
             </>
             ) : (
               <p className="rounded-xl border border-[#f1c9a5] bg-[#fff5ec] p-3 text-sm text-[#8a4a12]">
