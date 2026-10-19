@@ -42,7 +42,6 @@ export const metadata: Metadata = {
     "foreign exchange for importers",
     "business account declined by bank",
     "payments for mobile phone wholesalers",
-    "business account pricing UK",
   ],
   alternates: { canonical: "/" },
   robots: { index: true, follow: true },

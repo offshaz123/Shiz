@@ -20,6 +20,27 @@ export const pillars = [
 ] as const;
 
 /**
+ * What a quote is built from. The site publishes no rate card, because the
+ * charges depend on the business in front of us; these are the three things we
+ * ask about before giving a number, so the page can be specific about how
+ * pricing works without naming a price.
+ */
+export const quoteFactors = [
+  {
+    title: "What you move",
+    body: "How much goes through the account in a month, and how much of it you convert rather than send in sterling.",
+  },
+  {
+    title: "How you pay",
+    body: "Whether that is a handful of large supplier payments or hundreds of small ones, and which currencies they land in.",
+  },
+  {
+    title: "What you need beside it",
+    body: "Direct Debits, standing orders, cards, named accounts for a licensed business — the pieces not every account needs.",
+  },
+] as const;
+
+/**
  * What the customer sends us to open an account. Taken straight from the
  * onboarding file requirements — a complete file is the single biggest factor
  * in how fast a decision comes back.

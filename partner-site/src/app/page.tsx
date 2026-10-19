@@ -3,8 +3,7 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { brand, currencies } from "@/lib/brand";
 import { solutions } from "@/content/solutions";
-import { pillars } from "@/content/site";
-import { tierSummary } from "@/content/pricing";
+import { pillars, quoteFactors } from "@/content/site";
 import { GlobeBackdrop } from "@/components/GlobeBackdrop";
 import { RatePills } from "@/components/RatePills";
 import { CurrencyLive } from "@/components/CurrencyLive";
@@ -129,45 +128,38 @@ export default function Home() {
 
       <TrustBar />
 
-      {/* Pricing, high up on purpose. It used to be a page with no rate card
-          at all and an invitation to ask; it is now published, and the first
-          thing most people want from this page is the number. */}
+      {/* What it costs, high up on purpose, because it is the question people
+          arrive with. There is no published rate card: no two of these
+          businesses pay the same, so a table of tiers would only have to be
+          contradicted in the first conversation. The three cards say what the
+          quote is actually built from instead. */}
       <Section>
         <div className="grid gap-10 lg:grid-cols-[1fr_1.25fr] lg:items-center">
           <div>
-            <Eyebrow>Pricing</Eyebrow>
+            <Eyebrow>What it costs</Eyebrow>
             <h2 className="font-display text-balance mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Three numbers, and they are all published
+              Quoted for your business, not read off a list
             </h2>
             <p className="mt-5 text-base leading-relaxed text-muted">
-              A monthly fee, a charge for each payment, and a margin on anything you convert. The
-              charges fall and the margin tightens as the volume goes up, and the whole rate card
-              is on one page rather than behind a conversation.
+              A wholesaler converting half a million a month and a firm sending a dozen payments a
+              week are not the same account, and pricing them the same way would leave one of them
+              paying for something they never use.
             </p>
-            <Link href="/pricing" className="btn btn-primary mt-8">
-              See the full rate card
+            <p className="mt-4 text-base leading-relaxed text-muted">
+              So we look at what you actually do, tell you the number, and show you what you pay
+              today beside it. One conversation, no obligation.
+            </p>
+            <Link href="/contact" className="btn btn-primary mt-8">
+              Get a quote for your business
               <span aria-hidden="true">&rarr;</span>
             </Link>
           </div>
 
           <div className="grid gap-4 sm:grid-cols-3">
-            {tierSummary.map((tier) => (
-              <Card key={tier.name} className="p-5">
-                <p className="text-sm font-semibold">{tier.name}</p>
-                <p className="font-display mt-2 text-3xl font-semibold tracking-tight">
-                  {tier.monthly}
-                </p>
-                <p className="mt-1 text-xs text-muted">a month, ex VAT</p>
-                <dl className="mt-4 space-y-1.5 border-t border-border pt-4 text-xs">
-                  <div className="flex justify-between gap-2">
-                    <dt className="text-muted">Conversion</dt>
-                    <dd className="font-mono font-semibold">{tier.fx}</dd>
-                  </div>
-                  <div className="flex justify-between gap-2">
-                    <dt className="text-muted">Faster Payment</dt>
-                    <dd className="font-mono font-semibold">{tier.faster}</dd>
-                  </div>
-                </dl>
+            {quoteFactors.map((factor) => (
+              <Card key={factor.title} className="p-5">
+                <p className="text-sm font-semibold">{factor.title}</p>
+                <p className="mt-3 text-sm leading-relaxed text-muted">{factor.body}</p>
               </Card>
             ))}
           </div>
@@ -301,9 +293,10 @@ export default function Home() {
         </p>
       </Section>
 
-      {/* The cost of a bad rate. The ink "Pricing" band that used to follow
-          this said the same thing a second time and ended in the same button,
-          so it has gone; its four pricing lines live on /business-accounts. */}
+      {/* The cost of a bad rate. This is about the margin the customer is
+          paying someone else today, which is arithmetic they can check — not a
+          quote from us, and not a charge of ours. It is the one place a
+          percentage still belongs now the rate card has gone. */}
       <Section tone="surface">
         <div className="grid gap-10 lg:grid-cols-[1fr_1.15fr] lg:items-center">
           <div>

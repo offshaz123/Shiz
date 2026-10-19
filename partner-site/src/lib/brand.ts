@@ -180,15 +180,19 @@ export const brand = {
   },
 
   /**
-   * Published "from" prices for the software line only. Account pricing is
-   * deliberately absent: it is quoted against what the customer pays today,
-   * which you can only do in a conversation.
+   * "From" prices for the software line, kept here for reference only — the
+   * site publishes no prices at all. Every business gets a different number,
+   * and a figure on the page only invites the customer to decide for
+   * themselves which box they are in before we have spoken to them.
+   *
+   * These two values render NOWHERE while `showPricing` is false. Turning it
+   * back on puts them on /software, so change the figures before the flag.
    */
   software: {
     setupFrom: "£2,000",
     monthlyFrom: "£480",
-    /** Set false to take the figures off the public page and quote privately. */
-    showPricing: true,
+    /** False: /software says the work is quoted, and names no figure. */
+    showPricing: false,
   },
 } as const;
 

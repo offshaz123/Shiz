@@ -185,7 +185,7 @@ export default function SoftwarePage() {
       <Section tone="ink">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <div>
-            <Eyebrow>Pricing</Eyebrow>
+            <Eyebrow>What it costs</Eyebrow>
             <h2 className="font-display mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
               {brand.software.showPricing
                 ? `From ${brand.software.setupFrom} to set up, ${brand.software.monthlyFrom} a month to run`

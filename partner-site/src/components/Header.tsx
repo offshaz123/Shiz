@@ -9,7 +9,6 @@ import { IconTile } from "@/components/IconTile";
 
 const navLinks = [
   { href: "/business-accounts", label: "How it works" },
-  { href: "/pricing", label: "Pricing" },
   { href: "/opening-an-account", label: "Opening an account" },
   { href: "/about", label: "About" },
 ];

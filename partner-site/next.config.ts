@@ -38,6 +38,22 @@ const nextConfig: NextConfig = {
   },
   productionBrowserSourceMaps: false,
 
+  async redirects() {
+    return [
+      {
+        // /pricing was a published rate card with its own sitemap entry, so it
+        // is indexed and it is linked from mail that has already gone out.
+        // Deleting the route alone would turn all of that into a 404; a 308
+        // sends those people to the enquiry form, which is where a price now
+        // comes from. Keep this redirect as long as anything still points at
+        // the old URL.
+        source: "/pricing",
+        destination: "/contact",
+        permanent: true,
+      },
+    ];
+  },
+
   async headers() {
     return [
       {

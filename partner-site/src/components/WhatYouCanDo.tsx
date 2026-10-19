@@ -57,13 +57,13 @@ const slides = [
     statLabel: "However many people are on it",
   },
   {
-    badge: "Pricing",
-    title: "The whole rate card is published.",
-    body: "A monthly fee, a charge per payment and a margin on conversion. Three numbers, all of them on one page, and the rate is shown before you commit rather than after.",
-    href: "/pricing",
-    linkLabel: "See what it costs",
-    statValue: "From £49",
-    statLabel: "A month, excluding VAT",
+    badge: "What it costs",
+    title: "Priced against what you actually do.",
+    body: "No tier list to work out which box you fall into. We look at what goes through the account and what you pay for it today, then quote against that — and show you the comparison.",
+    href: "/contact",
+    linkLabel: "Get a quote",
+    statValue: "One call",
+    statLabel: "And the number is yours, no obligation",
   },
 ];
 

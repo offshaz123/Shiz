@@ -53,7 +53,6 @@ const routes = [
 const elsewhere = [
   { label: "How the account works", href: "/business-accounts" },
   { label: "Opening an account", href: "/opening-an-account" },
-  { label: "Pricing", href: "/pricing" },
 ];
 
 export default function ContactPage() {
