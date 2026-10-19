@@ -91,12 +91,25 @@ export function OrderTimeline({
           lines: order.status === "dispatched" ? (at("dispatched") ? [fmtDateTime(at("dispatched"))] : []) : ["Not sent yet"],
           email: order.status === "dispatched" ? dispatchEmail : undefined,
         },
+    ...(order.status === "cancelled" || order.status === "refunded"
+      ? []
+      : [
+          {
+            title: "Delivered",
+            state: (order.delivered_at ? "done" : "waiting") as State,
+            lines: order.delivered_at
+              ? [fmtDateTime(order.delivered_at)]
+              : order.status === "dispatched"
+                ? [order.packlink_ref ? "On its way. Checked with Packlink every 30 minutes." : "On its way"]
+                : [],
+          },
+        ]),
   ];
 
   return (
     <section className="rounded-2xl border border-line bg-white p-5">
       <h2 className="mb-4 font-display text-xl font-bold">Order progress</h2>
-      <ol className="grid gap-4 sm:grid-cols-5 sm:gap-3">
+      <ol className="grid gap-4 sm:grid-cols-6 sm:gap-3">
         {steps.map((s, i) => (
           <li key={s.title} className="flex gap-3 sm:block">
             <span

@@ -10,7 +10,7 @@ import { LOGO_CID, customerCancelEmail, customerDocsEmail, customerDispatchEmail
 import { renderPlatePng } from "./plate-image";
 import { countDiscountUse } from "./discounts";
 import { sendMetaPurchase } from "./meta-capi";
-import { sendToPacklink } from "./packlink";
+import { packlinkDelivered, sendToPacklink } from "./packlink";
 import { notifyNewOrder } from "./push";
 import { sendMail, sendToShop, shopAddress } from "./mail";
 import { logEmail, logOrderEvent, newToken, withOpenTracker } from "./email-log";
@@ -67,6 +67,7 @@ export type Order = {
   packlink_ref: string | null;
   packlink_error: string | null;
   packlink_cost: number | null;
+  delivered_at: Date | null;
   created_at: Date;
   paid_at: Date | null;
 };
@@ -84,10 +85,10 @@ function parse(row: Row): Order {
 
 const COLUMNS = `id, ref, user_id, status, customer_name, email, phone, address1, address2, town, postcode, items,
   delivery_name, delivery_price, subtotal, discount_code, discount, total, amount_paid, card_brand, card_last4, stripe_session_id,
-  docs_status, tracking_number, tracking_carrier, packlink_ref, packlink_error, packlink_cost, created_at, paid_at`;
+  docs_status, tracking_number, tracking_carrier, packlink_ref, packlink_error, packlink_cost, delivered_at, created_at, paid_at`;
 
 export async function createOrder(
-  o: Omit<Order, "id" | "created_at" | "paid_at" | "amount_paid" | "card_brand" | "card_last4" | "stripe_session_id" | "tracking_number" | "tracking_carrier" | "packlink_ref" | "packlink_error" | "packlink_cost">,
+  o: Omit<Order, "id" | "created_at" | "paid_at" | "amount_paid" | "card_brand" | "card_last4" | "stripe_session_id" | "tracking_number" | "tracking_carrier" | "packlink_ref" | "packlink_error" | "packlink_cost" | "delivered_at">,
 ) {
   const res = await execute(
     `INSERT INTO orders (ref, user_id, status, customer_name, email, phone, address1, address2, town, postcode,
@@ -266,6 +267,28 @@ export async function resumeTokenMatches(ref: string, token: string) {
   const saved = rows[0]?.resume_token;
   if (!saved || token.length !== saved.length) return false;
   return timingSafeEqual(Buffer.from(saved), Buffer.from(token));
+}
+
+// The parcel reached the customer. Only the first time counts.
+export async function markDelivered(order: Order, when = new Date()) {
+  const res = await execute("UPDATE orders SET delivered_at = ? WHERE id = ? AND delivered_at IS NULL", [when, order.id]);
+  if (res.affectedRows === 1) await logOrderEvent(order.ref, "delivered");
+  return res.affectedRows === 1;
+}
+
+// Asks Packlink about parcels still on their way (dispatched in the last
+// three weeks). Checked by the half-hourly timer.
+export async function checkDeliveries() {
+  const rows = await query<{ ref: string }>(
+    `SELECT ref FROM orders WHERE status = 'dispatched' AND delivered_at IS NULL AND packlink_ref IS NOT NULL
+       AND COALESCE(paid_at, created_at) > NOW() - INTERVAL 21 DAY`,
+  );
+  for (const { ref } of rows) {
+    const order = await getOrder(ref);
+    if (!order?.packlink_ref) continue;
+    const when = await packlinkDelivered(order.packlink_ref);
+    if (when) await markDelivered(order, when);
+  }
 }
 
 // The admin checked the documents: "approved", or back to "outstanding" when

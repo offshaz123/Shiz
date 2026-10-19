@@ -11,7 +11,10 @@ const colours: Record<OrderStatus, string> = {
   refunded: "bg-[#fdecec] text-[#b42318]",
 };
 
-export function StatusBadge({ status, customer = false }: { status: OrderStatus; customer?: boolean }) {
+// "Delivered" shows instead of "Dispatched" once the parcel has arrived.
+export function StatusBadge({ status, customer = false, delivered = false }: { status: OrderStatus; customer?: boolean; delivered?: boolean }) {
+  if (status === "dispatched" && delivered)
+    return <span className="inline-block whitespace-nowrap rounded-full bg-[#e7f6ec] px-3 py-1 text-xs font-bold text-[#1f7a3d]">✓ Delivered</span>;
   const label = customer && status === "unpaid" ? "Awaiting payment" : statusLabels[status];
   return <span className={`inline-block whitespace-nowrap rounded-full px-3 py-1 text-xs font-bold ${colours[status]}`}>{label}</span>;
 }

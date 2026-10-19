@@ -11,6 +11,7 @@ import { courierTracking, isPacklinkConfigured, syncTrackingFromPacklink } from 
 import { PlatePreview } from "@/components/PlatePreview";
 import { docsLabels, getOrder, listDocuments } from "@/lib/orders";
 import { DocsChecker } from "@/components/DocsChecker";
+import { MarkDeliveredButton } from "@/components/MarkDeliveredButton";
 import { describe, money, unitPrice } from "@/lib/plates";
 import { cardLine } from "@/lib/emails";
 import { listEmailLog, listOrderEvents } from "@/lib/email-log";
@@ -50,7 +51,8 @@ export default async function AdminOrderPage(props: PageProps<"/admin/orders/[re
       </Link>
       <div className="mt-3 flex flex-wrap items-center gap-3">
         <h2 className="font-display text-3xl font-bold">Order {order.ref}</h2>
-        <StatusBadge status={order.status} />
+        <StatusBadge status={order.status} delivered={Boolean(order.delivered_at)} />
+        {order.status === "dispatched" && !order.delivered_at && <MarkDeliveredButton orderRef={order.ref} />}
       </div>
       <p className="text-sm text-muted">Placed {fmtDateTime(order.created_at)}</p>
 

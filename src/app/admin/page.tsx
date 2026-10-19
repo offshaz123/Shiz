@@ -159,10 +159,10 @@ export default async function AdminPage(props: PageProps<"/admin">) {
                   ))}
                 </td>
                 <td className="p-3">
-                  <StatusBadge status={o.status} />
+                  <StatusBadge status={o.status} delivered={Boolean(o.delivered_at)} />
                 </td>
                 <td className={`p-3 text-xs font-semibold ${o.docs_status === "outstanding" ? "text-[#b42318]" : "text-muted"}`}>
-                  {o.docs_status === "outstanding" ? "Missing" : o.docs_status === "received" ? "Not checked" : o.docs_status === "approved" ? "Checked ✓" : "Not needed"}
+                  {o.docs_status === "outstanding" ? "Missing" : o.docs_status === "approved" ? "Checked ✓" : o.docs_status === "received" ? (["paid", "in_production"].includes(o.status) ? "Not checked" : "Received") : "Not needed"}
                 </td>
                 <td className="whitespace-nowrap p-3 text-xs font-semibold">
                   {(() => {

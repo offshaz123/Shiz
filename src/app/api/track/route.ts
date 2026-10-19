@@ -34,6 +34,7 @@ export async function POST(req: Request) {
       paid: order.paid_at,
       inProduction: at("in_production"),
       dispatched: at("dispatched"),
+      delivered: order.delivered_at,
       delivery: order.delivery_name,
       docsOutstanding: order.docs_status === "outstanding",
       items: order.items.map((i) => ({ reg: i.reg, qty: i.qty, description: describe(i) })),

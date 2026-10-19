@@ -171,6 +171,22 @@ export async function courierTracking(reference: string): Promise<{ number: stri
   }
 }
 
+// When Packlink says the courier delivered the parcel, or null if it hasn't
+// (or Packlink can't be reached).
+export async function packlinkDelivered(reference: string): Promise<Date | null> {
+  if (!isPacklinkConfigured()) return null;
+  try {
+    const s = await call<Record<string, unknown>>("GET", `shipments/${encodeURIComponent(reference)}`);
+    const state = [s.state, s.status, s.shipment_status].find((v) => typeof v === "string") as string | undefined;
+    if (!state || !/^DELIVERED$/i.test(state.trim())) return null;
+    const date = [s.delivered_date, s.delivery_date, s.delivered_at, s.update_date].map((v) => (typeof v === "string" ? new Date(v) : null)).find((d) => d && !Number.isNaN(d.getTime()));
+    return date && date.getTime() <= Date.now() ? date : new Date();
+  } catch (err) {
+    console.error(`Checking delivery for Packlink ${reference} failed`, err instanceof Error ? err.message : err);
+    return null;
+  }
+}
+
 // Fills in (or corrects) a dispatched order's tracking number from Packlink:
 // when it has none but went through Packlink, or when Packlink's own reference
 // was saved by mistake. Gives up after a few seconds so pages never hang.

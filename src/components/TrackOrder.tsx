@@ -11,6 +11,7 @@ type Result = {
   paid: string | null;
   inProduction: string | null;
   dispatched: string | null;
+  delivered: string | null;
   delivery: string;
   docsOutstanding: boolean;
   items: { reg: string; qty: number; description: string }[];
@@ -50,6 +51,7 @@ export function TrackOrder({ initialRef }: { initialRef: string }) {
       { title: "Payment received", done: Boolean(result.paid), when: fmt(result.paid) },
       { title: "Being made", done: Boolean(result.inProduction) || result.status === "dispatched", when: fmt(result.inProduction) },
       { title: "Dispatched", done: result.status === "dispatched", when: fmt(result.dispatched) },
+      { title: "Delivered", done: Boolean(result.delivered), when: fmt(result.delivered) },
     ];
     return (
       <div className="space-y-5">

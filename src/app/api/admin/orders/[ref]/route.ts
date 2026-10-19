@@ -1,5 +1,5 @@
 import { checkAdminLogin, failDelay, isAdmin } from "@/lib/auth";
-import { type OrderStatus, getOrder, markPaid, sendDocsEmail, sendOrderEmails, sendStatusEmail, setDocsStatus, setStatus, setTracking, statusLabels } from "@/lib/orders";
+import { type OrderStatus, getOrder, markDelivered, markPaid, sendDocsEmail, sendOrderEmails, sendStatusEmail, setDocsStatus, setStatus, setTracking, statusLabels } from "@/lib/orders";
 import { cleanTrackingNumber, isCarrier } from "@/lib/tracking";
 import { getCheckoutSession, refundCheckout } from "@/lib/stripe";
 import { courierTracking, isPacklinkRef, sendToPacklink } from "@/lib/packlink";
@@ -35,6 +35,11 @@ export async function POST(req: Request, ctx: RouteContext<"/api/admin/orders/[r
   if (body.action === "docs-approve") {
     await setDocsStatus(order, "approved");
     return Response.json({ message: "Documents marked as checked ✓" });
+  }
+  if (body.action === "delivered") {
+    if (order.status !== "dispatched") return Response.json({ error: "Only dispatched orders can be delivered." }, { status: 400 });
+    await markDelivered(order);
+    return Response.json({ message: "Marked as delivered" });
   }
   if (body.action === "docs-remind") {
     const sent = await sendDocsEmail(order, "docs_reminder");

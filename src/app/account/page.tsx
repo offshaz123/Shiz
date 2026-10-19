@@ -72,7 +72,7 @@ export default async function AccountPage(props: PageProps<"/account">) {
                       <p className="text-sm text-muted">Placed {fmt(o.created_at)}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <StatusBadge status={o.status} customer />
+                      <StatusBadge status={o.status} customer delivered={Boolean(o.delivered_at)} />
                       <span className="font-display text-2xl font-bold">{money(o.amount_paid ?? o.total)}</span>
                     </div>
                   </div>
