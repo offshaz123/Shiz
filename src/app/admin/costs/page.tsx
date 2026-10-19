@@ -53,8 +53,9 @@ export default async function CostsPage(props: PageProps<"/admin/costs">) {
     <AdminShell active="costs">
       <h2 className="font-display text-2xl font-bold">What your plates cost to make</h2>
       <p className="mt-1 max-w-3xl text-sm text-muted">
-        Materials only, from your prices below. A pair is two plates. A plate with a flag or green strip uses the flag sheet instead of the
-        plain reflective. Hex plates cost the same as standard.
+        Materials only, from your prices below. A pair is two plates. The flag sheet is only counted on plates where the customer chose a
+        flag or green strip; every other plate uses the plain reflective. Your orders below are worked out from what was actually ordered.
+        Hex plates cost the same as standard.
       </p>
 
       <div className="mt-4 overflow-x-auto rounded-2xl border border-line bg-white">
@@ -63,9 +64,9 @@ export default async function CostsPage(props: PageProps<"/admin/costs">) {
             <tr>
               <th className="p-3">Style</th>
               <th className="p-3">Letters</th>
-              <th className="p-3 text-right">1 plate (7 characters)</th>
-              <th className="p-3 text-right">Pair</th>
-              <th className="p-3 text-right">Pair with a flag</th>
+              <th className="p-3 text-right">1 plate, no flag (7 characters)</th>
+              <th className="p-3 text-right">Pair, no flag</th>
+              <th className="p-3 text-right">Pair if they add a flag</th>
               <th className="p-3 text-right">You sell a pair for</th>
               <th className="p-3 text-right">Left after materials</th>
             </tr>
