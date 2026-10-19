@@ -86,6 +86,7 @@ keywords, dealership social strategy).
 - How Many Ad Creatives Do You Actually Need Each Month? (practical how-to)
 - Meta & Instagram Ads for Wedding and Event Businesses (industry-specific)
 - Service Area Businesses: Should You Hide Your Address? (local search)
+- Meta & Instagram Ads for Dog Groomers and Pet Services (industry-specific)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -236,7 +237,7 @@ keywords, dealership social strategy).
 ## Backlog — industry-specific (added 2026-09-16 research round)
 - [x] Meta & Instagram Ads for Barbers and Hairdressers — target: "Facebook ads for barbers UK",
       "Instagram marketing for hairdressers"
-- [ ] Meta & Instagram Ads for Dog Groomers and Pet Services — target: "Facebook ads pet
+- [x] Meta & Instagram Ads for Dog Groomers and Pet Services — target: "Facebook ads pet
       business UK", "marketing for dog groomers"
 - [x] Meta & Instagram Ads for Mobile Businesses — target: "marketing for mobile businesses UK",
       "advertising a mobile service"
@@ -318,6 +319,40 @@ keywords, dealership social strategy).
       "Advantage+ Audience: What Happened to Interest Targeting" already answers this, including
       that detailed targeting is now a suggestion and creative does the filtering. A second page
       would compete with it for the same searches.
+
+## Backlog — Google Ads (added 2026-10-19 research round)
+Note: we sell Google Ads at a flat £600/month but the blog is almost entirely Meta. This round
+deliberately weights toward Google Ads to close that gap.
+- [ ] The Search Terms Report: Where Your Google Ads Money Actually Goes — target: "Google Ads
+      search terms report", "wasted ad spend Google Ads"
+- [ ] Negative Keywords: The List You Build Before You Launch — target: "negative keyword list
+      Google Ads", "stop irrelevant clicks Google Ads"
+- [ ] Should a Small Business Use Performance Max? — target: "Performance Max small budget",
+      "PMax vs search campaigns UK"
+- [ ] Why Your Google Ads Are Showing for the Wrong Town — target: "Google Ads location
+      targeting", "presence vs interest location settings"
+- [ ] Call Tracking for Google Ads: Knowing Which Ad Made the Phone Ring — target: "call tracking
+      Google Ads UK", "which ad made the phone ring"
+- [ ] Should You Bid on Your Own Business Name? — target: "bidding on your own brand name Google
+      Ads", "branded search PPC worth it"
+- [ ] Ad Scheduling: Should Your Ads Run at 3am? — target: "ad scheduling Google Ads", "dayparting
+      small business"
+
+## Backlog — forms & conversion (added 2026-10-19 research round)
+- [ ] How Many Fields Should Your Enquiry Form Have? — target: "how many form fields", "contact
+      form conversion rate"
+- [ ] Consent Wording on Your Enquiry Form: What UK Law Actually Needs — target: "GDPR contact
+      form UK", "PECR marketing consent small business" (verify against ICO guidance, not blogs)
+
+## Backlog — local search (added 2026-10-19 research round)
+- [ ] Google Business Profile Photos: Which Ones Actually Get Used — target: "Google Business
+      Profile photos", "best photos for Google listing"
+
+## Backlog — practical how-to (added 2026-10-19 research round)
+- [ ] What to Do With the Leads That Said No — target: "following up old leads", "re-engaging
+      cold leads small business"
+- [ ] Writing a Quote That Gets Accepted — target: "how to write a quote small business", "quote
+      follow up template"
 
 ## Notes for whoever (human or Routine) picks the next topic
 - Rotate categories — don't publish 3 industry guides in a row

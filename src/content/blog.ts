@@ -16,6 +16,95 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "meta-instagram-ads-for-dog-groomers-and-pet-services",
+    title: "Meta & Instagram Ads for Dog Groomers and Pet Services",
+    description:
+      "Pet businesses have the best content of any trade and the hardest sale. What to advertise when the product is trust and the diary is already the bottleneck.",
+    publishedAt: "2026-10-19",
+    keywords: [
+      "Facebook ads pet business UK",
+      "marketing for dog groomers",
+      "how to get more grooming clients",
+      "Instagram for dog groomers",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Pet businesses start with an advantage nobody else has. The content makes itself, it is genuinely charming, and people stop scrolling for it without being asked.",
+          "Which is also the trap. A grooming page can rack up views for months without filling a single slot, because the people watching are enjoying the dogs rather than looking for a groomer.",
+          "Attention is easy in this trade. Bookings are not, and they are a different job.",
+        ],
+      },
+      {
+        heading: "The sale is trust, not grooming",
+        paragraphs: [
+          "Somebody is handing over an animal they love to a stranger, leaving, and coming back hours later hoping it went well. They cannot ask the dog how it was.",
+          "That is the actual decision, and it explains why price barely moves it. The questions underneath are:",
+        ],
+        bullets: [
+          "Will my dog be frightened",
+          "What happens if it will not stay still, or snaps",
+          "Will somebody be with it the whole time, or is it in a crate for four hours",
+          "Do you know what you are doing with this breed",
+          "What if it has a bad hip, or is fifteen, or has had a bad experience before",
+        ],
+      },
+      {
+        paragraphs: [
+          "An advert that answers one of those directly will out-perform a lovely before-and-after that answers none of them.",
+        ],
+      },
+      {
+        heading: "Breed is the targeting",
+        paragraphs: [
+          "This is the most useful specific thing in this trade. Owners do not search for a groomer in the abstract, they search as the owner of a particular kind of dog, and the problems are completely different.",
+          "A doodle owner has one problem and it is matting. They have usually been told off by a previous groomer, or had a dog shaved down when they wanted it kept long, and they are braced for it happening again. An advert about coat maintenance between appointments, written plainly and without scolding, speaks directly to a large and anxious market.",
+          "A spaniel owner is thinking about ears and feathering. A double-coated breed owner has been told never to clip and wants to know what you will actually do. A puppy owner is nervous about the first groom full stop.",
+          "Write for one of those at a time. A general advert about dog grooming is competing with every other general advert, while a specific one arrives like it was meant for them.",
+        ],
+      },
+      {
+        heading: "If you are already full",
+        paragraphs: [
+          "Most working groomers are, which makes the usual pitch about more enquiries fairly useless.",
+          "What advertising is for when the diary is full is the same as it is for driving instructors. Filling the gaps a cancellation leaves. Choosing clients you want rather than taking whatever rings. Raising your prices with a waiting list behind you rather than hoping. And keeping the name in front of people for the quieter stretch, because it always comes.",
+          "The waiting list itself is worth saying out loud rather than hiding. Currently booking four weeks ahead is not an apology, it is the only proof in this trade that cannot be faked.",
+        ],
+      },
+      {
+        heading: "The no-show problem advertising cannot fix",
+        paragraphs: [
+          "Worth saying plainly, because groomers lose more money to this than to any shortage of enquiries.",
+          "A missed appointment is an empty chair you cannot refill at two hours' notice, and the slot is gone. Advertising into that is pouring more people into a bucket with a hole in it.",
+          "The fixes are unglamorous and they are not marketing. A deposit at booking. A reminder a few days before and again the night before. A clear, written cancellation policy that you actually apply. A waiting list you can message when a slot opens.",
+          "Get that right before spending on reach, or the advertising just buys you more people to be let down by.",
+        ],
+      },
+      {
+        heading: "What to show",
+        paragraphs: [
+          "The material is already on your phone.",
+        ],
+        bullets: [
+          "Before and after, obviously, and it works",
+          "The handling. A nervous dog being talked to gently does more for a worried owner than any finished groom",
+          "Your setup. Clean table, good lighting, where the dogs wait, whether they are crated and for how long",
+          "You, explaining something. Why a matted coat has to come off, what a puppy's first visit involves, how often a breed needs doing",
+          "Your qualifications and insurance, stated plainly rather than assumed",
+          "The old and the awkward dogs, because the owners of those dogs are the ones struggling to find anyone",
+        ],
+      },
+      {
+        heading: "One thing to be careful about",
+        paragraphs: [
+          "Keep off anything that reads as a health or veterinary claim. Treating a skin condition, curing itching, diagnosing anything.",
+          "Groomers often spot problems first and that is genuinely valuable, but there is a real line between noticing something and saying you can treat it. Say you will tell the owner if you see something that looks like it needs a vet. That is useful, true, and reassuring, and it stays well clear of claims you are not qualified to make.",
+          "The same goes for any product you sell alongside the grooming. Describing what it is for is fine, promising what it cures is not.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "service-area-businesses-should-you-hide-your-address",
     title: "Service Area Businesses: Should You Hide Your Address?",
     description:
