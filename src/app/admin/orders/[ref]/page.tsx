@@ -12,6 +12,7 @@ import { PlatePreview } from "@/components/PlatePreview";
 import { docsLabels, getOrder, listDocuments } from "@/lib/orders";
 import { DocsChecker } from "@/components/DocsChecker";
 import { MarkDeliveredButton } from "@/components/MarkDeliveredButton";
+import { HandOverButton } from "@/components/HandOverButton";
 import { describe, money, unitPrice } from "@/lib/plates";
 import { cardLine } from "@/lib/emails";
 import { listEmailLog, listOrderEvents } from "@/lib/email-log";
@@ -53,6 +54,9 @@ export default async function AdminOrderPage(props: PageProps<"/admin/orders/[re
         <h2 className="font-display text-3xl font-bold">Order {order.ref}</h2>
         <StatusBadge status={order.status} delivered={Boolean(order.delivered_at)} />
         {order.status === "dispatched" && !order.delivered_at && <MarkDeliveredButton orderRef={order.ref} />}
+        {["paid", "in_production", "dispatched"].includes(order.status) && !order.delivered_at && (
+          <HandOverButton orderRef={order.ref} email={order.email} docsMissing={order.docs_status === "outstanding"} />
+        )}
       </div>
       <p className="text-sm text-muted">Placed {fmtDateTime(order.created_at)}</p>
 

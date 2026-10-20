@@ -6,7 +6,7 @@ import { randomBytes, timingSafeEqual } from "node:crypto";
 import { site } from "./site";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { LOGO_CID, customerCancelEmail, customerDocsEmail, customerDispatchEmail, customerOrderEmail, customerReminderEmail, plateCid, plateImageParams, shopOrderEmail } from "./emails";
+import { LOGO_CID, customerCancelEmail, customerCollectedEmail, customerDocsEmail, customerDispatchEmail, customerOrderEmail, customerReminderEmail, plateCid, plateImageParams, shopOrderEmail } from "./emails";
 import { renderPlatePng } from "./plate-image";
 import { countDiscountUse } from "./discounts";
 import { sendMetaPurchase } from "./meta-capi";
@@ -288,6 +288,32 @@ export async function checkDeliveries() {
     if (!order?.packlink_ref) continue;
     const when = await packlinkDelivered(order.packlink_ref);
     if (when) await markDelivered(order, when);
+  }
+}
+
+// Plates collected by the customer or delivered by hand: the order is done
+// (dispatched and delivered, with no tracking) and the customer gets a short
+// "you've received your plates" email instead of the "on its way" one.
+export async function markHandedOver(order: Order) {
+  await execute("UPDATE orders SET status = 'dispatched', delivered_at = NOW(), tracking_number = NULL, tracking_carrier = NULL WHERE id = ?", [order.id]);
+  await logOrderEvent(order.ref, "dispatched");
+  await logOrderEvent(order.ref, "collected");
+  await logOrderEvent(order.ref, "delivered");
+  return sendCollectedEmail(order);
+}
+
+// The "you've got your plates" email for an order handed over in person.
+export async function sendCollectedEmail(order: Order) {
+  const email = customerCollectedEmail(order);
+  const token = newToken();
+  try {
+    await sendMail({ to: order.email, subject: email.subject, text: email.text, html: withOpenTracker(email.html, token) });
+    await logEmail({ orderId: order.id, kind: "collected", recipient: order.email, ok: true, token });
+    return true;
+  } catch (err) {
+    console.error(`Handed over email for ${order.ref} failed`, err);
+    await logEmail({ orderId: order.id, kind: "collected", recipient: order.email, ok: false, error: err });
+    return false;
   }
 }
 

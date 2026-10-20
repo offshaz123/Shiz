@@ -15,6 +15,7 @@ const emailNames: Record<EmailKind, string> = {
   reminder: "Checkout reminder",
   docs_reminder: "Documents reminder",
   docs_retake: "New photo request",
+  collected: "\"Handed over\" email",
 };
 
 function lastEmail(emails: EmailLog[], kind: EmailKind) {
@@ -56,7 +57,9 @@ export function OrderTimeline({
   const madeStage = ["in_production", "dispatched"].includes(order.status);
   const ended = order.status === "cancelled" || order.status === "refunded";
   const receipt = lastEmail(emails, "receipt");
-  const dispatchEmail = lastEmail(emails, "dispatched");
+  // Handed over in person (collected or delivered by hand) instead of posted.
+  const handed = at("collected");
+  const dispatchEmail = handed ? lastEmail(emails, "collected") : lastEmail(emails, "dispatched");
 
   const steps: Step[] = [
     { title: "Order placed", state: "done", lines: [fmtDateTime(order.created_at)] },
@@ -86,7 +89,7 @@ export function OrderTimeline({
           email: lastEmail(emails, order.status as EmailKind),
         }
       : {
-          title: "Dispatched",
+          title: handed ? "Handed over in person" : "Dispatched",
           state: order.status === "dispatched" ? (dispatchEmail?.status === "failed" ? "failed" : "done") : "waiting",
           lines: order.status === "dispatched" ? (at("dispatched") ? [fmtDateTime(at("dispatched"))] : []) : ["Not sent yet"],
           email: order.status === "dispatched" ? dispatchEmail : undefined,

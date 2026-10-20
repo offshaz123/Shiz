@@ -1,5 +1,6 @@
+import { listOrderEvents } from "@/lib/email-log";
 import { checkAdminLogin, failDelay, isAdmin } from "@/lib/auth";
-import { type OrderStatus, getOrder, markDelivered, markPaid, sendDocsEmail, sendOrderEmails, sendStatusEmail, setDocsStatus, setStatus, setTracking, statusLabels } from "@/lib/orders";
+import { type OrderStatus, getOrder, markDelivered, markHandedOver, sendCollectedEmail, markPaid, sendDocsEmail, sendOrderEmails, sendStatusEmail, setDocsStatus, setStatus, setTracking, statusLabels } from "@/lib/orders";
 import { cleanTrackingNumber, isCarrier } from "@/lib/tracking";
 import { getCheckoutSession, refundCheckout } from "@/lib/stripe";
 import { courierTracking, isPacklinkRef, sendToPacklink } from "@/lib/packlink";
@@ -36,6 +37,14 @@ export async function POST(req: Request, ctx: RouteContext<"/api/admin/orders/[r
     await setDocsStatus(order, "approved");
     return Response.json({ message: "Documents marked as checked ✓" });
   }
+  if (body.action === "handed-over") {
+    if (!["paid", "in_production", "dispatched"].includes(order.status) || order.delivered_at)
+      return Response.json({ error: "Only paid orders that haven't been delivered yet can be handed over." }, { status: 400 });
+    const sent = await markHandedOver(order);
+    return sent
+      ? Response.json({ message: `Marked as handed over · ${order.email} emailed` })
+      : Response.json({ error: "Marked as handed over, but the email didn't send." }, { status: 502 });
+  }
   if (body.action === "delivered") {
     if (order.status !== "dispatched") return Response.json({ error: "Only dispatched orders can be delivered." }, { status: 400 });
     await markDelivered(order);
@@ -56,6 +65,8 @@ export async function POST(req: Request, ctx: RouteContext<"/api/admin/orders/[r
   }
   if (body.action === "resend") {
     await sendOrderEmails(order);
+    // An order handed over in person also gets its "you've got your plates" email again.
+    if ((await listOrderEvents(order.id)).some((e) => e.event === "collected")) await sendCollectedEmail(order);
     return Response.json({ message: "Emails sent again" });
   }
   if (body.action === "check-payment") {

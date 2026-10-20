@@ -583,3 +583,35 @@ export function customerDocsEmail(o: Order, reason: string | null) {
     text,
   };
 }
+
+// Sent when the shop hands the plates over in person (collected, or
+// delivered by hand) instead of posting them.
+export function customerCollectedEmail(o: Order) {
+  const first = o.customer_name.split(" ")[0] || "there";
+  const regs = o.items.map((i) => i.reg).join(", ");
+  const helpHref = whatsappHref.replace(
+    encodeURIComponent("I'm a customer and I need some help"),
+    encodeURIComponent(`I have a question about my order ${o.ref}`),
+  );
+  const html = layout(
+    `Your PlatedUp order ${o.ref} has been handed over`,
+    `${first}, you've got your plates. Thanks for choosing PlatedUp!`,
+    `
+    <p style="margin:0 0 10px;"><span style="display:inline-block;background:#e7f6ec;color:#1f7a3d;font:700 13px Arial,sans-serif;padding:6px 12px;border-radius:999px;">&#10003; Handed over</span></p>
+    <p style="font:700 24px Arial,sans-serif;color:${INK};margin:0 0 8px;">Enjoy your new plates, ${esc(first)}!</p>
+    <p style="font:15px/1.6 Arial,sans-serif;color:${MUTED};margin:0 0 14px;">Your order ${esc(o.ref)} has been handed over to you in person, so there's nothing more to wait for.</p>
+    ${regs ? `<p style="font:14px Arial,sans-serif;color:${INK};margin:0 0 18px;"><strong>Plates:</strong> ${esc(regs)}</p>` : ""}
+    <p style="font:14px Arial,sans-serif;color:${MUTED};margin:0 0 4px;">Any questions? <a href="${helpHref}" style="color:#1f7a3d;font-weight:700;">WhatsApp us</a> and a real person will help.</p>
+    `,
+    "web",
+  );
+  const text = [
+    `Enjoy your new plates, ${first}!`,
+    "",
+    `Your order ${o.ref} has been handed over to you in person, so there's nothing more to wait for.`,
+    regs ? `Plates: ${regs}` : "",
+    "",
+    `Any questions? WhatsApp us: ${helpHref}`,
+  ].join("\n");
+  return { subject: `Order ${o.ref}: you've got your plates ✅`, html, text };
+}

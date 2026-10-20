@@ -3,6 +3,7 @@ import Link from "next/link";
 import { requireAdmin, fmtDateTime } from "@/lib/admin";
 import { AdminShell } from "@/components/AdminShell";
 import { StatusBadge } from "@/components/StatusBadge";
+import { HandOverButton } from "@/components/HandOverButton";
 import { listCustomers, listOrders, refreshPendingPayments, statusLabels } from "@/lib/orders";
 import { isStripeConfigured } from "@/lib/stripe";
 import { receiptSummary } from "@/lib/email-log";
@@ -160,6 +161,11 @@ export default async function AdminPage(props: PageProps<"/admin">) {
                 </td>
                 <td className="p-3">
                   <StatusBadge status={o.status} delivered={Boolean(o.delivered_at)} />
+                  {["paid", "in_production"].includes(o.status) && !o.delivered_at && (
+                    <span className="mt-1.5 block">
+                      <HandOverButton orderRef={o.ref} email={o.email} docsMissing={o.docs_status === "outstanding"} short />
+                    </span>
+                  )}
                 </td>
                 <td className={`p-3 text-xs font-semibold ${o.docs_status === "outstanding" ? "text-[#b42318]" : "text-muted"}`}>
                   {o.docs_status === "outstanding" ? "Missing" : o.docs_status === "approved" ? "Checked ✓" : o.docs_status === "received" ? (["paid", "in_production"].includes(o.status) ? "Not checked" : "Received") : "Not needed"}
