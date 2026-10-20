@@ -4,26 +4,42 @@ import type { Attachment } from "nodemailer/lib/mailer";
 export const MAX_FILE_BYTES = 10 * 1024 * 1024;
 export const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/heic", "image/heif", "image/webp", "application/pdf"];
 
+// Settings pasted into Hostinger can carry stray spaces or quotes.
+const env = (name: string) => (process.env[name] ?? "").trim().replace(/^["']|["']$/g, "");
+
 export function isMailConfigured() {
-  return Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
+  return Boolean(env("SMTP_HOST") && env("SMTP_USER") && env("SMTP_PASS"));
 }
 
-function transport() {
-  const port = Number(process.env.SMTP_PORT ?? 465);
+function transport(timeout = 10000) {
+  // 465 unless a different number was set (a blank or mistyped port would hang).
+  const port = Number(env("SMTP_PORT")) || 465;
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
+    host: env("SMTP_HOST"),
     port,
     secure: port === 465,
-    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 20000,
+    auth: { user: env("SMTP_USER"), pass: env("SMTP_PASS") },
+    connectionTimeout: timeout,
+    greetingTimeout: timeout,
+    socketTimeout: timeout * 2,
   });
 }
 
 // Logs in to the email server without sending anything (for the admin status bar).
 export async function verifyMail() {
-  await transport().verify();
+  const host = env("SMTP_HOST");
+  const port = Number(env("SMTP_PORT")) || 465;
+  try {
+    // Gives up before the status bar's own 8 second limit, so the real reason shows.
+    await transport(6000).verify();
+  } catch (err) {
+    const e = err as { code?: string; message?: string };
+    if (e.code === "EAUTH") throw new Error(`The email server said the password is wrong for ${env("SMTP_USER")}. Check SMTP_PASS in Hostinger.`);
+    if (e.code === "EDNS" || e.code === "ENOTFOUND") throw new Error(`Couldn't find the email server "${host}". SMTP_HOST should be smtp.hostinger.com.`);
+    if (e.code === "ETIMEDOUT" || e.code === "ECONNECTION" || e.code === "ESOCKET")
+      throw new Error(`Couldn't reach ${host} on port ${port}. SMTP_HOST should be smtp.hostinger.com and SMTP_PORT 465.`);
+    throw err;
+  }
 }
 
 type Mail = {
@@ -45,7 +61,7 @@ export async function sendMail(m: Mail) {
     return;
   }
   await transport().sendMail({
-    from: `${m.fromName ?? "PlatedUp"} <${process.env.SMTP_USER}>`,
+    from: `${m.fromName ?? "PlatedUp"} <${env("SMTP_USER")}>`,
     to: m.to,
     replyTo: m.replyTo,
     subject: m.subject,
@@ -56,7 +72,7 @@ export async function sendMail(m: Mail) {
 }
 
 export function shopAddress() {
-  return process.env.ORDERS_EMAIL || process.env.SMTP_USER || "";
+  return env("ORDERS_EMAIL") || env("SMTP_USER");
 }
 
 export async function sendToShop(m: Omit<Mail, "to" | "fromName">) {
