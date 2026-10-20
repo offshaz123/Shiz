@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { CameBack } from "@/components/CameBack";
-import { CarPreview } from "@/components/CarPreview";
+import { LookPreview, lookCaption } from "@/components/CarPreview";
 import { KlarnaNote } from "@/components/Klarna";
 import { PlatePreview } from "@/components/PlatePreview";
 import { isDbConfigured } from "@/lib/db";
@@ -92,8 +92,8 @@ export default async function CompleteOrder(props: PageProps<"/complete-order">)
       )}
 
       <section className="mt-6">
-        <CarPreview config={order.items[0]} />
-        <p className="mt-3 text-sm text-muted">Here&apos;s how your plate will look on the front of a car.</p>
+        <LookPreview config={order.items[0]} />
+        <p className="mt-3 text-sm text-muted">{lookCaption(order.items[0])}</p>
       </section>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start">

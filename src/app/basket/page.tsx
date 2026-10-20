@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { CarPreview } from "@/components/CarPreview";
+import { LookPreview, lookCaption } from "@/components/CarPreview";
 import { PlatePreview } from "@/components/PlatePreview";
 import { useCart } from "@/lib/cart";
 import { describe, fixings, money, unitPrice } from "@/lib/plates";
@@ -27,23 +27,25 @@ export default function BasketPage() {
       </div>
     );
 
+  const shown = items.find((i) => i.id === shownId) ?? items[0];
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-14">
       <h1 className="font-display text-3xl font-bold uppercase sm:text-4xl">Your basket</h1>
 
-      {/* The finished plate on a car, before they pay. */}
+      {/* The finished plate on a car (or on its own for bike and 4x4 plates), before they pay. */}
       <section className="mt-6">
-        <CarPreview config={items.find((i) => i.id === shownId) ?? items[0]} />
+        <LookPreview config={shown} />
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-          <p className="text-sm text-muted">Here&apos;s how your plate will look on the front of a car.</p>
+          <p className="text-sm text-muted">{lookCaption(shown)}</p>
           {items.length > 1 && (
-            <div className="flex flex-wrap gap-2" aria-label="Show plate on the car">
+            <div className="flex flex-wrap gap-2" aria-label="Show plate">
               {items.map((i) => (
                 <button
                   key={i.id}
                   type="button"
                   onClick={() => setShownId(i.id)}
-                  aria-pressed={(shownId ?? items[0].id) === i.id}
+                  aria-pressed={shown.id === i.id}
                   className="option whitespace-pre px-3 py-1.5 text-sm font-semibold"
                 >
                   {i.reg}
