@@ -3,7 +3,7 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { type BadgeId, type BorderId, type FlagId, type StyleId, badges, borders, cleanShowText, formatReg, sizes, styles } from "@/lib/plates";
 import { site } from "@/lib/site";
-import { CHAR_W, HEX_INSET, LEGAL_FONT, hexPoints, MARGIN, legalLayout, showFontSize } from "@/lib/plate-layout";
+import { HEX_INSET, MARGIN, fontFor, hexPoints, legalLayout, plateLines, showFontSize } from "@/lib/plate-layout";
 
 // Draws a plate as a PNG for emails (email apps can't show the SVG preview).
 // Used by /api/plate-image and attached straight into order emails.
@@ -32,9 +32,9 @@ export async function renderPlate(q: URLSearchParams) {
   const style = styles.find((s) => s.id === (q.get("style") as StyleId)) ?? styles[0];
   const size = sizes.find((s) => s.id === q.get("size")) ?? sizes[0];
   const { hex } = size;
-  // Hex plates have no flag or border.
-  const badge = hex ? badges[0] : (badges.find((b) => b.id === (q.get("badge") as BadgeId)) ?? badges[0]);
-  const border = hex ? "none" : (borders.find((b) => b.id === (q.get("border") as BorderId))?.id ?? "none");
+  // Hex and two-line plates have no room for a flag; hex plates no border either.
+  const badge = size.badge ? (badges.find((b) => b.id === (q.get("badge") as BadgeId)) ?? badges[0]) : badges[0];
+  const border = size.border ? (borders.find((b) => b.id === (q.get("border") as BorderId))?.id ?? "none") : "none";
   const rear = q.get("side") !== "front";
   const W = size.width * PX;
   const H = size.height * PX;
@@ -51,10 +51,27 @@ export async function renderPlate(q: URLSearchParams) {
   // The same layout as the website preview (PlatePreview), at 2px per mm.
   const px = PX;
   const available = (W - bandW) / px - MARGIN * 2 - (hex ? HEX_INSET * 2 : 0);
-  const layout = type === "legal" ? legalLayout(text) : null;
-  const scale = layout ? Math.min(1, available / layout.width) : 1;
-  const fontSize = (layout ? LEGAL_FONT * scale : showFontSize(text, available, 2)) * px;
-  const startX = layout ? bandW + ((W - bandW) - layout.width * scale * px) / 2 : 0;
+  // Motorbike and 4x4 / import plates are on two lines.
+  const dims = { charH: size.charH, charW: size.charW, gap: size.gap };
+  const lines = plateLines(text, size.lines);
+  const layouts = type === "legal" ? lines.map((l) => legalLayout(l, dims)) : null;
+  const scale = layouts ? Math.min(1, ...layouts.map((l) => available / l.width)) : 1;
+  const fontMm = layouts ? fontFor(dims) * scale : Math.min(...lines.map((l) => showFontSize(l, available, 2, fontFor(dims))));
+  const fontSize = fontMm * px;
+  // Each line is a band the letters are centred in (px). One line fills the
+  // plate above the maker's mark; two lines sit either side of the line gap.
+  const capPx = fontMm * 0.7 * px;
+  const rows =
+    lines.length === 1
+      ? [{ top: 0, height: H - 34 }]
+      : (() => {
+          // 2mm above centre, as on the website preview.
+          const top = (H - (capPx * 2 + size.lineGap * px)) / 2 - 2 * px;
+          return [
+            { top: top - capPx * 0.3, height: capPx * 1.6 },
+            { top: top + capPx + size.lineGap * px - capPx * 0.3, height: capPx * 1.6 },
+          ];
+        })();
   const depth = style.depth * 2;
   // Blurring a shadow takes a lot of memory, and on the shared hosting a
   // blur over about 3px made the thicker styles (4D, 5mm/7mm gel) fail to
@@ -69,18 +86,45 @@ export async function renderPlate(q: URLSearchParams) {
 
   const gel = style.look === "gel";
 
-  // The registration, drawn once for the letters and again (gel only) for their shine.
-  const letters = (look: React.CSSProperties) =>
-    layout ? (
-      layout.cells.map((cell, i) => (
+  // The registration, drawn once for the letters and again (gel only) for
+  // their shine. `shift` moves everything up, for drawing inside a shine band.
+  const letters = (look: React.CSSProperties, shift = 0) =>
+    lines.flatMap((line, li) => {
+      const row = rows[li];
+      const layout = layouts?.[li];
+      if (!layout)
+        return [
+          <div
+            key={li}
+            style={{
+              position: "absolute",
+              left: bandW,
+              right: 0,
+              top: row.top - shift,
+              height: row.height,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontFamily: "Plate",
+              fontSize,
+              letterSpacing: 4,
+              whiteSpace: "pre",
+              ...look,
+            }}
+          >
+            {line}
+          </div>,
+        ];
+      const startX = bandW + (W - bandW - layout.width * scale * px) / 2;
+      return layout.cells.map((cell, i) => (
         <div
-          key={i}
+          key={`${li}-${i}`}
           style={{
             position: "absolute",
-            left: startX + (cell.centre - CHAR_W / 2) * scale * px,
-            width: CHAR_W * scale * px,
-            top: 0,
-            height: H - 34,
+            left: startX + (cell.centre - dims.charW / 2) * scale * px,
+            width: dims.charW * scale * px,
+            top: row.top - shift,
+            height: row.height,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -92,28 +136,18 @@ export async function renderPlate(q: URLSearchParams) {
         >
           {cell.ch}
         </div>
-      ))
-    ) : (
-      <div
-        style={{
-          position: "absolute",
-          left: bandW,
-          right: 0,
-          top: 0,
-          height: H - 34,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontFamily: "Plate",
-          fontSize,
-          letterSpacing: 4,
-          whiteSpace: "pre",
-          ...look,
-        }}
-      >
-        {text}
-      </div>
-    );
+      ));
+    });
+
+  // Where the light catches the gel on each line: a soft sheen over the top
+  // half of the letters and a bright streak near the top.
+  const shineBands = rows.slice(0, lines.length).flatMap((row) => {
+    const letterTop = row.top + row.height / 2 - capPx / 2;
+    return [
+      { top: letterTop + capPx * 0.03, height: capPx * 0.5, alpha: 0.09 },
+      { top: letterTop + capPx * 0.17, height: Math.max(4, capPx * 0.05), alpha: 0.24 },
+    ];
+  });
 
   return new ImageResponse(
     (
@@ -176,17 +210,13 @@ export async function renderPlate(q: URLSearchParams) {
           <div style={{ position: "absolute", left: 10, top: 10, right: 10, bottom: 10, border: "6px solid #111", borderRadius: 10 }} />
         )}
         {letters({ color: "#111", textShadow: shadow })}
-        {/* Gel letters are domed resin: a shine across the top half of each one. */}
         {/* Gel letters are domed, glossy resin: a soft sheen on the upper part of */}
         {/* each letter and a bright streak where the light catches it. Images */}
         {/* can't fill text with a gradient, so these are bands of the letters cut out in white. */}
         {gel &&
-          [
-            { top: 20, height: 80, alpha: 0.09 },
-            { top: 42, height: 8, alpha: 0.24 },
-          ].map(({ top, height, alpha }) => (
+          shineBands.map(({ top, height, alpha }) => (
             <div key={top} style={{ position: "absolute", left: 0, top, width: W, height, overflow: "hidden", display: "flex" }}>
-              {letters({ color: `rgba(255,255,255,${alpha})`, top: -top, textShadow: "none" })}
+              {letters({ color: `rgba(255,255,255,${alpha})`, textShadow: "none" }, top)}
             </div>
           ))}
         <div

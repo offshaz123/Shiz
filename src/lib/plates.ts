@@ -10,23 +10,99 @@ export type FlagId = "uk" | "eng" | "sco" | "cym";
 export type BorderId = "none" | "black";
 export type FixingId = "none" | "pads" | "screws" | "both";
 export type DeliveryId = "standard" | "nextday";
-export type SizeId = "standard" | "hex4" | "hex5" | "hex6" | "hex7";
+export type SizeId = "standard" | "hex4" | "hex5" | "hex6" | "hex7" | "motorbike" | "square";
 export type MaterialId = "standard" | "premium";
 
-// Everything here is what we stock: the standard car plate (520 × 111mm) and
-// hex plates cut to the length of the registration. A hex plate's ends come
-// to a point, so it's a little longer than the characters need; `chars` is
-// the most characters (not counting the space) that fit. Hex plates have no
-// room for a flag or border.
-export const sizes: { id: SizeId; name: string; short: string; width: number; height: number; chars: number; hex: boolean }[] = [
-  { id: "standard", name: "Standard", short: "Standard", width: 520, height: 111, chars: 7, hex: false },
-  { id: "hex4", name: "Hex Plate – up to 4 characters", short: "Hex 4", width: 330, height: 111, chars: 4, hex: true },
-  { id: "hex5", name: "Hex Plate – 5 characters", short: "Hex 5", width: 390, height: 111, chars: 5, hex: true },
-  { id: "hex6", name: "Hex Plate – 6 characters", short: "Hex 6", width: 450, height: 111, chars: 6, hex: true },
-  { id: "hex7", name: "Hex Plate – 7 characters", short: "Hex 7", width: 520, height: 111, chars: 7, hex: true },
-];
+// Everything here is what we stock. Standard car plates (520 × 111mm), hex
+// plates cut to the length of the registration (their ends come to a point,
+// so `chars` is the most characters, not counting the space, that fit), and
+// two-line plates: motorbike (rear only, smaller 64mm characters) and the
+// square 4x4 / import plate. Only standard car plates have room for a flag:
+// on the others it would push the characters below the legal size.
+export type PlateSize = {
+  id: SizeId;
+  name: string;
+  short: string;
+  width: number;
+  height: number;
+  chars: number;
+  hex: boolean;
+  lines: 1 | 2;
+  // Character size (mm): 79mm on car plates, 64mm on motorbike plates.
+  charH: number;
+  charW: number;
+  gap: number;
+  // Space between the two lines (mm).
+  lineGap: number;
+  rearOnly: boolean;
+  badge: boolean;
+  border: boolean;
+  // Added to the plate price (pence).
+  extra: number;
+  note: string;
+};
+const car = { charH: 79, charW: 50, gap: 11, lineGap: 19 };
 // Hex plates cost this much more than the same style in the standard shape.
 export const HEX_EXTRA = 1500;
+export const SQUARE_EXTRA = 500;
+const hexSize = (chars: number, width: number): PlateSize => ({
+  id: `hex${chars}` as SizeId,
+  name: chars === 4 ? "Hex Plate – up to 4 characters" : `Hex Plate – ${chars} characters`,
+  short: `Hex ${chars}`,
+  width,
+  height: 111,
+  chars,
+  hex: true,
+  lines: 1,
+  ...car,
+  rearOnly: false,
+  badge: false,
+  border: false,
+  extra: HEX_EXTRA,
+  note: `Hex plate, ${width} × 111mm, cut to fit your registration with pointed ends. Road legal, with no room for a flag or border.`,
+});
+export const sizes: PlateSize[] = [
+  { id: "standard", name: "Standard", short: "Standard", width: 520, height: 111, chars: 7, hex: false, lines: 1, ...car, rearOnly: false, badge: true, border: true, extra: 0, note: "Standard UK car plate, 520 × 111mm. Fits most cars." },
+  hexSize(4, 330),
+  hexSize(5, 390),
+  hexSize(6, 450),
+  hexSize(7, 520),
+  {
+    id: "motorbike",
+    name: "Motorbike – 9 × 7 in",
+    short: "Motorbike",
+    width: 229,
+    height: 178,
+    chars: 7,
+    hex: false,
+    lines: 2,
+    charH: 64,
+    charW: 44,
+    gap: 10,
+    lineGap: 13,
+    rearOnly: true,
+    badge: false,
+    border: true,
+    extra: 0,
+    note: "Motorbike plate, 9 × 7 in (229 × 178mm), on two lines with the legal 64mm motorbike characters. Rear plate only: motorbikes don't have a front plate.",
+  },
+  {
+    id: "square",
+    name: "4x4 / Import – 11 × 8 in",
+    short: "4x4 / Import",
+    width: 279,
+    height: 203,
+    chars: 7,
+    hex: false,
+    lines: 2,
+    ...car,
+    rearOnly: false,
+    badge: false,
+    border: true,
+    extra: SQUARE_EXTRA,
+    note: "Square plate, 11 × 8 in (279 × 203mm), on two lines, for 4x4s and Japanese or US imports with a square plate space. Full-size road-legal characters.",
+  },
+];
 
 export const materials: { id: MaterialId; name: string; note: string; price: number }[] = [
   { id: "standard", name: "Standard Acrylic", note: "Our everyday road-legal acrylic", price: 0 },
@@ -46,7 +122,9 @@ export function hexSizeFor(text: string) {
 
 // Whether the text fits the chosen size.
 export function fitsSize(c: Pick<PlateConfig, "size" | "type" | "reg">) {
-  return charCount(plateText(c)) <= sizeOf(c).chars || !sizeOf(c).hex;
+  const size = sizeOf(c);
+  if (size.hex) return charCount(plateText(c)) <= size.chars;
+  return true;
 }
 
 // Price changes set in the admin (Admin → Prices), loaded from the database
@@ -320,12 +398,13 @@ export function isValidPlateText(c: Pick<PlateConfig, "type" | "reg">) {
 
 export function unitPrice(c: PlateConfig) {
   const style = styles.find((s) => s.id === c.style) ?? styles[0];
-  let p = c.which === "pair" ? style.pair : style.single;
-  if (sizeOf(c).hex) p += HEX_EXTRA;
+  const size = sizeOf(c);
+  let p = c.which === "pair" && !size.rearOnly ? style.pair : style.single;
+  p += size.extra;
   p += materials.find((m) => m.id === c.material)?.price ?? 0;
-  // Hex plates can't have a flag or border.
-  if (c.badge !== "none" && !sizeOf(c).hex) p += extrasPrice.badge;
-  if (c.border !== "none" && !sizeOf(c).hex) p += extrasPrice.border;
+  // Only some sizes have room for a flag or border.
+  if (c.badge !== "none" && size.badge) p += extrasPrice.badge;
+  if (c.border !== "none" && size.border) p += extrasPrice.border;
   p += fixings.find((f) => f.id === c.fixing)?.price ?? 0;
   return p;
 }
@@ -334,7 +413,7 @@ export function describe(c: PlateConfig) {
   const style = styles.find((s) => s.id === c.style)!;
   const which = whichPlates.find((w) => w.id === c.which)!;
   const parts = [c.type === "show" ? "SHOW PLATE (not road legal)" : "Road Legal"];
-  if (sizeOf(c).hex) parts.push(sizeOf(c).short);
+  if (sizeOf(c).id !== "standard") parts.push(sizeOf(c).short);
   parts.push(style.name);
   if (c.material === "premium") parts.push("Premium Acrylic");
   parts.push(which.name);
@@ -374,7 +453,7 @@ function checkItem(raw: unknown, badgeList: { id: BadgeId }[]): CartItem | null 
   // Older baskets and orders were all standard size and material.
   const size = r.size === undefined ? "standard" : pick(r.size, sizes);
   const material = r.material === undefined ? "standard" : pick(r.material, materials);
-  const hex = sizes.find((s) => s.id === size)?.hex ?? false;
+  const plateSize = sizes.find((s) => s.id === size);
   const reg = typeof r.reg === "string" ? r.reg : "";
   const type: PlateType = r.type === "show" ? "show" : "legal";
   const qty = Number(r.qty);
@@ -388,9 +467,10 @@ function checkItem(raw: unknown, badgeList: { id: BadgeId }[]): CartItem | null 
     size,
     material,
     style,
-    which,
-    badge: hex ? "none" : badge,
-    border: hex ? "none" : border,
+    // Motorbike plates are rear only; flags and borders only where they fit.
+    which: plateSize?.rearOnly ? "rear" : which,
+    badge: plateSize?.badge ? badge : "none",
+    border: plateSize?.border ? border : "none",
     fixing,
     qty,
   };

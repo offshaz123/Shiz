@@ -33,9 +33,16 @@ export type Cell = {
   squeeze: number;
 };
 
+// Character sizes: cars use 79mm characters; motorbike plates use smaller
+// 64mm ones (44mm wide, 10mm apart), as the law allows.
+export type CharDims = { charH: number; charW: number; gap: number };
+export const CAR_CHARS: CharDims = { charH: CHAR_H, charW: CHAR_W, gap: GAP };
+export const fontFor = (d: CharDims) => d.charH / CAP;
+
 // A road-legal registration: every character gets a 50mm space, 11mm apart,
 // with 33mm between the two groups (e.g. "AB12" and "CDE").
-export function legalLayout(reg: string) {
+export function legalLayout(reg: string, dims: CharDims = CAR_CHARS) {
+  const font = fontFor(dims);
   const cells: Cell[] = [];
   let x = 0;
   reg
@@ -44,10 +51,10 @@ export function legalLayout(reg: string) {
     .filter(Boolean)
     .forEach((group, gi) => {
       [...group].forEach((ch, ci) => {
-        if (ci > 0) x += GAP;
+        if (ci > 0) x += dims.gap;
         else if (gi > 0) x += GROUP_GAP;
-        cells.push({ ch, centre: x + CHAR_W / 2, squeeze: Math.min(1, CHAR_W / (advance(ch) * LEGAL_FONT)) });
-        x += CHAR_W;
+        cells.push({ ch, centre: x + dims.charW / 2, squeeze: Math.min(1, dims.charW / (advance(ch) * font)) });
+        x += dims.charW;
       });
     });
   return { width: x, cells };
@@ -55,9 +62,18 @@ export function legalLayout(reg: string) {
 
 // Show plates keep the customer's own spacing in the normal font: as big as
 // road-legal characters, but smaller if needed to fit the plate.
-export function showFontSize(text: string, available: number, letterSpacing: number) {
+export function showFontSize(text: string, available: number, letterSpacing: number, max = LEGAL_FONT) {
   const em = [...text].reduce((n, ch) => n + advance(ch), 0) || 1;
-  return Math.min(LEGAL_FONT, (available - letterSpacing * Math.max(text.length - 1, 0)) / em);
+  return Math.min(max, (available - letterSpacing * Math.max(text.length - 1, 0)) / em);
+}
+
+// Two-line plates (motorbike, 4x4 / import) put the first group on top and
+// the rest underneath, e.g. "AB12" over "CDE". One group stays on one line.
+export function plateLines(text: string, lines: 1 | 2) {
+  const t = text.trim();
+  if (lines === 1) return [t];
+  const i = t.search(/\s/);
+  return i < 0 ? [t] : [t.slice(0, i), t.slice(i).trim()];
 }
 
 // Hex plates: the ends come to a point halfway down. HEX_TIP is how far in the

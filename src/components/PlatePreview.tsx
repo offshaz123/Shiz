@@ -1,6 +1,6 @@
 import { useId } from "react";
 import { site } from "@/lib/site";
-import { CHAR_W, HEX_INSET, LEGAL_FONT, MARGIN, hexPoints, legalLayout, showFontSize } from "@/lib/plate-layout";
+import { HEX_INSET, MARGIN, fontFor, hexPoints, legalLayout, plateLines, showFontSize } from "@/lib/plate-layout";
 import { type FlagId, type PlateConfig, badges, plateText, sizeOf, styles } from "@/lib/plates";
 
 function Flag({ badge, w, h }: { badge: FlagId; w: number; h: number }) {
@@ -62,9 +62,9 @@ export function PlatePreview({
   // Drawn in millimetres: 520 × 111 for a standard plate, shorter for small hex plates.
   const size = sizeOf(config);
   const { width: w, height: h, hex } = size;
-  // Hex plates have no flag or border.
-  const badge = hex ? badges[0] : (badges.find((b) => b.id === config.badge) ?? badges[0]);
-  const border = !hex && config.border === "black";
+  // Hex and two-line plates have no room for a flag; hex plates no border either.
+  const badge = size.badge ? (badges.find((b) => b.id === config.badge) ?? badges[0]) : badges[0];
+  const border = size.border && config.border === "black";
   // One badge panel on the left, the same width whether it's the green
   // strip or a flag. Never more than one.
   const bandW = badge.id === "none" ? 0 : 50;
@@ -76,59 +76,68 @@ export function PlatePreview({
   const outline = hex ? hexPoints(w - 6, h - 6).map(([x, y]) => `${x + 3},${y + 3}`).join(" ") : "";
   // Road-legal plates use the real layout (79mm characters in 50mm spaces);
   // show plates keep the customer's spacing, shrunk if needed to fit.
+  // Motorbike and 4x4 / import plates are on two lines.
   const legal = config.type !== "show";
-  const layout = legal ? legalLayout(reg) : null;
-  const scale = layout ? Math.min(1, available / layout.width) : 1;
-  const fontSize = layout ? LEGAL_FONT * scale : showFontSize(reg, available, 2);
-  const start = layout ? cx - (layout.width * scale) / 2 : 0;
-  const baseline = h / 2 + fontSize * 0.35;
+  const dims = { charH: size.charH, charW: size.charW, gap: size.gap };
+  const lines = plateLines(reg, size.lines);
+  const layouts = legal ? lines.map((l) => legalLayout(l, dims)) : null;
+  const scale = layouts ? Math.min(1, ...layouts.map((l) => available / l.width)) : 1;
+  const fontSize = layouts ? fontFor(dims) * scale : Math.min(...lines.map((l) => showFontSize(l, available, 2, fontFor(dims))));
+  const capH = fontSize * 0.7;
+  // Two lines sit 2mm above centre, leaving room for the maker's mark (margins stay at least 11mm).
+  const top = (h - (capH * 2 + size.lineGap)) / 2 - 2;
+  const baselines = lines.length === 1 ? [h / 2 + fontSize * 0.35] : [top + capH, top + capH * 2 + size.lineGap];
 
   const gel = style.look === "gel";
   const textFill = gel ? `url(#gel-${uid})` : "#111";
   const d = style.depth;
 
   // The registration, drawn once for the letters and again (gel only) for their shine.
-  const lettering = (fill: string, filter?: string) =>
-    layout ? (
-      <g fill={fill} filter={filter}>
-        {layout.cells.map((cell, i) => (
+  const lettering = (fill: string, filter?: string) => (
+    <g fill={fill} filter={filter}>
+      {lines.map((line, li) => {
+        const layout = layouts?.[li];
+        if (!layout)
+          return (
+            <text
+              key={li}
+              x={cx}
+              y={baselines[li]}
+              textAnchor="middle"
+              fontFamily="var(--font-plate)"
+              fontWeight="600"
+              fontSize={fontSize}
+              letterSpacing="2"
+              // Keep every space the customer typed (SVG collapses them otherwise).
+              style={{ whiteSpace: "pre" }}
+            >
+              {line}
+            </text>
+          );
+        const start = cx - (layout.width * scale) / 2;
+        return layout.cells.map((cell, i) => (
           <text
-            key={i}
+            key={`${li}-${i}`}
             x={start + cell.centre * scale}
-            y={baseline}
+            y={baselines[li]}
             textAnchor="middle"
             fontFamily="var(--font-plate)"
             fontWeight="600"
             fontSize={fontSize}
-            {...(cell.squeeze < 1 && { textLength: CHAR_W * scale, lengthAdjust: "spacingAndGlyphs" })}
+            {...(cell.squeeze < 1 && { textLength: dims.charW * scale, lengthAdjust: "spacingAndGlyphs" })}
           >
             {cell.ch}
           </text>
-        ))}
-      </g>
-    ) : (
-      <text
-        x={cx}
-        y={baseline}
-        textAnchor="middle"
-        fontFamily="var(--font-plate)"
-        fontWeight="600"
-        fontSize={fontSize}
-        letterSpacing="2"
-        fill={fill}
-        filter={filter}
-        // Keep every space the customer typed (SVG collapses them otherwise).
-        style={{ whiteSpace: "pre" }}
-      >
-        {reg}
-      </text>
-    );
+        ));
+      })}
+    </g>
+  );
 
   return (
     <svg
       viewBox={`0 0 ${w} ${h}`}
       className={className}
-      // A short hex plate is drawn narrower than a standard one, to scale.
+      // Smaller plates (short hex, motorbike, square) are drawn to scale against a standard one.
       style={w < 520 ? { maxWidth: `${(w / 520) * 100}%`, marginInline: "auto", display: "block", ...css } : css}
       role="img"
       aria-label={`${side === "front" ? "Front" : "Rear"} plate preview: ${reg}`}

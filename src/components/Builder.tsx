@@ -23,7 +23,6 @@ import {
   isValidPlateText,
   plateText,
   money,
-  HEX_EXTRA,
   charCount,
   fitsSize,
   materials,
@@ -48,9 +47,10 @@ const plateTypes: { id: PlateType; name: string; note: string; icon: string }[] 
 ];
 
 // A small outline of a plate size, drawn to scale (standard = 62px wide).
+// Two-line plates show two bars for the two rows of characters.
 function SizeShape({ size }: { size: (typeof sizes)[number] }) {
   const w = size.width / 10;
-  const h = 11.1;
+  const h = size.height / 10;
   const t = 2.8;
   return (
     <svg viewBox={`0 0 ${w} ${h}`} width={w * 1.2} height={h * 1.2} aria-hidden>
@@ -58,6 +58,12 @@ function SizeShape({ size }: { size: (typeof sizes)[number] }) {
         <polygon points={`${t},0.4 ${w - t},0.4 ${w - 0.4},${h / 2} ${w - t},${h - 0.4} ${t},${h - 0.4} 0.4,${h / 2}`} fill="#f6c500" stroke="#8a6812" strokeWidth="0.6" strokeLinejoin="round" />
       ) : (
         <rect x="0.3" y="0.3" width={w - 0.6} height={h - 0.6} rx="1" fill="#f6c500" stroke="#8a6812" strokeWidth="0.6" />
+      )}
+      {size.lines === 2 && (
+        <>
+          <rect x={w * 0.18} y={h * 0.2} width={w * 0.64} height={h * 0.22} rx="0.5" fill="#14110b" opacity="0.75" />
+          <rect x={w * 0.25} y={h * 0.56} width={w * 0.5} height={h * 0.22} rx="0.5" fill="#14110b" opacity="0.75" />
+        </>
       )}
     </svg>
   );
@@ -141,7 +147,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
   const sizeError = fits ? "" : `${plateText(c)} has ${chars} characters, too many for a ${size.short} plate. Choose a bigger size.`;
   const showFront = c.which !== "rear";
   const showRear = c.which !== "front";
-  const platesPrice = c.which === "pair" ? style.pair : style.single;
+  const platesPrice = c.which === "pair" && !size.rearOnly ? style.pair : style.single;
 
   // "Tick if not required" for one side switches to the other side only.
   // Unticking brings it back. Both can't be unticked at once.
@@ -185,7 +191,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
     router.push("/basket");
   };
 
-  const sizeLabel = `${size.hex ? size.short : size.name} (${size.width}mm x ${size.height}mm)`;
+  const sizeLabel = `${size.short} (${size.width}mm x ${size.height}mm)`;
   const summary: [string, string][] = [
     [c.type === "show" ? "Plate Text" : "Registration", plateText(c) || "-"],
     ["Plate Type", c.type === "show" ? "Show Plate" : "Road Legal"],
@@ -195,10 +201,10 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
     ["Quantity", c.which === "pair" ? "Front and Rear" : whichPlates.find((w) => w.id === c.which)!.name],
   ];
   const addOns: [string, number][] = [
-    ...(size.hex ? [["Hex shape", HEX_EXTRA] as [string, number]] : []),
+    ...(size.extra ? [[size.hex ? "Hex shape" : `${size.short} size`, size.extra] as [string, number]] : []),
     ...(material.price ? [[material.name, material.price] as [string, number]] : []),
-    ...(c.border !== "none" && !size.hex ? [["Black Border", extrasPrice.border] as [string, number]] : []),
-    ...(c.badge !== "none" && !size.hex ? [[badge.name, extrasPrice.badge] as [string, number]] : []),
+    ...(c.border !== "none" && size.border ? [["Black Border", extrasPrice.border] as [string, number]] : []),
+    ...(c.badge !== "none" && size.badge ? [[badge.name, extrasPrice.badge] as [string, number]] : []),
     ...(c.fixing !== "none" ? [[fixing.name, fixing.price] as [string, number]] : []),
   ];
 
@@ -273,7 +279,9 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                       ? `Show plate: any text, spaces wherever you like (up to ${SHOW_MAX} characters)`
                       : isValidReg(c.reg) && !/^[A-Z]{2}\d{2}[A-Z]{3}$/.test(c.reg.replace(/\s/g, ""))
                         ? "✓ Private registration recognised, spaced to DVLA rules"
-                        : `Max ${size.chars} characters for selected plate size`}
+                        : size.lines === 2
+                          ? "Two lines: the first part on top (e.g. AB12) and the rest underneath (CDE)"
+                          : `Max ${size.chars} characters for selected plate size`}
                   </p>
                 )}
               </div>
@@ -281,7 +289,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
               {/* Plate size first: it changes the shape, so customers pick it before anything else. */}
               <div className="mt-5">
                 <p className="mb-2 text-sm font-semibold">Plate Size</p>
-                <div role="radiogroup" aria-label="Plate size" className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+                <div role="radiogroup" aria-label="Plate size" className="grid grid-cols-3 gap-2 sm:grid-cols-4">
                   {sizes.map((s) => {
                     const on = c.size === s.id;
                     return (
@@ -291,8 +299,13 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                         role="radio"
                         aria-checked={on}
                         onClick={() => {
-                          // Hex plates have no room for a flag or border.
-                          set(s.hex ? { size: s.id, badge: "none", border: "none" } : { size: s.id });
+                          // Some sizes have no room for a flag or border; motorbikes only have a rear plate.
+                          set({
+                            size: s.id,
+                            ...(!s.badge && { badge: "none" as const }),
+                            ...(!s.border && { border: "none" as const }),
+                            ...(s.rearOnly ? { which: "rear" as const } : size.rearOnly ? { which: "pair" as const } : {}),
+                          });
                           setStepError("");
                         }}
                         className={`flex flex-col items-center rounded-xl border-2 px-1 py-2.5 text-center transition-colors ${
@@ -302,19 +315,17 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                         <SizeShape size={s} />
                         <span className="mt-1.5 text-sm font-bold">{s.short}</span>
                         <span className="text-[11px] leading-tight text-muted">
-                          {s.hex ? `${s.chars === 4 ? "up to 4" : s.chars} characters` : "up to 7 characters"}
+                          {s.hex ? `${s.chars === 4 ? "up to 4" : s.chars} characters` : s.lines === 2 ? (s.rearOnly ? "2 lines · rear only" : "2 lines · square") : "up to 7 characters"}
                         </span>
-                        <span className={`text-[11px] font-semibold ${s.hex ? "text-gold" : "text-muted"}`}>
-                          {s.hex ? `+${money(HEX_EXTRA)}` : "Included"}
+                        <span className={`text-[11px] font-semibold ${s.extra ? "text-gold" : "text-muted"}`}>
+                          {s.extra ? `+${money(s.extra)}` : s.rearOnly ? "Single plate" : "Included"}
                         </span>
                       </button>
                     );
                   })}
                 </div>
                 <p className="mt-2 text-xs text-muted">
-                  {size.hex
-                    ? `Hex plate, ${size.width} × ${size.height}mm, cut to fit your registration with pointed ends. Road legal, with no room for a flag or border.`
-                    : "Standard UK car plate, 520 × 111mm. Fits most cars."}
+                  {size.note}
                 </p>
                 {sizeError && (
                   <p role="alert" className="mt-2 rounded-lg border border-[#f1c9a5] bg-[#fff5ec] p-3 text-sm font-semibold text-[#8a4a12]">
@@ -428,6 +439,11 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                     )}
 
                     <p className="mb-2 mt-5 text-sm font-semibold">Which plates do you need?</p>
+                    {size.rearOnly ? (
+                      <p className="rounded-xl border-2 border-[#b8901f] bg-gold-soft p-3 text-sm font-semibold">
+                        Rear plate only. Motorbikes don&apos;t have a front plate.
+                      </p>
+                    ) : (
                     <div className="grid grid-cols-2 gap-3">
                       {(["front", "rear"] as const).map((side) => {
                         const on = side === "front" ? showFront : showRear;
@@ -449,6 +465,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                         );
                       })}
                     </div>
+                    )}
                   </>
                 )}
 
@@ -479,8 +496,10 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                             />
                           </span>
                           <span className="mt-2 block font-semibold">{s.name}</span>
-                          <span className="block text-xs text-muted">{money(s.pair + (size.hex ? HEX_EXTRA : 0))} pair</span>
-                          <LaunchPrice id={s.id} extra={size.hex ? HEX_EXTRA : 0} className="mt-0.5 text-[11px] leading-tight" />
+                          <span className="block text-xs text-muted">
+                            {money((size.rearOnly ? s.single : s.pair) + size.extra)} {size.rearOnly ? "plate" : "pair"}
+                          </span>
+                          <LaunchPrice id={s.id} which={size.rearOnly ? "single" : "pair"} extra={size.extra} className="mt-0.5 text-[11px] leading-tight" />
                         </label>
                       ))}
                     </div>
@@ -517,9 +536,11 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
 
                 {tab === 2 && (
                   <>
-                    {size.hex && (
+                    {!size.badge && (
                       <p className="mb-4 rounded-lg border border-line bg-surface p-3 text-sm text-muted">
-                        Hex plates have no room for a border or flag, so those options are switched off.
+                        {size.hex
+                          ? "Hex plates have no room for a border or flag, so those options are switched off."
+                          : `${size.short} plates have no room for a flag at the legal character size, so badges are switched off.`}
                       </p>
                     )}
                     <Heading>Plate Border</Heading>
@@ -529,7 +550,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                         name="border"
                         checked={c.border === b.id}
                         onChange={() => set({ border: b.id })}
-                        disabled={size.hex && b.id !== "none"}
+                        disabled={!size.border && b.id !== "none"}
                         label={b.id === "none" ? "None" : "Black"}
                         price={b.id === "none" ? undefined : extrasPrice.border}
                       />
@@ -554,7 +575,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                             boxed
                             checked={c.badge === b.id}
                             onChange={() => set({ badge: b.id })}
-                            disabled={size.hex}
+                            disabled={!size.badge}
                             label={b.name}
                             price={extrasPrice.badge}
                           />

@@ -61,6 +61,14 @@ const showcase: (Partial<PlateConfig> & { caption: string })[] = [
   { reg: "EN07 UPS", style: "3d-gel", badge: "eng", caption: "3D Gel with England flag" },
 ];
 
+// The plate sizes, each shown to scale with an example registration.
+const sizeShowcase: { title: string; text: string; href: string; config: Partial<PlateConfig> }[] = [
+  { title: "Standard Car", text: "520 × 111mm. Fits most cars.", href: "/design", config: { reg: "AB12 CDE", style: "3d-gel" } },
+  { title: "Hex Plates", text: "Cut to your registration, 4 to 7 characters.", href: "/design?size=hex5", config: { reg: "K1 NGS", style: "5mm-gel", size: "hex5" } },
+  { title: "Motorbike", text: "9 × 7 in, two lines, rear plate.", href: "/design?size=motorbike", config: { reg: "MT23 BKE", style: "4d-5mm", size: "motorbike" } },
+  { title: "4x4 / Import", text: "11 × 8 in square plate, two lines.", href: "/design?size=square", config: { reg: "LR70 VER", style: "7mm-gel", size: "square" } },
+];
+
 const hexShowcase: (Partial<PlateConfig> & { caption: string })[] = [
   { reg: "MAX 1", size: "hex4", style: "4d-3mm", caption: "Hex 4 · 4D 3MM" },
   { reg: "K1 NGS", size: "hex5", style: "7mm-gel", caption: "Hex 5 · 7MM Gel" },
@@ -271,6 +279,42 @@ export default async function Home() {
             <Link href="/faqs" className="btn btn-white">
               Are hex plates legal?
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Every size */}
+      <section className="bg-white py-12 sm:py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6">
+          <div className="text-center">
+            <span className="inline-block rounded-full bg-gold-soft px-4 py-1.5 text-sm font-semibold text-gold">Every vehicle</span>
+            <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">Plates for Cars, Bikes, 4x4s &amp; Imports</h2>
+            <p className="mx-auto mt-2 max-w-2xl text-muted">
+              Every size in every style, from printed to 7mm gel, made to the same road-legal standard.
+            </p>
+          </div>
+          <div className="mt-8 grid grid-cols-1 gap-4 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4">
+            {sizeShowcase.map(({ title, text, href, config }) => (
+              <Link
+                key={title}
+                href={href}
+                className="flex flex-col overflow-hidden rounded-2xl border border-line bg-white shadow-sm transition-colors hover:border-[#b8901f]"
+              >
+                <div className="flex h-48 items-center justify-center bg-surface-2/60 p-5">
+                  <PlatePreview
+                    config={{ ...defaultConfig, ...config }}
+                    side="rear"
+                    className="h-full max-h-full w-full drop-shadow-md"
+                    // Shown as big as the box allows, so the smaller sizes are easy to see.
+                    style={{ maxWidth: "none" }}
+                  />
+                </div>
+                <div className="p-4">
+                  <p className="font-display text-xl font-bold">{title}</p>
+                  <p className="mt-1 text-sm text-muted">{text}</p>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>

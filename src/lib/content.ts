@@ -96,7 +96,7 @@ export const faqs: { q: string; a: string }[] = [
   },
   {
     q: "What size plates do you offer?",
-    a: "Standard UK car plates (520 × 111mm), which fit the vast majority of cars, and hex plates cut to the length of your registration: up to 4 characters (330mm), 5 characters (390mm), 6 characters (450mm) and 7 characters (520mm). All are 111mm tall.",
+    a: "Standard UK car plates (520 × 111mm), which fit the vast majority of cars; hex plates cut to the length of your registration: up to 4 characters (330mm), 5 characters (390mm), 6 characters (450mm) and 7 characters (520mm); motorbike plates (9 × 7 in, 229 × 178mm, on two lines); and square 4x4 / import plates (11 × 8 in, 279 × 203mm, on two lines) for 4x4s and Japanese or US imports with a square plate space. Every size comes in every style.",
   },
   {
     q: "Are hex number plates road legal?",
@@ -105,6 +105,10 @@ export const faqs: { q: string; a: string }[] = [
   {
     q: "Which hex plate size do I need?",
     a: "Count the letters and numbers in your registration, not the space. AB12 CDE has 7, so it needs the 7-character hex plate. A private plate like K1 NGS has 5, so the 5-character hex plate fits it perfectly. The plate builder tells you if your registration is too long for the size you've picked.",
+  },
+  {
+    q: "Do you make motorbike and 4x4 / import plates?",
+    a: "Yes. Motorbike plates are 9 × 7 in (229 × 178mm) on two lines, with the smaller 64mm characters the law sets for motorbikes, and are rear only because motorbikes don't have a front plate. Square 4x4 / import plates are 11 × 8 in (279 × 203mm) on two lines with full-size characters, for 4x4s and Japanese or US imports with a square plate space. Both come in every style. Neither has room for a flag at the legal character size, so they come without one.",
   },
   {
     q: "What's the difference between standard and premium acrylic?",
