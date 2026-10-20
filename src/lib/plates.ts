@@ -327,7 +327,12 @@ export type PlateConfig = {
   border: BorderId;
   badge: BadgeId;
   fixing: FixingId;
+  // A single show plate copy of a road-legal plate, offered in the basket to
+  // put up at home, at a fixed price.
+  keepsake?: boolean;
 };
+
+export const KEEPSAKE_PRICE = 1599;
 
 export type CartItem = PlateConfig & { id: string; qty: number };
 
@@ -409,6 +414,7 @@ export function sizePrice(prices: { pair: number; single: number }, size: PlateS
 }
 
 export function unitPrice(c: PlateConfig) {
+  if (c.keepsake) return KEEPSAKE_PRICE;
   const style = styles.find((s) => s.id === c.style) ?? styles[0];
   const size = sizeOf(c);
   let p = sizePrice(style, size, c.which);
@@ -427,7 +433,8 @@ export function describe(c: PlateConfig) {
   if (sizeOf(c).id !== "standard") parts.push(sizeOf(c).short);
   parts.push(style.name);
   if (c.material === "premium") parts.push("Premium Acrylic");
-  parts.push(which.name);
+  if (c.keepsake) parts.push(`1 ${c.which === "front" ? "white" : "yellow"} plate to display`);
+  else parts.push(which.name);
   const badge = badges.find((b) => b.id === c.badge)!;
   if (c.badge !== "none") parts.push(badge.name);
   if (c.border !== "none") parts.push("Black border");
@@ -471,6 +478,10 @@ function checkItem(raw: unknown, badgeList: { id: BadgeId }[]): CartItem | null 
   if (!style || !which || !badge || !border || !fixing || !size || !material) return null;
   if (!isValidPlateText({ type, reg }) || !Number.isInteger(qty) || qty < 1 || qty > 10) return null;
   if (!fitsSize({ size, type, reg })) return null;
+  // The show plate copy is one plate, white or yellow, with no extras charged.
+  const keepsake = r.keepsake === true && type === "show" && (which === "front" || which === "rear");
+  if (keepsake)
+    return { type, id: typeof r.id === "string" ? r.id.slice(0, 40) : "", reg: plateText({ type, reg }), size, material: "standard", style, which, badge: plateSize?.badge ? badge : "none", border: plateSize?.border ? border : "none", fixing: "none", qty, keepsake };
   return {
     type,
     id: typeof r.id === "string" ? r.id.slice(0, 40) : "",

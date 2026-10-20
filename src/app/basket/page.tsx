@@ -7,6 +7,7 @@ import { PlatePreview } from "@/components/PlatePreview";
 import { useCart } from "@/lib/cart";
 import { describe, fixings, money, unitPrice } from "@/lib/plates";
 import { KlarnaNote } from "@/components/Klarna";
+import { ShowPlateOffer } from "@/components/ShowPlateOffer";
 
 export default function BasketPage() {
   const { items, ready, subtotal, setQty, remove, setFixing } = useCart();
@@ -27,7 +28,9 @@ export default function BasketPage() {
       </div>
     );
 
-  const shown = items.find((i) => i.id === shownId) ?? items[0];
+  // The show plate copy isn't shown on the car.
+  const previewable = items.filter((i) => !i.keepsake);
+  const shown = previewable.find((i) => i.id === shownId) ?? previewable[0] ?? items[0];
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-14">
@@ -38,9 +41,9 @@ export default function BasketPage() {
         <LookPreview config={shown} />
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
           <p className="text-sm text-muted">{lookCaption(shown)}</p>
-          {items.length > 1 && (
+          {previewable.length > 1 && (
             <div className="flex flex-wrap gap-2" aria-label="Show plate">
-              {items.map((i) => (
+              {previewable.map((i) => (
                 <button
                   key={i.id}
                   type="button"
@@ -56,6 +59,8 @@ export default function BasketPage() {
         </div>
       </section>
 
+      <ShowPlateOffer />
+
       <ul className="mt-8 space-y-4">
         {items.map((item) => (
           <li key={item.id} className="grid gap-5 rounded-3xl border border-line bg-white p-5 sm:grid-cols-[220px_1fr]">
@@ -67,7 +72,7 @@ export default function BasketPage() {
                 <p className="whitespace-pre font-display text-2xl font-bold">{item.reg}</p>
                 <p className="text-sm text-muted">{describe(item)}</p>
               </div>
-              {item.fixing === "none" && !noFixings.includes(item.id) && (
+              {item.fixing === "none" && !item.keepsake && !noFixings.includes(item.id) && (
                 <div className="rounded-2xl border border-[#e8d89a] bg-[#fdf8e7] p-4">
                   <p className="font-semibold">Need something to fit them?</p>
                   <p className="mt-0.5 text-sm text-muted">
