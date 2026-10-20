@@ -66,7 +66,9 @@ export async function renderPlate(q: URLSearchParams) {
       ? [{ top: 0, height: H - 34 }]
       : (() => {
           // 2mm above centre, as on the website preview.
-          const top = (H - (capPx * 2 + size.lineGap * px)) / 2 - 2 * px;
+          // Centring a row puts the capitals about 0.057em below its middle
+          // (room the font keeps for descenders), so lift them back.
+          const top = (H - (capPx * 2 + size.lineGap * px)) / 2 - 2 * px - fontSize * 0.057;
           return [
             { top: top - capPx * 0.3, height: capPx * 1.6 },
             { top: top + capPx + size.lineGap * px - capPx * 0.3, height: capPx * 1.6 },

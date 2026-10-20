@@ -72,8 +72,13 @@ export function showFontSize(text: string, available: number, letterSpacing: num
 export function plateLines(text: string, lines: 1 | 2) {
   const t = text.trim();
   if (lines === 1) return [t];
-  const i = t.search(/\s/);
-  return i < 0 ? [t] : [t.slice(0, i), t.slice(i).trim()];
+  // Split at the space that makes the two lines closest in length, so
+  // "BIG BOY TOYS" goes "BIG BOY / TOYS" rather than "BIG / BOY TOYS".
+  // A registration has one space, so it splits there.
+  let best = -1;
+  for (let i = t.indexOf(" "); i >= 0; i = t.indexOf(" ", i + 1))
+    if (best < 0 || Math.abs(t.length - 2 * i) < Math.abs(t.length - 2 * best)) best = i;
+  return best < 0 ? [t] : [t.slice(0, best).trim(), t.slice(best).trim()];
 }
 
 // Hex plates: the ends come to a point halfway down. HEX_TIP is how far in the
