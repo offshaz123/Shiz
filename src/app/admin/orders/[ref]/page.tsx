@@ -104,6 +104,23 @@ export default async function AdminOrderPage(props: PageProps<"/admin/orders/[re
           </Card>
 
           <Card title="Update order">
+            {["paid", "in_production", "dispatched"].includes(order.status) && !order.delivered_at && (
+              <div className="mb-5 rounded-xl border border-[#cfe6d4] bg-[#f1faf3] p-4">
+                <p className="font-semibold">Delivered?</p>
+                <p className="mt-0.5 text-sm text-muted">
+                  {order.status === "dispatched"
+                    ? "If it's arrived, mark it delivered. If you handed it over yourself, use Handed over (the customer gets a short email)."
+                    : "Customer collected it, or you delivered it by hand? Press Handed over. The customer gets a short email, no tracking needed."}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <HandOverButton orderRef={order.ref} email={order.email} docsMissing={order.docs_status === "outstanding"} />
+                  {order.status === "dispatched" && <MarkDeliveredButton orderRef={order.ref} />}
+                </div>
+              </div>
+            )}
+            {order.delivered_at && (
+              <p className="mb-5 rounded-xl bg-[#e7f6ec] p-3 text-sm font-semibold text-[#1f7a3d]">✓ Delivered {fmtDateTime(order.delivered_at)}</p>
+            )}
             <AdminOrderActions
               orderRef={order.ref}
               status={order.status}

@@ -19,7 +19,7 @@ export function MarkDeliveredButton({ orderRef }: { orderRef: string }) {
         setBusy(false);
       }}
     >
-      {busy ? "Saving…" : "Mark as delivered"}
+      {busy ? "Saving…" : "✓ Mark as delivered (no email)"}
     </button>
   );
 }
