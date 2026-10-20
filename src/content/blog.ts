@@ -16,6 +16,90 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "google-ads-search-terms-report-where-your-money-goes",
+    title: "The Search Terms Report: Where Your Google Ads Money Actually Goes",
+    description:
+      "The gap between what you told Google to target and what people actually typed. It is the first place to look when the spend is high and the enquiries are not.",
+    publishedAt: "2026-10-20",
+    keywords: [
+      "Google Ads search terms report",
+      "wasted ad spend Google Ads",
+      "negative keywords Google Ads",
+      "search terms vs keywords",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "If you only ever learn one thing about Google Ads, make it this report. It is the difference between knowing what you asked Google to do and knowing what Google actually did.",
+          "Most small advertisers have never opened it, which is why so many of them conclude Google Ads does not work for their business.",
+        ],
+      },
+      {
+        heading: "Keywords and search terms are not the same thing",
+        paragraphs: [
+          "Google's own definitions are worth being precise about, because the whole problem lives in the gap between them.",
+          "A keyword is text you add to an ad group to target the right audience. A search term is the word or set of words a person actually entered on Google.",
+          "You control the first. You do not control the second. You pay for the second.",
+          "So you add \"loft conversion\" as a keyword, and Google decides that is close enough to \"loft conversion jobs\", \"loft ladder screwfix\" and \"loft conversion gone wrong\". Those are three clicks you paid for from three people who were never going to call you, and nothing on the main screen tells you it happened.",
+        ],
+      },
+      {
+        heading: "The column almost nobody turns on",
+        paragraphs: [
+          "The report sits under the keywords section of your account, and Google describes its job plainly: use it to know how your ads performed when triggered by actual searches within the Search Network.",
+          "There is one setting worth changing the moment you open it. There is a \"Keyword\" column that tells you which of your keywords matched someone's search term and triggered your ad, and it is hidden by default. You turn it on through the column settings.",
+          "Without it you can see that you paid for a bad search term but not which of your keywords let it in, which means you can block the one term and the same keyword will keep doing it tomorrow with a slightly different phrase. With it on, you can see the leak rather than the drip.",
+        ],
+      },
+      {
+        heading: "What you are looking for",
+        paragraphs: [
+          "Sort by cost, highest first, and read down. The waste usually falls into the same handful of groups.",
+        ],
+        bullets: [
+          "People looking for work. Anything with jobs, salary, apprenticeship, vacancy or careers in it. Common and expensive for trades",
+          "People doing it themselves. Free, DIY, how to, cheapest, tutorial, second hand",
+          "Students and researchers. Definitions, courses, qualifications, what is",
+          "Competitor names, which may be deliberate but usually is not",
+          "The wrong service entirely. The plumber paying for boiler manuals, the groomer paying for dog food",
+          "The wrong place. Towns you do not cover turning up despite your location settings",
+        ],
+      },
+      {
+        paragraphs: [
+          "That last one is worth pausing on, because it is usually a settings problem rather than a keyword problem, and adding negatives will not fix it.",
+        ],
+      },
+      {
+        heading: "Not everything is in there",
+        paragraphs: [
+          "An honest limitation, and one that trips people up when the numbers do not add up.",
+          "The report shows search terms a significant number of people used, and Google states that some search terms without enough query activity are omitted. So the costs in the report will not reconcile exactly with your total spend, and the gap is not an error.",
+          "Low-volume queries are instead grouped into themes in search terms insights, without showing the individual searches. That is less useful for building a negative list, but it still tells you roughly what kinds of searches you are picking up.",
+          "Which means you cannot block every bad term one at a time. The ones you can see are a sample, and the pattern they show you is more useful than the individual entries.",
+        ],
+      },
+      {
+        heading: "What to do with what you find",
+        paragraphs: [
+          "Two actions, and they are different.",
+          "Add negative keywords for the terms that are simply wrong. Not one negative per bad search term, which is a treadmill, but the word that explains the whole group. A single negative for \"jobs\" removes a category rather than an entry.",
+          "Then look at the keyword that let them in. If one keyword is generating most of the rubbish, the problem is that keyword rather than the searches. Broader matching brings in more loosely related terms than tighter matching does, and if a keyword is bringing in far more noise than work, tightening it is the fix.",
+          "And when a search term in the list is genuinely good, add it as its own keyword. The report is as useful for finding what works as for blocking what does not, and people only ever use it for the second.",
+        ],
+      },
+      {
+        heading: "How often to look",
+        paragraphs: [
+          "Often at the start, rarely later.",
+          "A new campaign should have this checked every few days for the first fortnight, because that is when the money is leaking fastest and the negative list is still thin. After that, monthly is usually enough unless something changes.",
+          "The one thing that resets this is any significant change: new keywords, a new campaign type, a budget increase. Each of those opens the door to a fresh set of search terms, and they deserve the same early attention as a launch.",
+          "None of this is advanced. It is a report, read in order of cost, with the keyword column switched on. The reason it is worth writing about is that it is the single biggest difference between an account that wastes a third of its budget and one that does not.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "meta-instagram-ads-for-dog-groomers-and-pet-services",
     title: "Meta & Instagram Ads for Dog Groomers and Pet Services",
     description:

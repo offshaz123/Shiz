@@ -87,6 +87,7 @@ keywords, dealership social strategy).
 - Meta & Instagram Ads for Wedding and Event Businesses (industry-specific)
 - Service Area Businesses: Should You Hide Your Address? (local search)
 - Meta & Instagram Ads for Dog Groomers and Pet Services (industry-specific)
+- The Search Terms Report: Where Your Google Ads Money Actually Goes (Google Ads)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -323,7 +324,7 @@ keywords, dealership social strategy).
 ## Backlog — Google Ads (added 2026-10-19 research round)
 Note: we sell Google Ads at a flat £600/month but the blog is almost entirely Meta. This round
 deliberately weights toward Google Ads to close that gap.
-- [ ] The Search Terms Report: Where Your Google Ads Money Actually Goes — target: "Google Ads
+- [x] The Search Terms Report: Where Your Google Ads Money Actually Goes — target: "Google Ads
       search terms report", "wasted ad spend Google Ads"
 - [ ] Negative Keywords: The List You Build Before You Launch — target: "negative keyword list
       Google Ads", "stop irrelevant clicks Google Ads"
