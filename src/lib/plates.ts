@@ -217,8 +217,8 @@ export const extrasPrice = {
   border: 399,
 } as const;
 
-// Tracked delivery is free once the plates come to this much (£100).
-export const FREE_DELIVERY_FROM = 10000;
+// Tracked delivery is free once the plates come to this much (£39.99, so every 3D Gel, 4D and gel pair).
+export const FREE_DELIVERY_FROM = 3999;
 
 export const delivery: { id: DeliveryId; name: string; note: string; price: number }[] = [
   { id: "standard", name: "Tracked Delivery", note: "2–5 working days", price: 499 },

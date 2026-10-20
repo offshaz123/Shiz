@@ -13,7 +13,7 @@ import { site } from "@/lib/site";
 
 const features = [
   {
-    title: "Free Delivery From £100",
+    title: "Free Delivery From £39.99",
     text: `Tracked UK delivery · same day dispatch before ${site.dispatchCutoff}`,
     icon: "M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z",
   },
@@ -74,7 +74,7 @@ export const revalidate = 300;
 export const metadata: Metadata = {
   title: { absolute: "Premium 3D Gel & 4D Number Plates | PlatedUp" },
   description:
-    "Design premium road-legal 3D gel and 4D number plates and show plates online. Handcrafted in Barking, Essex. Same day dispatch, free delivery from £100.",
+    "Design premium road-legal 3D gel and 4D number plates and show plates online. Handcrafted in Barking, Essex. Same day dispatch, free delivery from £39.99.",
   alternates: { canonical: "/" },
 };
 
@@ -132,7 +132,7 @@ export default async function Home() {
         />
         <div className="relative mx-auto max-w-5xl px-4 py-10 text-center sm:px-6 sm:py-24">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-sm font-semibold">
-            ✦ Premium handcrafted plates · Free delivery from £100
+            ✦ Premium handcrafted plates · Free delivery from £39.99
           </span>
           <h1 className="mt-6 font-display text-5xl font-bold leading-[0.95] sm:text-7xl">
             UK Number Plates

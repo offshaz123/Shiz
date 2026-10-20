@@ -412,7 +412,7 @@ Yes, as long as they're made to **BS AU 145e** with solid black characters, the 
 
 ## MOT coming up?
 
-If your plates are tired, cracked or questionable, replace them before the test. Order before 2pm on a working day and we'll dispatch the same day, with free tracked delivery on orders of £100 or more. [Start your order](/design).`,
+If your plates are tired, cracked or questionable, replace them before the test. Order before 2pm on a working day and we'll dispatch the same day, with free tracked delivery on orders of £39.99 or more. [Start your order](/design).`,
   },
   {
     slug: "how-to-clean-number-plates",
@@ -521,7 +521,7 @@ You'll need new plates before you drive. A **DVLA registered supplier** must see
 
 ## Replace them fast
 
-Order before 2pm on a working day and we'll make and dispatch your plates the same day, with free tracked delivery on orders of £100 or more. Add a **Sticky Pads & Screws** fixing kit in the [plate builder](/design) for extra security.`,
+Order before 2pm on a working day and we'll make and dispatch your plates the same day, with free tracked delivery on orders of £39.99 or more. Add a **Sticky Pads & Screws** fixing kit in the [plate builder](/design) for extra security.`,
   },
   {
     slug: "number-plate-font-charles-wright",
@@ -728,7 +728,7 @@ The best way to choose is to compare them side by side. Open the [plate builder]
 
 ## Fast turnaround
 
-Order online before 2pm on a working day and we'll make and dispatch your plates the **same day**, with free tracked delivery on orders of £100 or more. For local customers, that usually means new plates in a day or two.
+Order online before 2pm on a working day and we'll make and dispatch your plates the **same day**, with free tracked delivery on orders of £39.99 or more. For local customers, that usually means new plates in a day or two.
 
 ## Fully legal
 
@@ -832,7 +832,7 @@ It's best not to. Repairs rarely last, can make the plate harder to read, and wo
 
 ## Replace it fast
 
-You can order just a **front** or **rear** plate, or a matching pair. Order before 2pm on a working day and we'll dispatch the same day, with free tracked delivery on orders of £100 or more. [Order a replacement](/design).`,
+You can order just a **front** or **rear** plate, or a matching pair. Order before 2pm on a working day and we'll dispatch the same day, with free tracked delivery on orders of £39.99 or more. [Order a replacement](/design).`,
   },
   {
     slug: "number-plates-for-leased-cars",
@@ -989,7 +989,7 @@ Read more: [show plates explained](/blog/show-plates-explained).`,
 
 ## Order in time
 
-We make every plate to order and dispatch the same day if you order before 2pm on a working day, with free tracked delivery on orders of £100 or more. For Christmas, order early to beat the rush. [Design a gift plate](/design).
+We make every plate to order and dispatch the same day if you order before 2pm on a working day, with free tracked delivery on orders of £39.99 or more. For Christmas, order early to beat the rush. [Design a gift plate](/design).
 
 Remember: show plates are for display only and can't be used on the road.`,
   },
@@ -1054,7 +1054,7 @@ You can order just the front or the rear. If you're changing styles, a matching 
 
 ## How quickly can I get them?
 
-Order before 2pm on a working day and we'll make and dispatch your plates the **same day**, with free tracked delivery on orders of £100 or more. Have your V5C and photo ID ready to upload. [Start your order](/design).`,
+Order before 2pm on a working day and we'll make and dispatch your plates the **same day**, with free tracked delivery on orders of £39.99 or more. Have your V5C and photo ID ready to upload. [Start your order](/design).`,
   },
   {
     slug: "how-platedup-plates-are-made",

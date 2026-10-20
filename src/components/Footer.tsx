@@ -23,7 +23,7 @@ export function Footer() {
         <div className="col-span-2 lg:col-span-1">
           <h2 className="font-display text-2xl font-bold">{site.name}</h2>
           <p className="mt-3 text-sm leading-relaxed text-white/85">
-            Premium, handcrafted number plates. Fully road legal, with free UK tracked delivery on orders of £100 or more.
+            Premium, handcrafted number plates. Fully road legal, with free UK tracked delivery on orders of £39.99 or more.
           </p>
           <a href={site.instagram} className="mt-3 inline-flex items-center gap-2 py-2 text-sm font-semibold hover:underline">
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
