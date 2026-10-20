@@ -10,6 +10,7 @@ type Row = {
   pair: number;
   single: number;
   original: { pair: number; single: number };
+  sizes: string;
   upcoming: { id: number; day: string; pair: string; single: string; rise: boolean }[];
 };
 
@@ -48,6 +49,7 @@ function StyleRow({ row }: { row: Row }) {
           <p className="text-sm">
             <strong>{money(row.pair)}</strong> a pair · <strong>{money(row.single)}</strong> single
           </p>
+          <p className="mt-0.5 text-xs text-muted">{row.sizes}</p>
         </div>
         <button type="button" className="rounded-lg border border-line bg-white px-4 py-2 text-sm font-semibold" onClick={() => setOpen((o) => !o)}>
           {open ? "Close" : "Change price"}

@@ -27,6 +27,7 @@ import {
   fitsSize,
   materials,
   sizeOf,
+  sizePrice,
   sizes,
   styles,
   unitPrice,
@@ -147,7 +148,8 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
   const sizeError = fits ? "" : `${plateText(c)} has ${chars} characters, too many for a ${size.short} plate. Choose a bigger size.`;
   const showFront = c.which !== "rear";
   const showRear = c.which !== "front";
-  const platesPrice = c.which === "pair" && !size.rearOnly ? style.pair : style.single;
+  // A hex shape is listed as an add-on; the bike / 4x4 saving is taken off the plates.
+  const platesPrice = sizePrice(style, size, c.which) - Math.max(0, size.extra);
 
   // "Tick if not required" for one side switches to the other side only.
   // Unticking brings it back. Both can't be unticked at once.
@@ -201,7 +203,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
     ["Quantity", c.which === "pair" ? "Front and Rear" : whichPlates.find((w) => w.id === c.which)!.name],
   ];
   const addOns: [string, number][] = [
-    ...(size.extra ? [[size.hex ? "Hex shape" : `${size.short} size`, size.extra] as [string, number]] : []),
+    ...(size.extra > 0 ? [[size.hex ? "Hex shape" : `${size.short} size`, size.extra] as [string, number]] : []),
     ...(material.price ? [[material.name, material.price] as [string, number]] : []),
     ...(c.border !== "none" && size.border ? [["Black Border", extrasPrice.border] as [string, number]] : []),
     ...(c.badge !== "none" && size.badge ? [[badge.name, extrasPrice.badge] as [string, number]] : []),
@@ -317,8 +319,8 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                         <span className="text-[11px] leading-tight text-muted">
                           {s.hex ? `${s.chars === 4 ? "up to 4" : s.chars} characters` : s.lines === 2 ? (s.rearOnly ? "2 lines · rear only" : "2 lines · square") : "up to 7 characters"}
                         </span>
-                        <span className={`text-[11px] font-semibold ${s.extra ? "text-gold" : "text-muted"}`}>
-                          {s.extra ? `+${money(s.extra)}` : s.rearOnly ? "Single plate" : "Included"}
+                        <span className={`text-[11px] font-semibold ${s.extra > 0 ? "text-gold" : s.extra < 0 ? "text-[#1f7a3d]" : "text-muted"}`}>
+                          {s.extra > 0 ? `+${money(s.extra)}` : s.extra < 0 ? `${money(-s.extra)} less` : "Included"}
                         </span>
                       </button>
                     );
@@ -497,9 +499,9 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                           </span>
                           <span className="mt-2 block font-semibold">{s.name}</span>
                           <span className="block text-xs text-muted">
-                            {money((size.rearOnly ? s.single : s.pair) + size.extra)} {size.rearOnly ? "plate" : "pair"}
+                            {money(sizePrice(s, size, size.rearOnly ? "rear" : "pair"))} {size.rearOnly ? "plate" : "pair"}
                           </span>
-                          <LaunchPrice id={s.id} which={size.rearOnly ? "single" : "pair"} extra={size.extra} className="mt-0.5 text-[11px] leading-tight" />
+                          <LaunchPrice id={s.id} which={size.pairPriced || !size.rearOnly ? "pair" : "single"} extra={size.extra} className="mt-0.5 text-[11px] leading-tight" />
                         </label>
                       ))}
                     </div>

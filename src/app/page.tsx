@@ -7,7 +7,7 @@ import { RegForm } from "@/components/RegForm";
 import { TrustBadges } from "@/components/TrustBadges";
 import { ReviewsSection } from "@/components/ReviewsSection";
 import { PlatePreview } from "@/components/PlatePreview";
-import { type PlateConfig, changeDay, defaultConfig, lastDayBefore, money, styles, upcomingPrice } from "@/lib/plates";
+import { type PlateConfig, changeDay, defaultConfig, lastDayBefore, money, sizePrice, sizes, styles, upcomingPrice } from "@/lib/plates";
 import { products } from "@/lib/content";
 import { site } from "@/lib/site";
 
@@ -60,6 +60,12 @@ const showcase: (Partial<PlateConfig> & { caption: string })[] = [
   { reg: "EV24 VLT", style: "4d-3mm", badge: "green", caption: "4D 3MM with Green Strip" },
   { reg: "EN07 UPS", style: "3d-gel", badge: "eng", caption: "3D Gel with England flag" },
 ];
+
+// The cheapest plate in a size: the first style, as a pair (one plate for bikes).
+function fromPrice(config: Partial<PlateConfig>) {
+  const size = sizes.find((z) => z.id === (config.size ?? "standard")) ?? sizes[0];
+  return `${money(sizePrice(styles[0], size, size.rearOnly ? "rear" : "pair"))} ${size.rearOnly ? "a plate" : "a pair"}`;
+}
 
 // The plate sizes, each shown to scale with an example registration.
 const sizeShowcase: { title: string; text: string; href: string; config: Partial<PlateConfig> }[] = [
@@ -312,6 +318,7 @@ export default async function Home() {
                 <div className="p-4">
                   <p className="font-display text-xl font-bold">{title}</p>
                   <p className="mt-1 text-sm text-muted">{text}</p>
+                  <p className="mt-2 text-sm font-semibold">From {fromPrice(config)}</p>
                 </div>
               </Link>
             ))}
