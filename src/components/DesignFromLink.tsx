@@ -4,7 +4,8 @@ import { useSearchParams } from "next/navigation";
 import { Builder } from "./Builder";
 import { type SizeId, type StyleId, cleanShowText, formatReg, isValidReg, sizes, styles } from "@/lib/plates";
 
-// The builder, started from a link such as /design?reg=AB12CDE&style=4d.
+// The builder, started from a link such as /design?reg=AB12CDE&style=4d
+// (or /design?type=show to start on a show plate).
 // Read in the browser so the page itself can be cached and load instantly.
 export function DesignFromLink() {
   const params = useSearchParams();
@@ -16,12 +17,13 @@ export function DesignFromLink() {
   // A real UK registration starts as road legal; anything else (a name, a
   // word) starts as a show plate, and the builder explains why.
   const legal = !text || isValidReg(text);
+  const show = !legal || params.get("type") === "show";
   return (
     <Builder
       showPlateNotice={!legal}
       initial={{
-        type: legal ? "legal" : "show",
-        reg: legal ? formatReg(text) : cleanShowText(text).trim(),
+        type: show ? "show" : "legal",
+        reg: show ? cleanShowText(text).trim() : formatReg(text),
         ...(initialStyle && { style: initialStyle }),
         ...(initialSize && { size: initialSize }),
       }}
