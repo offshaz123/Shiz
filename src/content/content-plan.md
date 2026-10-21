@@ -88,6 +88,7 @@ keywords, dealership social strategy).
 - Service Area Businesses: Should You Hide Your Address? (local search)
 - Meta & Instagram Ads for Dog Groomers and Pet Services (industry-specific)
 - The Search Terms Report: Where Your Google Ads Money Actually Goes (Google Ads)
+- Consent Wording on Your Enquiry Form: What UK Law Actually Needs (forms & conversion)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -342,8 +343,10 @@ deliberately weights toward Google Ads to close that gap.
 ## Backlog — forms & conversion (added 2026-10-19 research round)
 - [ ] How Many Fields Should Your Enquiry Form Have? — target: "how many form fields", "contact
       form conversion rate"
-- [ ] Consent Wording on Your Enquiry Form: What UK Law Actually Needs — target: "GDPR contact
-      form UK", "PECR marketing consent small business" (verify against ICO guidance, not blogs)
+- [x] Consent Wording on Your Enquiry Form: What UK Law Actually Needs — target: "GDPR contact
+      form UK", "PECR marketing consent small business" (verified against ICO guidance 2026-10-21;
+      note the pages carry a "under review" notice re the Data (Use and Access) Act, so re-check
+      before reusing this material)
 
 ## Backlog — local search (added 2026-10-19 research round)
 - [ ] Google Business Profile Photos: Which Ones Actually Get Used — target: "Google Business

@@ -16,6 +16,100 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "consent-wording-on-your-enquiry-form-uk-law",
+    title: "Consent Wording on Your Enquiry Form: What UK Law Actually Needs",
+    description:
+      "Somebody filling in your form is not consent to market to them later. What the ICO actually requires, and why sole traders count as individuals.",
+    publishedAt: "2026-10-21",
+    keywords: [
+      "GDPR contact form UK",
+      "PECR marketing consent small business",
+      "enquiry form consent wording",
+      "can I email someone who filled in my form",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Somebody fills in the form on your website asking about a job. Six weeks later they have gone quiet, so you add them to the list that gets your monthly offer.",
+          "Most businesses assume that is fine, because the person gave you their email. The ICO's position is that it usually is not, and the reasoning is worth understanding rather than memorising.",
+        ],
+      },
+      {
+        heading: "The form covers the form",
+        paragraphs: [
+          "The ICO's guidance on consent uses an online survey as its example, and the line that matters is that submitting the form is not by itself enough to show valid consent for any further uses of the information.",
+          "In other words, filling in your enquiry form is consent to the thing the form was for, which is answering the enquiry. It is not consent to be marketed to next month. A prize draw entry gets the same treatment in their guidance: the details were given for the draw, and using them for marketing needs a different basis.",
+          "Replying to the enquiry is fine. Quoting for the job is fine. Chasing a quote you sent is a reasonable part of the same conversation. It is the newsletter and the monthly offer that are a different purpose.",
+        ],
+      },
+      {
+        heading: "What the rule says",
+        paragraphs: [
+          "Marketing by email and text is governed by PECR, and the ICO states it plainly: you must not send marketing emails or texts to individuals without specific consent.",
+          "The scope is wider than people expect. The same rule covers emails, texts, picture and video messages, voicemails, and direct messages via social media. An Instagram DM promoting your services is electronic mail marketing in exactly the way an email is.",
+          "Two more requirements sit alongside it. You must not disguise or conceal your identity, and you must give a valid contact address so people can opt out.",
+        ],
+      },
+      {
+        heading: "The soft opt-in, and all four of its conditions",
+        paragraphs: [
+          "There is an exemption, and it is narrower than the way most people use it. All of the following have to be true:",
+        ],
+        bullets: [
+          "They are an existing customer who bought, or negotiated to buy, something from you",
+          "What you are now marketing is a similar product or service",
+          "You gave them a simple way to opt out at the point you first collected their details",
+          "You have given them that opt-out in every message since",
+        ],
+      },
+      {
+        paragraphs: [
+          "The ICO is explicit that it does not apply to prospective customers or new contacts, and not to bought-in lists. So the enquiry that never became a job is not covered, because no purchase or negotiation to purchase happened.",
+          "Whether a serious quote conversation counts as having negotiated to buy is not something the guidance settles, which is a reason to get the opt-in box right rather than to rely on an argument.",
+        ],
+      },
+      {
+        heading: "Sole traders count as individuals",
+        paragraphs: [
+          "This is the one that catches people selling to trades, and it catches us as much as anyone.",
+          "The ICO says sole traders and some partnerships are treated as individuals. So the same consent rule applies to them as to a consumer. Emailing a one-man plumbing firm about your services is not B2B marketing in PECR's eyes.",
+          "Corporate bodies are different. A limited company, an LLP, a Scottish partnership or a government body can be emailed without that consent, though the ICO describes keeping a do-not-email list of any that object as good practice and good business sense.",
+          "Given how much of the UK trades sector is sole traders, assuming the business rules apply because the recipient is a business is the single most common mistake in this area.",
+        ],
+      },
+      {
+        heading: "What makes the box itself valid",
+        paragraphs: [
+          "Consent under UK GDPR has to be a clear affirmative action. The guidance rules out several things most forms still do.",
+        ],
+        bullets: [
+          "No pre-ticked boxes. Silence, inactivity and default settings do not count either",
+          "No bundling it into your terms and conditions. The request has to be separate, prominent, concise and in plain language",
+          "No opt-out consent. The ICO says there is no such thing",
+          "Name yourself. Consent is invalid where your organisation was not specifically named, and any third party relying on it has to be named too",
+          "Keep it granular. Separate purposes get separate options rather than one box covering everything",
+          "Say how to withdraw it, and make that as easy as giving it",
+        ],
+      },
+      {
+        heading: "What to actually put on the form",
+        paragraphs: [
+          "In practice this is one unticked checkbox and one sentence, sitting apart from the submit button's own wording.",
+          "Something along the lines of: tick here if you would like occasional emails from [your business name] about our services. You can unsubscribe at any time. Plus a link to your privacy policy nearby, and nothing pre-selected.",
+          "And then the part that actually matters, which is honouring it. Keep a record of who ticked and when, because consent you cannot evidence is consent you do not have. Most CRMs will store this if you set the field up; almost nobody does.",
+        ],
+      },
+      {
+        heading: "One caveat on timing",
+        paragraphs: [
+          "The ICO's direct marketing guidance currently carries a notice that it is under review and may change, following the Data (Use and Access) Act and its phased commencement.",
+          "So the principles above are what the regulator says today, and the detail may move. Nothing in this post is legal advice, and if you are building a list of any size it is worth a proper look at the current guidance rather than taking a blog's word for it.",
+          "The practical version does not really change, though. Ask properly, name yourself, keep the record, and make leaving easy.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "google-ads-search-terms-report-where-your-money-goes",
     title: "The Search Terms Report: Where Your Google Ads Money Actually Goes",
     description:
