@@ -58,6 +58,12 @@ export default function PrivacyPage() {
           under their own privacy policies.
         </p>
         <p>
+          Before you choose, or if you press &ldquo;Reject&rdquo;, Google&apos;s tag still runs in its &ldquo;consent
+          mode&rdquo;: it sets no cookies and sends Google only basic signals with no cookie or advertising ID (for
+          example that a page was viewed or an order placed), which Google uses to estimate how many orders came from
+          its adverts. Meta gets nothing unless you accept.
+        </p>
+        <p>
           You can change your mind at any time with &ldquo;Cookie settings&rdquo; at the bottom of every page.
         </p>
         <h2>Your rights</h2>

@@ -1,6 +1,6 @@
 // Advert and analytics events (Meta Pixel and Google tag), sent from the
-// browser. Nothing is sent unless the visitor accepted cookies: until then
-// fbq and gtag don't exist on the page and these calls do nothing.
+// browser. The Meta Pixel only exists once the visitor accepted cookies; the
+// Google tag is always there, but sends cookie-free signals until they accept.
 
 import { type CartItem, describe, unitPrice } from "./plates";
 import { site } from "./site";
@@ -39,9 +39,8 @@ export function saveConsent(choice: "yes" | "no") {
 
 // Runs `send` once the tags have loaded (they load just after the page, so
 // an event fired as a page opens would otherwise be lost). Gives up after
-// 10 seconds, or straight away if the visitor hasn't accepted cookies.
+// 10 seconds.
 export function whenTagsReady(send: () => void) {
-  if (readConsent() !== "yes") return () => {};
   let tries = 0;
   const attempt = () => {
     const { fbq, gtag } = tags();

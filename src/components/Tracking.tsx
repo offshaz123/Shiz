@@ -9,12 +9,16 @@ import { CONSENT_COOKIE, readConsent, saveConsent } from "@/lib/track";
 
 const googleIds = [tracking.googleAnalyticsId, tracking.googleAdsId].filter(Boolean);
 const anyTags = Boolean(tracking.metaPixelId || googleIds.length);
+const GRANTED = { ad_storage: "granted", ad_user_data: "granted", ad_personalization: "granted", analytics_storage: "granted" };
+const DENIED = { ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied", analytics_storage: "denied" };
 
 // Opens the cookie banner again (the "Cookie settings" link in the footer).
 export const OPEN_COOKIE_SETTINGS = "pu-cookie-settings";
 
-// Asks for cookie consent (UK law), then loads the Meta Pixel and Google tag.
-// Nothing is loaded, and no advert cookies are set, until "Accept" is pressed.
+// Asks for cookie consent (UK law). The Google tag loads straight away in
+// Google's consent mode: until "Accept" is pressed it sets no cookies and only
+// sends Google cookie-free signals (so Google Ads can see the tag and estimate
+// sales). The Meta Pixel loads only after "Accept".
 export function Tracking() {
   const pathname = usePathname();
   const [consent, setConsent] = useState<"yes" | "no" | null | "unknown">("unknown");
@@ -49,6 +53,7 @@ export function Tracking() {
     const was = consent;
     saveConsent(choice);
     setOpen(false);
+    if (choice === "yes") (window as unknown as { gtag?: (...a: unknown[]) => void }).gtag?.("consent", "update", GRANTED);
     // Tags already running can't be unloaded; a fresh page stops them.
     if (was === "yes" && choice === "no") window.location.reload();
   };
@@ -60,11 +65,11 @@ export function Tracking() {
           {`!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init',${JSON.stringify(tracking.metaPixelId)});fbq('track','PageView');`}
         </Script>
       )}
-      {consent === "yes" && googleIds.length > 0 && (
+      {googleIds.length > 0 && (
         <>
           <Script src={`https://www.googletagmanager.com/gtag/js?id=${googleIds[0]}`} strategy="afterInteractive" />
           <Script id="google-tag" strategy="afterInteractive">
-            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=gtag;gtag('consent','default',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted',analytics_storage:'granted'});gtag('js',new Date());${googleIds.map((id) => `gtag('config',${JSON.stringify(id)});`).join("")}`}
+            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=gtag;gtag('consent','default',${JSON.stringify(consent === "yes" ? GRANTED : DENIED)});gtag('set','ads_data_redaction',${consent !== "yes"});gtag('js',new Date());${googleIds.map((id) => `gtag('config',${JSON.stringify(id)});`).join("")}`}
           </Script>
         </>
       )}
