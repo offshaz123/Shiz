@@ -72,5 +72,5 @@ export const tracking = {
   googleAnalyticsId: "G-4K6ZCCYTQ9",
   // Google Ads: conversion ID ("AW-123456789") and the label of the purchase conversion.
   googleAdsId: "AW-18529107725",
-  googleAdsPurchaseLabel: "",
+  googleAdsPurchaseLabel: "CbatCO_k26QdEI3-roNF",
 };
