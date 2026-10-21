@@ -3,6 +3,7 @@ import { isMailConfigured, verifyMail } from "./mail";
 import { checkMetaAds, isMetaAdsConfigured } from "./meta-ads";
 import { checkPacklink, isPacklinkConfigured } from "./packlink";
 import { isStripeConfigured, stripeGet } from "./stripe";
+import { isTikTokEventsConfigured } from "./tiktok-events";
 
 // The admin status bar: is everything the shop relies on connected and
 // working? Each check is a light, read-only request. Results are kept for a
@@ -76,6 +77,11 @@ async function checkAll(): Promise<Check[]> {
       process.env.META_CAPI_TOKEN
         ? "Set up"
         : { name: "Meta Pixel (sales tracking)", state: "warn", detail: "META_CAPI_TOKEN is missing, so some sales won't show in Meta." },
+    ),
+    run("TikTok Pixel (sales tracking)", async () =>
+      isTikTokEventsConfigured()
+        ? "Set up"
+        : { name: "TikTok Pixel (sales tracking)", state: "warn", detail: "TIKTOK_ACCESS_TOKEN is missing, so some sales won't show in TikTok." },
     ),
   ]);
 }

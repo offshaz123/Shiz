@@ -1,5 +1,5 @@
 // Advert and analytics events (Meta Pixel and Google tag), sent from the
-// browser. The Meta Pixel only exists once the visitor accepted cookies; the
+// browser. The Meta and TikTok Pixels only exist once the visitor accepted cookies; the
 // Google tag is always there, but sends cookie-free signals until they accept.
 
 import { type CartItem, describe, unitPrice } from "./plates";
@@ -9,11 +9,12 @@ export const CONSENT_COOKIE = "pu-consent";
 
 type Fbq = (...args: unknown[]) => void;
 type Gtag = (...args: unknown[]) => void;
+type Ttq = { track: (...args: unknown[]) => void; page: () => void };
 
 function tags() {
-  if (typeof window === "undefined") return { fbq: undefined, gtag: undefined };
-  const w = window as unknown as { fbq?: Fbq; gtag?: Gtag };
-  return { fbq: w.fbq, gtag: w.gtag };
+  if (typeof window === "undefined") return { fbq: undefined, gtag: undefined, ttq: undefined };
+  const w = window as unknown as { fbq?: Fbq; gtag?: Gtag; ttq?: Ttq };
+  return { fbq: w.fbq, gtag: w.gtag, ttq: w.ttq };
 }
 
 export function readConsent(): "yes" | "no" | null {
@@ -37,6 +38,13 @@ export function saveConsent(choice: "yes" | "no") {
   window.dispatchEvent(new Event(CONSENT_COOKIE));
 }
 
+// Keeps the TikTok click id (?ttclid=… on a TikTok ad's link) for 7 days, so
+// the server can match the paid order to the ad. Only called after "Accept".
+export function saveTikTokClick() {
+  const id = new URLSearchParams(window.location.search).get("ttclid");
+  if (id) document.cookie = `pu-ttclid=${encodeURIComponent(id.slice(0, 200))}; Max-Age=${60 * 60 * 24 * 7}; Path=/${cookieDomain()}; SameSite=Lax; Secure`;
+}
+
 // Runs `send` once the tags have loaded (they load just after the page, so
 // an event fired as a page opens would otherwise be lost). Gives up after
 // 10 seconds.
@@ -53,6 +61,10 @@ export function whenTagsReady(send: () => void) {
 
 const pounds = (pence: number) => Math.round(pence) / 100;
 
+function ttContents(items: Pick<CartItem, "type" | "style" | "qty">[]) {
+  return items.map((i) => ({ content_id: `${i.type}-${i.style}`, quantity: i.qty }));
+}
+
 function contents(items: Pick<CartItem, "type" | "style" | "qty">[]) {
   return items.map((i) => ({ id: `${i.type}-${i.style}`, quantity: i.qty }));
 }
@@ -68,11 +80,12 @@ function gaItems(items: CartItem[]) {
 
 export function trackViewBuilder() {
   return whenTagsReady(() => {
-    const { fbq, gtag } = tags();
+    const { fbq, gtag, ttq } = tags();
     fbq?.("track", "ViewContent", {
       content_name: "Plate builder",
       content_type: "product",
     });
+    ttq?.track("ViewContent", { content_id: "plate-builder", content_name: "Plate builder", content_type: "product" });
     gtag?.("event", "view_item", {
       items: [{ item_id: "plate-builder", item_name: "Plate builder" }],
     });
@@ -80,8 +93,9 @@ export function trackViewBuilder() {
 }
 
 export function trackAddToCart(item: CartItem) {
-  const { fbq, gtag } = tags();
+  const { fbq, gtag, ttq } = tags();
   const value = pounds(unitPrice(item) * item.qty);
+  ttq?.track("AddToCart", { value, currency: "GBP", content_type: "product", contents: ttContents([item]) });
   fbq?.("track", "AddToCart", {
     value,
     currency: "GBP",
@@ -97,8 +111,9 @@ export function trackAddToCart(item: CartItem) {
 
 export function trackBeginCheckout(items: CartItem[], subtotal: number) {
   return whenTagsReady(() => {
-    const { fbq, gtag } = tags();
+    const { fbq, gtag, ttq } = tags();
     const value = pounds(subtotal);
+    ttq?.track("InitiateCheckout", { value, currency: "GBP", content_type: "product", contents: ttContents(items) });
     const num_items = items.reduce((n, i) => n + i.qty, 0);
     fbq?.("track", "InitiateCheckout", {
       value,
@@ -123,8 +138,10 @@ export function trackPurchase(p: {
   items: Pick<CartItem, "type" | "style" | "qty">[];
   googleAdsSendTo: string;
 }) {
-  const { fbq, gtag } = tags();
+  const { fbq, gtag, ttq } = tags();
   const value = pounds(p.value);
+  // The same event_id as the server sends, so TikTok counts the order once.
+  ttq?.track("CompletePayment", { value, currency: "GBP", content_type: "product", contents: ttContents(p.items) }, { event_id: p.ref });
   fbq?.(
     "track",
     "Purchase",
@@ -155,7 +172,8 @@ export function trackPurchase(p: {
 }
 
 export function trackLead(kind: string) {
-  const { fbq, gtag } = tags();
+  const { fbq, gtag, ttq } = tags();
   fbq?.("track", "Lead", { content_name: kind });
+  ttq?.track("SubmitForm", { content_name: kind });
   gtag?.("event", "generate_lead", { lead_source: kind });
 }

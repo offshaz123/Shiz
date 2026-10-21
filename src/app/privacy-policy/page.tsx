@@ -40,7 +40,7 @@ export default function PrivacyPage() {
         <h2>Who we share it with</h2>
         <p>
           Our payment provider and delivery company, only as needed to complete your order. If you accept
-          advertising cookies, Meta and Google as described under Cookies. We may
+          advertising cookies, Meta, Google and TikTok as described under Cookies. We may
           share records with the DVLA, police or Trading Standards when the law requires it. We
           never sell your data.
         </p>
@@ -51,11 +51,12 @@ export default function PrivacyPage() {
         </p>
         <p>
           <strong>Analytics and advertising cookies</strong> are only used if you press &ldquo;Accept&rdquo;. They
-          let Google Analytics show us how people use the site, and let Meta (Facebook and Instagram) and Google
+          let Google Analytics show us how people use the site, and let Meta (Facebook and Instagram), TikTok and Google
           Ads tell us which adverts lead to orders, so we can show them to people likely to be interested. If you
           accept and then place an order, we also send Meta your order value and a scrambled (hashed) copy of your
-          email, phone, name and postcode, so it can match the order to its advert. Meta and Google handle this
-          under their own privacy policies.
+          email, phone, name and postcode, and TikTok your order value and a scrambled copy of your email and phone,
+          so they can match the order to their advert. Meta, TikTok and Google handle this under their own privacy
+          policies.
         </p>
         <p>
           Before you choose, or if you press &ldquo;Reject&rdquo;, Google&apos;s tag still runs in its &ldquo;consent

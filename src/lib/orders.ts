@@ -10,6 +10,7 @@ import { LOGO_CID, customerCancelEmail, customerCollectedEmail, customerDocsEmai
 import { renderPlatePng } from "./plate-image";
 import { countDiscountUse } from "./discounts";
 import { sendMetaPurchase } from "./meta-capi";
+import { sendTikTokPurchase } from "./tiktok-events";
 import { packlinkDelivered, sendToPacklink } from "./packlink";
 import { notifyNewOrder } from "./push";
 import { sendMail, sendToShop, shopAddress } from "./mail";
@@ -453,6 +454,7 @@ export async function markPaid(s: PaidSession) {
     if (updated.discount_code) await countDiscountUse(updated.discount_code);
     after(() => sendOrderEmails(updated));
     after(() => sendMetaPurchase(updated));
+    after(() => sendTikTokPurchase(updated));
     after(() => sendToPacklink(updated));
     after(() => notifyNewOrder(updated).catch((err) => console.error("New order notification failed", err)));
   }

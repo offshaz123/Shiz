@@ -15,6 +15,9 @@ export type AdTracking = {
   consent: boolean;
   fbp: string;
   fbc: string;
+  // TikTok's browser cookie and click id, for the same purpose (tiktok-events.ts).
+  ttp?: string;
+  ttclid?: string;
   ip: string;
   userAgent: string;
   url: string;
@@ -33,20 +36,27 @@ export function adTrackingFrom(req: Request, ip: string): AdTracking | null {
     consent: true,
     fbp: cookie(cookies, "_fbp"),
     fbc: cookie(cookies, "_fbc"),
+    ttp: cookie(cookies, "_ttp"),
+    ttclid: cookie(cookies, "pu-ttclid"),
     ip: ip === "unknown" ? "" : ip,
     userAgent: (req.headers.get("user-agent") ?? "").slice(0, 400),
     url: (req.headers.get("referer") ?? "").slice(0, 400),
   };
 }
 
+export async function loadAdTracking(ref: string) {
+  const rows = await query<{ ad_tracking: string | null }>("SELECT ad_tracking FROM orders WHERE ref = ?", [ref]);
+  return rows[0]?.ad_tracking ? (JSON.parse(rows[0].ad_tracking) as AdTracking) : null;
+}
+
 export async function saveAdTracking(ref: string, t: AdTracking | null) {
   if (t) await execute("UPDATE orders SET ad_tracking = ? WHERE ref = ?", [JSON.stringify(t), ref]);
 }
 
-const hash = (v: string) => (v ? [createHash("sha256").update(v.trim().toLowerCase()).digest("hex")] : undefined);
+export const hash = (v: string) => (v ? [createHash("sha256").update(v.trim().toLowerCase()).digest("hex")] : undefined);
 
 // UK numbers in international form without "+", as Meta asks: 07123… → 447123…
-function phone(raw: string) {
+export function phone(raw: string) {
   const d = raw.replace(/\D/g, "");
   if (d.startsWith("44")) return d;
   if (d.startsWith("0")) return `44${d.slice(1)}`;
@@ -57,8 +67,7 @@ export async function sendMetaPurchase(order: Order) {
   const token = process.env.META_CAPI_TOKEN;
   if (!token || !tracking.metaPixelId) return;
   try {
-    const rows = await query<{ ad_tracking: string | null }>("SELECT ad_tracking FROM orders WHERE ref = ?", [order.ref]);
-    const t = rows[0]?.ad_tracking ? (JSON.parse(rows[0].ad_tracking) as AdTracking) : null;
+    const t = await loadAdTracking(order.ref);
     if (!t?.consent) return;
     const [first, ...rest] = order.customer_name.trim().split(/\s+/);
     const event = {

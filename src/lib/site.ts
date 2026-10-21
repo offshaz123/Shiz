@@ -73,4 +73,7 @@ export const tracking = {
   // Google Ads: conversion ID ("AW-123456789") and the label of the purchase conversion.
   googleAdsId: "AW-18529107725",
   googleAdsPurchaseLabel: "CbatCO_k26QdEI3-roNF",
+  // TikTok Pixel ID: TikTok Ads Manager → Tools → Events → Web events. Sales
+  // from the server also need TIKTOK_ACCESS_TOKEN in the Hostinger settings.
+  tiktokPixelId: "DBCIVQ3C77UCF2HDIPSG",
 };
