@@ -89,6 +89,7 @@ keywords, dealership social strategy).
 - Meta & Instagram Ads for Dog Groomers and Pet Services (industry-specific)
 - The Search Terms Report: Where Your Google Ads Money Actually Goes (Google Ads)
 - Consent Wording on Your Enquiry Form: What UK Law Actually Needs (forms & conversion)
+- Why Your Google Ads Are Showing for the Wrong Town (Google Ads)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -331,7 +332,7 @@ deliberately weights toward Google Ads to close that gap.
       Google Ads", "stop irrelevant clicks Google Ads"
 - [ ] Should a Small Business Use Performance Max? — target: "Performance Max small budget",
       "PMax vs search campaigns UK"
-- [ ] Why Your Google Ads Are Showing for the Wrong Town — target: "Google Ads location
+- [x] Why Your Google Ads Are Showing for the Wrong Town — target: "Google Ads location
       targeting", "presence vs interest location settings"
 - [ ] Call Tracking for Google Ads: Knowing Which Ad Made the Phone Ring — target: "call tracking
       Google Ads UK", "which ad made the phone ring"

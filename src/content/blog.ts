@@ -16,6 +16,100 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "why-your-google-ads-show-for-the-wrong-town",
+    title: "Why Your Google Ads Are Showing for the Wrong Town",
+    description:
+      "Google's default setting reaches people merely interested in your area, not only people in it. Here is the setting to change, and why exclusions do not fix it.",
+    publishedAt: "2026-10-22",
+    keywords: [
+      "Google Ads location targeting",
+      "presence or interest location settings",
+      "Google Ads showing wrong area",
+      "leads from outside my area Google Ads",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You set the campaign to your town. A fortnight later you are getting calls from ninety miles away, and the obvious conclusion is that the targeting is broken or Google is helping itself to your budget.",
+          "Neither. The default setting is doing exactly what it says it does, and almost nobody reads what it says.",
+        ],
+      },
+      {
+        heading: "Presence or Interest",
+        paragraphs: [
+          "Google gives you two options for who counts as being in your targeted area.",
+          "The default, which Google calls Presence or Interest, reaches people who are likely to be in or regularly present in your targeted location, as well as people who have shown interest in it.",
+          "The other, Presence, reaches people likely to be located or regularly located in the places you targeted. Physical location only.",
+          "Google is upfront that the default includes both physical locations and locations of interest. So targeting St Albans does not mean people in St Albans. It means people in St Albans, plus people anywhere who Google thinks are interested in St Albans.",
+          "Their own example is a bakery in Paris, where the ads can reach people in Paris or people who have expressed interest in Paris bakeries, now or in the past.",
+        ],
+      },
+      {
+        heading: "What counts as interest",
+        paragraphs: [
+          "Broader than you would guess, and it is not limited to what somebody just typed.",
+        ],
+        bullets: [
+          "Terms used in searches that indicate a location",
+          "Past searches that indicated a location of interest",
+          "A person's past physical locations",
+          "The content and context of a website where the ad appears",
+          "Searches on Google Maps",
+          "A custom location set in their search settings",
+        ],
+      },
+      {
+        paragraphs: [
+          "Google also notes that location of interest is not restricted to somebody's country. Their example is a person in Paris searching for a Los Angeles taxi on the French Google, who may still be identified as interested in Los Angeles.",
+          "Applied to a trade, somebody who looked at houses in your town two years ago and now lives elsewhere can qualify. They are not a bad lead because they lied. They are a bad lead because the setting invited them.",
+        ],
+      },
+      {
+        heading: "The exclusion trap",
+        paragraphs: [
+          "The obvious fix is to exclude the places you do not want. That half-works, and the reason is worth knowing.",
+          "Exclusions only operate on presence. Google's wording is that by default you exclude people likely to be located in your excluded locations, and that people located outside those areas may still receive your ads.",
+          "So you can exclude a city you keep getting calls from, and still reach somebody sitting two counties away who merely looks interested in it. The exclusion filters where people are, while your targeting is still inviting people based on where they are curious about. The two settings are not mirror images.",
+          "Useful related rule: where an area is both included and excluded, exclusion wins.",
+        ],
+      },
+      {
+        heading: "Nearby places, as well",
+        paragraphs: [
+          "One more reason the edges blur. Google says that when you target an area it may also show ads to people in nearby, closely related areas that could not normally be targeted, because of low population, insufficient data, or because that level of targeting is not available.",
+          "They put it plainly elsewhere: location targeting does not determine geographic borders. And across several pages they state that because the signals vary, 100% accuracy is not guaranteed in every situation.",
+          "Which means some bleed is expected rather than a fault. The job is reducing it, not eliminating it.",
+        ],
+      },
+      {
+        heading: "What to change",
+        paragraphs: [
+          "For a local business, almost always this:",
+        ],
+        bullets: [
+          "Switch the targeting option from Presence or Interest to Presence",
+          "Add exclusions for the places you genuinely will not travel to, knowing they only catch people physically there",
+          "Use radius targeting where your patch is a drive time rather than a set of towns. Google supports it, with a minimum of 1 km",
+          "Or target postcodes directly, which works in the UK, down to entries like RM17",
+          "Then watch the search terms report for place names you do not cover, because that tells you what is still getting through",
+        ],
+      },
+      {
+        paragraphs: [
+          "Be ready for the trade-off, because it is real and Google states it: most campaigns see a drop in impressions when moving off the default. Fewer people, more of them reachable. For a business that can only work within half an hour of the van, that is the correct direction.",
+        ],
+      },
+      {
+        heading: "Do not go too small",
+        paragraphs: [
+          "One limit in the other direction. Google only permits targeting for locations that meet minimum privacy thresholds, covering both minimum area and minimum user counts, and says very small targets might show only intermittently or not at all.",
+          "So a single residential postcode is not a strategy. If a campaign targeted that tightly is barely spending, that is usually why, and the answer is a slightly wider area rather than a bigger bid.",
+          "Worth noting one thing that confuses people who have done both jobs. Google Ads lets you set a radius. Your Google Business Profile does not, where service areas have to be real places rather than a distance. Same company, different products, opposite rules.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "consent-wording-on-your-enquiry-form-uk-law",
     title: "Consent Wording on Your Enquiry Form: What UK Law Actually Needs",
     description:
