@@ -158,6 +158,25 @@ const schema = [
     name VARCHAR(50) PRIMARY KEY,
     value TEXT NOT NULL
   ) CHARACTER SET utf8mb4`,
+  // Visits to the shop by where they came from (Admin → Insights). Counts
+  // only: nothing about who visited.
+  `CREATE TABLE IF NOT EXISTS visits (
+    day DATE NOT NULL,
+    source VARCHAR(20) NOT NULL,
+    count INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (day, source)
+  ) CHARACTER SET utf8mb4`,
+  // Money paid for ads (Admin → Money), typed in from the TikTok and Google
+  // bills: what came off the card, VAT included (pence).
+  `CREATE TABLE IF NOT EXISTS ad_spend (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    day DATE NOT NULL,
+    platform VARCHAR(20) NOT NULL,
+    amount INT NOT NULL,
+    note VARCHAR(200) NOT NULL DEFAULT '',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX (day)
+  ) CHARACTER SET utf8mb4`,
   `CREATE TABLE IF NOT EXISTS weekly_reports (
     week CHAR(10) PRIMARY KEY,
     sent_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -189,6 +208,8 @@ const addedColumns: [table: string, column: string, definition: string][] = [
   ["orders", "free_delivery_until", "DATETIME NULL"],
   // When the courier delivered it (from Packlink, or marked by the shop).
   ["orders", "delivered_at", "DATETIME NULL"],
+  // Where the customer came from (see lib/sources.ts), if they accepted cookies.
+  ["orders", "source", "VARCHAR(20) NULL"],
 ];
 
 async function ensureSchema() {

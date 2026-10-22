@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { loadAdTracking, phone } from "./meta-capi";
+import { loadAdTracking, phone } from "./ad-tracking";
 import type { Order } from "./orders";
 import { tracking } from "./site";
 

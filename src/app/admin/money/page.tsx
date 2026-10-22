@@ -6,7 +6,8 @@ import { type Movement, type Payout, balance, payoutMovements, recentMovements, 
 import { type OrderMoney, dayString, orderMoney, parseDay } from "@/lib/order-money";
 import { listPaidOrdersBetween, statusLabels } from "@/lib/orders";
 import { costHistory, costsOn, orderCost } from "@/lib/costs";
-import { type AdSpend, adSpend, isMetaAdsConfigured } from "@/lib/meta-ads";
+import { AD_PLATFORMS, type AdPayment, adPayments } from "@/lib/ad-spend";
+import { AdSpendEditor } from "@/components/AdSpendEditor";
 
 const DAY = 24 * 60 * 60 * 1000;
 
@@ -16,24 +17,16 @@ export const metadata = { title: "Money" };
 const gbp = (p: number) => `${p < 0 ? "−" : ""}£${(Math.abs(p) / 100).toFixed(2)}`;
 const day = (d: Date) => d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/London" });
 
-// Meta ad spend for the dates, or why it isn't showing.
-async function loadAds(from: Date, toDay: Date): Promise<AdSpend | { error: string }> {
-  if (!isMetaAdsConfigured()) return { error: "Not connected yet (add META_ADS_TOKEN in Hostinger)" };
-  try {
-    return await adSpend(from, toDay);
-  } catch (err) {
-    console.error("Loading Meta ad spend failed", err);
-    return { error: err instanceof Error ? err.message : "Couldn't reach Meta" };
-  }
-}
-
 async function load(from: Date, to: Date) {
   const [bal, movements, payouts, perOrder, ads] = await Promise.all([
     balance(),
     recentMovements(100),
     recentPayouts(6),
     orderMoney(from, to),
-    loadAds(from, new Date(to.getTime() - DAY)),
+    adPayments(from, to).catch((err): AdPayment[] => {
+      console.error("Loading ad spend failed", err);
+      return [];
+    }),
   ]);
   const breakdowns = await Promise.all(payouts.map((p) => payoutMovements(p.id).catch(() => [] as Movement[])));
   // Refunds in a payout may refund a payment from an earlier one: match them to orders too.
@@ -326,6 +319,7 @@ export default async function MoneyPage(props: PageProps<"/admin/money">) {
   const materials = (await listPaidOrdersBetween(from, end))
     .filter((o) => ["paid", "in_production", "dispatched"].includes(o.status))
     .reduce((n, o) => n + orderCost(o.items, costsOn(costs, o.paid_at ?? o.created_at)), 0);
+  const adTotal = ads.reduce((n, a) => n + a.amount, 0);
 
   return (
     <AdminShell active="money">
@@ -338,22 +332,29 @@ export default async function MoneyPage(props: PageProps<"/admin/money">) {
           note={`${rangeText} · Stripe fees ${gbp(-(stripeFees + otherCharges))} · Refunds ${gbp(-refunds)} · Packlink ${gbp(-delivery)}`}
         />
         <Stat label="You keep" value={gbp(kept)} note={`${rangeText} · after Stripe fees, refunds and Packlink delivery`} />
-        {"error" in ads ? (
-          <Stat label="Spent on Meta ads" value="-" note={ads.error} />
-        ) : (
-          <Stat
-            label="Spent on Meta ads"
-            value={gbp(ads.spend)}
-            note={`${rangeText} · ${ads.clicks} clicks · ${ads.purchases} purchase${ads.purchases === 1 ? "" : "s"}${
-              ads.purchases ? ` · ${gbp(Math.round(ads.spend / ads.purchases))} per purchase` : ""
-            }`}
-          />
-        )}
+        <Stat
+          label="Spent on ads"
+          value={gbp(adTotal)}
+          note={`${rangeText} · ${Object.entries(AD_PLATFORMS)
+            .map(([id, name]) => [name, ads.filter((a) => a.platform === id).reduce((n, a) => n + a.amount, 0)] as const)
+            .filter(([, n]) => n > 0)
+            .map(([name, n]) => `${name} ${gbp(n)}`)
+            .join(" · ") || "add your ad payments below"}`}
+        />
         <Stat
           label="Profit after everything"
-          value={"error" in ads ? gbp(kept - materials) : gbp(kept - ads.spend - materials)}
-          note={`${rangeText} · what you keep${"error" in ads ? "" : ` minus ${gbp(ads.spend)} ads`} minus ${gbp(materials)} materials (see Costs)`}
+          value={gbp(kept - adTotal - materials)}
+          note={`${rangeText} · what you keep minus ${gbp(adTotal)} ads minus ${gbp(materials)} materials (see Costs)`}
         />
+      </div>
+
+      <h2 id="ads" className="mt-10 font-display text-2xl font-bold">Ad spend</h2>
+      <p className="mt-1 text-sm text-muted">
+        Every payment to TikTok and Google for ads. It comes off your profit above, and Insights uses it to work out what each sale from TikTok and
+        Google cost you. The list shows the dates picked below ({rangeText}).
+      </p>
+      <div className="mt-4">
+        <AdSpendEditor payments={ads} platforms={AD_PLATFORMS} today={dayString(new Date())} />
       </div>
 
       <h2 className="mt-10 font-display text-2xl font-bold">What you keep from each order</h2>

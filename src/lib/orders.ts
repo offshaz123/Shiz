@@ -9,7 +9,6 @@ import { join } from "node:path";
 import { LOGO_CID, customerCancelEmail, customerCollectedEmail, customerDocsEmail, customerDispatchEmail, customerOrderEmail, customerReminderEmail, plateCid, plateImageParams, shopOrderEmail } from "./emails";
 import { renderPlatePng } from "./plate-image";
 import { countDiscountUse } from "./discounts";
-import { sendMetaPurchase } from "./meta-capi";
 import { sendTikTokPurchase } from "./tiktok-events";
 import { packlinkDelivered, sendToPacklink } from "./packlink";
 import { notifyNewOrder } from "./push";
@@ -69,6 +68,8 @@ export type Order = {
   packlink_error: string | null;
   packlink_cost: number | null;
   delivered_at: Date | null;
+  // Where the customer came from (lib/sources.ts), if they accepted cookies.
+  source: string | null;
   created_at: Date;
   paid_at: Date | null;
 };
@@ -86,10 +87,10 @@ function parse(row: Row): Order {
 
 const COLUMNS = `id, ref, user_id, status, customer_name, email, phone, address1, address2, town, postcode, items,
   delivery_name, delivery_price, subtotal, discount_code, discount, total, amount_paid, card_brand, card_last4, stripe_session_id,
-  docs_status, tracking_number, tracking_carrier, packlink_ref, packlink_error, packlink_cost, delivered_at, created_at, paid_at`;
+  docs_status, tracking_number, tracking_carrier, packlink_ref, packlink_error, packlink_cost, delivered_at, source, created_at, paid_at`;
 
 export async function createOrder(
-  o: Omit<Order, "id" | "created_at" | "paid_at" | "amount_paid" | "card_brand" | "card_last4" | "stripe_session_id" | "tracking_number" | "tracking_carrier" | "packlink_ref" | "packlink_error" | "packlink_cost" | "delivered_at">,
+  o: Omit<Order, "id" | "created_at" | "paid_at" | "amount_paid" | "card_brand" | "card_last4" | "stripe_session_id" | "tracking_number" | "tracking_carrier" | "packlink_ref" | "packlink_error" | "packlink_cost" | "delivered_at" | "source">,
 ) {
   const res = await execute(
     `INSERT INTO orders (ref, user_id, status, customer_name, email, phone, address1, address2, town, postcode,
@@ -453,7 +454,6 @@ export async function markPaid(s: PaidSession) {
   if (res.affectedRows === 1 && updated) {
     if (updated.discount_code) await countDiscountUse(updated.discount_code);
     after(() => sendOrderEmails(updated));
-    after(() => sendMetaPurchase(updated));
     after(() => sendTikTokPurchase(updated));
     after(() => sendToPacklink(updated));
     after(() => notifyNewOrder(updated).catch((err) => console.error("New order notification failed", err)));

@@ -1,6 +1,5 @@
 import { isDbConfigured, query } from "./db";
 import { isMailConfigured, verifyMail } from "./mail";
-import { checkMetaAds, isMetaAdsConfigured } from "./meta-ads";
 import { checkPacklink, isPacklinkConfigured } from "./packlink";
 import { isStripeConfigured, stripeGet } from "./stripe";
 import { isTikTokEventsConfigured } from "./tiktok-events";
@@ -61,11 +60,6 @@ async function checkAll(): Promise<Check[]> {
       if (failed) return { name: "Packlink", state: "warn", detail: `Connected, but ${failed} recent order${failed > 1 ? "s" : ""} didn't reach Packlink. Open the order and press "Send to Packlink".` };
       return "Connected";
     }),
-    run("Meta ads", async () => {
-      if (!isMetaAdsConfigured()) return { name: "Meta ads", state: "warn", detail: "META_ADS_TOKEN is missing, so ad spend isn't shown." };
-      await checkMetaAds();
-      return "Connected";
-    }),
     run("Order notifications", async () => {
       if (!isDbConfigured()) return "Not available without the database";
       const n = Number((await query<{ n: number }>("SELECT COUNT(*) AS n FROM push_subscriptions"))[0]?.n ?? 0);
@@ -73,11 +67,6 @@ async function checkAll(): Promise<Check[]> {
         ? `On for ${n} device${n > 1 ? "s" : ""}`
         : { name: "Order notifications", state: "warn", detail: "No phone gets new order notifications yet. Turn them on in Notifications." };
     }),
-    run("Meta Pixel (sales tracking)", async () =>
-      process.env.META_CAPI_TOKEN
-        ? "Set up"
-        : { name: "Meta Pixel (sales tracking)", state: "warn", detail: "META_CAPI_TOKEN is missing, so some sales won't show in Meta." },
-    ),
     run("TikTok Pixel (sales tracking)", async () =>
       isTikTokEventsConfigured()
         ? "Set up"

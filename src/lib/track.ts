@@ -1,20 +1,20 @@
-// Advert and analytics events (Meta Pixel and Google tag), sent from the
-// browser. The Meta and TikTok Pixels only exist once the visitor accepted cookies; the
+// Advert and analytics events (TikTok Pixel and Google tag), sent from the
+// browser. The TikTok Pixel only exists once the visitor accepted cookies; the
 // Google tag is always there, but sends cookie-free signals until they accept.
 
 import { type CartItem, describe, unitPrice } from "./plates";
 import { site } from "./site";
+import { type SourceId, landingSource } from "./sources";
 
 export const CONSENT_COOKIE = "pu-consent";
 
-type Fbq = (...args: unknown[]) => void;
 type Gtag = (...args: unknown[]) => void;
 type Ttq = { track: (...args: unknown[]) => void; page: () => void };
 
 function tags() {
-  if (typeof window === "undefined") return { fbq: undefined, gtag: undefined, ttq: undefined };
-  const w = window as unknown as { fbq?: Fbq; gtag?: Gtag; ttq?: Ttq };
-  return { fbq: w.fbq, gtag: w.gtag, ttq: w.ttq };
+  if (typeof window === "undefined") return { gtag: undefined, ttq: undefined };
+  const w = window as unknown as { gtag?: Gtag; ttq?: Ttq };
+  return { gtag: w.gtag, ttq: w.ttq };
 }
 
 export function readConsent(): "yes" | "no" | null {
@@ -45,14 +45,31 @@ export function saveTikTokClick() {
   if (id) document.cookie = `pu-ttclid=${encodeURIComponent(id.slice(0, 200))}; Max-Age=${60 * 60 * 24 * 7}; Path=/${cookieDomain()}; SameSite=Lax; Secure`;
 }
 
+// Where this visit came from, worked out once when the visitor lands (the
+// address changes as they move around the shop). null if from another page of the shop.
+let landing: SourceId | null | undefined;
+export function visitSource() {
+  if (landing === undefined) landing = landingSource(new URL(window.location.href), document.referrer, new URL(site.url).hostname);
+  return landing;
+}
+
+// Remembers where the customer came from for 30 days, so their order shows
+// it on Admin → Insights. Only called after "Accept". A later visit from
+// somewhere else replaces it, but typing the address in doesn't.
+export function saveSource() {
+  const s = visitSource();
+  if (!s || (s === "direct" && /(?:^|;\s*)pu-src=/.test(document.cookie))) return;
+  document.cookie = `pu-src=${s}; Max-Age=${60 * 60 * 24 * 30}; Path=/${cookieDomain()}; SameSite=Lax; Secure`;
+}
+
 // Runs `send` once the tags have loaded (they load just after the page, so
 // an event fired as a page opens would otherwise be lost). Gives up after
 // 10 seconds.
 export function whenTagsReady(send: () => void) {
   let tries = 0;
   const attempt = () => {
-    const { fbq, gtag } = tags();
-    if (fbq || gtag) send();
+    const { gtag, ttq } = tags();
+    if (gtag || ttq) send();
     else if (++tries < 40) timer = setTimeout(attempt, 250);
   };
   let timer = setTimeout(attempt, 0);
@@ -63,10 +80,6 @@ const pounds = (pence: number) => Math.round(pence) / 100;
 
 function ttContents(items: Pick<CartItem, "type" | "style" | "qty">[]) {
   return items.map((i) => ({ content_id: `${i.type}-${i.style}`, quantity: i.qty }));
-}
-
-function contents(items: Pick<CartItem, "type" | "style" | "qty">[]) {
-  return items.map((i) => ({ id: `${i.type}-${i.style}`, quantity: i.qty }));
 }
 
 function gaItems(items: CartItem[]) {
@@ -80,11 +93,7 @@ function gaItems(items: CartItem[]) {
 
 export function trackViewBuilder() {
   return whenTagsReady(() => {
-    const { fbq, gtag, ttq } = tags();
-    fbq?.("track", "ViewContent", {
-      content_name: "Plate builder",
-      content_type: "product",
-    });
+    const { gtag, ttq } = tags();
     ttq?.track("ViewContent", { content_id: "plate-builder", content_name: "Plate builder", content_type: "product" });
     gtag?.("event", "view_item", {
       items: [{ item_id: "plate-builder", item_name: "Plate builder" }],
@@ -93,15 +102,9 @@ export function trackViewBuilder() {
 }
 
 export function trackAddToCart(item: CartItem) {
-  const { fbq, gtag, ttq } = tags();
+  const { gtag, ttq } = tags();
   const value = pounds(unitPrice(item) * item.qty);
   ttq?.track("AddToCart", { value, currency: "GBP", content_type: "product", contents: ttContents([item]) });
-  fbq?.("track", "AddToCart", {
-    value,
-    currency: "GBP",
-    content_type: "product",
-    contents: contents([item]),
-  });
   gtag?.("event", "add_to_cart", {
     value,
     currency: "GBP",
@@ -111,17 +114,9 @@ export function trackAddToCart(item: CartItem) {
 
 export function trackBeginCheckout(items: CartItem[], subtotal: number) {
   return whenTagsReady(() => {
-    const { fbq, gtag, ttq } = tags();
+    const { gtag, ttq } = tags();
     const value = pounds(subtotal);
     ttq?.track("InitiateCheckout", { value, currency: "GBP", content_type: "product", contents: ttContents(items) });
-    const num_items = items.reduce((n, i) => n + i.qty, 0);
-    fbq?.("track", "InitiateCheckout", {
-      value,
-      currency: "GBP",
-      num_items,
-      content_type: "product",
-      contents: contents(items),
-    });
     gtag?.("event", "begin_checkout", {
       value,
       currency: "GBP",
@@ -130,7 +125,7 @@ export function trackBeginCheckout(items: CartItem[], subtotal: number) {
   });
 }
 
-// `ref` is the order number. Meta uses it to match this with the same
+// `ref` is the order number. TikTok uses it to match this with the same
 // purchase sent from the server, and Google to ignore repeats.
 export function trackPurchase(p: {
   ref: string;
@@ -138,21 +133,10 @@ export function trackPurchase(p: {
   items: Pick<CartItem, "type" | "style" | "qty">[];
   googleAdsSendTo: string;
 }) {
-  const { fbq, gtag, ttq } = tags();
+  const { gtag, ttq } = tags();
   const value = pounds(p.value);
   // The same event_id as the server sends, so TikTok counts the order once.
   ttq?.track("CompletePayment", { value, currency: "GBP", content_type: "product", contents: ttContents(p.items) }, { event_id: p.ref });
-  fbq?.(
-    "track",
-    "Purchase",
-    {
-      value,
-      currency: "GBP",
-      content_type: "product",
-      contents: contents(p.items),
-    },
-    { eventID: p.ref },
-  );
   gtag?.("event", "purchase", {
     transaction_id: p.ref,
     value,
@@ -172,8 +156,7 @@ export function trackPurchase(p: {
 }
 
 export function trackLead(kind: string) {
-  const { fbq, gtag, ttq } = tags();
-  fbq?.("track", "Lead", { content_name: kind });
+  const { gtag, ttq } = tags();
   ttq?.track("SubmitForm", { content_name: kind });
   gtag?.("event", "generate_lead", { lead_source: kind });
 }

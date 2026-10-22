@@ -23,7 +23,10 @@ export function weeklyReportEmail(x: Insights) {
     ["Paid orders", String(now.orders), change(now.orders, before.orders)],
     ["Sales", gbp(now.revenue), change(now.revenue, before.revenue)],
     ["Average order", gbp(x.avgOrder), ""],
-    ["Ad spend", gbp(now.adSpend), x.ads ? `${x.ads.linkClicks} clicks · ${x.ads.purchases} purchases` : (x.adsError ?? "")],
+    ["Ad spend", gbp(now.adSpend), x.ads ? `TikTok ${gbp(x.ads.byPlatform.tiktok)} · Google ${gbp(x.ads.byPlatform.google)}` : (x.adsError ?? "")],
+    ...x.sources
+      .filter((r) => r.id === "tiktok_ads" || r.id === "google_ads")
+      .map((r): [string, string, string] => [`${r.name} sales`, String(r.orders), `${r.visits} visits${r.costPerSale === null ? "" : ` · ${gbp(r.costPerSale)} per sale`}`]),
     ["Ad cost per sale", gbp(now.costPerSale), change(now.costPerSale, before.costPerSale, true)],
     ["Profit after everything", gbp(now.profit), "after Stripe, refunds, Packlink, ads and materials"],
     [

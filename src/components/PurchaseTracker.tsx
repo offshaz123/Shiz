@@ -8,7 +8,7 @@ import { trackPurchase, whenTagsReady } from "@/lib/track";
 const googleAdsSendTo =
   tracking.googleAdsId && tracking.googleAdsPurchaseLabel ? `${tracking.googleAdsId}/${tracking.googleAdsPurchaseLabel}` : "";
 
-// Tells Meta and Google about a paid order, once per order on this device
+// Tells Google and TikTok about a paid order, once per order on this device
 // (the thank-you page can be refreshed or revisited).
 export function PurchaseTracker({ orderRef, value, items }: { orderRef: string; value: number; items: Pick<CartItem, "type" | "style" | "qty">[] }) {
   useEffect(() => {

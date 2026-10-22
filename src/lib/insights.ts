@@ -1,5 +1,6 @@
 import { query } from "./db";
-import { type AdRow, type AdSpend, adSpend, adsByAd, isMetaAdsConfigured } from "./meta-ads";
+import { type AdSpend, adSpend } from "./ad-spend";
+import { SOURCES, type SourceId, isSource } from "./sources";
 import { type Order, listOpenOrders, listOrdersCreatedBetween, listPaidOrdersBetween } from "./orders";
 import { costHistory, costsOn, orderCost } from "./costs";
 import { orderMoney } from "./order-money";
@@ -7,12 +8,17 @@ import { badges, sizeOf, styles } from "./plates";
 import type { OrderMoney } from "./order-money";
 
 // How the shop is doing over a period, compared with the period before, and
-// what to do about it. Read live from the orders, Stripe, Packlink and Meta.
+// what to do about it. Read live from the orders, Stripe, Packlink and the ad
+// payments typed in on Admin → Money.
 // Used by the admin Insights page and the Monday email.
 
 const DAY = 24 * 60 * 60 * 1000;
 const PAID = ["paid", "in_production", "dispatched"];
 const gbp = (p: number) => `£${(p / 100).toFixed(2)}`;
+
+// Visits and sales from one place customers came from. Ad spend only for the
+// two paid ones (TikTok ads and Google Ads).
+export type SourceRow = { id: SourceId | "unknown"; name: string; visits: number; orders: number; revenue: number; spend: number | null; costPerSale: number | null };
 
 export type Advice = { level: "good" | "warn" | "tip"; title: string; text: string };
 
@@ -34,7 +40,7 @@ export type Insights = {
   avgOrder: number | null;
   ads: AdSpend | null;
   adsError: string | null;
-  perAd: AdRow[];
+  sources: SourceRow[];
   sellers: { styles: [string, number][]; hexShare: number; premiumShare: number; fixingShare: number; flagShare: number; plates: number };
   abandoned: { ref: string; name: string; phone: string; email: string; total: number; when: Date }[];
   docsWaiting: Order[];
@@ -64,19 +70,44 @@ async function totals(from: Date, to: Date, ads: AdSpend | null): Promise<Period
     revenue,
     keep,
     adSpend: spend,
-    costPerSale: spend !== null && real.length ? Math.round(spend / real.length) : null,
+    costPerSale: spend && real.length ? Math.round(spend / real.length) : null,
     profit: spend !== null ? keep - spend : null,
     money,
   };
 }
 
 async function safeAds(from: Date, to: Date) {
-  if (!isMetaAdsConfigured()) return { ads: null, error: "Meta ads aren't connected (META_ADS_TOKEN)." };
   try {
-    return { ads: await adSpend(from, new Date(to.getTime() - DAY)), error: null };
+    return { ads: await adSpend(from, to), error: null };
   } catch (err) {
-    return { ads: null, error: err instanceof Error ? err.message : "Couldn't reach Meta" };
+    return { ads: null, error: err instanceof Error ? err.message : "Couldn't load the ad payments" };
   }
+}
+
+// Where paid orders and visits came from. Orders from people who didn't
+// accept cookies can't be traced, so they show as "Not known".
+async function bySource(from: Date, to: Date, paid: Order[], ads: AdSpend | null): Promise<SourceRow[]> {
+  const ymd = (d: Date) => d.toISOString().slice(0, 10);
+  const visits = new Map(
+    (await query<{ source: string; n: number }>("SELECT source, SUM(count) AS n FROM visits WHERE day >= ? AND day < ? GROUP BY source", [ymd(from), ymd(to)])).map(
+      (r) => [r.source, Number(r.n)],
+    ),
+  );
+  const spendFor: Partial<Record<SourceId, number>> = ads ? { tiktok_ads: ads.byPlatform.tiktok, google_ads: ads.byPlatform.google } : {};
+  const rows: SourceRow[] = [...(Object.keys(SOURCES) as SourceId[]), "unknown" as const].map((id) => {
+    const orders = paid.filter((o) => (id === "unknown" ? !isSource(o.source) : o.source === id));
+    const spend = spendFor[id as SourceId] ?? null;
+    return {
+      id,
+      name: id === "unknown" ? "Not known (cookies not accepted)" : SOURCES[id],
+      visits: id === "unknown" ? 0 : (visits.get(id) ?? 0),
+      orders: orders.length,
+      revenue: orders.reduce((n, o) => n + (o.amount_paid ?? o.total), 0),
+      spend,
+      costPerSale: spend && orders.length ? Math.round(spend / orders.length) : null,
+    };
+  });
+  return rows.filter((r) => r.visits || r.orders || r.spend).sort((a, b) => b.orders - a.orders || b.visits - a.visits);
 }
 
 export async function getInsights(days: number, end = new Date()): Promise<Insights> {
@@ -85,11 +116,7 @@ export async function getInsights(days: number, end = new Date()): Promise<Insig
   const from = new Date(to.getTime() - days * DAY);
   const prevFrom = new Date(from.getTime() - days * DAY);
 
-  const [adsNow, adsBefore, perAd] = await Promise.all([
-    safeAds(from, to),
-    safeAds(prevFrom, from),
-    isMetaAdsConfigured() ? adsByAd(from, new Date(to.getTime() - DAY)).catch(() => [] as AdRow[]) : Promise.resolve([] as AdRow[]),
-  ]);
+  const [adsNow, adsBefore] = await Promise.all([safeAds(from, to), safeAds(prevFrom, from)]);
   const [nowAll, beforeAll, started, open] = await Promise.all([
     totals(from, to, adsNow.ads),
     totals(prevFrom, from, adsBefore.ads),
@@ -99,6 +126,7 @@ export async function getInsights(days: number, end = new Date()): Promise<Insig
   const { money: nowMoney, ...now } = nowAll;
   const before: PeriodTotals = { orders: beforeAll.orders, revenue: beforeAll.revenue, keep: beforeAll.keep, adSpend: beforeAll.adSpend, costPerSale: beforeAll.costPerSale, profit: beforeAll.profit };
   const paid = started.filter((o) => PAID.includes(o.status));
+  const sources = await bySource(from, to, paid, adsNow.ads);
 
   // What sells.
   const styleCount = new Map<string, number>();
@@ -176,7 +204,7 @@ export async function getInsights(days: number, end = new Date()): Promise<Insig
     avgOrder,
     ads: adsNow.ads,
     adsError: adsNow.error,
-    perAd,
+    sources,
     sellers,
     abandoned,
     docsWaiting,
@@ -210,36 +238,38 @@ function advise(x: Insights): Advice[] {
     out.push({ level: "good", title: `The reminder email won back ${won.length} order${won.length > 1 ? "s" : ""} (${gbp(won.reduce((n, r) => n + r.total, 0))})`, text: "People who left checkout came back through the free delivery link and paid." });
 
   // Sales.
-  if (now.orders === 0) out.push({ level: "warn", title: `No paid orders ${period}`, text: "Check the ads are running and the site works on your phone. Post a couple of TikTok or Instagram videos of your plates for free reach." });
+  if (now.orders === 0) out.push({ level: "warn", title: `No paid orders ${period}`, text: "Check the ads are running and the site works on your phone. Post a couple of TikTok videos of your plates for free reach." });
   else if (before.orders > 0) {
     const change = Math.round(((now.revenue - before.revenue) / Math.max(before.revenue, 1)) * 100);
     out.push(
       change >= 0
         ? { level: "good", title: `Sales up ${change}% on the period before`, text: `${now.orders} orders worth ${gbp(now.revenue)}, against ${before.orders} worth ${gbp(before.revenue)}.` }
-        : { level: "warn", title: `Sales down ${-change}% on the period before`, text: `${now.orders} orders worth ${gbp(now.revenue)}, against ${before.orders} worth ${gbp(before.revenue)}. Look at the ads below.` },
+        : { level: "warn", title: `Sales down ${-change}% on the period before`, text: `${now.orders} orders worth ${gbp(now.revenue)}, against ${before.orders} worth ${gbp(before.revenue)}. Look at where customers came from below.` },
     );
   }
 
   // Ads.
   if (ads && now.costPerSale !== null) {
     if (now.costPerSale > 2500)
-      out.push({ level: "warn", title: `Ads cost ${gbp(now.costPerSale)} per sale`, text: "That's too much for £40–£60 orders. Turn off the weakest ad (see the table), try a new one (hex plates are a fresh hook) or narrow the audience. Aim for under £15." });
+      out.push({ level: "warn", title: `Ads cost ${gbp(now.costPerSale)} per sale`, text: "That's too much for £40–£60 orders. Pause the weakest videos or ads, try a new one (hex plates are a fresh hook) or narrow the audience. Aim for under £15." });
     else if (now.costPerSale <= 1500) out.push({ level: "good", title: `Ads cost ${gbp(now.costPerSale)} per sale`, text: "That's healthy. If it stays like this for a week, try raising the daily budget by about 20%." });
     else out.push({ level: "tip", title: `Ads cost ${gbp(now.costPerSale)} per sale`, text: "Okay but not great. Aim for under £15 by keeping the best ad and replacing the weakest." });
   } else if (ads && ads.spend > 2000 && now.orders === 0)
     out.push({ level: "warn", title: `${gbp(ads.spend)} spent on ads with no sales`, text: "Something's off. Check the ads send people to platedup.co.uk and test buying on your phone." });
-  if (ads && ads.linkClicks > 30) {
-    const toCart = ads.addToCart / ads.linkClicks;
-    if (ads.addToCart === 0 || toCart < 0.05)
-      out.push({ level: "warn", title: "People click the ads but don't add plates to the basket", text: `${ads.linkClicks} clicks, ${ads.addToCart} added to basket. The ad may promise something the page doesn't show. Send ads straight to the plate builder and make sure prices match.` });
-    else if (ads.checkouts > 0 && ads.purchases / ads.checkouts < 0.3)
-      out.push({ level: "warn", title: "People reach checkout but don't pay", text: `${ads.checkouts} reached checkout, ${ads.purchases} paid. Delivery costs and the documents step are the usual reasons. The WhatsApp follow-ups help here.` });
-  }
-  for (const ad of x.perAd)
-    if (ad.spend >= 2000 && ad.purchases === 0 && ad.addToCart === 0)
-      out.push({ level: "tip", title: `Turn off "${ad.name}"`, text: `It has spent ${gbp(ad.spend)} with no sales or baskets. Let the money go to the ads that work.` });
-  const best = [...x.perAd].filter((a) => a.purchases > 0).sort((a, b) => a.spend / a.purchases - b.spend / b.purchases)[0];
-  if (best) out.push({ level: "good", title: `Best ad: "${best.name}"`, text: `${best.purchases} sale${best.purchases > 1 ? "s" : ""} at ${gbp(Math.round(best.spend / best.purchases))} each. Make more ads like it.` });
+  else if (ads && ads.spend === 0)
+    out.push({ level: "tip", title: "No ad payments typed in for these dates", text: "Add your TikTok and Google payments on Admin → Money, so cost per sale and profit are right." });
+  // TikTok against Google: put the money where sales cost least.
+  const paidAds = x.sources.filter((r) => r.spend && r.spend >= 2000);
+  for (const r of paidAds)
+    if (r.orders === 0)
+      out.push({ level: "warn", title: `${gbp(r.spend ?? 0)} on ${r.name} with no traced sales`, text: "Give new ads 3–4 days to learn. If it's still nothing after a week, pause the weakest videos or ads and try new ones." });
+  const priced = paidAds.filter((r) => r.costPerSale !== null).sort((a, b) => (a.costPerSale ?? 0) - (b.costPerSale ?? 0));
+  const [best, worst] = [priced[0], priced[priced.length - 1]];
+  if (priced.length >= 2 && (worst.costPerSale ?? 0) > (best.costPerSale ?? 0) * 1.5)
+    out.push({ level: "tip", title: `${best.name} sells cheaper than ${worst.name}`, text: `A sale costs ${gbp(best.costPerSale ?? 0)} from ${best.name} and ${gbp(worst.costPerSale ?? 0)} from ${worst.name}. Move some of the daily budget to ${best.name}.` });
+  const unknown = x.sources.find((r) => r.id === "unknown");
+  if (unknown && now.orders >= 4 && unknown.orders / now.orders > 0.5)
+    out.push({ level: "tip", title: "Most orders can't be traced to TikTok or Google", text: "Those customers didn't accept cookies, so we can't tell where they came from. The cost per sale shown is a lower limit: ads probably did better than it looks." });
 
   // Order value and what sells.
   if (x.avgOrder !== null && x.avgOrder < 5000)

@@ -47,7 +47,7 @@ export default async function OrderConfirmed(props: PageProps<"/order-confirmed"
   const sessionId = typeof session_id === "string" ? session_id.slice(0, 255) : "";
   const order = await loadOrder(orderRef, sessionId);
   const paid = order ? ["paid", "in_production", "dispatched"].includes(order.status) : false;
-  // Tell Meta and Google about the purchase only straight after paying, and
+  // Tell Google and TikTok about the purchase only straight after paying, and
   // never when the shop owner views the page, so reopening the page later (on
   // another device, or from the Klarna app) can't count the same order twice.
   const freshPurchase = paid && Boolean(sessionId) && justPaid(order) && !(await isAdmin());

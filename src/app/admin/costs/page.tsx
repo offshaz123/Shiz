@@ -119,7 +119,7 @@ export default async function CostsPage(props: PageProps<"/admin/costs">) {
         <div className="rounded-2xl border border-line bg-white p-5">
           <p className="text-xs font-semibold uppercase tracking-wider text-muted">Profit after materials</p>
           <p className="mt-1 font-display text-3xl font-bold text-[#1f7a3d]">{totalKeep === null ? "-" : money(totalKeep - totalMaterials)}</p>
-          <p className="text-sm text-muted">Before Meta ads (see Money)</p>
+          <p className="text-sm text-muted">Before ads (see Money)</p>
         </div>
       </div>
       <div className="mt-4 overflow-x-auto rounded-2xl border border-line bg-white">

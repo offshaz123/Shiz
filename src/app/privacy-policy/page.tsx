@@ -40,7 +40,7 @@ export default function PrivacyPage() {
         <h2>Who we share it with</h2>
         <p>
           Our payment provider and delivery company, only as needed to complete your order. If you accept
-          advertising cookies, Meta, Google and TikTok as described under Cookies. We may
+          advertising cookies, Google and TikTok as described under Cookies. We may
           share records with the DVLA, police or Trading Standards when the law requires it. We
           never sell your data.
         </p>
@@ -51,18 +51,20 @@ export default function PrivacyPage() {
         </p>
         <p>
           <strong>Analytics and advertising cookies</strong> are only used if you press &ldquo;Accept&rdquo;. They
-          let Google Analytics show us how people use the site, and let Meta (Facebook and Instagram), TikTok and Google
-          Ads tell us which adverts lead to orders, so we can show them to people likely to be interested. If you
-          accept and then place an order, we also send Meta your order value and a scrambled (hashed) copy of your
-          email, phone, name and postcode, and TikTok your order value and a scrambled copy of your email and phone,
-          so they can match the order to their advert. Meta, TikTok and Google handle this under their own privacy
-          policies.
+          let Google Analytics show us how people use the site, and let TikTok and Google Ads tell us which adverts
+          lead to orders, so we can show them to people likely to be interested. They also remember for 30 days
+          where you came to us from (for example a Google or TikTok advert), so we can see which adverts lead to
+          orders. If you accept and then place an order, we also send TikTok your order value and a scrambled
+          (hashed) copy of your email and phone, so it can match the order to its advert. TikTok and Google handle
+          this under their own privacy policies.
         </p>
         <p>
           Before you choose, or if you press &ldquo;Reject&rdquo;, Google&apos;s tag still runs in its &ldquo;consent
           mode&rdquo;: it sets no cookies and sends Google only basic signals with no cookie or advertising ID (for
           example that a page was viewed or an order placed), which Google uses to estimate how many orders came from
-          its adverts. Meta gets nothing unless you accept.
+          its adverts. TikTok gets nothing unless you accept. Whatever you choose, we count how many visits come
+          from each place (for example &ldquo;Google search&rdquo; or &ldquo;TikTok&rdquo;) as a plain number per
+          day. Nothing is stored on your device for this and the count says nothing about you.
         </p>
         <p>
           You can change your mind at any time with &ldquo;Cookie settings&rdquo; at the bottom of every page.

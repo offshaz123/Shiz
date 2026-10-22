@@ -7,7 +7,7 @@ import { isDbConfigured } from "@/lib/db";
 import { getCurrentUser, isValidPhone } from "@/lib/auth";
 import { clientIp, rateLimited } from "@/lib/places";
 import { checkDiscount } from "@/lib/discounts";
-import { adTrackingFrom, saveAdTracking } from "@/lib/meta-capi";
+import { adTrackingFrom, saveAdTracking } from "@/lib/ad-tracking";
 import { createCheckoutSession, isStripeConfigured, requestBaseUrl } from "@/lib/stripe";
 import { createOrder, getOrder, saveDocuments, sendOrderEmails, setStatus, setStripeSession } from "@/lib/orders";
 

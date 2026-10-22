@@ -69,22 +69,13 @@ export default async function InsightsPage(props: PageProps<"/admin/insights">) 
       </AdminShell>
     );
   }
-  const { now, before, ads } = x;
-  const funnel = ads
-    ? [
-        ["Clicked an ad", ads.linkClicks],
-        ["Opened the website", ads.landingViews],
-        ["Added to basket", ads.addToCart],
-        ["Started checkout", ads.checkouts],
-        ["Paid", ads.purchases],
-      ]
-    : [];
+  const { now, before } = x;
 
   return (
     <AdminShell active="insights">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted">
-          {day(x.from)} – {day(new Date(x.to.getTime() - 1))}, compared with the {days} days before. Live from your orders, Stripe, Packlink and Meta. A summary is emailed to you every Monday at 8am.
+          {day(x.from)} – {day(new Date(x.to.getTime() - 1))}, compared with the {days} days before. Live from your orders, Stripe, Packlink and the ad payments on Money. A summary is emailed to you every Monday at 8am.
         </p>
         <div className="flex flex-wrap gap-2">
           <SendReportButton />
@@ -111,7 +102,7 @@ export default async function InsightsPage(props: PageProps<"/admin/insights">) 
           <span className="text-muted">Aim for £55+</span>
         </Card>
         <Card label="Ad cost per sale" value={gbp(now.costPerSale)}>
-          {now.costPerSale === null ? <span className="text-muted">{x.adsError ?? "No sales yet"}</span> : <Change now={now.costPerSale} before={before.costPerSale} lowerIsBetter />}
+          {now.costPerSale === null ? <span className="text-muted">{x.adsError ?? (now.adSpend ? "No sales yet" : "Add ad payments on Money")}</span> : <Change now={now.costPerSale} before={before.costPerSale} lowerIsBetter />}
         </Card>
         <Card label="Profit after everything" value={gbp(now.profit)}>
           <span className="text-muted">After Stripe, refunds, Packlink, ads and materials</span>
@@ -135,58 +126,44 @@ export default async function InsightsPage(props: PageProps<"/admin/insights">) 
         )}
       </Section>
 
-      {ads && (
-        <Section title="From ad to sale" note="What happened after people clicked your Meta ads (as the Meta Pixel saw it).">
-          <div className="grid gap-3 sm:grid-cols-5">
-            {funnel.map(([label, n], i) => {
-              const prev = i > 0 ? Number(funnel[i - 1][1]) : 0;
-              return (
-                <div key={String(label)} className="rounded-2xl border border-line bg-white p-4 text-center">
-                  <p className="font-display text-3xl font-bold">{n}</p>
-                  <p className="text-sm font-semibold">{label}</p>
-                  {i > 0 && prev > 0 && <p className="text-xs text-muted">{pct(Number(n) / prev)} of the step before</p>}
-                </div>
-              );
-            })}
-          </div>
-        </Section>
-      )}
-
-      {x.perAd.length > 0 && (
-        <Section title="Each ad" note="Biggest spend first. Keep the ads with sales; replace the ones that only spend.">
+      <Section
+        title="Where customers came from"
+        note="Visits are counted for everyone. An order shows where it came from only if the customer accepted cookies; the rest are under “Not known”. Ad spend is what you typed in on Money."
+      >
+        {x.sources.length === 0 ? (
+          <p className="rounded-2xl border border-line bg-white p-5 text-sm text-muted">No visits counted yet. They start showing from today.</p>
+        ) : (
           <div className="overflow-x-auto rounded-2xl border border-line bg-white">
-            <table className="w-full min-w-[720px] text-sm">
+            <table className="w-full min-w-[640px] text-sm">
               <thead className="bg-surface text-left text-xs uppercase tracking-wider text-muted">
                 <tr>
-                  <th className="p-3">Ad</th>
-                  <th className="p-3 text-right">Spent</th>
-                  <th className="p-3 text-right">Clicks</th>
-                  <th className="p-3 text-right">Click rate</th>
-                  <th className="p-3 text-right">Baskets</th>
-                  <th className="p-3 text-right">Checkouts</th>
+                  <th className="p-3">Came from</th>
+                  <th className="p-3 text-right">Visits</th>
+                  <th className="p-3 text-right">Paid orders</th>
                   <th className="p-3 text-right">Sales</th>
+                  <th className="p-3 text-right">Ad spend</th>
                   <th className="p-3 text-right">Cost per sale</th>
                 </tr>
               </thead>
               <tbody>
-                {x.perAd.map((a) => (
-                  <tr key={a.name} className="border-t border-line">
-                    <td className="p-3 font-semibold">{a.name}</td>
-                    <td className="p-3 text-right">{gbp(a.spend)}</td>
-                    <td className="p-3 text-right">{a.linkClicks}</td>
-                    <td className={`p-3 text-right ${a.ctr < 1 ? "text-[#b42318]" : ""}`}>{a.ctr.toFixed(2)}%</td>
-                    <td className="p-3 text-right">{a.addToCart}</td>
-                    <td className="p-3 text-right">{a.checkouts}</td>
-                    <td className="p-3 text-right font-bold">{a.purchases}</td>
-                    <td className="p-3 text-right">{a.purchases ? gbp(Math.round(a.spend / a.purchases)) : "-"}</td>
+                {x.sources.map((r) => (
+                  <tr key={r.id} className="border-t border-line">
+                    <td className={`p-3 font-semibold ${r.id === "unknown" ? "text-muted" : ""}`}>{r.name}</td>
+                    <td className="p-3 text-right">{r.id === "unknown" ? "" : r.visits}</td>
+                    <td className="p-3 text-right font-bold">{r.orders}</td>
+                    <td className="p-3 text-right">{gbp(r.revenue)}</td>
+                    <td className="p-3 text-right">{r.spend === null ? "" : gbp(r.spend)}</td>
+                    <td className="p-3 text-right">{r.costPerSale === null ? (r.spend ? "no sales yet" : "") : gbp(r.costPerSale)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <p className="mt-2 text-xs text-muted">A click rate under 1% (in red) usually means the picture or headline isn&apos;t grabbing people.</p>
-        </Section>
-      )}
+        )}
+        <p className="mt-2 text-xs text-muted">
+          TikTok ads are the visits from your ads&apos; link (it ends in ?utm_source=tiktok). Google Ads and Google Shopping are recognised automatically.
+        </p>
+      </Section>
 
       <Section title="What sells" note={`${x.sellers.plates} plate order line${x.sellers.plates === 1 ? "" : "s"} paid in this period.`}>
         <div className="grid gap-3 lg:grid-cols-2">
