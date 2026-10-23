@@ -10,7 +10,7 @@ const day = (d: string) => new Date(`${d}T12:00:00Z`).toLocaleDateString("en-GB"
 
 // Admin → Money: type in each payment for ads from the TikTok and Google
 // bills, and see the ones in the chosen dates.
-export function AdSpendEditor({ payments, platforms, today }: { payments: Payment[]; platforms: Record<string, string>; today: string }) {
+export function AdSpendEditor({ payments, platforms, labels, today }: { payments: Payment[]; platforms: Record<string, string>; labels: Record<string, string>; today: string }) {
   const router = useRouter();
   const [date, setDate] = useState(today);
   const [platform, setPlatform] = useState("tiktok");
@@ -77,7 +77,7 @@ export function AdSpendEditor({ payments, platforms, today }: { payments: Paymen
       </form>
       <p className="mt-2 text-xs text-muted">
         Type the full amount that came off your card, VAT included (a £100 TikTok top-up is £120). You&apos;re not VAT registered, so the VAT is a
-        real cost. Find each payment under Billing / Payments in TikTok Ads Manager and Google Ads.
+        real cost. Find each payment under Billing / Payments in TikTok Ads Manager. Google and Meta come in by themselves.
       </p>
       {message && <p className={`mt-3 text-sm font-semibold ${message.ok ? "text-[#1f7a3d]" : "text-[#b42318]"}`}>{message.text}</p>}
 
@@ -99,7 +99,7 @@ export function AdSpendEditor({ payments, platforms, today }: { payments: Paymen
               {payments.map((p) => (
                 <tr key={p.id}>
                   <td className="py-2 pr-3 whitespace-nowrap">{day(p.day)}</td>
-                  <td className="py-2 pr-3 font-semibold">{platforms[p.platform] ?? p.platform}</td>
+                  <td className="py-2 pr-3 font-semibold">{labels[p.platform] ?? p.platform}</td>
                   <td className="py-2 pr-3 text-muted">{p.note}</td>
                   <td className="py-2 pr-3 text-right font-semibold">{gbp(p.amount)}</td>
                   <td className="py-2 text-right">

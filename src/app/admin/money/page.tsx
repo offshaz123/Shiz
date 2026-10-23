@@ -6,7 +6,9 @@ import { type Movement, type Payout, balance, payoutMovements, recentMovements, 
 import { type OrderMoney, dayString, orderMoney, parseDay } from "@/lib/order-money";
 import { listPaidOrdersBetween, statusLabels } from "@/lib/orders";
 import { costHistory, costsOn, orderCost } from "@/lib/costs";
-import { AD_PLATFORMS, type AdPayment, adPayments } from "@/lib/ad-spend";
+import { AD_PLATFORMS, type AdPayment, type AdSpend, adPayments, adSpend, googleAdsKey, googleAdsScript } from "@/lib/ad-spend";
+import { site } from "@/lib/site";
+import { CopyBox } from "@/components/CopyBox";
 import { AdSpendEditor } from "@/components/AdSpendEditor";
 
 const DAY = 24 * 60 * 60 * 1000;
@@ -18,7 +20,7 @@ const gbp = (p: number) => `${p < 0 ? "−" : ""}£${(Math.abs(p) / 100).toFixed
 const day = (d: Date) => d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Europe/London" });
 
 async function load(from: Date, to: Date) {
-  const [bal, movements, payouts, perOrder, ads] = await Promise.all([
+  const [bal, movements, payouts, perOrder, ads, adTotals] = await Promise.all([
     balance(),
     recentMovements(100),
     recentPayouts(6),
@@ -27,12 +29,16 @@ async function load(from: Date, to: Date) {
       console.error("Loading ad spend failed", err);
       return [];
     }),
+    adSpend(from, to).catch((err): AdSpend => {
+      console.error("Loading ad spend failed", err);
+      return { spend: 0, byPlatform: { tiktok: 0, google: 0, meta: 0, other: 0 }, metaError: null };
+    }),
   ]);
   const breakdowns = await Promise.all(payouts.map((p) => payoutMovements(p.id).catch(() => [] as Movement[])));
   // Refunds in a payout may refund a payment from an earlier one: match them to orders too.
   const orderOf = new Map(movements.filter((m) => m.orderRef).map((m) => [m.chargeId, m.orderRef]));
   const withOrders = (list: Movement[]) => list.map((m) => (m.orderRef ? m : { ...m, orderRef: orderOf.get(m.chargeId) ?? null }));
-  return { bal, movements, perOrder, ads, payouts: payouts.map((p, i) => ({ ...p, items: withOrders(breakdowns[i]) })) };
+  return { bal, movements, perOrder, ads, adTotals, payouts: payouts.map((p, i) => ({ ...p, items: withOrders(breakdowns[i]) })) };
 }
 
 function Stat({ label, value, note }: { label: string; value: string; note: string }) {
@@ -301,7 +307,7 @@ export default async function MoneyPage(props: PageProps<"/admin/money">) {
       </AdminShell>
     );
   }
-  const { bal, movements, payouts, perOrder, ads } = data;
+  const { bal, movements, payouts, perOrder, ads, adTotals } = data;
   // Totals for the chosen dates, from the per-order figures, plus anything Stripe
   // charged that isn't tied to an order (e.g. a paid Stripe feature).
   const end = new Date(toDay.getTime() + DAY);
@@ -319,7 +325,8 @@ export default async function MoneyPage(props: PageProps<"/admin/money">) {
   const materials = (await listPaidOrdersBetween(from, end))
     .filter((o) => ["paid", "in_production", "dispatched"].includes(o.status))
     .reduce((n, o) => n + orderCost(o.items, costsOn(costs, o.paid_at ?? o.created_at)), 0);
-  const adTotal = ads.reduce((n, a) => n + a.amount, 0);
+  const adTotal = adTotals.spend;
+  const script = googleAdsScript(site.url, await googleAdsKey());
 
   return (
     <AdminShell active="money">
@@ -335,11 +342,10 @@ export default async function MoneyPage(props: PageProps<"/admin/money">) {
         <Stat
           label="Spent on ads"
           value={gbp(adTotal)}
-          note={`${rangeText} · ${Object.entries(AD_PLATFORMS)
-            .map(([id, name]) => [name, ads.filter((a) => a.platform === id).reduce((n, a) => n + a.amount, 0)] as const)
-            .filter(([, n]) => n > 0)
-            .map(([name, n]) => `${name} ${gbp(n)}`)
-            .join(" · ") || "add your ad payments below"}`}
+          note={`${rangeText} · ${(Object.keys(AD_PLATFORMS) as (keyof typeof AD_PLATFORMS)[])
+            .filter((id) => adTotals.byPlatform[id] > 0)
+            .map((id) => `${AD_PLATFORMS[id]} ${gbp(adTotals.byPlatform[id])}`)
+            .join(" · ") || "none yet"}${adTotals.metaError ? ` · Meta couldn't be read: ${adTotals.metaError}` : ""} · VAT included`}
         />
         <Stat
           label="Profit after everything"
@@ -350,12 +356,27 @@ export default async function MoneyPage(props: PageProps<"/admin/money">) {
 
       <h2 id="ads" className="mt-10 font-display text-2xl font-bold">Ad spend</h2>
       <p className="mt-1 text-sm text-muted">
-        Every payment to TikTok and Google for ads. It comes off your profit above, and Insights uses it to work out what each sale from TikTok and
-        Google cost you. The list shows the dates picked below ({rangeText}).
+        Comes off your profit above, and Insights uses it to work out what each sale from TikTok and Google cost you. Meta comes in by itself
+        (read from Meta, as before) and Google Ads too once its script is set up (below). Only TikTok top-ups need typing in. The list shows
+        the dates picked below ({rangeText}).
       </p>
       <div className="mt-4">
-        <AdSpendEditor payments={ads} platforms={AD_PLATFORMS} today={dayString(new Date())} />
+        <AdSpendEditor payments={ads} platforms={{ tiktok: AD_PLATFORMS.tiktok, other: AD_PLATFORMS.other }} labels={AD_PLATFORMS} today={dayString(new Date())} />
       </div>
+      <details className="mt-4 rounded-2xl border border-line bg-white p-5">
+        <summary className="cursor-pointer font-semibold">Set up Google Ads to send its spend here automatically (once)</summary>
+        <ol className="mt-3 list-decimal space-y-1 pl-5 text-sm">
+          <li>Press &ldquo;Copy&rdquo; below.</li>
+          <li>In Google Ads, go to Tools → Bulk actions → Scripts, press the blue + and choose &ldquo;New script&rdquo;.</li>
+          <li>Delete what&apos;s in the box, paste, and name it &ldquo;PlatedUp spend&rdquo;.</li>
+          <li>Press &ldquo;Authorise&rdquo; and allow it, then &ldquo;Preview&rdquo;: the log should say &ldquo;200 Saved … days&rdquo;.</li>
+          <li>Press &ldquo;Save&rdquo;, then set Frequency to &ldquo;Daily&rdquo;.</li>
+        </ol>
+        <p className="mt-2 text-xs text-muted">The script contains a private key for your shop. Don&apos;t share it or post it anywhere else.</p>
+        <div className="mt-3">
+          <CopyBox text={script} />
+        </div>
+      </details>
 
       <h2 className="mt-10 font-display text-2xl font-bold">What you keep from each order</h2>
       <p className="mt-1 text-sm text-muted">
