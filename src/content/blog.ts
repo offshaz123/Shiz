@@ -16,6 +16,90 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "what-to-do-with-the-leads-that-said-no",
+    title: "What to Do With the Leads That Said No",
+    description:
+      "Most of them never said no, they said not now. What you are actually allowed to do about that in the UK, and the one kind of message that gets a reply.",
+    publishedAt: "2026-10-23",
+    keywords: [
+      "following up old leads",
+      "re-engaging cold leads small business",
+      "what to do with lost leads",
+      "lead follow up UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Every business has this list, usually by accident. People who enquired, got a price, went quiet, and were never heard from again.",
+          "It is the cheapest asset in the building. You already paid to find these people, and most of them did not actually reject you.",
+        ],
+      },
+      {
+        heading: "Why they went quiet",
+        paragraphs: [
+          "The assumption is always price. Sometimes it is. Far more often it is one of these:",
+        ],
+        bullets: [
+          "The timing moved. The money went on something else, or the job was pushed to next year",
+          "They were gathering quotes before they were ready to commit to any of them",
+          "Somebody else answered first, and speed decided it rather than merit",
+          "They got overwhelmed by three quotes that were hard to compare and did nothing",
+          "They are waiting on something out of your hands: planning, a sale completing, a partner agreeing",
+        ],
+      },
+      {
+        paragraphs: [
+          "Only the first of those is permanent, and even then only for this year. The rest are people who still want the job done.",
+        ],
+      },
+      {
+        heading: "The bit most advice skips",
+        paragraphs: [
+          "You will read a lot of content telling you to email your old leads. In the UK that advice is incomplete, and the gap matters.",
+          "Marketing email and text to individuals needs specific consent, and the soft opt-in exemption that covers existing customers does not extend to people who only ever enquired. The ICO is explicit that it does not apply to prospective customers. Sole traders are treated as individuals too, which catches anyone selling to trades.",
+          "So the question is not whether these people are warm. It is what you are allowed to send them.",
+          "Replying to their enquiry is fine. Following up a quote you actually gave them is part of the same conversation. Sending them your monthly offer eighteen months later, with no consent box ever ticked, is marketing, and that is a different thing.",
+        ],
+      },
+      {
+        heading: "What you can do instead",
+        paragraphs: [
+          "Three routes, and they are not equally easy.",
+          "The quote follow-up. If you quoted and never heard back, chasing that specific quote is the natural continuation of what they started. This is the strongest and least complicated option, and most businesses use it once and stop.",
+          "The phone. Calling somebody who gave you their number about a job you quoted is not the same as cold calling a stranger, but phone marketing has its own rules under the TPS and CTPS, so it is worth knowing where your call sits before you make a list of two hundred.",
+          "Advertising. This is the underused one. People who visited your site and did not enquire, or enquired and did not book, are the cheapest audience you will ever advertise to, and showing them an advert is not sending them a message. For most small businesses this is the practical answer to the whole problem.",
+        ],
+      },
+      {
+        heading: "Collect the consent at the start",
+        paragraphs: [
+          "The permanent fix costs nothing and almost nobody does it.",
+          "Put one unticked box on the enquiry form, naming your business, asking whether they would like occasional emails from you. Record who ticked it and when.",
+          "Do that from today and in twelve months you will have a list you can actually use, rather than a spreadsheet of people you are not allowed to contact. The businesses that find this frustrating are always the ones who did not ask at the time.",
+        ],
+      },
+      {
+        heading: "The message that works",
+        paragraphs: [
+          "Where you can make contact, the thing that gets a reply is specific rather than general.",
+          "A chase is \"just following up to see if you had any thoughts\". It is about you, it asks the person to do the work of remembering, and it is easy to ignore twice.",
+          "What works is a reason that belongs to them. Their date. Their job. Something that changed.",
+          "A cancellation has opened the week they wanted. The price they were quoted is about to change. You have just finished a job like theirs two streets away. Their kitchen was going to be done before Christmas and Christmas is nine weeks off.",
+          "Remembering what they told you, months later, is the single most impressive thing a small business can do, and it is not a talent. It is a note in the CRM that most people never write down.",
+        ],
+      },
+      {
+        heading: "Knowing when to stop",
+        paragraphs: [
+          "Two sensible limits.",
+          "If somebody has ignored three genuinely useful messages, they are not a lead. Mark them closed and stop spending attention on them. Continuing is how a follow-up system turns into the thing people complain about.",
+          "And if anyone asks to be left alone, that is the end of it, immediately and permanently, across every channel. It is both the law and the only decent way to run it.",
+          "Done properly, this is quiet work. A handful of notes, a reason to get in touch that is actually about them, and a box on a form you should have added a year ago.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "why-your-google-ads-show-for-the-wrong-town",
     title: "Why Your Google Ads Are Showing for the Wrong Town",
     description:

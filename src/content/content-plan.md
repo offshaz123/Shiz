@@ -90,6 +90,7 @@ keywords, dealership social strategy).
 - The Search Terms Report: Where Your Google Ads Money Actually Goes (Google Ads)
 - Consent Wording on Your Enquiry Form: What UK Law Actually Needs (forms & conversion)
 - Why Your Google Ads Are Showing for the Wrong Town (Google Ads)
+- What to Do With the Leads That Said No (practical how-to)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -354,7 +355,7 @@ deliberately weights toward Google Ads to close that gap.
       Profile photos", "best photos for Google listing"
 
 ## Backlog — practical how-to (added 2026-10-19 research round)
-- [ ] What to Do With the Leads That Said No — target: "following up old leads", "re-engaging
+- [x] What to Do With the Leads That Said No — target: "following up old leads", "re-engaging
       cold leads small business"
 - [ ] Writing a Quote That Gets Accepted — target: "how to write a quote small business", "quote
       follow up template"
