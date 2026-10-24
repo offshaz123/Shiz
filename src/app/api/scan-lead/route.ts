@@ -44,6 +44,8 @@ export async function POST(request: Request) {
   const email = clean(body.email);
   const phone = clean(body.phone);
   const website = clean(body.website);
+  // Kept as a column for the record of what the form said at the time. It no
+  // longer decides who gets what — the unsubscribe does that.
   const consent = body.marketingConsent === true;
 
   if (!name || !email || !phone || !website) {
@@ -77,16 +79,13 @@ export async function POST(request: Request) {
     auth: { user: SMTP_USER, pass: SMTP_PASS },
   });
 
-  // Consent is recorded either way. "No" matters as much as "yes": it is the
-  // record showing the follow-up sequence was not sent to someone who had not
-  // agreed to it.
   const lines = [
     `Name: ${name}`,
     `Email: ${email}`,
     `Phone: ${phone}`,
     `Website: ${website}`,
     "",
-    `Marketing consent: ${consent ? "YES — may receive the follow-up sequence" : "NO — report only, do not add to any list"}`,
+    "They'll get the day 1, 3 and 6 follow-ups unless they unsubscribe.",
     `Captured: ${new Date().toISOString()}`,
     leadId
       ? `Saved as lead #${leadId}.`

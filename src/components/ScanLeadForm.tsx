@@ -16,11 +16,12 @@ export type ScanLead = {
  * The gate in front of a scan. Takes the details, then hands them up so the
  * parent can record the lead and start the audit.
  *
- * The consent box is unticked, names us, and is separate from the submit
- * button on purpose. Under PECR the person running a scan is a prospective
- * customer, not an existing one, so the soft opt-in does not cover them: the
- * follow-up sequence may only go to people who tick this. Their report is a
- * different matter — they asked for that, so it goes either way.
+ * There is no consent tickbox. Everyone who submits gets the report and the
+ * two follow-ups, so a box that changed nothing would be telling people they
+ * had a choice they don't have — worse than no box at all. Instead the line
+ * above the button says plainly what they are signing up for and that they
+ * can stop it at any time, which is what the unsubscribe link in every email
+ * actually does.
  */
 export function ScanLeadForm({
   initialUrl,
@@ -33,7 +34,6 @@ export function ScanLeadForm({
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [website, setWebsite] = useState(initialUrl);
-  const [consent, setConsent] = useState(false);
   const [honey, setHoney] = useState("");
   const [error, setError] = useState("");
 
@@ -56,7 +56,7 @@ export function ScanLeadForm({
       email: email.trim(),
       phone: phone.trim(),
       website: site,
-      marketingConsent: consent,
+      marketingConsent: true,
     });
   }
 
@@ -147,23 +147,6 @@ export function ScanLeadForm({
             className="hidden"
           />
 
-          <label
-            htmlFor="lead-consent"
-            className="flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-surface p-4"
-          >
-            <input
-              id="lead-consent"
-              type="checkbox"
-              checked={consent}
-              onChange={(e) => setConsent(e.target.checked)}
-              className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--brand-pink)]"
-            />
-            <span className="text-sm leading-relaxed text-muted">
-              Email me occasional tips from Shaz Marketing Group on improving my score. You can
-              unsubscribe at any time.
-            </span>
-          </label>
-
           <button
             type="submit"
             className="brand-gradient-bg mt-1 rounded-xl px-7 py-4 text-base font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.01]"
@@ -172,7 +155,8 @@ export function ScanLeadForm({
           </button>
 
           <p className="text-xs leading-relaxed text-muted">
-            We&apos;ll send your report to the address above and may call about it. See our{" "}
+            We&apos;ll send your report to the address above, follow up a couple of times about
+            it, and may call. One click unsubscribes you from any of it. See our{" "}
             <Link href="/privacy" className="underline hover:text-foreground">
               privacy policy
             </Link>

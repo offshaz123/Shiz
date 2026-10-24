@@ -24,15 +24,20 @@ export const dynamic = "force-dynamic";
  */
 
 /**
- * Day one is the report they asked for, so it goes to everyone who ran a scan
- * — they handed over their email for exactly that. Days three and six are
- * marketing to a prospective customer, which under PECR needs consent, so
- * they go only to people who ticked the box.
+ * All three go to everyone who submitted their details, by Walid's decision.
+ *
+ * The basis is PECR's soft opt-in: someone who hands a marketing agency their
+ * details to get a website audit is in negotiations for a sale, and the form
+ * tells them plainly that the report and follow-ups are what they are signing
+ * up for. What keeps that defensible rather than reckless is the unsubscribe
+ * link on every email and the fact that it is honoured immediately — see the
+ * unsubscribed_at check in the query below, which is not optional and must
+ * not be removed.
  */
 const STEPS = [
-  { step: 1, afterDays: 1, requiresConsent: false },
-  { step: 3, afterDays: 3, requiresConsent: true },
-  { step: 6, afterDays: 6, requiresConsent: true },
+  { step: 1, afterDays: 1 },
+  { step: 3, afterDays: 3 },
+  { step: 6, afterDays: 6 },
 ];
 
 /** Kept small so a run finishes well inside any request timeout. */
@@ -85,7 +90,7 @@ async function run(request: Request) {
 
   const summary: Record<string, number> = { sent: 0, failed: 0, skipped: 0 };
 
-  for (const { step, afterDays, requiresConsent } of STEPS) {
+  for (const { step, afterDays } of STEPS) {
     const due = await withDb(async (db) => {
       const [rows] = await db.query<DueRow[]>(
         `SELECT l.id, l.name, l.email, l.website, l.audit_json
@@ -95,7 +100,6 @@ async function run(request: Request) {
            AND l.contacted = 0
            AND l.unsubscribed_at IS NULL
            AND l.created_at <= DATE_SUB(NOW(), INTERVAL ? DAY)
-           ${requiresConsent ? "AND l.marketing_consent = 1" : ""}
          ORDER BY l.created_at ASC
          LIMIT ?`,
         [step, afterDays, MAX_PER_RUN],

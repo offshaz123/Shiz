@@ -9,7 +9,7 @@ export type AdminLead = {
   email: string;
   phone: string;
   website: string;
-  marketingConsent: boolean;
+  unsubscribed: boolean;
   score: number | null;
   referrer: string | null;
   contacted: boolean;
@@ -22,7 +22,7 @@ export type AdminLead = {
 export type AdminStats = {
   totalLeads: number;
   leadsThisWeek: number;
-  consented: number;
+  unsubscribed: number;
   uncontacted: number;
   viewsThisWeek: number;
   topPages: { path: string; views: number }[];
@@ -34,7 +34,7 @@ interface LeadRow extends RowDataPacket {
   email: string;
   phone: string;
   website: string;
-  marketing_consent: number;
+  unsubscribed_at: Date | null;
   score: number | null;
   referrer: string | null;
   contacted: number;
@@ -63,7 +63,7 @@ export async function getLeads(limit = 200): Promise<AdminLead[] | null> {
       email: row.email,
       phone: row.phone,
       website: row.website,
-      marketingConsent: row.marketing_consent === 1,
+      unsubscribed: row.unsubscribed_at !== null,
       score: row.score,
       referrer: row.referrer,
       contacted: row.contacted === 1,
@@ -92,8 +92,8 @@ export async function getStats(): Promise<AdminStats | null> {
     const [[recent]] = await db.query<CountRow[]>(
       `SELECT COUNT(*) AS n FROM scan_leads WHERE created_at >= ${week}`,
     );
-    const [[consented]] = await db.query<CountRow[]>(
-      "SELECT COUNT(*) AS n FROM scan_leads WHERE marketing_consent = 1",
+    const [[unsubscribed]] = await db.query<CountRow[]>(
+      "SELECT COUNT(*) AS n FROM scan_leads WHERE unsubscribed_at IS NOT NULL",
     );
     const [[uncontacted]] = await db.query<CountRow[]>(
       "SELECT COUNT(*) AS n FROM scan_leads WHERE contacted = 0",
@@ -110,7 +110,7 @@ export async function getStats(): Promise<AdminStats | null> {
     return {
       totalLeads: total?.n ?? 0,
       leadsThisWeek: recent?.n ?? 0,
-      consented: consented?.n ?? 0,
+      unsubscribed: unsubscribed?.n ?? 0,
       uncontacted: uncontacted?.n ?? 0,
       viewsThisWeek: views?.n ?? 0,
       topPages: topPages.map((row) => ({ path: row.path, views: Number(row.views) })),

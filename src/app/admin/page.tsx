@@ -74,15 +74,13 @@ function LeadCard({ lead }: { lead: AdminLead }) {
       </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        <span
-          className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
-            lead.marketingConsent
-              ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
-              : "bg-muted/15 text-muted"
-          }`}
-        >
-          {lead.marketingConsent ? "Opted in" : "No marketing consent"}
-        </span>
+        {/* Only shown when it's true, because it's the one state that changes
+            what you may do: an unsubscribed lead gets no more emails. */}
+        {lead.unsubscribed && (
+          <span className="rounded-full bg-red-500/15 px-2.5 py-1 text-[11px] font-semibold text-red-600 dark:text-red-400">
+            Unsubscribed
+          </span>
+        )}
 
         {/* What the follow-up sequence has actually sent. Greyed means not yet
             sent — either it isn't due, or they never opted in, in which case
@@ -167,7 +165,7 @@ export default async function AdminPage() {
             <Stat label="Total leads" value={stats.totalLeads} />
             <Stat label="Last 7 days" value={stats.leadsThisWeek} />
             <Stat label="Not yet contacted" value={stats.uncontacted} />
-            <Stat label="Opted in to email" value={stats.consented} />
+            <Stat label="Unsubscribed" value={stats.unsubscribed} />
             <Stat label="Page views, 7 days" value={stats.viewsThisWeek} />
           </div>
 
