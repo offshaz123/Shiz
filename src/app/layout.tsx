@@ -7,6 +7,7 @@ import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { MetaPixel } from "@/components/MetaPixel";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/StructuredData";
+import { PublicOnly } from "@/components/PublicOnly";
 import { siteConfig } from "@/lib/site-config";
 
 const geistSans = Geist({
@@ -93,14 +94,20 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
-        <MetaPixel />
-        <OrganizationJsonLd />
-        <WebSiteJsonLd />
+        <PublicOnly>
+          <MetaPixel />
+          <OrganizationJsonLd />
+          <WebSiteJsonLd />
+        </PublicOnly>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-          <Header />
+          <PublicOnly>
+            <Header />
+          </PublicOnly>
           <main className="flex-1">{children}</main>
-          <Footer />
-          <WhatsAppButton />
+          <PublicOnly>
+            <Footer />
+            <WhatsAppButton />
+          </PublicOnly>
         </ThemeProvider>
       </body>
     </html>
