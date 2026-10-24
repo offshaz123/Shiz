@@ -30,7 +30,7 @@ export function HomeHero() {
 
           <div className="mt-7 flex flex-col gap-3.5 sm:flex-row sm:justify-center lg:justify-start">
             <Link
-              href="/free-audit"
+              href="/#scanner"
               className="brand-gradient-bg inline-flex items-center justify-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
             >
               <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4" aria-hidden="true">

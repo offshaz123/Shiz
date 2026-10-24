@@ -2,7 +2,7 @@ import { SiteScanner } from "./SiteScanner";
 
 export function HomeScanner() {
   return (
-    <section className="border-y border-border bg-surface">
+    <section id="scanner" className="scroll-mt-24 border-y border-border bg-surface">
       <div className="mx-auto max-w-3xl px-5 py-20 sm:px-8">
         <div className="text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">

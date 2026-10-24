@@ -5,12 +5,8 @@ import { HomeHero } from "@/components/HomeHero";
 import { StatsBar } from "@/components/StatsBar";
 import { ProblemGrid } from "@/components/ProblemGrid";
 import { ServicesGrid } from "@/components/ServicesGrid";
-import { Deliverables } from "@/components/Deliverables";
-import { AuditFramework } from "@/components/AuditFramework";
 import { HomeScanner } from "@/components/HomeScanner";
 import { HowWeWork } from "@/components/HowWeWork";
-import { StartProjectCta } from "@/components/StartProjectCta";
-import { LondonOfficeSection } from "@/components/LondonOffice";
 import { GoogleCalendarBadge } from "@/components/GoogleCalendarBadge";
 import { FaqJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
@@ -53,13 +49,12 @@ export default function Home() {
 
       <StatsBar />
       <ProblemGrid />
-      <ServicesGrid />
-      <Deliverables />
-      <AuditFramework />
+      {/* The scanner is the strongest thing on this page, so it sits where
+          people actually reach. It used to be section six, about 4,900px
+          down, which meant most visitors never saw it. */}
       <HomeScanner />
+      <ServicesGrid />
       <HowWeWork />
-      <StartProjectCta />
-      <LondonOfficeSection />
       <RealResultsSection />
 
       {/* AI receptionist highlight */}

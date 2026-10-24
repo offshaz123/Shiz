@@ -117,7 +117,7 @@ export function Header() {
         <div className="hidden items-center gap-3 xl:flex">
           <ThemeToggle />
           <Link
-            href="/free-audit"
+            href="/#scanner"
             className="brand-gradient-bg whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-black/10 transition-transform hover:scale-[1.03]"
           >
             Get a Free Audit
@@ -180,7 +180,7 @@ export function Header() {
               WhatsApp Us
             </a>
             <Link
-              href="/free-audit"
+              href="/#scanner"
               onClick={() => setOpen(false)}
               className="brand-gradient-bg rounded-full px-5 py-2 text-center text-sm font-semibold text-white"
             >
