@@ -91,6 +91,7 @@ keywords, dealership social strategy).
 - Consent Wording on Your Enquiry Form: What UK Law Actually Needs (forms & conversion)
 - Why Your Google Ads Are Showing for the Wrong Town (Google Ads)
 - What to Do With the Leads That Said No (practical how-to)
+- Google Business Profile Photos: Which Ones Actually Get Used (local search)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -305,6 +306,12 @@ keywords, dealership social strategy).
       Profile primary category", "which category should I choose Google"
 - [ ] Duplicate Google Listings, and How to Get Rid of Them — target: "duplicate Google Business
       Profile", "merge Google listings UK"
+      BLOCKED 2026-10-24: Google's own "resolve duplicates" page would not load (404 on the
+      obvious URL, absent from search). Third-party guides contradict each other on the actual
+      procedure — 3 days vs 7 days to claim an unresponsive owner's listing, and whether a
+      storefront and a service-area profile can merge at all. Don't write the steps until the
+      official page is readable; the one thing verified is Google's line on a suspended profile:
+      "Do not create a new Business Profile for the same business."
 - [x] Service Area Businesses: Should You Hide Your Address? — target: "service area business
       Google", "hide address Google Business Profile"
 - [x] Review Gating: The Shortcut That Gets Your Listing Suspended — target: "review gating Google
@@ -351,7 +358,7 @@ deliberately weights toward Google Ads to close that gap.
       before reusing this material)
 
 ## Backlog — local search (added 2026-10-19 research round)
-- [ ] Google Business Profile Photos: Which Ones Actually Get Used — target: "Google Business
+- [x] Google Business Profile Photos: Which Ones Actually Get Used — target: "Google Business
       Profile photos", "best photos for Google listing"
 
 ## Backlog — practical how-to (added 2026-10-19 research round)

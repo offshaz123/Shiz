@@ -16,6 +16,102 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "google-business-profile-photos-which-ones-get-used",
+    title: "Google Business Profile Photos: Which Ones Actually Get Used",
+    description:
+      "You choose a cover photo and Google may show a customer's instead. The specs, the rules, and why uploading more is not the same as uploading better.",
+    publishedAt: "2026-10-24",
+    keywords: [
+      "Google Business Profile photos",
+      "best photos for Google listing",
+      "Google Business Profile cover photo",
+      "GBP photo size requirements",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You set a cover photo. A week later you search your own business and something else is showing, usually a customer's blurry one taken at an angle you would not have chosen.",
+          "This is not a bug, and it is written into Google's own guidance in a line most people have never read.",
+        ],
+      },
+      {
+        heading: "Google gets the final say",
+        paragraphs: [
+          "Their help page says that if your chosen cover photo is low quality or is not the best representation, a user-submitted photo may be selected instead.",
+          "They also note plainly that the cover photo may not always appear as the first image.",
+          "So the setting is a preference, not an instruction. Which changes the job: it is not enough to upload a photo you like, it has to be good enough that Google prefers it to the ones your customers took.",
+        ],
+      },
+      {
+        heading: "The three kinds, and what each is for",
+        paragraphs: [
+          "Worth separating, because people upload everything into one pile.",
+        ],
+        bullets: [
+          "The logo, which Google says helps customers recognise your business, and which gets highlighted alongside your basic information like phone number and hours",
+          "The cover photo, which sits at the top of the profile and is the one Google may overrule",
+          "Business photos, the rest, which show features of the business and do the actual persuading",
+        ],
+      },
+      {
+        heading: "The specifications, so nothing gets rejected",
+        paragraphs: [
+          "These are the ones worth having written down somewhere.",
+        ],
+        bullets: [
+          "Format: JPG or PNG",
+          "File size: between 10 KB and 5 MB",
+          "Recommended resolution: 720 pixels tall by 720 wide",
+          "Minimum resolution: 250 by 250",
+          "Video: up to 30 seconds, up to 75 MB, 720p or higher",
+        ],
+      },
+      {
+        paragraphs: [
+          "A modern phone clears all of this without trying. The usual failure is the opposite problem: a photo that has been through three apps and arrives over 5 MB, or a logo exported at 180 pixels from an old email signature.",
+        ],
+      },
+      {
+        heading: "What Google asks for, and the bit trades get wrong",
+        paragraphs: [
+          "The guidance is short. Photos should be in focus and well lit, and they should represent reality. Google warns specifically against significant alterations and excessive use of filters.",
+          "That last part catches people. The temptation with a finished kitchen or a valeted car is to push the saturation until it looks like a brochure, and the result is both against the guidance and worse at its job.",
+          "A customer comparing three builders is trying to work out what you would actually deliver. A photo that looks edited reads as a photo hiding something. Well lit and honest beats processed every time, and it is also the thing Google asks for.",
+        ],
+      },
+      {
+        heading: "Customer photos are not your enemy",
+        paragraphs: [
+          "You can request the removal of customer-added photos, and businesses occasionally go looking for that option the moment an unflattering one appears.",
+          "Usually the better answer is to drown it rather than fight it. A profile with four owner photos and one bad customer shot has a problem. A profile with forty good owner photos has a customer photo somewhere in it.",
+          "Removal is worth pursuing for something genuinely wrong, a photo of the wrong business or something that breaches the content policy. For a merely unflattering one, more and better of your own does more.",
+        ],
+      },
+      {
+        heading: "What to actually photograph",
+        paragraphs: [
+          "For a trade or a local service, the useful list is shorter than people expect and it is mostly not the finished job.",
+        ],
+        bullets: [
+          "Finished work, obviously, several angles, in daylight",
+          "The van, clean, with the signwriting legible. It is the thing turning up outside their house",
+          "You and the team, faces visible. People are letting you into their home",
+          "The work actually happening, with dust sheets down and the place tidy",
+          "Certificates, accreditations and insurance documents, photographed straight",
+          "The premises if you have any, including the sign, which also helps with the storefront question",
+        ],
+      },
+      {
+        heading: "Then wait",
+        paragraphs: [
+          "One practical thing that saves a panic. Uploads do not appear instantly. Google says media shows to customers once it is live, that pending media does not show, and that this can take 24 to 48 hours.",
+          "If something is flagged as violating policy it is marked not approved and will not appear on Search or Maps at all, which is a different situation from simply waiting.",
+          "So upload, leave it two days, then look. Re-uploading the same photo three times because it has not appeared yet is the most common way people end up with a profile full of duplicates.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "what-to-do-with-the-leads-that-said-no",
     title: "What to Do With the Leads That Said No",
     description:
