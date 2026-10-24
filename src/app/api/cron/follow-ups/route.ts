@@ -1,0 +1,194 @@
+import { NextResponse } from "next/server";
+import nodemailer from "nodemailer";
+import type { RowDataPacket } from "mysql2";
+import { withDb } from "@/lib/db";
+import { mintToken } from "@/lib/lead-tokens";
+import { buildFollowUp, type EmailLead, type StoredAudit } from "@/lib/follow-up-emails";
+import { siteConfig } from "@/lib/site-config";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+/**
+ * Sends the day 1, 3 and 6 follow-ups. Fired by a cron job, guarded by
+ * CRON_SECRET — without that anyone who found this URL could run the whole
+ * sequence at will.
+ *
+ * Safe to run as often as you like and safe to run twice. What has already
+ * gone out is decided by rows in lead_emails, and the unique key on
+ * (lead_id, step) means a duplicate send is rejected by the database rather
+ * than relying on this code getting it right.
+ *
+ * A lead stops receiving these the moment any of these is true: marked
+ * contacted in the admin page, unsubscribed, or past step 6.
+ */
+
+/**
+ * Day one is the report they asked for, so it goes to everyone who ran a scan
+ * — they handed over their email for exactly that. Days three and six are
+ * marketing to a prospective customer, which under PECR needs consent, so
+ * they go only to people who ticked the box.
+ */
+const STEPS = [
+  { step: 1, afterDays: 1, requiresConsent: false },
+  { step: 3, afterDays: 3, requiresConsent: true },
+  { step: 6, afterDays: 6, requiresConsent: true },
+];
+
+/** Kept small so a run finishes well inside any request timeout. */
+const MAX_PER_RUN = 25;
+
+interface DueRow extends RowDataPacket {
+  id: number;
+  name: string;
+  email: string;
+  website: string;
+  audit_json: string | null;
+}
+
+function authorised(request: Request): boolean {
+  const secret = process.env.CRON_SECRET;
+  if (!secret || secret.length < 16) return false;
+
+  const header = request.headers.get("authorization");
+  if (header === `Bearer ${secret}`) return true;
+
+  // Hostinger's cron runs a shell command, and getting a header onto it is
+  // fiddlier than a query string, so both are accepted.
+  return new URL(request.url).searchParams.get("key") === secret;
+}
+
+export async function POST(request: Request) {
+  return run(request);
+}
+
+export async function GET(request: Request) {
+  return run(request);
+}
+
+async function run(request: Request) {
+  if (!authorised(request)) {
+    return NextResponse.json({ error: "unauthorised" }, { status: 401 });
+  }
+
+  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
+  if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS) {
+    return NextResponse.json({ error: "smtp_not_configured" }, { status: 500 });
+  }
+
+  const transporter = nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: Number(SMTP_PORT),
+    secure: Number(SMTP_PORT) === 465,
+    auth: { user: SMTP_USER, pass: SMTP_PASS },
+  });
+
+  const summary: Record<string, number> = { sent: 0, failed: 0, skipped: 0 };
+
+  for (const { step, afterDays, requiresConsent } of STEPS) {
+    const due = await withDb(async (db) => {
+      const [rows] = await db.query<DueRow[]>(
+        `SELECT l.id, l.name, l.email, l.website, l.audit_json
+         FROM scan_leads l
+         LEFT JOIN lead_emails e ON e.lead_id = l.id AND e.step = ?
+         WHERE e.id IS NULL
+           AND l.contacted = 0
+           AND l.unsubscribed_at IS NULL
+           AND l.created_at <= DATE_SUB(NOW(), INTERVAL ? DAY)
+           ${requiresConsent ? "AND l.marketing_consent = 1" : ""}
+         ORDER BY l.created_at ASC
+         LIMIT ?`,
+        [step, afterDays, MAX_PER_RUN],
+      );
+      return rows;
+    });
+
+    if (!due) {
+      return NextResponse.json({ error: "no_database" }, { status: 500 });
+    }
+
+    for (const row of due) {
+      let audit: StoredAudit | null = null;
+      if (row.audit_json) {
+        try {
+          audit = JSON.parse(row.audit_json) as StoredAudit;
+        } catch {
+          // A row we can't parse still gets the email, just the shorter one
+          // that doesn't quote a score.
+          audit = null;
+        }
+      }
+
+      const unsubscribeToken = mintToken("unsubscribe", row.id);
+      if (!unsubscribeToken) {
+        summary.skipped += 1;
+        continue;
+      }
+      const unsubscribeUrl = `${siteConfig.url}/unsubscribe?t=${unsubscribeToken}`;
+
+      const lead: EmailLead = {
+        id: row.id,
+        name: row.name,
+        website: row.website,
+        audit,
+      };
+
+      const email = buildFollowUp(step, lead, unsubscribeUrl);
+      if (!email) {
+        summary.skipped += 1;
+        continue;
+      }
+
+      // Claim the step before sending. If the send then fails the row is
+      // updated to 'failed' rather than deleted, so a broken address doesn't
+      // get retried on every cron run forever.
+      const claimed = await withDb(async (db) => {
+        await db.execute(
+          "INSERT INTO lead_emails (lead_id, step, subject, status) VALUES (?, ?, ?, 'sending')",
+          [row.id, step, email.subject],
+        );
+        return true;
+      });
+      if (!claimed) {
+        summary.skipped += 1;
+        continue;
+      }
+
+      try {
+        await transporter.sendMail({
+          from: `"Walid at Shaz Marketing Group" <${SMTP_USER}>`,
+          to: row.email,
+          replyTo: siteConfig.email,
+          subject: email.subject,
+          text: email.text,
+          html: email.html,
+          headers: {
+            // Lets Gmail and Outlook show their own unsubscribe button, which
+            // people trust more than a link inside the message.
+            "List-Unsubscribe": `<${unsubscribeUrl}>`,
+            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+          },
+        });
+
+        await withDb(async (db) => {
+          await db.execute("UPDATE lead_emails SET status = 'sent' WHERE lead_id = ? AND step = ?", [
+            row.id,
+            step,
+          ]);
+        });
+        summary.sent += 1;
+      } catch (err) {
+        console.error(`Follow-up step ${step} failed for lead ${row.id}:`, err);
+        await withDb(async (db) => {
+          await db.execute(
+            "UPDATE lead_emails SET status = 'failed', error = ? WHERE lead_id = ? AND step = ?",
+            [String(err).slice(0, 500), row.id, step],
+          );
+        });
+        summary.failed += 1;
+      }
+    }
+  }
+
+  return NextResponse.json({ ok: true, ...summary });
+}

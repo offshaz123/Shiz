@@ -3,6 +3,7 @@ import nodemailer from "nodemailer";
 import type { ResultSetHeader } from "mysql2";
 import { siteConfig } from "@/lib/site-config";
 import { withDb } from "@/lib/db";
+import { mintToken } from "@/lib/lead-tokens";
 
 export const runtime = "nodejs";
 
@@ -105,5 +106,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false }, { status: 500 });
   }
 
-  return NextResponse.json({ success: true });
+  // The token lets the browser attach the finished audit to this row once the
+  // scan completes, without ever handing out the row id — the ids are
+  // sequential, so in the clear they would let anyone overwrite other people's
+  // results by counting upwards.
+  return NextResponse.json({
+    success: true,
+    token: leadId ? mintToken("result", leadId) : null,
+  });
 }

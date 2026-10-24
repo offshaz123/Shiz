@@ -1,4 +1,5 @@
 import mysql from "mysql2/promise";
+import type { RowDataPacket } from "mysql2";
 
 /**
  * The MySQL connection, and the schema it expects.
@@ -53,10 +54,12 @@ const SCHEMA = [
     website VARCHAR(255) NOT NULL,
     marketing_consent TINYINT(1) NOT NULL DEFAULT 0,
     score TINYINT UNSIGNED NULL,
+    audit_json MEDIUMTEXT NULL,
     source VARCHAR(40) NOT NULL DEFAULT 'scan',
     referrer VARCHAR(255) NULL,
     contacted TINYINT(1) NOT NULL DEFAULT 0,
     notes TEXT NULL,
+    unsubscribed_at DATETIME NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     KEY idx_created (created_at),
@@ -95,9 +98,38 @@ const SCHEMA = [
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 ];
 
+/**
+ * Columns added after the table first shipped.
+ *
+ * MySQL has no ADD COLUMN IF NOT EXISTS — that is a MariaDB extension, and
+ * Hostinger runs MySQL — so each one is checked against information_schema
+ * before it is added. Same idempotence as the CREATE TABLEs above, so a
+ * database created before these columns existed catches up on next connect
+ * and a fresh one does nothing.
+ */
+const ADDED_COLUMNS: { table: string; column: string; definition: string }[] = [
+  { table: "scan_leads", column: "audit_json", definition: "MEDIUMTEXT NULL AFTER score" },
+  { table: "scan_leads", column: "unsubscribed_at", definition: "DATETIME NULL AFTER notes" },
+];
+
+interface CountRow extends RowDataPacket {
+  n: number;
+}
+
 async function ensureSchema(db: mysql.Pool): Promise<void> {
   for (const statement of SCHEMA) {
     await db.query(statement);
+  }
+
+  for (const { table, column, definition } of ADDED_COLUMNS) {
+    const [rows] = await db.query<CountRow[]>(
+      `SELECT COUNT(*) AS n FROM information_schema.COLUMNS
+       WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?`,
+      [table, column],
+    );
+    if ((rows[0]?.n ?? 0) === 0) {
+      await db.query(`ALTER TABLE \`${table}\` ADD COLUMN \`${column}\` ${definition}`);
+    }
   }
 }
 

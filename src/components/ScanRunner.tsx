@@ -88,6 +88,8 @@ export function ScanRunner() {
   /** Prefilled from the homepage box; the form is still the gate. */
   const initialUrl = params.get("url") ?? "";
   const [lead, setLead] = useState<ScanLead | null>(null);
+  /** Signed reference to this lead's row, for attaching the result below. */
+  const [leadToken, setLeadToken] = useState<string | null>(null);
   const [result, setResult] = useState<AuditResult | null>(null);
   const [error, setError] = useState("");
   const [settled, setSettled] = useState(false);
@@ -143,6 +145,18 @@ export function ScanRunner() {
     };
   }, [target]);
 
+  // Attach the finished audit to the lead's row, so the follow-up emails have
+  // their own scan to talk about. Fire-and-forget: it changes nothing the
+  // visitor can see, and a failure must not disturb the report in front of them.
+  useEffect(() => {
+    if (!leadToken || !result) return;
+    void fetch("/api/scan-lead/result", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: leadToken, result }),
+    }).catch(() => {});
+  }, [leadToken, result]);
+
   const domain = (result?.finalUrl ?? target).replace(/^https?:\/\//, "").replace(/\/$/, "");
 
   // The gate. Nothing runs until we have the details.
@@ -158,7 +172,10 @@ export function ScanRunner() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(captured),
-          }).catch(() => {});
+          })
+            .then((res) => (res.ok ? res.json() : null))
+            .then((data) => setLeadToken(data?.token ?? null))
+            .catch(() => {});
         }}
       />
     );
