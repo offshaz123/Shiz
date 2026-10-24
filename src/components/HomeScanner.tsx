@@ -13,8 +13,8 @@ export function HomeScanner() {
           </h2>
           <p className="mx-auto mt-4 max-w-xl leading-relaxed text-muted">
             Put your address in below. We&apos;ll check whether anything is being tracked, how
-            Google reads your pages, and how easy you are to contact. Takes a few seconds and we
-            don&apos;t ask for your email to show you the results.
+            Google reads your pages, and how easy you are to contact. It&apos;s free &mdash; we
+            just ask where to send the report.
           </p>
         </div>
 

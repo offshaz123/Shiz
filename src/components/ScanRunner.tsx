@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import type { AuditResult, Severity } from "@/lib/site-audit";
 import { ScanProgress } from "./ScanProgress";
+import { ScanBrowserFrame } from "./ScanBrowserFrame";
+import { ScanLeadForm, type ScanLead } from "./ScanLeadForm";
 import { ScanSupportButton } from "./ScanSupportButton";
 
 const ERRORS: Record<string, string> = {
@@ -83,10 +85,28 @@ function ScoreRing({ score, size = 56 }: { score: number; size?: number }) {
 
 export function ScanRunner() {
   const params = useSearchParams();
-  const target = params.get("url") ?? "";
+  /** Prefilled from the homepage box; the form is still the gate. */
+  const initialUrl = params.get("url") ?? "";
+  const [lead, setLead] = useState<ScanLead | null>(null);
   const [result, setResult] = useState<AuditResult | null>(null);
   const [error, setError] = useState("");
   const [settled, setSettled] = useState(false);
+  /** How many of the browser frame's five slots have been revealed. */
+  const [revealed, setRevealed] = useState(0);
+
+  const target = lead?.website ?? "";
+
+  // Reveal one slot per fifth of the loading sequence. The scan itself usually
+  // answers long before this finishes, so what gets revealed is the real
+  // result rather than a guess dressed up as one.
+  useEffect(() => {
+    if (!target) return;
+    const step = MIN_RUN_MS / 5;
+    const timers = [1, 2, 3, 4, 5].map((n) =>
+      setTimeout(() => setRevealed(n), step * n),
+    );
+    return () => timers.forEach(clearTimeout);
+  }, [target]);
 
   useEffect(() => {
     if (!target) return;
@@ -125,7 +145,26 @@ export function ScanRunner() {
 
   const domain = (result?.finalUrl ?? target).replace(/^https?:\/\//, "").replace(/\/$/, "");
 
-  if (!target || (settled && (error || !result))) {
+  // The gate. Nothing runs until we have the details.
+  if (!lead) {
+    return (
+      <ScanLeadForm
+        initialUrl={initialUrl}
+        onStart={(captured) => {
+          setLead(captured);
+          // Record it, but never block the scan on it — if this fails the
+          // visitor still gets what they came for.
+          void fetch("/api/scan-lead", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(captured),
+          }).catch(() => {});
+        }}
+      />
+    );
+  }
+
+  if (settled && (error || !result)) {
     return (
       <div className="rounded-3xl border border-border bg-surface p-8 text-center">
         <h1 className="text-2xl font-bold text-foreground">We couldn&apos;t scan that</h1>
@@ -148,8 +187,18 @@ export function ScanRunner() {
           {domain}
         </h1>
         <p className="mt-2 text-sm text-muted">Takes about twenty seconds.</p>
-        <div className="mt-8">
+        <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_0.85fr] lg:items-start lg:gap-14">
           <ScanProgress done={false} />
+          <div className="lg:sticky lg:top-28">
+            <ScanBrowserFrame
+              url={domain}
+              categories={result?.categories}
+              revealed={revealed}
+            />
+            <p className="mt-3 text-center text-xs text-muted">
+              Checking five areas of your site.
+            </p>
+          </div>
         </div>
       </div>
     );

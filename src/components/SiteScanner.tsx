@@ -47,7 +47,7 @@ export function SiteScanner() {
       </form>
 
       <p className="mt-2.5 text-xs text-muted">
-        Free, takes a few seconds, and we don&apos;t ask for your email to show you the results.
+        Free. We&apos;ll ask where to send the report, then run the check.
       </p>
 
       {error && (
