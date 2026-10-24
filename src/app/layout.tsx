@@ -8,6 +8,7 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { MetaPixel } from "@/components/MetaPixel";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/StructuredData";
 import { PublicOnly } from "@/components/PublicOnly";
+import { PageViewTracker } from "@/components/PageViewTracker";
 import { siteConfig } from "@/lib/site-config";
 
 const geistSans = Geist({
@@ -95,6 +96,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <PublicOnly>
+          <PageViewTracker />
           <MetaPixel />
           <OrganizationJsonLd />
           <WebSiteJsonLd />
