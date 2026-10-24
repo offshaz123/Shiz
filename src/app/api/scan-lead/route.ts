@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
+import type { ResultSetHeader } from "mysql2";
 import { siteConfig } from "@/lib/site-config";
+import { withDb } from "@/lib/db";
 
 export const runtime = "nodejs";
 
 /**
  * Records somebody who ran a website scan.
  *
- * For now it emails the details through, the same way the contact form does.
- * Once the MySQL credentials are in the environment this also writes a row, so
- * the admin page has something to list and the follow-up sequence has
- * something to work from. Emailing stays either way — it is a free backup and
- * it means a database problem never silently loses a lead.
+ * It writes a row for the admin page and the follow-up sequence to work from,
+ * and emails the details through the same way the contact form does. Both,
+ * deliberately: the email is a free backup, so a database problem never
+ * silently loses a lead.
  *
  * The scan is never blocked on this succeeding. If it fails the visitor still
  * gets their report; we just lose the record, which is the right way round.
@@ -48,6 +49,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false, error: "missing_fields" }, { status: 400 });
   }
 
+  const referrer = request.headers.get("referer")?.slice(0, 255) ?? null;
+
+  // Recorded first, so the id is available for the email. A null here means
+  // there is no database configured or it refused the write; the lead still
+  // goes out by email below.
+  const leadId = await withDb(async (db) => {
+    const [result] = await db.execute<ResultSetHeader>(
+      `INSERT INTO scan_leads (name, email, phone, website, marketing_consent, referrer)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [name, email, phone, website, consent ? 1 : 0, referrer],
+    );
+    return result.insertId;
+  });
+
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
   if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS) {
     console.error("Scan lead: SMTP environment variables are not configured");
@@ -72,6 +87,9 @@ export async function POST(request: Request) {
     "",
     `Marketing consent: ${consent ? "YES — may receive the follow-up sequence" : "NO — report only, do not add to any list"}`,
     `Captured: ${new Date().toISOString()}`,
+    leadId
+      ? `Saved as lead #${leadId}.`
+      : "NOT SAVED to the database — this email is the only record of it.",
   ];
 
   try {
