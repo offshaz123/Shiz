@@ -92,6 +92,7 @@ keywords, dealership social strategy).
 - Why Your Google Ads Are Showing for the Wrong Town (Google Ads)
 - What to Do With the Leads That Said No (practical how-to)
 - Google Business Profile Photos: Which Ones Actually Get Used (local search)
+- How Many Fields Should Your Enquiry Form Have? (forms & conversion)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -350,8 +351,10 @@ deliberately weights toward Google Ads to close that gap.
       small business"
 
 ## Backlog — forms & conversion (added 2026-10-19 research round)
-- [ ] How Many Fields Should Your Enquiry Form Have? — target: "how many form fields", "contact
-      form conversion rate"
+- [x] How Many Fields Should Your Enquiry Form Have? — target: "how many form fields", "contact
+      form conversion rate" (researched 2026-10-25: the widely-quoted figures — three fields is
+      optimal, 4% loss per field, the 120% lift — trace back to one vendor's own blog or a single
+      dated before/after test. Post says so rather than repeating them.)
 - [x] Consent Wording on Your Enquiry Form: What UK Law Actually Needs — target: "GDPR contact
       form UK", "PECR marketing consent small business" (verified against ICO guidance 2026-10-21;
       note the pages carry a "under review" notice re the Data (Use and Access) Act, so re-check

@@ -16,6 +16,92 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "how-many-fields-should-your-enquiry-form-have",
+    title: "How Many Fields Should Your Enquiry Form Have?",
+    description:
+      "The figures everyone quotes about form length do not survive checking. Here is what is actually true, and the better question to ask about every field you add.",
+    publishedAt: "2026-10-25",
+    keywords: [
+      "how many form fields",
+      "contact form conversion rate",
+      "enquiry form best practice UK",
+      "reduce form fields leads",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Someone will tell you three fields is the magic number. Someone else will say five. Both will have a percentage to back it up, and neither will tell you where it came from.",
+          "It is worth knowing what is behind those numbers before you redesign your form around them.",
+        ],
+      },
+      {
+        heading: "The figures everyone quotes do not survive checking",
+        paragraphs: [
+          "Go looking for data on form length and the same handful of statistics come back at you from a dozen different pages. Conversion peaks at three fields. Each extra field costs you four per cent. Cutting a form from eleven fields to four lifted conversions by a hundred and twenty per cent.",
+          "Follow them back and they mostly lead to one software company's own blog, or to a single before-and-after test on one website some years ago. The hundred-and-twenty-per-cent figure is one company, one form, one change, a long time ago. It is not a law of nature and it was never presented as one.",
+          "We are not saying the direction is wrong. Across everything written on this, longer forms do get fewer submissions, and that is consistent enough to plan around. What is missing is a trustworthy number, and a number you cannot trace is not a reason to change anything.",
+        ],
+      },
+      {
+        heading: "Every field is a small decision",
+        paragraphs: [
+          "The mechanism is simpler than the statistics make it sound. Each box is a moment where someone can stop.",
+          "Some of those moments are harmless. Typing a name costs nothing. Others are not. A box asking for a budget makes someone work out whether they are about to be judged for their answer. A phone number makes them decide whether they want to be rung.",
+          "So the useful way to look at a form is not to count the boxes. It is to go through them one at a time and ask what each one is costing in hesitation.",
+        ],
+      },
+      {
+        heading: "The real question is what you will do with it",
+        paragraphs: [
+          "Here is the test that settles most arguments about a field: what would you do differently if you had the answer?",
+          "If someone tells you their budget and it changes which package you quote, that field is earning its place. If you are going to ask again on the phone anyway, it is costing you enquiries for information you were always going to get free.",
+          "Run every field through that. Most forms have two or three that nobody has ever used.",
+        ],
+        bullets: [
+          "Name — keep it, you need something to open the call with",
+          "Phone or email — keep at least one, and be honest with yourself about which one you actually use",
+          "What they need — keep it, usually as one open box rather than three dropdowns",
+          "Company name — only if you sell differently to businesses than to households",
+          "Budget — only if it changes what you quote, not because it would be nice to know",
+          "How did you hear about us — this belongs in the follow-up call, not the form",
+        ],
+      },
+      {
+        heading: "More submissions is not the same as more customers",
+        paragraphs: [
+          "This is the part the short-form advice skips over.",
+          "Strip a form back to an email address and you will get more submissions. You will also get more people who were idly curious, and you will spend your week chasing them. A longer form does filter, and sometimes filtering is exactly what you want.",
+          "If you are a two-person outfit who can handle four jobs a month, a form that produces thirty vague enquiries is worse than one that produces eight serious ones. If you have the capacity to work a bigger list, the opposite is true.",
+          "So the right length depends on something nobody writing about form fields can know: how much of your time an unqualified enquiry costs you.",
+        ],
+      },
+      {
+        heading: "Ask for more only when you are giving something back",
+        paragraphs: [
+          "Asking for four fields in exchange for nothing is a cheek. Asking for four fields in exchange for something specific is a fair trade, and people treat it as one.",
+          "That is the difference between a bare contact form and a form in front of a report, a quote or a sample. The second one tells the person what they are getting for the effort, which makes the effort feel worth it.",
+          "Whatever you promise there, the thing has to actually arrive, and quickly. A form that collects details for something that never comes does more damage than no form at all.",
+        ],
+      },
+      {
+        heading: "Two things that matter more than the count",
+        paragraphs: [
+          "Both of these are worth fixing before you argue about how many boxes to have.",
+          "The first is how it behaves on a phone. Most of your enquiries arrive on one. A form that needs pinching to read, or that fires the wrong keyboard for a phone number, loses people regardless of length.",
+          "The second is what happens after they press send. Pressing a button and getting a blank page is the point where someone starts to wonder whether it went anywhere. A clear confirmation, and a reply that arrives the same day, does more for your enquiry numbers than removing a field ever will.",
+        ],
+      },
+      {
+        heading: "The only data worth trusting is your own",
+        paragraphs: [
+          "You do not need a study. You need to know how many people land on your contact page and how many of them send something.",
+          "Once you can see that, change one thing and watch it for a month. Remove a field, or move one, and compare. Your own form on your own traffic beats any benchmark, because it is measuring the actual people you are trying to reach.",
+          "If you cannot see that number at all, that is the thing to fix first. A form you are not measuring cannot be improved, only guessed at.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "google-business-profile-photos-which-ones-get-used",
     title: "Google Business Profile Photos: Which Ones Actually Get Used",
     description:
