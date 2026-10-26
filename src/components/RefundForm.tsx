@@ -30,7 +30,7 @@ export function RefundForm({ initialRef }: { initialRef: string }) {
   }
 
   return (
-    <form
+    <form data-clarity-mask="true"
       method="post"
       className="space-y-4"
       onSubmit={async (e) => {

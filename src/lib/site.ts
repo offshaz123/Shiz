@@ -71,4 +71,8 @@ export const tracking = {
   // TikTok Pixel ID: TikTok Ads Manager → Tools → Events → Web events. Sales
   // from the server also need TIKTOK_ACCESS_TOKEN in the Hostinger settings.
   tiktokPixelId: "DBCIVQ3C77UCF2HDIPSG",
+  // Microsoft Clarity project ID (clarity.microsoft.com → the project's
+  // address): anonymous recordings and heatmaps of visits, to see where
+  // people leave. Only after "Accept".
+  clarityId: "z3sc0lemd7",
 };

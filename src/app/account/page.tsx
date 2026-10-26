@@ -30,7 +30,7 @@ export default async function AccountPage(props: PageProps<"/account">) {
     `rounded-lg px-4 py-2.5 font-semibold transition-colors ${on ? "gold-bg shadow-sm" : "bg-surface-2/70 text-muted hover:bg-surface-2"}`;
 
   return (
-    <div className="bg-surface">
+    <div className="bg-surface" data-clarity-mask="true">
       <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-14">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>

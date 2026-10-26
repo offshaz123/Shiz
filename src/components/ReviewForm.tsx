@@ -28,7 +28,7 @@ export function ReviewForm() {
     );
 
   return (
-    <form
+    <form data-clarity-mask="true"
       className="mx-auto max-w-xl space-y-4 rounded-2xl border border-line bg-white p-5 text-left sm:p-6"
       onSubmit={async (e) => {
         e.preventDefault();

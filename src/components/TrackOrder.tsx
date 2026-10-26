@@ -135,7 +135,7 @@ export function TrackOrder({ initialRef }: { initialRef: string }) {
   }
 
   return (
-    <form onSubmit={lookUp} className="space-y-4 rounded-3xl border border-line bg-white p-6">
+    <form data-clarity-mask="true" onSubmit={lookUp} className="space-y-4 rounded-3xl border border-line bg-white p-6">
       <label className="block">
         <span className="text-sm font-semibold">Order number</span>
         <input name="ref" className="field mt-1 uppercase" defaultValue={initialRef} placeholder="e.g. PU-AB12C" maxLength={20} required />

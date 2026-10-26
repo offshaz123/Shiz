@@ -177,7 +177,7 @@ export default function CheckoutPage() {
           </>
         )}
       </p>
-      <form ref={formRef} onSubmit={onSubmit} className="mt-8 grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
+      <form data-clarity-mask="true" ref={formRef} onSubmit={onSubmit} className="mt-8 grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
         <div className="space-y-6">
           <Section n={1} title="Your details">
             <div className="grid gap-4 sm:grid-cols-2">

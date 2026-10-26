@@ -21,7 +21,7 @@ export function AccountDetailsForm({ user }: { user: Omit<User, "id" | "created_
   return (
     // POST so typed details never end up in the address bar if the page's
     // JavaScript hasn't loaded yet.
-    <form
+    <form data-clarity-mask="true"
       method="post"
       className="space-y-6"
       onSubmit={async (e) => {

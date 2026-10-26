@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   icons: { apple: "/icons/admin-180.png" },
 };
 
+// Visit recordings (Microsoft Clarity) never show what's on admin pages.
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return <div data-clarity-mask="true">{children}</div>;
 }

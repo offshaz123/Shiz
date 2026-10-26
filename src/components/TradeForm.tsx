@@ -11,7 +11,7 @@ const volumes = ["1–10 a month", "10–50 a month", "50–100 a month", "100+ 
 export function TradeForm() {
   const [error, setError] = useState("");
   return (
-    <form
+    <form data-clarity-mask="true"
       className="space-y-4 rounded-3xl border border-line bg-white p-5 shadow-xl shadow-black/5 sm:p-6"
       onSubmit={(e) => {
         e.preventDefault();

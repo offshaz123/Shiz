@@ -52,11 +52,14 @@ export default function PrivacyPage() {
         <p>
           <strong>Analytics and advertising cookies</strong> are only used if you press &ldquo;Accept&rdquo;. They
           let Google Analytics show us how people use the site, and let TikTok and Google Ads tell us which adverts
-          lead to orders, so we can show them to people likely to be interested. They also remember for 30 days
+          lead to orders, so we can show them to people likely to be interested. Microsoft Clarity records how the
+          site is used (where people scroll and tap, as anonymous replays and heatmaps) so we can find and fix
+          what&apos;s confusing. It hides everything you type into our forms (name, address, email, phone) and doesn&apos;t
+          tell us who you are. These cookies also remember for 30 days
           where you came to us from (for example a Google or TikTok advert), so we can see which adverts lead to
           orders. If you accept and then place an order, we also send TikTok your order value and a scrambled
-          (hashed) copy of your email and phone, so it can match the order to its advert. TikTok and Google handle
-          this under their own privacy policies.
+          (hashed) copy of your email and phone, so it can match the order to its advert. TikTok, Google and
+          Microsoft handle this under their own privacy policies.
         </p>
         <p>
           Before you choose, or if you press &ldquo;Reject&rdquo;, Google&apos;s tag still runs in its &ldquo;consent
