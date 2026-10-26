@@ -1,8 +1,20 @@
+"use client";
+
 import Script from "next/script";
 import { siteConfig } from "@/lib/site-config";
+import { useAnalyticsAllowed } from "./CookieConsent";
 
+/**
+ * The Meta Pixel, behind the consent banner.
+ *
+ * Nothing renders until somebody has actively accepted — no script, no
+ * noscript image, no request to Facebook. The noscript fallback is gated
+ * too: it is a tracking request like any other, and shipping it to people
+ * who declined would make the banner a lie.
+ */
 export function MetaPixel() {
-  if (!siteConfig.metaPixelId) return null;
+  const allowed = useAnalyticsAllowed();
+  if (!allowed || !siteConfig.metaPixelId) return null;
 
   return (
     <>

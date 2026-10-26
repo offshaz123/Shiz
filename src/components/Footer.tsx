@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { CookieSettingsLink } from "./CookieConsent";
 import { usePathname } from "next/navigation";
 import { Logo } from "./Logo";
 import { SocialLinks } from "./SocialLinks";
@@ -250,6 +251,9 @@ export function Footer() {
             <a href="/sitemap.xml" className="hover:text-foreground">
               Sitemap
             </a>
+            {/* Withdrawing consent has to be as easy as giving it, so this
+                sits with the other legal links rather than buried. */}
+            <CookieSettingsLink className="hover:text-foreground" />
             <span className="flex items-center gap-2">
               <span className="font-semibold text-foreground">Client rating</span>
               <Stars />

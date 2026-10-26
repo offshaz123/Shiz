@@ -9,6 +9,8 @@ import { MetaPixel } from "@/components/MetaPixel";
 import { OrganizationJsonLd, WebSiteJsonLd } from "@/components/StructuredData";
 import { PublicOnly } from "@/components/PublicOnly";
 import { PageViewTracker } from "@/components/PageViewTracker";
+import { CookieBanner } from "@/components/CookieConsent";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { siteConfig } from "@/lib/site-config";
 
 const geistSans = Geist({
@@ -98,6 +100,7 @@ export default function RootLayout({
         <PublicOnly>
           <PageViewTracker />
           <MetaPixel />
+          <GoogleAnalytics />
           <OrganizationJsonLd />
           <WebSiteJsonLd />
         </PublicOnly>
@@ -109,6 +112,7 @@ export default function RootLayout({
           <PublicOnly>
             <Footer />
             <WhatsAppButton />
+            <CookieBanner />
           </PublicOnly>
         </ThemeProvider>
       </body>

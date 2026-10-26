@@ -16,6 +16,10 @@ export const siteConfig = {
   demoVideoUrl: "",
   // Meta (Facebook/Instagram) Pixel ID, from Events Manager. Leave empty to disable.
   metaPixelId: "1096415716381078",
+  // Google Analytics 4 measurement ID, from Admin -> Data streams. Looks like
+  // "G-XXXXXXXXXX". Leave empty to disable. Both this and the Pixel only load
+  // once a visitor has accepted cookies.
+  googleAnalyticsId: "",
   address: {
     line1: "Level 39",
     line2: "One Canada Square",
