@@ -5,8 +5,8 @@ import { site } from "@/lib/site";
 // Product feed for Google Merchant Center (free listings in Google Shopping).
 // Add it in Merchant Center → Products → Add products → From a file →
 // "Add a URL": https://platedup.co.uk/feed.xml
-// One product per plate style, priced as a pair; the link opens the builder
-// with that style picked, which shows the same price.
+// One product per plate style, priced as a pair; the link opens that style's
+// own page (/plates/<style>), which shows the same price and product details.
 
 export const revalidate = 3600;
 
@@ -25,7 +25,7 @@ export async function GET() {
       <g:id>PU-${s.id.toUpperCase()}-PAIR</g:id>
       <title>${esc(`${s.name} Number Plates – Road Legal Pair (Front & Rear) | PlatedUp`)}</title>
       <description>${esc(`${s.blurb} A pair of road-legal front and rear number plates made to order for your registration. Made to BS AU 145e by a DVLA registered supplier. Same day dispatch when you order before ${site.dispatchCutoff} on a working day.`)}</description>
-      <link>${esc(`${site.url}/design?style=${s.id}`)}</link>
+      <link>${esc(`${site.url}/plates/${s.id}`)}</link>
       <g:image_link>${esc(image)}</g:image_link>
       <g:additional_image_link>${esc(front)}</g:additional_image_link>
       <g:price>${gbp(s.pair)}</g:price>
