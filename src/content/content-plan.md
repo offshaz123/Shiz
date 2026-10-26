@@ -93,6 +93,7 @@ keywords, dealership social strategy).
 - What to Do With the Leads That Said No (practical how-to)
 - Google Business Profile Photos: Which Ones Actually Get Used (local search)
 - How Many Fields Should Your Enquiry Form Have? (forms & conversion)
+- Negative Keywords: The List You Build Before You Launch (Google Ads)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -337,8 +338,11 @@ Note: we sell Google Ads at a flat £600/month but the blog is almost entirely M
 deliberately weights toward Google Ads to close that gap.
 - [x] The Search Terms Report: Where Your Google Ads Money Actually Goes — target: "Google Ads
       search terms report", "wasted ad spend Google Ads"
-- [ ] Negative Keywords: The List You Build Before You Launch — target: "negative keyword list
-      Google Ads", "stop irrelevant clicks Google Ads"
+- [x] Negative Keywords: The List You Build Before You Launch — target: "negative keyword list
+      Google Ads", "stop irrelevant clicks Google Ads" (verified 2026-10-26 against Google's own
+      "About negative keywords" help page for the close-variant rule, the three match types, the
+      16-word limit and the casing/misspelling behaviour. Note: at least one third-party guide
+      claims broad negatives now match close variants — Google's page says the opposite.)
 - [ ] Should a Small Business Use Performance Max? — target: "Performance Max small budget",
       "PMax vs search campaigns UK"
 - [x] Why Your Google Ads Are Showing for the Wrong Town — target: "Google Ads location

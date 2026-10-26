@@ -16,6 +16,97 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "negative-keywords-the-list-you-build-before-you-launch",
+    title: "Negative Keywords: The List You Build Before You Launch",
+    description:
+      "Negative keywords do not behave like normal ones, and the difference costs people money. What Google blocks for you, what it does not, and the list to write first.",
+    publishedAt: "2026-10-26",
+    keywords: [
+      "negative keyword list Google Ads",
+      "stop irrelevant clicks Google Ads",
+      "Google Ads negative keyword match types",
+      "wasted Google Ads spend UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "A plumber runs Google Ads for a week and gets clicks from people searching how to fix a leaking tap themselves, what plumbers earn, and plumbing courses near them. None of them were ever going to ring. All of them cost money.",
+          "Negative keywords are how you stop that, and they are worth setting up before the campaign goes live rather than after you have paid to learn what you needed to block.",
+        ],
+      },
+      {
+        heading: "The rule almost everybody gets wrong",
+        paragraphs: [
+          "Normal keywords expand. Put in a term and Google will match searches it considers close enough, including plurals and related phrasings, and there is no way to switch that off.",
+          "Negative keywords do not do this. Google's own documentation is blunt about it: negative keywords will not match to close variants or other expansions.",
+          "Their example is the one to remember. Exclude the broad negative \u201cflowers\u201d and your ad will not show for \u201cred flowers\u201d, but it can still show for \u201cred flower\u201d. One letter, and the block stops working.",
+          "So if you want the singular and the plural both excluded, you add both. Same for synonyms. Google says plainly that you will need to add synonyms and singular or plural versions yourself if you want them excluded.",
+        ],
+      },
+      {
+        heading: "The one thing it does handle for you",
+        paragraphs: [
+          "There is no need to sit there typing out every way somebody might misspell a word. Google states that negative keywords automatically account for casing and misspellings.",
+          "So \u201cFree\u201d, \u201cfree\u201d and \u201cfre\u201d are covered by one entry. \u201cfreebie\u201d is not, because that is a different word rather than a misspelling of the same one.",
+        ],
+      },
+      {
+        heading: "Three types, and what each actually blocks",
+        paragraphs: [
+          "Negatives come in the same three flavours as regular keywords, and they behave differently enough to matter.",
+        ],
+        bullets: [
+          "Broad, the default: your ad will not show if the search contains all your negative terms, even in a different order. It may still show if the search contains only some of them",
+          "Phrase: your ad will not show if the search contains the exact terms in the same order",
+          "Exact: your ad will not show only if the search is the exact terms, in that order, with no extra words. Add words and your ad can show again",
+        ],
+      },
+      {
+        paragraphs: [
+          "For a single word, broad and phrase come to the same thing. The distinction starts to matter with multi-word negatives.",
+          "Most of the time broad is what you want. Exact is for the narrow case where one specific search is a problem and everything around it is fine.",
+        ],
+      },
+      {
+        heading: "The list worth writing before you spend anything",
+        paragraphs: [
+          "You will not guess every one of these, and that is fine. The point is to catch the obvious money-burners before they run, not to be exhaustive.",
+          "For most local service businesses the waste falls into the same handful of groups.",
+        ],
+        bullets: [
+          "People wanting it free or cheap: free, cheap, discount, bargain",
+          "People wanting to do it themselves: DIY, how to, tutorial, guide, yourself",
+          "People wanting your job rather than your service: jobs, job, vacancy, vacancies, salary, salaries, wage, career, careers, apprenticeship",
+          "People wanting to learn the trade: course, courses, training, qualification, college, NVQ",
+          "People shopping for parts rather than labour: wholesale, supplier, suppliers, trade price, buy, for sale",
+          "The wrong end of the market, if that applies: commercial, industrial, or domestic, depending which way round you work",
+        ],
+      },
+      {
+        paragraphs: [
+          "Note how many of those are listed twice, singular and plural. That is the close-variant rule doing its work. \u201cjob\u201d does not block \u201cjobs\u201d.",
+          "Build it once as a negative keyword list at account level and it applies everywhere, rather than being rebuilt campaign by campaign.",
+        ],
+      },
+      {
+        heading: "Two limits worth knowing about",
+        paragraphs: [
+          "The first is odd but real. Google says an ad might still show for a phrase longer than sixteen words, and that the block does not apply when your negative keyword is the sixteenth word in the phrase. Very long searches can slip through, which is nobody's biggest problem but explains the occasional strange one in your report.",
+          "The second matters more. Google warns that if you use too many negative keywords, your ads might reach fewer customers.",
+          "That is the trap on the other side. It is possible to block so thoroughly that you also block people who would have bought from you. Somebody searching \u201chow much does a new boiler cost\u201d is using the words of a researcher and the intent of a buyer, and a blanket \u201chow\u201d negative loses them.",
+        ],
+      },
+      {
+        heading: "The list is never finished",
+        paragraphs: [
+          "Whatever you write before launch is a starting position. The real list comes from the search terms report, which shows what people actually typed rather than what you imagined they would.",
+          "Check it weekly at first. Every entry in it that was never going to become a customer is a negative keyword you have just been shown for free, and adding it means you do not pay for that search twice.",
+          "That loop, rather than the list you start with, is what brings the wasted spend down over time.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-many-fields-should-your-enquiry-form-have",
     title: "How Many Fields Should Your Enquiry Form Have?",
     description:
