@@ -16,7 +16,7 @@ const steps = [
   {
     step: "Audit",
     colour: "#9b3df2",
-    body: "The Lead Leak Audit. Your website, tracking, enquiry process and what your competitors are already running.",
+    body: "We go through your website, your tracking, your enquiry process and what your competitors are already running, and write down where enquiries are being lost.",
     icon: icon("M4 4v16h16M8 16v-5M12 16V8M16 16v-3"),
   },
   {

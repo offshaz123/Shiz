@@ -16,7 +16,7 @@ const faqs = [
   {
     question: "How much do Meta & Instagram ads cost with Shaz Marketing Group?",
     answer:
-      "Our done-for-you Meta & Instagram ads management starts from £499/month on the Starter plan, with Growth (£699/month) and Scale (£1,399/month) plans adding a full CRM, automation and an AI receptionist. Google Ads is a flat £600/month including the landing page and CRM, and SEO starts at £350/month. Ad spend itself is separate and paid directly to Meta or Google.",
+      "Meta & Instagram management comes in three plans: Starter at £499/month, Growth at £699/month which adds a full CRM and automation, and Scale at £1,399/month which adds an AI receptionist. Google Ads and SEO are priced separately, and the pricing page has the full breakdown of what each plan includes.",
   },
   {
     question: "Do you run Meta & Instagram ads for automotive businesses?",
@@ -68,7 +68,7 @@ export default function Home() {
               See it in action before you commit
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-muted">
-              Pick a time that works for you — 15 minutes, no pressure. We&apos;ll show you exactly
+              Pick a time that works for you — fifteen minutes. We&apos;ll show you exactly
               how this would work for your business, then get instant confirmation with a Google
               Meet link sent straight to your inbox.
             </p>
@@ -191,14 +191,14 @@ export default function Home() {
             </h2>
             <p className="mt-4 max-w-md text-muted">
               Fill in your details and our team will be in touch to map out a Meta &amp; Instagram
-              ads plan for your business — no obligation.
+              ads plan for your business.
             </p>
             <div className="mt-8 space-y-4 text-sm text-muted">
               <p className="flex items-center gap-2.5">
                 <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-brand-pink">
                   <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                Free, no-pressure strategy call
+                Free strategy call
               </p>
               <p className="flex items-center gap-2.5">
                 <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-brand-pink">
