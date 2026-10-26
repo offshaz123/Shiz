@@ -67,7 +67,9 @@ export default function PrivacyPage() {
           example that a page was viewed or an order placed), which Google uses to estimate how many orders came from
           its adverts. TikTok gets nothing unless you accept. Whatever you choose, we count how many visits come
           from each place (for example &ldquo;Google search&rdquo; or &ldquo;TikTok&rdquo;) as a plain number per
-          day. Nothing is stored on your device for this and the count says nothing about you.
+          day, along with how many go on to open the plate builder, add to basket and reach checkout. When you
+          order, we note on the order where that visit came from (for example &ldquo;TikTok ads&rdquo;), so we can
+          see which adverts lead to sales. Nothing is stored on your device for this.
         </p>
         <p>
           You can change your mind at any time with &ldquo;Cookie settings&rdquo; at the bottom of every page.

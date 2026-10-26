@@ -33,30 +33,53 @@ export async function adPayments(from: Date, to: Date): Promise<AdPayment[]> {
 
 export async function adSpend(from: Date, to: Date): Promise<AdSpend> {
   const byPlatform: Record<AdPlatform, number> = { tiktok: 0, google: 0, meta: 0, other: 0 };
-  for (const p of await adPayments(from, to)) byPlatform[p.platform] += p.amount;
-  let metaError: string | null = null;
-  try {
-    byPlatform.meta += await metaSpend(from, to);
-  } catch (err) {
-    metaError = err instanceof Error ? err.message : "Couldn't reach Meta";
-  }
+  const { days, metaError } = await adSpendByDay(from, to);
+  for (const d of days) for (const p of Object.keys(byPlatform) as AdPlatform[]) byPlatform[p] += d[p];
   return { spend: Object.values(byPlatform).reduce((n, v) => n + v, 0), byPlatform, metaError };
 }
 
-// Meta (Facebook and Instagram) ads between two dates, VAT added, read live
-// from Meta (Meta's own figures leave VAT out). 0 if META_ADS_TOKEN isn't set.
-const metaCache = new Map<string, { at: number; pence: number }>();
-async function metaSpend(from: Date, to: Date) {
+// Each day's spend by platform (pence), for the chart on Admin → Insights.
+// TikTok shows on the day it was topped up.
+export type SpendDay = Record<AdPlatform, number> & { day: string };
+export async function adSpendByDay(from: Date, to: Date): Promise<{ days: SpendDay[]; metaError: string | null }> {
+  const days = new Map<string, SpendDay>();
+  for (let t = Date.UTC(from.getUTCFullYear(), from.getUTCMonth(), from.getUTCDate()); t < to.getTime(); t += 24 * 60 * 60 * 1000) {
+    const day = ymd(new Date(t));
+    days.set(day, { day, tiktok: 0, google: 0, meta: 0, other: 0 });
+  }
+  for (const p of await adPayments(from, to)) {
+    const d = days.get(p.day);
+    if (d) d[p.platform] += p.amount;
+  }
+  let metaError: string | null = null;
+  try {
+    for (const [day, pence] of await metaSpend(from, to)) {
+      const d = days.get(day);
+      if (d) d.meta += pence;
+    }
+  } catch (err) {
+    metaError = err instanceof Error ? err.message : "Couldn't reach Meta";
+  }
+  return { days: [...days.values()], metaError };
+}
+
+// Meta (Facebook and Instagram) ads for each day between two dates, VAT
+// added, read live from Meta (Meta's own figures leave VAT out). Nothing if
+// META_ADS_TOKEN isn't set.
+const metaCache = new Map<string, { at: number; days: [string, number][] }>();
+async function metaSpend(from: Date, to: Date): Promise<[string, number][]> {
   const token = process.env.META_ADS_TOKEN?.trim();
-  if (!token) return 0;
+  if (!token) return [];
   const key = `${ymd(from)}_${ymd(to)}`;
   const hit = metaCache.get(key);
-  if (hit && Date.now() - hit.at < 60 * 60 * 1000) return hit.pence;
+  if (hit && Date.now() - hit.at < 60 * 60 * 1000) return hit.days;
   const account = (process.env.META_AD_ACCOUNT_ID || "1077776095076022").replace(/^act_/, "");
   const until = new Date(to.getTime() - 24 * 60 * 60 * 1000);
   const params = new URLSearchParams({
     fields: "spend",
     level: "account",
+    time_increment: "1",
+    limit: "100",
     time_range: JSON.stringify({ since: ymd(from), until: ymd(until < from ? from : until) }),
     access_token: token,
   });
@@ -67,9 +90,12 @@ async function metaSpend(from: Date, to: Date) {
   const json = await res.json().catch(() => ({}));
   // Never show the token, even if Meta repeats it back.
   if (!res.ok) throw new Error(String(json?.error?.message ?? `Meta said ${res.status}`).replace(/access_token=[^&\s]+/g, "access_token=…").slice(0, 200));
-  const pence = Math.round((Number(json?.data?.[0]?.spend) || 0) * 100 * VAT);
-  metaCache.set(key, { at: Date.now(), pence });
-  return pence;
+  const days: [string, number][] = (Array.isArray(json?.data) ? json.data : []).map((r: { date_start?: string; spend?: string }) => [
+    String(r.date_start ?? ""),
+    Math.round((Number(r.spend) || 0) * 100 * VAT),
+  ]);
+  metaCache.set(key, { at: Date.now(), days });
+  return days;
 }
 
 export async function addAdPayment(p: Omit<AdPayment, "id">) {

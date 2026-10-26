@@ -42,10 +42,15 @@ export async function loadAdTracking(ref: string) {
   return rows[0]?.ad_tracking ? (JSON.parse(rows[0].ad_tracking) as AdTracking) : null;
 }
 
-export async function saveAdTracking(ref: string, t: (AdTracking & { source: string | null }) | null) {
-  if (!t) return;
+// `visitSource` is where this visit came from, used when the cookie (kept
+// only with consent) doesn't say.
+export async function saveAdTracking(ref: string, t: (AdTracking & { source: string | null }) | null, visitSource: string | null = null) {
+  if (!t) {
+    if (visitSource) await execute("UPDATE orders SET source = ? WHERE ref = ?", [visitSource, ref]);
+    return;
+  }
   const { source, ...rest } = t;
-  await execute("UPDATE orders SET ad_tracking = ?, source = ? WHERE ref = ?", [JSON.stringify(rest), source, ref]);
+  await execute("UPDATE orders SET ad_tracking = ?, source = ? WHERE ref = ?", [JSON.stringify(rest), source ?? visitSource, ref]);
 }
 
 // UK numbers in international form without "+": 07123… → 447123…

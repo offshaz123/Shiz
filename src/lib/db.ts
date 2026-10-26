@@ -166,6 +166,15 @@ const schema = [
     count INT NOT NULL DEFAULT 0,
     PRIMARY KEY (day, source)
   ) CHARACTER SET utf8mb4`,
+  // How far visits got (plate builder, basket, checkout) by where they came
+  // from, for the "from visit to sale" chart on Admin → Insights. Counts only.
+  `CREATE TABLE IF NOT EXISTS funnel (
+    day DATE NOT NULL,
+    source VARCHAR(20) NOT NULL,
+    step VARCHAR(20) NOT NULL,
+    count INT NOT NULL DEFAULT 0,
+    PRIMARY KEY (day, source, step)
+  ) CHARACTER SET utf8mb4`,
   // Money paid for ads (Admin → Money), typed in from the TikTok and Google
   // bills: what came off the card, VAT included (pence).
   `CREATE TABLE IF NOT EXISTS ad_spend (

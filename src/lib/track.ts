@@ -4,7 +4,7 @@
 
 import { type CartItem, describe, unitPrice } from "./plates";
 import { site } from "./site";
-import { type SourceId, landingSource } from "./sources";
+import { type FunnelStep, type SourceId, landingSource } from "./sources";
 
 export const CONSENT_COOKIE = "pu-consent";
 
@@ -62,6 +62,20 @@ export function saveSource() {
   document.cookie = `pu-src=${s}; Max-Age=${60 * 60 * 24 * 30}; Path=/${cookieDomain()}; SameSite=Lax; Secure`;
 }
 
+// Counts a step towards a sale (Admin → Insights), once per step per visit,
+// with where the visit came from. A plain count: nothing about the visitor
+// and nothing saved on their device.
+const counted = new Set<FunnelStep>();
+function funnelStep(step: FunnelStep) {
+  if (typeof window === "undefined" || counted.has(step)) return;
+  counted.add(step);
+  fetch("/api/funnel", { method: "POST", body: `${step} ${visitSource() ?? "unknown"}`, keepalive: true }).catch(() => {});
+}
+
+// Where this visit came from, sent with the order so Insights can show
+// which sales came from which ads.
+export const orderSource = () => (typeof window === "undefined" ? null : visitSource());
+
 // Runs `send` once the tags have loaded (they load just after the page, so
 // an event fired as a page opens would otherwise be lost). Gives up after
 // 10 seconds.
@@ -92,6 +106,7 @@ function gaItems(items: CartItem[]) {
 }
 
 export function trackViewBuilder() {
+  funnelStep("builder");
   return whenTagsReady(() => {
     const { gtag, ttq } = tags();
     ttq?.track("ViewContent", { content_id: "plate-builder", content_name: "Plate builder", content_type: "product" });
@@ -102,6 +117,7 @@ export function trackViewBuilder() {
 }
 
 export function trackAddToCart(item: CartItem) {
+  funnelStep("basket");
   const { gtag, ttq } = tags();
   const value = pounds(unitPrice(item) * item.qty);
   ttq?.track("AddToCart", { value, currency: "GBP", content_type: "product", contents: ttContents([item]) });
@@ -113,6 +129,7 @@ export function trackAddToCart(item: CartItem) {
 }
 
 export function trackBeginCheckout(items: CartItem[], subtotal: number) {
+  funnelStep("checkout");
   return whenTagsReady(() => {
     const { gtag, ttq } = tags();
     const value = pounds(subtotal);

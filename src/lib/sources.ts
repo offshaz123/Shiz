@@ -41,3 +41,8 @@ export function landingSource(url: URL, referrer: string, shopHost: string): Sou
   if (/(facebook|instagram|fb)\.com$/.test(host) || host === "l.facebook.com" || host === "l.instagram.com") return "meta";
   return "other";
 }
+
+// The steps between a visit and a sale, counted on Admin → Insights.
+export const FUNNEL_STEPS = { builder: "Opened the plate builder", basket: "Added to basket", checkout: "Reached checkout" } as const;
+export type FunnelStep = keyof typeof FUNNEL_STEPS;
+export const isFunnelStep = (v: unknown): v is FunnelStep => typeof v === "string" && v in FUNNEL_STEPS;

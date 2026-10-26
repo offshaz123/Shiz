@@ -1,6 +1,6 @@
 import { query } from "./db";
-import { type AdSpend, adSpend } from "./ad-spend";
-import { SOURCES, type SourceId, isSource } from "./sources";
+import { type AdSpend, type SpendDay, adSpend, adSpendByDay } from "./ad-spend";
+import { FUNNEL_STEPS, type FunnelStep, SOURCES, type SourceId, isSource } from "./sources";
 import { type Order, listOpenOrders, listOrdersCreatedBetween, listPaidOrdersBetween } from "./orders";
 import { costHistory, costsOn, orderCost } from "./costs";
 import { orderMoney } from "./order-money";
@@ -19,6 +19,9 @@ const gbp = (p: number) => `£${(p / 100).toFixed(2)}`;
 // Visits and sales from one place customers came from. Ad spend only for the
 // two paid ones (TikTok ads and Google Ads).
 export type SourceRow = { id: SourceId | "unknown"; name: string; visits: number; orders: number; revenue: number; spend: number | null; costPerSale: number | null };
+
+// Visits → plate builder → basket → checkout → paid, for one place customers came from.
+export type Funnel = { id: SourceId | "all"; name: string; steps: { label: string; count: number }[] };
 
 export type Advice = { level: "good" | "warn" | "tip"; title: string; text: string };
 
@@ -41,6 +44,8 @@ export type Insights = {
   ads: AdSpend | null;
   adsError: string | null;
   sources: SourceRow[];
+  funnels: Funnel[];
+  spendDays: SpendDay[];
   sellers: { styles: [string, number][]; hexShare: number; premiumShare: number; fixingShare: number; flagShare: number; plates: number };
   abandoned: { ref: string; name: string; phone: string; email: string; total: number; when: Date }[];
   docsWaiting: Order[];
@@ -84,8 +89,31 @@ async function safeAds(from: Date, to: Date) {
   }
 }
 
-// Where paid orders and visits came from. Orders from people who didn't
-// accept cookies can't be traced, so they show as "Not known".
+// How far visits got before leaving, overall and for each paid advert.
+async function funnels(from: Date, to: Date, paid: Order[], sources: SourceRow[]): Promise<Funnel[]> {
+  const ymd = (d: Date) => d.toISOString().slice(0, 10);
+  const rows = await query<{ source: string; step: string; n: number }>(
+    "SELECT source, step, SUM(count) AS n FROM funnel WHERE day >= ? AND day < ? GROUP BY source, step",
+    [ymd(from), ymd(to)],
+  );
+  const make = (id: SourceId | "all"): Funnel => {
+    const pick = (step: FunnelStep) => rows.filter((r) => r.step === step && (id === "all" || r.source === id)).reduce((n, r) => n + Number(r.n), 0);
+    const visits = id === "all" ? sources.reduce((n, r) => n + r.visits, 0) : (sources.find((r) => r.id === id)?.visits ?? 0);
+    return {
+      id,
+      name: id === "all" ? "Everyone" : SOURCES[id],
+      steps: [
+        { label: "Visited", count: visits },
+        ...(Object.keys(FUNNEL_STEPS) as FunnelStep[]).map((step) => ({ label: FUNNEL_STEPS[step], count: pick(step) })),
+        { label: "Paid", count: id === "all" ? paid.length : paid.filter((o) => o.source === id).length },
+      ],
+    };
+  };
+  return [make("tiktok_ads"), make("google_ads"), make("all")];
+}
+
+// Where paid orders and visits came from. Orders whose source couldn't be
+// told (e.g. the page was reloaded before buying) show as "Not known".
 async function bySource(from: Date, to: Date, paid: Order[], ads: AdSpend | null): Promise<SourceRow[]> {
   const ymd = (d: Date) => d.toISOString().slice(0, 10);
   const visits = new Map(
@@ -99,7 +127,7 @@ async function bySource(from: Date, to: Date, paid: Order[], ads: AdSpend | null
     const spend = spendFor[id as SourceId] ?? null;
     return {
       id,
-      name: id === "unknown" ? "Not known (cookies not accepted)" : SOURCES[id],
+      name: id === "unknown" ? "Not known" : SOURCES[id],
       visits: id === "unknown" ? 0 : (visits.get(id) ?? 0),
       orders: orders.length,
       revenue: orders.reduce((n, o) => n + (o.amount_paid ?? o.total), 0),
@@ -116,7 +144,13 @@ export async function getInsights(days: number, end = new Date()): Promise<Insig
   const from = new Date(to.getTime() - days * DAY);
   const prevFrom = new Date(from.getTime() - days * DAY);
 
-  const [adsNow, adsBefore] = await Promise.all([safeAds(from, to), safeAds(prevFrom, from)]);
+  const [adsNow, adsBefore, spendDays] = await Promise.all([
+    safeAds(from, to),
+    safeAds(prevFrom, from),
+    adSpendByDay(from, to)
+      .then((r) => r.days)
+      .catch(() => [] as SpendDay[]),
+  ]);
   const [nowAll, beforeAll, started, open] = await Promise.all([
     totals(from, to, adsNow.ads),
     totals(prevFrom, from, adsBefore.ads),
@@ -127,6 +161,7 @@ export async function getInsights(days: number, end = new Date()): Promise<Insig
   const before: PeriodTotals = { orders: beforeAll.orders, revenue: beforeAll.revenue, keep: beforeAll.keep, adSpend: beforeAll.adSpend, costPerSale: beforeAll.costPerSale, profit: beforeAll.profit };
   const paid = started.filter((o) => PAID.includes(o.status));
   const sources = await bySource(from, to, paid, adsNow.ads);
+  const funnel = await funnels(from, to, paid, sources);
 
   // What sells.
   const styleCount = new Map<string, number>();
@@ -205,6 +240,8 @@ export async function getInsights(days: number, end = new Date()): Promise<Insig
     ads: adsNow.ads,
     adsError: adsNow.error,
     sources,
+    funnels: funnel,
+    spendDays,
     sellers,
     abandoned,
     docsWaiting,
@@ -269,7 +306,7 @@ function advise(x: Insights): Advice[] {
     out.push({ level: "tip", title: `${best.name} sells cheaper than ${worst.name}`, text: `A sale costs ${gbp(best.costPerSale ?? 0)} from ${best.name} and ${gbp(worst.costPerSale ?? 0)} from ${worst.name}. Move some of the daily budget to ${best.name}.` });
   const unknown = x.sources.find((r) => r.id === "unknown");
   if (unknown && now.orders >= 4 && unknown.orders / now.orders > 0.5)
-    out.push({ level: "tip", title: "Most orders can't be traced to TikTok or Google", text: "Those customers didn't accept cookies, so we can't tell where they came from. The cost per sale shown is a lower limit: ads probably did better than it looks." });
+    out.push({ level: "tip", title: "Most orders can't be traced to TikTok or Google", text: "We couldn't tell where those customers came from (for example they came back later by typing the address). Ads probably did better than it looks." });
 
   // Order value and what sells.
   if (x.avgOrder !== null && x.avgOrder < 5000)

@@ -4,6 +4,9 @@ import { requireAdmin } from "@/lib/admin";
 import { type Advice, getInsights } from "@/lib/insights";
 import { site } from "@/lib/site";
 import { SendReportButton } from "@/components/SendReportButton";
+import { ClarityPanel, FunnelCharts, SpendChart } from "@/components/InsightsCharts";
+import { claritySummary } from "@/lib/clarity";
+import { tracking } from "@/lib/site";
 
 export const metadata = { title: "Insights" };
 
@@ -70,6 +73,7 @@ export default async function InsightsPage(props: PageProps<"/admin/insights">) 
     );
   }
   const { now, before } = x;
+  const clarity = await claritySummary().catch((err) => ({ error: err instanceof Error ? err.message : "Couldn't reach Clarity" }));
 
   return (
     <AdminShell active="insights">
@@ -127,8 +131,23 @@ export default async function InsightsPage(props: PageProps<"/admin/insights">) 
       </Section>
 
       <Section
+        title="From visit to sale"
+        note="How far people got before leaving. A big drop (in red) shows the step to fix. Counted for every visit, whether or not they accepted cookies."
+      >
+        <FunnelCharts funnels={x.funnels} />
+      </Section>
+
+      <Section title="Ad spend by day" note="What each advert platform cost each day in these dates.">
+        <SpendChart days={x.spendDays} />
+      </Section>
+
+      <Section title="How visitors behave" note="From Microsoft Clarity: only visitors who accepted cookies, with anything they type hidden.">
+        <ClarityPanel data={clarity} projectId={tracking.clarityId} />
+      </Section>
+
+      <Section
         title="Where customers came from"
-        note="Visits are counted for everyone. An order shows where it came from only if the customer accepted cookies; the rest are under “Not known”. Ad spend is what you typed in on Money."
+        note="Visits are counted for everyone. An order shows where the customer came from on the visit they bought in (and, if they accepted cookies, from earlier visits in the last 30 days). Ad spend is from Money."
       >
         {x.sources.length === 0 ? (
           <p className="rounded-2xl border border-line bg-white p-5 text-sm text-muted">No visits counted yet. They start showing from today.</p>

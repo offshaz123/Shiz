@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/lib/cart";
-import { trackBeginCheckout } from "@/lib/track";
+import { orderSource, trackBeginCheckout } from "@/lib/track";
 import { AddressFields } from "@/components/AddressFields";
 import { type DeliveryId, FREE_DELIVERY_FROM, delivery, deliveryPrice as priceFor, describe, money, unitPrice } from "@/lib/plates";
 import { KlarnaNote } from "@/components/Klarna";
@@ -145,6 +145,7 @@ export default function CheckoutPage() {
     form.set("items", JSON.stringify(items));
     form.set("delivery", deliveryId);
     form.set("discount", applied?.code ?? "");
+    form.set("src", orderSource() ?? "");
     try {
       const res = await fetch("/api/order", { method: "POST", body: form });
       const data = await res.json();
