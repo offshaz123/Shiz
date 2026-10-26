@@ -19,6 +19,15 @@ export const dynamic = "force-dynamic";
  * (lead_id, step) means a duplicate send is rejected by the database rather
  * than relying on this code getting it right.
  *
+ * One email per person per run, always the earliest one they are still owed.
+ * This matters whenever the scheduler has not run for a while: a lead who has
+ * been waiting six days is due all three at once, and firing them within the
+ * same second would land as three emails stacked in an inbox, in a sequence
+ * that reads as though it was written to be spread over a week. Sending the
+ * earliest and letting the rest follow on later runs keeps the order and the
+ * spacing intact, at the cost of the sequence finishing a few days later than
+ * the day numbers suggest. That is the right way round.
+ *
  * A lead stops receiving these the moment any of these is true: marked
  * contacted in the admin page, unsubscribed, or past step 6.
  */
@@ -43,12 +52,26 @@ const STEPS = [
 /** Kept small so a run finishes well inside any request timeout. */
 const MAX_PER_RUN = 25;
 
+/**
+ * Minimum gap between two emails to the same person.
+ *
+ * Without this the spacing of the sequence is a property of how often the
+ * cron happens to run, not of the data. Anyone firing the route twice in an
+ * afternoon — testing it, or catching up after an outage — would walk a
+ * backlogged lead through the whole sequence in minutes. Twenty hours rather
+ * than a full day so a daily job that drifts by an hour still fires.
+ */
+const MIN_GAP_HOURS = 20;
+
 interface DueRow extends RowDataPacket {
   id: number;
   name: string;
   email: string;
   website: string;
   audit_json: string | null;
+  age_days: number;
+  sent_steps: string | null;
+  hours_since_last: number | null;
 }
 
 function authorised(request: Request): boolean {
@@ -90,107 +113,128 @@ async function run(request: Request) {
 
   const summary: Record<string, number> = { sent: 0, failed: 0, skipped: 0 };
 
-  for (const { step, afterDays } of STEPS) {
-    const due = await withDb(async (db) => {
-      const [rows] = await db.query<DueRow[]>(
-        `SELECT l.id, l.name, l.email, l.website, l.audit_json
-         FROM scan_leads l
-         LEFT JOIN lead_emails e ON e.lead_id = l.id AND e.step = ?
-         WHERE e.id IS NULL
-           AND l.contacted = 0
-           AND l.unsubscribed_at IS NULL
-           AND l.created_at <= DATE_SUB(NOW(), INTERVAL ? DAY)
-         ORDER BY l.created_at ASC
-         LIMIT ?`,
-        [step, afterDays, MAX_PER_RUN],
-      );
-      return rows;
-    });
+  // Everyone who could be owed something: not contacted, not unsubscribed,
+  // and old enough for at least the first step.
+  const due = await withDb(async (db) => {
+    const [rows] = await db.query<DueRow[]>(
+      `SELECT l.id, l.name, l.email, l.website, l.audit_json,
+              TIMESTAMPDIFF(DAY, l.created_at, NOW()) AS age_days,
+              GROUP_CONCAT(e.step) AS sent_steps,
+              TIMESTAMPDIFF(HOUR, MAX(e.sent_at), NOW()) AS hours_since_last
+       FROM scan_leads l
+       LEFT JOIN lead_emails e ON e.lead_id = l.id
+       WHERE l.contacted = 0
+         AND l.unsubscribed_at IS NULL
+         AND l.created_at <= DATE_SUB(NOW(), INTERVAL ? DAY)
+       GROUP BY l.id
+       ORDER BY l.created_at ASC
+       LIMIT ?`,
+      [STEPS[0].afterDays, MAX_PER_RUN],
+    );
+    return rows;
+  });
 
-    if (!due) {
-      return NextResponse.json({ error: "no_database" }, { status: 500 });
+  if (!due) {
+    return NextResponse.json({ error: "no_database" }, { status: 500 });
+  }
+
+  for (const row of due) {
+    // Any existing row counts as attempted, including a failed one. Retrying
+    // a bad address on every run forever helps nobody and harms the domain's
+    // sending reputation.
+    const already = new Set(
+      (row.sent_steps ?? "").split(",").filter(Boolean).map(Number),
+    );
+
+    // Nothing within twenty hours of the last one, whatever the schedule did.
+    if (row.hours_since_last !== null && row.hours_since_last < MIN_GAP_HOURS) {
+      continue;
     }
 
-    for (const row of due) {
-      let audit: StoredAudit | null = null;
-      if (row.audit_json) {
-        try {
-          audit = JSON.parse(row.audit_json) as StoredAudit;
-        } catch {
-          // A row we can't parse still gets the email, just the shorter one
-          // that doesn't quote a score.
-          audit = null;
-        }
-      }
+    const next = STEPS.find(
+      (candidate) => row.age_days >= candidate.afterDays && !already.has(candidate.step),
+    );
+    if (!next) continue;
+    const step = next.step;
 
-      const unsubscribeToken = mintToken("unsubscribe", row.id);
-      if (!unsubscribeToken) {
-        summary.skipped += 1;
-        continue;
-      }
-      const unsubscribeUrl = `${siteConfig.url}/unsubscribe?t=${unsubscribeToken}`;
-
-      const lead: EmailLead = {
-        id: row.id,
-        name: row.name,
-        website: row.website,
-        audit,
-      };
-
-      const email = buildFollowUp(step, lead, unsubscribeUrl);
-      if (!email) {
-        summary.skipped += 1;
-        continue;
-      }
-
-      // Claim the step before sending. If the send then fails the row is
-      // updated to 'failed' rather than deleted, so a broken address doesn't
-      // get retried on every cron run forever.
-      const claimed = await withDb(async (db) => {
-        await db.execute(
-          "INSERT INTO lead_emails (lead_id, step, subject, status) VALUES (?, ?, ?, 'sending')",
-          [row.id, step, email.subject],
-        );
-        return true;
-      });
-      if (!claimed) {
-        summary.skipped += 1;
-        continue;
-      }
-
+    let audit: StoredAudit | null = null;
+    if (row.audit_json) {
       try {
-        await transporter.sendMail({
-          from: `"Walid at Shaz Marketing Group" <${SMTP_USER}>`,
-          to: row.email,
-          replyTo: siteConfig.email,
-          subject: email.subject,
-          text: email.text,
-          html: email.html,
-          headers: {
-            // Lets Gmail and Outlook show their own unsubscribe button, which
-            // people trust more than a link inside the message.
-            "List-Unsubscribe": `<${unsubscribeUrl}>`,
-            "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
-          },
-        });
-
-        await withDb(async (db) => {
-          await db.execute("UPDATE lead_emails SET status = 'sent' WHERE lead_id = ? AND step = ?", [
-            row.id,
-            step,
-          ]);
-        });
-        summary.sent += 1;
-      } catch (err) {
-        console.error(`Follow-up step ${step} failed for lead ${row.id}:`, err);
-        await withDb(async (db) => {
-          await db.execute(
-            "UPDATE lead_emails SET status = 'failed', error = ? WHERE lead_id = ? AND step = ?",
-            [String(err).slice(0, 500), row.id, step],
-          );
-        });
-        summary.failed += 1;
+        audit = JSON.parse(row.audit_json) as StoredAudit;
+      } catch {
+        // A row we can't parse still gets the email, just the shorter one
+        // that doesn't quote a score.
+        audit = null;
       }
+    }
+
+    const unsubscribeToken = mintToken("unsubscribe", row.id);
+    if (!unsubscribeToken) {
+      summary.skipped += 1;
+      continue;
+    }
+    const unsubscribeUrl = `${siteConfig.url}/unsubscribe?t=${unsubscribeToken}`;
+
+    const lead: EmailLead = {
+      id: row.id,
+      name: row.name,
+      website: row.website,
+      audit,
+    };
+
+    const email = buildFollowUp(step, lead, unsubscribeUrl);
+    if (!email) {
+      summary.skipped += 1;
+      continue;
+    }
+
+    // Claim the step before sending. If the send then fails the row is
+    // updated to 'failed' rather than deleted, so a broken address doesn't
+    // get retried on every cron run forever.
+    const claimed = await withDb(async (db) => {
+      await db.execute(
+        "INSERT INTO lead_emails (lead_id, step, subject, status) VALUES (?, ?, ?, 'sending')",
+        [row.id, step, email.subject],
+      );
+      return true;
+    });
+    if (!claimed) {
+      summary.skipped += 1;
+      continue;
+    }
+
+    try {
+      await transporter.sendMail({
+        from: `"Walid at Shaz Marketing Group" <${SMTP_USER}>`,
+        to: row.email,
+        replyTo: siteConfig.email,
+        subject: email.subject,
+        text: email.text,
+        html: email.html,
+        headers: {
+          // Lets Gmail and Outlook show their own unsubscribe button, which
+          // people trust more than a link inside the message.
+          "List-Unsubscribe": `<${unsubscribeUrl}>`,
+          "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+        },
+      });
+
+      await withDb(async (db) => {
+        await db.execute("UPDATE lead_emails SET status = 'sent' WHERE lead_id = ? AND step = ?", [
+          row.id,
+          step,
+        ]);
+      });
+      summary.sent += 1;
+    } catch (err) {
+      console.error(`Follow-up step ${step} failed for lead ${row.id}:`, err);
+      await withDb(async (db) => {
+        await db.execute(
+          "UPDATE lead_emails SET status = 'failed', error = ? WHERE lead_id = ? AND step = ?",
+          [String(err).slice(0, 500), row.id, step],
+        );
+      });
+      summary.failed += 1;
     }
   }
 
