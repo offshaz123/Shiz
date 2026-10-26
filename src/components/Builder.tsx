@@ -133,8 +133,6 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
     setStepError("");
   };
   const [regError, setRegError] = useState("");
-  const [confirmed, setConfirmed] = useState(false);
-  const [confirmError, setConfirmError] = useState(false);
   const [notice, setNotice] = useState(showPlateNotice);
 
   const set = (patch: Partial<PlateConfig>) => setC((prev) => ({ ...prev, ...patch }));
@@ -180,11 +178,6 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
       setTab(missed);
       setStepError(missed === 1 ? "Choose your plate style first" : "Check your extras first (border, badge and fixings)");
       document.getElementById("plate-steps")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      return;
-    }
-    if (!confirmed) {
-      setConfirmError(true);
-      document.getElementById("confirm-details")?.scrollIntoView({ behavior: "smooth", block: "center" });
       return;
     }
     const item = { ...c, reg: plateText(c) };
@@ -686,32 +679,6 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
               <div className="mt-5">
                 <DispatchCountdown />
               </div>
-
-              <label
-                id="confirm-details"
-                className={`mt-5 flex cursor-pointer items-start gap-3 rounded-xl border-2 p-4 text-sm ${
-                  confirmError && !confirmed ? "border-[#d92d20] bg-[#fdecec]" : "border-line bg-surface"
-                }`}
-              >
-                <input
-                  type="checkbox"
-                  checked={confirmed}
-                  onChange={(e) => {
-                    setConfirmed(e.target.checked);
-                    setConfirmError(false);
-                  }}
-                  className="mt-0.5 h-5 w-5 shrink-0 accent-[#8a6812]"
-                />
-                <span>
-                  <strong>I&apos;ve checked my {c.type === "show" ? "plate text" : "registration"} and details are correct.</strong>{" "}
-                  Plates are made to order, so they <strong>can&apos;t be refunded</strong> if they&apos;re entered wrong.
-                </span>
-              </label>
-              {confirmError && !confirmed && (
-                <p role="alert" className="mt-2 text-sm font-semibold text-[#b42318]">
-                  Please tick the box to confirm your details before adding to basket.
-                </p>
-              )}
 
               <button type="button" onClick={addToBasket} className="btn btn-dark mt-4 w-full rounded-lg">
                 <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
