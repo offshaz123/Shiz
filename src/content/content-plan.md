@@ -94,6 +94,7 @@ keywords, dealership social strategy).
 - Google Business Profile Photos: Which Ones Actually Get Used (local search)
 - How Many Fields Should Your Enquiry Form Have? (forms & conversion)
 - Negative Keywords: The List You Build Before You Launch (Google Ads)
+- Creative Fatigue: How to Tell an Ad Has Stopped Working (Meta mechanics)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -296,8 +297,12 @@ keywords, dealership social strategy).
 ## Backlog — Meta mechanics & platform change (added 2026-10-08 research round)
 - [x] Advantage+ Audience: What Happened to Interest Targeting — target: "Advantage+ audience
       explained", "Meta detailed targeting removed 2026"
-- [ ] Creative Fatigue: How to Tell an Ad Has Stopped Working — target: "Facebook ad creative
-      fatigue", "ad frequency too high"
+- [x] Creative Fatigue: How to Tell an Ad Has Stopped Working — target: "Facebook ad creative
+      fatigue", "ad frequency too high" (researched 2026-10-27: Meta publishes no frequency
+      threshold. Agency guides give 2.5, 3.0, 3.5 and 4-8 with equal confidence, so the post says
+      so rather than picking one. The Creative Limited / Creative Fatigue delivery statuses are
+      described consistently by third parties — cost per result up vs roughly doubled — but
+      Meta's own help page could not be reached, so the post flags that wording as unconfirmed.)
 - [ ] Why Pausing the Wrong Thing Resets Your Campaign — target: "Facebook ads learning phase
       reset", "pausing ad vs ad set"
 - [ ] What Happens to Your Ads When You Change the Budget Mid-Flight — target: "changing Facebook

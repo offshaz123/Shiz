@@ -16,6 +16,88 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "creative-fatigue-how-to-tell-an-ad-has-stopped-working",
+    title: "Creative Fatigue: How to Tell an Ad Has Stopped Working",
+    description:
+      "Everyone quotes a frequency number and they all quote a different one. What actually tells you an ad is finished, and why Meta's own warning arrives too late to help.",
+    publishedAt: "2026-10-27",
+    keywords: [
+      "Facebook ad creative fatigue",
+      "ad frequency too high",
+      "when to refresh Facebook ad creative",
+      "Meta ads stopped working",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "An ad runs well for three weeks. Then the enquiries thin out, the cost per lead creeps up, and nothing in the account has changed. Same budget, same audience, same targeting.",
+          "The usual diagnosis is creative fatigue: the people you are reaching have seen it enough times to stop noticing. The usual advice is to watch your frequency and refresh at a certain number. That advice is where it falls apart.",
+        ],
+      },
+      {
+        heading: "Nobody agrees what the number is",
+        paragraphs: [
+          "Go looking for the frequency at which an ad is finished and you will be given one. You will be given several.",
+          "Across the guides written on this you will find 2.5 given as an early warning, 3.0 as the point broad prospecting wears out, 3.5 as the refresh point for cold audiences, and anywhere from four to eight for retargeting. Each is stated with confidence. They cannot all be right.",
+          "The reason they vary is that Meta does not publish a threshold, so every number you read is somebody's house rule from their own accounts. A figure that held up across one agency's clients is not a law, and it was never meant to be read as one.",
+          "Which is less useful than a number, but more useful than the wrong number.",
+        ],
+      },
+      {
+        heading: "Meta does warn you, just late",
+        paragraphs: [
+          "There is a Delivery column in Ads Manager, and it carries two statuses worth knowing.",
+        ],
+        bullets: [
+          "Creative Limited — your cost per result has risen against your previous ads, but has not doubled",
+          "Creative Fatigue — your cost per result has roughly doubled",
+        ],
+      },
+      {
+        paragraphs: [
+          "Worth saying plainly: those definitions come from third-party guides rather than Meta's own documentation, which we could not get to. Treat them as the shape of the thing rather than exact wording.",
+          "The shape is the point though. By the time an ad is flagged as fatigued, the damage has already happened — you are paying roughly twice what you were. It is a death certificate, not a diagnosis.",
+          "So the column is worth checking, but it is not an early warning system. If you only act when Meta tells you to, you have already spent a few weeks of budget finding out.",
+        ],
+      },
+      {
+        heading: "Watch three things together, not one",
+        paragraphs: [
+          "The honest version of this is less tidy than a threshold. You are looking for several things moving the same way at once.",
+        ],
+        bullets: [
+          "Frequency climbing, whatever your own normal turns out to be",
+          "Click-through rate falling week on week, on the same audience",
+          "Cost per result rising while your budget and audience have not changed",
+        ],
+      },
+      {
+        paragraphs: [
+          "One of those on its own means very little. Together they are the pattern.",
+          "The trap is acting on frequency alone. A high frequency with a click-through rate that has not moved does not mean fatigue — it means you are showing a small, tightly targeted audience an ad they still respond to. Refreshing that is solving a problem you do not have.",
+          "The opposite case matters more. Click-through falling while frequency is still low is not fatigue at all. That is the ad, or the audience, being wrong from the start.",
+        ],
+      },
+      {
+        heading: "Your own numbers are the only baseline",
+        paragraphs: [
+          "The reason the published figures conflict is that the right number depends on things nobody else can see.",
+          "A retargeting audience of a few thousand people will reach a frequency of four in days. A broad prospecting audience in a city will take weeks to get there. Same number, completely different situation.",
+          "So before you can tell that something has gone wrong, you need to know what normal looks like in your account. Three months of your own data beats any benchmark, because it is measuring your audience, your market and your creative rather than somebody else's.",
+          "If you have been running for less than that, the practical move is to write down your cost per result and click-through rate each week. In a month you will have the baseline you are currently missing.",
+        ],
+      },
+      {
+        heading: "What to do when it is genuinely tired",
+        paragraphs: [
+          "The instinct is to tinker: change the headline, swap a word, adjust the targeting. That rarely does much, because the thing people have stopped noticing is the image or the video, not the third line of text.",
+          "New creative means a genuinely different visual. A different person, a different setting, a different format — a video where there was a photo. Something the eye reads as new in the half-second it gets while someone scrolls.",
+          "The better habit is not to wait. Running a few creatives at once and adding one or two each month means you are never relying on a single ad that is quietly wearing out. It also tells you something: when a new one beats an old one, you have learned what your audience actually responds to, and that is worth more than the refresh itself.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "negative-keywords-the-list-you-build-before-you-launch",
     title: "Negative Keywords: The List You Build Before You Launch",
     description:
