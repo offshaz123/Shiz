@@ -1091,4 +1091,239 @@ Your plates are packed carefully, along with any fixing kit you ordered, and sen
 
 Want to see your plates being made? Follow us on Instagram, or [start your order](/design) today.`,
   },
+  {
+    slug: "design-your-own-number-plates-online",
+    title: "How to Design Your Own Number Plates Online (Step by Step)",
+    description:
+      "Use our free online number plate designer to make road-legal or show plates with a live preview. Here's how it works, step by step.",
+    date: "2026-11-04",
+    category: "Guides",
+    plate: { text: "MY PL8S", style: "4d-5mm", type: "show" },
+    body: `You don't need to visit a shop to get new number plates. With an online number plate designer, you can build your plates on your phone, see exactly how they'll look, and order in a few minutes. Here's how ours works.
+
+## 1. Choose your plate size
+
+Open the [plate builder](/design) and pick a size first, because it changes the shape:
+
+- **Standard**: the usual 520 × 111mm car plate
+- **Hex**: cut to fit your registration, with pointed ends
+- **Motorbike**: 9 × 7 in on two lines, rear only
+- **4x4 / Import**: an 11 × 8 in square plate on two lines
+
+## 2. Road legal or show plate?
+
+Choose **Road Legal** for plates you'll drive with. Choose **Show Plate** if you want any text you like, for a car show, your garage wall or a gift. Show plates are not road legal.
+
+## 3. Type your registration
+
+Type your reg and the designer applies the **legal spacing** for you, in the legal font. For show plates, type whatever you like (up to 12 characters).
+
+## 4. Pick a style
+
+Switch between styles and watch the live preview change:
+
+- [Standard 2D](/plates/standard): flat, crisp print
+- [3D Gel](/plates/3d-gel): raised, glossy gel letters
+- [4D 3mm](/plates/4d-3mm) and [4D 5mm](/plates/4d-5mm): laser-cut acrylic letters
+- [5mm Gel](/plates/5mm-gel) and [7mm Gel](/plates/7mm-gel): deep letters topped with gel
+
+## 5. Add the finishing touches
+
+In **Additions**, choose a flag (UK or England), the green strip for electric cars, or a black border. You can also add a fixing kit with sticky pads or screws.
+
+## 6. Order and upload your documents
+
+Add your plates to the basket and check out. For road-legal plates, the law says we must see proof you're entitled to the registration (such as your V5C) and photo ID. You can upload them at checkout. Read [which documents you need](/blog/documents-needed-to-buy-number-plates).
+
+Order before 2pm on a working day and we'll make and dispatch your plates the **same day**.
+
+Ready? [Open the number plate builder](/design) and see your reg in seconds.`,
+  },
+  {
+    slug: "4d-number-plates-with-border",
+    title: "4D Number Plates With a Border: Is It Legal and Does It Look Good?",
+    description:
+      "Thinking of a border on your 4D plates? Here's what the rules say, how it looks, and which plate sizes have room for one.",
+    date: "2026-11-07",
+    category: "Styles",
+    plate: { text: "4D B0RDR", style: "4d-5mm", type: "show" },
+    body: `A black border is one of the most popular extras on [4D number plates](/4d-plates). It frames the raised letters and gives the plate a finished, custom look. But is it allowed?
+
+## Is a border legal on a 4D plate?
+
+**Yes.** A thin, plain border is allowed on a road-legal plate, including 4D. The usual rules still apply:
+
+- It mustn't cover or crowd the characters
+- The required margin around the registration must stay clear
+- No patterns or pictures behind the characters
+
+The 4D characters themselves must be **one solid shade of black**, in the legal font and spacing, with the supplier's details and the **BS AU 145e** mark. Read more in [are 4D number plates legal?](/blog/are-4d-number-plates-legal) and [are number plate borders legal?](/blog/are-number-plate-borders-legal)
+
+## How does it look?
+
+- On **4D 3mm**, a border gives a neat, tidy finish.
+- On **4D 5mm**, the deeper letters plus a border make a bolder statement.
+- A border also helps a plate look straight if the plate recess isn't perfectly square.
+
+## Which sizes can have a border?
+
+- **Standard** car plates: yes
+- **Motorbike** and **4x4 / Import** square plates: yes
+- **Hex** plates: no, as the cut shape leaves no room for one
+
+## See it before you buy
+
+Open the [plate builder](/design), choose [4D 3mm](/plates/4d-3mm) or [4D 5mm](/plates/4d-5mm), type your registration, then go to **Additions** and switch the black border on and off on the live preview.`,
+  },
+  {
+    slug: "what-are-gel-number-plates",
+    title: "What Are Gel Number Plates? 3D, 5mm and 7mm Gel Explained",
+    description:
+      "Gel number plates have raised, glossy letters that catch the light. Here's what they are, the different depths, and whether they're legal.",
+    date: "2026-11-11",
+    category: "Styles",
+    plate: { text: "GEL PL8S", style: "3d-gel", type: "show" },
+    body: `Gel plates are one of the easiest ways to make your car look sharper. Instead of flat printed letters, the characters are **raised and glossy**, so they catch the light from every angle.
+
+## How gel plates are made
+
+Clear resin gel is applied over each character and left to set into a smooth, domed finish. The result is a raised letter with a wet-look shine.
+
+## The three gel styles
+
+- **[3D Gel](/plates/3d-gel)**: our most popular style. Printed characters topped with a glossy gel dome. A clean upgrade that suits any car.
+- **[5mm Gel](/plates/5mm-gel)**: 5mm acrylic characters topped with gel, for real depth and shine.
+- **[7mm Gel](/plates/7mm-gel)**: our deepest letters at 7mm. Maximum impact.
+
+Can't decide between the deeper ones? Read [5mm vs 7mm gel](/blog/5mm-vs-7mm-gel-plates). Comparing gel with laser-cut letters? See [3D gel vs 4D](/blog/3d-gel-vs-4d-number-plates).
+
+## Are gel plates legal?
+
+**Yes**, when they're made properly. The characters must be one solid shade of black, in the legal font and spacing, and the plate must carry the supplier's details and the **BS AU 145e** mark. All our gel plates are made this way by a DVLA registered supplier.
+
+## Other sizes
+
+Gel works on every plate size we make: [motorbike](/plates/3d-gel/motorbike), [4x4 / import square](/plates/3d-gel/4x4-import), [hex](/plates/3d-gel/hex), or a [single plate](/plates/3d-gel/single) if you only need a front or rear.
+
+## Try it on your reg
+
+The quickest way to choose is to see it. [Open the builder](/design), type your registration and switch between 3D Gel, 5mm Gel and 7mm Gel on the live preview.`,
+  },
+  {
+    slug: "hex-number-plates",
+    title: "Hex Number Plates: Are They Legal and Which Size Do I Need?",
+    description:
+      "Hex plates are cut to fit your registration with pointed ends. Here's whether they're legal, how sizing works and what to know before you order.",
+    date: "2026-11-14",
+    category: "Styles",
+    plate: { text: "HEX 1", style: "4d-3mm", type: "show" },
+    body: `Hex number plates have angled, pointed ends instead of square corners, and they're cut to the length of your registration. Short private plates especially look great on a hex plate.
+
+## Are hex plates legal?
+
+**Yes**, as long as the plate itself follows the rules. It's the characters and markings that matter:
+
+- The legal **Charles Wright** font, character size and spacing
+- The required margin around the characters
+- Solid black characters on a white front or yellow rear plate
+- The supplier's details and the **BS AU 145e** mark
+
+Our hex plates are cut so all of that fits.
+
+## Which size do I need?
+
+The size depends on how many characters are in your registration (not counting the space):
+
+- **Up to 4 characters**: 330mm
+- **5 characters**: 390mm
+- **6 characters**: 450mm
+- **7 characters**: 520mm, the same length as a standard plate
+
+You don't need to work it out yourself. In the [plate builder](/design), choose Hex and type your registration, and it shows the size that fits.
+
+## Anything to know before ordering?
+
+- Hex plates have **no room for a flag or border**, because of the cut shape.
+- Measure your plate recess if it's an unusual shape, especially for short plates.
+- Hex plates come in every style: [standard](/plates/standard/hex), [3D gel](/plates/3d-gel/hex), [4D 3mm](/plates/4d-3mm/hex), [4D 5mm](/plates/4d-5mm/hex) and our deep gels.
+
+[Design your hex plates](/design) and see the shape on your own registration.`,
+  },
+  {
+    slug: "motorbike-number-plate-rules",
+    title: "Motorbike Number Plate Rules in the UK: Size, Lines and Font",
+    description:
+      "Need a new motorbike plate? Here are the UK rules on size, two-line layout, character size and front plates, explained simply.",
+    date: "2026-11-18",
+    category: "The Law",
+    plate: { text: "MT23 BKE", style: "4d-3mm", type: "show" },
+    body: `Motorbike plates follow their own rules, which catch a lot of riders out. Here's what you need to know.
+
+## Rear plate only
+
+Motorbikes registered on or after **1 September 2001** must show a number plate at the **rear only**. A front plate isn't allowed on these bikes.
+
+## Two lines
+
+A motorbike plate shows the registration on **two lines**: for example, **MT23** on the top line and **BKE** underneath.
+
+## Smaller characters than a car
+
+Motorbike plates use smaller characters than car plates:
+
+- **64mm** high (a car plate uses 79mm)
+- **44mm** wide
+- **10mm** thick strokes
+
+They must still be in the legal **Charles Wright** font, solid black on a yellow background, with the supplier's details and the **BS AU 145e** mark.
+
+## Size
+
+The most common motorbike plate is **9 × 7 inches** (229 × 178mm), which fits most bikes and keeps the legal character size.
+
+## What about flags?
+
+On a 9 × 7 in plate there isn't room for a flag at the legal character size, so our motorbike plates don't include one.
+
+## Get yours
+
+We make motorbike plates in every style, including [standard](/plates/standard/motorbike), [3D gel](/plates/3d-gel/motorbike), [4D 3mm](/plates/4d-3mm/motorbike) and [4D 5mm](/plates/4d-5mm/motorbike). Just like car plates, you'll need to upload [your documents](/blog/documents-needed-to-buy-number-plates) for a road-legal plate.
+
+[Design your motorbike plate](/design?size=motorbike) with a live preview.`,
+  },
+  {
+    slug: "square-number-plates-imports-4x4",
+    title: "Square Number Plates for Imports and 4x4s: What's Legal?",
+    description:
+      "Got a car with a square plate space, like a US or Japanese import or a 4x4? Here's how two-line square number plates work in the UK.",
+    date: "2026-11-21",
+    category: "The Law",
+    plate: { text: "LR70 VER", style: "7mm-gel", type: "show" },
+    body: `Not every car has room for a long, standard number plate. Many **US and Japanese imports** and some **4x4s** have a square space for the plate. That's where a square, two-line plate comes in.
+
+## Are square plates legal?
+
+**Yes.** A road-legal plate can show the registration on **two lines**: for example, **LR70** on the top line and **VER** underneath.
+
+What matters is that the plate follows the same rules as any other road-legal plate:
+
+- Full-size car characters: **79mm** high and **50mm** wide
+- The legal **Charles Wright** font and spacing
+- White at the front, yellow at the rear, with solid black characters
+- The supplier's details and the **BS AU 145e** mark
+
+## What size is a square plate?
+
+The most common size is **11 × 8 inches** (279 × 203mm). It fits two lines of full-size characters with the legal margins.
+
+## Flags and borders
+
+There isn't room for a flag at the legal character size on a square plate, but you can still add a **black border**.
+
+## Which styles?
+
+Square plates come in every style, from [standard](/plates/standard/4x4-import) to [3D gel](/plates/3d-gel/4x4-import), [4D 5mm](/plates/4d-5mm/4x4-import) and our deepest [7mm gel](/plates/7mm-gel/4x4-import).
+
+[Design your square plates](/design?size=square), type your registration and see both lines on the live preview.`,
+  },
 ];
