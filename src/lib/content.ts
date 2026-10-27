@@ -36,7 +36,7 @@ export const products: {
   {
     slug: "3d-gel-plates",
     styles: ["3d-gel", "5mm-gel", "7mm-gel"],
-    title: "3D Gel Number Plates",
+    title: "3D Gel Number Plates: Road Legal Gel Plates",
     heading: "3D Gel Plates",
     intro:
       "Raised, domed gel characters with a glossy finish that catches the light. Choose classic 3D Gel, or go deeper with 5mm and 7mm gel.",
@@ -51,7 +51,7 @@ export const products: {
   {
     slug: "4d-plates",
     styles: ["4d-3mm", "4d-5mm"],
-    title: "4D Number Plates",
+    title: "4D Number Plates: Laser-Cut 4D Letters",
     heading: "4D Plates",
     intro:
       "Laser-cut solid acrylic letters bonded to the plate for a bold, sharp-edged 3D look. Available in 3mm and 5mm.",

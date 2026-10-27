@@ -20,6 +20,18 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/**/*": ["./src/assets/**"],
   },
+  // Addresses from the old website that Google still has (Search Console →
+  // Pages → Not found), sent to the matching page here.
+  async redirects() {
+    return [
+      { source: "/product/4d-3mm-plate", destination: "/plates/4d-3mm", permanent: true },
+      { source: "/product/3d-plate", destination: "/plates/3d-gel", permanent: true },
+      { source: "/product/:slug*", destination: "/design", permanent: true },
+      { source: "/product-category/:slug*", destination: "/design", permanent: true },
+      { source: "/faq/:slug*", destination: "/faqs", permanent: true },
+      { source: "/payment-confirmation", destination: "/track", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {
@@ -56,7 +68,7 @@ const nextConfig: NextConfig = {
       },
       {
         // Orders and enquiries must never be served from a cache.
-        source: "/api/((?!plate-image).*)",
+        source: "/api/((?!plate-image|product-image).*)",
         headers: [{ key: "Cache-Control", value: "no-store, max-age=0" }],
       },
     ];

@@ -7,9 +7,9 @@ import { DesignFromLink } from "@/components/DesignFromLink";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Number Plate Builder: Design Your Plates Online",
+  title: "Number Plate Builder & Designer: Make Your Plates Online",
   description:
-    "Design road-legal 2D, 3D gel and 4D number plates or show plates with a live preview. Made in Barking, dispatched same day before 2pm.",
+    "Online number plate designer: make road-legal 2D, 3D gel and 4D number plates or show plates with a live preview, then order. Dispatched same day before 2pm.",
   alternates: { canonical: "/design" },
 };
 
