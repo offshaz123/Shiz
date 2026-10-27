@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
 import { products } from "@/lib/content";
 import { publishedPosts } from "@/lib/blog";
+import { cities } from "@/lib/cities";
 import { allListings } from "@/lib/listings";
 
 // Picks up new blog posts as they go live.
@@ -17,6 +18,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/blog",
     ...publishedPosts().map((p) => `/blog/${p.slug}`),
     "/number-plates-essex",
+    "/number-plates",
+    ...cities.map((c) => `/number-plates/${c.slug}`),
     "/trade",
     "/about",
     "/contact",
