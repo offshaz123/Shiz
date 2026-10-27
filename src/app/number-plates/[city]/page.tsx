@@ -35,10 +35,10 @@ export default async function CityPage(props: PageProps<"/number-plates/[city]">
   const [tracked, nextDay] = delivery;
 
   const reasons = [
-    { title: "Next Day Delivery", text: `Order before ${site.dispatchCutoff} on a working day and choose Next Day Delivery to get your plates in ${c.name} the next working day.` },
-    { title: "Made in London", text: "Handcrafted in our London workshop from premium high-impact acrylic, made to BS AU 145e." },
-    { title: "Fully road legal", text: "DVLA registered supplier, with the legal font, spacing and markings on every road-legal plate." },
-    { title: `Free delivery from ${money(FREE_DELIVERY_FROM)}`, text: `Free tracked delivery to your door anywhere in ${c.region} on orders of ${money(FREE_DELIVERY_FROM)} or more.` },
+    { title: "Next Day Delivery", text: `Order before ${site.dispatchCutoff}` },
+    { title: "Made in London", text: "Premium high-impact acrylic" },
+    { title: "Fully road legal", text: "DVLA registered, BS AU 145e" },
+    { title: `Free delivery`, text: `On orders from ${money(FREE_DELIVERY_FROM)}` },
   ];
 
   const faqs = [
@@ -84,7 +84,7 @@ export default async function CityPage(props: PageProps<"/number-plates/[city]">
       <JsonLd data={service} />
       <JsonLd data={faqData} />
       <PageHero eyebrow={`${c.name} · ${c.region}`} title={`Number Plates in ${c.name}`}>
-        Road-legal 3D gel, 4D and standard number plates, made in London and delivered to your door, with Next Day Delivery available.
+        Road-legal 3D gel and 4D plates, made in London and delivered to your door.
       </PageHero>
       <div className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
         <div className="mx-auto max-w-xl rounded-3xl border border-line bg-white p-5 shadow-xl shadow-black/5 sm:p-6">
@@ -92,16 +92,16 @@ export default async function CityPage(props: PageProps<"/number-plates/[city]">
           <RegForm buttonLabel="Build Now" />
         </div>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-auto mt-6 grid max-w-3xl grid-cols-2 gap-2 sm:grid-cols-4">
           {reasons.map((r) => (
-            <div key={r.title} className="rounded-3xl border border-line bg-surface p-6">
-              <h2 className="font-display text-xl font-bold">{r.title}</h2>
-              <p className="mt-2 text-sm text-muted">{r.text}</p>
+            <div key={r.title} className="rounded-2xl border border-line bg-surface p-3 text-center">
+              <p className="font-display text-base font-bold leading-tight">{r.title}</p>
+              <p className="mt-1 text-xs text-muted">{r.text}</p>
             </div>
           ))}
         </div>
 
-        <div className="prose-plate mx-auto mt-12 max-w-3xl">
+        <div className="prose-plate mx-auto mt-10 max-w-3xl">
           <h2>Number plates for {c.name} drivers</h2>
           <p>{c.intro}</p>
           <p>
@@ -113,25 +113,17 @@ export default async function CityPage(props: PageProps<"/number-plates/[city]">
             <Link href="/plates/3d-gel/4x4-import" className={link}>4x4 / import</Link> sizes. Need something for display?
             We make <Link href="/plates/3d-gel/show" className={link}>show plates</Link> with any text too.
           </p>
-          <h2>Areas we deliver to around {c.name}</h2>
-          <ul className="!list-none !pl-0 flex flex-wrap gap-2">
-            {[c.name, ...c.areas].map((a) => (
-              <li key={a} className="rounded-full border border-line bg-white px-3 py-1 text-sm">
-                {a}
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3">
-            Including {c.postcodes.join(", ")} postcodes, and the rest of the UK. See{" "}
-            <Link href="/number-plates" className={link}>all the areas we deliver to</Link>.
+          <p className="text-sm text-muted">
+            We deliver across {c.name}, {c.areas.join(", ")} ({c.postcodes.join(", ")} postcodes) and the rest of the UK. See{" "}
+            <Link href="/number-plates" className={link}>all areas</Link>.
           </p>
         </div>
 
-        <div className="mx-auto mt-14 max-w-3xl">
-          <h2 className="text-center font-display text-3xl font-bold">Questions from {c.name}</h2>
-          <div className="mt-6 space-y-3">
+        <div className="mx-auto mt-10 max-w-3xl">
+          <h2 className="text-center font-display text-2xl font-bold">Questions from {c.name}</h2>
+          <div className="mt-4 space-y-2">
             {faqs.map((f) => (
-              <details key={f.q} className="rounded-2xl border border-line bg-white p-5">
+              <details key={f.q} className="rounded-2xl border border-line bg-white p-4">
                 <summary className="cursor-pointer font-semibold">{f.q}</summary>
                 <p className="mt-2 text-muted">{f.a}</p>
               </details>
