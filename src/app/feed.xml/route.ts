@@ -1,12 +1,14 @@
 import { loadPriceChanges } from "@/lib/prices";
+import { allListings } from "@/lib/listings";
 import { FREE_DELIVERY_FROM, delivery, styles } from "@/lib/plates";
 import { site } from "@/lib/site";
 
 // Product feed for Google Merchant Center (free listings in Google Shopping).
 // Add it in Merchant Center → Products → Add products → From a file →
 // "Add a URL": https://platedup.co.uk/feed.xml
-// One product per plate style, priced as a pair; the link opens that style's
-// own page (/plates/<style>), which shows the same price and product details.
+// Every product in lib/listings (each style as a pair, single, motorbike,
+// 4x4 / import, hex and show plates); each link opens that product's own
+// page, which shows the same price and product details.
 
 export const revalidate = 3600;
 
@@ -16,24 +18,22 @@ const gbp = (pence: number) => `${(pence / 100).toFixed(2)} GBP`;
 export async function GET() {
   await loadPriceChanges();
   const standard = delivery.find((d) => d.id === "standard")!;
-  const items = styles.map((s) => {
-    const image = `${site.url}/api/plate-image?${new URLSearchParams({ text: "PL24 TED", type: "legal", style: s.id, badge: "none", border: "none", side: "rear" })}`;
-    const front = `${site.url}/api/plate-image?${new URLSearchParams({ text: "PL24 TED", type: "legal", style: s.id, badge: "none", border: "none", side: "front" })}`;
-    const shipping = s.pair >= FREE_DELIVERY_FROM ? "0.00 GBP" : gbp(standard.price);
+  const items = allListings().map((l) => {
+    const style = styles.find((s) => s.id === l.style)!;
+    const shipping = l.price >= FREE_DELIVERY_FROM ? "0.00 GBP" : gbp(standard.price);
     return `
     <item>
-      <g:id>PU-${s.id.toUpperCase()}-PAIR</g:id>
-      <title>${esc(`${s.name} Number Plates – Road Legal Pair (Front & Rear) | PlatedUp`)}</title>
-      <description>${esc(`${s.blurb} A pair of road-legal front and rear number plates made to order for your registration. Made to BS AU 145e by a DVLA registered supplier. Same day dispatch when you order before ${site.dispatchCutoff} on a working day.`)}</description>
-      <link>${esc(`${site.url}/plates/${s.id}`)}</link>
-      <g:image_link>${esc(image)}</g:image_link>
-      <g:additional_image_link>${esc(front)}</g:additional_image_link>
-      <g:price>${gbp(s.pair)}</g:price>
+      <g:id>${l.id}</g:id>
+      <title>${esc(`${l.title} | ${site.name}`)}</title>
+      <description>${esc(l.description)}</description>
+      <link>${esc(`${site.url}${l.path}`)}</link>
+      <g:image_link>${esc(l.image)}</g:image_link>
+      <g:price>${gbp(l.price)}</g:price>
       <g:availability>in_stock</g:availability>
       <g:condition>new</g:condition>
       <g:brand>${esc(site.name)}</g:brand>
       <g:identifier_exists>no</g:identifier_exists>
-      <g:product_type>Vehicle Parts &amp; Accessories &gt; Number Plates &gt; ${esc(s.name)}</g:product_type>
+      <g:product_type>${esc(`Vehicle Parts & Accessories > Number Plates > ${l.kind === "show" ? "Show Plates" : style.name}`)}</g:product_type>
       <g:shipping>
         <g:country>GB</g:country>
         <g:service>${esc(standard.name)}</g:service>
