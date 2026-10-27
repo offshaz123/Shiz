@@ -47,10 +47,12 @@ export async function GET(req: Request) {
           background: "linear-gradient(180deg, #f4f3ef 0%, #e6e4dd 100%)",
         }}
       >
-        {/* A shadow would show as a box round the hex shape, so hex plates go without. */}
+        {/* No blurred shadow: on the shared hosting a big blur runs out of memory
+            and the picture fails (see lib/plate-image). A thin outline instead,
+            except round the hex shape, where it would show as a box. */}
         {plates.map((src, i) => (
           // eslint-disable-next-line @next/next/no-img-element -- ImageResponse needs a plain img
-          <img key={i} src={src} width={w} height={h} alt="" style={size.hex ? {} : { boxShadow: "0 18px 40px rgba(0,0,0,0.22)", borderRadius: 10 }} />
+          <img key={i} src={src} width={w} height={h} alt="" style={size.hex ? {} : { border: "2px solid #cfccc2", borderRadius: 10 }} />
         ))}
       </div>
     ),
