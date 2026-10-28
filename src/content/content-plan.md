@@ -95,6 +95,7 @@ keywords, dealership social strategy).
 - How Many Fields Should Your Enquiry Form Have? (forms & conversion)
 - Negative Keywords: The List You Build Before You Launch (Google Ads)
 - Creative Fatigue: How to Tell an Ad Has Stopped Working (Meta mechanics)
+- Writing a Quote That Gets Accepted (practical how-to)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -376,8 +377,11 @@ deliberately weights toward Google Ads to close that gap.
 ## Backlog — practical how-to (added 2026-10-19 research round)
 - [x] What to Do With the Leads That Said No — target: "following up old leads", "re-engaging
       cold leads small business"
-- [ ] Writing a Quote That Gets Accepted — target: "how to write a quote small business", "quote
-      follow up template"
+- [x] Writing a Quote That Gets Accepted — target: "how to write a quote small business", "quote
+      follow up template" (the quote-vs-estimate "binding" distinction is only on trade blogs, no
+      official source found, so the post says the wording governs rather than the label. The CRA
+      2015 s.51 point — no agreed price means a reasonable price "and no more", reasonableness a
+      "question of fact" — is quoted from legislation.gov.uk itself and is safe to reuse.)
 
 ## Notes for whoever (human or Routine) picks the next topic
 - Rotate categories — don't publish 3 industry guides in a row

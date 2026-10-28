@@ -16,6 +16,86 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "writing-a-quote-that-gets-accepted",
+    title: "Writing a Quote That Gets Accepted",
+    description:
+      "Most quotes are just a number in an email. What to put around that number so it gets a yes, and the one word that changes what you're legally on the hook for.",
+    publishedAt: "2026-10-28",
+    keywords: [
+      "how to write a quote small business",
+      "quote follow up template",
+      "quote vs estimate UK",
+      "why customers do not reply to quotes",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You did the visit, worked out the job, and sent the price. Then nothing. No reply, no no, just silence.",
+          "It is tempting to read that as too expensive. Usually it is not. It is that the quote gave them a number and nothing to weigh it against, so comparing you to the next person came down to which figure was smaller.",
+        ],
+      },
+      {
+        heading: "Say which one it is, and mean it",
+        paragraphs: [
+          "The words quote and estimate get used as if they mean the same thing. They do not, and the difference is about who carries the risk if the job runs over.",
+          "The common reading is that a quote is a fixed price you will honour once it is accepted, and an estimate is an informed guess that can move. Worth being careful here: what actually binds you is the wording of what you sent, not the heading at the top. Calling something an estimate while writing \u201cthe price for this work is £2,400\u201d underneath is not the protection people think it is.",
+          "So pick deliberately. If you have seen the job and you are confident, quote it, say it is fixed, and name what would change it. If there are genuine unknowns — what is under the floor, what the walls are made of — say estimate, say plainly what you have assumed, and say what happens if the assumption is wrong.",
+          "Customers do not mind unknowns. They mind finding out about them at the end.",
+        ],
+      },
+      {
+        heading: "Agreeing no price at all is the worst option",
+        paragraphs: [
+          "Sometimes a job starts on a handshake and the price is never pinned down. It is worth knowing what the law does with that.",
+          "The Consumer Rights Act 2015 covers it directly. Where a contract does not fix a price and does not say how it is to be fixed, the contract is treated as including a term that the consumer must pay a reasonable price for the service, and no more. Whether a price is reasonable is, in the Act's words, a question of fact.",
+          "In plain terms: if you never agreed a number, you do not get to decide the number afterwards. Somebody else decides what reasonable looks like, and you are arguing about it after the work is done and the goodwill is gone.",
+          "A written price, agreed before you start, is worth more than any clause you could add later.",
+        ],
+      },
+      {
+        heading: "Put the number last",
+        paragraphs: [
+          "Most quotes open with the total. The customer reads the figure, feels it, and reads everything after it through that feeling.",
+          "Turn it round. Before the number, remind them what you are solving — a short paragraph in their words, not yours. What you saw, what is causing it, what it will be like when it is done.",
+          "By the time they reach the price they are judging it against a job they understand, rather than against the other figure in their inbox.",
+        ],
+      },
+      {
+        heading: "Break the total up",
+        paragraphs: [
+          "One number invites one question: why so much? A short breakdown answers it before it is asked.",
+          "It does not need to be a spreadsheet. Three or four lines is enough.",
+        ],
+        bullets: [
+          "Labour, with roughly how long it will take",
+          "Materials, named — not just \u201cmaterials\u201d",
+          "Anything that is included that a cheaper quote probably leaves out: making good, taking the rubbish away, the certificate at the end",
+          "VAT, stated plainly, so nobody gets a surprise at the bottom",
+        ],
+      },
+      {
+        paragraphs: [
+          "That last group matters more than people realise. When someone is holding two quotes and one is cheaper, the cheaper one usually left something out. If you do not list what you include, they cannot see that.",
+        ],
+      },
+      {
+        heading: "Tell them what happens next",
+        paragraphs: [
+          "Almost every quote ends at the price. The customer is then left to work out what they are supposed to do, which for a lot of people means doing nothing.",
+          "Write the next step down. Reply to this email, or ring me, and I will book you in. Say how long the price holds for, and say when you could start — a real date is worth more than any amount of persuading. Somebody choosing between two trades will often pick the one who can be there on Tuesday.",
+        ],
+      },
+      {
+        heading: "Then follow it up once, properly",
+        paragraphs: [
+          "Silence after a quote is not usually a no. It is a maybe that nobody got back to.",
+          "One follow-up, three or four days later, catches more work than anything else you could change about the document. Not a chase — a short message that adds something. Confirming the price still stands, mentioning you have had a cancellation that week, asking whether anything in it was unclear.",
+          "If you have a quote sat unanswered from a fortnight ago, that is the cheapest piece of marketing available to you today. You have already done the hard part.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "creative-fatigue-how-to-tell-an-ad-has-stopped-working",
     title: "Creative Fatigue: How to Tell an Ad Has Stopped Working",
     description:
