@@ -16,6 +16,101 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "how-long-google-business-profile-verification-takes",
+    title: "How Long Google Business Profile Verification Actually Takes",
+    description:
+      "Google publishes the timings and most guides ignore them. The real numbers, why you can't pick your method, and the postcard mistake that restarts the clock.",
+    publishedAt: "2026-10-29",
+    keywords: [
+      "Google Business Profile verification time UK",
+      "video verification Google",
+      "how long does Google Business Profile verification take",
+      "Google Business Profile postcard code",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You have filled everything in, recorded the video, and now you are refreshing the page wondering whether it went through at all.",
+          "Most of what gets written about this is guesswork. Google does publish timings, and they are worth knowing before you start worrying.",
+        ],
+      },
+      {
+        heading: "The numbers Google actually gives",
+        paragraphs: [
+          "Three figures, from Google's own help pages rather than anyone's estimate.",
+        ],
+        bullets: [
+          "Video verification review: \u201ccan take up to 5 business days\u201d after you upload",
+          "Verification reviews generally: \u201cup to 5 business days\u201d, and Google adds that \u201con rare occasions, reviews may take longer\u201d",
+          "Postcard: \u201cmost codes arrive within 14 days\u201d, and the code expires after 30",
+        ],
+      },
+      {
+        paragraphs: [
+          "Five business days is a week and a bit once a weekend lands in the middle. If you are two days in, nothing has gone wrong.",
+          "The postcard is the one that catches people out. Fourteen days for the card, thirty before the code dies — so you have a fortnight of waiting and then a fortnight of grace, and plenty of businesses lose the window by not opening the post.",
+        ],
+      },
+      {
+        heading: "You do not get to choose how you verify",
+        paragraphs: [
+          "This surprises people who have read a guide listing eight methods as if they were a menu.",
+          "Google's wording is flat: verification methods \u201care automatically determined by Google and can't be changed\u201d. What you are offered depends on your business type, your public information, your region and your opening hours. Sometimes you are asked for more than one.",
+          "So if you were hoping for a text message and you have been handed a video, there is no setting to change. Google does say that where video is offered, it is the one they recommend.",
+          "Worth knowing too: a business that operates purely online is not eligible for a profile at all.",
+        ],
+      },
+      {
+        heading: "What the video has to be",
+        paragraphs: [
+          "The requirements are specific, and this is where most rejections come from rather than from anything about the business itself.",
+        ],
+        bullets: [
+          "At least 30 seconds, unedited, and in one take with no breaks",
+          "Recorded and uploaded live from a mobile device through your Business Profile",
+          "Not pre-recorded — Google states you cannot film it offline and upload it later",
+          "No bank, tax or ID numbers on screen, no private information, and no other people's faces",
+        ],
+      },
+      {
+        paragraphs: [
+          "That fourth one is worth planning around. Filming during opening hours in a busy shop means someone will walk through the shot.",
+          "Google does not publish a maximum length, a file size or a resolution for this, whatever you may read elsewhere. The stated minimum is thirty seconds.",
+        ],
+      },
+      {
+        heading: "What has to be in it",
+        paragraphs: [
+          "Three things, and the third is the one people forget.",
+          "Where you are: street signs, building numbers, nearby businesses or recognisable places around you.",
+          "That the business exists: for a shop or premises, signage with your business name on something permanent — a board, a wall, a window — matching the name on the profile. Google is direct that a business without permanent signage on site should be listed as a service-area business instead.",
+          "That you run it: this is the step that gets missed. Google wants footage of something only someone who works there could do. Opening the till, getting into the kitchen or the stockroom, using the point-of-sale system.",
+        ],
+      },
+      {
+        paragraphs: [
+          "If you are a trade without a shopfront, the same three apply in a different shape. Your tools and equipment, branded workwear or business cards, and unlocking a signwritten van. Google also accepts a permit, invoice or utility bill in the business name.",
+        ],
+      },
+      {
+        heading: "Two postcard mistakes that cost you weeks",
+        paragraphs: [
+          "Both are in Google's own guidance and both are easy to walk into while you are waiting.",
+          "Do not edit your business name, address or category while the card is in the post. Google says plainly that if you do, the code they sent will not work.",
+          "Do not request a second card because the first is taking a while. Requesting a new code invalidates the one already in the mail, so the card that was about to land becomes useless and you start the fourteen days again.",
+        ],
+      },
+      {
+        heading: "If it comes back rejected",
+        paragraphs: [
+          "A rejected video is not the end of it. You can record another, and Google tells you what was missing.",
+          "The part worth getting right: the replacement has to contain everything that was in the first video plus whatever was missing. People re-film only the bit that failed and get rejected again for leaving out the parts that had already passed.",
+          "Google does not state a limit on attempts, and does not describe an appeal process. If one method keeps failing and your profile offers others, trying a different one is the route it points you to.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "writing-a-quote-that-gets-accepted",
     title: "Writing a Quote That Gets Accepted",
     description:

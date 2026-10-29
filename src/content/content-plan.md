@@ -96,6 +96,7 @@ keywords, dealership social strategy).
 - Negative Keywords: The List You Build Before You Launch (Google Ads)
 - Creative Fatigue: How to Tell an Ad Has Stopped Working (Meta mechanics)
 - Writing a Quote That Gets Accepted (practical how-to)
+- How Long Google Business Profile Verification Actually Takes (local search)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -324,8 +325,12 @@ keywords, dealership social strategy).
       Google", "hide address Google Business Profile"
 - [x] Review Gating: The Shortcut That Gets Your Listing Suspended — target: "review gating Google
       policy", "asking only happy customers for reviews" (note: also touches DMCC Act 2024)
-- [ ] How Long Google Business Profile Verification Actually Takes — target: "Google Business
-      Profile verification time UK", "video verification Google"
+- [x] How Long Google Business Profile Verification Actually Takes — target: "Google Business
+      Profile verification time UK", "video verification Google" (verified 2026-10-29 against
+      Google's OWN help pages, which loaded this time: answer/14271705 for video and
+      answer/7107242 for methods. Every timing and requirement in the post is quoted from those.
+      Google states no maximum video length, file size, resolution, attempt limit or appeal
+      process — third-party guides that give those numbers are making them up.)
 
 ## Backlog — practical how-to (added 2026-10-08 research round)
 - [x] Writing Location Pages That Aren't Just the Town Name Swapped — target: "location pages
