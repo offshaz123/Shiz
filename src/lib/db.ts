@@ -83,6 +83,25 @@ const SCHEMA = [
       REFERENCES scan_leads (id) ON DELETE CASCADE
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
+  // Reviews people have left. Nothing appears on the site until Walid
+  // approves it — a review waiting for approval is not a review we show.
+  // There is deliberately no seeding here: an empty table shows an empty
+  // section, because inventing a testimonial is the one thing this site
+  // must never do.
+  `CREATE TABLE IF NOT EXISTS reviews (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(120) NOT NULL,
+    business VARCHAR(160) NULL,
+    rating TINYINT UNSIGNED NOT NULL,
+    body TEXT NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    source VARCHAR(40) NOT NULL DEFAULT 'website',
+    email VARCHAR(200) NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    KEY idx_status (status, created_at)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
   // Page views. No cookie, no identifier that survives the visit — just what
   // was looked at and roughly where it came from, which is all the admin page
   // needs to answer "is anyone reading the pricing page".

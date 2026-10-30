@@ -12,6 +12,7 @@ import {
   tooManyAttempts,
 } from "@/lib/admin-auth";
 import { withDb } from "@/lib/db";
+import { deleteReview, setReviewStatus, type ReviewStatus } from "@/lib/reviews";
 
 /**
  * Every action here verifies the session first. Server actions are reachable
@@ -88,4 +89,31 @@ export async function saveNote(formData: FormData): Promise<void> {
   });
 
   revalidatePath("/admin");
+}
+
+export async function moderateReview(formData: FormData): Promise<void> {
+  await requireAdmin();
+
+  const id = Number(formData.get("id"));
+  const status = String(formData.get("status"));
+  if (!Number.isInteger(id) || id <= 0) return;
+  if (!["pending", "approved", "hidden"].includes(status)) return;
+
+  await setReviewStatus(id, status as ReviewStatus);
+
+  // The homepage caches for five minutes, so without this an approved review
+  // would sit invisible for up to that long and look like the button failed.
+  revalidatePath("/admin");
+  revalidatePath("/");
+}
+
+export async function removeReview(formData: FormData): Promise<void> {
+  await requireAdmin();
+
+  const id = Number(formData.get("id"));
+  if (!Number.isInteger(id) || id <= 0) return;
+
+  await deleteReview(id);
+  revalidatePath("/admin");
+  revalidatePath("/");
 }

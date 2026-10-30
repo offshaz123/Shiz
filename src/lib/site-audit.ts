@@ -74,6 +74,7 @@ type Input = {
 export function buildReport({ html, finalUrl, robots, sitemap, ms }: Input): AuditResult {
   const body = visibleHtml(html);
   const https = finalUrl.startsWith("https://");
+  const consentGated = has(html, ...CONSENT_SIGNALS);
   const host = (() => {
     try {
       return new URL(finalUrl).hostname.replace(/^www\./, "");
@@ -119,48 +120,53 @@ export function buildReport({ html, finalUrl, robots, sitemap, ms }: Input): Aud
       name: "Tracking & Advertising",
       score: 0,
       checks: [
-        check(
+        trackingCheck(
           "meta-pixel",
           "Meta Pixel",
           has(html, "connect.facebook.net", "fbq("),
           "Installed",
           "Not detected",
-          "Anything you run on Facebook or Instagram can't learn who actually bought from you, and you can't advertise again to people who visited and left."
+          "Anything you run on Facebook or Instagram can't learn who actually bought from you, and you can't advertise again to people who visited and left.",
+          consentGated
         ),
-        check(
+        trackingCheck(
           "analytics",
           "Google Analytics",
           has(html, "googletagmanager.com", "gtag(", "google-analytics.com"),
           "Installed",
           "Not detected",
-          "You have no record of how many people visit, where they come from, or which pages they leave on."
+          "You have no record of how many people visit, where they come from, or which pages they leave on.",
+          consentGated
         ),
-        check(
+        trackingCheck(
           "gtm",
           "Google Tag Manager",
           has(html, "googletagmanager.com/gtm.js", "GTM-"),
           "Installed",
           "Not detected",
           "Without it, every new tag needs a developer rather than taking two minutes.",
+          consentGated,
           "warning"
         ),
-        check(
+        trackingCheck(
           "google-ads",
           "Google Ads tracking",
           has(html, "googleadservices.com", "google_conversion", "/aw-"),
           "Installed",
           "Not detected",
           "Only matters if you run Google Ads, but without it you can't tell which clicks became enquiries.",
+          consentGated,
           "warning"
         ),
-        check(
+        trackingCheck(
           "retargeting",
           "Retargeting ready",
           has(html, "connect.facebook.net", "fbq(") ||
             has(html, "googletagmanager.com", "gtag("),
           "Yes",
           "No",
-          "Most people don't buy on the first visit. Without a pixel you can't reach them again, and that's the cheapest advertising there is."
+          "Most people don't buy on the first visit. Without a pixel you can't reach them again, and that's the cheapest advertising there is.",
+          consentGated
         ),
       ],
     },
@@ -327,7 +333,12 @@ export function buildReport({ html, finalUrl, robots, sitemap, ms }: Input): Aud
       (sum, c) => sum + (c.severity === "good" ? 1 : c.severity === "warning" ? 0.4 : 0),
       0
     );
-    cat.score = scored.length ? Math.round((earned / scored.length) * 100) / 10 : 0;
+    // Nothing scoreable means nothing to score — not nought out of ten. A
+    // site that gates every tag behind a cookie banner leaves the whole
+    // tracking category unknown, and marking that zero would punish it for
+    // something we were simply not allowed to see. -1 drops the category from
+    // the overall average and hides its ring, the same as the info panel.
+    cat.score = scored.length ? Math.round((earned / scored.length) * 100) / 10 : -1;
   }
 
   const scored = categories.filter((c) => c.score !== -1);
@@ -365,4 +376,76 @@ function check(
 
 function unknownCheck(id: string, label: string, value: string): AuditCheck {
   return { id, label, value, severity: "unknown" };
+}
+
+/**
+ * Signs that a site asks for cookie consent before it loads anything.
+ *
+ * Either a named consent platform, one of the standard consent APIs, or the
+ * plain-HTML controls a hand-built banner leaves behind. A cookie policy link
+ * on its own is deliberately not in here: plenty of sites link one and still
+ * fire every tag on arrival, so it proves nothing.
+ */
+const CONSENT_SIGNALS = [
+  // Consent platforms
+  "cookiebot",
+  "onetrust",
+  "optanon",
+  "usercentrics",
+  "iubenda",
+  "termly",
+  "cookieyes",
+  "osano",
+  "klaro",
+  "complianz",
+  "borlabs",
+  "cookie-script",
+  "civicuk",
+  // IAB's Transparency and Consent Framework, and Google's consent mode
+  "__tcfapi",
+  "gtag('consent'",
+  'gtag("consent"',
+  // A banner or preferences control written by hand
+  "cookie settings",
+  "cookie preferences",
+  "manage cookies",
+  "accept all cookies",
+  "we use cookies",
+];
+
+/**
+ * A tracking check that knows the difference between "not there" and
+ * "not there yet".
+ *
+ * We read the page the way a browser first loads it. On a site that gates its
+ * tags behind a cookie banner, nothing has been allowed to run at that point,
+ * so a missing pixel means we cannot see it rather than that it is absent.
+ * Reporting that as a failure would mark a site down for doing the right
+ * thing, and would tell its owner to fix something that is not broken.
+ *
+ * So when consent is in use and the tag is not visible, the check says it
+ * cannot tell. Unknown checks are left out of the score entirely, which is
+ * the honest treatment: we neither reward nor punish what we could not see.
+ */
+function trackingCheck(
+  id: string,
+  label: string,
+  pass: boolean,
+  goodValue: string,
+  badValue: string,
+  why: string,
+  consentGated: boolean,
+  failSeverity: Severity = "critical"
+): AuditCheck {
+  if (pass) return { id, label, value: goodValue, severity: "good" };
+  if (consentGated) {
+    return {
+      id,
+      label,
+      value: "Can't tell \u2014 cookie consent in use",
+      severity: "unknown",
+      why: "Your cookie banner holds tags back until someone accepts, so we can't see this one from outside. Worth confirming it fires once consent is given.",
+    };
+  }
+  return { id, label, value: badValue, severity: failSeverity, why };
 }

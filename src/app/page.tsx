@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LeadForm } from "@/components/LeadForm";
 import { RealResultsSection } from "@/components/RealResults";
+import { Reviews } from "@/components/Reviews";
 import { HomeHero } from "@/components/HomeHero";
 import { StatsBar } from "@/components/StatsBar";
 import { ProblemGrid } from "@/components/ProblemGrid";
@@ -11,6 +12,14 @@ import { GoogleCalendarBadge } from "@/components/GoogleCalendarBadge";
 import { FaqJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
 import { blogPosts } from "@/content/blog";
+
+/**
+ * The reviews section reads from the database, so a fully static homepage
+ * would freeze whatever was approved at build time until the next deploy.
+ * Five minutes keeps the page fast and means approving a review in the admin
+ * shows up on the site without anyone pushing code.
+ */
+export const revalidate = 300;
 
 const faqs = [
   {
@@ -178,6 +187,9 @@ export default function Home() {
           </Link>
         </section>
       )}
+
+      {/* Renders nothing until a review has been approved in the admin page. */}
+      <Reviews />
 
       {/* Final CTA + form */}
       <section id="lead-form" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
