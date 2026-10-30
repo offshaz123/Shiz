@@ -74,16 +74,25 @@ interface DueRow extends RowDataPacket {
   hours_since_last: number | null;
 }
 
-function authorised(request: Request): boolean {
+/**
+ * Three outcomes, not two.
+ *
+ * A missing CRON_SECRET and a wrong one used to both answer 401, which meant
+ * a silently dead scheduler looked identical from outside to one being
+ * probed by a stranger. Saying which is which costs nothing — it reveals
+ * only whether an environment variable exists, never its value — and it is
+ * the difference between diagnosing this in a second and guessing at it.
+ */
+function authorised(request: Request): "ok" | "wrong_key" | "not_configured" {
   const secret = process.env.CRON_SECRET;
-  if (!secret || secret.length < 16) return false;
+  if (!secret || secret.length < 16) return "not_configured";
 
   const header = request.headers.get("authorization");
-  if (header === `Bearer ${secret}`) return true;
+  if (header === `Bearer ${secret}`) return "ok";
 
   // Hostinger's cron runs a shell command, and getting a header onto it is
   // fiddlier than a query string, so both are accepted.
-  return new URL(request.url).searchParams.get("key") === secret;
+  return new URL(request.url).searchParams.get("key") === secret ? "ok" : "wrong_key";
 }
 
 export async function POST(request: Request) {
@@ -95,7 +104,17 @@ export async function GET(request: Request) {
 }
 
 async function run(request: Request) {
-  if (!authorised(request)) {
+  const auth = authorised(request);
+  if (auth === "not_configured") {
+    return NextResponse.json(
+      {
+        error: "cron_secret_not_configured",
+        fix: "Add CRON_SECRET under Environment variables in hPanel, then redeploy.",
+      },
+      { status: 503 },
+    );
+  }
+  if (auth !== "ok") {
     return NextResponse.json({ error: "unauthorised" }, { status: 401 });
   }
 
