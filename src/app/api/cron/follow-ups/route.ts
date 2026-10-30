@@ -1,10 +1,7 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 import type { RowDataPacket } from "mysql2";
 import { withDb } from "@/lib/db";
-import { mintToken } from "@/lib/lead-tokens";
-import { buildFollowUp, type EmailLead, type StoredAudit } from "@/lib/follow-up-emails";
-import { siteConfig } from "@/lib/site-config";
+import { sendFollowUp } from "@/lib/send-follow-up";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -65,10 +62,6 @@ const MIN_GAP_HOURS = 20;
 
 interface DueRow extends RowDataPacket {
   id: number;
-  name: string;
-  email: string;
-  website: string;
-  audit_json: string | null;
   age_days: number;
   sent_steps: string | null;
   hours_since_last: number | null;
@@ -118,25 +111,13 @@ async function run(request: Request) {
     return NextResponse.json({ error: "unauthorised" }, { status: 401 });
   }
 
-  const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
-  if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS) {
-    return NextResponse.json({ error: "smtp_not_configured" }, { status: 500 });
-  }
-
-  const transporter = nodemailer.createTransport({
-    host: SMTP_HOST,
-    port: Number(SMTP_PORT),
-    secure: Number(SMTP_PORT) === 465,
-    auth: { user: SMTP_USER, pass: SMTP_PASS },
-  });
-
   const summary: Record<string, number> = { sent: 0, failed: 0, skipped: 0 };
 
   // Everyone who could be owed something: not contacted, not unsubscribed,
   // and old enough for at least the first step.
   const due = await withDb(async (db) => {
     const [rows] = await db.query<DueRow[]>(
-      `SELECT l.id, l.name, l.email, l.website, l.audit_json,
+      `SELECT l.id,
               TIMESTAMPDIFF(DAY, l.created_at, NOW()) AS age_days,
               GROUP_CONCAT(e.step) AS sent_steps,
               TIMESTAMPDIFF(HOUR, MAX(e.sent_at), NOW()) AS hours_since_last
@@ -176,85 +157,10 @@ async function run(request: Request) {
     if (!next) continue;
     const step = next.step;
 
-    let audit: StoredAudit | null = null;
-    if (row.audit_json) {
-      try {
-        audit = JSON.parse(row.audit_json) as StoredAudit;
-      } catch {
-        // A row we can't parse still gets the email, just the shorter one
-        // that doesn't quote a score.
-        audit = null;
-      }
-    }
-
-    const unsubscribeToken = mintToken("unsubscribe", row.id);
-    if (!unsubscribeToken) {
-      summary.skipped += 1;
-      continue;
-    }
-    const unsubscribeUrl = `${siteConfig.url}/unsubscribe?t=${unsubscribeToken}`;
-
-    const lead: EmailLead = {
-      id: row.id,
-      name: row.name,
-      website: row.website,
-      audit,
-    };
-
-    const email = buildFollowUp(step, lead, unsubscribeUrl);
-    if (!email) {
-      summary.skipped += 1;
-      continue;
-    }
-
-    // Claim the step before sending. If the send then fails the row is
-    // updated to 'failed' rather than deleted, so a broken address doesn't
-    // get retried on every cron run forever.
-    const claimed = await withDb(async (db) => {
-      await db.execute(
-        "INSERT INTO lead_emails (lead_id, step, subject, status) VALUES (?, ?, ?, 'sending')",
-        [row.id, step, email.subject],
-      );
-      return true;
-    });
-    if (!claimed) {
-      summary.skipped += 1;
-      continue;
-    }
-
-    try {
-      await transporter.sendMail({
-        from: `"Walid at Shaz Marketing Group" <${SMTP_USER}>`,
-        to: row.email,
-        replyTo: siteConfig.email,
-        subject: email.subject,
-        text: email.text,
-        html: email.html,
-        headers: {
-          // Lets Gmail and Outlook show their own unsubscribe button, which
-          // people trust more than a link inside the message.
-          "List-Unsubscribe": `<${unsubscribeUrl}>`,
-          "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
-        },
-      });
-
-      await withDb(async (db) => {
-        await db.execute("UPDATE lead_emails SET status = 'sent' WHERE lead_id = ? AND step = ?", [
-          row.id,
-          step,
-        ]);
-      });
-      summary.sent += 1;
-    } catch (err) {
-      console.error(`Follow-up step ${step} failed for lead ${row.id}:`, err);
-      await withDb(async (db) => {
-        await db.execute(
-          "UPDATE lead_emails SET status = 'failed', error = ? WHERE lead_id = ? AND step = ?",
-          [String(err).slice(0, 500), row.id, step],
-        );
-      });
-      summary.failed += 1;
-    }
+    const result = await sendFollowUp(row.id, step);
+    if (result.ok) summary.sent += 1;
+    else if (result.reason === "send_failed") summary.failed += 1;
+    else summary.skipped += 1;
   }
 
   return NextResponse.json({ ok: true, ...summary });

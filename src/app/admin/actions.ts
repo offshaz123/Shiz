@@ -13,6 +13,7 @@ import {
 } from "@/lib/admin-auth";
 import { withDb } from "@/lib/db";
 import { deleteReview, setReviewStatus, type ReviewStatus } from "@/lib/reviews";
+import { sendFollowUp } from "@/lib/send-follow-up";
 
 /**
  * Every action here verifies the session first. Server actions are reachable
@@ -116,4 +117,28 @@ export async function removeReview(formData: FormData): Promise<void> {
   await deleteReview(id);
   revalidatePath("/admin");
   revalidatePath("/");
+}
+
+/**
+ * Sends one follow-up immediately, from the admin page.
+ *
+ * Deliberately ignores the day-1/3/6 schedule and the twenty-hour spacing
+ * the scheduler keeps. Those exist to stop automation doing something daft
+ * on its own; a person who has clicked the button has already decided, and
+ * making them wait would be the software arguing with them.
+ *
+ * It still cannot send the same step twice, and it still will not email
+ * somebody who has unsubscribed — those are in sendFollowUp and apply
+ * whatever asks it.
+ */
+export async function sendStepNow(formData: FormData): Promise<void> {
+  await requireAdmin();
+
+  const id = Number(formData.get("id"));
+  const step = Number(formData.get("step"));
+  if (!Number.isInteger(id) || id <= 0) return;
+  if (![1, 3, 6].includes(step)) return;
+
+  await sendFollowUp(id, step);
+  revalidatePath("/admin");
 }

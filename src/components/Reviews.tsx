@@ -7,6 +7,11 @@ import { getApprovedReviews, summarise, type Review } from "@/lib/reviews";
  * Renders nothing at all when there are no approved reviews. An empty space
  * is the honest state before anyone has reviewed you, and it is better than
  * a section full of placeholders that somebody forgets to replace.
+ *
+ * Note that the "leave a review" link inside here is not the only way in.
+ * It cannot be, because this whole section is hidden until somebody has
+ * already left one — the first reviewer would have nowhere to click. The
+ * footer carries the link on every page for exactly that reason.
  */
 
 function Stars({ rating }: { rating: number }) {

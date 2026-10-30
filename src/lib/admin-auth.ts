@@ -17,6 +17,22 @@ import { cookies } from "next/headers";
 const COOKIE = "sm_admin";
 const SESSION_HOURS = 12;
 
+/**
+ * Marks this browser as the owner's, so page views from it are not counted.
+ *
+ * Separate from the login cookie and much longer lived, because the admin
+ * session expires after half a day and Walid reads his own site more often
+ * than he logs in. It holds no identity and no session value — it is a flag
+ * saying "do not count me", and the worst anyone could do with a stolen copy
+ * is leave themselves out of the statistics.
+ *
+ * It is worth being plain about what this can and cannot do. It excludes a
+ * browser, not a person. A different browser, a phone, or a private window
+ * is a different browser, and will be counted until it has logged in too.
+ */
+const NO_TRACK_COOKIE = "sm_no_track";
+const NO_TRACK_DAYS = 365;
+
 function secret(): string | null {
   const value = process.env.ADMIN_PASSWORD;
   // A blank or absent password must not mean "anyone gets in". Every entry
@@ -54,6 +70,27 @@ export async function startSession(): Promise<void> {
     path: "/",
     maxAge: SESSION_HOURS * 60 * 60,
   });
+
+  store.set(NO_TRACK_COOKIE, "1", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: NO_TRACK_DAYS * 24 * 60 * 60,
+  });
+}
+
+/**
+ * Whether this request comes from a browser that has logged into the admin.
+ *
+ * Checked by the page-view tracker so the owner reading his own site does
+ * not inflate his own numbers. Logging out deliberately leaves this in
+ * place: the point is to stop counting the browser, not to end a session.
+ */
+export async function isOwnerBrowser(): Promise<boolean> {
+  const store = await cookies();
+  if (store.get(NO_TRACK_COOKIE)?.value === "1") return true;
+  return await isAdmin();
 }
 
 export async function endSession(): Promise<void> {

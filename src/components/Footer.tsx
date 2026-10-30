@@ -28,6 +28,7 @@ const companyLinks = [
   { href: "/free-audit", label: "Free Audit" },
   { href: "/blog", label: "Blog" },
   { href: "/walid", label: "Talk to Walid" },
+  { href: "/leave-a-review", label: "Leave a Review" },
   { href: "/contact", label: "Contact" },
   { href: "/privacy", label: "Privacy Policy" },
 ];

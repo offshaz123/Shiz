@@ -4,7 +4,7 @@ import { isDbConfigured } from "@/lib/db";
 import { getLeads, getStats, type AdminLead } from "@/lib/admin-data";
 import { getAllReviews, type Review } from "@/lib/reviews";
 import { LoginForm } from "./LoginForm";
-import { logout, moderateReview, removeReview, saveNote, setContacted } from "./actions";
+import { logout, moderateReview, removeReview, saveNote, sendStepNow, setContacted } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -88,18 +88,30 @@ function LeadCard({ lead }: { lead: AdminLead }) {
             it never will be. */}
         {SEQUENCE.map((step) => {
           const sent = lead.emailsSent.includes(step);
+          if (sent) {
+            return (
+              <span
+                key={step}
+                title={`Day ${step} email sent`}
+                className="rounded-full bg-brand-pink/15 px-2.5 py-1 text-[11px] font-semibold text-brand-pink"
+              >
+                Day {step}
+              </span>
+            );
+          }
+          // Not sent yet, so the pill is the button that sends it.
           return (
-            <span
-              key={step}
-              title={sent ? `Day ${step} email sent` : `Day ${step} email not sent`}
-              className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${
-                sent
-                  ? "bg-brand-pink/15 text-brand-pink"
-                  : "border border-border text-muted/60"
-              }`}
-            >
-              Day {step}
-            </span>
+            <form key={step} action={sendStepNow}>
+              <input type="hidden" name="id" value={lead.id} />
+              <input type="hidden" name="step" value={step} />
+              <button
+                type="submit"
+                title={`Send the day ${step} email now`}
+                className="rounded-full border border-border px-2.5 py-1 text-[11px] font-semibold text-muted/70 transition-colors hover:border-brand-pink/50 hover:text-foreground"
+              >
+                Day {step} · send
+              </button>
+            </form>
           );
         })}
       </div>

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { withDb } from "@/lib/db";
+import { isOwnerBrowser } from "@/lib/admin-auth";
 
 export const runtime = "nodejs";
 
@@ -27,6 +28,12 @@ function looksReal(path: string): boolean {
 }
 
 export async function POST(request: Request) {
+  // Reading your own site should not show up as traffic. A browser that has
+  // logged into the admin page is the owner's and is left out.
+  if (await isOwnerBrowser()) {
+    return new NextResponse(null, { status: 204 });
+  }
+
   const body = (await request.json().catch(() => null)) as
     | { path?: unknown; referrer?: unknown }
     | null;
