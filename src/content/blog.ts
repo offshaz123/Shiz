@@ -16,6 +16,86 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "should-you-bid-on-your-own-business-name",
+    title: "Should You Bid on Your Own Business Name?",
+    description:
+      "Paying for people who already searched for you feels wrong. But Google will not stop a competitor bidding on your name, and that changes the maths.",
+    publishedAt: "2026-10-30",
+    keywords: [
+      "bidding on your own brand name Google Ads",
+      "branded search PPC worth it",
+      "competitor bidding on my business name",
+      "Google Ads trademark complaint",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "It is the first thing most business owners object to. Somebody has typed your name into Google. They already know who you are. Why would you pay for that click when you are the first result anyway?",
+          "It is a fair question, and the answer turns on something most people have never checked.",
+        ],
+      },
+      {
+        heading: "You cannot stop a competitor bidding on your name",
+        paragraphs: [
+          "This is the part that surprises people, and it comes straight from Google's own advertising policy rather than from anyone's opinion.",
+          "The policy sets out what Google will and will not restrict after a trademark complaint. Sitting plainly in the will-not-restrict list is \u201cusing trademarks as keywords\u201d.",
+          "So a competitor can buy your business name as a keyword and have their ad appear when somebody searches for you. Complaining to Google does not change that. It is allowed, it is common, and in some trades it is the first thing a new competitor does.",
+          "That reframes the question. You are not deciding whether to pay for a click you would get free. You are deciding whether to leave the top of your own name to whoever wants it.",
+        ],
+      },
+      {
+        heading: "What you can stop is them using your name in the ad",
+        paragraphs: [
+          "The keyword and the words in the advert are treated differently, and the difference is worth knowing.",
+          "Google's policy says it will restrict \u201cusing trademarks in an ad from a direct competitor\u201d, and ads that use a trademark \u201cin a confusing, deceptive, or misleading way\u201d. It also specifies that the trademark has to appear in the ad itself, not only on the landing page.",
+          "That happens after a complaint. Google's wording is that if a trademark owner submits a complaint, they will review it and may restrict use of the trademark. The route is the Report Content On Google form, and complaints are only accepted against specific advertisers identified by their URL, in the countries and industries where the owner has demonstrated trademark rights.",
+          "So the practical position is this: a rival may bid on your name, but if they write your name into their advert, you have something to do about it.",
+        ],
+      },
+      {
+        heading: "First, go and look",
+        paragraphs: [
+          "Before deciding anything, open a private browsing window and search your own business name.",
+          "What you see decides it for you.",
+        ],
+        bullets: [
+          "Nothing above your listing — nobody is bidding on you, and the case for spending here is weak",
+          "A competitor's ad sitting above you — somebody is already taking calls that were meant for you",
+          "A directory or lead-generation site above you — the same problem wearing a different hat, and often harder to shift",
+        ],
+      },
+      {
+        paragraphs: [
+          "Do it from a phone as well as a computer. The screen is smaller, the ads take up proportionally more of it, and a lot of people never scroll past them.",
+        ],
+      },
+      {
+        heading: "The honest case against",
+        paragraphs: [
+          "If nothing is appearing above you, there is a real argument for not bothering.",
+          "You already hold the top organic result for your own name. Running an ad there means some of the people who would have clicked the free listing click the paid one instead, and you pay for a visit you were getting anyway. That is not nothing, and anyone who tells you brand bidding is always worth it is selling you something.",
+          "The honest version is that it depends entirely on who else is there, which is why the search above matters more than any general rule.",
+        ],
+      },
+      {
+        heading: "If you do run it, keep it tight",
+        paragraphs: [
+          "A campaign on your own name should be small and separate from everything else, so you can see what it costs on its own rather than hiding it inside your main budget.",
+          "Use your business name and the obvious variations people actually type — with and without Ltd, common misspellings, your name plus your town. Keep it in its own campaign with its own budget so the reporting stays clean.",
+          "Then add negatives. Somebody searching your name plus \u201cjobs\u201d, \u201ccareers\u201d, \u201ccomplaints\u201d or \u201creviews\u201d is not about to buy from you, and those are easy clicks to stop paying for.",
+        ],
+      },
+      {
+        heading: "Then prove it, with your own account",
+        paragraphs: [
+          "There is no benchmark worth trusting here, because the answer depends on your market and who is bidding against you this month.",
+          "The test is simple enough. Run it for a month and write down what it cost and how many enquiries came through it. Then turn it off for a month and look at whether your total enquiries dropped by less than you were spending.",
+          "If they held steady, you were paying for clicks you had anyway. If they fell, somebody else was catching them. Either way you will know, which beats arguing about it.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-long-google-business-profile-verification-takes",
     title: "How Long Google Business Profile Verification Actually Takes",
     description:

@@ -97,6 +97,7 @@ keywords, dealership social strategy).
 - Creative Fatigue: How to Tell an Ad Has Stopped Working (Meta mechanics)
 - Writing a Quote That Gets Accepted (practical how-to)
 - How Long Google Business Profile Verification Actually Takes (local search)
+- Should You Bid on Your Own Business Name? (Google Ads)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -360,8 +361,12 @@ deliberately weights toward Google Ads to close that gap.
       targeting", "presence vs interest location settings"
 - [ ] Call Tracking for Google Ads: Knowing Which Ad Made the Phone Ring — target: "call tracking
       Google Ads UK", "which ad made the phone ring"
-- [ ] Should You Bid on Your Own Business Name? — target: "bidding on your own brand name Google
-      Ads", "branded search PPC worth it"
+- [x] Should You Bid on Your Own Business Name? — target: "bidding on your own brand name Google
+      Ads", "branded search PPC worth it" (verified 2026-10-30 against Google's own Trademarks
+      advertising policy, support.google.com/adspolicy/answer/6118, which loaded: "using
+      trademarks as keywords" is explicitly in the will-NOT-restrict list, while trademarks in a
+      direct competitor's ad text WILL be restricted after a complaint. No cost figures used —
+      none are verifiable and the answer depends on who else is bidding.)
 - [ ] Ad Scheduling: Should Your Ads Run at 3am? — target: "ad scheduling Google Ads", "dayparting
       small business"
 
