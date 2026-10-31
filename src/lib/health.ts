@@ -1,5 +1,6 @@
 import { isDbConfigured, query } from "./db";
 import { isMailConfigured, verifyMail } from "./mail";
+import { MISSED_EMAILS_SQL } from "./orders";
 import { checkPacklink, isPacklinkConfigured } from "./packlink";
 import { isStripeConfigured, stripeGet } from "./stripe";
 import { isTikTokEventsConfigured } from "./tiktok-events";
@@ -48,6 +49,14 @@ async function checkAll(): Promise<Check[]> {
       const failed = isDbConfigured()
         ? Number((await query<{ n: number }>("SELECT COUNT(*) AS n FROM email_log WHERE status = 'failed' AND created_at > NOW() - INTERVAL 1 DAY"))[0]?.n ?? 0)
         : 0;
+      // Paid orders with no order email at all, not even a failed one.
+      const missed = isDbConfigured() ? Number((await query<{ n: number }>(`SELECT COUNT(*) AS n ${MISSED_EMAILS_SQL}`))[0]?.n ?? 0) : 0;
+      if (missed)
+        return {
+          name: "Email",
+          state: "warn",
+          detail: `${missed} paid order${missed > 1 ? "s haven't" : " hasn't"} had its confirmation email yet. It's retried every 5 minutes; to send it now, open the order and press "Resend emails".`,
+        };
       if (failed) return { name: "Email", state: "warn", detail: `Working, but ${failed} email${failed > 1 ? "s" : ""} failed in the last day (often a mistyped customer address). See the order pages.` };
       return "Working";
     }),

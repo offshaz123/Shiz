@@ -364,11 +364,15 @@ export async function sendDueDocsReminders() {
 // receipt to the customer. Email problems are logged, never thrown: the
 // payment is already taken and the order is safe in the database.
 export async function sendOrderEmails(order: Order) {
-  const docs = await getDocuments(order.id);
+  // Without the documents the shop email still goes, and they're on the order page.
+  const docs = await getDocuments(order.id).catch((err) => {
+    console.error(`Reading documents for ${order.ref} failed`, err);
+    return [];
+  });
   const images = await emailImages(order);
   const mode = images ? "inline" : "web";
-  const shop = shopOrderEmail(order, docs.length, mode);
   try {
+    const shop = shopOrderEmail(order, docs.length, mode);
     await sendToShop({
       subject: shop.subject,
       text: shop.text,
@@ -384,14 +388,30 @@ export async function sendOrderEmails(order: Order) {
     console.error(`Shop email for ${order.ref} failed`, err);
     await logEmail({ orderId: order.id, kind: "shop", recipient: shopAddress(), ok: false, error: err });
   }
-  const customer = customerOrderEmail(order, mode);
   const token = newToken();
   try {
+    const customer = customerOrderEmail(order, mode);
     await sendMail({ to: order.email, subject: customer.subject, text: customer.text, html: withOpenTracker(customer.html, token), attachments: images ?? [] });
     await logEmail({ orderId: order.id, kind: "receipt", recipient: order.email, ok: true, token });
   } catch (err) {
     console.error(`Customer email for ${order.ref} failed`, err);
     await logEmail({ orderId: order.id, kind: "receipt", recipient: order.email, ok: false, error: err });
+  }
+}
+
+// Paid orders whose emails never went at all: nothing in the email log, not
+// even a failure. That happens if the server restarts in the moment after a
+// payment, before the emails are sent. Checked every few minutes, so the
+// customer and the shop still get them.
+export const MISSED_EMAILS_SQL = `FROM orders o
+  WHERE o.status IN ('paid', 'in_production', 'dispatched') AND o.paid_at > NOW() - INTERVAL 3 DAY AND o.paid_at < NOW() - INTERVAL 10 MINUTE
+    AND NOT EXISTS (SELECT 1 FROM email_log e WHERE e.order_id = o.id AND e.kind IN ('shop', 'receipt'))`;
+
+export async function sendMissedOrderEmails() {
+  const missed = await query<{ ref: string }>(`SELECT o.ref ${MISSED_EMAILS_SQL} LIMIT 5`);
+  for (const { ref } of missed) {
+    const order = await getOrder(ref);
+    if (order) await sendOrderEmails(order);
   }
 }
 

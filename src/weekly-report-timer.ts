@@ -1,6 +1,6 @@
 import { maybeSendWeeklyReport } from "./lib/weekly-report";
 import { maybeSendPriceRiseReminder } from "./lib/price-rise";
-import { checkDeliveries, sendDueDocsReminders } from "./lib/orders";
+import { checkDeliveries, sendDueDocsReminders, sendMissedOrderEmails } from "./lib/orders";
 import { loadPriceChanges } from "./lib/prices";
 
 // Checks every 30 minutes whether it's time for the Monday report email
@@ -16,3 +16,9 @@ const check = () => {
 };
 setTimeout(check, 2 * 60 * 1000).unref();
 setInterval(check, 30 * 60 * 1000).unref();
+
+// Order emails that never went out after a payment, checked more often so
+// the customer isn't left waiting.
+const missedEmails = () => sendMissedOrderEmails().catch((err) => console.error("Sending missed order emails failed", err));
+setTimeout(missedEmails, 3 * 60 * 1000).unref();
+setInterval(missedEmails, 5 * 60 * 1000).unref();
