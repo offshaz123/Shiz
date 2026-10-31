@@ -16,6 +16,76 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "your-google-reviews-wont-put-stars-on-your-google-ads",
+    title: "Your Google Reviews Won't Put Stars on Your Google Ads",
+    description:
+      "Everyone says collect 100 Google reviews and stars appear on your ads. Google's own page lists the sources that count, and your Business Profile is not one of them.",
+    publishedAt: "2026-10-31",
+    keywords: [
+      "store ratings Google Ads",
+      "stars on Google Ads reviews",
+      "how to get review stars in Google Ads",
+      "Google seller ratings UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "The advice goes round every trade group. Get to a hundred Google reviews and the star rating starts showing on your Google Ads, which lifts your click rate for nothing.",
+          "The first half of that is roughly right. The second half is about the wrong reviews.",
+        ],
+      },
+      {
+        heading: "There are two review systems, and they are not connected",
+        paragraphs: [
+          "The stars you are thinking of are called store ratings. They have their own Google help page, and that page lists exactly where the reviews come from.",
+          "Google Customer Reviews, which is a free programme run through Merchant Center. Shopping reviews for your domain. Aggregated data from Google's own shopping research. And a list of twenty-nine named third-party partners — Trustpilot, Feefo, Reviews.io, Bazaarvoice, Yotpo and the rest.",
+          "Your Google Business Profile is not on that list. The page does not mention Business Profile anywhere at all.",
+          "So the reviews a plumber spends a year collecting, the ones that show under the business on Maps, are not the reviews that put a star on a search ad. They are a different system doing a different job.",
+        ],
+      },
+      {
+        heading: "The hundred is not a rule either",
+        paragraphs: [
+          "Google's wording on the number is deliberately loose, and the version that gets repeated has hardened it into something it is not.",
+          "What the page says is that the number needed can vary from business to business, but that most merchants are able to obtain a rating after collecting a hundred or more eligible reviews.",
+          "Most. Able to. Not a threshold you cross and a switch flips.",
+          "The window is also longer than people think. Google counts reviews from the last twenty-four months, not twelve. That matters if you are working out whether an old pile of reviews still counts — two years, not one.",
+        ],
+      },
+      {
+        heading: "The rule that is a rule",
+        paragraphs: [
+          "One number on that page is firm, and it is the one nobody mentions.",
+          "A rating of 3.5 or above is required to display a store rating on text ads. Below that, the stars simply do not appear on your ads.",
+          "There is a quiet asymmetry here worth knowing. The same page notes that unpaid listings can show store ratings when the average is under 3.5. So a middling score can follow you around the free listings while being withheld from the thing you are paying for.",
+        ],
+      },
+      {
+        heading: "So should a local trade chase this at all?",
+        paragraphs: [
+          "Honestly, for most of them, no.",
+          "Getting store ratings means collecting reviews through Merchant Center or signing up to one of the named partners, which is a system built around shops that ship orders. For a business that quotes, attends and invoices, that is a lot of machinery for a star.",
+          "The exception is if you already use one of those partners for something else. If your reviews are going into Trustpilot or Feefo anyway, you are already feeding the right system and it is worth checking whether the ratings are eligible to show.",
+        ],
+      },
+      {
+        heading: "What your Google reviews actually do",
+        paragraphs: [
+          "None of this makes Business Profile reviews less important. It makes them important for a different reason, and the more valuable one for a local business.",
+          "They are what gets you into the map pack, the three businesses Google shows above the ordinary results when somebody searches for a trade near them. That placement is free, it sits above the paid ads on a phone screen, and reviews are one of the main things that decide who appears in it.",
+          "A plumber with fifty recent reviews showing in the map pack is in a better position than one with a star on a paid click. One is a standing asset; the other is rented.",
+        ],
+      },
+      {
+        heading: "The useful version of the advice",
+        paragraphs: [
+          "Keep asking for Google reviews. Keep them recent, because recency matters to the thing they actually feed.",
+          "Just stop expecting them to show up on your ads, and do not let somebody sell you a review-collection service on the promise that they will. If stars on paid search are genuinely what you want, the route is a review partner Google names, and it is worth being clear-eyed that it is a separate job rather than a side effect of the one you are already doing.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "should-you-bid-on-your-own-business-name",
     title: "Should You Bid on Your Own Business Name?",
     description:

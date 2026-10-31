@@ -98,6 +98,7 @@ keywords, dealership social strategy).
 - Writing a Quote That Gets Accepted (practical how-to)
 - How Long Google Business Profile Verification Actually Takes (local search)
 - Should You Bid on Your Own Business Name? (Google Ads)
+- Your Google Reviews Won't Put Stars on Your Google Ads (reviews & local search)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -392,6 +393,44 @@ deliberately weights toward Google Ads to close that gap.
       official source found, so the post says the wording governs rather than the label. The CRA
       2015 s.51 point — no agreed price means a reasonable price "and no more", reasonableness a
       "question of fact" — is quoted from legislation.gov.uk itself and is safe to reuse.)
+
+## Backlog — added 2026-10-31 research round
+Research basis: searches on what UK small business owners and trades are asking about Meta ads
+and local marketing right now. Nearly every source found was an agency or vendor blog, and their
+figures contradicted each other, so each item below records what still needs verifying against a
+primary source before it is written. Several are deliberately framed as "what the official page
+actually says", because that gap has produced the strongest posts this month.
+
+- [x] Your Google Reviews Won't Put Stars on Your Google Ads — target: "store ratings Google Ads",
+      "stars on Google Ads reviews" (verified 2026-10-31 against Google's own "About store ratings"
+      page: no fixed review count, "most merchants" manage it at 100+, a 24-month window, 3.5 stars
+      required for text ads, and a named partner list that does NOT include Google Business Profile)
+- [ ] Can You Run Instagram Ads Without a Facebook Page? — target: "Instagram ads without Facebook",
+      "do I need a Facebook page for Instagram ads" (VERIFY against Meta's own help pages: boosting
+      in-app vs full campaign control is the claimed distinction)
+- [ ] Meta's March 2026 Attribution Change: What "Link Clicks Only" Means for Your Reports —
+      target: "Meta attribution change 2026", "click-through attribution link clicks" (VERIFY on
+      Meta's business help centre or newsroom first — one agency blog is not enough for a post
+      about how someone's numbers are counted)
+- [ ] Threads Ads: Worth It for a Local Business? — target: "Threads ads UK", "advertising on
+      Threads small business" (VERIFY current availability and the September 2026 username rule)
+- [ ] What You're Actually Buying From a Shared Lead Platform — target: "are Checkatrade leads
+      worth it", "shared leads tradesmen" (write about the mechanics of shared vs exclusive leads
+      and how to work out your own cost per job; do NOT disparage named platforms)
+- [ ] How Recent Do Your Google Reviews Need to Be? — target: "do old Google reviews still count",
+      "review recency local SEO" (VERIFY: Google publishes little on this, so the post may have to
+      say that plainly rather than quote a number)
+- [ ] Lead Forms vs Sending People to Your Website — target: "Meta lead ads vs website",
+      "instant forms vs landing page" (the trade-off between fewer drop-offs and worse lead quality)
+- [ ] Why Your Ad Account Spends Unevenly Across the Week — target: "Facebook ads daily budget
+      not spending", "ad spend uneven daily budget"
+- [ ] Schema Markup for a Local Business, in Plain English — target: "local business schema UK",
+      "structured data for tradesmen"
+- [ ] How to Tell If Your Website Is Actually Slow — target: "website speed test small business",
+      "Core Web Vitals for local business" (use real measurable thresholds from web.dev, not
+      agency rules of thumb)
+- [ ] What to Do in Your First Week With a New Ad Account — target: "new Facebook ad account
+      warm up", "first week running Meta ads"
 
 ## Notes for whoever (human or Routine) picks the next topic
 - Rotate categories — don't publish 3 industry guides in a row
