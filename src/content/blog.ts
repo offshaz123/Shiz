@@ -16,6 +16,89 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "how-to-tell-if-your-website-is-actually-slow",
+    title: "How to Tell If Your Website Is Actually Slow",
+    description:
+      "Your site loads fine on your laptop. That proves nothing. Three published numbers decide whether it is slow, and one detail in how they are measured catches everyone out.",
+    publishedAt: "2026-11-01",
+    keywords: [
+      "website speed test small business",
+      "Core Web Vitals for local business",
+      "LCP INP CLS explained",
+      "is my website slow",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Somebody tells you your website is slow. You open it, it appears straight away, and you decide they were on bad signal.",
+          "You might both be right. Speed is not one number and it is certainly not the number you get on your own laptop, on your own wifi, on a page your browser has already cached.",
+        ],
+      },
+      {
+        heading: "There are three numbers, and they are published",
+        paragraphs: [
+          "Google calls them the Core Web Vitals. There are exactly three, they measure different things, and the thresholds are written down rather than being a matter of opinion.",
+        ],
+        bullets: [
+          "Largest Contentful Paint (LCP) — loading. Should happen within 2.5 seconds of the page starting to load",
+          "Interaction to Next Paint (INP) — responsiveness. Should be 200 milliseconds or less",
+          "Cumulative Layout Shift (CLS) — visual stability. Should be 0.1 or less",
+        ],
+      },
+      {
+        paragraphs: [
+          "Worth knowing that one of these is newer than people assume. Interaction to Next Paint replaced an older metric called First Input Delay, becoming a stable Core Web Vital in 2024. If you are reading a guide that still talks about FID, it is out of date.",
+        ],
+      },
+      {
+        heading: "The detail that catches everybody out",
+        paragraphs: [
+          "You do not pass on your average visitor. You pass on your worst quarter of them.",
+          "The guidance is to measure at the 75th percentile of page loads, segmented across mobile and desktop. A page counts as passing only if it hits all three targets at that 75th percentile.",
+          "In plain terms: take every visit to a page, line them up slowest to fastest, and look at the one a quarter of the way down. That is the one being judged. Three quarters of your visitors have to be having a good time, not half of them.",
+          "This is why a site can feel quick to the person who owns it and still fail. The owner is in the fastest few per cent — modern phone, good connection, everything already cached from the last visit.",
+        ],
+      },
+      {
+        heading: "What each one actually means",
+        paragraphs: [
+          "The names are jargon. The things they describe are not.",
+          "LCP is how long until the main thing appears — usually the big image or heading at the top. On a local business site it is almost always an image that has not been resized, uploaded at whatever size the camera produced.",
+          "INP is what happens when somebody taps something. They press the menu, nothing happens for half a second, they press it again. That gap is what this measures, and on phones it is usually too much script running at once.",
+          "CLS is the one everybody has experienced and nobody has a name for. You go to tap a button, an advert or a late-loading image pushes the page down, and you tap the wrong thing. On a quote form that is a lost enquiry.",
+        ],
+      },
+      {
+        heading: "Three more numbers that help you find the cause",
+        paragraphs: [
+          "These are not Core Web Vitals, and no thresholds are published for them, but they are what you look at once you know something is wrong.",
+          "Time to First Byte and First Contentful Paint are both parts of the loading experience and are used to work out why LCP is poor — whether the server was slow to answer at all, or answered quickly and then took a while to show anything.",
+          "Total Blocking Time is a lab measurement rather than something collected from real visitors, and it is the usual way of catching the problem behind a bad INP before anyone complains.",
+        ],
+      },
+      {
+        heading: "How to actually test it",
+        paragraphs: [
+          "Not by loading it yourself. Two things make your own impression useless: your browser has the page cached, and you are almost certainly on better hardware and a better connection than your customers.",
+          "Use a tool that reports the real figures. PageSpeed Insights gives you the three numbers, and Search Console has a Core Web Vitals report built from what actual visitors experienced rather than from one test run.",
+          "Then test the pages that matter rather than the homepage. Whichever page your ads land on, and whichever page has your contact form, are worth more attention than the front door.",
+        ],
+      },
+      {
+        heading: "The usual culprits on a small business site",
+        paragraphs: [
+          "In practice it is nearly always the same short list, and the first one is nearly always the answer.",
+        ],
+        bullets: [
+          "Images straight off a phone or camera, several megabytes each, where a properly sized one would be a few hundred kilobytes",
+          "A page builder or theme loading scripts for features the page does not use",
+          "Too many third-party tags — chat widgets, review badges, tracking pixels — each one fetching from somebody else's server",
+          "No set height on images or embeds, so everything below them jumps when they finally arrive",
+        ],
+      },
+    ],
+  },
+  {
     slug: "your-google-reviews-wont-put-stars-on-your-google-ads",
     title: "Your Google Reviews Won't Put Stars on Your Google Ads",
     description:

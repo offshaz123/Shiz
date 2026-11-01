@@ -99,6 +99,7 @@ keywords, dealership social strategy).
 - How Long Google Business Profile Verification Actually Takes (local search)
 - Should You Bid on Your Own Business Name? (Google Ads)
 - Your Google Reviews Won't Put Stars on Your Google Ads (reviews & local search)
+- How to Tell If Your Website Is Actually Slow (website & technical)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -406,8 +407,14 @@ actually says", because that gap has produced the strongest posts this month.
       page: no fixed review count, "most merchants" manage it at 100+, a 24-month window, 3.5 stars
       required for text ads, and a named partner list that does NOT include Google Business Profile)
 - [ ] Can You Run Instagram Ads Without a Facebook Page? — target: "Instagram ads without Facebook",
-      "do I need a Facebook page for Instagram ads" (VERIFY against Meta's own help pages: boosting
-      in-app vs full campaign control is the claimed distinction)
+      "do I need a Facebook page for Instagram ads"
+      BLOCKED 2026-11-01: Meta's own pages cannot be read. help.instagram.com/1338916436473267
+      302-redirects to a login wall, and facebook.com/business/help/1513393428972189 returns an
+      84-character empty shell with only the title. Third-party guides flatly contradict each
+      other — some say a Page is required for any Instagram advertising, others say in-app
+      boosting works without one — and this is a setup question where being wrong wastes someone
+      an afternoon. Don't write it until a primary source is readable or someone can confirm the
+      flow from a real Ads Manager account.
 - [ ] Meta's March 2026 Attribution Change: What "Link Clicks Only" Means for Your Reports —
       target: "Meta attribution change 2026", "click-through attribution link clicks" (VERIFY on
       Meta's business help centre or newsroom first — one agency blog is not enough for a post
@@ -426,9 +433,11 @@ actually says", because that gap has produced the strongest posts this month.
       not spending", "ad spend uneven daily budget"
 - [ ] Schema Markup for a Local Business, in Plain English — target: "local business schema UK",
       "structured data for tradesmen"
-- [ ] How to Tell If Your Website Is Actually Slow — target: "website speed test small business",
-      "Core Web Vitals for local business" (use real measurable thresholds from web.dev, not
-      agency rules of thumb)
+- [x] How to Tell If Your Website Is Actually Slow — target: "website speed test small business",
+      "Core Web Vitals for local business" (verified 2026-11-01 against web.dev/articles/vitals,
+      last updated 2024-10-31: LCP 2.5s, INP 200ms, CLS 0.1, judged at the 75th percentile across
+      mobile and desktop, INP having replaced FID as stable in 2024. Note the page does NOT mention
+      Search ranking, so the post doesn't claim it — only that the data surfaces in Search Console.)
 - [ ] What to Do in Your First Week With a New Ad Account — target: "new Facebook ad account
       warm up", "first week running Meta ads"
 
