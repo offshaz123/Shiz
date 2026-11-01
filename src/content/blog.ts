@@ -19,7 +19,7 @@ export const blogPosts: BlogPost[] = [
     slug: "how-to-tell-if-your-website-is-actually-slow",
     title: "How to Tell If Your Website Is Actually Slow",
     description:
-      "Your site loads fine on your laptop. That proves nothing. Three published numbers decide whether it is slow, and one detail in how they are measured catches everyone out.",
+      "Your site loads fine on your laptop. That proves nothing. Three published numbers decide it, and one detail in how they're measured catches everyone out.",
     publishedAt: "2026-11-01",
     keywords: [
       "website speed test small business",
