@@ -1,8 +1,8 @@
 import { randomBytes } from "node:crypto";
 import { execute, isDbConfigured, query } from "./db";
 
-// What ads cost, for Admin → Money and Insights. Counted VAT included: the
-// shop isn't VAT registered, so the VAT can't be claimed back.
+// What ads cost, for Admin → Money and Insights: what actually comes off the
+// card. The shop isn't VAT registered, so any VAT is a real cost.
 //  - TikTok (and anything else): payments typed in on Admin → Money.
 //  - Google Ads: sent every day by a script inside the Google Ads account
 //    (googleAdsScript below), what was spent each day.
@@ -108,14 +108,17 @@ export async function deleteAdPayment(id: number) {
 
 
 // Google Ads: the script in the Google Ads account sends what was spent on
-// each of the last 30 days (Google's figures leave VAT out). Each day's
-// figure replaces what it sent before, as Google can adjust recent days.
+// each of the last 30 days. Each day's figure replaces what it sent before,
+// as Google can adjust recent days. Google charges the account no VAT, only
+// its UK Digital Services Tax fee of 2% on top of the clicks (Billing →
+// Billing activity: "UK DST Fee"), so that's added here.
 const GOOGLE_NOTE = "Automatic from Google Ads";
+const GOOGLE_DST_FEE = 1.02;
 
 export async function saveGoogleSpend(days: { date: string; cost: number }[]) {
   for (const d of days) {
     await execute("DELETE FROM ad_spend WHERE platform = 'google' AND day = ? AND note = ?", [d.date, GOOGLE_NOTE]);
-    const pence = Math.round(d.cost * 100 * VAT);
+    const pence = Math.round(d.cost * 100 * GOOGLE_DST_FEE);
     if (pence > 0) await addAdPayment({ day: d.date, platform: "google", amount: pence, note: GOOGLE_NOTE });
   }
 }

@@ -84,7 +84,7 @@ export function SpendChart({ days }: { days: SpendDay[] }) {
         <span>Highest day {gbp(top)}</span>
         <span>{days.at(-1) && label(days.at(-1)!.day)}</span>
       </div>
-      <p className="mt-2 text-xs text-muted">TikTok shows on the day you topped up; Google and Meta on the day it was spent. VAT included.</p>
+      <p className="mt-2 text-xs text-muted">TikTok shows on the day you topped up; Google and Meta on the day it was spent. What comes off your card, with any VAT and fees.</p>
     </div>
   );
 }

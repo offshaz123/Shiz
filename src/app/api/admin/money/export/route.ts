@@ -60,7 +60,7 @@ export async function GET(req: Request) {
         pounds(orders.reduce((n, o) => n + o.keep, 0)),
       ]),
       "",
-      ...(ads ? Object.entries(AD_PLATFORMS).map(([id, name]) => row([`${name} spend, VAT included (£)`, pounds(ads.byPlatform[id as keyof typeof AD_PLATFORMS])])) : []),
+      ...(ads ? Object.entries(AD_PLATFORMS).map(([id, name]) => row([`${name} spend, as charged (£)`, pounds(ads.byPlatform[id as keyof typeof AD_PLATFORMS])])) : []),
       row(["Total ad spend (£)", ads ? pounds(ads.spend) : "couldn't load"]),
       row(["Profit after ads, before materials (£)", ads ? pounds(kept - ads.spend) : ""]),
       "",
