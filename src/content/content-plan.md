@@ -100,6 +100,7 @@ keywords, dealership social strategy).
 - Should You Bid on Your Own Business Name? (Google Ads)
 - Your Google Reviews Won't Put Stars on Your Google Ads (reviews & local search)
 - How to Tell If Your Website Is Actually Slow (website & technical)
+- What You're Actually Buying From a Shared Lead Platform (practical how-to)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -421,9 +422,12 @@ actually says", because that gap has produced the strongest posts this month.
       about how someone's numbers are counted)
 - [ ] Threads Ads: Worth It for a Local Business? — target: "Threads ads UK", "advertising on
       Threads small business" (VERIFY current availability and the September 2026 username rule)
-- [ ] What You're Actually Buying From a Shared Lead Platform — target: "are Checkatrade leads
-      worth it", "shared leads tradesmen" (write about the mechanics of shared vs exclusive leads
-      and how to work out your own cost per job; do NOT disparage named platforms)
+- [x] What You're Actually Buying From a Shared Lead Platform — target: "are Checkatrade leads
+      worth it", "shared leads tradesmen" (written 2026-11-02 naming no platform at all, which is
+      both safer and more durable than a post about particular companies. Deliberately quotes no
+      conversion or cost-per-job figures: a search for these returns plenty, and essentially every
+      one is published by a company selling exclusive leads. The post says so and sends the reader
+      to measure their own instead.)
 - [ ] How Recent Do Your Google Reviews Need to Be? — target: "do old Google reviews still count",
       "review recency local SEO" (VERIFY: Google publishes little on this, so the post may have to
       say that plainly rather than quote a number)

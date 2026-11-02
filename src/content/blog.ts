@@ -16,6 +16,98 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "what-youre-actually-buying-from-a-shared-lead-platform",
+    title: "What You're Actually Buying From a Shared Lead Platform",
+    description:
+      "Four other trades got the same enquiry. That is not a fault, it is the product. How to work out what a shared lead really costs you, using your own numbers.",
+    publishedAt: "2026-11-02",
+    keywords: [
+      "are shared leads worth it",
+      "shared leads tradesmen",
+      "cost per lead vs cost per job",
+      "buying leads UK trades",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You pay for a lead, ring within the hour, and the customer says they have already had three quotes.",
+          "That is not the platform letting you down. That is the thing you bought.",
+        ],
+      },
+      {
+        heading: "Shared means shared",
+        paragraphs: [
+          "A shared lead is one enquiry sold to several trades at once. Everybody who buys it gets the same name and the same job, and the customer gets a handful of calls.",
+          "An exclusive lead goes to one buyer. It costs more, for the obvious reason.",
+          "Neither is dishonest and both have their place. The mistake is paying for the first and expecting the second — treating a shared lead as a customer when what you have bought is a place in a queue.",
+        ],
+      },
+      {
+        heading: "Cost per lead is the wrong number",
+        paragraphs: [
+          "The price on the screen is per lead. The number that decides whether this works is per job won, and the gap between them is larger than most people expect.",
+          "Work it through with your own figures. Say you pay thirty pounds a lead and you win one in five. That is five leads, a hundred and fifty pounds, for one job. Win one in ten and the same job cost you three hundred.",
+          "Now put your own average job value next to it. On a two-thousand-pound job, three hundred is fine. On a ninety-pound call-out it is not a business.",
+          "That is the whole calculation, and it only works with your own numbers in it.",
+        ],
+      },
+      {
+        heading: "Be careful whose maths you are reading",
+        paragraphs: [
+          "Search for whether shared leads are worth it and you will find confident figures. Shared leads convert at eight per cent. Your real cost per job is five to seven times the lead price. Exclusive leads close three times as often.",
+          "Look at who published them. Almost every one of those comparisons is written by a company that sells exclusive leads. They may well be right, but a figure produced by somebody selling the alternative is a sales argument, not evidence, and it should not be the thing you plan around.",
+          "The only conversion rate worth trusting is the one from your own account, which means writing it down.",
+        ],
+      },
+      {
+        heading: "What to track, starting with the next one",
+        paragraphs: [
+          "You need four columns and a month. Anything will do — a notebook is fine.",
+        ],
+        bullets: [
+          "What the lead cost",
+          "Whether you got hold of them at all",
+          "Whether you quoted",
+          "Whether you won it, and what it was worth",
+        ],
+      },
+      {
+        paragraphs: [
+          "After a month you will know your real cost per job, and the argument stops being a matter of opinion. Most people who do this are surprised in one direction or the other, which is the point of doing it.",
+        ],
+      },
+      {
+        heading: "Questions worth asking before you buy",
+        paragraphs: [
+          "These are the things that change the maths and are easy not to ask.",
+        ],
+        bullets: [
+          "How many other trades get the same lead",
+          "What happens when a lead is dead — wrong number, wrong trade, already booked. Is there a refund or a credit, and how long do you have to claim it",
+          "If you are buying credits, do they expire, and are unused ones refundable",
+          "Is there a minimum term, and what does cancelling involve",
+          "Can you turn it off for a fortnight when you are already full",
+        ],
+      },
+      {
+        heading: "With a shared lead you are in a race",
+        paragraphs: [
+          "The one thing that genuinely moves the numbers is how fast you answer. Everybody buying that lead got it at the same moment, and the customer is forming an opinion from whoever speaks to them first.",
+          "An hour is too slow. If you cannot ring within a few minutes while you are on a job, the realistic options are a text straight away saying when you will call, or somebody answering for you.",
+          "This is the part people try to fix by buying more leads, when the same spend would go further by answering the ones they already have.",
+        ],
+      },
+      {
+        heading: "A bridge, not a foundation",
+        paragraphs: [
+          "Buying leads does one thing well: it produces work this week. When the diary is empty that is worth real money and there is no shame in it.",
+          "What it does not do is accumulate. Stop paying and it stops, and you are back where you started, because none of it built anything of yours — no profile, no reviews, no site that ranks for your town.",
+          "The sensible position for most trades is both at once. Buy leads while you need the work, and put some of what they earn into the things that keep producing after you stop paying.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-to-tell-if-your-website-is-actually-slow",
     title: "How to Tell If Your Website Is Actually Slow",
     description:
