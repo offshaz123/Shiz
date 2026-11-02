@@ -80,12 +80,12 @@ export const services: Service[] = [
       "Every enquiry in one place, tracked through to won or lost, with the follow-up happening whether you remember or not.",
     tags: ["Unified Inbox", "Pipelines", "Automated Follow-Up", "Missed-Call Text-Back"],
     intro:
-      "Most businesses lose more money to enquiries that never got answered than to any weakness in their advertising. A CRM is simply somewhere every enquiry lives visibly, at whatever stage it's currently at, instead of in someone's head and four different apps.",
+      "Most businesses lose more money to enquiries that never got answered than to any weakness in their advertising. A CRM is simply somewhere every enquiry lives visibly, at whatever stage it's currently at, instead of in someone's head and four different apps. Not every business needs one, and we will say so if yours doesn't — a one-man trade taking four calls a week is better served by a phone that gets answered than by software. We set this up where it earns its place, built around how your enquiries actually arrive.",
     metaDescription:
       "CRM setup and automation for UK small businesses. One inbox for Instagram, Facebook, WhatsApp and web forms, with pipelines and automated follow-up.",
     keywords: ["CRM for small business UK", "lead management system", "automated follow up"],
     whoFor:
-      "Any business handling more than a handful of enquiries a week, particularly where they arrive outside working hours.",
+      "Businesses handling more than a handful of enquiries a week, particularly where they arrive outside working hours or across several apps. If your enquiries all come by phone and you answer them, you may only need the missed-call text-back rather than the whole thing.",
     includes: [
       { title: "One inbox for every channel", body: "Instagram, Facebook, WhatsApp, SMS and your website forms, all in one place." },
       { title: "A pipeline built around your business", body: "Named after what actually happens, not sales jargon. Four to six stages you can say from memory." },

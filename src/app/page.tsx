@@ -104,8 +104,9 @@ export default function Home() {
         </h2>
         <p className="mx-auto mt-4 max-w-2xl text-muted">
           Meta &amp; Instagram ads from £499 a month. Google Ads at one flat £600 a month with the
-          landing page, the tracking and the CRM included. SEO from £350 a month. Ad spend is
-          always separate and paid straight to Meta or Google, so you can see what goes where.
+          landing page and the tracking included, and a CRM set up if your business turns out to
+          need one. SEO from £350 a month. Ad spend is always separate and paid straight to Meta
+          or Google, so you can see what goes where.
         </p>
         <Link
           href="/pricing"
