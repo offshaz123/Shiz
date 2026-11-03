@@ -101,6 +101,7 @@ keywords, dealership social strategy).
 - Your Google Reviews Won't Put Stars on Your Google Ads (reviews & local search)
 - How to Tell If Your Website Is Actually Slow (website & technical)
 - What You're Actually Buying From a Shared Lead Platform (practical how-to)
+- Call Tracking for Google Ads: Knowing Which Ad Made the Phone Ring (Google Ads)
 
 ## Backlog — industry-specific guides
 - [x] Meta & Instagram Ads for Home & Trade Services (plumbers, electricians, builders) —
@@ -362,8 +363,13 @@ deliberately weights toward Google Ads to close that gap.
       "PMax vs search campaigns UK"
 - [x] Why Your Google Ads Are Showing for the Wrong Town — target: "Google Ads location
       targeting", "presence vs interest location settings"
-- [ ] Call Tracking for Google Ads: Knowing Which Ad Made the Phone Ring — target: "call tracking
-      Google Ads UK", "which ad made the phone ring"
+- [x] Call Tracking for Google Ads: Knowing Which Ad Made the Phone Ring — target: "call tracking
+      Google Ads UK", "which ad made the phone ring" (verified 2026-11-03 against Google's own
+      pages — answer/6100664, answer/2454052 and answer/6095883. Note answer/6367837 404s. Every
+      fact quoted from those: forwarding numbers, no charge for a manually dialled call, UK in the
+      country list, clicks on a mobile number being clicks and NOT calls, the website snippet
+      requirement and its one-number-per-page limit, and that the numbers are Google's property
+      and can be reassigned.)
 - [x] Should You Bid on Your Own Business Name? — target: "bidding on your own brand name Google
       Ads", "branded search PPC worth it" (verified 2026-10-30 against Google's own Trademarks
       advertising policy, support.google.com/adspolicy/answer/6118, which loaded: "using

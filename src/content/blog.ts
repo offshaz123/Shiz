@@ -16,6 +16,90 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "call-tracking-google-ads-which-ad-made-the-phone-ring",
+    title: "Call Tracking for Google Ads: Knowing Which Ad Made the Phone Ring",
+    description:
+      "Half your enquiries arrive by phone and you have no idea which ad caused them. Google tracks this for free, and most accounts never switch it on.",
+    publishedAt: "2026-11-03",
+    keywords: [
+      "call tracking Google Ads UK",
+      "which ad made the phone ring",
+      "Google forwarding number",
+      "call conversion tracking",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "The phone goes, you book the job, and you have no idea where it came from. Ask the customer and they say they found you on Google, which could mean five different things.",
+          "For a trade, a garage or anything else people ring rather than fill in a form, that gap is most of your reporting. Google closes it, and it does not charge you for it.",
+        ],
+      },
+      {
+        heading: "How it works: a number that is not yours",
+        paragraphs: [
+          "When you turn call reporting on, Google assigns what it calls a Google forwarding number to your ad. The customer sees that number instead of yours, rings it, and the call routes through to you.",
+          "Because the call passes through Google first, they can record what happened to it. Their own wording is that this lets you track \u201ccall duration, call start time, caller phone number for calls over 15 seconds\u201d, and whether the call was connected.",
+          "Your caller ID still works. Google says that caller ID works for calls routed through forwarding numbers, with exceptions for some calls in India and Japan. From your end it rings like any other call.",
+          "The UK is on Google's list of countries where forwarding numbers are available, so none of this is a US-only feature.",
+        ],
+      },
+      {
+        heading: "It does not cost anything",
+        paragraphs: [
+          "This is the part that surprises people, and it is worth being precise about.",
+          "Google states that it does not charge advertisers when a user manually dials a forwarding number. You are only charged when the number shown in the ad is clicked, and that click costs the same as any other click on your ad.",
+          "The website version is free too. Google's wording is that you can use dynamically generated forwarding numbers that replace your business number on your site \u201cwithout any cost to you\u201d.",
+          "So this is not a product you buy. It is a setting in an account you are already paying for, and most accounts have it switched off.",
+        ],
+      },
+      {
+        heading: "Five different things, and they are not the same",
+        paragraphs: [
+          "Google lists several kinds of call tracking and people tend to assume they have all of them. They are quite different.",
+        ],
+        bullets: [
+          "Calls from call-only ads and call assets — tracked properly, through a forwarding number",
+          "Calls to the number on your website, after someone clicked your ad — also tracked, but this one needs work on the site",
+          "Clicks on a phone number on your mobile site — Google is explicit that it can only track the click, not whether a call happened",
+          "Clicks on call ads without a forwarding number — counted as a conversion based on Google's estimate of whether a meaningful call followed",
+          "Imported call conversions — calls recorded in another system, such as a CRM, and uploaded back into Google Ads",
+        ],
+      },
+      {
+        heading: "A click on your number is not a call",
+        paragraphs: [
+          "The third one in that list is where reporting quietly goes wrong.",
+          "Somebody on a phone taps your number. That is a click. Whether they went through with the call, whether it connected, whether they hung up after two seconds — Google says plainly it cannot see that, only the click.",
+          "If your conversions are built on taps rather than calls, your numbers are flattering. Everyone who tapped and changed their mind is in there as a success.",
+        ],
+      },
+      {
+        heading: "The website bit needs installing",
+        paragraphs: [
+          "Tracking calls from your own site is the most useful of these for a business people ring, and it is the only one that is not just a switch.",
+          "Google's own requirements: the Google tag plus a specific event snippet for website call conversions, and a JavaScript snippet that swaps your number for a forwarding number when the visitor arrived from an ad. The phone snippet goes on every page where your number appears.",
+          "One limitation worth knowing before you plan around it: Google states that only one number can be tracked on a single page using the default JavaScript tag. If you show a different number per branch on the same page, that is a problem to solve first.",
+        ],
+      },
+      {
+        heading: "Decide what counts as a call",
+        paragraphs: [
+          "You set a minimum call length, and calls that reach it count as a conversion. Google does not publish a default, so this is your decision rather than something to leave alone.",
+          "Think about what a real enquiry sounds like in your trade. For a plumber, thirty seconds is somebody describing a leak. For a business where the first question is always the price, a genuine enquiry might take two minutes.",
+          "Set it too low and wrong numbers count as conversions. Set it too high and real enquiries do not, and you end up moving budget away from something that was working.",
+        ],
+      },
+      {
+        heading: "Do not put the forwarding number on your van",
+        paragraphs: [
+          "A practical warning, straight from Google's documentation and easy to walk into.",
+          "The forwarding numbers belong to Google. They say so directly: the numbers are Google's property, they can change or be reassigned, and you cannot use them outside call reporting and website call conversion tracking.",
+          "So it does not go on your signwriting, your business cards, your letterheads or your Google Business Profile. It exists inside your ads and on your site while somebody is there from an ad. Print it anywhere permanent and one day it will ring somebody else.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "what-youre-actually-buying-from-a-shared-lead-platform",
     title: "What You're Actually Buying From a Shared Lead Platform",
     description:
