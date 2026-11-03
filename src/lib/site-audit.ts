@@ -41,6 +41,11 @@ export type AuditResult = {
   pagesFound: number;
   words: number;
   /**
+   * The Google listing's own score, when there is one. Deliberately kept out
+   * of `score` above: see the note where the headline is worked out.
+   */
+  googleScore?: number;
+  /**
    * The Google listing we matched to this domain, when we matched one. Kept
    * alongside the checks because the facts on it — the name Google shows, the
    * phone number, the link to the listing itself — are worth reading straight
@@ -370,9 +375,18 @@ export function buildReport({ html, finalUrl, robots, sitemap, ms, google }: Inp
     cat.score = scored.length ? Math.round((earned / scored.length) * 100) / 10 : -1;
   }
 
-  const scored = categories.filter((c) => c.score !== -1);
+  // The headline score is the WEBSITE, and only the website.
+  //
+  // Averaging the Google listing into it hides the thing we were asked to
+  // look at: a valeting firm we scanned has a 6.2 website and a 10/10
+  // listing, and blended that reads 6.8 — their good listing quietly
+  // covering for the site. The listing gets its own number instead, so both
+  // are visible and neither flatters the other.
+  const scored = categories.filter((c) => c.score !== -1 && c.id !== "google");
   const score =
     Math.round((scored.reduce((s, c) => s + c.score, 0) / Math.max(1, scored.length)) * 10) / 10;
+
+  const googleCategoryScore = categories.find((c) => c.id === "google")?.score ?? -1;
 
   const all = categories.flatMap((c) => c.checks);
   const counts = {
@@ -390,6 +404,7 @@ export function buildReport({ html, finalUrl, robots, sitemap, ms, google }: Inp
     counts,
     pagesFound: internal.size,
     words,
+    ...(googleCategoryScore >= 0 ? { googleScore: googleCategoryScore } : {}),
     ...(google?.status === "ok" ? { googleBusiness: google.business } : {}),
   };
 }
@@ -658,6 +673,9 @@ function weightOf(severity: Severity): number {
  */
 export function projectedScore(categories: AuditCategory[], fixedIds: Set<string>): number {
   const scores = categories
+    // The Google listing is scored separately and isn't in the headline, so
+    // it mustn't be in the projection of the headline either.
+    .filter((cat) => cat.id !== "google")
     .map((cat) => {
       const scored = cat.checks.filter((c) => c.severity !== "unknown");
       if (scored.length === 0) return -1;

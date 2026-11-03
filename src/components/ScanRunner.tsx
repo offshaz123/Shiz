@@ -56,6 +56,12 @@ function StatusIcon({ severity }: { severity: Severity }) {
   );
 }
 
+function toneFor(score: number): string {
+  if (score >= 7) return "text-emerald-500";
+  if (score >= 4) return "text-amber-500";
+  return "text-red-500";
+}
+
 function ScoreRing({ score, size = 56 }: { score: number; size?: number }) {
   const pct = Math.max(0, Math.min(1, score / 10));
   const r = size / 2 - 4;
@@ -221,8 +227,7 @@ export function ScanRunner() {
     );
   }
 
-  const tone =
-    result.score >= 7 ? "text-emerald-500" : result.score >= 4 ? "text-amber-500" : "text-red-500";
+  const tone = toneFor(result.score);
 
   return (
     <div>
@@ -236,12 +241,31 @@ export function ScanRunner() {
             {result.pagesFound}+ pages found · checked just now
           </p>
         </div>
-        <div className="rounded-3xl border border-border bg-surface px-7 py-5 text-center">
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted">Overall</p>
-          <p className={`mt-1 text-5xl font-bold tracking-tight ${tone}`}>
-            {result.score.toFixed(1)}
-          </p>
-          <p className="text-sm text-muted">out of 10</p>
+        {/*
+          Two numbers, not one. The website and the Google listing are
+          separate problems with separate fixes, and averaging them lets a
+          good listing hide a poor site — which is exactly what it did on the
+          first real scan we ran.
+        */}
+        <div className="flex gap-3">
+          <div className="rounded-3xl border border-border bg-surface px-7 py-5 text-center">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Website</p>
+            <p className={`mt-1 text-5xl font-bold tracking-tight ${tone}`}>
+              {result.score.toFixed(1)}
+            </p>
+            <p className="text-sm text-muted">out of 10</p>
+          </div>
+          {result.googleScore !== undefined && (
+            <div className="rounded-3xl border border-border bg-surface px-7 py-5 text-center">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+                Google listing
+              </p>
+              <p className={`mt-1 text-5xl font-bold tracking-tight ${toneFor(result.googleScore)}`}>
+                {result.googleScore.toFixed(1)}
+              </p>
+              <p className="text-sm text-muted">out of 10</p>
+            </div>
+          )}
         </div>
       </div>
 

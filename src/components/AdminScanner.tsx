@@ -208,9 +208,18 @@ function Report({
           <div className={`text-4xl font-bold ${tone(result.score)}`}>
             {result.score.toFixed(1)}
           </div>
+          <div className="text-[11px] uppercase tracking-wide text-muted">website</div>
           {lifted && (
             <div className="mt-1 text-sm font-semibold text-emerald-500">
               → {projected.toFixed(1)} if fixed
+            </div>
+          )}
+          {result.googleScore !== undefined && (
+            <div className="mt-2 border-t border-border pt-2">
+              <span className={`text-xl font-bold ${tone(result.googleScore)}`}>
+                {result.googleScore.toFixed(1)}
+              </span>
+              <div className="text-[11px] uppercase tracking-wide text-muted">google</div>
             </div>
           )}
         </div>
