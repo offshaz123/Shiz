@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { STATUSES, type Prospect, type ProspectStatus } from "@/lib/prospect-types";
 import { industries } from "@/content/industries";
+import { areaGroups } from "@/content/areas";
 
 /**
  * The call list.
@@ -286,7 +287,44 @@ export function ProspectFinder() {
             placeholder="Romford"
             className="w-full max-w-xs rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand-pink"
           />
-          <div className="mt-3 flex flex-wrap gap-2">
+
+          {/*
+            Typing a town every time means thinking of one every time, and the
+            ones that come to mind are the big names — which are precisely the
+            searches that return four-hundred-review operators. These are
+            suburbs, closest first. The box above still takes anything.
+          */}
+          <div className="mt-3 flex flex-col gap-2">
+            {areaGroups.map((group) => (
+              <div key={group.name} className="flex flex-wrap items-center gap-1.5">
+                <span
+                  title={group.note}
+                  className="mr-1 w-full text-[11px] uppercase tracking-wide text-muted sm:w-auto"
+                >
+                  {group.name}
+                </span>
+                {group.areas.map((area) => (
+                  <button
+                    key={area}
+                    type="button"
+                    onClick={() => setTown(area)}
+                    className={`rounded-md border px-2 py-0.5 text-[11px] ${
+                      town === area
+                        ? "border-brand-pink text-foreground"
+                        : "border-border text-muted hover:text-foreground"
+                    }`}
+                  >
+                    {area}
+                  </button>
+                ))}
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-4 text-xs font-semibold text-foreground">
+            {town.trim() ? `Search ${town.trim()} for:` : "Pick an area, then a trade:"}
+          </p>
+          <div className="mt-2 flex flex-wrap gap-2">
             {tradesFor(industry).map((trade) => (
               <button
                 key={trade}
@@ -301,7 +339,8 @@ export function ProspectFinder() {
           </div>
           {!town.trim() && (
             <p className="mt-2 text-xs text-muted">
-              Type a town first. A suburb finds smaller operators than &ldquo;London&rdquo; does.
+              Pick an area first. A suburb finds smaller operators than &ldquo;London&rdquo; does —
+              searching a whole city mostly returns the big firms who don&apos;t need us.
             </p>
           )}
         </div>
@@ -312,15 +351,24 @@ export function ProspectFinder() {
           <label htmlFor="f-reviews" className="mb-1.5 block text-xs text-muted">
             Max reviews
           </label>
-          <input
+          {/*
+            A free number box let "02" be typed, which filters to businesses
+            with two reviews or fewer and returns an empty page that looks
+            broken rather than filtered. Fixed values can't be typed wrong.
+          */}
+          <select
             id="f-reviews"
-            type="number"
-            min={0}
-            max={500}
             value={maxReviews}
             onChange={(e) => setMaxReviews(Number(e.target.value))}
-            className="w-28 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand-pink"
-          />
+            className="w-32 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand-pink"
+          >
+            <option value={10}>Under 10</option>
+            <option value={25}>Under 25</option>
+            <option value={50}>Under 50</option>
+            <option value={100}>Under 100</option>
+            <option value={200}>Under 200</option>
+            <option value={500}>Any</option>
+          </select>
         </div>
         <div>
           <label htmlFor="f-rating" className="mb-1.5 block text-xs text-muted">
