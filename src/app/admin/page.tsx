@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { isAdmin } from "@/lib/admin-auth";
 import { isDbConfigured } from "@/lib/db";
 import { getLeads, getStats, type AdminLead } from "@/lib/admin-data";
@@ -233,14 +234,22 @@ export default async function AdminPage() {
     <div className="mx-auto max-w-5xl px-5 py-12 sm:px-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-bold tracking-tight text-foreground">Leads</h1>
-        <form action={logout}>
-          <button
-            type="submit"
+        <div className="flex items-center gap-2">
+          <Link
+            href="/admin/scan"
             className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
           >
-            Log out
-          </button>
-        </form>
+            Scan a site
+          </Link>
+          <form action={logout}>
+            <button
+              type="submit"
+              className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
+            >
+              Log out
+            </button>
+          </form>
+        </div>
       </div>
 
       {!stats || !leads ? (

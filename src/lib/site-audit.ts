@@ -449,3 +449,39 @@ function trackingCheck(
   }
   return { id, label, value: badValue, severity: failSeverity, why };
 }
+
+/** How much a check contributes, out of 1. Unknown checks are not scored. */
+function weightOf(severity: Severity): number {
+  return severity === "good" ? 1 : severity === "warning" ? 0.4 : 0;
+}
+
+/**
+ * Rescores a finished report as though the named checks had passed.
+ *
+ * This is what the admin's comparison tool uses to answer "and if we fixed
+ * these?". It is deliberately the same arithmetic as the real scoring above
+ * rather than a second copy of it, so the projected figure is the score the
+ * site would genuinely get on a re-scan.
+ *
+ * Worth being clear about what it does and does not claim. It projects a
+ * score, which is arithmetic we control and can show our working for. It
+ * says nothing about enquiries, rankings or revenue, because nobody can
+ * know those from a page scan and a made-up number in front of a customer
+ * is worse than no number at all.
+ */
+export function projectedScore(categories: AuditCategory[], fixedIds: Set<string>): number {
+  const scores = categories
+    .map((cat) => {
+      const scored = cat.checks.filter((c) => c.severity !== "unknown");
+      if (scored.length === 0) return -1;
+      const earned = scored.reduce(
+        (sum, c) => sum + (fixedIds.has(c.id) ? 1 : weightOf(c.severity)),
+        0,
+      );
+      return Math.round((earned / scored.length) * 100) / 10;
+    })
+    .filter((n) => n !== -1);
+
+  if (scores.length === 0) return 0;
+  return Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 10) / 10;
+}
