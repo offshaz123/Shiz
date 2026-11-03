@@ -248,6 +248,8 @@ function Report({
           })}
       </div>
 
+      {result.googleBusiness && <GoogleListing business={result.googleBusiness} />}
+
       {problems.length > 0 && (
         <div className="mt-7 border-t border-border pt-5">
           <h3 className="text-sm font-semibold text-foreground">
@@ -283,6 +285,62 @@ function Report({
             ))}
           </ul>
         </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * The Google listing we matched to the scanned domain.
+ *
+ * This block exists for one practical reason: when the scanner is being used
+ * to work out who to ring, the phone number and the listing itself are the
+ * two things needed next, and reading them out of a list of pass-or-fail rows
+ * is slower than it needs to be.
+ */
+function GoogleListing({
+  business,
+}: {
+  business: NonNullable<AuditResult["googleBusiness"]>;
+}) {
+  const stars =
+    business.rating === null ? "No rating yet" : `${business.rating.toFixed(1)} out of 5`;
+
+  return (
+    <div className="mt-7 rounded-xl border border-border bg-background p-5">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <h3 className="text-sm font-semibold text-foreground">Their Google listing</h3>
+        <span className="text-xs text-muted">
+          {business.reviews === 1 ? "1 review" : `${business.reviews} reviews`} · {stars}
+        </span>
+      </div>
+
+      <p className="mt-2 text-sm text-foreground">{business.name}</p>
+      {business.category && <p className="text-xs text-muted">{business.category}</p>}
+      {business.address && <p className="mt-1 text-xs text-muted">{business.address}</p>}
+
+      <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+        {business.phone && (
+          <a href={`tel:${business.phone.replace(/\s+/g, "")}`} className="font-semibold text-foreground underline">
+            {business.phone}
+          </a>
+        )}
+        {business.mapsUri && (
+          <a
+            href={business.mapsUri}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="text-muted underline"
+          >
+            Open on Google Maps
+          </a>
+        )}
+      </div>
+
+      {business.closed && (
+        <p className="mt-3 rounded-lg border border-red-500/40 bg-red-500/5 px-3 py-2 text-xs text-foreground">
+          Google has this marked as closed.
+        </p>
       )}
     </div>
   );

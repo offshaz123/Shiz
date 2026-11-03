@@ -46,6 +46,38 @@ and redeploy. Every submission (from the Home page, Contact page and /demo page)
 redirected to `/thank-you`. Without these set, the API route returns an error and the form shows
 its built-in fallback message.
 
+## Environment variables
+
+Everything optional degrades quietly: a missing variable turns its feature off rather than
+breaking a page. Set them in hPanel → the site → **Environment variables** (or `.env.local`
+for local dev).
+
+| Variable | Needed for | Without it |
+| --- | --- | --- |
+| `SMTP_HOST` `SMTP_PORT` `SMTP_USER` `SMTP_PASS` | Sending enquiry emails and the follow-up sequence | Forms show their fallback message; no email sends |
+| `DB_HOST` `DB_PORT` `DB_NAME` `DB_USER` `DB_PASS` | Storing scan leads, sent emails, reviews, page views | The site runs; nothing is stored and the admin lists are empty. **On Hostinger `DB_HOST` must be `127.0.0.1`, not `localhost`** |
+| `ADMIN_PASSWORD` | Signing in at `/admin` | Admin can't be opened. Changing it signs every session out |
+| `CRON_SECRET` | The follow-up email cron endpoint | `/api/cron/follow-ups` returns 503 and sends nothing |
+| `CRON_SITE_URL` | `scripts/cron.js`, when run somewhere other than the live site | Defaults to the live site |
+| `GOOGLE_PLACES_KEY` | The Google Business Profile section of the scanner, and `scripts/find-local-prospects.mjs` | The scanner leaves that section out entirely and scores exactly as it did before |
+| `GOOGLE_PLACES_DAILY_BUDGET` | Capping Places lookups per day | Defaults to 300 |
+| `META_CONVERSIONS_API_TOKEN` | Server-side conversion events to Meta | Events aren't sent |
+| `COMPANIES_HOUSE_KEY` | `scripts/find-prospects.mjs` | That script won't run |
+
+### Google Places key
+
+One-off, in [console.cloud.google.com](https://console.cloud.google.com):
+
+1. Create a project
+2. **APIs & Services** → enable **Places API (New)**
+3. **Credentials** → create an API key
+4. Restrict it to the Places API, and ideally to the server's IP
+5. Set `GOOGLE_PLACES_KEY`
+
+Billing has to be switched on, but Google's standing monthly credit covers far more lookups
+than this site makes, and the scanner caches each domain for a day and stops asking once
+`GOOGLE_PLACES_DAILY_BUDGET` is spent, so the public audit form can't be used to run up a bill.
+
 ## WhatsApp
 
 The floating WhatsApp button (`src/components/WhatsAppButton.tsx`) and all WhatsApp links use the
@@ -107,12 +139,12 @@ the same setup already used for the SMG Details site in this repo.
    repository rather than starting from a template
 2. Authorize/select GitHub, choose the `Shiz` repo, and set the branch to
    `claude/meta-ads-instagram-website-p2ah5o`
-3. Framework should auto-detect as Next.js. Set the `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY`
-   environment variable (from web3forms.com — see Lead form section above) in the site's
-   **Environment variables** panel so the lead form can send
+3. Framework should auto-detect as Next.js. Set the environment variables listed above in the
+   site's **Environment variables** panel — at minimum the four `SMTP_*` ones, so the lead form
+   can send
 4. Deploy — Hostinger gives it a temporary `*.hostingersite.com` URL first
 5. Once it's working, go to **Domains** → **Connect domain** and point `shazmarketing.com` at it
 
-This is a static export (`output: "export"` in `next.config.ts`), so it'll build to a plain
-`out/` folder regardless of how Hostinger runs it — safe either as a static site or served via
-Node.
+This site runs as a real Next.js server, not a static export: the lead form, the scanner,
+the admin pages, the database and the follow-up cron all need server-side code. Hostinger's
+Websites product serves it with Node, which is what makes that possible.

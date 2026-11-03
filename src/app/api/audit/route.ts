@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { lookup } from "node:dns/promises";
 import { buildReport } from "@/lib/site-audit";
+import { lookupGoogleBusiness } from "@/lib/google-business";
 
 export const runtime = "nodejs";
 
@@ -153,9 +154,13 @@ export async function POST(request: Request) {
     }
 
     const html = await readCapped(res);
-    const [robots, sitemap] = await Promise.all([
+    // The Google lookup runs alongside the two file checks and has its own
+    // timeout inside it. It never throws, so a Google outage costs us the
+    // listing section and nothing else.
+    const [robots, sitemap, google] = await Promise.all([
       exists(finalUrl, "/robots.txt", controller.signal),
       exists(finalUrl, "/sitemap.xml", controller.signal),
+      lookupGoogleBusiness(html, finalUrl.toString()),
     ]);
 
     const result = buildReport({
@@ -164,6 +169,7 @@ export async function POST(request: Request) {
       robots,
       sitemap,
       ms,
+      google,
     });
 
     return NextResponse.json(result);

@@ -213,7 +213,7 @@ export function ScanRunner() {
               revealed={revealed}
             />
             <p className="mt-3 text-center text-xs text-muted">
-              Checking five areas of your site.
+              Checking your site area by area.
             </p>
           </div>
         </div>

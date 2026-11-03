@@ -6,7 +6,13 @@
  * consent manager won't appear, and we say so in the results rather than
  * reporting a false negative as fact. Where we genuinely can't tell, the
  * check says so instead of guessing.
+ *
+ * The one exception is the Google Business Profile section, which comes from
+ * the Places API rather than the page. It is only included when a listing
+ * could be matched to the domain with certainty — see google-business.ts.
  */
+
+import type { GoogleBusiness, GoogleBusinessLookup } from "./google-business";
 
 export type Severity = "critical" | "warning" | "good" | "unknown";
 
@@ -34,6 +40,13 @@ export type AuditResult = {
   counts: { critical: number; warning: number; good: number; unknown: number };
   pagesFound: number;
   words: number;
+  /**
+   * The Google listing we matched to this domain, when we matched one. Kept
+   * alongside the checks because the facts on it — the name Google shows, the
+   * phone number, the link to the listing itself — are worth reading straight
+   * rather than only as pass-or-fail rows.
+   */
+  googleBusiness?: GoogleBusiness;
 };
 
 const has = (html: string, ...needles: string[]) =>
@@ -69,9 +82,11 @@ type Input = {
   robots: boolean;
   sitemap: boolean;
   ms: number;
+  /** Omitted when the Places lookup isn't configured or didn't get to run. */
+  google?: GoogleBusinessLookup;
 };
 
-export function buildReport({ html, finalUrl, robots, sitemap, ms }: Input): AuditResult {
+export function buildReport({ html, finalUrl, robots, sitemap, ms, google }: Input): AuditResult {
   const body = visibleHtml(html);
   const https = finalUrl.startsWith("https://");
   const consentGated = has(html, ...CONSENT_SIGNALS);
@@ -101,6 +116,15 @@ export function buildReport({ html, finalUrl, robots, sitemap, ms }: Input): Aud
   const title = text(html, /<title[^>]*>([\s\S]*?)<\/title>/i);
   const desc = text(html, /<meta[^>]+name=["']description["'][^>]+content=["']([^"']*)["']/i);
   const h1s = body.match(/<h1[\s>]/gi)?.length ?? 0;
+
+  /**
+   * Google Ads conversion tracking. The conversion ID is matched case-sensitively
+   * as a whole word, because "aw-" on its own appears inside ordinary English —
+   * "law-firm", "raw-data" — and was quietly passing sites that run no ads.
+   */
+  const googleAds =
+    has(html, "googleadservices.com", "googleads.g.doubleclick.net", "google_conversion") ||
+    /\bAW-\d{6,}\b/.test(html);
 
   const cms = has(html, "wp-content", "wp-includes")
     ? "WordPress"
@@ -151,7 +175,7 @@ export function buildReport({ html, finalUrl, robots, sitemap, ms }: Input): Aud
         trackingCheck(
           "google-ads",
           "Google Ads tracking",
-          has(html, "googleadservices.com", "google_conversion", "/aw-"),
+          googleAds,
           "Installed",
           "Not detected",
           "Only matters if you run Google Ads, but without it you can't tell which clicks became enquiries.",
@@ -325,6 +349,11 @@ export function buildReport({ html, finalUrl, robots, sitemap, ms }: Input): Aud
     },
   ];
 
+  // The Google listing section, when there is one to show. Slotted in before
+  // the information panel so the scored sections stay together.
+  const googleCat = googleCategory(google);
+  if (googleCat) categories.splice(categories.length - 1, 0, googleCat);
+
   // Score each scored category out of 10.
   for (const cat of categories) {
     if (cat.score === -1) continue;
@@ -353,7 +382,165 @@ export function buildReport({ html, finalUrl, robots, sitemap, ms }: Input): Aud
     unknown: all.filter((c) => c.severity === "unknown").length,
   };
 
-  return { url: finalUrl, finalUrl, categories, score, counts, pagesFound: internal.size, words };
+  return {
+    url: finalUrl,
+    finalUrl,
+    categories,
+    score,
+    counts,
+    pagesFound: internal.size,
+    words,
+    ...(google?.status === "ok" ? { googleBusiness: google.business } : {}),
+  };
+}
+
+/**
+ * The Google Business Profile section.
+ *
+ * Returns null when there is nothing honest to put in it — no API key, no
+ * budget left, or a Google error — because an empty section with an apology in
+ * it tells a visitor nothing and makes the report look broken.
+ *
+ * When we searched and found no listing linking this domain, we do show a
+ * section, but it holds a single row that says exactly that and the whole
+ * section is left unscored. Two very different things produce that result —
+ * having no listing at all, and having one that doesn't link the site — and
+ * from out here we cannot tell which, so we don't pretend to.
+ */
+function googleCategory(google?: GoogleBusinessLookup): AuditCategory | null {
+  if (!google || google.status === "unavailable") return null;
+
+  if (google.status === "no_match") {
+    return {
+      id: "google",
+      name: "Google Business Profile",
+      score: -1,
+      checks: [
+        unknownCheck(
+          "g-listing",
+          "Google listing",
+          "Couldn't match one to this website"
+        ),
+        unknownCheck(
+          "g-listing-why",
+          "What that means",
+          "Either there isn't a listing, or there is one and it doesn't link this site. Both are worth sorting — the map results are where most local searches end up."
+        ),
+      ],
+    };
+  }
+
+  const b = google.business;
+  const months = monthsSince(b.latestReviewAt);
+  const checks: AuditCheck[] = [];
+
+  if (b.closed) {
+    checks.push({
+      id: "g-closed",
+      label: "Listing status",
+      value: "Marked closed on Google",
+      severity: "critical",
+      why: "Google is telling everyone who searches that this business has shut. Nothing else on the listing matters until that's corrected.",
+    });
+  }
+
+  checks.push({
+    id: "g-reviews",
+    label: "Google reviews",
+    value: b.reviews === 1 ? "1 review" : `${b.reviews} reviews`,
+    severity: b.reviews >= 25 ? "good" : b.reviews >= 5 ? "warning" : "critical",
+    ...(b.reviews >= 25
+      ? {}
+      : {
+          why:
+            b.reviews === 0
+              ? "With no reviews at all, anyone comparing you to a competitor on the map has nothing to go on but the competitor's."
+              : "Review count is one of the things people sort by and one of the things Google weighs. Fewer than a rival nearby means being skipped before being read.",
+        }),
+  });
+
+  checks.push(
+    b.rating === null
+      ? unknownCheck("g-rating", "Star rating", "No rating yet")
+      : {
+          id: "g-rating",
+          label: "Star rating",
+          value: `${b.rating.toFixed(1)} out of 5`,
+          severity: b.rating >= 4.5 ? "good" : b.rating >= 4 ? "warning" : "critical",
+          ...(b.rating >= 4.5
+            ? {}
+            : {
+                why: "Below about four and a half stars, people start reading the bad reviews instead of ringing. Replying to them publicly is usually the quickest fix.",
+              }),
+        }
+  );
+
+  checks.push(
+    months === null
+      ? unknownCheck("g-review-age", "Most recent review", "Nothing to read yet")
+      : {
+          id: "g-review-age",
+          label: "Most recent review",
+          value: months === 0 ? "Within the last month" : months === 1 ? "A month ago" : `About ${months} months ago`,
+          severity: months <= 3 ? "good" : months <= 9 ? "warning" : "critical",
+          ...(months <= 3
+            ? {}
+            : {
+                why: "A listing whose newest review is old reads as a business that has gone quiet, whatever the star rating says.",
+              }),
+        }
+  );
+
+  checks.push({
+    id: "g-photos",
+    label: "Photos on the listing",
+    value: b.photos === 0 ? "None" : `${b.photos}${b.photos >= 10 ? "+" : ""}`,
+    severity: b.photos >= 5 ? "good" : b.photos >= 1 ? "warning" : "critical",
+    ...(b.photos >= 5
+      ? {}
+      : {
+          why: "Photos are the first thing anyone looks at in the map results, and for this kind of work the before-and-afters are the sell.",
+        }),
+  });
+
+  checks.push({
+    id: "g-phone",
+    label: "Phone number on the listing",
+    value: b.phone || "Not on the listing",
+    severity: b.phone ? "good" : "critical",
+    ...(b.phone ? {} : { why: "The call button is the whole point of the listing on a phone. Without a number there isn't one." }),
+  });
+
+  checks.push({
+    id: "g-hours",
+    label: "Opening hours",
+    value: b.hasHours ? "Published" : "Not published",
+    severity: b.hasHours ? "good" : "warning",
+    ...(b.hasHours
+      ? {}
+      : {
+          why: "Google shows \"Hours not available\", and it stops the listing appearing for anyone filtering by open now.",
+        }),
+  });
+
+  if (b.category) {
+    checks.push(unknownCheck("g-category", "Google's category for you", b.category));
+  }
+  if (b.name) {
+    checks.push(unknownCheck("g-name", "Listed as", b.name));
+  }
+
+  return { id: "google", name: "Google Business Profile", score: 0, checks };
+}
+
+/** Whole months between a timestamp and now, or null if there isn't one. */
+function monthsSince(iso: string | null): number | null {
+  if (!iso) return null;
+  const then = Date.parse(iso);
+  if (Number.isNaN(then)) return null;
+  const days = (Date.now() - then) / 86_400_000;
+  if (days < 0) return 0;
+  return Math.floor(days / 30.44);
 }
 
 function internalHas(links: Set<string>, ...words: string[]) {

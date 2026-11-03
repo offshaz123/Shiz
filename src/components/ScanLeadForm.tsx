@@ -176,7 +176,7 @@ export function ScanLeadForm({
       <div className="lg:sticky lg:top-28">
         <ScanBrowserFrame url={website} revealed={0} />
         <p className="mt-3 text-center text-xs text-muted">
-          We check five areas of your site and show you each one.
+          We check your site area by area and show you each one.
         </p>
       </div>
     </div>
