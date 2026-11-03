@@ -37,11 +37,18 @@ const TIMEOUT_MS = 4_000;
 const TOTAL_BUDGET_MS = 6_000;
 
 /**
- * Review and photo fields sit in Google's dearest field tier, so asking for
- * them costs more per lookup than name-and-address alone. It is still a very
- * small amount per scan and the cache below means a domain is only ever
- * charged once a day, but it's the reason this list is kept tight: every
- * field here has a check that depends on it.
+ * Google bills a request at the dearest tier any field in this mask belongs
+ * to, so the list is kept tight: every field here has a check that depends on
+ * it, and nothing is asked for out of curiosity.
+ *
+ * rating, userRatingCount, websiteUri, nationalPhoneNumber and
+ * regularOpeningHours are Enterprise fields; reviews is dearer still. Dropping
+ * reviews would save a little per thousand but the free monthly allowance is
+ * the same either way, and "your newest review is eighteen months old" is the
+ * single most useful thing this lookup produces. So it stays.
+ *
+ * websiteUri isn't optional whatever it costs — it is the only thing that
+ * proves a listing belongs to the site we scanned.
  */
 const FIELD_MASK = [
   "places.displayName",
@@ -117,14 +124,47 @@ type Place = {
 const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 const cache = new Map<string, { at: number; value: GoogleBusinessLookup }>();
 
-/** Lookups allowed per day, before the scanner quietly stops asking. */
-const DAILY_BUDGET = Number(process.env.GOOGLE_PLACES_DAILY_BUDGET ?? 300);
-let spend = { day: "", used: 0 };
+/**
+ * What a lookup actually costs, as of Google's published pricing in November
+ * 2026, and why the defaults below are what they are.
+ *
+ * Google bills a Text Search request at the dearest tier any field in the
+ * field mask belongs to. Asking for the review count, rating, phone or hours
+ * puts us in Enterprise; asking for reviews themselves puts us in Enterprise +
+ * Atmosphere. That tier allows 1,000 free calls a month and charges per
+ * thousand after it.
+ *
+ * There is no longer a standing monthly dollar credit — Google replaced it
+ * with these per-SKU allowances — so "free" means 1,000 calls, not £200 of
+ * them. A scan spends one call, or two when the first search doesn't find a
+ * match, which is why the monthly default sits a little under 1,000 rather
+ * than on it.
+ *
+ * Belt and braces: this is the application's own limit. The hard stop is a
+ * daily quota set on the key in Google Cloud, which Google enforces whatever
+ * this code does.
+ */
+const MONTHLY_BUDGET = Number(process.env.GOOGLE_PLACES_MONTHLY_BUDGET ?? 900);
+
+/** A second limit, so one bad day can't spend the whole month by teatime. */
+const DAILY_BUDGET = Number(process.env.GOOGLE_PLACES_DAILY_BUDGET ?? 60);
+
+let spend = { day: "", month: "", today: 0, thisMonth: 0 };
 
 function withinBudget(): boolean {
-  const today = new Date().toISOString().slice(0, 10);
-  if (spend.day !== today) spend = { day: today, used: 0 };
-  return spend.used < DAILY_BUDGET;
+  const now = new Date().toISOString();
+  const day = now.slice(0, 10);
+  const month = now.slice(0, 7);
+
+  if (spend.month !== month) spend = { day, month, today: 0, thisMonth: 0 };
+  if (spend.day !== day) spend = { ...spend, day, today: 0 };
+
+  return spend.today < DAILY_BUDGET && spend.thisMonth < MONTHLY_BUDGET;
+}
+
+function recordSpend(): void {
+  spend.today += 1;
+  spend.thisMonth += 1;
 }
 
 /* ------------------------------------------------------------------ */
@@ -367,7 +407,7 @@ export async function lookupGoogleBusiness(
       break;
     }
 
-    spend.used += 1;
+    recordSpend();
 
     let places: Place[];
     try {

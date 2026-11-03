@@ -60,7 +60,7 @@ for local dev).
 | `CRON_SECRET` | The follow-up email cron endpoint | `/api/cron/follow-ups` returns 503 and sends nothing |
 | `CRON_SITE_URL` | `scripts/cron.js`, when run somewhere other than the live site | Defaults to the live site |
 | `GOOGLE_PLACES_KEY` | The Google Business Profile section of the scanner, and `scripts/find-local-prospects.mjs` | The scanner leaves that section out entirely and scores exactly as it did before |
-| `GOOGLE_PLACES_DAILY_BUDGET` | Capping Places lookups per day | Defaults to 300 |
+| `GOOGLE_PLACES_MONTHLY_BUDGET` `GOOGLE_PLACES_DAILY_BUDGET` | Capping Places lookups | Default to 900 a month and 60 a day — see below |
 | `META_CONVERSIONS_API_TOKEN` | Server-side conversion events to Meta | Events aren't sent |
 | `COMPANIES_HOUSE_KEY` | `scripts/find-prospects.mjs` | That script won't run |
 
@@ -74,9 +74,20 @@ One-off, in [console.cloud.google.com](https://console.cloud.google.com):
 4. Restrict it to the Places API, and ideally to the server's IP
 5. Set `GOOGLE_PLACES_KEY`
 
-Billing has to be switched on, but Google's standing monthly credit covers far more lookups
-than this site makes, and the scanner caches each domain for a day and stops asking once
-`GOOGLE_PLACES_DAILY_BUDGET` is spent, so the public audit form can't be used to run up a bill.
+Billing has to be switched on. Also set a **daily quota** on the key: **APIs & Services** →
+**Places API (New)** → **Quotas** → cap requests per day. That is a hard stop Google enforces,
+and it is the one that matters.
+
+**What it costs.** Google bills a Text Search request at the dearest tier of any field asked
+for. The scanner asks for review counts, ratings and reviews, which puts it in the Enterprise +
+Atmosphere tier: **1,000 free calls a month**, then $40 per thousand (Google's published
+pay-as-you-go pricing, November 2026 — check before relying on it). There is no longer a
+standing monthly dollar credit; Google replaced it with per-SKU free allowances, so "free"
+means 1,000 calls rather than a sum of money.
+
+A scan spends one call, or two when the first search finds no match. The defaults — 900 a
+month, 60 a day — keep the site inside the free allowance even if the public audit form gets
+hammered, and a scanned domain is cached for 24 hours so rescanning it costs nothing.
 
 ## WhatsApp
 
