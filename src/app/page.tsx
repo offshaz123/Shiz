@@ -189,9 +189,6 @@ export default function Home() {
         </section>
       )}
 
-      {/* Renders nothing until a review has been approved in the admin page. */}
-      <Reviews />
-
       {/* Final CTA + form */}
       <section id="lead-form" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
@@ -233,6 +230,15 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/*
+        Last thing above the footer. Somebody who has read this far and filled
+        nothing in is deciding whether to trust us, and other people's words
+        answer that better than another paragraph of ours.
+
+        Renders nothing until a review has been approved in the admin page.
+      */}
+      <Reviews />
     </div>
   );
 }

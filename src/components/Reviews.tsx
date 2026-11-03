@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getApprovedReviews, summarise, type Review } from "@/lib/reviews";
 
 /**
- * The reviews section, near the bottom of the homepage.
+ * The reviews section, at the very bottom of the homepage above the footer.
  *
  * Renders nothing at all when there are no approved reviews. An empty space
  * is the honest state before anyone has reviewed you, and it is better than
@@ -12,7 +12,19 @@ import { getApprovedReviews, summarise, type Review } from "@/lib/reviews";
  * It cannot be, because this whole section is hidden until somebody has
  * already left one — the first reviewer would have nowhere to click. The
  * footer carries the link on every page for exactly that reason.
+ *
+ * Up to five, they sit in a grid. Past that a grid either runs down the page
+ * forever or quietly stops showing the newer ones, so they scroll instead —
+ * slowly, and pausing when the pointer is over them so a card can actually be
+ * read. The animation is pure CSS and turns itself off for anyone who has
+ * asked for reduced motion, who gets a row they can swipe instead.
  */
+
+/** Above this many, the grid becomes a scrolling row. */
+const MARQUEE_FROM = 6;
+
+/** Seconds per card. Slow enough to read one as it passes. */
+const SECONDS_PER_CARD = 9;
 
 function Stars({ rating }: { rating: number }) {
   return (
@@ -48,7 +60,8 @@ function Card({ review }: { review: Review }) {
 }
 
 export async function Reviews() {
-  const reviews = await getApprovedReviews(6);
+  // More than the grid showed, since the marquee has room for them.
+  const reviews = await getApprovedReviews(14);
   const summary = summarise(reviews);
   if (!summary) return null;
 
@@ -71,13 +84,17 @@ export async function Reviews() {
           </div>
         </div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {reviews.map((review) => (
-            <Card key={review.id} review={review} />
-          ))}
-        </div>
+        {reviews.length < MARQUEE_FROM ? (
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {reviews.map((review) => (
+              <Card key={review.id} review={review} />
+            ))}
+          </div>
+        ) : (
+          <Marquee reviews={reviews} />
+        )}
 
-        <p className="mt-10 text-center text-sm text-muted">
+        <p className="mt-12 text-center text-sm text-muted">
           Worked with us?{" "}
           <Link href="/leave-a-review" className="underline hover:text-foreground">
             Leave a review
@@ -86,5 +103,40 @@ export async function Reviews() {
         </p>
       </div>
     </section>
+  );
+}
+
+/**
+ * The scrolling row.
+ *
+ * The list is rendered twice. The second copy is hidden from screen readers
+ * and from the keyboard — it exists only so that when the first copy has
+ * scrolled off the left there is already an identical one in its place, which
+ * is what makes the loop seamless. Reading the same six reviews twice would
+ * be nobody's idea of an improvement.
+ */
+function Marquee({ reviews }: { reviews: Review[] }) {
+  const group = (
+    <div className="review-marquee-group">
+      {reviews.map((review) => (
+        <div key={review.id} className="w-[20rem] shrink-0 sm:w-[22rem]">
+          <Card review={review} />
+        </div>
+      ))}
+    </div>
+  );
+
+  return (
+    <div
+      className="review-marquee mt-12 -mx-5 px-5 sm:-mx-8 sm:px-8"
+      style={{ ["--marquee-duration" as string]: `${reviews.length * SECONDS_PER_CARD}s` }}
+    >
+      <div className="review-marquee-track">
+        {group}
+        <div aria-hidden inert>
+          {group}
+        </div>
+      </div>
+    </div>
   );
 }
