@@ -51,6 +51,10 @@ const TOTAL_BUDGET_MS = 6_000;
  * proves a listing belongs to the site we scanned.
  */
 const FIELD_MASK = [
+  // The place ID is an Essentials field — it costs nothing extra and it is
+  // the only identifier that stays put when a business renames itself or
+  // moves, which is what the prospects list keys on.
+  "places.id",
   "places.displayName",
   "places.formattedAddress",
   "places.googleMapsUri",
@@ -66,6 +70,8 @@ const FIELD_MASK = [
 ].join(",");
 
 export type GoogleBusiness = {
+  /** Google's own stable identifier for this place. */
+  id: string;
   name: string;
   address: string;
   mapsUri: string;
@@ -93,6 +99,7 @@ export type GoogleBusinessLookup =
 
 /** Shape of the bits of a Places result we read. Google sends more. */
 type Place = {
+  id?: string;
   displayName?: { text?: string };
   formattedAddress?: string;
   googleMapsUri?: string;
@@ -291,6 +298,63 @@ export function searchTermsFor(html: string, host: string): string[] {
 }
 
 /* ------------------------------------------------------------------ */
+/* Finding businesses in an area                                       */
+/* ------------------------------------------------------------------ */
+
+export type ProspectSearch =
+  | { status: "ok"; businesses: GoogleBusiness[]; found: number; dropped: number }
+  | { status: "unavailable"; reason: "no_key" | "budget" | "error"; message?: string };
+
+/**
+ * Businesses in an area, smallest first.
+ *
+ * The opposite direction to the lookup above: that one starts from a website
+ * and finds its listing, this one starts from "car detailing in Romford" and
+ * finds the businesses. It exists because the useful question when deciding
+ * who to ring is not "is this site bad" but "is this business small enough to
+ * still want the work" — and review count is the only honest proxy for that
+ * we can read.
+ *
+ * Sorted fewest reviews first, because that is the order you should call in.
+ * Businesses with no website at all come out of this too; they are the better
+ * prospect and the caller shows them first.
+ */
+export async function searchBusinesses(
+  query: string,
+  maxReviews: number,
+): Promise<ProspectSearch> {
+  const key = process.env.GOOGLE_PLACES_KEY;
+  if (!key) return { status: "unavailable", reason: "no_key" };
+  if (!withinBudget()) return { status: "unavailable", reason: "budget" };
+
+  recordSpend();
+
+  let places: Place[];
+  try {
+    places = await searchOnce(query, key);
+  } catch (err) {
+    return {
+      status: "unavailable",
+      reason: "error",
+      message: err instanceof Error ? err.message : undefined,
+    };
+  }
+
+  const open = places.filter((p) => !p.businessStatus || p.businessStatus === "OPERATIONAL");
+  const businesses = open
+    .map(toBusiness)
+    .filter((b) => b.reviews <= maxReviews)
+    .sort((a, b) => a.reviews - b.reviews);
+
+  return {
+    status: "ok",
+    businesses,
+    found: places.length,
+    dropped: places.length - businesses.length,
+  };
+}
+
+/* ------------------------------------------------------------------ */
 /* Matching                                                           */
 /* ------------------------------------------------------------------ */
 
@@ -324,6 +388,7 @@ function toBusiness(p: Place): GoogleBusiness {
     .pop();
 
   return {
+    id: p.id ?? "",
     name: p.displayName?.text ?? "",
     address: p.formattedAddress ?? "",
     mapsUri: p.googleMapsUri ?? "",

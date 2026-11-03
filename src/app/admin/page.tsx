@@ -241,6 +241,12 @@ export default async function AdminPage() {
         <h1 className="text-2xl font-bold tracking-tight text-foreground">Leads</h1>
         <div className="flex items-center gap-2">
           <Link
+            href="/admin/prospects"
+            className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
+          >
+            Who to call
+          </Link>
+          <Link
             href="/admin/scan"
             className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
           >

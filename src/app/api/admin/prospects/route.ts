@@ -1,0 +1,109 @@
+import { NextResponse } from "next/server";
+import { isAdmin } from "@/lib/admin-auth";
+import { searchBusinesses } from "@/lib/google-business";
+import {
+  saveProspects,
+  listProspects,
+  updateProspect,
+  isStatus,
+  type ProspectStatus,
+} from "@/lib/prospects";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+/**
+ * The call list: searching for businesses, reading the saved ones back, and
+ * writing what happened on the phone.
+ *
+ * Admin only. Not because public listings are sensitive — they aren't — but
+ * because every search spends a Google lookup out of a monthly allowance, and
+ * an open endpoint would be somebody else's free Places API.
+ */
+
+const MAX_QUERY = 120;
+
+async function guard() {
+  return (await isAdmin()) ? null : NextResponse.json({ error: "unauthorised" }, { status: 401 });
+}
+
+function num(value: unknown): number | undefined {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : undefined;
+}
+
+/** Reads the saved list back, with the filters applied. */
+export async function GET(request: Request) {
+  const denied = await guard();
+  if (denied) return denied;
+
+  const params = new URL(request.url).searchParams;
+  const statusParam = params.get("status") ?? "all";
+
+  const prospects = await listProspects({
+    maxReviews: num(params.get("maxReviews")),
+    minRating: num(params.get("minRating")),
+    status:
+      statusParam === "all" || statusParam === "to-call"
+        ? statusParam
+        : isStatus(statusParam)
+          ? statusParam
+          : "all",
+  });
+
+  if (!prospects) return NextResponse.json({ error: "no_database" }, { status: 500 });
+  return NextResponse.json({ prospects });
+}
+
+/** Searches Google for businesses in an area, and files what it finds. */
+export async function POST(request: Request) {
+  const denied = await guard();
+  if (denied) return denied;
+
+  const body = await request.json().catch(() => null);
+  const query = typeof body?.query === "string" ? body.query.trim().slice(0, MAX_QUERY) : "";
+  if (query.length < 3) {
+    return NextResponse.json({ error: "query_too_short" }, { status: 400 });
+  }
+
+  const maxReviews = num(body?.maxReviews) ?? 50;
+  const result = await searchBusinesses(query, Math.min(500, Math.max(0, Math.round(maxReviews))));
+
+  if (result.status === "unavailable") {
+    const status = result.reason === "no_key" ? 503 : result.reason === "budget" ? 429 : 502;
+    return NextResponse.json({ error: result.reason, message: result.message }, { status });
+  }
+
+  // Filed before answering, so the list the page reads back is already
+  // complete and a search is never a result you can only see once.
+  await saveProspects(result.businesses, query);
+
+  const prospects = await listProspects({ maxReviews, status: "all" });
+
+  return NextResponse.json({
+    found: result.found,
+    dropped: result.dropped,
+    matched: result.businesses.length,
+    prospects: prospects ?? [],
+    saved: prospects !== null,
+  });
+}
+
+/** What happened when you rang them. */
+export async function PATCH(request: Request) {
+  const denied = await guard();
+  if (denied) return denied;
+
+  const body = await request.json().catch(() => null);
+  const id = num(body?.id);
+  if (!id) return NextResponse.json({ error: "bad_id" }, { status: 400 });
+
+  const status: ProspectStatus | undefined = isStatus(body?.status) ? body.status : undefined;
+  const notes = typeof body?.notes === "string" ? body.notes : undefined;
+  const siteScore = num(body?.siteScore);
+
+  const ok = await updateProspect(id, { status, notes, siteScore });
+  if (!ok) return NextResponse.json({ error: "not_saved" }, { status: 500 });
+
+  return NextResponse.json({ ok: true });
+}

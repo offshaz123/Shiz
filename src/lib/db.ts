@@ -141,6 +141,39 @@ const SCHEMA = [
     PRIMARY KEY (id),
     KEY idx_created (created_at)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  // Businesses we might ring, and what happened when we did.
+  //
+  // Keyed on Google's own place ID so the same business found twice — once
+  // searching "detailing in Romford" and again searching "valeting in
+  // Romford" — is one row that keeps whatever was written on it, rather than
+  // a fresh blank entry that loses the fact it was already called.
+  //
+  // The listing figures are refreshed on every search; the status, the notes
+  // and when it was called are ours and are never overwritten by one.
+  `CREATE TABLE IF NOT EXISTS prospects (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    place_id VARCHAR(190) NOT NULL,
+    name VARCHAR(200) NOT NULL,
+    phone VARCHAR(60) NULL,
+    website VARCHAR(255) NULL,
+    address VARCHAR(255) NULL,
+    category VARCHAR(120) NULL,
+    maps_uri VARCHAR(500) NULL,
+    reviews SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    rating DECIMAL(2,1) NULL,
+    site_score DECIMAL(3,1) NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'new',
+    notes TEXT NULL,
+    called_at DATETIME NULL,
+    found_for VARCHAR(160) NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uniq_place (place_id),
+    KEY idx_status (status),
+    KEY idx_reviews (reviews)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 ];
 
 /**
