@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { STATUSES, type Prospect, type ProspectStatus } from "@/lib/prospect-types";
+import { industries } from "@/content/industries";
 
 /**
  * The call list.
@@ -63,13 +64,19 @@ const FILTERS = [
   { value: "customer", label: "Customers" },
 ] as const;
 
-const SUGGESTIONS = [
-  "car detailing in Romford",
-  "window tinting in Essex",
-  "mobile valeting in Ilford",
-  "car wrapping in Barking",
-  "alloy wheel repair in Enfield",
-];
+/**
+ * The trades to offer, taken straight from the industries the site sells to
+ * rather than a list invented here. If a sector is added to
+ * content/industries.ts it turns up on this page without anyone remembering
+ * to come and add it.
+ *
+ * "&" is dropped because it means nothing to a Google text search — "Garages
+ * & MOT" finds less than "Garages MOT".
+ */
+function tradesFor(slug: string): string[] {
+  const industry = industries.find((i) => i.slug === slug);
+  return (industry?.examples ?? []).map((e) => e.replace(/\s*&\s*/g, " "));
+}
 
 function tone(score: number): string {
   if (score >= 8) return "text-emerald-500";
@@ -81,6 +88,8 @@ type Busy = { scanning?: boolean; scanError?: string };
 
 export function ProspectFinder() {
   const [query, setQuery] = useState("");
+  const [town, setTown] = useState("");
+  const [industry, setIndustry] = useState("");
   const [maxReviews, setMaxReviews] = useState(50);
   const [minRating, setMinRating] = useState(0);
   const [status, setStatus] = useState<string>("to-call");
@@ -103,6 +112,7 @@ export function ProspectFinder() {
       maxReviews: String(maxReviews),
       minRating: String(minRating),
       status,
+      industry,
     });
     const res = await fetch(`/api/admin/prospects?${params}`);
     const data = await res.json();
@@ -130,7 +140,7 @@ export function ProspectFinder() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [maxReviews, minRating, status]);
+  }, [maxReviews, minRating, status, industry]);
 
   /** The Refresh button. An event handler, so it can show progress. */
   async function load() {
@@ -146,9 +156,12 @@ export function ProspectFinder() {
     }
   }
 
-  async function search(e?: React.FormEvent) {
+  async function search(e?: React.FormEvent, override?: string) {
     e?.preventDefault();
     if (searching) return;
+
+    const text = override ?? query;
+    if (override) setQuery(override);
     setSearching(true);
     setError("");
 
@@ -156,7 +169,7 @@ export function ProspectFinder() {
       const res = await fetch("/api/admin/prospects", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query, maxReviews }),
+        body: JSON.stringify({ query: text, maxReviews, industry }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -236,18 +249,63 @@ export function ProspectFinder() {
         </button>
       </form>
 
-      <div className="mt-3 flex flex-wrap gap-2">
-        {SUGGESTIONS.map((s) => (
-          <button
-            key={s}
-            type="button"
-            onClick={() => setQuery(s)}
-            className="rounded-full border border-border px-3 py-1 text-xs text-muted hover:text-foreground"
-          >
-            {s}
-          </button>
-        ))}
+      <div className="mt-5">
+        <p className="text-xs font-semibold uppercase tracking-wide text-muted">Industry</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {industries.map((i) => (
+            <button
+              key={i.slug}
+              type="button"
+              onClick={() => setIndustry(industry === i.slug ? "" : i.slug)}
+              className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${
+                industry === i.slug
+                  ? "border-brand-pink text-foreground"
+                  : "border-border text-muted hover:text-foreground"
+              }`}
+            >
+              {i.name}
+            </button>
+          ))}
+        </div>
+        <p className="mt-2 text-xs text-muted">
+          {industry
+            ? "The list below is filtered to this industry. Pick a trade to find more."
+            : "Pick one to filter the list, and to get its trades as one-click searches."}
+        </p>
       </div>
+
+      {industry && (
+        <div className="mt-4 rounded-xl border border-border bg-surface p-4">
+          <label htmlFor="prospect-town" className="mb-1.5 block text-xs text-muted">
+            Town or area to search in
+          </label>
+          <input
+            id="prospect-town"
+            value={town}
+            onChange={(e) => setTown(e.target.value)}
+            placeholder="Romford"
+            className="w-full max-w-xs rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand-pink"
+          />
+          <div className="mt-3 flex flex-wrap gap-2">
+            {tradesFor(industry).map((trade) => (
+              <button
+                key={trade}
+                type="button"
+                disabled={!town.trim() || searching}
+                onClick={() => search(undefined, `${trade} in ${town.trim()}`)}
+                className="rounded-full border border-border px-3 py-1.5 text-xs text-muted hover:border-brand-pink hover:text-foreground disabled:opacity-40"
+              >
+                {trade}
+              </button>
+            ))}
+          </div>
+          {!town.trim() && (
+            <p className="mt-2 text-xs text-muted">
+              Type a town first. A suburb finds smaller operators than &ldquo;London&rdquo; does.
+            </p>
+          )}
+        </div>
+      )}
 
       <div className="mt-7 flex flex-wrap items-end gap-4 border-t border-border pt-6">
         <div>
@@ -395,23 +453,35 @@ function Row({
             {p.phone}
           </a>
         )}
-        {p.category && <span>{p.category}</span>}
-        {p.address && <span className="truncate">{p.address}</span>}
-        {p.mapsUri && (
-          <a href={p.mapsUri} target="_blank" rel="noreferrer noopener" className="underline">
-            Maps
-          </a>
-        )}
+        {/*
+          The site link sits right after the phone and is styled as something
+          to press, because on a call the two things wanted in the first three
+          seconds are the number and a look at their website. Buried in the
+          grey line with the address it read as plain text and nobody clicked
+          it.
+        */}
         {p.website && (
           <a
             href={p.website}
             target="_blank"
             rel="noreferrer noopener"
-            className="truncate underline"
+            className="max-w-[18rem] truncate rounded-lg border border-border px-2.5 py-1 font-semibold text-foreground hover:border-brand-pink"
           >
-            {p.website.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+            {p.website.replace(/^https?:\/\//, "").replace(/\/$/, "")} ↗
           </a>
         )}
+        {p.mapsUri && (
+          <a
+            href={p.mapsUri}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="rounded-lg border border-border px-2.5 py-1 font-semibold hover:border-brand-pink hover:text-foreground"
+          >
+            Maps ↗
+          </a>
+        )}
+        {p.category && <span>{p.category}</span>}
+        {p.address && <span className="truncate">{p.address}</span>}
         {p.website &&
           (p.siteScore !== null ? (
             <span className={`font-bold ${tone(p.siteScore)}`}>site {p.siteScore.toFixed(1)}</span>

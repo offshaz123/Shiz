@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/admin-auth";
 import { searchBusinesses } from "@/lib/google-business";
+import { industries } from "@/content/industries";
 import {
   saveProspects,
   listProspects,
@@ -32,6 +33,11 @@ function num(value: unknown): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
+/** Only an industry the site actually has. Anything else is ignored. */
+function industrySlug(value: unknown): string {
+  return typeof value === "string" && industries.some((i) => i.slug === value) ? value : "";
+}
+
 /** Reads the saved list back, with the filters applied. */
 export async function GET(request: Request) {
   const denied = await guard();
@@ -43,6 +49,7 @@ export async function GET(request: Request) {
   const prospects = await listProspects({
     maxReviews: num(params.get("maxReviews")),
     minRating: num(params.get("minRating")),
+    industry: industrySlug(params.get("industry")),
     status:
       statusParam === "all" || statusParam === "to-call"
         ? statusParam
@@ -76,9 +83,10 @@ export async function POST(request: Request) {
 
   // Filed before answering, so the list the page reads back is already
   // complete and a search is never a result you can only see once.
-  await saveProspects(result.businesses, query);
+  const industry = industrySlug(body?.industry);
+  await saveProspects(result.businesses, query, industry);
 
-  const prospects = await listProspects({ maxReviews, status: "all" });
+  const prospects = await listProspects({ maxReviews, status: "all", industry });
 
   return NextResponse.json({
     found: result.found,

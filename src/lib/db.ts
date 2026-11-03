@@ -167,6 +167,7 @@ const SCHEMA = [
     notes TEXT NULL,
     called_at DATETIME NULL,
     found_for VARCHAR(160) NULL,
+    industry VARCHAR(40) NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
@@ -188,6 +189,7 @@ const SCHEMA = [
 const ADDED_COLUMNS: { table: string; column: string; definition: string }[] = [
   { table: "scan_leads", column: "audit_json", definition: "MEDIUMTEXT NULL AFTER score" },
   { table: "scan_leads", column: "unsubscribed_at", definition: "DATETIME NULL AFTER notes" },
+  { table: "prospects", column: "industry", definition: "VARCHAR(40) NULL AFTER found_for" },
 ];
 
 interface CountRow extends RowDataPacket {

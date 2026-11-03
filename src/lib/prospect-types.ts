@@ -39,4 +39,6 @@ export type Prospect = {
   notes: string;
   calledAt: string | null;
   foundFor: string;
+  /** Which of the site's industries this was found under. */
+  industry: string;
 };

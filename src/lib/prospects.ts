@@ -35,6 +35,7 @@ interface ProspectRow extends RowDataPacket {
   notes: string | null;
   called_at: string | null;
   found_for: string | null;
+  industry: string | null;
 }
 
 function toProspect(row: ProspectRow): Prospect {
@@ -54,6 +55,7 @@ function toProspect(row: ProspectRow): Prospect {
     notes: row.notes ?? "",
     calledAt: row.called_at ? String(row.called_at) : null,
     foundFor: row.found_for ?? "",
+    industry: row.industry ?? "",
   };
 }
 
@@ -68,6 +70,7 @@ function toProspect(row: ProspectRow): Prospect {
 export async function saveProspects(
   businesses: GoogleBusiness[],
   foundFor: string,
+  industry: string,
 ): Promise<void> {
   const rows = businesses.filter((b) => b.id);
   if (rows.length === 0) return;
@@ -76,8 +79,8 @@ export async function saveProspects(
     for (const b of rows) {
       await db.execute(
         `INSERT INTO prospects
-           (place_id, name, phone, website, address, category, maps_uri, reviews, rating, found_for)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+           (place_id, name, phone, website, address, category, maps_uri, reviews, rating, found_for, industry)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON DUPLICATE KEY UPDATE
            name = VALUES(name),
            phone = VALUES(phone),
@@ -86,7 +89,10 @@ export async function saveProspects(
            category = VALUES(category),
            maps_uri = VALUES(maps_uri),
            reviews = VALUES(reviews),
-           rating = VALUES(rating)`,
+           rating = VALUES(rating),
+           -- Keeps whichever industry it was first filed under rather than
+           -- blanking it when the same firm turns up in a plain text search.
+           industry = COALESCE(NULLIF(VALUES(industry), ''), industry)`,
         [
           b.id,
           b.name.slice(0, 200),
@@ -98,6 +104,7 @@ export async function saveProspects(
           b.reviews,
           b.rating,
           foundFor.slice(0, 160),
+          industry.slice(0, 40),
         ],
       );
     }
@@ -108,11 +115,12 @@ export type ProspectFilters = {
   maxReviews?: number;
   minRating?: number;
   status?: ProspectStatus | "all" | "to-call";
+  industry?: string;
   limit?: number;
 };
 
 export async function listProspects(filters: ProspectFilters = {}): Promise<Prospect[] | null> {
-  const { maxReviews, minRating, status = "all", limit = 200 } = filters;
+  const { maxReviews, minRating, status = "all", industry, limit = 200 } = filters;
 
   return withDb(async (db) => {
     const where: string[] = [];
@@ -128,6 +136,10 @@ export async function listProspects(filters: ProspectFilters = {}): Promise<Pros
       // out for failing a test it cannot take.
       where.push("(rating IS NULL OR rating >= ?)");
       params.push(minRating);
+    }
+    if (industry) {
+      where.push("industry = ?");
+      params.push(industry);
     }
     if (status === "to-call") {
       where.push("status IN ('new', 'no-answer')");
