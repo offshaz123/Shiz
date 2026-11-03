@@ -115,6 +115,32 @@ const SCHEMA = [
     KEY idx_created (created_at),
     KEY idx_path (path)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  // Every time the follow-up scheduler runs, what it did.
+  //
+  // This exists because the follow-up sequence sat dead for a week and
+  // nothing anywhere said so. The cron job was listed in hPanel, on a
+  // sensible schedule, and Hostinger's "View Output" showed an empty box
+  // that never finished loading. From outside, a scheduler that runs and
+  // finds nothing to do is indistinguishable from one that never runs — and
+  // the second one costs you every lead you don't follow up.
+  //
+  // So the site keeps its own record. A row here means the job ran and
+  // reached the end. No rows, or none since yesterday, means it didn't, and
+  // the admin page says so in plain words rather than leaving it to be
+  // noticed.
+  `CREATE TABLE IF NOT EXISTS cron_runs (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    job VARCHAR(40) NOT NULL DEFAULT 'follow-ups',
+    sent SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    failed SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    skipped SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    considered SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    detail VARCHAR(400) NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    KEY idx_created (created_at)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 ];
 
 /**

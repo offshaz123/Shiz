@@ -163,5 +163,34 @@ async function run(request: Request) {
     else summary.skipped += 1;
   }
 
+  await recordRun(due.length, summary);
+
   return NextResponse.json({ ok: true, ...summary });
+}
+
+/**
+ * Leaves a record that this run happened, whether or not it sent anything.
+ *
+ * A run that finds nobody due is the normal case and looks exactly like a
+ * scheduler that never fired — which is how this sequence managed to sit dead
+ * for a week with a cron job sitting in hPanel looking perfectly healthy. The
+ * row is the proof it ran; the admin page reads it and says so.
+ *
+ * Deliberately never throws. Failing to write the diary must not fail the
+ * send that just happened.
+ */
+async function recordRun(considered: number, summary: Record<string, number>) {
+  await withDb(async (db) => {
+    await db.execute(
+      `INSERT INTO cron_runs (job, sent, failed, skipped, considered, detail)
+       VALUES ('follow-ups', ?, ?, ?, ?, ?)`,
+      [
+        summary.sent,
+        summary.failed,
+        summary.skipped,
+        considered,
+        considered === 0 ? "nobody was due" : null,
+      ],
+    );
+  }).catch(() => null);
 }

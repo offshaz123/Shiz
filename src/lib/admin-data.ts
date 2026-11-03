@@ -117,3 +117,48 @@ export async function getStats(): Promise<AdminStats | null> {
     };
   });
 }
+
+/**
+ * When the follow-up scheduler last ran, and what it did.
+ *
+ * `lastRunAt` being null does not mean "no emails went out" — it means the
+ * job has not reached the end of a run since this table existed. That is the
+ * distinction the admin page needs: a scheduler that runs daily and finds
+ * nobody due looks, from the leads table alone, exactly like one that is
+ * dead. It was dead for a week and nothing said so.
+ */
+export type CronHealth = {
+  lastRunAt: string | null;
+  hoursSince: number | null;
+  sentLast7Days: number;
+  runsLast7Days: number;
+};
+
+interface CronRow extends RowDataPacket {
+  last_run: string | null;
+  hours_since: number | null;
+  runs: number;
+  sent: number;
+}
+
+export async function getCronHealth(): Promise<CronHealth | null> {
+  return withDb(async (db) => {
+    const [[row]] = await db.query<CronRow[]>(
+      `SELECT MAX(created_at) AS last_run,
+              TIMESTAMPDIFF(HOUR, MAX(created_at), NOW()) AS hours_since,
+              SUM(created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)) AS runs,
+              SUM(CASE WHEN created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) THEN sent ELSE 0 END) AS sent
+         FROM cron_runs
+        WHERE job = 'follow-ups'`,
+    );
+
+    return {
+      lastRunAt: row?.last_run ? String(row.last_run) : null,
+      hoursSince: row?.hours_since === null || row?.hours_since === undefined
+        ? null
+        : Number(row.hours_since),
+      runsLast7Days: Number(row?.runs ?? 0),
+      sentLast7Days: Number(row?.sent ?? 0),
+    };
+  });
+}

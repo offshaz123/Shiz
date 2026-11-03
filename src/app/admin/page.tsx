@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { isAdmin } from "@/lib/admin-auth";
 import { isDbConfigured } from "@/lib/db";
-import { getLeads, getStats, type AdminLead } from "@/lib/admin-data";
+import { getLeads, getStats, getCronHealth, type AdminLead, type CronHealth } from "@/lib/admin-data";
 import { getAllReviews, type Review } from "@/lib/reviews";
 import { LoginForm } from "./LoginForm";
 import { logout, moderateReview, removeReview, saveNote, sendStepNow, setContacted } from "./actions";
@@ -226,7 +226,12 @@ function NoDatabase() {
 export default async function AdminPage() {
   if (!(await isAdmin())) return <LoginForm />;
 
-  const [stats, leads, reviews] = await Promise.all([getStats(), getLeads(), getAllReviews()]);
+  const [stats, leads, reviews, cron] = await Promise.all([
+    getStats(),
+    getLeads(),
+    getAllReviews(),
+    getCronHealth(),
+  ]);
 
   const pendingReviews = (reviews ?? []).filter((r) => r.status === "pending").length;
 
@@ -258,6 +263,8 @@ export default async function AdminPage() {
         </div>
       ) : (
         <>
+          {cron && <SchedulerStatus cron={cron} />}
+
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-5">
             <Stat label="Total leads" value={stats.totalLeads} />
             <Stat label="Last 7 days" value={stats.leadsThisWeek} />
@@ -318,6 +325,58 @@ export default async function AdminPage() {
           </div>
         </>
       )}
+    </div>
+  );
+}
+
+/**
+ * Whether the follow-up scheduler is alive.
+ *
+ * Sits at the top of the page and says so in plain words, because the
+ * failure this is here to catch is a silent one: the cron job was sitting in
+ * hPanel on a perfectly sensible daily schedule, the endpoint was healthy,
+ * the secret was set, and not one follow-up had gone out in a week. Nothing
+ * on this page said anything was wrong, because nothing on this page was
+ * looking.
+ *
+ * It is deliberately loud when the job hasn't run and quiet when it has.
+ */
+function SchedulerStatus({ cron }: { cron: CronHealth }) {
+  const neverRun = cron.lastRunAt === null;
+  const stale = cron.hoursSince !== null && cron.hoursSince >= 48;
+
+  if (neverRun || stale) {
+    return (
+      <div className="mt-8 rounded-2xl border border-red-500/50 bg-red-500/5 p-5">
+        <h2 className="text-sm font-semibold text-foreground">
+          Follow-up emails are not being sent automatically
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted">
+          {neverRun
+            ? "The daily job has never reported finishing a run. Day 1, 3 and 6 emails will only go out when you press the buttons on a lead below."
+            : `The daily job last finished ${cron.hoursSince} hours ago. It should run every day.`}
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-muted">
+          Check the cron job in hPanel under Advanced → Cron Jobs. The two things that break
+          it are the script path being wrong and CRON_SECRET missing from the file the cron
+          reads, which is not necessarily the same place the website reads it from.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-8 rounded-2xl border border-border bg-surface px-5 py-4">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <h2 className="text-sm font-semibold text-foreground">Follow-up scheduler</h2>
+        <span className="text-xs text-muted">
+          {cron.hoursSince === 0 ? "ran within the hour" : `ran ${cron.hoursSince}h ago`}
+        </span>
+      </div>
+      <p className="mt-1 text-sm text-muted">
+        {cron.runsLast7Days} {cron.runsLast7Days === 1 ? "run" : "runs"} in the last 7 days,{" "}
+        {cron.sentLast7Days} {cron.sentLast7Days === 1 ? "email" : "emails"} sent.
+      </p>
     </div>
   );
 }
