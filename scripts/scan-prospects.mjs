@@ -66,7 +66,11 @@ async function scan(domain) {
       body: JSON.stringify({ url: domain }),
     });
     const data = await res.json();
-    if (!res.ok) return { domain, error: data?.error ?? `http_${res.status}` };
+    // The scanner answered and said it couldn't read that site. That is a
+    // finding about them, not a failure of ours — some sites block anything
+    // that isn't a browser, which is worth knowing before you ring up and
+    // say their site is broken.
+    if (!res.ok) return { domain, siteError: data?.error ?? `http_${res.status}` };
 
     const problems = data.categories
       .flatMap((c) => c.checks)
@@ -88,22 +92,44 @@ async function scan(domain) {
       problems,
     };
   } catch (err) {
-    return { domain, error: String(err).slice(0, 60) };
+    // We never reached the scanner at all. Worth retrying; the one above is not.
+    return { domain, networkError: String(err).slice(0, 60) };
   }
 }
 
-// Sequential on purpose. Each scan fetches somebody's site, and firing twenty
-// at once is both rude and a good way to get our own IP blocked.
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// Sequential, with a pause. Each scan fetches somebody's site, so firing
+// twenty at once is both rude and a good way to get our own IP blocked. The
+// gap also keeps us under our own API's rate limiting, which a first run of
+// this hit — a row of identical "fetch failed" results is that, not a row of
+// broken websites, and it would be easy to misread as the prospects being
+// worse than they are.
 const results = [];
-for (const domain of domains) {
+for (const [i, domain] of domains.entries()) {
+  if (i > 0) await sleep(2500);
   if (!csv) process.stderr.write(`scanning ${domain}… `);
-  const result = await scan(domain);
-  if (!csv) process.stderr.write(result.error ? `failed (${result.error})\n` : `${result.score}\n`);
+
+  let result = await scan(domain);
+  // Retry only when we couldn't reach our own scanner. A scanner that
+  // answered "I couldn't read that site" will say the same thing again.
+  if (result.networkError) {
+    await sleep(6000);
+    result = await scan(domain);
+  }
+
+  const problem = result.siteError ?? result.networkError;
+  if (!csv) {
+    process.stderr.write(
+      problem ? `${result.siteError ? "couldn't read" : "network"} (${problem})\n` : `${result.score}\n`,
+    );
+  }
   results.push(result);
 }
 
-const scored = results.filter((r) => !r.error).sort((a, b) => a.score - b.score);
-const failed = results.filter((r) => r.error);
+const scored = results.filter((r) => r.score !== undefined).sort((a, b) => a.score - b.score);
+const unreadable = results.filter((r) => r.siteError);
+const unreached = results.filter((r) => r.networkError);
 
 if (csv) {
   console.log("domain,score,critical,warning,pages,words,weakest,problems");
@@ -130,8 +156,13 @@ if (csv) {
       if (r.problems.length) console.log(`  ${r.domain}\n    ${r.problems.join(", ")}\n`);
     }
   }
-  if (failed.length) {
-    console.log("Couldn't scan:");
-    for (const r of failed) console.log(`  ${r.domain} — ${r.error}`);
+  if (unreadable.length) {
+    console.log("Their site wouldn't load for us — check it in a browser before calling:");
+    for (const r of unreadable) console.log(`  ${r.domain} — ${r.siteError}`);
+    console.log();
+  }
+  if (unreached.length) {
+    console.log("Our end failed, worth running again:");
+    for (const r of unreached) console.log(`  ${r.domain} — ${r.networkError}`);
   }
 }
