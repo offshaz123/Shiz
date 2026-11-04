@@ -16,6 +16,86 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "how-recent-do-your-google-reviews-need-to-be",
+    title: "How Recent Do Your Google Reviews Need to Be?",
+    description:
+      "Google documents how many reviews you have and says nothing at all about how old they are. Here is what that means, and the question that matters more anyway.",
+    publishedAt: "2026-11-04",
+    keywords: [
+      "do old Google reviews still count",
+      "review recency local SEO",
+      "Google reviews ranking UK",
+      "how often should you get Google reviews",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You have forty reviews and a 4.8 average. Good numbers. The newest one is from eighteen months ago.",
+          "Does that still count? It is a fair question and it gets asked a lot, usually by somebody who did a push for reviews once, hit a number they were happy with, and stopped.",
+        ],
+      },
+      {
+        heading: "What Google actually says",
+        paragraphs: [
+          "Google publishes a page on local ranking, and it is worth reading rather than taking anyone's summary of it.",
+          "Local results, in Google's wording, are \u201cmainly based on relevance, distance, and popularity\u201d. Reviews sit under the third one, which the page then calls prominence: \u201cProminence means how well-known a business is.\u201d",
+          "The sentence everybody quotes is this: \u201cMore reviews and positive ratings can help your business's local ranking.\u201d",
+          "Read it closely. More reviews. Positive ratings. Count and score. There is nothing there about when they were left.",
+        ],
+      },
+      {
+        heading: "On recency, the page is silent",
+        paragraphs: [
+          "We went through Google's local ranking page and its page on managing reviews looking for anything about review age, recency, or how recently a review was written. There is nothing. Not a sentence.",
+          "Plenty of local SEO blogs will give you a number \u2014 reviews lose a share of their value after thirty days, after six months, pick one. Those numbers are not from Google. They come from third-party case studies and from surveys of other SEOs, and the sources disagree with each other.",
+          "That does not make them worthless. The industry consensus does lean towards a steady flow of new reviews helping, and the people saying it are not fools. But it is correlation and informed opinion, and anyone presenting it to you as a documented Google rule is overstating what they know.",
+          "Google is also explicit about why you will not get a straight answer: \u201cThere's no way to request or pay for a better local ranking on Google. We do our best to keep the search algorithm details confidential.\u201d",
+        ],
+      },
+      {
+        heading: "The question that matters more",
+        paragraphs: [
+          "Here is the thing, though. Ranking is the wrong thing to be worrying about with this one.",
+          "Forget the algorithm for a second and picture the actual customer. They have your listing open and a competitor's open in the next tab. They are deciding which one to ring.",
+          "Your newest review is from eighteen months ago. Theirs is from last week.",
+          "Nothing about that is subtle. An old newest-review reads as a business that has gone quiet \u2014 maybe they are not taking work, maybe the good staff left, maybe something went wrong. None of that may be true. It does not need to be true to cost you the call.",
+          "You do not need Google to confirm anything for that effect to be real. It is happening on a screen in front of a person who is about to choose.",
+        ],
+      },
+      {
+        heading: "A trickle beats a burst",
+        paragraphs: [
+          "The common pattern is a push. A business decides to sort its reviews out, asks forty customers over a fortnight, gets twenty-five, and never asks again.",
+          "Two years later the profile looks exactly like what it is: somebody who cared about this once.",
+          "A handful a month, forever, beats a burst and a silence. It also looks more natural, which matters \u2014 a sudden spike of reviews after years of nothing is the sort of thing that gets a listing looked at.",
+          "The practical version for most small businesses:",
+        ],
+        bullets: [
+          "Ask at the moment the customer is happiest, which is usually when they are looking at the finished work, not three days later by email",
+          "Ask every time, not in campaigns \u2014 build it into how a job finishes rather than running it as a project",
+          "Give them the direct link. Nobody is navigating to your listing from scratch to do you a favour",
+          "Reply to every one. Google's own wording is that \u201cpositive reviews and helpful replies can help your business stand out\u201d, and a reply is the one part of this entirely within your control",
+        ],
+      },
+      {
+        heading: "Two things not to do",
+        paragraphs: [
+          "Do not buy them. Beyond the obvious, bought reviews arrive in patterns that are not hard to spot, and the downside is losing the listing rather than a ranking position.",
+          "Do not filter who you ask. Sending happy customers to Google and unhappy ones to a private form is review gating, it breaks Google's policies, and it is one of the more reliable ways to get a profile suspended.",
+          "One quirk worth knowing while you are in there: if a customer edits their review after reading your reply, Google says the date on it changes to show when the update was made. So a reply that actually resolves something can refresh the date on a review you already had."
+        ],
+      },
+      {
+        heading: "How to tell where you stand",
+        paragraphs: [
+          "Open your profile and your three nearest competitors' profiles. Ignore the totals and the averages. Look only at the date on the newest review on each.",
+          "If theirs are from this month and yours is from last year, you have your answer, and it has nothing to do with what Google does or does not document.",
+          "That is the gap worth closing, and it does not take a campaign. It takes asking the next customer."
+        ],
+      },
+    ],
+  },
+  {
     slug: "call-tracking-google-ads-which-ad-made-the-phone-ring",
     title: "Call Tracking for Google Ads: Knowing Which Ad Made the Phone Ring",
     description:
