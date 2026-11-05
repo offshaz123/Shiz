@@ -6,11 +6,14 @@ import { whatsappHref } from "@/lib/site";
 // The floating "Chat with us" button for customers. Hidden in the admin,
 // where it would only cover the shop's own buttons.
 export function WhatsAppFloat() {
-  if (usePathname().startsWith("/admin")) return null;
+  const path = usePathname();
+  if (path.startsWith("/admin")) return null;
+  // On the plate builder, phones have a price bar along the bottom: sit above it.
+  const builder = path === "/design" || path.startsWith("/plates/");
   return (
     <a
       href={whatsappHref}
-      className="fixed bottom-5 right-5 z-30 flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-3 font-semibold text-white shadow-lg hover:brightness-95"
+      className={`fixed right-5 z-30 flex ${builder ? "bottom-24 lg:bottom-5" : "bottom-5"} items-center gap-2 rounded-full bg-[#25D366] px-4 py-3 font-semibold text-white shadow-lg hover:brightness-95`}
       aria-label="Chat with us on WhatsApp"
     >
       <svg viewBox="0 0 24 24" className="h-6 w-6" fill="currentColor" aria-hidden>

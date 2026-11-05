@@ -105,20 +105,20 @@ export function Tracking() {
         <div
           role="dialog"
           aria-label="Cookie choices"
-          className="fixed inset-x-3 bottom-3 z-40 mx-auto max-w-xl rounded-2xl border border-line bg-white p-4 shadow-2xl sm:p-5"
+          className="fixed inset-x-3 bottom-3 z-40 mx-auto max-w-xl rounded-2xl border border-line bg-white p-3 shadow-2xl sm:p-5"
         >
-          <p className="text-sm leading-relaxed">
+          <p className="text-xs leading-relaxed sm:text-sm">
             We&apos;d like to use cookies to see how people find and use our site, and to measure our adverts on Google and TikTok. Essential cookies
             (your basket and login) are always on.{" "}
             <Link href="/privacy-policy#cookies" className="font-semibold underline">
               More about cookies
             </Link>
           </p>
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            <button type="button" className="btn btn-white" onClick={() => choose("no")}>
+          <div className="mt-2 grid grid-cols-2 gap-2 sm:mt-3">
+            <button type="button" className="btn btn-white min-h-10 sm:min-h-12" onClick={() => choose("no")}>
               Reject
             </button>
-            <button type="button" className="btn btn-gold" onClick={() => choose("yes")}>
+            <button type="button" className="btn btn-gold min-h-10 sm:min-h-12" onClick={() => choose("yes")}>
               Accept
             </button>
           </div>

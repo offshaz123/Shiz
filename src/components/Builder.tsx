@@ -124,14 +124,14 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
   const { add } = useCart();
   const [c, setC] = useState<PlateConfig>({ ...defaultConfig, ...initial });
   const [tab, setTabState] = useState(0);
-  // Every step has to be looked at before the plate can go in the basket.
-  const [visited, setVisited] = useState<number[]>([0]);
   const [stepError, setStepError] = useState("");
   const setTab = (i: number) => {
     setTabState(i);
-    setVisited((v) => (v.includes(i) ? v : [...v, i]));
     setStepError("");
   };
+  // Most people want a standard plate, so the other sizes are tucked away
+  // until asked for (or already chosen, e.g. from a motorbike page).
+  const [moreSizes, setMoreSizes] = useState((initial.size ?? "standard") !== "standard");
   const [regError, setRegError] = useState("");
   const [notice, setNotice] = useState(showPlateNotice);
 
@@ -173,13 +173,6 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
       document.getElementById("plate-steps")?.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
-    const missed = tabs.findIndex((_, i) => !visited.includes(i));
-    if (missed !== -1) {
-      setTab(missed);
-      setStepError(missed === 1 ? "Choose your plate style first" : "Check your extras first (border, badge and fixings)");
-      document.getElementById("plate-steps")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      return;
-    }
     const item = { ...c, reg: plateText(c) };
     add(item);
     trackAddToCart({ ...item, id: "", qty: 1 });
@@ -205,17 +198,14 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
 
   return (
     <div className="bg-surface">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-        <Link href="/" className="inline-flex items-center gap-2 py-2 text-sm font-semibold hover:text-gold">
-          <span aria-hidden>←</span> Back to Home
-        </Link>
-        <h1 className="mt-3 text-center font-display text-3xl font-bold sm:mt-4 sm:text-5xl">Build Your Number Plates</h1>
+      <div className="mx-auto max-w-7xl px-4 pb-28 pt-4 sm:px-6 sm:pt-6 lg:pb-10">
+        <h1 className="text-center font-display text-2xl font-bold sm:text-4xl">Build Your Number Plates</h1>
 
-        <ul className="mt-8 hidden grid-cols-2 gap-3 sm:grid lg:grid-cols-4">
+        <ul className="mt-5 hidden grid-cols-2 gap-3 sm:grid lg:grid-cols-4">
           {trust.map((t) => (
             <li
               key={t.title}
-              className={`flex items-center gap-3 rounded-xl border p-4 ${
+              className={`flex items-center gap-3 rounded-xl border p-3 ${
                 t.highlight ? "border-[#d9c37a] bg-[#fdf8e7]" : "border-line bg-white"
               }`}
             >
@@ -232,11 +222,11 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
           ))}
         </ul>
 
-        <div className="mt-5 grid gap-6 sm:mt-6 lg:grid-cols-2 lg:items-start">
+        <div className="mt-4 grid gap-6 sm:mt-6 lg:grid-cols-2 lg:items-start">
           {/* Configure */}
           <section className="overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
-            <h2 className="gold-deep px-6 py-5 font-display text-2xl font-bold">Configure Your Plate</h2>
-            <div className="p-5 sm:p-6">
+            <h2 className="sr-only">Configure Your Plate</h2>
+            <div className="p-4 sm:p-6">
               <div className="rounded-xl border border-[#e8d89a] bg-[#fdf8e7] p-4">
                 <label htmlFor="reg" className="mb-2 block text-sm font-semibold">
                   {c.type === "show" ? "Show Plate Text" : "Registration Number"}
@@ -281,11 +271,17 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                 )}
               </div>
 
+              {/* On phones the full preview is further down the page, so show the plate
+                  straight under the registration, where they see it as they type. */}
+              <div className="mt-3 rounded-xl bg-surface-2/60 p-3 lg:hidden" aria-hidden>
+                <PlatePreview config={c} side="rear" className="w-full drop-shadow-md" />
+              </div>
+
               {/* Plate size first: it changes the shape, so customers pick it before anything else. */}
               <div className="mt-5">
                 <p className="mb-2 text-sm font-semibold">Plate Size</p>
                 <div role="radiogroup" aria-label="Plate size" className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-                  {sizes.map((s) => {
+                  {(moreSizes ? sizes : sizes.filter((s) => s.id === c.size)).map((s) => {
                     const on = c.size === s.id;
                     return (
                       <button
@@ -318,6 +314,16 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                       </button>
                     );
                   })}
+                  {!moreSizes && (
+                    <button
+                      type="button"
+                      onClick={() => setMoreSizes(true)}
+                      className="col-span-2 flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-line bg-white px-2 py-2.5 text-center hover:border-[#c9c6b8] sm:col-span-3"
+                    >
+                      <span className="text-sm font-bold">Other sizes ›</span>
+                      <span className="text-[11px] leading-tight text-muted">Hex, motorbike, 4x4 / import</span>
+                    </button>
+                  )}
                 </div>
                 <p className="mt-2 text-xs text-muted">
                   {size.note}
@@ -329,10 +335,6 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                 )}
               </div>
 
-              {/* On phones the full preview is further down the page, so show the plate here too. */}
-              <div className="mt-4 rounded-xl bg-surface-2/60 p-3 lg:hidden" aria-hidden>
-                <PlatePreview config={c} side="rear" className="w-full drop-shadow-md" />
-              </div>
 
               {notice && c.type === "show" && (
                 <div className="mt-4 rounded-xl border border-[#f1c9a5] bg-[#fff5ec] p-3 text-sm text-[#8a4a12]">
@@ -609,9 +611,9 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
 
           {/* Preview & summary */}
           <section className="overflow-hidden rounded-2xl border border-line bg-white shadow-sm lg:sticky lg:top-36">
-            <h2 className="gold-bg px-6 py-5 font-display text-2xl font-bold">Preview &amp; Summary</h2>
+            <h2 className="gold-bg px-6 py-3 font-display text-xl font-bold">Preview &amp; Summary</h2>
             <div className="p-5 sm:p-6">
-              <div className="grid gap-4">
+              <div className="mx-auto grid max-w-md gap-3">
                 {showFront && (
                   <div>
                     <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted">Front</p>
@@ -626,7 +628,26 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                 )}
               </div>
 
-              <dl className="mt-6 space-y-2.5">
+              {/* The price and the button come straight after the plates, so they're
+                  in view without scrolling; the details are underneath. */}
+              <div className="mt-5 flex items-center justify-between border-t border-line pt-4">
+                <span className="font-display text-2xl font-bold">Total:</span>
+                <span className="gold-text font-display text-4xl font-bold">{money(unitPrice(c))}</span>
+              </div>
+              <KlarnaNote amount={unitPrice(c)} className="mt-3" />
+
+              <button type="button" onClick={addToBasket} className="btn btn-dark mt-4 w-full rounded-lg">
+                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+                  <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" />
+                </svg>
+                Add to Basket
+              </button>
+
+              <div className="mt-4">
+                <DispatchCountdown />
+              </div>
+
+              <dl className="mt-6 space-y-2.5 border-t border-line pt-4">
                 {summary.map(([k, v]) => (
                   <div key={k} className="flex justify-between gap-4">
                     <dt className="text-muted">{k}:</dt>
@@ -669,25 +690,23 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                   </div>
                 )}
               </dl>
-
-              <div className="mt-4 flex items-center justify-between border-t border-line pt-4">
-                <span className="font-display text-2xl font-bold">Total:</span>
-                <span className="gold-text font-display text-4xl font-bold">{money(unitPrice(c))}</span>
-              </div>
-              <KlarnaNote amount={unitPrice(c)} className="mt-3" />
-
-              <div className="mt-5">
-                <DispatchCountdown />
-              </div>
-
-              <button type="button" onClick={addToBasket} className="btn btn-dark mt-4 w-full rounded-lg">
-                <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-                  <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" />
-                </svg>
-                Add to Basket
-              </button>
             </div>
           </section>
+        </div>
+      </div>
+
+      {/* Phones: the price and the button stay on screen while choosing. */}
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_-12px_rgb(0_0_0/0.25)] backdrop-blur lg:hidden">
+        <div className="mx-auto flex max-w-xl items-center gap-3">
+          <div className="min-w-0 flex-1 leading-tight">
+            <p className="font-display text-2xl font-bold">{money(unitPrice(c))}</p>
+            <p className="truncate text-xs text-muted">
+              {style.name} · {size.rearOnly ? "rear plate" : c.which === "pair" ? "front & rear" : `${c.which} plate`}
+            </p>
+          </div>
+          <button type="button" onClick={addToBasket} className="btn btn-gold shrink-0 rounded-lg px-5">
+            Add to Basket
+          </button>
         </div>
       </div>
     </div>
