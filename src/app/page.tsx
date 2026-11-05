@@ -228,6 +228,36 @@ export default async function Home() {
         </section>
       )}
 
+      {/* A real pair from the workshop, with the sample board behind. */}
+      <section className="border-b border-line bg-white py-12 sm:py-20">
+        <div className="mx-auto grid max-w-5xl items-center gap-8 px-4 sm:px-6 md:grid-cols-2 md:gap-12">
+          <Image
+            src="/workshop/3d-gel-pair.jpg"
+            alt="A finished 3D Gel front and rear number plate pair held up in the PlatedUp workshop, with sample plates of every style on the wall"
+            width={1200}
+            height={1500}
+            sizes="(min-width: 768px) 450px, 100vw"
+            className="w-full rounded-2xl border border-line object-cover shadow-sm"
+          />
+          <div>
+            <span className="inline-block rounded-full bg-gold-soft px-4 py-1.5 text-sm font-semibold text-gold">Made in our workshop</span>
+            <h2 className="mt-3 font-display text-3xl font-bold sm:text-4xl">Real plates, made by hand in London</h2>
+            <p className="mt-3 text-muted">
+              Every plate is pressed, finished and checked in our own workshop, from classic printed plates to deep 7mm gel. This is a real
+              3D Gel pair, ready to go out to a customer.
+            </p>
+            <ul className="mt-4 space-y-1.5 text-sm">
+              <li>✓ DVLA registered supplier, every road-legal plate made to BS AU 145e</li>
+              <li>✓ Our name and postcode on every plate, as the law requires</li>
+              <li>✓ Same day dispatch when you order before {site.dispatchCutoff} on a working day</li>
+            </ul>
+            <Link href="/design" className="btn btn-gold mt-6 rounded-lg">
+              Design Your Plates <span aria-hidden>→</span>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* Gallery */}
       <section className="bg-surface py-12 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
