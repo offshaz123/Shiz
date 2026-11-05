@@ -9,6 +9,7 @@ marketing specifically (car buyers researching on social before purchase, purcha
 keywords, dealership social strategy).
 
 ## Published so far
+- Lead Forms vs Sending People to Your Website (Meta ads / conversion)
 - How Recent Do Your Google Reviews Need to Be? (reviews / local SEO)
 - Instagram Ads for Car Dealerships: A Complete Guide (automotive)
 - How Much Should You Spend on Meta & Instagram Ads? (budgeting)
@@ -438,7 +439,7 @@ actually says", because that gap has produced the strongest posts this month.
 - [x] How Recent Do Your Google Reviews Need to Be? — target: "do old Google reviews still count",
       "review recency local SEO" (VERIFY: Google publishes little on this, so the post may have to
       say that plainly rather than quote a number)
-- [ ] Lead Forms vs Sending People to Your Website — target: "Meta lead ads vs website",
+- [x] Lead Forms vs Sending People to Your Website — target: "Meta lead ads vs website",
       "instant forms vs landing page" (the trade-off between fewer drop-offs and worse lead quality)
 - [ ] Why Your Ad Account Spends Unevenly Across the Week — target: "Facebook ads daily budget
       not spending", "ad spend uneven daily budget"

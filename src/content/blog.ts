@@ -16,6 +16,93 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "lead-forms-vs-sending-people-to-your-website",
+    title: "Lead Forms vs Sending People to Your Website",
+    description:
+      "Instant forms get you more leads for less money. That is exactly why they are not always the right answer, and the difference shows up weeks later.",
+    publishedAt: "2026-11-05",
+    keywords: [
+      "Meta lead ads vs website",
+      "instant forms vs landing page",
+      "Facebook lead form quality",
+      "where should Facebook ads send people",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "When you build a campaign to get enquiries, Meta asks where they should land. An instant form that opens inside the app, or your own website.",
+          "The form will almost always produce more leads at a lower cost per lead. Whoever is reporting on the campaign will prefer it. That is not the same as it being the right choice, and the difference does not show up in the first week.",
+        ],
+      },
+      {
+        heading: "What each one actually is",
+        paragraphs: [
+          "An instant form opens inside Facebook or Instagram. The person never leaves the app. Name, email and phone come pre-filled from their account, so finishing it can take two taps.",
+          "Sending them to your site means a tap, a page load, and a form they have to type into themselves. More steps, every one of which loses somebody.",
+          "That is the entire trade-off, and both halves of it are real.",
+        ],
+      },
+      {
+        heading: "Forms win on volume, and that is not a compliment",
+        paragraphs: [
+          "A form that takes two taps gets filled in by people who would never have typed their number into a website. Some of those are customers you would otherwise have missed, which is the honest case for instant forms.",
+          "But low effort cuts both ways. Somebody half-watching the telly taps through a pre-filled form in four seconds, and by the time you ring they have no memory of doing it. Nothing was wrong with the targeting. They just did not have to want it very much.",
+          "The pre-filled numbers are their own problem. Pre-filled means whatever is on their Facebook account, which might be a number they stopped using in 2019. They are not fake, they are stale, and you cannot tell the difference until you have rung forty of them.",
+          "So the cost per lead is lower and the cost per booked job may not be. Those are different numbers and only one of them pays you.",
+        ],
+      },
+      {
+        heading: "What you give up by never sending anyone to your site",
+        paragraphs: [
+          "This is the part that is easy to miss, because none of it shows up in the campaign report.",
+          "If nobody lands on your website, your pixel never sees them. You build no audience of people who looked and did not enquire, which means no retargeting \u2014 and retargeting people who already visited is usually the cheapest advertising you have access to.",
+          "You also never get to sell. A form shows them a headline and an image. A page can show the work, the prices, the before-and-afters, the reviews, and the answer to whatever is actually stopping them. Somebody who reads all that and then enquires is a different person to one who tapped twice.",
+          "And your website stops earning anything. If every campaign routes around it, it is a brochure nobody opens, and you will eventually and reasonably conclude it was not worth building.",
+        ],
+      },
+      {
+        heading: "What you give up by sending them to your site",
+        paragraphs: [
+          "The honest other side: every extra step loses people, and on a phone the losses are brutal.",
+          "A page that takes five seconds to appear has already lost a chunk of the people who tapped. A form below three scrolls of text loses more. A form asking for a postcode, a vehicle registration and a preferred date loses nearly everyone.",
+          "If your site is slow or your form is long, instant forms will beat it and they will deserve to. Fix the page before you blame the channel.",
+        ],
+      },
+      {
+        heading: "Make the form harder, on purpose",
+        paragraphs: [
+          "If you do run instant forms, the useful instinct is the counter-intuitive one: add friction deliberately.",
+          "Meta lets you add a review step before submitting, so the person confirms what they are sending rather than tapping straight past it. It lets you add your own questions. Both reduce how many leads you get. Both improve what arrives.",
+          "The questions worth adding are the ones a time-waster will not bother answering:",
+        ],
+        bullets: [
+          "What they actually want \u2014 a free-text box beats a dropdown, because somebody typing a sentence has thought about it",
+          "When they want it done, which separates this month from someday",
+          "Their postcode, if you only cover a radius \u2014 better to lose them here than after a forty-minute drive",
+          "Anything your quote depends on, so the first phone call can be about price rather than about facts",
+        ],
+      },
+      {
+        heading: "Know where the leads live",
+        paragraphs: [
+          "One practical trap, worth sorting on day one rather than discovering later.",
+          "Leads from instant forms sit inside Meta, and they are not stored there forever \u2014 the figure widely quoted is ninety days, though we could not confirm it on Meta's own documentation. Either way, Ads Manager is not your database and should not be treated as one.",
+          "Connect the form to an inbox, a spreadsheet or a CRM on the day you launch it, so leads arrive somewhere you own while they are still warm. Downloading a CSV once a fortnight is how enquiries go cold.",
+          "Worth knowing too: access to the ad account is not necessarily access to the leads. They belong to the Page. If an agency runs your ads, check who can actually download them before you need to."
+        ],
+      },
+      {
+        heading: "How to choose",
+        paragraphs: [
+          "A rough rule that holds up for most local businesses.",
+          "Use your website when the decision needs selling \u2014 higher value, longer consideration, or something people want to see proof of before they call. Detailing, extensions, anything over a few hundred pounds.",
+          "Use instant forms when the offer is simple and the person already knows if they want it, or when your website genuinely is not ready yet. A form is a reasonable stopgap while a proper page is being built. It is a poor permanent answer.",
+          "And if you only change one thing, change how fast you answer. A mediocre lead rung in five minutes beats an excellent one rung tomorrow, whichever box it came from."
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-recent-do-your-google-reviews-need-to-be",
     title: "How Recent Do Your Google Reviews Need to Be?",
     description:
