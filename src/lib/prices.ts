@@ -15,6 +15,11 @@ export async function loadPriceChanges(force = false) {
     if (seeded.affectedRows === 1)
       for (const c of LAUNCH_RISE)
         await execute("INSERT INTO price_changes (style, pair, single, starts_at) VALUES (?, ?, ?, ?)", [c.style, c.pair, c.single, new Date(c.startsAt)]);
+    // The launch rise moved from 10 to 21 November 2026: once, move any rise
+    // still set for the old date.
+    const moved = await execute("INSERT IGNORE INTO weekly_reports (week) VALUES ('rise1121')");
+    if (moved.affectedRows === 1)
+      await execute("UPDATE price_changes SET starts_at = ? WHERE starts_at = ?", [new Date("2026-11-21T00:00:00Z"), new Date("2026-11-10T00:00:00Z")]);
     const rows = await query<{ id: number; style: string; pair: number; single: number; starts_at: Date }>(
       "SELECT id, style, pair, single, starts_at FROM price_changes ORDER BY starts_at",
     );

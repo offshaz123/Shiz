@@ -141,9 +141,9 @@ export function fitsSize(c: Pick<PlateConfig, "size" | "type" | "reg">) {
 export type PriceChange = { id?: number; style: StyleId; pair: number; single: number; startsAt: number };
 
 export const LAUNCH_RISE: PriceChange[] = [
-  { style: "3d-gel", pair: 4999, single: 2899, startsAt: Date.parse("2026-11-10T00:00:00Z") },
-  { style: "4d-3mm", pair: 5499, single: 3199, startsAt: Date.parse("2026-11-10T00:00:00Z") },
-  { style: "4d-5mm", pair: 5999, single: 3499, startsAt: Date.parse("2026-11-10T00:00:00Z") },
+  { style: "3d-gel", pair: 4999, single: 2899, startsAt: Date.parse("2026-11-21T00:00:00Z") },
+  { style: "4d-3mm", pair: 5499, single: 3199, startsAt: Date.parse("2026-11-21T00:00:00Z") },
+  { style: "4d-5mm", pair: 5999, single: 3499, startsAt: Date.parse("2026-11-21T00:00:00Z") },
 ];
 
 let priceChanges: PriceChange[] = LAUNCH_RISE;
@@ -171,7 +171,7 @@ export function upcomingPrice(id: StyleId, now = Date.now()) {
   return next && style && next.pair > style.pair ? next : null;
 }
 
-// "10 November", and the day before it ("Sunday 9 November"), in UK time.
+// "21 November", and the day before it ("Friday 20 November"), in UK time.
 export function changeDay(startsAt: number) {
   return new Date(startsAt).toLocaleDateString("en-GB", { day: "numeric", month: "long", timeZone: "Europe/London" });
 }

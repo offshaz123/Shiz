@@ -1,6 +1,6 @@
 import { type StyleId, changeDay, money, upcomingPrice } from "@/lib/plates";
 
-// "Goes up to £49.99 on 10 November" next to a style with a price rise
+// "Goes up to £49.99 on 21 November" next to a style with a price rise
 // scheduled in Admin → Prices. Shows nothing otherwise.
 export function LaunchPrice({ id, which = "pair", extra = 0, className = "" }: { id: StyleId; which?: "pair" | "single"; extra?: number; className?: string }) {
   const next = upcomingPrice(id);
