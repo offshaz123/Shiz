@@ -4,9 +4,7 @@ import { requireAdmin } from "@/lib/admin";
 import { type Advice, getInsights } from "@/lib/insights";
 import { site } from "@/lib/site";
 import { SendReportButton } from "@/components/SendReportButton";
-import { ClarityPanel, FunnelCharts, SpendChart } from "@/components/InsightsCharts";
-import { claritySummary } from "@/lib/clarity";
-import { tracking } from "@/lib/site";
+import { FunnelCharts, SpendChart } from "@/components/InsightsCharts";
 
 export const metadata = { title: "Insights" };
 
@@ -73,7 +71,6 @@ export default async function InsightsPage(props: PageProps<"/admin/insights">) 
     );
   }
   const { now, before } = x;
-  const clarity = await claritySummary().catch((err) => ({ error: err instanceof Error ? err.message : "Couldn't reach Clarity" }));
 
   return (
     <AdminShell active="insights">
@@ -139,10 +136,6 @@ export default async function InsightsPage(props: PageProps<"/admin/insights">) 
 
       <Section title="Ad spend by day" note="What each advert platform cost each day in these dates.">
         <SpendChart days={x.spendDays} />
-      </Section>
-
-      <Section title="How visitors behave" note="From Microsoft Clarity: only visitors who accepted cookies, with anything they type hidden.">
-        <ClarityPanel data={clarity} projectId={tracking.clarityId} />
       </Section>
 
       <Section

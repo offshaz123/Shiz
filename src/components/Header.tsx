@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
-import { ThemeToggle } from "./ThemeToggle";
 import { nav, whatsappHref } from "@/lib/site";
 import { useCart } from "@/lib/cart";
 
@@ -83,9 +82,11 @@ export function Header() {
             </Link>
             <Link
               href="/upload-documents"
-              className="gold-bg hidden items-center gap-2 rounded-lg px-4 py-2.5 text-sm font-bold sm:inline-flex"
+              className="hidden h-11 items-center gap-2 rounded-lg border border-line px-3 text-sm font-semibold hover:bg-surface sm:inline-flex"
+              aria-label="Upload documents"
             >
-              <UploadIcon /> Upload Documents
+              <UploadIcon />
+              <span className="hidden xl:inline">Upload Docs</span>
             </Link>
             <Link
               href={account.href}
@@ -97,7 +98,6 @@ export function Header() {
               </svg>
               {account.label}
             </Link>
-            <ThemeToggle />
             <Link
               href="/basket"
               className="relative flex h-11 w-11 items-center justify-center rounded-lg border border-line hover:bg-surface"
@@ -168,7 +168,7 @@ export function Header() {
               <Link href={account.href} onClick={() => setOpen(false)} className="btn btn-dark w-full">
                 {account.label}
               </Link>
-              <Link href="/upload-documents" onClick={() => setOpen(false)} className="btn btn-gold w-full">
+              <Link href="/upload-documents" onClick={() => setOpen(false)} className="btn btn-white w-full">
                 Upload Documents
               </Link>
               <a href={whatsappHref} className="btn btn-white w-full">

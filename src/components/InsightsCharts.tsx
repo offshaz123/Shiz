@@ -1,9 +1,8 @@
 import type { SpendDay } from "@/lib/ad-spend";
-import type { ClarityMetric, ClaritySummary } from "@/lib/clarity";
 import type { Funnel } from "@/lib/insights";
 
-// The charts on Admin → Insights: how far visits get before leaving, ad
-// spend per day, and how visitors behave (from Microsoft Clarity).
+// The charts on Admin → Insights: how far visits get before leaving, and ad
+// spend per day.
 
 const gbp = (p: number) => `£${(p / 100).toFixed(2)}`;
 
@@ -85,90 +84,6 @@ export function SpendChart({ days }: { days: SpendDay[] }) {
         <span>{days.at(-1) && label(days.at(-1)!.day)}</span>
       </div>
       <p className="mt-2 text-xs text-muted">TikTok shows on the day you topped up; Google and Meta on the day it was spent. What comes off your card, with any VAT and fees.</p>
-    </div>
-  );
-}
-
-// "totalSessionCount" → "Total session count".
-const words = (k: string) => {
-  const w = k.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
-  return w.charAt(0).toUpperCase() + w.slice(1);
-};
-const show = (v: string | number) => (typeof v === "number" ? (Number.isInteger(v) ? v : v.toFixed(2)) : v);
-// Breakdowns that don't say anything about problems on the site.
-const LISTS = ["Popular Pages", "Browser", "Device", "OS", "Country/Region", "Page Title", "Referrer URL"];
-const PROBLEMS = ["Rage Click Count", "Dead Click Count", "Quickback Click", "Excessive Scroll", "Script Error Count", "Error Click Count"];
-
-function MetricCard({ m }: { m: ClarityMetric }) {
-  const first = m.rows[0] ?? {};
-  return (
-    <div className="rounded-2xl border border-line bg-white p-4">
-      <p className="text-xs font-semibold uppercase tracking-wider text-muted">{m.name}</p>
-      <dl className="mt-2 space-y-1 text-sm">
-        {Object.entries(first).map(([k, v]) => (
-          <div key={k} className="flex justify-between gap-3">
-            <dt className="text-muted">{words(k)}</dt>
-            <dd className="font-semibold tabular-nums">{show(v)}</dd>
-          </div>
-        ))}
-        {Object.keys(first).length === 0 && <dd className="text-muted">Nothing yet</dd>}
-      </dl>
-    </div>
-  );
-}
-
-export function ClarityPanel({ data, projectId }: { data: ClaritySummary | { error: string }; projectId: string }) {
-  const link = `https://clarity.microsoft.com/projects/view/${projectId}/dashboard`;
-  if ("error" in data)
-    return (
-      <div className="rounded-2xl border border-line bg-white p-5 text-sm">
-        <p className="text-muted">{data.error}</p>
-        <a href={link} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block font-semibold text-gold underline">
-          Open Clarity
-        </a>
-      </div>
-    );
-  const overall = data.overall.filter((m) => !LISTS.includes(m.name));
-  const struggles = data.byPage.filter((m) => PROBLEMS.includes(m.name) && m.rows.length);
-  return (
-    <div>
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {overall.map((m) => (
-          <MetricCard key={m.name} m={m} />
-        ))}
-      </div>
-      {struggles.length > 0 && (
-        <div className="mt-4 rounded-2xl border border-line bg-white p-5">
-          <p className="font-semibold">Pages where people struggle</p>
-          <div className="mt-3 space-y-4">
-            {struggles.map((m) => (
-              <div key={m.name} className="overflow-x-auto">
-                <p className="text-xs font-semibold uppercase tracking-wider text-muted">{m.name}</p>
-                <table className="mt-1 w-full text-sm">
-                  <tbody className="divide-y divide-line">
-                    {m.rows.slice(0, 8).map((r, i) => (
-                      <tr key={i}>
-                        {Object.entries(r).map(([k, v]) => (
-                          <td key={k} className={`py-1 pr-3 ${k === "URL" ? "max-w-[18rem] truncate" : "text-right tabular-nums"}`} title={`${words(k)}: ${v}`}>
-                            {k === "URL" ? String(v).replace(/^https?:\/\/[^/]+/, "") || "/" : show(v)}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-      <p className="mt-2 text-xs text-muted">
-        Last 3 days, updated every few hours. Watch the recordings of these visits in{" "}
-        <a href={link} target="_blank" rel="noopener noreferrer" className="font-semibold text-gold underline">
-          Clarity
-        </a>
-        .
-      </p>
     </div>
   );
 }

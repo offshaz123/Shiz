@@ -5,7 +5,7 @@ import { useState } from "react";
 import { LookPreview, lookCaption } from "@/components/CarPreview";
 import { PlatePreview } from "@/components/PlatePreview";
 import { useCart } from "@/lib/cart";
-import { describe, fixings, money, unitPrice } from "@/lib/plates";
+import { FREE_DELIVERY_FROM, describe, fixings, money, unitPrice } from "@/lib/plates";
 import { KlarnaNote } from "@/components/Klarna";
 import { ShowPlateOffer } from "@/components/ShowPlateOffer";
 
@@ -140,7 +140,20 @@ export default function BasketPage() {
           <span className="text-muted">Subtotal</span>
           <span className="font-display text-2xl font-bold">{money(subtotal)}</span>
         </div>
-        <p className="mt-1 text-sm text-muted">Free tracked delivery on orders of £39.99 or more. Next day delivery available at checkout.</p>
+        {subtotal < FREE_DELIVERY_FROM ? (
+          <div className="mt-3 rounded-xl border border-[#e8d89a] bg-[#fdf8e7] p-3">
+            <p className="text-sm">
+              Add <strong>{money(FREE_DELIVERY_FROM - subtotal)}</strong> more for <strong>FREE tracked delivery</strong>
+            </p>
+            <div className="mt-2 h-2 overflow-hidden rounded-full bg-white" aria-hidden>
+              <div className="gold-bg h-full rounded-full" style={{ width: `${Math.round((subtotal / FREE_DELIVERY_FROM) * 100)}%` }} />
+            </div>
+            <p className="mt-2 text-xs text-muted">Try 3D Gel or 4D, or add fixings or a flag.</p>
+          </div>
+        ) : (
+          <p className="mt-3 text-sm font-semibold text-[#1f7a3d]">✓ You get FREE tracked delivery</p>
+        )}
+        <p className="mt-2 text-sm text-muted">Next day delivery available at checkout.</p>
         <KlarnaNote amount={subtotal} className="mt-4" />
         <Link href="/checkout" className="btn btn-gold mt-5 w-full">
           Checkout

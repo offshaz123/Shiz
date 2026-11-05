@@ -44,8 +44,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en-GB" className={`${body.variable} ${heading.variable} ${plate.variable}`} suppressHydrationWarning>
       <head>
-        {/* Apply a saved dark-mode choice before the page paints, so it doesn't flash white. */}
-        <script dangerouslySetInnerHTML={{ __html: `try{if(localStorage.getItem("pu-theme")==="dark")document.documentElement.dataset.theme="dark"}catch(e){}` }} />
+        {/* Light or dark to match the phone or computer's own setting, applied
+            before the page paints (no white flash) and again if it changes. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var m=matchMedia("(prefers-color-scheme: dark)"),d=document.documentElement,f=function(){if(m.matches)d.dataset.theme="dark";else delete d.dataset.theme};f();m.addEventListener("change",f)}catch(e){}`,
+          }}
+        />
       </head>
       <body className="flex min-h-screen flex-col">
         <PriceSync changes={getPriceChanges()} />

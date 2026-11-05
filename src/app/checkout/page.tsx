@@ -8,6 +8,7 @@ import { orderSource, trackBeginCheckout } from "@/lib/track";
 import { AddressFields } from "@/components/AddressFields";
 import { type DeliveryId, FREE_DELIVERY_FROM, delivery, deliveryPrice as priceFor, describe, money, unitPrice } from "@/lib/plates";
 import { KlarnaNote } from "@/components/Klarna";
+import { suggestEmail } from "@/lib/email-typo";
 
 function Section({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
   return (
@@ -18,6 +19,42 @@ function Section({ n, title, children }: { n: number; title: string; children: R
       </h2>
       <div className="mt-5">{children}</div>
     </section>
+  );
+}
+
+// The email box, with a "Did you mean …@gmail.com?" fix for common typos.
+function EmailField() {
+  const [suggestion, setSuggestion] = useState<string | null>(null);
+  const input = useRef<HTMLInputElement>(null);
+  return (
+    <label className="block">
+      <span className="mb-1.5 block text-sm font-semibold">Email</span>
+      <input
+        ref={input}
+        className="field"
+        name="email"
+        type="email"
+        autoComplete="email"
+        required
+        onBlur={(e) => setSuggestion(suggestEmail(e.target.value))}
+        onChange={() => setSuggestion(null)}
+      />
+      {suggestion && (
+        <span className="mt-1.5 block text-sm">
+          Did you mean <strong>{suggestion}</strong>?{" "}
+          <button
+            type="button"
+            className="font-semibold text-gold underline"
+            onClick={() => {
+              if (input.current) input.current.value = suggestion;
+              setSuggestion(null);
+            }}
+          >
+            Yes, fix it
+          </button>
+        </span>
+      )}
+    </label>
   );
 }
 
@@ -183,7 +220,7 @@ export default function CheckoutPage() {
           <Section n={1} title="Your details">
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Full name" name="name" autoComplete="name" className="sm:col-span-2" />
-              <Field label="Email" name="email" type="email" autoComplete="email" />
+              <EmailField />
               <Field label="Mobile number" name="phone" type="tel" autoComplete="tel" />
             </div>
           </Section>
