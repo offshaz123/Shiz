@@ -134,6 +134,9 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
   const [moreSizes, setMoreSizes] = useState((initial.size ?? "standard") !== "standard");
   const [regError, setRegError] = useState("");
   const [notice, setNotice] = useState(showPlateNotice);
+  // Set up as a show plate only because the text from the link wasn't a
+  // registration (not chosen by the customer): typing a real one switches back.
+  const [autoShow, setAutoShow] = useState(showPlateNotice);
 
   const set = (patch: Partial<PlateConfig>) => setC((prev) => ({ ...prev, ...patch }));
   const style = styles.find((s) => s.id === c.style)!;
@@ -239,6 +242,13 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                     const v = e.target.value.toUpperCase();
                     // A hex plate only fits so many characters: stop typing there.
                     const text = limitChars(c.type === "show" ? cleanShowText(v) : v, size.hex ? size.chars : Infinity);
+                    if (autoShow && isValidReg(text)) {
+                      set({ type: "legal", reg: formatReg(text) });
+                      setAutoShow(false);
+                      setNotice(false);
+                      setRegError("");
+                      return;
+                    }
                     // Road legal: put the DVLA space in as soon as it's a real registration.
                     // Show plates keep the spacing exactly as typed.
                     set({ reg: c.type === "legal" && isValidReg(text) ? formatReg(text) : text });
@@ -261,7 +271,9 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                 ) : (
                   <p id="reg-hint" className="mt-2 text-center text-xs text-muted">
                     {c.type === "show"
-                      ? `Show plate: any text, spaces wherever you like (up to ${SHOW_MAX} characters)`
+                      ? isValidReg(c.reg)
+                        ? "This is a UK registration. To drive with it, choose Road Legal below."
+                        : `Show plate: any text, spaces wherever you like (up to ${SHOW_MAX} characters)`
                       : isValidReg(c.reg) && !/^[A-Z]{2}\d{2}[A-Z]{3}$/.test(c.reg.replace(/\s/g, ""))
                         ? "✓ Private registration recognised, spaced to DVLA rules"
                         : size.lines === 2
@@ -336,7 +348,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
               </div>
 
 
-              {notice && c.type === "show" && (
+              {notice && c.type === "show" && !isValidReg(c.reg) && (
                 <div className="mt-4 rounded-xl border border-[#f1c9a5] bg-[#fff5ec] p-3 text-sm text-[#8a4a12]">
                   <p>
                     <strong>&ldquo;{plateText(c)}&rdquo; isn&apos;t a UK registration</strong>, so we&apos;ve set it up as a{" "}
@@ -403,6 +415,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                             onChange={() => {
                               // Back to road legal: snap the text to the legal spacing.
                               set(t.id === "legal" ? { type: t.id, reg: formatReg(c.reg) } : { type: t.id });
+                              setAutoShow(false);
                               setRegError("");
                             }}
                             className="absolute right-3 top-3 h-5 w-5 accent-[#8a6812]"
