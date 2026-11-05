@@ -668,6 +668,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                 {buttonLabel}
                 {nextStep !== null && <span aria-hidden>›</span>}
               </button>
+              <p className="mt-2 text-center text-xs text-muted">🔒 Secure checkout · Card, Apple Pay, Google Pay or Klarna</p>
 
               <div className="mt-4">
                 <DispatchCountdown />

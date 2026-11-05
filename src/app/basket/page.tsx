@@ -158,6 +158,7 @@ export default function BasketPage() {
         <Link href="/checkout" className="btn btn-gold mt-5 w-full">
           Checkout
         </Link>
+        <p className="mt-2 text-center text-xs text-muted">🔒 Secure checkout · Card, Apple Pay, Google Pay or Klarna</p>
         <Link href="/design" className="mt-3 block text-center text-sm font-semibold underline underline-offset-4">
           Add another plate
         </Link>

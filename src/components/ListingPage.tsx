@@ -1,5 +1,6 @@
 import { Builder } from "@/components/Builder";
 import { JsonLd } from "@/components/JsonLd";
+import { RatingBadge } from "@/components/RatingBadge";
 import type { Listing } from "@/lib/listings";
 import { site } from "@/lib/site";
 
@@ -27,6 +28,9 @@ export function ListingPage({ listing }: { listing: Listing }) {
   return (
     <>
       <JsonLd data={product} />
+      <div className="bg-surface px-4 pt-3 text-center sm:pt-5">
+        <RatingBadge />
+      </div>
       <Builder initial={listing.config} />
     </>
   );

@@ -6,6 +6,8 @@ import Link from "next/link";
 import { RegForm } from "@/components/RegForm";
 import { TrustBadges } from "@/components/TrustBadges";
 import { ReviewsSection } from "@/components/ReviewsSection";
+import { RatingBadge } from "@/components/RatingBadge";
+import { ChristmasGifts } from "@/components/ChristmasGifts";
 import { PlatePreview } from "@/components/PlatePreview";
 import { type PlateConfig, changeDay, defaultConfig, lastDayBefore, money, sizePrice, sizes, styles, upcomingPrice } from "@/lib/plates";
 import { products } from "@/lib/content";
@@ -145,9 +147,14 @@ export default async function Home() {
           className="pointer-events-none absolute -top-40 left-1/2 h-[500px] w-[900px] -translate-x-1/2 rounded-full bg-[#f2dc93] opacity-15 blur-3xl"
         />
         <div className="relative mx-auto max-w-5xl px-4 py-10 text-center sm:px-6 sm:py-24">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-sm font-semibold">
-            ✦ Premium handcrafted plates · Free delivery from £39.99
-          </span>
+          <RatingBadge
+            dark
+            fallback={
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-4 py-1.5 text-sm font-semibold">
+                ✦ Premium handcrafted plates · Free delivery from £39.99
+              </span>
+            }
+          />
           <h1 className="mt-6 font-display text-5xl font-bold leading-[0.95] sm:text-7xl">
             UK Number Plates
             <br />
@@ -182,6 +189,8 @@ export default async function Home() {
       <div className="border-b border-line bg-white py-5">
         <TrustBadges />
       </div>
+
+      <ChristmasGifts />
 
       {/* Launch prices, until the day they go up. */}
       {launchStyles.length > 0 && (

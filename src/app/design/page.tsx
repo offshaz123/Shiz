@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { Builder } from "@/components/Builder";
 import { DesignFromLink } from "@/components/DesignFromLink";
+import { RatingBadge } from "@/components/RatingBadge";
 
 // Rebuilt hourly so launch prices switch over on the day they rise.
 export const revalidate = 3600;
@@ -17,8 +18,13 @@ export const metadata: Metadata = {
 // first; a link's registration and style are filled in by the browser.
 export default function DesignPage() {
   return (
-    <Suspense fallback={<Builder initial={{}} />}>
-      <DesignFromLink />
-    </Suspense>
+    <>
+      <div className="bg-surface px-4 pt-3 text-center sm:pt-5">
+        <RatingBadge />
+      </div>
+      <Suspense fallback={<Builder initial={{}} />}>
+        <DesignFromLink />
+      </Suspense>
+    </>
   );
 }
