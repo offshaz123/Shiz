@@ -31,31 +31,6 @@ const features = [
   },
 ];
 
-// Lifestyle photos (AI-generated). Captions describe the plates only: these
-// aren't customers, so no names or quotes.
-const gallery = [
-  {
-    src: "/gallery/porsche-taycan-platedup.jpg",
-    alt: "Man holding a PlatedUp sign in front of a black Porsche Taycan with a UK flag number plate",
-    caption: "Porsche Taycan · 3D Gel plates",
-  },
-  {
-    src: "/gallery/porsche-taycan-charged.jpg",
-    alt: "Woman holding a PlatedUp sign beside a silver Porsche Taycan with a Green Strip UK show plate on a London rooftop",
-    caption: "Porsche Taycan · 2D Printed plates",
-  },
-  {
-    src: "/gallery/range-rover-green-strip.jpg",
-    alt: "Man holding a PlatedUp sign in front of a black Range Rover with a Green Strip UK show plate",
-    caption: "Range Rover · 7MM Gel plates",
-  },
-  {
-    src: "/gallery/bmw-m4-hit-it.jpg",
-    alt: "Woman holding a PlatedUp sign beside a white BMW M4 with a show plate",
-    caption: "BMW M4 · 4D 5MM plates",
-  },
-];
-
 const showcase: (Partial<PlateConfig> & { caption: string })[] = [
   { reg: "PL24 TED", style: "4d-5mm", badge: "uk", caption: "4D 5MM with UK Flag" },
   { reg: "G0 LDY", style: "7mm-gel", border: "black", caption: "7MM Gel with black border" },
@@ -251,47 +226,16 @@ export default async function Home() {
               <li>✓ Our name and postcode on every plate, as the law requires</li>
               <li>✓ Same day dispatch when you order before {site.dispatchCutoff} on a working day</li>
             </ul>
-            <Link href="/design" className="btn btn-gold mt-6 rounded-lg">
-              Design Your Plates <span aria-hidden>→</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Gallery */}
-      <section className="bg-surface py-12 sm:py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6">
-          <div className="text-center">
-            <span className="inline-block rounded-full bg-gold-soft px-4 py-1.5 text-sm font-semibold text-gold">
-              Get Plated Up
-            </span>
-            <h2 className="mt-3 font-display text-4xl font-bold sm:text-5xl">Plates That Turn Heads</h2>
-            <p className="mt-2 text-muted">From everyday cars to supercars, built your way.</p>
-          </div>
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
-            {gallery.map((g) => (
-              <figure key={g.src} className="overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
-                <Image
-                  src={g.src}
-                  alt={g.alt}
-                  width={900}
-                  height={900}
-                  sizes="(min-width: 1024px) 25vw, 50vw"
-                  className="aspect-square w-full object-cover"
-                />
-                <figcaption className="p-3 text-sm font-semibold sm:p-4">{g.caption}</figcaption>
-              </figure>
-            ))}
-          </div>
-          <div className="mt-10 flex flex-wrap justify-center gap-3">
-            <Link href="/design" className="btn btn-gold rounded-lg">
-              Design Your Plate
-            </Link>
-            {products.map((p) => (
-              <Link key={p.slug} href={`/${p.slug}`} className="btn btn-white rounded-lg">
-                {p.heading}
+            <div className="mt-6 flex flex-wrap gap-2">
+              <Link href="/design" className="btn btn-gold rounded-lg">
+                Design Your Plates <span aria-hidden>→</span>
               </Link>
-            ))}
+              {products.map((p) => (
+                <Link key={p.slug} href={`/${p.slug}`} className="btn btn-white rounded-lg">
+                  {p.heading}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </section>
