@@ -213,6 +213,8 @@ const addedColumns: [table: string, column: string, definition: string][] = [
   ["orders", "packlink_error", "VARCHAR(500) NULL"],
   // What Packlink charged for the label (pence, with VAT), saved once it's bought.
   ["orders", "packlink_cost", "INT NULL"],
+  // Where a review came from when it wasn't written on this website (e.g. "old_site").
+  ["reviews", "source", "VARCHAR(20) NULL"],
   // Free delivery offered in the checkout reminder email, until this time.
   ["orders", "free_delivery_until", "DATETIME NULL"],
   // When the courier delivered it (from Packlink, or marked by the shop).
