@@ -124,11 +124,18 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
   const { add } = useCart();
   const [c, setC] = useState<PlateConfig>({ ...defaultConfig, ...initial });
   const [tab, setTabState] = useState(0);
+  // Customers see the styles and the extras before the plate goes in the
+  // basket: until they have, the button takes them to the next step. A style
+  // chosen already (e.g. on a 4D plates page) counts as seen.
+  const [seen, setSeen] = useState<number[]>(initial.style ? [0, 1] : [0]);
   const [stepError, setStepError] = useState("");
   const setTab = (i: number) => {
     setTabState(i);
+    setSeen((v) => (v.includes(i) ? v : [...v, i]));
     setStepError("");
   };
+  const nextStep = [1, 2].find((i) => !seen.includes(i)) ?? null;
+  const buttonLabel = nextStep === 1 ? "Choose Your Style" : nextStep === 2 ? "Next: Extras" : "Add to Basket";
   // Most people want a standard plate, so the other sizes are tucked away
   // until asked for (or already chosen, e.g. from a motorbike page).
   const [moreSizes, setMoreSizes] = useState((initial.size ?? "standard") !== "standard");
@@ -173,6 +180,11 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
     if (!fits) {
       setTab(0);
       setStepError(sizeError.replace(/\.$/, ""));
+      document.getElementById("plate-steps")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+    if (nextStep !== null) {
+      setTab(nextStep);
       document.getElementById("plate-steps")?.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
@@ -376,7 +388,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                     onClick={() => setTab(i)}
                     className={`flex items-center justify-center gap-2 rounded-lg py-3 font-semibold transition-colors ${
                       tab === i ? "gold-bg shadow-sm" : "bg-surface-2/70 text-muted hover:bg-surface-2"
-                    }`}
+                    } ${tab !== i && i === nextStep ? "animate-pulse ring-2 ring-[#b8901f]" : ""}`}
                   >
                     <span
                       className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${
@@ -616,7 +628,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                 </button>
               ) : (
                 <button type="button" className="btn btn-gold mt-7 w-full rounded-lg" onClick={addToBasket}>
-                  Add to Basket
+                  {buttonLabel}
                 </button>
               )}
             </div>
@@ -653,7 +665,8 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                 <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
                   <path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" />
                 </svg>
-                Add to Basket
+                {buttonLabel}
+                {nextStep !== null && <span aria-hidden>›</span>}
               </button>
 
               <div className="mt-4">
@@ -718,7 +731,8 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
             </p>
           </div>
           <button type="button" onClick={addToBasket} className="btn btn-gold shrink-0 rounded-lg px-5">
-            Add to Basket
+            {buttonLabel}
+            {nextStep !== null && <span aria-hidden>›</span>}
           </button>
         </div>
       </div>
