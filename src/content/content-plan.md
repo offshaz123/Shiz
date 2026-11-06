@@ -9,6 +9,7 @@ marketing specifically (car buyers researching on social before purchase, purcha
 keywords, dealership social strategy).
 
 ## Published so far
+- Schema Markup for a Local Business, in Plain English (technical SEO)
 - Lead Forms vs Sending People to Your Website (Meta ads / conversion)
 - How Recent Do Your Google Reviews Need to Be? (reviews / local SEO)
 - Instagram Ads for Car Dealerships: A Complete Guide (automotive)
@@ -443,7 +444,7 @@ actually says", because that gap has produced the strongest posts this month.
       "instant forms vs landing page" (the trade-off between fewer drop-offs and worse lead quality)
 - [ ] Why Your Ad Account Spends Unevenly Across the Week — target: "Facebook ads daily budget
       not spending", "ad spend uneven daily budget"
-- [ ] Schema Markup for a Local Business, in Plain English — target: "local business schema UK",
+- [x] Schema Markup for a Local Business, in Plain English — target: "local business schema UK",
       "structured data for tradesmen"
 - [x] How to Tell If Your Website Is Actually Slow — target: "website speed test small business",
       "Core Web Vitals for local business" (verified 2026-11-01 against web.dev/articles/vitals,

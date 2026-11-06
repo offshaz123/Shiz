@@ -16,6 +16,83 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "schema-markup-for-a-local-business-in-plain-english",
+    title: "Schema Markup for a Local Business, in Plain English",
+    description:
+      "Google asks for two things and most sites get sold ten. Here is what structured data actually does, what it requires, and the star-rating rule almost everybody gets wrong.",
+    publishedAt: "2026-11-06",
+    keywords: [
+      "local business schema UK",
+      "structured data for tradesmen",
+      "LocalBusiness schema markup",
+      "does schema markup help ranking",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Somebody has probably offered to add schema markup to your website. It usually comes with a price and a vague promise about Google.",
+          "It is a real thing and it is worth having. It is also far smaller and far cheaper than it is usually made to sound, and the main claim made for it is not one Google makes.",
+        ],
+      },
+      {
+        heading: "What it actually is",
+        paragraphs: [
+          "Structured data is a block of invisible code on your page that spells out, in a format Google reads directly, what the page is about. For a local business: this is the name, this is the address, this is the phone number, these are the opening hours.",
+          "A human reading your contact page works that out from the layout. A search engine is guessing. Structured data stops it guessing.",
+          "Nobody visiting your site ever sees it. It sits in the source code.",
+        ],
+      },
+      {
+        heading: "It is not a ranking trick",
+        paragraphs: [
+          "This is where the selling usually overstates things, so it is worth quoting Google rather than paraphrasing anyone.",
+          "Google's own introduction to structured data says what it is for: \u201cAdding structured data can enable search results that are more engaging to users and might encourage them to interact more with your website, which are called rich results.\u201d",
+          "Rich results are the extra bits \u2014 the stars, the opening hours, the FAQ dropdowns. Not position. Google's page on structured data does not claim it lifts rankings, and the word does not appear on it.",
+          "And they are explicit that even the rich results are not promised: \u201cGoogle does not guarantee that features that consume structured data will show up in search results.\u201d",
+          "So: worth doing, cheap to do, and anyone quoting you four figures for it on a ranking promise is selling something Google has not offered.",
+        ],
+      },
+      {
+        heading: "Google asks for two things",
+        paragraphs: [
+          "For a local business, the required properties are shorter than most people expect. Google's documentation lists exactly two.",
+          "Name, and address. That is the requirement.",
+          "Everything else is on the recommended list \u2014 worth adding, not required: telephone, url, geo coordinates, price range, and openingHoursSpecification, which is the structured version of your opening hours.",
+          "If your current markup has the name and the address right, the expensive part is already done. The rest is filling in fields.",
+        ],
+      },
+      {
+        heading: "The stars thing, which almost everybody gets wrong",
+        paragraphs: [
+          "Here is the one worth knowing before you pay anyone to add review markup to your site.",
+          "People add aggregateRating to their own website hoping for gold stars under their listing in Google. It does not work, and Google says so plainly.",
+          "Their wording: \u201cIf the entity that's being reviewed controls the reviews about itself, their pages that use LocalBusiness or any other type of Organization structured data are ineligible for star review feature.\u201d",
+          "They give the example directly \u2014 a review about a business, placed on that business's own website, \u201ceither directly in their structured data or through an embedded third-party widget (for example, Google Business reviews or Facebook reviews widget)\u201d.",
+          "The documentation is consistent about it: on the local business page, aggregateRating and review are each marked as \u201conly recommended for sites that capture reviews about other local businesses\u201d. Directories, in other words. Not you reviewing yourself.",
+          "This is not a reason to take reviews off your website. Reviews on your own site do a great deal of work convincing the person reading them. Just do not pay extra for markup sold on the promise of stars in the search results, because that specific outcome is ruled out.",
+        ],
+      },
+      {
+        heading: "Only mark up what is on the page",
+        paragraphs: [
+          "The rule that gets sites in trouble, and it is one sentence.",
+          "Google: \u201cdon't add structured data about information that is not visible to the user, even if the information is accurate.\u201d",
+          "So no marking up opening hours the page does not display, and no aggregate rating the visitor cannot see. Accuracy is not the test. Visibility is.",
+          "The consequence is not nothing. Google says a site that breaks the guidelines may get a manual action, and that where one is issued \u201cthe structured data on the page will be ignored\u201d. The page still appears in search; the markup stops counting. You would have paid for something switched off.",
+        ],
+      },
+      {
+        heading: "How to check what you already have",
+        paragraphs: [
+          "Before buying this from anyone, find out whether your site already does it. Plenty of platforms and SEO plugins output business markup on their own, and people pay to have added what they already had.",
+          "Google runs a free Rich Results Test. Put your homepage and your contact page through it. It tells you what structured data it found, what type, and what is missing or malformed.",
+          "If it reports a LocalBusiness block with your name and address in it, you have the required part. Fill in the phone number, the URL and the opening hours, make sure they match what the page shows, and you are finished.",
+          "If it finds nothing at all, that is a genuine gap \u2014 and a small, one-off job, not a monthly retainer.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "lead-forms-vs-sending-people-to-your-website",
     title: "Lead Forms vs Sending People to Your Website",
     description:
