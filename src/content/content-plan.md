@@ -9,6 +9,7 @@ marketing specifically (car buyers researching on social before purchase, purcha
 keywords, dealership social strategy).
 
 ## Published so far
+- Should a Small Business Use Performance Max? (Google Ads)
 - Schema Markup for a Local Business, in Plain English (technical SEO)
 - Lead Forms vs Sending People to Your Website (Meta ads / conversion)
 - How Recent Do Your Google Reviews Need to Be? (reviews / local SEO)
@@ -362,7 +363,7 @@ deliberately weights toward Google Ads to close that gap.
       "About negative keywords" help page for the close-variant rule, the three match types, the
       16-word limit and the casing/misspelling behaviour. Note: at least one third-party guide
       claims broad negatives now match close variants — Google's page says the opposite.)
-- [ ] Should a Small Business Use Performance Max? — target: "Performance Max small budget",
+- [x] Should a Small Business Use Performance Max? — target: "Performance Max small budget",
       "PMax vs search campaigns UK"
 - [x] Why Your Google Ads Are Showing for the Wrong Town — target: "Google Ads location
       targeting", "presence vs interest location settings"

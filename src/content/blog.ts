@@ -16,6 +16,80 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "should-a-small-business-use-performance-max",
+    title: "Should a Small Business Use Performance Max?",
+    description:
+      "Google will push you towards Performance Max the moment you open an account. Here is what you give up by taking it, and what Google does and does not publish about budgets.",
+    publishedAt: "2026-11-07",
+    keywords: [
+      "Performance Max small budget",
+      "PMax vs search campaigns UK",
+      "Performance Max for local business",
+      "should I use Performance Max",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Open a new Google Ads account and you will be steered towards Performance Max within about three clicks. It is the campaign type Google wants you in, and for a lot of advertisers it is the right answer.",
+          "For a local business spending twenty or thirty pounds a day, it is a harder call than the setup wizard makes it look. Here is what you are actually choosing between.",
+        ],
+      },
+      {
+        heading: "What it actually is",
+        paragraphs: [
+          "Performance Max is one campaign that runs everywhere. Google's own description: it lets you access all of Google's channels \u201cincluding YouTube, Display, Search, Discover, Gmail, and Maps, from a single campaign\u201d.",
+          "You give it your budget, your goal, some images, some text and a few headlines. It decides who sees what, where and when.",
+          "That is the pitch and it is a real one. One campaign instead of five, and it will find people in places you would never have thought to buy.",
+        ],
+      },
+      {
+        heading: "You don't pick the keywords",
+        paragraphs: [
+          "This is the part that catches people out, and it is the single biggest difference from a normal Search campaign.",
+          "In a Search campaign you choose the keywords. You decide you want \u201cwindow tinting [your town]\u201d and not \u201cwindow tint film roll\u201d, and you can read a search terms report afterwards that shows you exactly which phrases took your money.",
+          "Performance Max does not work that way. Google lists what you get instead: \u201ckeywordless targeting\u201d, \u201csearch themes\u201d, \u201cnegative keywords\u201d and \u201cbrand exclusions\u201d. Search themes are a steer, not a list \u2014 you tell it roughly what you are about and it works out the rest.",
+          "You do still get reporting. Google names placement reports, channel performance, asset group reporting and asset-level metrics. What is not on that list is a search terms report of the kind a Search campaign gives you.",
+          "If you are the sort of person who wants to open the account and see the exact phrases that spent your money last week, that difference will bother you. If you are not, it genuinely may not matter.",
+        ],
+      },
+      {
+        heading: "Your Search campaign still wins the exact match",
+        paragraphs: [
+          "A common worry is that running both means Performance Max will eat your Search campaign. Google is clear about the order, and it is worth knowing.",
+          "Their wording: \u201cSearch campaigns containing an exact match keyword are prioritized to serve over Performance Max when a query hits an exact match keyword.\u201d",
+          "So if you have \u201cwindow tinting romford\u201d as an exact match keyword in a Search campaign, and somebody searches exactly that, your Search campaign takes it. Performance Max picks up what is left.",
+          "That is the argument for running a tight Search campaign alongside, rather than instead. Your best-known, highest-intent phrases stay under your control, and Performance Max works the edges.",
+        ],
+      },
+      {
+        heading: "Google publishes no minimum budget",
+        paragraphs: [
+          "You will find plenty of figures online for what Performance Max needs to work. A hundred a day. Fifty conversions a month. Pick one.",
+          "We went looking for Google's own number and there isn't one. No minimum budget, no recommended figure, no required conversion count on any of their Performance Max pages.",
+          "What Google does have is a budget panel that works a figure out for your specific campaign: \u201cthe lower level is the minimum recommended budget for your campaign, and selecting a higher budget level may further increase its overall effectiveness\u201d. That number is calculated for you, in your account, and it is the only one worth paying attention to.",
+          "So anyone quoting you a universal minimum is quoting a blog, not Google. Open the account, set the campaign up, and read what the panel tells you before deciding whether the budget is there.",
+        ],
+      },
+      {
+        heading: "Give it time to settle",
+        paragraphs: [
+          "One more thing that applies whichever type you pick.",
+          "Google says that \u201cmajor structural changes, like creating a new campaign or bid strategy, may display a temporary \u2018Learning\u2019 status for up to 7 days\u201d. That is about Smart Bidding rather than Performance Max specifically, but it applies the moment you launch either.",
+          "The practical version: a week of poking at it every day is a week of learning thrown away. Build it, let it run, then change things.",
+        ],
+      },
+      {
+        heading: "So which one",
+        paragraphs: [
+          "A rough rule for a local service business.",
+          "Start with Search if you can name the ten phrases a customer would type. A tinter, a plumber, a garage \u2014 you already know them. On a small budget, spending it only on those phrases is the most efficient thing you can do, and the search terms report shows you where every pound went, which matters a lot more when the budget is twenty pounds a day than when it is two hundred.",
+          "Performance Max makes more sense once you have conversion tracking recording real enquiries, a decent set of images and video to feed it, and enough budget that you can afford it to explore. It is a campaign type that gets better the more you give it.",
+          "The order most local businesses should go in: get Search working and measurable first, then add Performance Max alongside it. Not instead of it \u2014 your exact match keywords are the ones you least want to hand over.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "schema-markup-for-a-local-business-in-plain-english",
     title: "Schema Markup for a Local Business, in Plain English",
     description:
