@@ -16,6 +16,85 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "why-your-ad-account-spends-unevenly-across-the-week",
+    title: "Why Your Ad Account Spends Unevenly Across the Week",
+    description:
+      "You set twenty pounds a day and it spent twenty-seven yesterday and nine today. Nothing is broken. Here is what a daily budget actually is, and the number to watch instead.",
+    publishedAt: "2026-11-08",
+    keywords: [
+      "Facebook ads daily budget not spending",
+      "ad spend uneven daily budget",
+      "why did Facebook spend more than my budget",
+      "Meta daily budget average",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You set a twenty pound daily budget. You open the account on Tuesday and it spent twenty-seven quid yesterday. You open it on Thursday and it spent nine.",
+          "The first reaction is usually that something has gone wrong, or that you are being overcharged. Neither is true, and the misunderstanding behind it causes people to make changes that genuinely do cost them money.",
+        ],
+      },
+      {
+        heading: "A daily budget is an average, not a ceiling",
+        paragraphs: [
+          "This is the whole thing in one sentence, and it is the bit nobody tells you when you type the number in.",
+          "When you set twenty pounds a day, you are not telling the platform \u201cnever spend more than twenty pounds in a day\u201d. You are telling it \u201cover time, average about twenty pounds a day\u201d. Those are very different instructions.",
+          "So on a day when the system sees a lot of people who look likely to convert, it leans in and spends more. On a quiet day it holds back. The daily figure moves around deliberately, because spending evenly across good days and bad days would be worse for you.",
+          "Google Ads and Meta both work this way. If you have come from a world where a budget is a hard stop, it feels wrong the first few times you see it.",
+        ],
+      },
+      {
+        heading: "The week is the unit that matters",
+        paragraphs: [
+          "The figure that is actually held to is the weekly one. Across a week, spend works out to roughly seven times your daily budget. That is the consistent rule across both platforms and across every source we checked.",
+          "So on twenty pounds a day you are looking at around a hundred and forty pounds a week, however lumpy the individual days look.",
+          "That is the number to put in your head, and the only one worth reporting on. Checking the daily figure is like weighing yourself three times a day: the reading moves for reasons that have nothing to do with anything you did.",
+        ],
+      },
+      {
+        heading: "The percentage everyone quotes, and why we are not going to",
+        paragraphs: [
+          "There is a well-known figure for how far over your daily budget a single day can go. You will see it quoted confidently in a lot of places.",
+          "We went looking for it and the sources disagree. The number most people remember is lower than the number more recent write-ups give, the two differ by a wide margin, and at least one of the figures in circulation appears to have come from a different advertising platform altogether and got attached to this one.",
+          "We could not get to the platform's own help documentation to settle it, so we are not going to print a number. A made-up precision is worse than none.",
+          "It does not change what you should do anyway. Whether a given day can run twenty-five per cent over or considerably more, the answer is the same: stop reading the daily figure and read the weekly one.",
+        ],
+      },
+      {
+        heading: "What this means in practice",
+        paragraphs: [
+          "Three things follow, and they will save you money.",
+        ],
+        bullets: [
+          "Judge a campaign on at least a week. Not on Monday, not on a bad Thursday. A single day tells you almost nothing",
+          "Do not change the budget because of one expensive day. A budget edit is a structural change, and on most platforms it sends the campaign back into learning, which costs you more than the overspend did",
+          "When you report to yourself, report the week. Spend, enquiries, cost per enquiry, all weekly. The daily view exists to be checked, not acted on",
+        ],
+      },
+      {
+        heading: "When uneven spend is a real problem",
+        paragraphs: [
+          "All of the above is about a budget that moves around but broadly gets spent. There is a different problem that looks similar and is not: a budget that never gets spent at all.",
+          "If you set twenty pounds a day and it is quietly spending four, week after week, that is not pacing. That is the system telling you it cannot find enough people to show your ads to at the price you have set. Usually one of:",
+        ],
+        bullets: [
+          "The audience is too small \u2014 a tight radius and a narrow interest stack can leave almost nobody to reach",
+          "Your bid or target cost is too low to win anything in the auction",
+          "An ad or the whole ad set has been rejected and you have not noticed",
+          "Your schedule is restricting delivery to hours with almost no traffic",
+        ],
+      },
+      {
+        heading: "The short version",
+        paragraphs: [
+          "Spending more than your daily budget on a given day is normal and usually a good sign. It means the system found something worth buying.",
+          "Spending nothing like your daily budget, consistently, is the one to look into.",
+          "And either way, the week is the number. Set it, leave it alone for seven days, then judge it on what the seven days did.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "should-a-small-business-use-performance-max",
     title: "Should a Small Business Use Performance Max?",
     description:

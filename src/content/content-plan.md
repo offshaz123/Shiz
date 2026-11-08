@@ -9,6 +9,7 @@ marketing specifically (car buyers researching on social before purchase, purcha
 keywords, dealership social strategy).
 
 ## Published so far
+- Why Your Ad Account Spends Unevenly Across the Week (ads mechanics / budgeting)
 - Should a Small Business Use Performance Max? (Google Ads)
 - Schema Markup for a Local Business, in Plain English (technical SEO)
 - Lead Forms vs Sending People to Your Website (Meta ads / conversion)
@@ -443,7 +444,7 @@ actually says", because that gap has produced the strongest posts this month.
       say that plainly rather than quote a number)
 - [x] Lead Forms vs Sending People to Your Website — target: "Meta lead ads vs website",
       "instant forms vs landing page" (the trade-off between fewer drop-offs and worse lead quality)
-- [ ] Why Your Ad Account Spends Unevenly Across the Week — target: "Facebook ads daily budget
+- [x] Why Your Ad Account Spends Unevenly Across the Week — target: "Facebook ads daily budget
       not spending", "ad spend uneven daily budget"
 - [x] Schema Markup for a Local Business, in Plain English — target: "local business schema UK",
       "structured data for tradesmen"
