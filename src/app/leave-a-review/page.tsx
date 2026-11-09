@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ReviewForm } from "@/components/ReviewForm";
+import { TrustpilotBadge } from "@/components/TrustpilotBadge";
 import { siteConfig } from "@/lib/site-config";
 
 export const metadata: Metadata = {
@@ -22,8 +23,27 @@ export default function LeaveAReviewPage() {
         all, and we will come back to you either way.
       </p>
 
+      {/* Trustpilot first, and said plainly: a review there is public and
+          verifiable by anyone, where one left below is a testimonial we
+          publish ourselves. The second is still worth having, but it is not
+          the same thing and should not be dressed up as it. */}
+      <div className="mt-10 rounded-3xl border border-border bg-surface p-7">
+        <h2 className="text-lg font-semibold text-foreground">Review us on Trustpilot</h2>
+        <p className="mt-3 text-sm leading-relaxed text-muted">
+          This is the one that counts for other people. It is public, it sits on Trustpilot rather
+          than on our own site, and anyone can go and read it without taking our word for
+          anything. Takes a minute and you do not need an account first.
+        </p>
+        <TrustpilotBadge className="mt-5" />
+      </div>
+
       <div className="mt-10">
-        <ReviewForm />
+        <p className="text-sm text-muted">
+          Or leave it here, and we will put it on the site once we have read it.
+        </p>
+        <div className="mt-5">
+          <ReviewForm />
+        </div>
       </div>
     </div>
   );

@@ -61,9 +61,34 @@ export const siteConfig = {
     count: 0,
     profileUrl: "",
   },
+  // Trustpilot. `domain` is the one claimed on the Trustpilot business account,
+  // which is what both their URLs are keyed on — not a profile ID. Clear it to
+  // remove every Trustpilot link from the site at once.
+  //
+  // Deliberately a plain link rather than one of Trustpilot's TrustBox
+  // widgets. A widget loads their script into every page that carries it, the
+  // score-showing ones would display 0.0 until reviews land, and the better
+  // ones belong to paid plans, so the badge would vanish when a trial ends. A
+  // link does the one thing that matters — put someone on the review form —
+  // and keeps working on the free plan forever.
+  trustpilot: {
+    domain: "shazmarketing.com",
+  },
 };
 
 export const hasPublishedReviews = siteConfig.reviews.count > 0;
+
+export const hasTrustpilot = siteConfig.trustpilot.domain !== "";
+
+/** Trustpilot's "write a review" form for this business. */
+export const trustpilotReviewUrl = hasTrustpilot
+  ? `https://uk.trustpilot.com/evaluate/${siteConfig.trustpilot.domain}`
+  : "";
+
+/** The public profile, where reviews are read rather than written. */
+export const trustpilotProfileUrl = hasTrustpilot
+  ? `https://uk.trustpilot.com/review/${siteConfig.trustpilot.domain}`
+  : "";
 
 export const socialProfileUrls = Object.values(siteConfig.social).filter(Boolean);
 

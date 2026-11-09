@@ -7,6 +7,7 @@ import { Logo } from "./Logo";
 import { SocialLinks } from "./SocialLinks";
 import { NewsletterForm } from "./NewsletterForm";
 import { siteConfig, whatsappHref, hasPublishedReviews } from "@/lib/site-config";
+import { TrustpilotLink } from "./TrustpilotBadge";
 import { services } from "@/content/services";
 import { industries } from "@/content/industries";
 import { locations } from "@/content/locations";
@@ -255,11 +256,12 @@ export function Footer() {
             {/* Withdrawing consent has to be as easy as giving it, so this
                 sits with the other legal links rather than buried. */}
             <CookieSettingsLink className="hover:text-foreground" />
-            <span className="flex items-center gap-2">
-              <span className="font-semibold text-foreground">Client rating</span>
-              <Stars />
-              <span>97%</span>
-            </span>
+            {/* A "Client rating 97%" sat here with nothing behind it. There is
+                no profile a visitor could check it against, which is the kind
+                of claim the CMA treats as a misleading practice, so it is
+                gone. Fill in siteConfig.reviews from the real Google profile
+                and the badge below turns itself on. */}
+            <TrustpilotLink />
             {hasPublishedReviews && (
               <a
                 href={siteConfig.reviews.profileUrl}
