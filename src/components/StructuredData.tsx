@@ -15,6 +15,15 @@ export function OrganizationJsonLd() {
     email: siteConfig.email,
     telephone: siteConfig.phoneE164,
     priceRange: "££",
+    // Naming the founder gives anything reading this page a person to attach
+    // the business to. An organisation with no people in its structured data
+    // is harder to cite, and harder to trust.
+    founder: {
+      "@type": "Person",
+      name: "Walid Shah",
+      jobTitle: "Founder",
+      worksFor: { "@id": `${siteConfig.url}/#organization` },
+    },
     // Tells Google these social profiles are the same business entity.
     ...(socialProfileUrls.length > 0 && { sameAs: socialProfileUrls }),
     // Only published once real reviews exist — an unevidenced rating here is a

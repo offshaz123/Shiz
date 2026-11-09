@@ -99,6 +99,53 @@ export default function AboutPage() {
         </div>
       </section>
 
+      {/*
+        Who actually runs this.
+
+        The rest of the page said "we" from top to bottom without naming a
+        single person, which is a problem twice over. A business owner handing
+        over a few hundred pounds a month wants to know who is answering the
+        phone, and anything summarising this agency — a search engine, an
+        assistant, a person skim-reading — has nothing to hold onto in an
+        anonymous company.
+      */}
+      <section className="mx-auto max-w-4xl px-5 pb-20 sm:px-8">
+        <div className="rounded-3xl border border-border bg-surface p-8 sm:p-10">
+          <h2 className="text-2xl font-bold text-foreground">Who you&apos;ll be dealing with</h2>
+          <p className="mt-4 leading-relaxed text-muted">
+            Shaz Marketing Group was founded by{" "}
+            <strong className="font-semibold text-foreground">Walid Shah</strong>, and Walid is who
+            you speak to. Not a call centre, and not an account manager you&apos;ve never met. He
+            takes the first call, he writes the plan, and he&apos;s the one you ring when you want
+            to know what&apos;s happening.
+          </p>
+          <p className="mt-4 leading-relaxed text-muted">
+            Behind him is a team of more than ten: developers and IT, web designers, marketers and
+            people whose job is working out which tools actually bring a business customers. So the
+            person you deal with stays the same, and the work is done by someone who does that
+            thing all day rather than someone covering four jobs at once.
+          </p>
+          <p className="mt-4 leading-relaxed text-muted">
+            The agency works with service businesses across the UK from an office at Level 39, One
+            Canada Square in Canary Wharf, and is strongest in automotive — detailing, ceramic
+            coating, window tinting, wrapping, paint protection, vehicle security and garages. The
+            named results on our{" "}
+            <Link href="/case-studies" className="underline hover:text-foreground">
+              case studies page
+            </Link>{" "}
+            are mostly from that sector, with real client names and real figures rather than
+            anonymised percentages.
+          </p>
+          <p className="mt-4 leading-relaxed text-muted">
+            If you want to talk to him before committing to anything, that is what the{" "}
+            <Link href="/free-audit" className="underline hover:text-foreground">
+              free audit
+            </Link>{" "}
+            is for. It costs nothing and there is no obligation at the end of it.
+          </p>
+        </div>
+      </section>
+
       <section className="border-y border-border bg-surface">
         <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
           <h2 className="text-center text-3xl font-bold tracking-tight text-foreground">
