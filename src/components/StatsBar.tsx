@@ -1,3 +1,5 @@
+import { TrustpilotCard } from "./TrustpilotBadge";
+
 const stats = [
   { value: "200+", label: "Projects", sub: "Delivered" },
   { value: "97%", label: "Satisfaction", sub: "Client feedback rating" },
@@ -93,7 +95,11 @@ export function StatsBar() {
           Five stars is the rating our clients give us across the feedback we collect.
         </p>
 
+        {/* Trustpilot leads this row deliberately. It is the only one of these
+            that a visitor can click and verify in a second; the rest ask to be
+            taken on trust. */}
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3 border-t border-border pt-8 sm:gap-4">
+          <TrustpilotCard />
           {partners.map((partner) => (
             <div
               key={partner.name}

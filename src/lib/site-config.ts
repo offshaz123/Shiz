@@ -73,12 +73,23 @@ export const siteConfig = {
   // and keeps working on the free plan forever.
   trustpilot: {
     domain: "shazmarketing.com",
+    // Same discipline as `reviews` above: these must match what the public
+    // Trustpilot profile shows, because the badge links straight to it and
+    // anyone can check in one click. While `reviewCount` is 0 the homepage
+    // badge renders nothing — the "review us" link is unaffected, since
+    // inviting a review claims nothing. Set `trustScore` to 0 to show the
+    // count without a star rating.
+    reviewCount: 0,
+    trustScore: 0,
   },
 };
 
 export const hasPublishedReviews = siteConfig.reviews.count > 0;
 
 export const hasTrustpilot = siteConfig.trustpilot.domain !== "";
+
+/** Only true once there are reviews on the profile to point at. */
+export const hasTrustpilotReviews = hasTrustpilot && siteConfig.trustpilot.reviewCount > 0;
 
 /** Trustpilot's "write a review" form for this business. */
 export const trustpilotReviewUrl = hasTrustpilot
