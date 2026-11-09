@@ -49,7 +49,7 @@ export const siteConfig = {
   googleSiteVerification: "",
   // Bing Webmaster Tools verification, same idea. Bing feeds DuckDuckGo and
   // increasingly gets used by AI assistants, so it is worth the two minutes.
-  bingSiteVerification: "",
+  bingSiteVerification: "878B8AB36868DC27A6EC555CB86AFBAA",
   // Public review rating, shown as a star badge and published in the
   // Organization schema. Fill these in ONLY from reviews genuinely received on
   // a real profile — the count and average must match what's publicly visible
