@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { locations, getLocation } from "@/content/locations";
+import { locations, getLocation, getLocationFaqs } from "@/content/locations";
+import { FaqSection } from "@/components/FaqSection";
 import { LeadForm } from "@/components/LeadForm";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
@@ -29,6 +30,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
   const { slug } = await params;
   const location = getLocation(slug);
   if (!location) notFound();
+  const faqs = getLocationFaqs(location.slug);
   const others = locations.filter((l) => l.slug !== location.slug);
 
   return (
@@ -118,6 +120,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
           ))}
         </div>
       </section>
+      <FaqSection items={faqs} />
     </div>
   );
 }

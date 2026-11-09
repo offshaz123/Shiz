@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { niches, getNiche } from "@/content/niches";
+import { niches, getNiche, getNicheFaqs } from "@/content/niches";
+import { FaqSection } from "@/components/FaqSection";
 import { LeadForm } from "@/components/LeadForm";
 import { BreadcrumbJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
@@ -37,6 +38,7 @@ export default async function NichePage({ params }: { params: Promise<{ slug: st
   const niche = getNiche(slug);
   if (!niche) notFound();
   const others = niches.filter((n) => n.slug !== niche.slug);
+  const faqs = getNicheFaqs(niche.slug);
 
   return (
     <div>
@@ -182,6 +184,11 @@ export default async function NichePage({ params }: { params: Promise<{ slug: st
           </div>
         </div>
       </section>
+
+      <FaqSection
+        items={faqs}
+        intro={`The things ${niche.trade} ask before they spend anything. Straight answers, including where the answer is that it probably is not worth it.`}
+      />
 
       <section className="border-t border-border">
         <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
