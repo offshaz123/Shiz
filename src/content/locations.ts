@@ -14,6 +14,25 @@ export type Location = {
 
 export const locations: Location[] = [
   {
+    slug: "canary-wharf",
+    city: "Canary Wharf",
+    isBase: true,
+    teaser: "Where we actually are — Level 39, One Canada Square.",
+    metaDescription:
+      "Marketing agency in Canary Wharf, based at Level 39, One Canada Square. Meta and Google Ads, SEO, websites and CRM for London service businesses.",
+    keywords: [
+      "marketing agency Canary Wharf",
+      "Canary Wharf advertising agency",
+      "Google Ads agency Canary Wharf",
+      "marketing agency One Canada Square",
+    ],
+    presence:
+      "This is our address, not a forwarding one. We are at Level 39, One Canada Square, and if meeting in person is easier than a call then that is where you would come.",
+    context:
+      "Canary Wharf is an odd place to run a local marketing agency from, and we are aware of it. The businesses on the estate are mostly banks, law firms and the companies that serve them, and very few of them need what we do. Our customers are the trades and service businesses out past the estate — in Poplar, the Isle of Dogs, Stratford, Barking and further into Essex — who are competing for people within a half-hour drive rather than for international mandates. Being in the Wharf buys us two things: somewhere to sit down with a client that is easy to reach on the Jubilee line or the Elizabeth line, and a short walk to most of east London's actual customer base.",
+    strongSectors: ["Automotive", "Home & trade services", "Health & beauty", "Professional services"],
+  },
+  {
     slug: "london",
     city: "London",
     isBase: true,

@@ -4,6 +4,7 @@ import { blogPosts } from "@/content/blog";
 import { services } from "@/content/services";
 import { industries } from "@/content/industries";
 import { locations } from "@/content/locations";
+import { niches } from "@/content/niches";
 import { approaches } from "@/content/case-studies";
 import { projects, hasProjects } from "@/content/projects";
 
@@ -30,6 +31,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/free-audit", changeFrequency: "monthly", priority: 0.95 },
     { path: "/walid", changeFrequency: "monthly", priority: 0.7 },
     { path: "/industries", changeFrequency: "monthly", priority: 0.85 },
+    { path: "/marketing-for", changeFrequency: "monthly", priority: 0.9 },
     { path: "/locations", changeFrequency: "monthly", priority: 0.8 },
     { path: "/case-studies", changeFrequency: "monthly", priority: 0.85 },
     { path: "/services", changeFrequency: "monthly", priority: 0.9 },
@@ -59,6 +61,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: siteUpdated,
     changeFrequency: "monthly" as const,
     priority: 0.8,
+  }));
+
+  // The automotive niche pages. Higher priority than the broad industry pages
+  // because they target what people actually search for, and because they are
+  // the pages this agency can genuinely win.
+  const nicheEntries = niches.map((niche) => ({
+    url: `${siteConfig.url}/marketing-for/${niche.slug}`,
+    lastModified: siteUpdated,
+    changeFrequency: "monthly" as const,
+    priority: 0.85,
   }));
 
   const locationEntries = locations.map((location) => ({
@@ -103,6 +115,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...staticEntries,
     ...serviceEntries,
     ...industryEntries,
+    ...nicheEntries,
     ...locationEntries,
     ...approachEntries,
     ...projectEntries,
