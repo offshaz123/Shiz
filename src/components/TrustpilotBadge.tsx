@@ -39,15 +39,15 @@ function StarBoxes({ filled = 5, size = "h-6 w-6" }: { filled?: number; size?: s
 
 /**
  * The homepage trust strip. Two states, decided by the config rather than by
- * us, and the link turns itself on with the reviews.
+ * us, and it changes job as the reviews arrive.
  *
- * With none yet it is not a link: a badge that sends someone to an empty
- * profile is worse than one that sits still. It says "Collecting reviews"
- * rather than carrying a score, because five green stars with no number and
- * no way to check reads as a rating, and there is nothing behind it yet.
+ * With none yet it is a collector: it says "Review us on Trustpilot" and
+ * links to the review form, not to the profile, so nobody is sent to an empty
+ * page. It carries no score, because five green stars with no number beside
+ * them read as a rating and there is nothing behind it yet.
  *
  * Once `reviewCount` is set from the real profile it becomes what it is meant
- * to be: the actual score, linked to the page that proves it.
+ * to be: the actual score, linked to the page that evidences it.
  */
 export function TrustpilotCard() {
   if (!hasTrustpilot) return null;
@@ -55,32 +55,22 @@ export function TrustpilotCard() {
   const { reviewCount, trustScore } = siteConfig.trustpilot;
   const earned = hasTrustpilotReviews;
 
-  const inner = (
-    <>
+  return (
+    <a
+      href={earned ? trustpilotProfileUrl : trustpilotReviewUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex items-center gap-4 rounded-2xl border border-border bg-background px-5 py-3.5 transition-colors hover:border-[#00b67a]"
+    >
       <StarBoxes filled={earned ? Math.round(trustScore) : 5} />
       <span className="text-left leading-tight">
         <span className="block text-sm font-semibold text-foreground">Trustpilot</span>
         <span className="block text-xs text-muted">
           {earned
             ? `${trustScore.toFixed(1)} from ${reviewCount} review${reviewCount === 1 ? "" : "s"}`
-            : "Collecting reviews"}
+            : "Review us on Trustpilot"}
         </span>
       </span>
-    </>
-  );
-
-  const className = "flex items-center gap-4 rounded-2xl border border-border bg-background px-5 py-3.5";
-
-  if (!earned) return <div className={className}>{inner}</div>;
-
-  return (
-    <a
-      href={trustpilotProfileUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`${className} transition-colors hover:border-[#00b67a]`}
-    >
-      {inner}
     </a>
   );
 }
