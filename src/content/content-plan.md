@@ -9,6 +9,7 @@ marketing specifically (car buyers researching on social before purchase, purcha
 keywords, dealership social strategy).
 
 ## Published so far
+- Ad Scheduling: Should Your Ads Run at 3am? (Google Ads)
 - Why Your Ad Account Spends Unevenly Across the Week (ads mechanics / budgeting)
 - Should a Small Business Use Performance Max? (Google Ads)
 - Schema Markup for a Local Business, in Plain English (technical SEO)
@@ -381,7 +382,7 @@ deliberately weights toward Google Ads to close that gap.
       trademarks as keywords" is explicitly in the will-NOT-restrict list, while trademarks in a
       direct competitor's ad text WILL be restricted after a complaint. No cost figures used —
       none are verifiable and the answer depends on who else is bidding.)
-- [ ] Ad Scheduling: Should Your Ads Run at 3am? — target: "ad scheduling Google Ads", "dayparting
+- [x] Ad Scheduling: Should Your Ads Run at 3am? — target: "ad scheduling Google Ads", "dayparting
       small business"
 
 ## Backlog — forms & conversion (added 2026-10-19 research round)

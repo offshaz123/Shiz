@@ -16,6 +16,82 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "ad-scheduling-should-your-ads-run-at-3am",
+    title: "Ad Scheduling: Should Your Ads Run at 3am?",
+    description:
+      "Switching your ads off overnight feels like the obvious saving. Google changed how budgets pace in 2026, and for days of the week it no longer saves you anything.",
+    publishedAt: "2026-11-09",
+    keywords: [
+      "ad scheduling Google Ads",
+      "dayparting small business",
+      "should I turn ads off at night",
+      "Google Ads schedule hours",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Nobody is ringing a garage at three in the morning, so why pay for clicks then. It is one of the first things people want to change in a new account, and on a twenty pound a day budget it feels like free money.",
+          "It is a reasonable instinct. It is also, for one of the two ways you can do it, now completely pointless, and Google has published why.",
+        ],
+      },
+      {
+        heading: "Turning off whole days no longer saves you anything",
+        paragraphs: [
+          "This is the part most people have not caught up with.",
+          "Google's pacing works to a monthly figure, not a daily one. Their wording: \u201cyour campaigns pace toward a monthly spend of 30.4 times your average daily budget\u201d, and that applies \u201cregardless of how many days your campaign is active in a given month\u201d.",
+          "So if you switch Sundays off, you have not cut your spend by a seventh. You have told the same monthly budget to fit into fewer days.",
+          "Google published a change to pacing dated 1 June 2026 which says it plainly: \u201cGoogle's pacing system will now attempt to spend up to this amount regardless of ad scheduling usage.\u201d The page is still written in future tense, so it is worth glancing at your own account rather than taking a blog's word for it, this one included.",
+          "The practical upshot: switching off a slow day does not reduce what you spend. It concentrates it.",
+        ],
+      },
+      {
+        heading: "Hours within a day are a different thing",
+        paragraphs: [
+          "Here is the distinction that matters, and Google draws it explicitly on the same page.",
+          "\u201cThese changes impact ad schedules that turn off campaigns on specific days of the week.\u201d",
+          "And then: \u201cThese changes do not impact ad schedules that turn off campaigns for specific hours within a day.\u201d",
+          "So turning Sunday off is now a redistribution. Turning midnight to 6am off is still a restriction on when you can be seen. Two very different decisions that look identical in the interface.",
+        ],
+      },
+      {
+        heading: "The timezone trap",
+        paragraphs: [
+          "Before touching any of this, check one setting.",
+          "Google is clear that \u201cad schedules are set based on your account's time zone\u201d, not the customer's. They go further and tell you to \u201cadjust your ad schedule to account for any difference in your target customers' time zone\u201d.",
+          "If an account was set up by somebody abroad, or set to the wrong zone at creation, your carefully planned nine to five is running at a time nobody in your town is awake. Account timezone is also one of the settings you cannot change freely later, so it is worth knowing what yours says.",
+        ],
+      },
+      {
+        heading: "Turn the bid down instead of going dark",
+        paragraphs: [
+          "There is a middle option that most small accounts never use, and it is almost always the better one.",
+          "Rather than switching off, you can change what you are willing to pay at particular times. Google's words: \u201cyou can adjust your bids for specific days and times\u201d, with their own example being \u201c+10% on Tuesdays between 8 a.m. and 10 a.m.\u201d",
+          "And the bit that makes it safe: \u201cby setting bid adjustments, your spending on individual clicks may vary, but your average daily budget won't change\u201d.",
+          "So you can bid less at 3am rather than disappearing at 3am. You stay eligible for the cheap overnight click, you just stop paying a premium for it.",
+          "One limitation to know before you plan around it: Google states that ad scheduling bid adjustments are available for campaigns using the Maximize clicks bid strategy. If you are on a different strategy, that option may not be there.",
+        ],
+      },
+      {
+        heading: "So should they run at 3am?",
+        paragraphs: [
+          "For most local service businesses, yes, and the reason is about behaviour rather than budgets.",
+          "The person who finds you at 11pm is not going to ring you at 11pm. They are going to read your page, decide you look right, and call in the morning. If your ads were off, they never saw you and they found somebody else instead. Google is blunt about what being off means: \u201cyour ad won't show during the dates and times that aren't listed on your ad schedule.\u201d",
+          "That is especially true for anything people research before they buy. Tinting, wrapping, PPF, a new kitchen. The looking happens on the sofa in the evening. The phone call happens the next day.",
+          "The exception is a business where the only thing that converts is a phone call answered immediately. Emergency plumbing, locksmiths, recovery. If nobody is picking up at 3am and the customer will simply ring the next firm, paying for that click is genuinely wasted.",
+        ],
+      },
+      {
+        heading: "Before you schedule anything",
+        paragraphs: [
+          "Three things in order.",
+          "Check your account timezone first. Everything else is built on it.",
+          "Then look at the actual numbers before deciding anything. Google's own reports break performance down by day and by hour, and a hunch about when your customers are about is usually wrong. You need enough weeks of data for those rows to mean something, and on a small budget that takes longer than you would like.",
+          "And when you do act, reach for a bid adjustment before you reach for the off switch. Being cheap at 3am costs you nothing. Being invisible at 3am costs you the people who were going to ring at nine.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "why-your-ad-account-spends-unevenly-across-the-week",
     title: "Why Your Ad Account Spends Unevenly Across the Week",
     description:
