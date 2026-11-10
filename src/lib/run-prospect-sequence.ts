@@ -1,5 +1,6 @@
 import { buildDraft, STEP_DAYS, type OutreachStep } from "./prospect-outreach";
-import { prospectUnsubscribeUrl, sendProspectEmail } from "./send-prospect-email";
+import { sendProspectEmail } from "./send-prospect-email";
+import { prospectUnsubscribeUrl } from "./unsubscribe-url";
 import { listSequenceAddresses, listSequenceDue, markReplied } from "./prospects";
 import { sendersSince } from "./mail-store";
 

@@ -1,5 +1,6 @@
 import type { RowDataPacket, ResultSetHeader } from "mysql2";
 import { withDb } from "./db";
+import { prospectUnsubscribeUrl } from "./unsubscribe-url";
 import type { GoogleBusiness } from "./google-business";
 import {
   isStatus as isValidStatus,
@@ -55,6 +56,7 @@ interface ProspectRow extends RowDataPacket {
 interface SentEmailRow extends RowDataPacket {
   subject: string;
   body: string;
+  step: number | null;
   status: string;
   sent_at: string;
 }
@@ -100,6 +102,7 @@ function toProspect(row: ProspectRow): Prospect {
     sequenceStopReason: row.sequence_stop_reason ?? "",
     repliedAt: row.replied_at ? String(row.replied_at) : null,
     unsubscribedAt: row.unsubscribed_at ? String(row.unsubscribed_at) : null,
+    unsubscribeUrl: prospectUnsubscribeUrl(row.id),
     foundFor: row.found_for ?? "",
     industry: row.industry ?? "",
   };
@@ -465,16 +468,19 @@ export async function unsubscribeProspect(id: number): Promise<boolean> {
 /** What has already gone out to one prospect, newest first. */
 export async function listProspectEmails(
   id: number,
-): Promise<{ subject: string; body: string; status: string; sentAt: string }[] | null> {
+): Promise<
+  { subject: string; body: string; step: number; status: string; sentAt: string }[] | null
+> {
   return withDb(async (db) => {
     const [rows] = await db.query<SentEmailRow[]>(
-      `SELECT subject, body, status, sent_at FROM prospect_emails
-       WHERE prospect_id = ? ORDER BY id DESC LIMIT 20`,
+      `SELECT subject, body, step, status, sent_at FROM prospect_emails
+       WHERE prospect_id = ? ORDER BY id ASC LIMIT 20`,
       [id],
     );
     return rows.map((r) => ({
       subject: r.subject,
       body: r.body,
+      step: Number(r.step ?? 1),
       status: r.status,
       sentAt: String(r.sent_at),
     }));

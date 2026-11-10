@@ -3,7 +3,7 @@ import MailComposer from "nodemailer/lib/mail-composer";
 import { getProspect, recordProspectEmail } from "./prospects";
 import { siteConfig } from "./site-config";
 import { fileInSent } from "./mail-store";
-import { mintToken } from "./lead-tokens";
+import { prospectUnsubscribeUrl } from "./unsubscribe-url";
 
 /**
  * Sends one outreach email to one prospect.
@@ -45,14 +45,6 @@ export type SendProspectResult =
 
 const MAX_SUBJECT = 200;
 const MAX_BODY = 20_000;
-
-/** The one-click unsubscribe link for a prospect, or "" when there is no
- *  CRON_SECRET to sign it with — in which case the email says "reply and say
- *  so" and nothing links to a page that cannot work. */
-export function prospectUnsubscribeUrl(id: number): string {
-  const token = mintToken("unsubscribe-prospect", id);
-  return token ? `${siteConfig.url}/unsubscribe?t=${token}` : "";
-}
 
 export async function sendProspectEmail(
   id: number,

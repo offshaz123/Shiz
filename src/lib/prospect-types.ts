@@ -59,6 +59,10 @@ export type Prospect = {
   sequenceStopReason: string;
   repliedAt: string | null;
   unsubscribedAt: string | null;
+  /** Signed one-click unsubscribe link for this business, minted on the
+   *  server. Empty when there is no CRON_SECRET to sign with, in which case
+   *  no email links to a page that could not work. */
+  unsubscribeUrl: string;
   foundFor: string;
   /** Which of the site's industries this was found under. */
   industry: string;

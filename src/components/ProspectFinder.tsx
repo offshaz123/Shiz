@@ -90,6 +90,50 @@ function tone(score: number): string {
 type Busy = { scanning?: boolean; scanError?: string };
 
 
+export type SentEmail = {
+  subject: string;
+  body: string;
+  step: number;
+  status: string;
+  sentAt: string;
+};
+
+/**
+ * What to do about this business next, in one line.
+ *
+ * The call list answers "who is worth ringing". Once you are looking at one
+ * of them the question changes to "what now", and the answer is sitting in
+ * four or five fields that nobody wants to read and weigh up at nine in the
+ * morning with a phone in their hand. So it gets said outright.
+ *
+ * Ordered by what overrules what: a request not to be contacted beats
+ * everything, a reply beats the sequence, and the sequence beats a nudge to
+ * write to them.
+ */
+function nextMove(p: Prospect, emails: SentEmail[]): string {
+  if (p.unsubscribedAt) return "Leave them. They asked not to be contacted again.";
+  if (p.status === "not-interested") return "Leave them. Marked not interested.";
+  if (p.status === "customer") return "They are a customer. Nothing to chase here.";
+  if (p.repliedAt) return "They have written back — the follow-ups have stopped. Answer them yourself.";
+  if (p.status === "interested") return "Interested: ring them and get a time in the diary.";
+
+  const sent = emails.filter((e) => e.status === "sent");
+  if (!p.website) return `No website at all — which is the pitch. Ring them on ${p.phone || "the number on their listing"}.`;
+  if (p.scannedAt === null) return "Scan their site first, so there is something to open with.";
+  if (!p.email) return `No email published on their site. Ring them on ${p.phone || "the listing number"}.`;
+
+  if (sent.length === 0) return "Write the first email. The scan has given you the opening line.";
+  if (sent.length >= 3) {
+    return "Three emails, no answer. One phone call is worth a try, then leave it alone.";
+  }
+  if (p.sequenceStoppedAt) {
+    return "Follow-ups are off. If they are still worth it, ring them rather than emailing again.";
+  }
+  return sent.length === 1
+    ? "Emailed once. The day 3 follow-up goes on its own — nothing to do unless you fancy ringing."
+    : "Two emails in. The last one goes on day 5, then it stops.";
+}
+
 /**
  * Where the mail actually gets sent from.
  *
@@ -564,6 +608,18 @@ function Section({
   );
 }
 
+/** One label and one value on the profile panel. */
+function Fact({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex gap-2">
+      <span className="min-w-[5.5rem] font-semibold text-muted">{label}</span>
+      <span className="truncate text-foreground" title={value}>
+        {value}
+      </span>
+    </div>
+  );
+}
+
 function Row({
   p,
   busy,
@@ -582,6 +638,9 @@ function Row({
   // What the row knows about the sequence after an action on this page, so a
   // send or a stop shows immediately rather than on the next load.
   const [seq, setSeq] = useState<"unchanged" | "started" | "stopped">("unchanged");
+  const [profile, setProfile] = useState(false);
+  const [history, setHistory] = useState<SentEmail[] | null>(null);
+  const [openEmail, setOpenEmail] = useState<number | null>(null);
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState("");
   const [sendError, setSendError] = useState("");
@@ -597,6 +656,22 @@ function Row({
     const ok = await copyText(text);
     setCopied(ok ? label : "copy failed");
     window.setTimeout(() => setCopied(""), 2500);
+  }
+
+  /** Everything already sent to them, loaded when the profile is opened
+   *  rather than with the list: thirty rows of email bodies is a lot to carry
+   *  for a panel that is usually closed. */
+  async function openProfile() {
+    const next = !profile;
+    setProfile(next);
+    if (!next || history) return;
+    try {
+      const res = await fetch(`/api/admin/prospects/email?id=${p.id}`);
+      const data = (await res.json().catch(() => null)) as { sent?: SentEmail[] } | null;
+      setHistory(data?.sent ?? []);
+    } catch {
+      setHistory([]);
+    }
   }
 
   /** Calls off the day 3 and day 5 emails for this one business. */
@@ -706,7 +781,7 @@ function Row({
             </button>
             <button
               type="button"
-              onClick={() => setCompose(compose ? null : buildDraft(1, p))}
+              onClick={() => setCompose(compose ? null : buildDraft(1, p, p.unsubscribeUrl))}
               className="rounded-lg border border-border px-2.5 py-1 font-semibold hover:border-brand-pink hover:text-foreground"
               title="Write and send an email to them from here"
             >
@@ -857,12 +932,102 @@ function Row({
         ))}
         <button
           type="button"
-          onClick={() => setOpen((v) => !v)}
+          onClick={openProfile}
           className="ml-auto text-[11px] font-semibold text-muted hover:text-foreground"
+        >
+          {profile ? "Close profile" : "Profile"}
+        </button>
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="text-[11px] font-semibold text-muted hover:text-foreground"
         >
           {p.notes && !open ? "Notes ✓" : open ? "Close notes" : "Notes"}
         </button>
       </div>
+
+      {/* The profile: everything known about this business in one place, and
+          what to do about it. The call list answers who to ring; this
+          answers what happened last time and what happens next. */}
+      {profile && (
+        <div className="mt-3 flex flex-col gap-3 rounded-xl border border-border bg-background px-3 py-3 text-[11px]">
+          <div>
+            <div className="font-bold uppercase tracking-wide text-muted">Next move</div>
+            <p className="mt-1 text-xs font-semibold leading-relaxed text-foreground">
+              {nextMove(p, history ?? [])}
+            </p>
+          </div>
+
+          <div className="grid gap-x-6 gap-y-1 sm:grid-cols-2">
+            <Fact label="Phone" value={p.phone || "—"} />
+            <Fact label="Email" value={p.email || "none published"} />
+            <Fact label="Listing" value={`${p.reviews} reviews${p.rating ? ` · ${p.rating}★` : ""}`} />
+            <Fact
+              label="Site score"
+              value={p.siteScore === null ? "not scanned" : `${p.siteScore.toFixed(1)} / 10`}
+            />
+            <Fact label="Scanned" value={p.scannedAt ? p.scannedAt.slice(0, 10) : "never"} />
+            <Fact label="First called" value={p.calledAt ? p.calledAt.slice(0, 10) : "not yet"} />
+            <Fact label="Found under" value={p.foundFor || p.industry || "—"} />
+            <Fact
+              label="Sequence"
+              value={
+                p.unsubscribedAt
+                  ? "unsubscribed"
+                  : p.repliedAt
+                    ? `replied ${p.repliedAt.slice(0, 10)}`
+                    : p.sequenceStoppedAt
+                      ? `stopped${p.sequenceStopReason ? ` — ${p.sequenceStopReason}` : ""}`
+                      : p.sequenceStartedAt
+                        ? `running since ${p.sequenceStartedAt.slice(0, 10)}`
+                        : "not started"
+              }
+            />
+          </div>
+
+          <div>
+            <div className="font-bold uppercase tracking-wide text-muted">
+              Emails sent{history ? ` (${history.length})` : ""}
+            </div>
+            {history === null ? (
+              <p className="mt-1 text-muted">Loading…</p>
+            ) : history.length === 0 ? (
+              <p className="mt-1 text-muted">Nothing sent to them yet.</p>
+            ) : (
+              <ul className="mt-1 flex flex-col gap-1">
+                {history.map((e, i) => (
+                  <li key={`${e.sentAt}-${i}`} className="rounded-lg border border-border px-2.5 py-1.5">
+                    <button
+                      type="button"
+                      onClick={() => setOpenEmail(openEmail === i ? null : i)}
+                      className="flex w-full flex-wrap items-center gap-2 text-left"
+                    >
+                      <span className="font-bold text-foreground">Email {e.step}</span>
+                      <span className="text-muted">{e.sentAt.slice(0, 10)}</span>
+                      <span
+                        className={
+                          e.status === "sent"
+                            ? "font-semibold text-emerald-500"
+                            : "font-semibold text-red-500"
+                        }
+                      >
+                        {e.status}
+                      </span>
+                      <span className="truncate text-muted">{e.subject}</span>
+                      <span className="ml-auto text-muted">{openEmail === i ? "−" : "+"}</span>
+                    </button>
+                    {openEmail === i && (
+                      <pre className="mt-2 whitespace-pre-wrap font-sans leading-relaxed text-muted">
+                        {e.body}
+                      </pre>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </div>
+      )}
 
       {p.notes && !open && <p className="mt-2 text-xs italic text-muted">{p.notes}</p>}
 

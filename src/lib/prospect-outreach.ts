@@ -17,22 +17,22 @@ import type { Prospect } from "./prospect-types";
  */
 
 /**
- * The signature, built from site-config so a profile that goes live later
- * appears here the moment its URL is filled in there.
+ * The signature. Four lines, and that is the whole point of it.
  *
- * The postal address is on it deliberately. A cold email from a business with
- * no address behind it reads as a mailshot to a person and scores as one with
- * a spam filter.
+ * It used to carry LinkedIn, Instagram, Facebook and the postal address. A
+ * signature with six links under it looks like a mailshot even when the
+ * email above it is not one, and every one of those links is a thing between
+ * the reader and the only two that matter: the phone number and the website.
+ *
+ * The address came off with them, at Walid's call. It buys a little goodwill
+ * with a spam filter, but a cold email that looks like a letterhead costs
+ * more than it earns.
  */
 export const SIGNATURE: string[] = [
   "Walid Shah",
   siteConfig.name,
   `${siteConfig.phoneDisplay} · ${siteConfig.email}`,
-  siteConfig.url,
-  ...(siteConfig.social.linkedin ? [`LinkedIn: ${siteConfig.social.linkedin}`] : []),
-  ...(siteConfig.social.instagram ? [`Instagram: ${siteConfig.social.instagram}`] : []),
-  ...(siteConfig.social.facebook ? [`Facebook: ${siteConfig.social.facebook}`] : []),
-  `${siteConfig.address.line1}, ${siteConfig.address.line2}, ${siteConfig.address.city} ${siteConfig.address.postcode}`,
+  siteConfig.url.replace(/^https?:\/\//, ""),
 ];
 
 export type OutreachStep = 1 | 2 | 3;
@@ -51,7 +51,7 @@ const booking = siteConfig.demoBookingUrl;
  * This one says what is wrong, what we do about it, and how to answer — and
  * stops. Everything else can wait for a reply or for step 2.
  */
-function stepOne(p: Prospect): Draft {
+function stepOne(p: Prospect, unsubscribeUrl: string): Draft {
   const findings = p.findings.length
     ? [
         p.findings.length === 1
@@ -68,13 +68,17 @@ function stepOne(p: Prospect): Draft {
       `Hi,`,
       ``,
       ...findings,
-      `That is the sort of thing we fix, alongside running the Google and Meta ads that bring people to the site in the first place.`,
+      `That's the sort of thing we fix, alongside running the Google and Meta ads that bring people to the site in the first place.`,
       ``,
-      `Want the full report? Reply and I will send it over — free, no obligation. Or ring me on ${siteConfig.phoneDisplay}: I am Walid Shah, I own the business, and I take the calls myself.`,
-      ``,
-      `If you would rather I did not email again, just say so and that is the end of it.`,
+      `Want the full report? Reply and I'll send it over — free, no obligation. Or ring me on ${siteConfig.phoneDisplay}: I'm Walid Shah, I own the business, and I take the calls myself.`,
       ``,
       ...SIGNATURE,
+      // One click rather than "reply and say so". Asking somebody to compose
+      // an email to make you stop is a small favour to ask of a person you
+      // wrote to out of the blue, and a filter counts a link it can see.
+      ...(unsubscribeUrl
+        ? [``, `Rather not hear from me? Click here and I won't contact you again: ${unsubscribeUrl}`]
+        : [``, `If you'd rather I didn't email again, just say so and that's the end of it.`]),
     ].join("\n"),
   };
 }
@@ -95,21 +99,21 @@ function stepTwo(p: Prospect, unsubscribeUrl: string): Draft {
       ``,
       `Following up on what I sent about the ${p.name} website.`,
       ``,
-      `The reason I am bothering you again is what those things add up to. They are all the same story: somebody looking for exactly what you sell finds you, something small gets in the way — nothing to tap, nothing that answers them, nothing that follows up — and they go back to the search results and ring the next one instead. You never see it happen. It just looks like a quiet week.`,
+      `The reason I'm bothering you again is what those things add up to. They are all the same story: somebody looking for exactly what you sell finds you, something small gets in the way — nothing to tap, nothing that answers them, nothing that follows up — and they go back to the search results and ring the next one instead. You never see it happen. It just looks like a quiet week.`,
       ``,
       `What we would actually do, in order:`,
       ``,
-      `- Fix what is losing people on the site now, which is the list in my last email.`,
-      `- Put Google Ads in front of the people already searching for what you do in your area, and Meta and Instagram ads in front of the ones who have not thought of you yet.`,
+      `- Fix what's losing people on the site now, which is the list in my last email.`,
+      `- Put Google Ads in front of the people already searching for what you do in your area, and Meta and Instagram ads in front of the ones who haven't thought of you yet.`,
       `- Set you up with a CRM so every enquiry — form, WhatsApp, phone, Instagram — lands in one place and gets followed up, instead of sitting in somebody's phone.`,
       ``,
       `The full list of what we do is ${servicesLine()}.`,
       ``,
-      `Our prices are on the website, which is more than most will tell you up front. If you are already working with someone, tell me what you are paying and I will tell you straight whether we would beat it — and if we would not, I will say so.`,
+      `Our prices are on the website, which is more than most will tell you up front. If you're already working with someone, tell me what you're paying and I'll tell you straight whether we'd beat it — and if we wouldn't, I'll say so.`,
       ``,
-      `Twenty minutes on a Google Meet with me is usually enough to know whether any of it is worth doing.${booking ? ` You can take a slot out of my diary here: ${booking}` : ""}`,
+      `Twenty minutes on a Google Meet with me is usually enough to know whether any of it's worth doing.${booking ? ` You can take a slot out of my diary here: ${booking}` : ""}`,
       ``,
-      `Reply, or ring me on ${siteConfig.phoneDisplay}. If neither, I will send one more and then leave you to it.`,
+      `Reply, or ring me on ${siteConfig.phoneDisplay}. If neither, I'll send one more and then leave you to it.`,
       ``,
       ...SIGNATURE,
       ``,
@@ -133,9 +137,9 @@ function stepThree(p: Prospect, unsubscribeUrl: string): Draft {
       ``,
       `Last one from me, as promised.`,
       ``,
-      `Short version: the ${p.name} website is losing enquiries it does not need to lose, I can show you exactly where, and the report is free whether or not you ever work with us.`,
+      `Short version: the ${p.name} website is losing enquiries it doesn't need to lose, I can show you exactly where, and the report's free whether or not you ever work with us.`,
       ``,
-      `If the timing is wrong, or you already have somebody, or it is simply not the thing you need this month — all completely fair. I will not email you again either way.`,
+      `If the timing's wrong, or you already have somebody, or it's simply not the thing you need this month — all completely fair. I won't email you again either way.`,
       ``,
       `If it ever does become the thing: ${siteConfig.phoneDisplay}, ${siteConfig.email}, and the prices are on ${siteConfig.url}.${booking ? ` My diary is at ${booking}.` : ""}`,
       ``,
@@ -151,5 +155,5 @@ function stepThree(p: Prospect, unsubscribeUrl: string): Draft {
 export function buildDraft(step: OutreachStep, p: Prospect, unsubscribeUrl = ""): Draft {
   if (step === 2) return stepTwo(p, unsubscribeUrl);
   if (step === 3) return stepThree(p, unsubscribeUrl);
-  return stepOne(p);
+  return stepOne(p, unsubscribeUrl);
 }
