@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { STATUSES, type Prospect, type ProspectStatus } from "@/lib/prospect-types";
 import { industries } from "@/content/industries";
-import { areaGroups } from "@/content/areas";
+import { areaGroups, cities } from "@/content/areas";
 import { siteConfig } from "@/lib/site-config";
 import { buildDraft } from "@/lib/prospect-outreach";
 
@@ -456,13 +456,37 @@ export function ProspectFinder() {
           <label htmlFor="prospect-town" className="mb-1.5 block text-xs text-muted">
             Town or area to search in
           </label>
-          <input
-            id="prospect-town"
-            value={town}
-            onChange={(e) => setTown(e.target.value)}
-            placeholder="Romford"
-            className="w-full max-w-xs rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand-pink"
-          />
+          <div className="flex flex-wrap items-center gap-2">
+            <input
+              id="prospect-town"
+              value={town}
+              onChange={(e) => setTown(e.target.value)}
+              placeholder="Romford"
+              className="w-full max-w-xs rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand-pink"
+            />
+            {/* A whole city, for when you want to cast wider than the
+                suburbs below. It fills the box rather than searching on its
+                own, so the trade is still chosen the same way. */}
+            <select
+              value={cities.includes(town.trim()) ? town.trim() : ""}
+              onChange={(e) => e.target.value && setTown(e.target.value)}
+              className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted outline-none focus:border-brand-pink"
+              aria-label="Pick a city"
+            >
+              <option value="">Or pick a city…</option>
+              {cities.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </div>
+          {cities.includes(town.trim()) && (
+            <p className="mt-2 text-xs text-muted">
+              A whole city mostly returns the big operators who already have an agency. If it comes
+              back thin, try a suburb of it below.
+            </p>
+          )}
 
           {/*
             Typing a town every time means thinking of one every time, and the

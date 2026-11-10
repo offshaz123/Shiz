@@ -105,3 +105,48 @@ export const areaGroups: AreaGroup[] = [
 
 /** Flat list, for validating what comes back from the page. */
 export const allAreas: string[] = areaGroups.flatMap((g) => g.areas);
+
+/**
+ * Whole cities, for when you want to cast wider than a suburb.
+ *
+ * Kept apart from the groups above because they do a different job and come
+ * with a warning: searching a city centre returns the big established
+ * operators with hundreds of reviews, who have an agency already. The
+ * suburbs are where the businesses that still want the work are.
+ *
+ * Here anyway, because "try Manchester and see what comes back" is a
+ * perfectly reasonable thing to want to do, and typing it every time is
+ * friction for no reason.
+ */
+export const cities: string[] = [
+  "London",
+  "Birmingham",
+  "Manchester",
+  "Liverpool",
+  "Leeds",
+  "Sheffield",
+  "Bristol",
+  "Nottingham",
+  "Leicester",
+  "Coventry",
+  "Newcastle upon Tyne",
+  "Glasgow",
+  "Edinburgh",
+  "Cardiff",
+  "Belfast",
+  "Southampton",
+  "Portsmouth",
+  "Brighton",
+  "Reading",
+  "Milton Keynes",
+  "Luton",
+  "Oxford",
+  "Cambridge",
+  "Norwich",
+  "Ipswich",
+  "Derby",
+  "Stoke-on-Trent",
+  "Wolverhampton",
+  "Plymouth",
+  "Aberdeen",
+];
