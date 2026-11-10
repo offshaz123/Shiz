@@ -5,8 +5,11 @@ import { industries } from "@/content/industries";
 import {
   saveProspects,
   listProspects,
+  countByContact,
   updateProspect,
   isStatus,
+  type ContactFilter,
+  type ProspectFilters,
   type ProspectStatus,
 } from "@/lib/prospects";
 
@@ -45,22 +48,31 @@ export async function GET(request: Request) {
 
   const params = new URL(request.url).searchParams;
   const statusParam = params.get("status") ?? "all";
+  const contactParam = params.get("contact");
 
-  const prospects = await listProspects({
+  const filters: ProspectFilters = {
     maxReviews: num(params.get("maxReviews")),
     minRating: num(params.get("minRating")),
     industry: industrySlug(params.get("industry")),
-    sort: params.get("sort") === "worst-site" ? "worst-site" : "default",
+    sort: params.get("sort") === "worst-site" ? ("worst-site" as const) : ("default" as const),
     status:
       statusParam === "all" || statusParam === "to-call"
         ? statusParam
         : isStatus(statusParam)
           ? statusParam
-          : "all",
-  });
+          : ("all" as const),
+    contact: (contactParam === "not-contacted" || contactParam === "contacted"
+      ? contactParam
+      : "all") as ContactFilter,
+  };
+
+  // Both in one request: the list itself, and the two tab counts above it.
+  // Separately they would be two round trips that can disagree with each
+  // other by a send that happened in between.
+  const [prospects, counts] = await Promise.all([listProspects(filters), countByContact(filters)]);
 
   if (!prospects) return NextResponse.json({ error: "no_database" }, { status: 500 });
-  return NextResponse.json({ prospects });
+  return NextResponse.json({ prospects, counts });
 }
 
 /** Searches Google for businesses in an area, and files what it finds. */

@@ -160,10 +160,26 @@ export async function saveProspects(
   }).catch(() => null);
 }
 
+/**
+ * Contacted or not, which is the first question the call list has to answer.
+ *
+ * Deliberately not the same thing as the status. A status is a judgement
+ * somebody typed — interested, no answer — and it stays "new" on a business
+ * that has had an email sent to it and not replied yet. "Have we approached
+ * these people" is a fact, and it is the one that decides whether a row
+ * belongs on the list of people still to approach.
+ */
+export type ContactFilter = "all" | "not-contacted" | "contacted";
+
+/** Approached at all: emailed from the admin page, or given a status that
+ *  stamped called_at. */
+const CONTACTED_SQL = "(emailed_at IS NOT NULL OR called_at IS NOT NULL)";
+
 export type ProspectFilters = {
   maxReviews?: number;
   minRating?: number;
   status?: ProspectStatus | "all" | "to-call";
+  contact?: ContactFilter;
   industry?: string;
   /** "worst-site" puts the most broken websites first, which is the order
    *  you want to ring in: the worse the site, the more there is to say. */
@@ -171,35 +187,69 @@ export type ProspectFilters = {
   limit?: number;
 };
 
+/**
+ * The filters, as SQL, shared by the list and the counts above it so the two
+ * can never disagree about what they are describing.
+ */
+function whereFor(filters: ProspectFilters): { where: string[]; params: (string | number)[] } {
+  const { maxReviews, minRating, status = "all", contact = "all", industry } = filters;
+  const where: string[] = [];
+  const params: (string | number)[] = [];
+
+  if (typeof maxReviews === "number") {
+    where.push("reviews <= ?");
+    params.push(maxReviews);
+  }
+  if (typeof minRating === "number" && minRating > 0) {
+    // A business with no rating at all has no reviews yet, which is a better
+    // prospect than a mediocre one — so it is kept, not filtered out for
+    // failing a test it cannot take.
+    where.push("(rating IS NULL OR rating >= ?)");
+    params.push(minRating);
+  }
+  if (industry) {
+    where.push("industry = ?");
+    params.push(industry);
+  }
+  if (status === "to-call") {
+    where.push("status IN ('new', 'no-answer')");
+  } else if (status !== "all") {
+    where.push("status = ?");
+    params.push(status);
+  }
+  if (contact === "not-contacted") where.push(`NOT ${CONTACTED_SQL}`);
+  else if (contact === "contacted") where.push(CONTACTED_SQL);
+
+  return { where, params };
+}
+
+/**
+ * How many are waiting to be approached and how many already have been, under
+ * whatever filters are set — the contact one excepted, since those two
+ * numbers are the thing being chosen between.
+ */
+export async function countByContact(
+  filters: ProspectFilters = {},
+): Promise<{ notContacted: number; contacted: number } | null> {
+  const { where, params } = whereFor({ ...filters, contact: "all" });
+  return withDb(async (db) => {
+    const [rows] = await db.query<(RowDataPacket & { contacted: number; total: number })[]>(
+      `SELECT SUM(${CONTACTED_SQL}) AS contacted, COUNT(*) AS total
+         FROM prospects
+        ${where.length ? `WHERE ${where.join(" AND ")}` : ""}`,
+      params,
+    );
+    const contacted = Number(rows[0]?.contacted ?? 0);
+    const total = Number(rows[0]?.total ?? 0);
+    return { notContacted: total - contacted, contacted };
+  });
+}
+
 export async function listProspects(filters: ProspectFilters = {}): Promise<Prospect[] | null> {
-  const { maxReviews, minRating, status = "all", industry, sort = "default", limit = 200 } = filters;
+  const { sort = "default", limit = 200 } = filters;
+  const { where, params } = whereFor(filters);
 
   return withDb(async (db) => {
-    const where: string[] = [];
-    const params: (string | number)[] = [];
-
-    if (typeof maxReviews === "number") {
-      where.push("reviews <= ?");
-      params.push(maxReviews);
-    }
-    if (typeof minRating === "number" && minRating > 0) {
-      // A business with no rating at all has no reviews yet, which is a
-      // better prospect than a mediocre one — so it is kept, not filtered
-      // out for failing a test it cannot take.
-      where.push("(rating IS NULL OR rating >= ?)");
-      params.push(minRating);
-    }
-    if (industry) {
-      where.push("industry = ?");
-      params.push(industry);
-    }
-    if (status === "to-call") {
-      where.push("status IN ('new', 'no-answer')");
-    } else if (status !== "all") {
-      where.push("status = ?");
-      params.push(status);
-    }
-
     const [rows] = await db.query<ProspectRow[]>(
       `SELECT * FROM prospects
        ${where.length ? `WHERE ${where.join(" AND ")}` : ""}
@@ -208,7 +258,9 @@ export async function listProspects(filters: ProspectFilters = {}): Promise<Pros
            ? // Unscanned last: a row with no score is not evidence of a good
              // site, just of one we have not looked at yet.
              "site_score IS NULL ASC, site_score ASC, reviews ASC"
-           : "FIELD(status, 'interested', 'new', 'no-answer', 'called', 'customer', 'not-interested'), reviews ASC"
+           : // On the contacted list the useful order is what happened last,
+             // not who is most worth ringing.
+             "emailed_at IS NULL ASC, emailed_at DESC, FIELD(status, 'interested', 'new', 'no-answer', 'called', 'customer', 'not-interested'), reviews ASC"
        }
        LIMIT ?`,
       [...params, limit],

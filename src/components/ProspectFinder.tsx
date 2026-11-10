@@ -188,6 +188,12 @@ export function ProspectFinder() {
   const [loading, setLoading] = useState(false);
   const [searching, setSearching] = useState(false);
   const [sort, setSort] = useState<"default" | "worst-site">("default");
+  // Which half of the list you are looking at. Anyone who has been emailed or
+  // rung leaves the list of people still to approach, because the whole job
+  // of that list is "who have we not got to yet".
+  const [contact, setContact] = useState<"not-contacted" | "contacted" | "all">("not-contacted");
+  const [counts, setCounts] = useState<{ notContacted: number; contacted: number } | null>(null);
+  const [moved, setMoved] = useState("");
   const [scanAllState, setScanAllState] = useState<{ running: boolean; done: number }>({
     running: false,
     done: 0,
@@ -201,18 +207,27 @@ export function ProspectFinder() {
    * causes a second render before the first has painted — so every setState
    * below happens after the await, in the continuation.
    */
-  async function fetchList(): Promise<Prospect[]> {
+  type ListPayload = {
+    prospects: Prospect[];
+    counts: { notContacted: number; contacted: number } | null;
+  };
+
+  async function fetchList(): Promise<ListPayload> {
     const params = new URLSearchParams({
       maxReviews: String(maxReviews),
       minRating: String(minRating),
       status,
+      contact,
       industry,
       sort,
     });
     const res = await fetch(`/api/admin/prospects?${params}`);
     const data = await res.json();
     if (!res.ok) throw new Error(ERRORS[data?.error] ?? "Couldn't load the list.");
-    return data.prospects as Prospect[];
+    return {
+      prospects: data.prospects as Prospect[],
+      counts: (data.counts ?? null) as ListPayload["counts"],
+    };
   }
 
   // Reload whenever a filter moves. The list is the thing on this page; the
@@ -220,9 +235,10 @@ export function ProspectFinder() {
   useEffect(() => {
     let cancelled = false;
     fetchList()
-      .then((list) => {
+      .then((payload) => {
         if (cancelled) return;
-        setProspects(list);
+        setProspects(payload.prospects);
+        setCounts(payload.counts);
         setError("");
       })
       .catch((err: Error) => {
@@ -235,7 +251,7 @@ export function ProspectFinder() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [maxReviews, minRating, status, industry, sort]);
+  }, [maxReviews, minRating, status, contact, industry, sort]);
 
   /**
    * Works through every unscanned prospect, a batch at a time.
@@ -258,7 +274,9 @@ export function ProspectFinder() {
         setScanAllState({ running: true, done: total });
         if (data.done) break;
       }
-      setProspects(await fetchList());
+      const payload = await fetchList();
+      setProspects(payload.prospects);
+      setCounts(payload.counts);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Couldn't reach the server.");
     } finally {
@@ -271,7 +289,9 @@ export function ProspectFinder() {
     setLoading(true);
     setError("");
     try {
-      setProspects(await fetchList());
+      const payload = await fetchList();
+      setProspects(payload.prospects);
+      setCounts(payload.counts);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Couldn't reach the server.");
     } finally {
@@ -301,6 +321,7 @@ export function ProspectFinder() {
       } else {
         // A fresh search shows everything it found, whatever filter was set.
         setStatus("all");
+        setContact("all");
         setProspects(data.prospects as Prospect[]);
         if (!data.saved) setError(ERRORS.no_database);
       }
@@ -309,6 +330,24 @@ export function ProspectFinder() {
     } finally {
       setSearching(false);
     }
+  }
+
+  /**
+   * Takes a business off the "to contact" list the moment it has been
+   * written to, rather than leaving it there until the next reload looking
+   * like it still needs doing.
+   *
+   * The line it leaves behind is the receipt: the row vanishing on its own
+   * with nothing said would read as something having gone wrong.
+   */
+  function markContacted(id: number, name: string) {
+    setCounts((c) => (c ? { notContacted: c.notContacted - 1, contacted: c.contacted + 1 } : c));
+    if (contact !== "not-contacted") return;
+    setMoved(`${name} → Contacted`);
+    window.setTimeout(() => {
+      setProspects((list) => list.filter((p) => p.id !== id));
+      setMoved("");
+    }, 2500);
   }
 
   function patch(id: number, changes: Partial<Prospect>) {
@@ -469,7 +508,35 @@ export function ProspectFinder() {
         </div>
       )}
 
-      <div className="mt-7 flex flex-wrap items-end gap-4 border-t border-border pt-6">
+      {/* The two lists. Everything found by a search starts on the left; the
+          moment it is emailed or rung it moves to the right, so the left is
+          always and only the people still waiting to be approached. */}
+      <div className="mt-7 flex flex-wrap items-center gap-2 border-t border-border pt-6">
+        {([
+          { value: "not-contacted", label: "To contact", count: counts?.notContacted },
+          { value: "contacted", label: "Contacted", count: counts?.contacted },
+          { value: "all", label: "Everyone", count: undefined },
+        ] as const).map((tab) => (
+          <button
+            key={tab.value}
+            type="button"
+            onClick={() => setContact(tab.value)}
+            className={`rounded-lg border px-4 py-2 text-sm font-bold ${
+              contact === tab.value
+                ? "border-brand-pink bg-brand-pink/10 text-foreground"
+                : "border-border text-muted hover:text-foreground"
+            }`}
+          >
+            {tab.label}
+            {typeof tab.count === "number" && (
+              <span className="ml-2 font-semibold text-muted">{tab.count}</span>
+            )}
+          </button>
+        ))}
+        {moved && <span className="text-xs font-bold text-emerald-500">{moved}</span>}
+      </div>
+
+      <div className="mt-4 flex flex-wrap items-end gap-4">
         <div>
           <label htmlFor="f-reviews" className="mb-1.5 block text-xs text-muted">
             Max reviews
@@ -571,7 +638,14 @@ export function ProspectFinder() {
           note="Nothing to criticise, just something to build."
         >
           {noSite.map((p) => (
-            <Row key={p.id} p={p} busy={busy[p.id]} onSave={save} onScan={scan} />
+            <Row
+              key={p.id}
+              p={p}
+              busy={busy[p.id]}
+              onSave={save}
+              onScan={scan}
+              onContacted={markContacted}
+            />
           ))}
         </Section>
       )}
@@ -582,7 +656,14 @@ export function ProspectFinder() {
           note="Fewest reviews first. Press Scan to score their site."
         >
           {withSite.map((p) => (
-            <Row key={p.id} p={p} busy={busy[p.id]} onSave={save} onScan={scan} />
+            <Row
+              key={p.id}
+              p={p}
+              busy={busy[p.id]}
+              onSave={save}
+              onScan={scan}
+              onContacted={markContacted}
+            />
           ))}
         </Section>
       )}
@@ -625,11 +706,13 @@ function Row({
   busy,
   onSave,
   onScan,
+  onContacted,
 }: {
   p: Prospect;
   busy?: Busy;
   onSave: (id: number, changes: { status?: ProspectStatus; notes?: string }) => void;
   onScan: (p: Prospect) => void;
+  onContacted: (id: number, name: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [notes, setNotes] = useState(p.notes);
@@ -716,6 +799,7 @@ function Row({
       );
       setSeq("started");
       setCompose(null);
+      onContacted(p.id, p.name);
     } catch {
       setSendError("Could not reach the server.");
     } finally {
