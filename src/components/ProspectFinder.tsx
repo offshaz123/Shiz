@@ -90,16 +90,15 @@ type Busy = { scanning?: boolean; scanError?: string };
 
 
 /**
- * Opens a draft in whatever mail client is set up, pre-filled with what the
- * scan found.
+ * The draft that gets sent to a prospect: subject, body, and his signature.
  *
- * Deliberately a mailto: and not a send button. This is one person writing to
+ * Deliberately a draft and never a send button. This is one person writing to
  * one business about their own website, which he reads before it goes — not a
  * campaign fired from a server. It is also the honest side of the line under
  * PECR, where a sole trader is an individual subscriber and cold bulk email
  * to one needs consent that we do not have.
  */
-function draftHref(p: Prospect): string {
+function buildDraft(p: Prospect): { subject: string; body: string } {
   const first = p.findings[0];
   const lines = [
     `Hi,`,
@@ -116,13 +115,58 @@ function draftHref(p: Prospect): string {
       : []),
     `Happy to send over the full report, it is free and there is no obligation.`,
     ``,
+    `If you would rather I did not email you again, just reply and say so.`,
+    ``,
     `Walid`,
     `Shaz Marketing Group`,
     `${siteConfig.phoneDisplay}`,
     `${siteConfig.url}`,
   ];
-  const subject = first ? `${p.name} - ${first.label.toLowerCase()}` : `${p.name} - your website`;
-  return `mailto:${encodeURIComponent(p.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join("\n"))}`;
+  return {
+    subject: first ? `${p.name} - ${first.label.toLowerCase()}` : `${p.name} - your website`,
+    body: lines.join("\n"),
+  };
+}
+
+/**
+ * Where the mail actually gets sent from.
+ *
+ * A plain mailto: link does nothing on a machine with no desktop mail client
+ * registered, which is the case here — the inbox lives in Hostinger webmail in
+ * a browser tab. There is no documented way to pre-fill that compose box from
+ * a URL, so the draft goes to the clipboard and webmail opens beside it: one
+ * paste, and it keeps working if the mail ever moves to Gmail or Outlook.
+ */
+const WEBMAIL_URL = "https://mail.hostinger.com";
+
+/** Kept for a phone, where mailto: does have a handler and opens Mail with
+ *  everything already filled in. */
+function mailtoHref(to: string, subject: string, body: string): string {
+  return `mailto:${encodeURIComponent(to)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+/** Copies without assuming the async clipboard API is there: it needs a secure
+ *  context and a permission that an embedded or older browser may refuse. */
+async function copyText(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    try {
+      const box = document.createElement("textarea");
+      box.value = text;
+      box.setAttribute("readonly", "");
+      box.style.position = "fixed";
+      box.style.opacity = "0";
+      document.body.appendChild(box);
+      box.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(box);
+      return ok;
+    } catch {
+      return false;
+    }
+  }
 }
 
 export function ProspectFinder() {
@@ -571,6 +615,52 @@ function Row({
 }) {
   const [open, setOpen] = useState(false);
   const [notes, setNotes] = useState(p.notes);
+  const [copied, setCopied] = useState("");
+  const [compose, setCompose] = useState<{ subject: string; body: string } | null>(null);
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState("");
+  const [sendError, setSendError] = useState("");
+
+  /** Copies a piece of the draft and says so, optionally opening webmail in a
+   *  new tab so the paste has somewhere to land. */
+  async function take(label: string, text: string, openWebmail = false) {
+    if (openWebmail) {
+      // Opened before the await so it counts as part of the click and does not
+      // get caught by the popup blocker.
+      window.open(WEBMAIL_URL, "_blank", "noopener,noreferrer");
+    }
+    const ok = await copyText(text);
+    setCopied(ok ? label : "copy failed");
+    window.setTimeout(() => setCopied(""), 2500);
+  }
+
+  /** Sends the draft through the site's own mail server, so this works from
+   *  any device signed into the admin page with no mail client set up. */
+  async function send() {
+    if (!compose || sending) return;
+    setSending(true);
+    setSendError("");
+    try {
+      const res = await fetch("/api/admin/prospects/email", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ id: p.id, subject: compose.subject, body: compose.body }),
+      });
+      const data = (await res.json().catch(() => null)) as
+        | { sent?: boolean; recipient?: string; message?: string; error?: string }
+        | null;
+      if (!res.ok || !data?.sent) {
+        setSendError(data?.message ?? data?.error ?? "Could not send it.");
+        return;
+      }
+      setSent(`Sent to ${data.recipient ?? p.email}`);
+      setCompose(null);
+    } catch {
+      setSendError("Could not reach the server.");
+    } finally {
+      setSending(false);
+    }
+  }
 
   return (
     <li className="rounded-xl border border-border bg-surface px-4 py-3">
@@ -620,19 +710,27 @@ function Row({
         )}
         {p.email && (
           <>
-            <a
-              href={`mailto:${p.email}`}
-              className="truncate font-semibold hover:text-foreground"
-              title={p.email}
+            <button
+              type="button"
+              onClick={() => take("address copied", p.email)}
+              className="max-w-[16rem] truncate font-semibold hover:text-foreground"
+              title={`${p.email} — click to copy`}
             >
               {p.email}
-            </a>
-            <a
-              href={draftHref(p)}
+            </button>
+            <button
+              type="button"
+              onClick={() => setCompose(compose ? null : buildDraft(p))}
               className="rounded-lg border border-border px-2.5 py-1 font-semibold hover:border-brand-pink hover:text-foreground"
+              title="Write and send an email to them from here"
             >
-              Write email
-            </a>
+              {compose ? "Close draft" : "Write email"}
+            </button>
+            {sent && <span className="font-semibold text-emerald-500">{sent}</span>}
+            {!sent && p.emailedAt && (
+              <span title={p.emailedAt}>emailed {p.emailedAt.slice(0, 10)}</span>
+            )}
+            {copied && <span className="font-semibold text-brand-pink">{copied}</span>}
           </>
         )}
         {p.category && <span>{p.category}</span>}
@@ -665,6 +763,66 @@ function Row({
             </li>
           ))}
         </ul>
+      )}
+
+      {/* The draft itself, on the page rather than in a mail client.
+          Editable before it goes, because the whole point is that a person
+          reads it first — and sent by the server, so it works from a phone
+          with nothing set up on it. */}
+      {compose && (
+        <div className="mt-3 flex flex-col gap-2 rounded-xl border border-border bg-background px-3 py-3">
+          <div className="text-[11px] font-semibold text-muted">
+            To <span className="text-foreground">{p.email}</span> · from{" "}
+            <span className="text-foreground">{siteConfig.email}</span>
+          </div>
+          <input
+            value={compose.subject}
+            onChange={(e) => setCompose({ ...compose, subject: e.target.value })}
+            placeholder="Subject"
+            className="rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-brand-pink"
+          />
+          <textarea
+            value={compose.body}
+            onChange={(e) => setCompose({ ...compose, body: e.target.value })}
+            rows={12}
+            className="rounded-lg border border-border bg-surface px-3 py-2 text-xs leading-relaxed text-foreground outline-none focus:border-brand-pink"
+          />
+          <div className="flex flex-wrap items-center gap-2 text-[11px]">
+            <button
+              type="button"
+              onClick={send}
+              disabled={sending}
+              className="rounded-lg bg-brand-pink px-3 py-1.5 font-bold text-white disabled:opacity-50"
+            >
+              {sending ? "Sending…" : "Send it"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setCompose(null)}
+              className="rounded-lg border border-border px-2.5 py-1 font-semibold text-muted hover:text-foreground"
+            >
+              Cancel
+            </button>
+            {/* Kept for the times you would rather send it yourself: the
+                draft goes to the clipboard and webmail opens next to it. */}
+            <button
+              type="button"
+              onClick={() => take("draft copied", compose.body, true)}
+              className="rounded-lg border border-border px-2.5 py-1 font-semibold text-muted hover:text-foreground"
+              title="Copies the message and opens Hostinger webmail in a new tab"
+            >
+              Copy + webmail
+            </button>
+            <a
+              href={mailtoHref(p.email, compose.subject, compose.body)}
+              className="rounded-lg border border-border px-2.5 py-1 font-semibold text-muted hover:text-foreground"
+              title="Opens the mail app on your phone with the draft filled in"
+            >
+              Mail app
+            </a>
+            {sendError && <span className="font-semibold text-red-500">{sendError}</span>}
+          </div>
+        </div>
       )}
 
       <div className="mt-3 flex flex-wrap items-center gap-1.5">

@@ -42,8 +42,16 @@ interface ProspectRow extends RowDataPacket {
   status: string;
   notes: string | null;
   called_at: string | null;
+  emailed_at: string | null;
   found_for: string | null;
   industry: string | null;
+}
+
+interface SentEmailRow extends RowDataPacket {
+  subject: string;
+  body: string;
+  status: string;
+  sent_at: string;
 }
 
 /** Stored as JSON and only ever read back whole. Bad JSON means no findings,
@@ -81,6 +89,7 @@ function toProspect(row: ProspectRow): Prospect {
     status: isValidStatus(row.status) ? row.status : "new",
     notes: row.notes ?? "",
     calledAt: row.called_at ? String(row.called_at) : null,
+    emailedAt: row.emailed_at ? String(row.emailed_at) : null,
     foundFor: row.found_for ?? "",
     industry: row.industry ?? "",
   };
@@ -271,4 +280,72 @@ export async function saveProspectScan(
       ],
     );
   }).catch(() => null);
+}
+
+/** One prospect by id, for the parts of the admin that act on a single row
+ *  rather than a list. Null when there is no database or no such row. */
+export async function getProspect(id: number): Promise<Prospect | null> {
+  const found = await withDb(async (db) => {
+    const [rows] = await db.query<ProspectRow[]>("SELECT * FROM prospects WHERE id = ? LIMIT 1", [
+      id,
+    ]);
+    return rows[0] ? toProspect(rows[0]) : null;
+  });
+  return found ?? null;
+}
+
+/**
+ * Files away an outreach email, sent or failed, and stamps the prospect.
+ *
+ * The body is kept in full. The server is the only thing that holds a copy —
+ * nothing lands in a Sent folder when the server does the sending — so if
+ * this row is not written, the record of what was said exists nowhere.
+ */
+export async function recordProspectEmail(
+  id: number,
+  email: {
+    recipient: string;
+    subject: string;
+    body: string;
+    status: "sent" | "failed";
+    error?: string;
+  },
+): Promise<void> {
+  await withDb(async (db) => {
+    await db.execute(
+      `INSERT INTO prospect_emails (prospect_id, recipient, subject, body, status, error)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [
+        id,
+        email.recipient.slice(0, 200),
+        email.subject.slice(0, 255),
+        email.body,
+        email.status,
+        email.error ? email.error.slice(0, 500) : null,
+      ],
+    );
+    // Only a send that actually worked counts as having written to them.
+    if (email.status === "sent") {
+      await db.execute("UPDATE prospects SET emailed_at = NOW() WHERE id = ?", [id]);
+    }
+  }).catch(() => null);
+}
+
+/** What has already gone out to one prospect, newest first. */
+export async function listProspectEmails(
+  id: number,
+): Promise<{ subject: string; body: string; status: string; sentAt: string }[] | null> {
+  return withDb(async (db) => {
+    const [rows] = await db.query<SentEmailRow[]>(
+      `SELECT subject, body, status, sent_at FROM prospect_emails
+       WHERE prospect_id = ? ORDER BY id DESC LIMIT 20`,
+      [id],
+    );
+    return rows.map((r) => ({
+      subject: r.subject,
+      body: r.body,
+      status: r.status,
+      sentAt: String(r.sent_at),
+    }));
+  });
 }

@@ -49,6 +49,8 @@ export type Prospect = {
   status: ProspectStatus;
   notes: string;
   calledAt: string | null;
+  /** When an email was last sent to them from the admin page. */
+  emailedAt: string | null;
   foundFor: string;
   /** Which of the site's industries this was found under. */
   industry: string;

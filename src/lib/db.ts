@@ -175,6 +175,29 @@ const SCHEMA = [
     KEY idx_status (status),
     KEY idx_reviews (reviews)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  // One row per outreach email sent from the admin page, with the text that
+  // went out.
+  //
+  // Kept because the mail is sent by the server rather than from a mail
+  // client, so there is no Sent folder holding the only copy. Without this
+  // the record of what was said to whom would live nowhere, which matters
+  // both for picking up a conversation and for being able to show, if anyone
+  // ever asks, exactly what was sent and when.
+  `CREATE TABLE IF NOT EXISTS prospect_emails (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    prospect_id INT UNSIGNED NOT NULL,
+    recipient VARCHAR(200) NOT NULL,
+    subject VARCHAR(255) NOT NULL,
+    body MEDIUMTEXT NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'sent',
+    error TEXT NULL,
+    sent_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    KEY idx_prospect (prospect_id, sent_at),
+    CONSTRAINT fk_prospect_emails_prospect FOREIGN KEY (prospect_id)
+      REFERENCES prospects (id) ON DELETE CASCADE
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 ];
 
 /**
@@ -198,6 +221,9 @@ const ADDED_COLUMNS: { table: string; column: string; definition: string }[] = [
   // Taken off their own website during the scan, because Places never
   // returns one. Generic business inboxes are preferred over personal ones.
   { table: "prospects", column: "email", definition: "VARCHAR(200) NULL AFTER phone" },
+  // When an email was last sent to them from the admin page, so the call list
+  // shows at a glance who has already been written to.
+  { table: "prospects", column: "emailed_at", definition: "DATETIME NULL AFTER called_at" },
 ];
 
 interface CountRow extends RowDataPacket {
