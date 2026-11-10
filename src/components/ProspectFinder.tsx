@@ -90,6 +90,30 @@ function tone(score: number): string {
 type Busy = { scanning?: boolean; scanError?: string };
 
 
+/**
+ * What a search did, said plainly.
+ *
+ * Google is asked for businesses and the answer is then filtered by review
+ * count before anything is saved, so "found twenty, kept none" is an ordinary
+ * outcome — and until this existed it looked exactly like "found nothing",
+ * which sends you looking for a fault that is not there. The review cap is
+ * named because it is almost always the thing that did it: a city centre
+ * trade with a cap of 25 filters out the entire high street.
+ */
+function searchOutcome(query: string, found: number, dropped: number, cap: number): string {
+  if (!Number.isFinite(found) || found === 0) {
+    return `Google found nothing for "${query}". Try different wording, or a bigger area.`;
+  }
+  const kept = found - (Number.isFinite(dropped) ? dropped : 0);
+  if (kept <= 0) {
+    return `Found ${found} for "${query}", and every one had more than ${cap} reviews, so none were kept. Raise "Max reviews" and search again.`;
+  }
+  if (dropped > 0) {
+    return `Found ${found} for "${query}", kept ${kept}. The other ${dropped} had more than ${cap} reviews.`;
+  }
+  return `Found ${found} for "${query}", all kept.`;
+}
+
 export type SentEmail = {
   subject: string;
   body: string;
@@ -194,6 +218,10 @@ export function ProspectFinder() {
   const [contact, setContact] = useState<"not-contacted" | "contacted" | "all">("not-contacted");
   const [counts, setCounts] = useState<{ notContacted: number; contacted: number } | null>(null);
   const [moved, setMoved] = useState("");
+  /** What the last search actually did, in words. Without this a search that
+   *  found twenty businesses and filtered every one of them out looks
+   *  identical to one that found nothing at all. */
+  const [searchNote, setSearchNote] = useState("");
   // Which town's prospects to show. Separate from the town box above, which
   // says where the next *search* runs — this one filters what is already in
   // the list, so you can work one area at a time on the phone.
@@ -298,6 +326,11 @@ export function ProspectFinder() {
   async function load() {
     setLoading(true);
     setError("");
+    // Refresh is the deliberate "show me the list as it stands", so the
+    // receipt from the last search goes with it. It is not cleared when a
+    // filter moves, because the search resets the filters itself and would
+    // wipe its own message a moment after writing it.
+    setSearchNote("");
     try {
       const payload = await fetchList();
       setProspects(payload.prospects);
@@ -337,6 +370,7 @@ export function ProspectFinder() {
         // Romford because that is where you were working an hour ago.
         setTownFilter("");
         setProspects(data.prospects as Prospect[]);
+        setSearchNote(searchOutcome(text, Number(data.found), Number(data.dropped), maxReviews));
         if (!data.saved) setError(ERRORS.no_database);
       }
     } catch {
@@ -573,6 +607,12 @@ export function ProspectFinder() {
         ))}
         {moved && <span className="text-xs font-bold text-emerald-500">{moved}</span>}
       </div>
+
+      {searchNote && (
+        <p className="mt-3 rounded-xl border border-border bg-surface px-4 py-3 text-xs font-semibold text-foreground">
+          {searchNote}
+        </p>
+      )}
 
       <div className="mt-4 flex flex-wrap items-end gap-4">
         <div>
