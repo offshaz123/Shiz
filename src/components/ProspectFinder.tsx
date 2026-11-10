@@ -463,6 +463,22 @@ export function ProspectFinder() {
       <div className="mt-5">
         <p className="text-xs font-semibold uppercase tracking-wide text-muted">Industry</p>
         <div className="mt-2 flex flex-wrap gap-2">
+          {/* First, and spelled out, because the whole list is the default
+              view anyone wants when the question is "who have we contacted"
+              rather than "who shall I ring next". Clicking the selected
+              industry again did this already, which nobody could be expected
+              to guess. */}
+          <button
+            type="button"
+            onClick={() => setIndustry("")}
+            className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${
+              industry === ""
+                ? "border-brand-pink text-foreground"
+                : "border-border text-muted hover:text-foreground"
+            }`}
+          >
+            All industries
+          </button>
           {industries.map((i) => (
             <button
               key={i.slug}
@@ -481,7 +497,7 @@ export function ProspectFinder() {
         <p className="mt-2 text-xs text-muted">
           {industry
             ? "The list below is filtered to this industry. Pick a trade to find more."
-            : "Pick one to filter the list, and to get its trades as one-click searches."}
+            : "Showing every business you have ever searched for. Pick an industry to narrow it down and to search for more."}
         </p>
       </div>
 
