@@ -90,6 +90,29 @@ type Busy = { scanning?: boolean; scanError?: string };
 
 
 /**
+ * The signature on the bottom of every draft.
+ *
+ * Built from site-config rather than typed out here, so a profile that goes
+ * live — Facebook, a Google review link — appears in the signature the moment
+ * its URL is filled in there, and an empty one is simply left out rather than
+ * sending people to a page that does not exist.
+ *
+ * The postal address is on it deliberately. A cold email from a business with
+ * no address behind it reads as a mailshot to a person and scores as one with
+ * a spam filter.
+ */
+const SIGNATURE: string[] = [
+  "Walid",
+  siteConfig.name,
+  `${siteConfig.phoneDisplay} · ${siteConfig.email}`,
+  siteConfig.url,
+  ...(siteConfig.social.linkedin ? [`LinkedIn: ${siteConfig.social.linkedin}`] : []),
+  ...(siteConfig.social.instagram ? [`Instagram: ${siteConfig.social.instagram}`] : []),
+  ...(siteConfig.social.facebook ? [`Facebook: ${siteConfig.social.facebook}`] : []),
+  `${siteConfig.address.line1}, ${siteConfig.address.line2}, ${siteConfig.address.city} ${siteConfig.address.postcode}`,
+];
+
+/**
  * The draft that gets sent to a prospect: subject, body, and his signature.
  *
  * Deliberately a draft and never a send button. This is one person writing to
@@ -117,10 +140,7 @@ function buildDraft(p: Prospect): { subject: string; body: string } {
     ``,
     `If you would rather I did not email you again, just reply and say so.`,
     ``,
-    `Walid`,
-    `Shaz Marketing Group`,
-    `${siteConfig.phoneDisplay}`,
-    `${siteConfig.url}`,
+    ...SIGNATURE,
   ];
   return {
     subject: first ? `${p.name} - ${first.label.toLowerCase()}` : `${p.name} - your website`,
