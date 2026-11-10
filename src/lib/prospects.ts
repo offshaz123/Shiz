@@ -51,6 +51,7 @@ interface ProspectRow extends RowDataPacket {
   unsubscribed_at: string | null;
   found_for: string | null;
   industry: string | null;
+  town: string | null;
 }
 
 interface SentEmailRow extends RowDataPacket {
@@ -105,6 +106,7 @@ function toProspect(row: ProspectRow): Prospect {
     unsubscribeUrl: prospectUnsubscribeUrl(row.id),
     foundFor: row.found_for ?? "",
     industry: row.industry ?? "",
+    town: row.town ?? "",
   };
 }
 
@@ -120,6 +122,7 @@ export async function saveProspects(
   businesses: GoogleBusiness[],
   foundFor: string,
   industry: string,
+  town = "",
 ): Promise<void> {
   const rows = businesses.filter((b) => b.id);
   if (rows.length === 0) return;
@@ -128,8 +131,8 @@ export async function saveProspects(
     for (const b of rows) {
       await db.execute(
         `INSERT INTO prospects
-           (place_id, name, phone, website, address, category, maps_uri, reviews, rating, found_for, industry)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+           (place_id, name, phone, website, address, category, maps_uri, reviews, rating, found_for, industry, town)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON DUPLICATE KEY UPDATE
            name = VALUES(name),
            phone = VALUES(phone),
@@ -141,7 +144,10 @@ export async function saveProspects(
            rating = VALUES(rating),
            -- Keeps whichever industry it was first filed under rather than
            -- blanking it when the same firm turns up in a plain text search.
-           industry = COALESCE(NULLIF(VALUES(industry), ''), industry)`,
+           industry = COALESCE(NULLIF(VALUES(industry), ''), industry),
+           -- Same for the town: a business found again by a search with no
+           -- town box filled in keeps the area it was first filed under.
+           town = COALESCE(NULLIF(VALUES(town), ''), town)`,
         [
           b.id,
           b.name.slice(0, 200),
@@ -154,6 +160,7 @@ export async function saveProspects(
           b.rating,
           foundFor.slice(0, 160),
           industry.slice(0, 40),
+          town.slice(0, 80),
         ],
       );
     }
@@ -181,6 +188,8 @@ export type ProspectFilters = {
   status?: ProspectStatus | "all" | "to-call";
   contact?: ContactFilter;
   industry?: string;
+  /** One town, exactly as it is stored. Empty means every town. */
+  town?: string;
   /** "worst-site" puts the most broken websites first, which is the order
    *  you want to ring in: the worse the site, the more there is to say. */
   sort?: "default" | "worst-site";
@@ -192,7 +201,7 @@ export type ProspectFilters = {
  * can never disagree about what they are describing.
  */
 function whereFor(filters: ProspectFilters): { where: string[]; params: (string | number)[] } {
-  const { maxReviews, minRating, status = "all", contact = "all", industry } = filters;
+  const { maxReviews, minRating, status = "all", contact = "all", industry, town } = filters;
   const where: string[] = [];
   const params: (string | number)[] = [];
 
@@ -210,6 +219,10 @@ function whereFor(filters: ProspectFilters): { where: string[]; params: (string 
   if (industry) {
     where.push("industry = ?");
     params.push(industry);
+  }
+  if (town) {
+    where.push("town = ?");
+    params.push(town);
   }
   if (status === "to-call") {
     where.push("status IN ('new', 'no-answer')");
@@ -536,5 +549,30 @@ export async function listProspectEmails(
       status: r.status,
       sentAt: String(r.sent_at),
     }));
+  });
+}
+
+/**
+ * Every town there is a prospect in, with how many, commonest first.
+ *
+ * Built from the data rather than from the list of areas on the search form,
+ * so the filter only ever offers somewhere there is actually something to
+ * look at.
+ */
+export async function listTowns(
+  filters: ProspectFilters = {},
+): Promise<{ town: string; n: number }[] | null> {
+  const { where, params } = whereFor({ ...filters, town: "" });
+  const clauses = [...where, "town IS NOT NULL", "town <> ''"];
+  return withDb(async (db) => {
+    const [rows] = await db.query<(RowDataPacket & { town: string; n: number })[]>(
+      `SELECT town, COUNT(*) AS n FROM prospects
+        WHERE ${clauses.join(" AND ")}
+        GROUP BY town
+        ORDER BY n DESC, town ASC
+        LIMIT 60`,
+      params,
+    );
+    return rows.map((r) => ({ town: r.town, n: Number(r.n) }));
   });
 }

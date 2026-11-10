@@ -210,7 +210,14 @@ const SCHEMA = [
  * database created before these columns existed catches up on next connect
  * and a fresh one does nothing.
  */
-const ADDED_COLUMNS: { table: string; column: string; definition: string }[] = [
+const ADDED_COLUMNS: {
+  table: string;
+  column: string;
+  definition: string;
+  /** Run once, immediately after the column is added, to fill it in for rows
+   *  that existed before it. Never run again. */
+  backfill?: string;
+}[] = [
   { table: "scan_leads", column: "audit_json", definition: "MEDIUMTEXT NULL AFTER score" },
   { table: "scan_leads", column: "unsubscribed_at", definition: "DATETIME NULL AFTER notes" },
   { table: "prospects", column: "industry", definition: "VARCHAR(40) NULL AFTER found_for" },
@@ -240,6 +247,25 @@ const ADDED_COLUMNS: { table: string; column: string; definition: string }[] = [
   // Added at the same time as the sequence: rows written before it exists
   // default to step 1, which is what they were.
   { table: "prospect_emails", column: "step", definition: "TINYINT UNSIGNED NOT NULL DEFAULT 1 AFTER body" },
+  // The town a prospect was found in, so the list can be worked one area at a
+  // time — which is how the ringing actually happens, and how a business
+  // hears that you know the place rather than that you found them in a list.
+  //
+  // Written from the town box on the search form. The backfill reads it off
+  // the search that found each existing row: those are all of the form
+  // "nail salons in Barking", so whatever follows the last " in " is the
+  // town. Rows from a free-text search that does not look like that keep an
+  // empty town and simply never match a town filter, which is right —
+  // guessing a location onto a business is worse than having none.
+  {
+    table: "prospects",
+    column: "town",
+    definition: "VARCHAR(80) NULL AFTER industry",
+    backfill: `UPDATE prospects
+                  SET town = TRIM(SUBSTRING_INDEX(found_for, ' in ', -1))
+                WHERE (town IS NULL OR town = '')
+                  AND found_for LIKE '% in %'`,
+  },
 ];
 
 interface CountRow extends RowDataPacket {
@@ -251,7 +277,7 @@ async function ensureSchema(db: mysql.Pool): Promise<void> {
     await db.query(statement);
   }
 
-  for (const { table, column, definition } of ADDED_COLUMNS) {
+  for (const { table, column, definition, backfill } of ADDED_COLUMNS) {
     const [rows] = await db.query<CountRow[]>(
       `SELECT COUNT(*) AS n FROM information_schema.COLUMNS
        WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?`,
@@ -259,6 +285,10 @@ async function ensureSchema(db: mysql.Pool): Promise<void> {
     );
     if ((rows[0]?.n ?? 0) === 0) {
       await db.query(`ALTER TABLE \`${table}\` ADD COLUMN \`${column}\` ${definition}`);
+      // Only here, inside the branch that just created the column. A
+      // backfill that ran on every connect would be a table scan on every
+      // cold start for the life of the site.
+      if (backfill) await db.query(backfill).catch(() => null);
     }
   }
 }

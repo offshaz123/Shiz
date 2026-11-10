@@ -66,4 +66,6 @@ export type Prospect = {
   foundFor: string;
   /** Which of the site's industries this was found under. */
   industry: string;
+  /** The town the search that found them was run in. */
+  town: string;
 };

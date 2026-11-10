@@ -6,6 +6,7 @@ import {
   saveProspects,
   listProspects,
   countByContact,
+  listTowns,
   updateProspect,
   isStatus,
   type ContactFilter,
@@ -64,15 +65,22 @@ export async function GET(request: Request) {
     contact: (contactParam === "not-contacted" || contactParam === "contacted"
       ? contactParam
       : "all") as ContactFilter,
+    town: (params.get("town") ?? "").slice(0, 80),
   };
 
   // Both in one request: the list itself, and the two tab counts above it.
   // Separately they would be two round trips that can disagree with each
   // other by a send that happened in between.
-  const [prospects, counts] = await Promise.all([listProspects(filters), countByContact(filters)]);
+  const [prospects, counts, towns] = await Promise.all([
+    listProspects(filters),
+    countByContact(filters),
+    // The town list ignores the town that is selected, so choosing one does
+    // not reduce the menu to the thing you just chose.
+    listTowns({ ...filters, town: "" }),
+  ]);
 
   if (!prospects) return NextResponse.json({ error: "no_database" }, { status: 500 });
-  return NextResponse.json({ prospects, counts });
+  return NextResponse.json({ prospects, counts, towns: towns ?? [] });
 }
 
 /** Searches Google for businesses in an area, and files what it finds. */
@@ -97,7 +105,11 @@ export async function POST(request: Request) {
   // Filed before answering, so the list the page reads back is already
   // complete and a search is never a result you can only see once.
   const industry = industrySlug(body?.industry);
-  await saveProspects(result.businesses, query, industry);
+  // The town comes from its own box rather than being picked back out of the
+  // query, so "nail salons in Barking" and a free-text search are filed the
+  // same way.
+  const town = typeof body?.town === "string" ? body.town.trim().slice(0, 80) : "";
+  await saveProspects(result.businesses, query, industry, town);
 
   const prospects = await listProspects({ maxReviews, status: "all", industry });
 

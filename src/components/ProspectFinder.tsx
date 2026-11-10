@@ -194,6 +194,11 @@ export function ProspectFinder() {
   const [contact, setContact] = useState<"not-contacted" | "contacted" | "all">("not-contacted");
   const [counts, setCounts] = useState<{ notContacted: number; contacted: number } | null>(null);
   const [moved, setMoved] = useState("");
+  // Which town's prospects to show. Separate from the town box above, which
+  // says where the next *search* runs — this one filters what is already in
+  // the list, so you can work one area at a time on the phone.
+  const [townFilter, setTownFilter] = useState("");
+  const [towns, setTowns] = useState<{ town: string; n: number }[]>([]);
   const [scanAllState, setScanAllState] = useState<{ running: boolean; done: number }>({
     running: false,
     done: 0,
@@ -210,6 +215,7 @@ export function ProspectFinder() {
   type ListPayload = {
     prospects: Prospect[];
     counts: { notContacted: number; contacted: number } | null;
+    towns: { town: string; n: number }[];
   };
 
   async function fetchList(): Promise<ListPayload> {
@@ -219,6 +225,7 @@ export function ProspectFinder() {
       status,
       contact,
       industry,
+      town: townFilter,
       sort,
     });
     const res = await fetch(`/api/admin/prospects?${params}`);
@@ -227,6 +234,7 @@ export function ProspectFinder() {
     return {
       prospects: data.prospects as Prospect[],
       counts: (data.counts ?? null) as ListPayload["counts"],
+      towns: (data.towns ?? []) as ListPayload["towns"],
     };
   }
 
@@ -239,6 +247,7 @@ export function ProspectFinder() {
         if (cancelled) return;
         setProspects(payload.prospects);
         setCounts(payload.counts);
+        setTowns(payload.towns);
         setError("");
       })
       .catch((err: Error) => {
@@ -251,7 +260,7 @@ export function ProspectFinder() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [maxReviews, minRating, status, contact, industry, sort]);
+  }, [maxReviews, minRating, status, contact, industry, townFilter, sort]);
 
   /**
    * Works through every unscanned prospect, a batch at a time.
@@ -277,6 +286,7 @@ export function ProspectFinder() {
       const payload = await fetchList();
       setProspects(payload.prospects);
       setCounts(payload.counts);
+      setTowns(payload.towns);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Couldn't reach the server.");
     } finally {
@@ -292,6 +302,7 @@ export function ProspectFinder() {
       const payload = await fetchList();
       setProspects(payload.prospects);
       setCounts(payload.counts);
+      setTowns(payload.towns);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Couldn't reach the server.");
     } finally {
@@ -313,7 +324,7 @@ export function ProspectFinder() {
       const res = await fetch("/api/admin/prospects", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: text, maxReviews, industry }),
+        body: JSON.stringify({ query: text, maxReviews, industry, town: town.trim() }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -322,6 +333,9 @@ export function ProspectFinder() {
         // A fresh search shows everything it found, whatever filter was set.
         setStatus("all");
         setContact("all");
+        // A search that just ran in Barking should not come back filtered to
+        // Romford because that is where you were working an hour ago.
+        setTownFilter("");
         setProspects(data.prospects as Prospect[]);
         if (!data.saved) setError(ERRORS.no_database);
       }
@@ -591,6 +605,24 @@ export function ProspectFinder() {
               {f.label}
             </button>
           ))}
+        </div>
+        <div>
+          <label htmlFor="f-town" className="mb-1.5 block text-xs text-muted">
+            Town
+          </label>
+          <select
+            id="f-town"
+            value={townFilter}
+            onChange={(e) => setTownFilter(e.target.value)}
+            className="w-40 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand-pink"
+          >
+            <option value="">Everywhere</option>
+            {towns.map((t) => (
+              <option key={t.town} value={t.town}>
+                {t.town} ({t.n})
+              </option>
+            ))}
+          </select>
         </div>
         <select
           value={sort}
@@ -1052,6 +1084,7 @@ function Row({
             />
             <Fact label="Scanned" value={p.scannedAt ? p.scannedAt.slice(0, 10) : "never"} />
             <Fact label="First called" value={p.calledAt ? p.calledAt.slice(0, 10) : "not yet"} />
+            <Fact label="Town" value={p.town || "—"} />
             <Fact label="Found under" value={p.foundFor || p.industry || "—"} />
             <Fact
               label="Sequence"
