@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { withDb } from "@/lib/db";
 import { readToken } from "@/lib/lead-tokens";
+import { unsubscribeProspect } from "@/lib/prospects";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +26,13 @@ export default async function UnsubscribePage({
   searchParams: Promise<{ t?: string }>;
 }) {
   const { t } = await searchParams;
+
+  // Two kinds of token arrive here: someone who ran a scan on the website,
+  // and a business we wrote to off the call list. Different tables, separate
+  // signing purposes, same page — because to the person clicking it there is
+  // only one question being asked, and it is answered the same way.
   const leadId = t ? readToken("unsubscribe", t) : null;
+  const prospectId = t && !leadId ? readToken("unsubscribe-prospect", t) : null;
 
   let done = false;
   if (leadId) {
@@ -37,6 +44,8 @@ export default async function UnsubscribePage({
       return true;
     });
     done = Boolean(result);
+  } else if (prospectId) {
+    done = await unsubscribeProspect(prospectId);
   }
 
   return (
@@ -47,8 +56,7 @@ export default async function UnsubscribePage({
             You&apos;re unsubscribed
           </h1>
           <p className="mt-4 leading-relaxed text-muted">
-            We won&apos;t email you again about your website check. Nothing else needed from
-            you.
+            We won&apos;t email you again. Nothing else needed from you.
           </p>
         </>
       ) : (

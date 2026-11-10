@@ -5,7 +5,7 @@ import { STATUSES, type Prospect, type ProspectStatus } from "@/lib/prospect-typ
 import { industries } from "@/content/industries";
 import { areaGroups } from "@/content/areas";
 import { siteConfig } from "@/lib/site-config";
-import { outreachLine, servicesLine } from "@/lib/outreach-lines";
+import { buildDraft } from "@/lib/prospect-outreach";
 
 /**
  * The call list.
@@ -89,84 +89,6 @@ function tone(score: number): string {
 
 type Busy = { scanning?: boolean; scanError?: string };
 
-
-/**
- * The signature on the bottom of every draft.
- *
- * Built from site-config rather than typed out here, so a profile that goes
- * live — Facebook, a Google review link — appears in the signature the moment
- * its URL is filled in there, and an empty one is simply left out rather than
- * sending people to a page that does not exist.
- *
- * The postal address is on it deliberately. A cold email from a business with
- * no address behind it reads as a mailshot to a person and scores as one with
- * a spam filter.
- */
-const SIGNATURE: string[] = [
-  "Walid",
-  siteConfig.name,
-  `${siteConfig.phoneDisplay} · ${siteConfig.email}`,
-  siteConfig.url,
-  ...(siteConfig.social.linkedin ? [`LinkedIn: ${siteConfig.social.linkedin}`] : []),
-  ...(siteConfig.social.instagram ? [`Instagram: ${siteConfig.social.instagram}`] : []),
-  ...(siteConfig.social.facebook ? [`Facebook: ${siteConfig.social.facebook}`] : []),
-  `${siteConfig.address.line1}, ${siteConfig.address.line2}, ${siteConfig.address.city} ${siteConfig.address.postcode}`,
-];
-
-/**
- * The draft that gets sent to a prospect: subject, body, and his signature.
- *
- * Written as a person writes, not as the report reads. The findings go
- * through outreachLine, which turns the audit's shorthand into a sentence the
- * owner of a nail salon can read without knowing what a meta description is,
- * and what we actually do is said out loud rather than left to be guessed at
- * from a link.
- *
- * Deliberately a draft and never a send-without-looking. This is one person
- * writing to one business about their own website, which he reads before it
- * goes — not a campaign fired from a server.
- */
-function buildDraft(p: Prospect): { subject: string; body: string } {
-  const lines = [
-    `Hi,`,
-    ``,
-    `I run a marketing agency in London and I had a look at the ${p.name} website.`,
-    ``,
-    ...(p.findings.length
-      ? [
-          p.findings.length === 1 ? `One thing stood out:` : `A few things stood out:`,
-          ``,
-          ...p.findings.flatMap((f) => [`- ${outreachLine(f)}`, ``]),
-        ]
-      : []),
-    `Fixing that sort of thing is part of what we do. The rest of it is ${servicesLine()} — so whether the problem is that not enough people are finding you or that the ones who do are not getting in touch, it is the same conversation.`,
-    ``,
-    `Happy to send over the full report on your site. It is free, there is no obligation, and it is yours to act on with or without us.`,
-    ``,
-    // Said plainly because it is the objection, and because an offer to be
-    // compared is worth more than a claim to be better: one can be checked
-    // in a minute, the other is what every email of this kind says.
-    `If you are already working with someone, that is fine and I am not trying to talk you out of it. Tell me what you are paying and I will tell you straight whether we would beat it. Our prices are on the website either way.`,
-    ``,
-    // The owner saying he will take the call himself is the one thing in
-    // here an agency with a sales floor cannot say back.
-    `Reply here or give me a ring on ${siteConfig.phoneDisplay}. If it is easier to go through it properly, I do these calls myself — I am Walid Shah, I own the business — and we can sit on a Google Meet for twenty minutes and go through what is worth doing for you.`,
-    ...(siteConfig.demoBookingUrl ? [``, `You can pick a time straight out of my diary here: ${siteConfig.demoBookingUrl}`] : []),
-    ``,
-    `If you would rather I did not email you again, just reply and say so.`,
-    ``,
-    ...SIGNATURE,
-  ];
-  return {
-    // Written to them, not to us. The old subject was the internal shorthand
-    // off the call list — "Melody Nail Spa - meta description" — which reads
-    // like a support ticket landing in a stranger's inbox.
-    subject: p.findings.length
-      ? `${p.name} — a couple of things on your website`
-      : `${p.name} — your website`,
-    body: lines.join("\n"),
-  };
-}
 
 /**
  * Where the mail actually gets sent from.
@@ -657,6 +579,9 @@ function Row({
   const [notes, setNotes] = useState(p.notes);
   const [copied, setCopied] = useState("");
   const [compose, setCompose] = useState<{ subject: string; body: string } | null>(null);
+  // What the row knows about the sequence after an action on this page, so a
+  // send or a stop shows immediately rather than on the next load.
+  const [seq, setSeq] = useState<"unchanged" | "started" | "stopped">("unchanged");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState("");
   const [sendError, setSendError] = useState("");
@@ -674,6 +599,16 @@ function Row({
     window.setTimeout(() => setCopied(""), 2500);
   }
 
+  /** Calls off the day 3 and day 5 emails for this one business. */
+  async function stopFollowUps() {
+    setSeq("stopped");
+    await fetch("/api/admin/prospects/email", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ id: p.id, action: "stop" }),
+    }).catch(() => null);
+  }
+
   /** Sends the draft through the site's own mail server, so this works from
    *  any device signed into the admin page with no mail client set up. */
   async function send() {
@@ -687,13 +622,24 @@ function Row({
         body: JSON.stringify({ id: p.id, subject: compose.subject, body: compose.body }),
       });
       const data = (await res.json().catch(() => null)) as
-        | { sent?: boolean; recipient?: string; message?: string; error?: string }
+        | {
+            sent?: boolean;
+            recipient?: string;
+            filedInSent?: boolean;
+            message?: string;
+            error?: string;
+          }
         | null;
       if (!res.ok || !data?.sent) {
         setSendError(data?.message ?? data?.error ?? "Could not send it.");
         return;
       }
-      setSent(`Sent to ${data.recipient ?? p.email}`);
+      setSent(
+        data.filedInSent === false
+          ? `Sent to ${data.recipient ?? p.email} — but no copy went in your Sent folder`
+          : `Sent to ${data.recipient ?? p.email}`,
+      );
+      setSeq("started");
       setCompose(null);
     } catch {
       setSendError("Could not reach the server.");
@@ -760,7 +706,7 @@ function Row({
             </button>
             <button
               type="button"
-              onClick={() => setCompose(compose ? null : buildDraft(p))}
+              onClick={() => setCompose(compose ? null : buildDraft(1, p))}
               className="rounded-lg border border-border px-2.5 py-1 font-semibold hover:border-brand-pink hover:text-foreground"
               title="Write and send an email to them from here"
             >
@@ -770,6 +716,30 @@ function Row({
             {!sent && p.emailedAt && (
               <span title={p.emailedAt}>emailed {p.emailedAt.slice(0, 10)}</span>
             )}
+            {/* Where the three-email sequence has got to. The first one only
+                ever goes out by hand; these two follow on their own unless
+                something here says they should not. */}
+            {p.unsubscribedAt ? (
+              <span className="font-semibold text-red-500">unsubscribed</span>
+            ) : p.repliedAt ? (
+              <span className="font-semibold text-emerald-500">replied — follow-ups stopped</span>
+            ) : seq === "stopped" || (seq === "unchanged" && p.sequenceStoppedAt) ? (
+              <span title={p.sequenceStopReason}>
+                follow-ups off{p.sequenceStopReason ? ` (${p.sequenceStopReason})` : ""}
+              </span>
+            ) : seq === "started" || p.sequenceStartedAt ? (
+              <>
+                <span className="font-semibold text-foreground">follow-ups on · day 3 + 5</span>
+                <button
+                  type="button"
+                  onClick={stopFollowUps}
+                  className="rounded-lg border border-border px-2.5 py-1 font-semibold hover:border-brand-pink hover:text-foreground"
+                  title="Cancel the day 3 and day 5 emails for this business"
+                >
+                  Stop
+                </button>
+              </>
+            ) : null}
             {copied && <span className="font-semibold text-brand-pink">{copied}</span>}
           </>
         )}
@@ -814,6 +784,13 @@ function Row({
           <div className="text-[11px] font-semibold text-muted">
             To <span className="text-foreground">{p.email}</span> · from{" "}
             <span className="text-foreground">{siteConfig.email}</span>
+          </div>
+          {/* Said here because pressing send does two things, and the second
+              one happens days later when nobody is watching. */}
+          <div className="text-[11px] leading-relaxed text-muted">
+            Sending this starts the sequence: a longer follow-up goes on day 3 and a last one on
+            day 5, both with an unsubscribe link. They stop on their own the moment this business
+            replies, unsubscribes, or you mark them interested, not interested or a customer.
           </div>
           <input
             value={compose.subject}

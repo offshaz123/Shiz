@@ -51,6 +51,14 @@ export type Prospect = {
   calledAt: string | null;
   /** When an email was last sent to them from the admin page. */
   emailedAt: string | null;
+  /** Set when the first email was sent by hand, which is what starts the two
+   *  that follow on their own. Null means no sequence is running. */
+  sequenceStartedAt: string | null;
+  sequenceStoppedAt: string | null;
+  /** Why it stopped: replied, unsubscribed, stopped by hand, and so on. */
+  sequenceStopReason: string;
+  repliedAt: string | null;
+  unsubscribedAt: string | null;
   foundFor: string;
   /** Which of the site's industries this was found under. */
   industry: string;

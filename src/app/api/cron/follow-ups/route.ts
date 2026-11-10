@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type { RowDataPacket } from "mysql2";
 import { withDb } from "@/lib/db";
 import { sendFollowUp } from "@/lib/send-follow-up";
+import { runProspectSequence } from "@/lib/run-prospect-sequence";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -163,9 +164,19 @@ async function run(request: Request) {
     else summary.skipped += 1;
   }
 
-  await recordRun(due.length, summary);
+  // The call list's own three-email sequence rides on this same job rather
+  // than a second cron entry in hPanel. One scheduler to keep alive, one
+  // place to look when it stops, and the admin page's "did the cron run"
+  // check covers both. It never throws: a mail server refusing IMAP must not
+  // take down the audit follow-ups that were already sent above.
+  const prospects = await runProspectSequence().catch((err) => {
+    console.error("Prospect sequence:", err);
+    return null;
+  });
 
-  return NextResponse.json({ ok: true, ...summary });
+  await recordRun(due.length, summary, prospects?.sent ?? 0);
+
+  return NextResponse.json({ ok: true, ...summary, prospects });
 }
 
 /**
@@ -179,17 +190,25 @@ async function run(request: Request) {
  * Deliberately never throws. Failing to write the diary must not fail the
  * send that just happened.
  */
-async function recordRun(considered: number, summary: Record<string, number>) {
+async function recordRun(
+  considered: number,
+  summary: Record<string, number>,
+  prospectsSent: number,
+) {
   await withDb(async (db) => {
     await db.execute(
       `INSERT INTO cron_runs (job, sent, failed, skipped, considered, detail)
        VALUES ('follow-ups', ?, ?, ?, ?, ?)`,
       [
-        summary.sent,
+        summary.sent + prospectsSent,
         summary.failed,
         summary.skipped,
         considered,
-        considered === 0 ? "nobody was due" : null,
+        considered === 0 && prospectsSent === 0
+          ? "nobody was due"
+          : prospectsSent > 0
+            ? `${prospectsSent} prospect follow-up(s)`
+            : null,
       ],
     );
   }).catch(() => null);

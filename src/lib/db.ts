@@ -190,6 +190,7 @@ const SCHEMA = [
     recipient VARCHAR(200) NOT NULL,
     subject VARCHAR(255) NOT NULL,
     body MEDIUMTEXT NOT NULL,
+    step TINYINT UNSIGNED NOT NULL DEFAULT 1,
     status VARCHAR(20) NOT NULL DEFAULT 'sent',
     error TEXT NULL,
     sent_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -224,6 +225,21 @@ const ADDED_COLUMNS: { table: string; column: string; definition: string }[] = [
   // When an email was last sent to them from the admin page, so the call list
   // shows at a glance who has already been written to.
   { table: "prospects", column: "emailed_at", definition: "DATETIME NULL AFTER called_at" },
+  // The three-email sequence. It starts only when Walid sends the first one
+  // himself, which is what `sequence_started_at` records — nothing here can
+  // write to somebody who has not been written to by hand first.
+  { table: "prospects", column: "sequence_started_at", definition: "DATETIME NULL AFTER emailed_at" },
+  { table: "prospects", column: "sequence_stopped_at", definition: "DATETIME NULL AFTER sequence_started_at" },
+  { table: "prospects", column: "sequence_stop_reason", definition: "VARCHAR(40) NULL AFTER sequence_stopped_at" },
+  // When they wrote back. A follow-up landing after a reply is the thing that
+  // makes this look like a machine, so the sequence stops on sight of one.
+  { table: "prospects", column: "replied_at", definition: "DATETIME NULL AFTER sequence_stop_reason" },
+  // Honoured absolutely, by the same unsubscribe page the audit follow-ups
+  // use. Nothing is ever sent to a row with this set.
+  { table: "prospects", column: "unsubscribed_at", definition: "DATETIME NULL AFTER replied_at" },
+  // Added at the same time as the sequence: rows written before it exists
+  // default to step 1, which is what they were.
+  { table: "prospect_emails", column: "step", definition: "TINYINT UNSIGNED NOT NULL DEFAULT 1 AFTER body" },
 ];
 
 interface CountRow extends RowDataPacket {

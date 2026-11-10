@@ -13,7 +13,13 @@ import { createHmac, createHash, timingSafeEqual } from "node:crypto";
  * neither can be forged without the key.
  */
 
-type Purpose = "result" | "unsubscribe";
+/**
+ * "unsubscribe" is a scan_leads row; "unsubscribe-prospect" is a prospects
+ * row. Deliberately separate purposes rather than one with a flag: the two
+ * tables have their own sequential ids, and a token minted for lead 41 must
+ * never unsubscribe prospect 41.
+ */
+type Purpose = "result" | "unsubscribe" | "unsubscribe-prospect";
 
 function key(): string | null {
   const value = process.env.CRON_SECRET;

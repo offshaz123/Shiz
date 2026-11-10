@@ -43,6 +43,11 @@ interface ProspectRow extends RowDataPacket {
   notes: string | null;
   called_at: string | null;
   emailed_at: string | null;
+  sequence_started_at: string | null;
+  sequence_stopped_at: string | null;
+  sequence_stop_reason: string | null;
+  replied_at: string | null;
+  unsubscribed_at: string | null;
   found_for: string | null;
   industry: string | null;
 }
@@ -90,6 +95,11 @@ function toProspect(row: ProspectRow): Prospect {
     notes: row.notes ?? "",
     calledAt: row.called_at ? String(row.called_at) : null,
     emailedAt: row.emailed_at ? String(row.emailed_at) : null,
+    sequenceStartedAt: row.sequence_started_at ? String(row.sequence_started_at) : null,
+    sequenceStoppedAt: row.sequence_stopped_at ? String(row.sequence_stopped_at) : null,
+    sequenceStopReason: row.sequence_stop_reason ?? "",
+    repliedAt: row.replied_at ? String(row.replied_at) : null,
+    unsubscribedAt: row.unsubscribed_at ? String(row.unsubscribed_at) : null,
     foundFor: row.found_for ?? "",
     industry: row.industry ?? "",
   };
@@ -307,28 +317,149 @@ export async function recordProspectEmail(
     recipient: string;
     subject: string;
     body: string;
+    step: number;
     status: "sent" | "failed";
     error?: string;
   },
 ): Promise<void> {
   await withDb(async (db) => {
     await db.execute(
-      `INSERT INTO prospect_emails (prospect_id, recipient, subject, body, status, error)
-       VALUES (?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO prospect_emails (prospect_id, recipient, subject, body, step, status, error)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         id,
         email.recipient.slice(0, 200),
         email.subject.slice(0, 255),
         email.body,
+        email.step,
         email.status,
         email.error ? email.error.slice(0, 500) : null,
       ],
     );
-    // Only a send that actually worked counts as having written to them.
+    // Only a send that actually worked counts as having written to them — and
+    // the first one is what starts the clock on the two that follow by
+    // themselves. COALESCE so re-sending a first email never moves the start
+    // date and quietly runs the sequence again.
     if (email.status === "sent") {
-      await db.execute("UPDATE prospects SET emailed_at = NOW() WHERE id = ?", [id]);
+      await db.execute(
+        email.step === 1
+          ? `UPDATE prospects
+                SET emailed_at = NOW(),
+                    sequence_started_at = COALESCE(sequence_started_at, NOW())
+              WHERE id = ?`
+          : "UPDATE prospects SET emailed_at = NOW() WHERE id = ?",
+        [id],
+      );
     }
   }).catch(() => null);
+}
+
+/**
+ * Prospects owed the next email in the sequence.
+ *
+ * Only rows whose first email was sent by hand are in here at all, and a row
+ * leaves the moment any of these is true: the sequence was stopped, they
+ * replied, they unsubscribed, or they were marked interested, not interested
+ * or a customer — at which point a scripted follow-up is the wrong thing to
+ * send whichever way it went.
+ */
+export type SequenceDue = { prospect: Prospect; lastStep: number; hoursSinceStart: number };
+
+interface DueRow extends ProspectRow {
+  last_step: number | null;
+  hours_since_start: number | null;
+}
+
+export async function listSequenceDue(limit = 20): Promise<SequenceDue[] | null> {
+  return withDb(async (db) => {
+    const [rows] = await db.query<DueRow[]>(
+      `SELECT p.*,
+              MAX(e.step) AS last_step,
+              TIMESTAMPDIFF(HOUR, p.sequence_started_at, NOW()) AS hours_since_start
+         FROM prospects p
+         LEFT JOIN prospect_emails e
+           ON e.prospect_id = p.id AND e.status = 'sent'
+        WHERE p.sequence_started_at IS NOT NULL
+          AND p.sequence_stopped_at IS NULL
+          AND p.replied_at IS NULL
+          AND p.unsubscribed_at IS NULL
+          AND p.email IS NOT NULL AND p.email <> ''
+          AND p.status NOT IN ('interested', 'not-interested', 'customer')
+        GROUP BY p.id
+       HAVING last_step IS NOT NULL AND last_step < 3
+        ORDER BY p.sequence_started_at ASC
+        LIMIT ?`,
+      [limit],
+    );
+    return rows.map((row) => ({
+      prospect: toProspect(row),
+      lastStep: Number(row.last_step ?? 1),
+      hoursSinceStart: Number(row.hours_since_start ?? 0),
+    }));
+  });
+}
+
+/** Takes a prospect out of the sequence for good, with the reason why. */
+export async function stopSequence(id: number, reason: string): Promise<void> {
+  await withDb(async (db) => {
+    await db.execute(
+      `UPDATE prospects
+          SET sequence_stopped_at = COALESCE(sequence_stopped_at, NOW()),
+              sequence_stop_reason = COALESCE(sequence_stop_reason, ?)
+        WHERE id = ?`,
+      [reason.slice(0, 40), id],
+    );
+  }).catch(() => null);
+}
+
+/** They wrote back. Stamps the row and ends the sequence in one go. */
+export async function markReplied(id: number): Promise<void> {
+  await withDb(async (db) => {
+    await db.execute(
+      `UPDATE prospects
+          SET replied_at = COALESCE(replied_at, NOW()),
+              sequence_stopped_at = COALESCE(sequence_stopped_at, NOW()),
+              sequence_stop_reason = COALESCE(sequence_stop_reason, 'replied')
+        WHERE id = ?`,
+      [id],
+    );
+  }).catch(() => null);
+}
+
+/** Everyone in a live sequence, so the reply check can compare the whole lot
+ *  against one read of the inbox instead of asking once per address. */
+export async function listSequenceAddresses(): Promise<{ id: number; email: string }[] | null> {
+  return withDb(async (db) => {
+    const [rows] = await db.query<(RowDataPacket & { id: number; email: string })[]>(
+      `SELECT id, email FROM prospects
+        WHERE sequence_started_at IS NOT NULL
+          AND sequence_stopped_at IS NULL
+          AND replied_at IS NULL
+          AND email IS NOT NULL AND email <> ''`,
+    );
+    return rows.map((r) => ({ id: r.id, email: r.email.toLowerCase() }));
+  });
+}
+
+/**
+ * Honours an unsubscribe click.
+ *
+ * Separate from stopSequence because this one is permanent and applies to
+ * anything we might ever send them, not only the three emails.
+ */
+export async function unsubscribeProspect(id: number): Promise<boolean> {
+  const done = await withDb(async (db) => {
+    const [res] = await db.execute<ResultSetHeader>(
+      `UPDATE prospects
+          SET unsubscribed_at = COALESCE(unsubscribed_at, NOW()),
+              sequence_stopped_at = COALESCE(sequence_stopped_at, NOW()),
+              sequence_stop_reason = COALESCE(sequence_stop_reason, 'unsubscribed')
+        WHERE id = ?`,
+      [id],
+    );
+    return res.affectedRows > 0;
+  });
+  return done ?? false;
 }
 
 /** What has already gone out to one prospect, newest first. */

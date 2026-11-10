@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/admin-auth";
 import { sendProspectEmail } from "@/lib/send-prospect-email";
-import { listProspectEmails } from "@/lib/prospects";
+import { listProspectEmails, stopSequence } from "@/lib/prospects";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -23,6 +23,7 @@ const MESSAGES: Record<string, string> = {
   no_prospect: "That prospect is no longer in the list.",
   no_email: "No email address on file for them.",
   empty: "The subject and the message both need something in them.",
+  unsubscribed: "They have asked not to be emailed, so nothing was sent.",
   send_failed: "The mail server refused it. Try again in a minute.",
 };
 
@@ -40,7 +41,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "bad_request" }, { status: 400 });
   }
 
-  const result = await sendProspectEmail(id, subject, text);
+  // Calling off the two follow-ups for one business, from the call list,
+  // without having to remember a status that means something else.
+  if (body?.action === "stop") {
+    await stopSequence(id, "stopped by hand");
+    return NextResponse.json({ stopped: true });
+  }
+
+  // Always step one from here. Steps two and three exist only for a prospect
+  // whose first email a person read and sent, and they are sent by the cron.
+  const result = await sendProspectEmail(id, subject, text, 1);
   if (!result.ok) {
     return NextResponse.json(
       { error: result.reason, message: MESSAGES[result.reason] ?? result.reason },
@@ -50,7 +60,14 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({ sent: true, recipient: result.recipient });
+  return NextResponse.json({
+    sent: true,
+    recipient: result.recipient,
+    // False means the email went but no copy could be put in the Sent
+    // folder, which the admin page says out loud rather than leaving him to
+    // find out by looking for it later.
+    filedInSent: result.filedInSent,
+  });
 }
 
 export async function GET(request: Request) {
