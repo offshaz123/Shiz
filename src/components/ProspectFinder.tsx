@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { STATUSES, type Prospect, type ProspectStatus } from "@/lib/prospect-types";
 import { industries } from "@/content/industries";
 import { areaGroups } from "@/content/areas";
+import { siteConfig } from "@/lib/site-config";
 
 /**
  * The call list.
@@ -87,6 +88,43 @@ function tone(score: number): string {
 
 type Busy = { scanning?: boolean; scanError?: string };
 
+
+/**
+ * Opens a draft in whatever mail client is set up, pre-filled with what the
+ * scan found.
+ *
+ * Deliberately a mailto: and not a send button. This is one person writing to
+ * one business about their own website, which he reads before it goes — not a
+ * campaign fired from a server. It is also the honest side of the line under
+ * PECR, where a sole trader is an individual subscriber and cold bulk email
+ * to one needs consent that we do not have.
+ */
+function draftHref(p: Prospect): string {
+  const first = p.findings[0];
+  const lines = [
+    `Hi,`,
+    ``,
+    `I run a marketing agency in London and I had a look at your website this morning.`,
+    ``,
+    ...(p.findings.length
+      ? [
+          `A couple of things stood out:`,
+          ``,
+          ...p.findings.map((f) => `- ${f.label}${f.why ? `: ${f.why}` : ""}`),
+          ``,
+        ]
+      : []),
+    `Happy to send over the full report, it is free and there is no obligation.`,
+    ``,
+    `Walid`,
+    `Shaz Marketing Group`,
+    `${siteConfig.phoneDisplay}`,
+    `${siteConfig.url}`,
+  ];
+  const subject = first ? `${p.name} - ${first.label.toLowerCase()}` : `${p.name} - your website`;
+  return `mailto:${encodeURIComponent(p.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join("\n"))}`;
+}
+
 export function ProspectFinder() {
   const [query, setQuery] = useState("");
   const [town, setTown] = useState("");
@@ -99,6 +137,11 @@ export function ProspectFinder() {
   const [busy, setBusy] = useState<Record<number, Busy>>({});
   const [loading, setLoading] = useState(false);
   const [searching, setSearching] = useState(false);
+  const [sort, setSort] = useState<"default" | "worst-site">("default");
+  const [scanAllState, setScanAllState] = useState<{ running: boolean; done: number }>({
+    running: false,
+    done: 0,
+  });
   const [error, setError] = useState("");
   const [loaded, setLoaded] = useState(false);
 
@@ -114,6 +157,7 @@ export function ProspectFinder() {
       minRating: String(minRating),
       status,
       industry,
+      sort,
     });
     const res = await fetch(`/api/admin/prospects?${params}`);
     const data = await res.json();
@@ -141,7 +185,36 @@ export function ProspectFinder() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [maxReviews, minRating, status, industry]);
+  }, [maxReviews, minRating, status, industry, sort]);
+
+  /**
+   * Works through every unscanned prospect, a batch at a time.
+   *
+   * The server scans eight per call and tells us whether more are waiting, so
+   * this loops rather than asking it to do hundreds in one request — which on
+   * this hosting would be a long-running process and a timeout. The count
+   * climbs as it goes so a long run does not look like a hang.
+   */
+  async function scanAll() {
+    setScanAllState({ running: true, done: 0 });
+    setError("");
+    try {
+      let total = 0;
+      for (let round = 0; round < 40; round++) {
+        const res = await fetch("/api/admin/prospects/scan", { method: "POST" });
+        const data = await res.json();
+        if (!res.ok) throw new Error(ERRORS[data?.error] ?? "Couldn't scan.");
+        total += Number(data.scanned ?? 0) + Number(data.unreadable ?? 0);
+        setScanAllState({ running: true, done: total });
+        if (data.done) break;
+      }
+      setProspects(await fetchList());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Couldn't reach the server.");
+    } finally {
+      setScanAllState((s) => ({ running: false, done: s.done }));
+    }
+  }
 
   /** The Refresh button. An event handler, so it can show progress. */
   async function load() {
@@ -402,6 +475,23 @@ export function ProspectFinder() {
             </button>
           ))}
         </div>
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value as "default" | "worst-site")}
+          className="rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold text-muted"
+          aria-label="Order"
+        >
+          <option value="default">By status</option>
+          <option value="worst-site">Worst site first</option>
+        </select>
+        <button
+          type="button"
+          onClick={scanAll}
+          disabled={scanAllState.running}
+          className="rounded-lg border border-border px-3 py-2 text-xs font-semibold text-muted hover:text-foreground disabled:opacity-50"
+        >
+          {scanAllState.running ? `Scanning… ${scanAllState.done}` : "Scan all sites"}
+        </button>
         <button
           type="button"
           onClick={load}
@@ -528,6 +618,23 @@ function Row({
             Maps ↗
           </a>
         )}
+        {p.email && (
+          <>
+            <a
+              href={`mailto:${p.email}`}
+              className="truncate font-semibold hover:text-foreground"
+              title={p.email}
+            >
+              {p.email}
+            </a>
+            <a
+              href={draftHref(p)}
+              className="rounded-lg border border-border px-2.5 py-1 font-semibold hover:border-brand-pink hover:text-foreground"
+            >
+              Write email
+            </a>
+          </>
+        )}
         {p.category && <span>{p.category}</span>}
         {p.address && <span className="truncate">{p.address}</span>}
         {p.website &&
@@ -546,6 +653,19 @@ function Row({
             </button>
           ))}
       </div>
+
+      {/* What the scanner found, which is the reason to ring them. Shown
+          before the status buttons because it is what you read out loud. */}
+      {p.findings.length > 0 && (
+        <ul className="mt-3 flex flex-col gap-1 rounded-xl border border-border bg-background px-3 py-2.5">
+          {p.findings.map((f) => (
+            <li key={f.label} className="text-[11px] leading-relaxed text-muted">
+              <span className="font-semibold text-foreground">{f.label}</span>
+              {f.why ? ` — ${f.why}` : ""}
+            </li>
+          ))}
+        </ul>
+      )}
 
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
         {STATUSES.map((s) => (

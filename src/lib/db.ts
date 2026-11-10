@@ -190,6 +190,14 @@ const ADDED_COLUMNS: { table: string; column: string; definition: string }[] = [
   { table: "scan_leads", column: "audit_json", definition: "MEDIUMTEXT NULL AFTER score" },
   { table: "scan_leads", column: "unsubscribed_at", definition: "DATETIME NULL AFTER notes" },
   { table: "prospects", column: "industry", definition: "VARCHAR(40) NULL AFTER found_for" },
+  // What the scanner found on their site, so the call list can show why they
+  // are worth ringing before anyone dials. JSON, because it is only ever read
+  // back whole and never queried into.
+  { table: "prospects", column: "site_findings", definition: "TEXT NULL AFTER site_score" },
+  { table: "prospects", column: "scanned_at", definition: "DATETIME NULL AFTER site_findings" },
+  // Taken off their own website during the scan, because Places never
+  // returns one. Generic business inboxes are preferred over personal ones.
+  { table: "prospects", column: "email", definition: "VARCHAR(200) NULL AFTER phone" },
 ];
 
 interface CountRow extends RowDataPacket {

@@ -50,6 +50,7 @@ export async function GET(request: Request) {
     maxReviews: num(params.get("maxReviews")),
     minRating: num(params.get("minRating")),
     industry: industrySlug(params.get("industry")),
+    sort: params.get("sort") === "worst-site" ? "worst-site" : "default",
     status:
       statusParam === "all" || statusParam === "to-call"
         ? statusParam

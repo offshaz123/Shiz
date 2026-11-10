@@ -1,7 +1,12 @@
 import type { RowDataPacket, ResultSetHeader } from "mysql2";
 import { withDb } from "./db";
 import type { GoogleBusiness } from "./google-business";
-import { isStatus as isValidStatus, type Prospect, type ProspectStatus } from "./prospect-types";
+import {
+  isStatus as isValidStatus,
+  type Prospect,
+  type ProspectStatus,
+  type ProspectFinding,
+} from "./prospect-types";
 
 /**
  * The call list.
@@ -17,13 +22,14 @@ import { isStatus as isValidStatus, type Prospect, type ProspectStatus } from ".
 // nothing — the call-list UI needs them in the browser and must not drag the
 // MySQL driver in with them.
 export { STATUSES, isStatus } from "./prospect-types";
-export type { Prospect, ProspectStatus } from "./prospect-types";
+export type { Prospect, ProspectStatus, ProspectFinding } from "./prospect-types";
 
 interface ProspectRow extends RowDataPacket {
   id: number;
   place_id: string;
   name: string;
   phone: string | null;
+  email: string | null;
   website: string | null;
   address: string | null;
   category: string | null;
@@ -31,11 +37,29 @@ interface ProspectRow extends RowDataPacket {
   reviews: number;
   rating: string | number | null;
   site_score: string | number | null;
+  site_findings: string | null;
+  scanned_at: string | null;
   status: string;
   notes: string | null;
   called_at: string | null;
   found_for: string | null;
   industry: string | null;
+}
+
+/** Stored as JSON and only ever read back whole. Bad JSON means no findings,
+ *  never a crash: a malformed column must not take the call list down. */
+function parseFindings(raw: string | null): ProspectFinding[] {
+  if (!raw) return [];
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter((f): f is ProspectFinding =>
+        typeof f === "object" && f !== null && typeof (f as ProspectFinding).label === "string")
+      .map((f) => ({ label: String(f.label), why: String(f.why ?? "") }));
+  } catch {
+    return [];
+  }
 }
 
 function toProspect(row: ProspectRow): Prospect {
@@ -44,6 +68,7 @@ function toProspect(row: ProspectRow): Prospect {
     placeId: row.place_id,
     name: row.name,
     phone: row.phone ?? "",
+    email: row.email ?? "",
     website: row.website ?? "",
     address: row.address ?? "",
     category: row.category ?? "",
@@ -51,6 +76,8 @@ function toProspect(row: ProspectRow): Prospect {
     reviews: Number(row.reviews),
     rating: row.rating === null ? null : Number(row.rating),
     siteScore: row.site_score === null ? null : Number(row.site_score),
+    findings: parseFindings(row.site_findings),
+    scannedAt: row.scanned_at ? String(row.scanned_at) : null,
     status: isValidStatus(row.status) ? row.status : "new",
     notes: row.notes ?? "",
     calledAt: row.called_at ? String(row.called_at) : null,
@@ -116,11 +143,14 @@ export type ProspectFilters = {
   minRating?: number;
   status?: ProspectStatus | "all" | "to-call";
   industry?: string;
+  /** "worst-site" puts the most broken websites first, which is the order
+   *  you want to ring in: the worse the site, the more there is to say. */
+  sort?: "default" | "worst-site";
   limit?: number;
 };
 
 export async function listProspects(filters: ProspectFilters = {}): Promise<Prospect[] | null> {
-  const { maxReviews, minRating, status = "all", industry, limit = 200 } = filters;
+  const { maxReviews, minRating, status = "all", industry, sort = "default", limit = 200 } = filters;
 
   return withDb(async (db) => {
     const where: string[] = [];
@@ -151,8 +181,13 @@ export async function listProspects(filters: ProspectFilters = {}): Promise<Pros
     const [rows] = await db.query<ProspectRow[]>(
       `SELECT * FROM prospects
        ${where.length ? `WHERE ${where.join(" AND ")}` : ""}
-       ORDER BY FIELD(status, 'interested', 'new', 'no-answer', 'called', 'customer', 'not-interested'),
-                reviews ASC
+       ORDER BY ${
+         sort === "worst-site"
+           ? // Unscanned last: a row with no score is not evidence of a good
+             // site, just of one we have not looked at yet.
+             "site_score IS NULL ASC, site_score ASC, reviews ASC"
+           : "FIELD(status, 'interested', 'new', 'no-answer', 'called', 'customer', 'not-interested'), reviews ASC"
+       }
        LIMIT ?`,
       [...params, limit],
     );
@@ -193,4 +228,47 @@ export async function updateProspect(
   });
 
   return result ?? false;
+}
+
+/** Prospects with a website that has never been scanned. The batch scanner
+ *  works through these, oldest first, so a long list drains predictably. */
+export async function listUnscanned(limit = 10): Promise<Prospect[] | null> {
+  return withDb(async (db) => {
+    const [rows] = await db.query<ProspectRow[]>(
+      `SELECT * FROM prospects
+       WHERE scanned_at IS NULL
+         AND website IS NOT NULL AND website <> ''
+       ORDER BY id ASC
+       LIMIT ?`,
+      [limit],
+    );
+    return rows.map(toProspect);
+  });
+}
+
+/**
+ * Records a scan. `scanned_at` is set either way, including when the scan
+ * found nothing readable — otherwise a dead domain would be retried on every
+ * run forever, and a prospect with no working site is one worth ringing, not
+ * one worth hiding.
+ */
+export async function saveProspectScan(
+  id: number,
+  scan: { score: number; findings: ProspectFinding[]; email?: string } | null,
+): Promise<void> {
+  await withDb(async (db) => {
+    await db.execute(
+      // COALESCE on email keeps anything already there: a corrected address
+      // typed in by hand must not be overwritten by a rescan of the page.
+      `UPDATE prospects
+         SET site_score = ?, site_findings = ?, email = COALESCE(email, ?), scanned_at = NOW()
+       WHERE id = ?`,
+      [
+        scan ? scan.score : null,
+        scan && scan.findings.length ? JSON.stringify(scan.findings).slice(0, 4000) : null,
+        scan?.email ? scan.email.slice(0, 200) : null,
+        id,
+      ],
+    );
+  }).catch(() => null);
 }

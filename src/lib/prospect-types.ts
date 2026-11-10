@@ -23,11 +23,18 @@ export function isStatus(value: unknown): value is ProspectStatus {
   return typeof value === "string" && (STATUSES as readonly string[]).includes(value);
 }
 
+/** Mirrors ProspectFinding in prospect-scan.ts. Repeated here rather than
+ *  imported because that module reaches the network, and this one is read by
+ *  the browser. */
+export type ProspectFinding = { label: string; why: string };
+
 export type Prospect = {
   id: number;
   placeId: string;
   name: string;
   phone: string;
+  /** Published on their site, when they publish one. */
+  email: string;
   website: string;
   address: string;
   category: string;
@@ -35,6 +42,10 @@ export type Prospect = {
   reviews: number;
   rating: number | null;
   siteScore: number | null;
+  /** The worst few things the scanner found on their site, for the call. */
+  findings: ProspectFinding[];
+  /** Null until the site has been scanned at all. */
+  scannedAt: string | null;
   status: ProspectStatus;
   notes: string;
   calledAt: string | null;

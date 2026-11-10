@@ -97,7 +97,18 @@ export async function sendFollowUp(leadId: number, step: number): Promise<SendRe
 
   try {
     await transporter.sendMail({
-      from: `"Walid at Shaz Marketing Group" <${SMTP_USER}>`,
+      // Follow-ups go out from their own address rather than the inbox
+      // clients write to. Two reasons: a sequence that gets marked as spam
+      // then damages the reputation of the sending address, and that must
+      // not be info@, which is where real correspondence lands. Set
+      // MAIL_FROM to a mailbox the SMTP user may send as — most servers
+      // reject a From that the authenticated account has no rights to, so
+      // the safe route is a real second mailbox with its own credentials.
+      // Falls back to the SMTP user, which is the behaviour until it is set.
+      //
+      // Deliberately a human address, never noreply@: these emails are
+      // written to be replied to, and that is the only thing they are for.
+      from: `"Walid at Shaz Marketing Group" <${process.env.MAIL_FROM || SMTP_USER}>`,
       to: lead.email,
       replyTo: siteConfig.email,
       subject: email.subject,
