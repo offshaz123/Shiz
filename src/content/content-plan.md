@@ -454,7 +454,7 @@ actually says", because that gap has produced the strongest posts this month.
       last updated 2024-10-31: LCP 2.5s, INP 200ms, CLS 0.1, judged at the 75th percentile across
       mobile and desktop, INP having replaced FID as stable in 2024. Note the page does NOT mention
       Search ranking, so the post doesn't claim it — only that the data surfaces in Search Console.)
-- [ ] What to Do in Your First Week With a New Ad Account — target: "new Facebook ad account
+- [x] What to Do in Your First Week With a New Ad Account — target: "new Facebook ad account
       warm up", "first week running Meta ads"
 
 ## Notes for whoever (human or Routine) picks the next topic

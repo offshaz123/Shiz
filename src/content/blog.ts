@@ -16,6 +16,81 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "what-to-do-in-your-first-week-with-a-new-ad-account",
+    title: "What to Do in Your First Week With a New Ad Account",
+    description:
+      "Most of the damage done to a small ad account happens in the first seven days, and almost all of it comes from the owner trying to help. Here is what to do instead.",
+    publishedAt: "2026-11-10",
+    keywords: [
+      "new Facebook ad account warm up",
+      "first week running Meta ads",
+      "new ad account no results",
+      "Facebook ads learning phase reset",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "The account is live. The card is on it. You have spent money for four days and had two enquiries, one of which was somebody asking if you sell tyres.",
+          "This is the week where most small accounts get broken rather than built, and almost always by the person paying for them. Not through neglect. Through helping.",
+        ],
+      },
+      {
+        heading: "Start on the budget you intend to keep",
+        paragraphs: [
+          "The common pattern is to start high to “give it a proper test”, panic at the spend on day three, and cut it in half. Or the reverse, start at a fiver to be safe, see nothing happen, and jump to fifty.",
+          "Both are worse than picking one number and staying on it. Changes to budget are not free, and we will come to why in a moment.",
+          "Pick the figure you could still be spending in week four without flinching. If that is twenty pounds a day, start at twenty pounds a day. A smaller budget held steady beats a larger one you keep yanking about.",
+        ],
+      },
+      {
+        heading: "The hardest instruction: leave it alone",
+        paragraphs: [
+          "Meta's delivery system has a learning phase. It is real, it is documented, and while an ad set is in it the results you see are not yet representative of anything.",
+          "Here is where we have to be straight with you, because this is the part every blog states with total confidence. The figure usually quoted is fifty optimisation events per ad set within seven days. Meta's own help pages were not readable when this was written, and the third party guides do not agree with each other: some report ten events in three days for certain campaign types, others say accounts are now leaving the phase on twenty or thirty. We are not going to print a number we cannot check against Meta's own documentation.",
+          "What matters for your first week is not the threshold anyway. It is that the clock restarts when you make significant edits. Changing the optimisation goal, changing targeting, and making large budget changes are all widely reported to reset it.",
+          "So every time you log in and adjust something because today looked quiet, you are not tuning the account. You are putting it back to the start of the week.",
+        ],
+      },
+      {
+        heading: "Spend the week on the parts that are actually yours",
+        paragraphs: [
+          "There is plenty to do. None of it is in the ads manager.",
+          "Check your tracking yourself, properly. Fill in your own enquiry form from your phone, on mobile data rather than the office wifi, and confirm the conversion registers. A first week spent optimising against a pixel that is not firing is a week thrown away, and it is more common than anyone admits.",
+          "Then test the path a customer takes. Click your own advert. Does the page load quickly on a phone. Is the price or a price range visible. Is there a phone number you can press. Most ads that “do not work” are fine, and the page behind them is the problem.",
+          "And decide now who answers. Enquiries from paid ads go cold faster than anything else, because the person filling in your form has usually filled in two others. If an enquiry at 10am is answered at 6pm, the advertising is not what failed.",
+        ],
+      },
+      {
+        heading: "What a first week can and cannot tell you",
+        paragraphs: [
+          "It cannot tell you your cost per lead. Five or six conversions is not a number, it is a handful of coincidences, and dividing your spend by it produces a figure that feels precise and means nothing.",
+          "What it can tell you is whether the machinery works.",
+        ],
+        bullets: [
+          "Did the ads get approved, or are they sitting in review or rejected",
+          "Is the pixel or conversion action firing when you test it yourself",
+          "Are enquiries arriving at all, and arriving somewhere you actually look",
+          "Are they the right kind of enquiry, or are people asking for something you do not do",
+          "Is the landing page quick and clear on a phone",
+        ],
+      },
+      {
+        heading: "The one thing worth changing mid week",
+        paragraphs: [
+          "If the enquiries coming through are consistently for work you do not want, that is worth acting on, and quickly. Wrong-fit leads do not improve with time, because the targeting and the advert copy are doing exactly what you asked them to.",
+          "Everything else, the cost per click that looks high, the quiet Tuesday, the day that spent more than the daily budget, can wait. Those are normal and they settle.",
+        ],
+      },
+      {
+        heading: "The short version",
+        paragraphs: [
+          "Set the budget you can live with, then do not touch the campaign for seven days. Use that week to test your own form, your own page and your own response time, because those are the three things that are entirely within your control and they are usually where the money is leaking.",
+          "Judge the account at the end of week two, not the end of week one. And when you do judge it, look at whether the phone rang and who was on the other end, not at the cost per click.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "ad-scheduling-should-your-ads-run-at-3am",
     title: "Ad Scheduling: Should Your Ads Run at 3am?",
     description:
@@ -138,9 +213,7 @@ export const blogPosts: BlogPost[] = [
       },
       {
         heading: "What this means in practice",
-        paragraphs: [
-          "Three things follow, and they will save you money.",
-        ],
+        paragraphs: ["Three things follow, and they will save you money."],
         bullets: [
           "Judge a campaign on at least a week. Not on Monday, not on a bad Thursday. A single day tells you almost nothing",
           "Do not change the budget because of one expensive day. A budget edit is a structural change, and on most platforms it sends the campaign back into learning, which costs you more than the overspend did",
@@ -394,7 +467,7 @@ export const blogPosts: BlogPost[] = [
           "One practical trap, worth sorting on day one rather than discovering later.",
           "Leads from instant forms sit inside Meta, and they are not stored there forever \u2014 the figure widely quoted is ninety days, though we could not confirm it on Meta's own documentation. Either way, Ads Manager is not your database and should not be treated as one.",
           "Connect the form to an inbox, a spreadsheet or a CRM on the day you launch it, so leads arrive somewhere you own while they are still warm. Downloading a CSV once a fortnight is how enquiries go cold.",
-          "Worth knowing too: access to the ad account is not necessarily access to the leads. They belong to the Page. If an agency runs your ads, check who can actually download them before you need to."
+          "Worth knowing too: access to the ad account is not necessarily access to the leads. They belong to the Page. If an agency runs your ads, check who can actually download them before you need to.",
         ],
       },
       {
@@ -403,7 +476,7 @@ export const blogPosts: BlogPost[] = [
           "A rough rule that holds up for most local businesses.",
           "Use your website when the decision needs selling \u2014 higher value, longer consideration, or something people want to see proof of before they call. Detailing, extensions, anything over a few hundred pounds.",
           "Use instant forms when the offer is simple and the person already knows if they want it, or when your website genuinely is not ready yet. A form is a reasonable stopgap while a proper page is being built. It is a poor permanent answer.",
-          "And if you only change one thing, change how fast you answer. A mediocre lead rung in five minutes beats an excellent one rung tomorrow, whichever box it came from."
+          "And if you only change one thing, change how fast you answer. A mediocre lead rung in five minutes beats an excellent one rung tomorrow, whichever box it came from.",
         ],
       },
     ],
@@ -475,7 +548,7 @@ export const blogPosts: BlogPost[] = [
         paragraphs: [
           "Do not buy them. Beyond the obvious, bought reviews arrive in patterns that are not hard to spot, and the downside is losing the listing rather than a ranking position.",
           "Do not filter who you ask. Sending happy customers to Google and unhappy ones to a private form is review gating, it breaks Google's policies, and it is one of the more reliable ways to get a profile suspended.",
-          "One quirk worth knowing while you are in there: if a customer edits their review after reading your reply, Google says the date on it changes to show when the update was made. So a reply that actually resolves something can refresh the date on a review you already had."
+          "One quirk worth knowing while you are in there: if a customer edits their review after reading your reply, Google says the date on it changes to show when the update was made. So a reply that actually resolves something can refresh the date on a review you already had.",
         ],
       },
       {
@@ -483,7 +556,7 @@ export const blogPosts: BlogPost[] = [
         paragraphs: [
           "Open your profile and your three nearest competitors' profiles. Ignore the totals and the averages. Look only at the date on the newest review on each.",
           "If theirs are from this month and yours is from last year, you have your answer, and it has nothing to do with what Google does or does not document.",
-          "That is the gap worth closing, and it does not take a campaign. It takes asking the next customer."
+          "That is the gap worth closing, and it does not take a campaign. It takes asking the next customer.",
         ],
       },
     ],
@@ -1371,9 +1444,7 @@ export const blogPosts: BlogPost[] = [
       },
       {
         heading: "The specifications, so nothing gets rejected",
-        paragraphs: [
-          "These are the ones worth having written down somewhere.",
-        ],
+        paragraphs: ["These are the ones worth having written down somewhere."],
         bullets: [
           "Format: JPG or PNG",
           "File size: between 10 KB and 5 MB",
@@ -1494,7 +1565,7 @@ export const blogPosts: BlogPost[] = [
         heading: "The message that works",
         paragraphs: [
           "Where you can make contact, the thing that gets a reply is specific rather than general.",
-          "A chase is \"just following up to see if you had any thoughts\". It is about you, it asks the person to do the work of remembering, and it is easy to ignore twice.",
+          'A chase is "just following up to see if you had any thoughts". It is about you, it asks the person to do the work of remembering, and it is easy to ignore twice.',
           "What works is a reason that belongs to them. Their date. Their job. Something that changed.",
           "A cancellation has opened the week they wanted. The price they were quoted is about to change. You have just finished a job like theirs two streets away. Their kitchen was going to be done before Christmas and Christmas is nine weeks off.",
           "Remembering what they told you, months later, is the single most impressive thing a small business can do, and it is not a talent. It is a note in the CRM that most people never write down.",
@@ -1579,9 +1650,7 @@ export const blogPosts: BlogPost[] = [
       },
       {
         heading: "What to change",
-        paragraphs: [
-          "For a local business, almost always this:",
-        ],
+        paragraphs: ["For a local business, almost always this:"],
         bullets: [
           "Switch the targeting option from Presence or Interest to Presence",
           "Add exclusions for the places you genuinely will not travel to, knowing they only catch people physically there",
@@ -1724,14 +1793,14 @@ export const blogPosts: BlogPost[] = [
           "Google's own definitions are worth being precise about, because the whole problem lives in the gap between them.",
           "A keyword is text you add to an ad group to target the right audience. A search term is the word or set of words a person actually entered on Google.",
           "You control the first. You do not control the second. You pay for the second.",
-          "So you add \"loft conversion\" as a keyword, and Google decides that is close enough to \"loft conversion jobs\", \"loft ladder screwfix\" and \"loft conversion gone wrong\". Those are three clicks you paid for from three people who were never going to call you, and nothing on the main screen tells you it happened.",
+          'So you add "loft conversion" as a keyword, and Google decides that is close enough to "loft conversion jobs", "loft ladder screwfix" and "loft conversion gone wrong". Those are three clicks you paid for from three people who were never going to call you, and nothing on the main screen tells you it happened.',
         ],
       },
       {
         heading: "The column almost nobody turns on",
         paragraphs: [
           "The report sits under the keywords section of your account, and Google describes its job plainly: use it to know how your ads performed when triggered by actual searches within the Search Network.",
-          "There is one setting worth changing the moment you open it. There is a \"Keyword\" column that tells you which of your keywords matched someone's search term and triggered your ad, and it is hidden by default. You turn it on through the column settings.",
+          'There is one setting worth changing the moment you open it. There is a "Keyword" column that tells you which of your keywords matched someone\'s search term and triggered your ad, and it is hidden by default. You turn it on through the column settings.',
           "Without it you can see that you paid for a bad search term but not which of your keywords let it in, which means you can block the one term and the same keyword will keep doing it tomorrow with a slightly different phrase. With it on, you can see the leak rather than the drip.",
         ],
       },
@@ -1767,7 +1836,7 @@ export const blogPosts: BlogPost[] = [
         heading: "What to do with what you find",
         paragraphs: [
           "Two actions, and they are different.",
-          "Add negative keywords for the terms that are simply wrong. Not one negative per bad search term, which is a treadmill, but the word that explains the whole group. A single negative for \"jobs\" removes a category rather than an entry.",
+          'Add negative keywords for the terms that are simply wrong. Not one negative per bad search term, which is a treadmill, but the word that explains the whole group. A single negative for "jobs" removes a category rather than an entry.',
           "Then look at the keyword that let them in. If one keyword is generating most of the rubbish, the problem is that keyword rather than the searches. Broader matching brings in more loosely related terms than tighter matching does, and if a keyword is bringing in far more noise than work, tightening it is the fix.",
           "And when a search term in the list is genuinely good, add it as its own keyword. The report is as useful for finding what works as for blocking what does not, and people only ever use it for the second.",
         ],
@@ -1850,9 +1919,7 @@ export const blogPosts: BlogPost[] = [
       },
       {
         heading: "What to show",
-        paragraphs: [
-          "The material is already on your phone.",
-        ],
+        paragraphs: ["The material is already on your phone."],
         bullets: [
           "Before and after, obviously, and it works",
           "The handling. A nervous dog being talked to gently does more for a worried owner than any finished groom",
@@ -1937,9 +2004,7 @@ export const blogPosts: BlogPost[] = [
       },
       {
         heading: "What to do this week",
-        paragraphs: [
-          "Four things, and none of them takes long.",
-        ],
+        paragraphs: ["Four things, and none of them takes long."],
         bullets: [
           "If customers never visit you, take the address off and set your service areas instead",
           "Replace any radius thinking with a real list of towns and postcodes you actually travel to",
@@ -2142,7 +2207,7 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "Google's test is one sentence",
         paragraphs: [
-          "Their guidelines put it better than any SEO blog manages. Choose categories that complete the sentence \"this business IS a\", rather than \"this business HAS a\".",
+          'Their guidelines put it better than any SEO blog manages. Choose categories that complete the sentence "this business IS a", rather than "this business HAS a".',
           "That one distinction clears up most of the confusion. A garden centre with a coffee shop in it IS a garden centre, it HAS a cafe. A builder who also fits kitchens IS a builder. A gym with a sauna IS a gym.",
           "Google says the point is to describe the business holistically, not to list every service, product or amenity you offer. The temptation is always the opposite, because every service feels like a chance to be found for something. The services list exists for that. Categories are for what you are.",
         ],
@@ -2151,7 +2216,7 @@ export const blogPosts: BlogPost[] = [
         heading: "Specific beats broad",
         paragraphs: [
           "The guidance is to focus primarily on the most specific categories for your business, and this is where people reach for the safe general option instead.",
-          "If \"roofing contractor\" exists, that beats \"contractor\". If there is a category for your exact trade, take it rather than the parent.",
+          'If "roofing contractor" exists, that beats "contractor". If there is a category for your exact trade, take it rather than the parent.',
           "The reason it costs you nothing is that Google adds the broader categories automatically. Picking the specific one gets you the general one as well, so you can skip anything that is redundant with something more specific you already chose. Choosing broad to be safe just throws away the precision and gains you nothing.",
         ],
       },
@@ -2234,7 +2299,7 @@ export const blogPosts: BlogPost[] = [
       },
       {
         paragraphs: [
-          "So the advert changes with the calendar rather than stopping. Running the same \"garden maintenance\" creative in December is why people conclude advertising does not work in winter.",
+          'So the advert changes with the calendar rather than stopping. Running the same "garden maintenance" creative in December is why people conclude advertising does not work in winter.',
         ],
       },
       {
@@ -2315,7 +2380,6 @@ export const blogPosts: BlogPost[] = [
           "Asking staff to hit a quota of reviews",
           "Pressuring customers to leave a rating while they're still on the premises",
         ],
-        
       },
       {
         paragraphs: [
@@ -2328,7 +2392,7 @@ export const blogPosts: BlogPost[] = [
           "This is the part most businesses have not caught up with. The Digital Markets, Competition and Consumers Act 2024 brought in consumer rules that have been in force since 6 April 2025, and several review practices are now banned outright, meaning automatically unfair with no argument about context.",
           "The banned list includes posting fake reviews, commissioning somebody else to write them, publishing incentivised reviews without disclosing the incentive, presenting misleading star ratings, and concealing negative reviews.",
           "Concealing negative reviews is what gating is. The quiet private feedback form was the point of the exercise.",
-          "The CMA can now enforce consumer law directly rather than going to court first, with fines reaching up to 10% of global turnover. That ceiling is aimed at large companies, and a sole trader is not the target of the enforcement programme. But the rule applies to you the same way it applies to everyone, and \"the software did it\" is not a defence when you bought the software.",
+          'The CMA can now enforce consumer law directly rather than going to court first, with fines reaching up to 10% of global turnover. That ceiling is aimed at large companies, and a sole trader is not the target of the enforcement programme. But the rule applies to you the same way it applies to everyone, and "the software did it" is not a defence when you bought the software.',
         ],
       },
       {
@@ -2511,7 +2575,7 @@ export const blogPosts: BlogPost[] = [
         paragraphs: [
           "Instructors tend to bury the wait, as if it were bad news. It is the opposite, and saying it plainly does three useful things at once.",
           "It filters out the people who wanted to start tomorrow and would have messaged you and vanished. It tells everyone else you are in demand, which is the only social proof in this trade that cannot be faked. And it sets the expectation honestly, so nobody books in feeling misled.",
-          "\"Currently booking from mid-January, three slots left\" is a better advert than anything about competitive rates.",
+          '"Currently booking from mid-January, three slots left" is a better advert than anything about competitive rates.',
         ],
       },
       {
@@ -2573,9 +2637,7 @@ export const blogPosts: BlogPost[] = [
         ],
       },
       {
-        paragraphs: [
-          "Suggestions, the ones it treats as a hint:",
-        ],
+        paragraphs: ["Suggestions, the ones it treats as a hint:"],
         bullets: [
           "Age range",
           "Gender",
@@ -2623,9 +2685,7 @@ export const blogPosts: BlogPost[] = [
       },
       {
         heading: "What to go and check",
-        paragraphs: [
-          "Three things, and none of them take long.",
-        ],
+        paragraphs: ["Three things, and none of them take long."],
         bullets: [
           "Open any campaign with an exclusion list and confirm the list is in the controls section, not the suggestions section",
           "Check your location radius is what you think it is, since that is the setting with real teeth",
@@ -2654,7 +2714,7 @@ export const blogPosts: BlogPost[] = [
     sections: [
       {
         paragraphs: [
-          "Somebody tells you that putting your trade and your town in your Google listing name helps you rank. You change \"Mahee Builders\" to \"Mahee Builders | Extensions & Loft Conversions Manchester\", and for a while the map rankings do move.",
+          'Somebody tells you that putting your trade and your town in your Google listing name helps you rank. You change "Mahee Builders" to "Mahee Builders | Extensions & Loft Conversions Manchester", and for a while the map rankings do move.',
           "That is the problem. It works often enough that people keep recommending it, and the bill arrives later.",
         ],
       },
@@ -2672,8 +2732,8 @@ export const blogPosts: BlogPost[] = [
           "Opening hours, or whether you're open now",
           "Phone numbers and website addresses",
           "Product or service descriptions, which is the one that catches most trades",
-          "Location details such as landmarks, exit numbers or \"near\" phrases",
-          "\"Inside\" or \"at\" another business",
+          'Location details such as landmarks, exit numbers or "near" phrases',
+          '"Inside" or "at" another business',
           "The same name repeated in more than one language or script",
         ],
       },
@@ -2697,7 +2757,7 @@ export const blogPosts: BlogPost[] = [
         heading: "You're more likely to be reported than caught",
         paragraphs: [
           "People assume Google is scanning for this. Sometimes it is, but the usual route is simpler and more reliable: anyone can suggest an edit to your listing, and your competitors can see exactly what you've done.",
-          "If you're the only roofer in town with the word \"roofer\" in your name, you have not found a loophole, you have made yourself the obvious one to report. The businesses most likely to do it are the ones directly beneath you in the map pack.",
+          'If you\'re the only roofer in town with the word "roofer" in your name, you have not found a loophole, you have made yourself the obvious one to report. The businesses most likely to do it are the ones directly beneath you in the map pack.',
           "Which means the risk isn't spread evenly. It rises the better the trick works.",
         ],
       },
@@ -2849,7 +2909,7 @@ export const blogPosts: BlogPost[] = [
         heading: "Qualify in the ad, not on the phone",
         paragraphs: [
           "You cannot quote a removal without knowing what's being moved, from where, to where, and when. Four things, and until you have them an enquiry is just a question.",
-          "So get them in the first message. Run the ads into WhatsApp and write the pre-filled text so it starts the job: \"Hi, moving from [postcode] to [postcode] on\" and people finish it without thinking about it.",
+          'So get them in the first message. Run the ads into WhatsApp and write the pre-filled text so it starts the job: "Hi, moving from [postcode] to [postcode] on" and people finish it without thinking about it.',
           "Now every enquiry arrives with the information you need, you can price it properly, and you can see instantly whether it's a job worth doing. Someone moving a studio flat two streets away and someone moving a four-bed across the country are completely different businesses, and you want to know which one you're talking to before you ring back.",
           "Stairs and parking are the two that catch people out. Ask about both early or you'll quote a job and lose money on it.",
         ],
@@ -2924,7 +2984,7 @@ export const blogPosts: BlogPost[] = [
           "Most of it is unglamorous and you should be doing it anyway:",
         ],
         bullets: [
-          "Say what you do in plain words. \"We fit acoustic wall panels in homes across South London\" is usable. \"Transforming spaces with innovative solutions\" is not, by a machine or a human",
+          'Say what you do in plain words. "We fit acoustic wall panels in homes across South London" is usable. "Transforming spaces with innovative solutions" is not, by a machine or a human',
           "Keep your name, address and phone number identical everywhere. Inconsistency makes you harder to identify as one business",
           "Fill in every field on your Google Business Profile, including the services and the attributes people skip",
           "Get listed where your trade genuinely gets listed. Trade bodies, accreditation registers, local directories that real people use",
@@ -3148,7 +3208,7 @@ export const blogPosts: BlogPost[] = [
         paragraphs: [
           "If you offer a free estimate from a photo, that should be the thing you advertise, not your company name.",
           "It works because it removes everything that stops people enquiring. They don't have to drive over, book anything, take time off or speak to anyone. They take a picture of the damage and get a number back.",
-          "Run it into WhatsApp rather than a form and it gets easier again, because sending a photo in WhatsApp is something people do twenty times a day without thinking. Write the pre-filled message so it starts the job for you, something like \"Hi, photo attached, my car is a\" and they finish the sentence.",
+          'Run it into WhatsApp rather than a form and it gets easier again, because sending a photo in WhatsApp is something people do twenty times a day without thinking. Write the pre-filled message so it starts the job for you, something like "Hi, photo attached, my car is a" and they finish the sentence.',
           "You'll get more enquiries this way and some will be people who were never serious. That's the trade, and a quick glance at a photo costs you far less than an empty ramp.",
         ],
       },
@@ -3211,7 +3271,7 @@ export const blogPosts: BlogPost[] = [
           "Google rarely tells you which rule you broke, so you're left working it out. In practice it's nearly always one of these:",
         ],
         bullets: [
-          "Keywords stuffed into the business name. Listing yourself as \"Smith Plumbing Emergency Plumber London 24 Hour\" when your actual registered name is Smith Plumbing. This is the most common cause by a distance",
+          'Keywords stuffed into the business name. Listing yourself as "Smith Plumbing Emergency Plumber London 24 Hour" when your actual registered name is Smith Plumbing. This is the most common cause by a distance',
           "Changing several important things at once. Name, address and category all edited in the same week looks like somebody taking over a listing rather than a business updating its details",
           "An address that isn't really yours. Virtual offices, mailboxes, a coworking desk you don't have exclusive use of, or an address shared with several other listed businesses",
           "A service-area business displaying an address. If you travel to customers and don't serve them at your premises, the address is supposed to be hidden. Showing it can get you pulled",
@@ -3516,7 +3576,7 @@ export const blogPosts: BlogPost[] = [
         paragraphs: [
           "The advert almost writes itself, and most mobile businesses bury the best part of it.",
           "You come to them. They don't have to drive anywhere, wait anywhere, take time off or arrange anything. For plenty of people that's the entire reason they'd choose you, and it should be the first line rather than something mentioned halfway down.",
-          "Name the areas you cover in the ad copy too. Someone seeing their own town written down believes it in a way they don't believe \"covering the local area\", and it saves you fielding enquiries from people thirty miles outside.",
+          'Name the areas you cover in the ad copy too. Someone seeing their own town written down believes it in a way they don\'t believe "covering the local area", and it saves you fielding enquiries from people thirty miles outside.',
           "Show the van or the kit if it looks the part. It answers the quiet question people have about whether a mobile service is a proper business or somebody with a bucket.",
         ],
       },
@@ -3667,7 +3727,7 @@ export const blogPosts: BlogPost[] = [
           "The moment something changes. Paint going on, a machine starting, the dirt lifting, the piece fitting. People will watch a satisfying process far longer than they'll watch a person",
           "The bit customers never see. The prep, the masking, the measuring, the checks. Half your value is in the work nobody's aware you do, and filming it is how they find out",
           "Answering a question you get asked every week. Film yourself saying it once and you've got a video plus something useful for your website",
-          "The mistake you keep fixing for other people. Anything that starts with \"this is what happens when\" holds attention, and it quietly makes the case for using someone who knows what they're doing",
+          'The mistake you keep fixing for other people. Anything that starts with "this is what happens when" holds attention, and it quietly makes the case for using someone who knows what they\'re doing',
           "The tools or kit, if yours are better than average. Specialist equipment is a credibility argument that doesn't sound like boasting",
           "The team doing normal things. Not a staged team photo. Someone concentrating, someone laughing at something, the place looking busy",
           "A customer reacting, with their permission. Nothing you write about your service is worth as much as ten seconds of somebody's face when they see it finished",
@@ -3683,9 +3743,7 @@ export const blogPosts: BlogPost[] = [
       },
       {
         heading: "What nobody watches",
-        paragraphs: [
-          "Worth knowing so you don't waste the effort:",
-        ],
+        paragraphs: ["Worth knowing so you don't waste the effort:"],
         bullets: [
           "Logo animations. Nobody has ever stayed for one",
           "Long introductions. If the first eight seconds are you saying hello and explaining who you are, most people are gone before the content starts",
@@ -3832,7 +3890,7 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "The pre-filled message does the qualifying",
         paragraphs: [
-          "You get to write the message that appears in the chat box before someone sends it. This is the most useful part of the whole setup and most businesses waste it on something like \"Hi, I'd like more information.\"",
+          'You get to write the message that appears in the chat box before someone sends it. This is the most useful part of the whole setup and most businesses waste it on something like "Hi, I\'d like more information."',
           "Because it's lower friction than a form, these ads get you more enquiries, and some of them will be people who weren't really thinking. The pre-filled message is your filter.",
           "Write it so sending it tells you something useful. Something like \"Hi, I'm interested in a respray, my car is a\" makes people finish the sentence, and the ones who can't be bothered are the ones you didn't want. You can also use it to sort enquiries, so a message starting with the service name means you can tell at a glance what somebody wants.",
           "Keep it short and keep it natural. People can edit it before sending, and they will if it reads like a robot wrote it.",
@@ -4099,7 +4157,8 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "q4-advertising-why-costs-rise-in-november",
-    title: "Q4 Advertising: Why Your Costs Rise in November and What to Do About It",
+    title:
+      "Q4 Advertising: Why Your Costs Rise in November and What to Do About It",
     description:
       "Meta ad costs climb every year from November as retail budgets flood the auction. Here's why it happens, who it hits hardest, and what to do about it.",
     publishedAt: "2026-09-19",
@@ -4133,7 +4192,8 @@ export const blogPosts: BlogPost[] = [
         ],
       },
       {
-        heading: "A higher cost per thousand is not the same as a worse campaign",
+        heading:
+          "A higher cost per thousand is not the same as a worse campaign",
         paragraphs: [
           "This is the part most people get wrong, and it leads to campaigns being switched off that were doing fine.",
           "Cost per thousand impressions going up only tells you what it costs to be seen. It says nothing about what happens next. In December people are often in more of a buying mood than they are in February, so the percentage who act on an ad can rise at the same time the price does.",
@@ -4213,7 +4273,7 @@ export const blogPosts: BlogPost[] = [
           "Keep it short. This is a page people read for fifteen seconds:",
         ],
         bullets: [
-          "Confirmation it worked, and what happens next in plain words. \"We've got it. Someone will call you within the hour\" beats \"thank you for your enquiry\"",
+          'Confirmation it worked, and what happens next in plain words. "We\'ve got it. Someone will call you within the hour" beats "thank you for your enquiry"',
           "A realistic timeframe, and then beat it. Saying within 24 hours and ringing in ten minutes is a very good first impression",
           "A way to reach you immediately for anyone impatient — a phone number or a WhatsApp link, because some people will want to talk now",
           "Something to read while they wait. A relevant article or a short guide keeps you in their attention instead of them moving on",
@@ -4260,7 +4320,7 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "Advertise the gap, not the shop",
         paragraphs: [
-          "Most salon ads say some version of \"book now\" with a photo of a nice fade. It's pleasant and it achieves very little, because it gives nobody a reason to act today rather than whenever they next think about it.",
+          'Most salon ads say some version of "book now" with a photo of a nice fade. It\'s pleasant and it achieves very little, because it gives nobody a reason to act today rather than whenever they next think about it.',
           "The useful version is specific about the gap you're actually trying to fill. Midweek daytime appointments. A new stylist with availability this month. Late openings on a Thursday.",
           "That's a different message to the same audience, and it converts because it answers a question the person already has — when can I get in — rather than announcing something they already knew.",
         ],
@@ -4278,7 +4338,7 @@ export const blogPosts: BlogPost[] = [
         paragraphs: [
           "Hair styling sits in a comfortable position. Before-and-after photographs of a haircut or a colour are fine, because the prohibition on before-and-after imagery applies to body and health transformations rather than to a fringe.",
           "Two things do move you into stricter territory. Anything to do with hair loss, scalp conditions or restoration treatments is health, and the rules on unrealistic outcomes and personal attributes apply properly.",
-          "And copy aimed at how someone feels about their appearance breaks the personal attributes rule regardless of trade. \"Hate your hair?\" will get pulled. \"Restyles and colour corrections in Leeds\" says the same thing to the same people and runs without trouble.",
+          'And copy aimed at how someone feels about their appearance breaks the personal attributes rule regardless of trade. "Hate your hair?" will get pulled. "Restyles and colour corrections in Leeds" says the same thing to the same people and runs without trouble.',
         ],
       },
       {
@@ -4376,7 +4436,8 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "whatsapp-business-app-vs-api",
-    title: "WhatsApp Business App vs API: Which Does a Small Business Actually Need?",
+    title:
+      "WhatsApp Business App vs API: Which Does a Small Business Actually Need?",
     description:
       "Most businesses need the free app and are told they need the API. Here's what each one does, what the API really costs, and when the switch is worth making.",
     publishedAt: "2026-09-14",
@@ -4403,9 +4464,7 @@ export const blogPosts: BlogPost[] = [
       },
       {
         heading: "What the free Business app gives you",
-        paragraphs: [
-          "More than most people realise:",
-        ],
+        paragraphs: ["More than most people realise:"],
         bullets: [
           "A proper business profile with your address, hours, website and a description",
           "Away messages and a greeting for first-time contacts, so nobody is met with silence out of hours",
@@ -4473,7 +4532,7 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "Make it one tap",
         paragraphs: [
-          "Every extra step loses people. \"Find us on Google and leave a review\" means opening Maps, searching, picking the right listing, scrolling — and by step three they've given up, with no bad feeling at all. They just stopped.",
+          'Every extra step loses people. "Find us on Google and leave a review" means opening Maps, searching, picking the right listing, scrolling — and by step three they\'ve given up, with no bad feeling at all. They just stopped.',
           "Google Business Profile gives you a short link that opens the review box directly. Put it everywhere: in the text you send after a job, in your email signature, on a QR code at the counter, on the invoice.",
           "The ask itself should be plain and short. \"If you've got a minute, a quick Google review really helps us — here's the link\" outperforms anything more elaborate, because it sounds like a person rather than a campaign.",
         ],
@@ -4531,7 +4590,7 @@ export const blogPosts: BlogPost[] = [
         heading: "Why the details drift",
         paragraphs: [
           "Almost nobody creates inconsistency deliberately. It accumulates.",
-          "You moved premises and updated your website but not the twelve directories. You changed phone provider. Someone wrote \"Ltd\" on one listing and left it off another. A directory scraped your details from an old source and published a version you've never seen.",
+          'You moved premises and updated your website but not the twelve directories. You changed phone provider. Someone wrote "Ltd" on one listing and left it off another. A directory scraped your details from an old source and published a version you\'ve never seen.',
           "None of these feel like a problem individually, and collectively they're why a business that should rank locally quietly doesn't.",
         ],
       },
@@ -4606,8 +4665,8 @@ export const blogPosts: BlogPost[] = [
         heading: "The creative has to do the qualifying",
         paragraphs: [
           "If the targeting can't narrow the audience, the advert must. That sounds like a handicap and mostly isn't — it just moves the work somewhere more useful.",
-          "An ad that opens with the town, the property type and the price is invisible to everyone it doesn't apply to. \"Three-bed semi in Consett, £145,000\" needs no interest targeting to find the right person, because the wrong people scroll past without registering it.",
-          "This is why specificity matters more in property than almost anywhere. Vague brand advertising — \"your local property experts\" — has no filtering power at all, and inside a restricted category that's fatal.",
+          'An ad that opens with the town, the property type and the price is invisible to everyone it doesn\'t apply to. "Three-bed semi in Consett, £145,000" needs no interest targeting to find the right person, because the wrong people scroll past without registering it.',
+          'This is why specificity matters more in property than almost anywhere. Vague brand advertising — "your local property experts" — has no filtering power at all, and inside a restricted category that\'s fatal.',
         ],
       },
       {
@@ -4706,7 +4765,8 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "google-business-profile-vs-paid-ads",
-    title: "Google Business Profile vs Paid Ads: Where Should a Local Business Start?",
+    title:
+      "Google Business Profile vs Paid Ads: Where Should a Local Business Start?",
     description:
       "One is free and captures people already looking. The other costs money and reaches people who aren't. Which you need first depends on your trade.",
     publishedAt: "2026-09-09",
@@ -4814,9 +4874,9 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "The rule that stops it feeling like nagging",
         paragraphs: [
-          "Every message should contain something other than a request for their attention. \"Just checking in\" and \"following up on my last message\" are pure asking — the third one of those is when a person starts feeling hounded.",
+          'Every message should contain something other than a request for their attention. "Just checking in" and "following up on my last message" are pure asking — the third one of those is when a person starts feeling hounded.',
           "Give something instead. The price they'd have asked about. Your earliest availability. A photo of similar work. An answer to the question everyone in your trade gets asked.",
-          "Compare \"just checking you got my message\" with \"we've got a slot on Thursday morning if that's any use — £180 for the job as you described it.\" Both are follow-ups. Only one is worth receiving.",
+          'Compare "just checking you got my message" with "we\'ve got a slot on Thursday morning if that\'s any use — £180 for the job as you described it." Both are follow-ups. Only one is worth receiving.',
         ],
       },
       {
@@ -5014,7 +5074,7 @@ export const blogPosts: BlogPost[] = [
           "Google weighs relevance, distance and prominence. Distance you can't change — you are where you are. The other two you can work on:",
         ],
         bullets: [
-          "Complete every field, particularly the primary category, which does more than almost anything else. \"Emergency plumber\" and \"plumber\" are different categories and surface for different searches",
+          'Complete every field, particularly the primary category, which does more than almost anything else. "Emergency plumber" and "plumber" are different categories and surface for different searches',
           "List services and areas explicitly rather than assuming Google infers them from your website",
           "Add photos regularly — recent ones. A listing whose newest photo is three years old reads as a business that may not exist any more",
           "Use Google Posts. Few small businesses bother, which is precisely why it's worth doing",
@@ -5218,16 +5278,16 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "The first line is nearly the whole job",
         paragraphs: [
-          "Meta cuts your text off after roughly 125 characters and hides the rest behind \"See more.\" Most people never tap it. So the first line isn't an introduction to your ad — for the majority of people who see it, the first line is the entire ad.",
-          "Which means it can't be a warm-up. \"At [business name], we pride ourselves on...\" has spent the whole budget saying nothing.",
+          'Meta cuts your text off after roughly 125 characters and hides the rest behind "See more." Most people never tap it. So the first line isn\'t an introduction to your ad — for the majority of people who see it, the first line is the entire ad.',
+          'Which means it can\'t be a warm-up. "At [business name], we pride ourselves on..." has spent the whole budget saying nothing.',
           "Open with the thing that would make someone stop. A price, a specific problem, a plain statement of what you're offering. The rest of the copy is for the minority who are already interested.",
         ],
       },
       {
         heading: "Write to one person, not an audience",
         paragraphs: [
-          "Copy addressed to everyone lands on nobody. \"We help businesses grow\" is technically true of thousands of companies and describes none of them.",
-          "The fix is uncomfortable but simple: narrow it until it feels too narrow. \"Domestic cleaning in Luton, weekly or fortnightly, same cleaner each time\" excludes almost everybody — and that's why the people it does describe pay attention.",
+          'Copy addressed to everyone lands on nobody. "We help businesses grow" is technically true of thousands of companies and describes none of them.',
+          'The fix is uncomfortable but simple: narrow it until it feels too narrow. "Domestic cleaning in Luton, weekly or fortnightly, same cleaner each time" excludes almost everybody — and that\'s why the people it does describe pay attention.',
           "You're not trying to appeal to the maximum number of people. You're trying to be unmistakable to a small number of them.",
         ],
       },
@@ -5238,18 +5298,18 @@ export const blogPosts: BlogPost[] = [
           "Details do the work adjectives can't:",
         ],
         bullets: [
-          "Prices — \"from £21 an hour\" says more about your positioning than \"affordable\" ever will",
-          "Timeframes — \"we'll call you back within the hour\" is a promise; \"fast response\" is a hope",
+          'Prices — "from £21 an hour" says more about your positioning than "affordable" ever will',
+          'Timeframes — "we\'ll call you back within the hour" is a promise; "fast response" is a hope',
           "Numbers — how many years, how many jobs, how long a typical job takes",
           "The awkward bits — what you don't do, who you're not for. Nothing builds trust faster than a business ruling itself out of something",
-          "Location, named properly — the town, not \"your local area\", which reads as a template because it is one",
+          'Location, named properly — the town, not "your local area", which reads as a template because it is one',
         ],
       },
       {
         heading: "Say what happens next",
         paragraphs: [
           "A surprising number of ads never tell anyone what to do. They describe the business, then stop, and hope.",
-          "Be plain about the next step and what it involves. \"Tap below, fill in four boxes, and we'll ring you today\" tells someone exactly what they're signing up for. \"Get in touch to discuss your requirements\" makes it sound like effort.",
+          'Be plain about the next step and what it involves. "Tap below, fill in four boxes, and we\'ll ring you today" tells someone exactly what they\'re signing up for. "Get in touch to discuss your requirements" makes it sound like effort.',
           "Reducing the perceived commitment matters more than persuading. Most people who don't enquire aren't unconvinced — they just don't want to be trapped in a sales conversation. Say how long it takes and that there's no obligation, and you'll remove more hesitation than any amount of persuasion adds.",
         ],
       },
@@ -5257,7 +5317,7 @@ export const blogPosts: BlogPost[] = [
         heading: "The rule this industry gets wrong",
         paragraphs: [
           "Ad copy must not imply you know something personal about the reader. That means questions aimed at their situation — their health, weight, finances or age — will get the ad rejected, however sympathetically they're phrased.",
-          "\"Struggling with debt?\" and \"Unhappy with your skin?\" both break it. Describing the service instead — \"debt advice appointments in Leeds\" — says the same thing to the same audience and runs without trouble.",
+          '"Struggling with debt?" and "Unhappy with your skin?" both break it. Describing the service instead — "debt advice appointments in Leeds" — says the same thing to the same audience and runs without trouble.',
           "It's worth internalising, because the rejected version is usually the one that feels most natural to write.",
         ],
       },
@@ -5294,7 +5354,7 @@ export const blogPosts: BlogPost[] = [
         heading: "The two rules that catch everyone",
         paragraphs: [
           "Before-and-after images are prohibited for body transformations. Not discouraged — prohibited. This surprises people every time, because it's usually the single strongest asset a trainer owns.",
-          "The second is personal attributes. Your ad must not imply you know something about the person seeing it, and body copy in this industry breaks that constantly. \"Struggling to lose weight?\" implies you know they are. \"Weight loss coaching in Leeds\" says the same thing about your service without making a claim about the reader.",
+          'The second is personal attributes. Your ad must not imply you know something about the person seeing it, and body copy in this industry breaks that constantly. "Struggling to lose weight?" implies you know they are. "Weight loss coaching in Leeds" says the same thing about your service without making a claim about the reader.',
           "It's a small change in phrasing with a large effect on whether your ads run. Describe what you do, not who you think is reading.",
         ],
       },
@@ -5518,7 +5578,7 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "Advertise cars, not the dealership",
         paragraphs: [
-          "The most common mistake is an ad that says something like \"quality used cars, finance available, family run since 1998.\" It's all true and it gives nobody a reason to tap.",
+          'The most common mistake is an ad that says something like "quality used cars, finance available, family run since 1998." It\'s all true and it gives nobody a reason to tap.',
           "Compare that with a specific car, priced, filmed on the forecourt, with the mileage and MOT stated plainly. One is a business card. The other is something a person in the market can act on.",
           "This also solves the creative problem that stops most dealers advertising consistently. You don't need to invent content — your stock changes every week and each arrival is a new ad. A ninety second walkaround filmed on a phone will usually outperform anything more polished, because it looks like what it is.",
         ],
@@ -5548,7 +5608,7 @@ export const blogPosts: BlogPost[] = [
         heading: "The enquiry is where deals are lost",
         paragraphs: [
           "Car buyers enquire on several vehicles at several dealers on the same evening. It's a considered purchase made in a distinctly unconsidered way — a few messages fired off from the sofa.",
-          "Whoever replies first, with the actual answer rather than \"is this still available?\", tends to get the viewing. And the viewing is where the car sells itself.",
+          'Whoever replies first, with the actual answer rather than "is this still available?", tends to get the viewing. And the viewing is where the car sells itself.',
           "That's why speed matters more here than almost anywhere else. An independent competing against a franchise with a full sales floor can't win on stock levels or opening hours, but can absolutely win on replying to a nine o'clock message before the following afternoon.",
         ],
       },
@@ -5622,7 +5682,8 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "why-meta-ads-get-low-quality-leads",
-    title: "Why Your Meta Ads Are Getting Low-Quality Leads (and How to Fix It)",
+    title:
+      "Why Your Meta Ads Are Getting Low-Quality Leads (and How to Fix It)",
     description:
       "Wrong numbers, people who don't remember enquiring, nobody answering the phone. Poor lead quality is usually a settings problem, and it's fixable.",
     publishedAt: "2026-08-27",
@@ -5665,7 +5726,7 @@ export const blogPosts: BlogPost[] = [
         heading: "Say the price in the ad",
         paragraphs: [
           "The most effective quality filter isn't a setting at all. It's putting something in the ad copy that makes unsuitable people scroll past.",
-          "A starting price does this better than anything. \"From £400 a month\" costs you a good number of enquiries and almost none of them were going to buy. What's left is people who saw the number and enquired anyway, which is a far more useful conversation.",
+          'A starting price does this better than anything. "From £400 a month" costs you a good number of enquiries and almost none of them were going to buy. What\'s left is people who saw the number and enquired anyway, which is a far more useful conversation.',
           "The same applies to eligibility. If you only serve a certain area, only take certain jobs, or have a minimum, say so plainly. Every ad you write is either filtering or it isn't, and vague copy filters nothing.",
         ],
       },
@@ -5755,7 +5816,8 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "what-the-meta-pixel-actually-does",
-    title: "What the Meta Pixel Actually Does, and Why It Matters More Than It Used To",
+    title:
+      "What the Meta Pixel Actually Does, and Why It Matters More Than It Used To",
     description:
       "The Pixel isn't just analytics. It's what tells Meta which of your ads produced real customers, and without it the system is optimising half blind.",
     publishedAt: "2026-08-25",
@@ -5910,7 +5972,7 @@ export const blogPosts: BlogPost[] = [
         heading: "Why the rules are tighter here",
         paragraphs: [
           "Meta's position is that people shouldn't feel identified by an advert. An ad implying you know something about someone's body, health or appearance crosses that line, and it's enforced more strictly in this category than anywhere else.",
-          "This catches ordinary, well-meaning copy constantly. \"Struggling with acne?\" and \"Unhappy with your smile?\" both imply knowledge about the reader. \"Book an acne consultation\" and \"Cosmetic dentistry in Manchester\" describe the same service to the same audience without making any claim about who's reading.",
+          'This catches ordinary, well-meaning copy constantly. "Struggling with acne?" and "Unhappy with your smile?" both imply knowledge about the reader. "Book an acne consultation" and "Cosmetic dentistry in Manchester" describe the same service to the same audience without making any claim about who\'s reading.',
           "The distinction feels pedantic until you realise it's the difference between an account running smoothly and an account under review.",
         ],
       },
@@ -5947,7 +6009,7 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "Where to put the budget",
         paragraphs: [
-          "Advertise a specific treatment rather than the business in general. \"Book a facial\" gives someone a decision to make; \"award-winning salon in Leeds\" doesn't. Pick the treatment with a good margin and reasonable repeat potential, and build the campaign around that one thing.",
+          'Advertise a specific treatment rather than the business in general. "Book a facial" gives someone a decision to make; "award-winning salon in Leeds" doesn\'t. Pick the treatment with a good margin and reasonable repeat potential, and build the campaign around that one thing.',
           "Keep the radius tight. People travel a long way for a wedding venue and almost no distance for a regular appointment, so a wide radius mostly buys you enquiries that will never convert into a standing booking.",
           "And be realistic about the first month. New campaigns need time to settle before the numbers mean anything, and this is a sector where the strongest results usually come from the second visit onwards rather than the first.",
         ],
@@ -5956,7 +6018,8 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "how-long-before-meta-ads-work-learning-phase",
-    title: "How Long Before Meta Ads Start Working? The Learning Phase Explained",
+    title:
+      "How Long Before Meta Ads Start Working? The Learning Phase Explained",
     description:
       "Meta ads rarely perform properly in week one, and there's a mechanical reason for it. Here's what the learning phase is and what a realistic timeline looks like.",
     publishedAt: "2026-08-22",
@@ -6052,8 +6115,8 @@ export const blogPosts: BlogPost[] = [
         paragraphs: [
           "This is the single most common reason a legitimate small business ad gets pulled, and it surprises people every time because the copy sounds completely reasonable when you read it aloud.",
           "The rule is that your ad must not imply you know something personal about the person seeing it — their health, their finances, their age, their religion, their relationship status. Meta's concern is that people shouldn't feel identified or singled out by an advert.",
-          "The tell is the second-person question. \"Struggling with back pain?\" implies you know the reader has back pain. \"Book a back pain assessment in Birmingham\" says the same thing about your service without making a claim about the reader. Same offer, same audience, completely different outcome at review.",
-          "It applies far more widely than health. \"In debt?\", \"Overweight?\", \"Recently divorced?\" and \"Are you over 50?\" all trip the same rule. The fix is nearly always to describe what you do rather than who you think is reading.",
+          'The tell is the second-person question. "Struggling with back pain?" implies you know the reader has back pain. "Book a back pain assessment in Birmingham" says the same thing about your service without making a claim about the reader. Same offer, same audience, completely different outcome at review.',
+          'It applies far more widely than health. "In debt?", "Overweight?", "Recently divorced?" and "Are you over 50?" all trip the same rule. The fix is nearly always to describe what you do rather than who you think is reading.',
         ],
       },
       {
@@ -6111,7 +6174,7 @@ export const blogPosts: BlogPost[] = [
     sections: [
       {
         paragraphs: [
-          "\"CRM\" and \"pipeline\" are two of those words that make perfectly capable business owners assume the topic isn't for them. They sound like software problems — something with a dashboard, a monthly fee and a training video nobody watches.",
+          '"CRM" and "pipeline" are two of those words that make perfectly capable business owners assume the topic isn\'t for them. They sound like software problems — something with a dashboard, a monthly fee and a training video nobody watches.',
           "Underneath the jargon it's much simpler than that. A pipeline is just the list of stages an enquiry goes through between someone first contacting you and them becoming a paying customer. That's genuinely all it is.",
         ],
       },
@@ -6134,7 +6197,7 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "The stage that quietly loses you money",
         paragraphs: [
-          "If you only ever fix one thing, make it this: know exactly who is sitting in the \"quoted, waiting to hear back\" stage, and have a habit of following up with them.",
+          'If you only ever fix one thing, make it this: know exactly who is sitting in the "quoted, waiting to hear back" stage, and have a habit of following up with them.',
           "Most businesses lose more revenue here than anywhere else in their marketing. Not to competitors, and not because the price was wrong — simply because the conversation stopped and nobody restarted it. A single follow-up message a week later recovers a meaningful share of those.",
           "This is also why a pipeline and paid advertising belong together. If you're spending money to generate enquiries and then losing a chunk of them in the middle stage, more ad budget just pushes more people into the same leak.",
         ],
@@ -6147,7 +6210,7 @@ export const blogPosts: BlogPost[] = [
         ],
         bullets: [
           "Four to six stages, maximum — if you can't say them out loud from memory, it's too complex",
-          "Name them after what actually happens, not sales jargon — \"Quoted\" and \"Waiting to hear back\" beat \"Qualified opportunity\"",
+          'Name them after what actually happens, not sales jargon — "Quoted" and "Waiting to hear back" beat "Qualified opportunity"',
           "Everyone who touches an enquiry uses it, or it drifts out of date within a fortnight",
           "Every enquiry has one clear owner, so nobody assumes someone else is handling it",
           "It updates itself where possible — enquiries arriving from your ads, inbox or website should land in it automatically rather than needing typing in",
@@ -6190,9 +6253,7 @@ export const blogPosts: BlogPost[] = [
       },
       {
         heading: "Before you spend anything: the account setup",
-        paragraphs: [
-          "Dull, and the source of most launch-day problems:",
-        ],
+        paragraphs: ["Dull, and the source of most launch-day problems:"],
         bullets: [
           "The ad account is in your name, not your agency's — this matters more than it sounds, because campaign history and accumulated Pixel data stay with whoever owns the account when you part ways",
           "Currency is set correctly — Meta will not let you change it afterwards, and fixing it means creating a whole new ad account from scratch",
@@ -6362,7 +6423,7 @@ export const blogPosts: BlogPost[] = [
         bullets: [
           "The actual professional on camera — a partner explaining a common problem in plain language consistently outperforms stock imagery, because clients are hiring a person rather than a firm in the abstract",
           "Genuine credentials, stated plainly — qualifications, accreditations and years in practice do quiet, unglamorous work here",
-          "Real specifics about who you serve — \"accountants for owner-managed construction firms\" pulls harder than \"accountancy services,\" because the right person recognises themselves immediately",
+          'Real specifics about who you serve — "accountants for owner-managed construction firms" pulls harder than "accountancy services," because the right person recognises themselves immediately',
           "Careful language about outcomes — never promise a result you can't guarantee. Beyond the regulatory problem, outcome promises tend to attract exactly the enquiries you'd rather not have",
         ],
       },
@@ -6384,7 +6445,8 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "what-is-a-unified-inbox-lead-generation",
-    title: "What Is a Unified Inbox, and Why Does It Matter for Lead Generation?",
+    title:
+      "What Is a Unified Inbox, and Why Does It Matter for Lead Generation?",
     description:
       "Enquiries arrive across six different apps and half get missed. Here's what a unified inbox actually changes, what it doesn't, and when you genuinely need one.",
     publishedAt: "2026-08-16",
@@ -6410,7 +6472,7 @@ export const blogPosts: BlogPost[] = [
           "Nobody knows what's already been handled — two people reply to the same person, or everyone assumes someone else did and nobody does",
           "The business owner has no visibility — you can't manage, measure or improve a flow of enquiries you can't actually see in one place",
           "Context disappears at handover — someone covering a shift has no idea what was already discussed, so the customer repeats themselves",
-          "There's no record to look back on — \"did we ever follow up with that person from last month?\" becomes unanswerable",
+          'There\'s no record to look back on — "did we ever follow up with that person from last month?" becomes unanswerable',
           "Enquiries land on personal accounts — DMs arriving on a staff member's own phone leave with them when they go on holiday, or leave the business entirely",
         ],
       },
@@ -6545,9 +6607,9 @@ export const blogPosts: BlogPost[] = [
         ],
       },
       {
-        heading: "\"My customers aren't on Facebook\" — worth actually checking",
+        heading: '"My customers aren\'t on Facebook" — worth actually checking',
         paragraphs: [
-          "This assumption is usually rooted in something real: Facebook's user base does skew somewhat older than Instagram's in the UK. But \"skews older\" is not the same as \"absent,\" and the platform remains enormous across every age group that has money to spend.",
+          'This assumption is usually rooted in something real: Facebook\'s user base does skew somewhat older than Instagram\'s in the UK. But "skews older" is not the same as "absent," and the platform remains enormous across every age group that has money to spend.',
           "There's also a mismatch worth noticing between where people *post* and where they *see ads*. Someone might not have published anything to Facebook in five years while still scrolling it daily, checking Marketplace, or using Messenger constantly. Ad delivery follows attention, not posting activity — and plenty of people who'd describe themselves as \"not really on Facebook\" are reachable there.",
           "The honest answer is that you don't need to guess. Run both, let a few weeks of data accumulate, then look at the placement breakdown in Ads Manager. Your own account will tell you where your enquiries actually came from, and it fairly regularly surprises people.",
         ],
@@ -6712,7 +6774,7 @@ export const blogPosts: BlogPost[] = [
         heading: "Should it tell people it's AI?",
         paragraphs: [
           "This comes up almost every time, and the answer is yes — be upfront about it.",
-          "In practice, most people are entirely comfortable dealing with an automated assistant to book an appointment or ask a straightforward question. What they react badly to is discovering they were misled about it. Presenting the system as a human and being found out costs you far more trust than simply saying \"I'm the virtual assistant, I can get you booked in or pass you to the team\" ever would.",
+          'In practice, most people are entirely comfortable dealing with an automated assistant to book an appointment or ask a straightforward question. What they react badly to is discovering they were misled about it. Presenting the system as a human and being found out costs you far more trust than simply saying "I\'m the virtual assistant, I can get you booked in or pass you to the team" ever would.',
           "There's a practical argument too: when people know they're talking to an assistant, they tend to ask clearer, simpler questions — which is exactly the sort the system answers well.",
         ],
       },
@@ -6780,7 +6842,7 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "Specific beats clever, every time",
         paragraphs: [
-          "Clever headlines win awards. Specific headlines win enquiries. \"Elevate your everyday drive\" tells the viewer nothing; \"Ceramic coating from £395, booked in this week\" tells them exactly what's on offer, roughly what it costs, and when they can have it.",
+          'Clever headlines win awards. Specific headlines win enquiries. "Elevate your everyday drive" tells the viewer nothing; "Ceramic coating from £395, booked in this week" tells them exactly what\'s on offer, roughly what it costs, and when they can have it.',
           "A few habits that consistently separate specific creative from vague creative:",
         ],
         bullets: [
@@ -6841,7 +6903,7 @@ export const blogPosts: BlogPost[] = [
         bullets: [
           "Emergency or time-critical services — a burst pipe, a lockout, an urgent repair. Nobody scrolls Instagram looking for an emergency plumber; they search, and they call the first credible result",
           "Established categories people know how to search for, where the search volume genuinely exists in your area",
-          "High-intent \"near me\" and location-based searching, which is a large share of local service demand",
+          'High-intent "near me" and location-based searching, which is a large share of local service demand',
           "Businesses where the customer already knows exactly what they want and is comparing providers rather than deciding whether to buy at all",
         ],
       },
@@ -6869,7 +6931,7 @@ export const blogPosts: BlogPost[] = [
         heading: "Why the answer is often both — in a specific order",
         paragraphs: [
           "For most established businesses, the mature answer is both. Google captures the people already looking; Meta creates awareness among people who weren't, then retargets everyone who showed interest but didn't convert. They compound rather than compete.",
-          "But \"both\" is rarely the right place to start. Splitting a modest budget across two platforms usually means neither gets enough spend or data to perform properly — Meta in particular needs consistent, sustained budget to get out of its learning phase and start optimising. Picking one, running it properly for a few weeks, and adding the second once the first is working reliably will nearly always beat launching both at half strength.",
+          'But "both" is rarely the right place to start. Splitting a modest budget across two platforms usually means neither gets enough spend or data to perform properly — Meta in particular needs consistent, sustained budget to get out of its learning phase and start optimising. Picking one, running it properly for a few weeks, and adding the second once the first is working reliably will nearly always beat launching both at half strength.',
           "One thing worth saying plainly: if your customers genuinely are searching for what you sell in meaningful volume, Google may well be the better first pound spent — even though Meta & Instagram ads are what we do. Recommending the wrong channel because it's the one we sell would be a short-sighted way to run an agency.",
         ],
       },
@@ -6883,7 +6945,8 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "meta-instagram-ads-for-restaurants-hospitality",
-    title: "Meta & Instagram Ads for Restaurants & Hospitality: What Actually Fills Tables",
+    title:
+      "Meta & Instagram Ads for Restaurants & Hospitality: What Actually Fills Tables",
     description:
       "Restaurant ads aren't lead generation — the goal is a booked table. Here's how to structure Meta & Instagram campaigns around covers, radius and timing.",
     publishedAt: "2026-08-09",
@@ -6931,7 +6994,7 @@ export const blogPosts: BlogPost[] = [
         bullets: [
           "Close-up video of signature dishes being prepared or served, shot on a phone if that's what you have",
           "The room itself — atmosphere sells a booking as much as the food does, particularly for evening trade",
-          "A specific, concrete offer where you're running one, rather than a vague \"come and visit us\"",
+          'A specific, concrete offer where you\'re running one, rather than a vague "come and visit us"',
           "Text overlays that state the offer and the area clearly, since a large share of people watch with the sound off",
           "Seasonal and event-led creative refreshed regularly, because food ads fatigue faster than most — the same dish shown for three months stops working",
         ],
@@ -6968,7 +7031,7 @@ export const blogPosts: BlogPost[] = [
       {
         paragraphs: [
           "\"What's a good cost per lead?\" is one of the most-asked questions about Meta ads, and it rarely has a single useful answer. A cost per lead that would be a brilliant result for one business would be a disaster for another, because the number on its own doesn't tell you anything — it only means something next to what that lead is actually worth to you.",
-          "Here's a more useful way to think about cost per lead, what actually moves it, and why comparing your number to a generic \"industry average\" can send you in the wrong direction entirely.",
+          'Here\'s a more useful way to think about cost per lead, what actually moves it, and why comparing your number to a generic "industry average" can send you in the wrong direction entirely.',
         ],
       },
       {
@@ -6979,9 +7042,9 @@ export const blogPosts: BlogPost[] = [
         ],
       },
       {
-        heading: "What \"a lead\" even means changes the number completely",
+        heading: 'What "a lead" even means changes the number completely',
         paragraphs: [
-          "Cost per lead figures are only comparable if \"a lead\" means the same thing in both cases, and it rarely does. A raw form submission, a qualified enquiry that's actually a fit for the business, and a booked, showed-up customer are three very different numbers — often several multiples apart from each other.",
+          'Cost per lead figures are only comparable if "a lead" means the same thing in both cases, and it rarely does. A raw form submission, a qualified enquiry that\'s actually a fit for the business, and a booked, showed-up customer are three very different numbers — often several multiples apart from each other.',
           "This is why a headline cost-per-lead figure without context can be misleading in either direction: a low number might just mean loosely qualified form-fills that go nowhere, and a higher number might reflect tightly qualified leads that convert at a much higher rate. Cost per booked customer is usually the number that actually matters to the business, even though cost per lead is the one people ask about first.",
         ],
       },
@@ -7000,7 +7063,9 @@ export const blogPosts: BlogPost[] = [
       },
       {
         heading: "What actually moves your cost per lead",
-        paragraphs: ["Whatever your starting point, a few levers tend to have the biggest effect on the number over time:"],
+        paragraphs: [
+          "Whatever your starting point, a few levers tend to have the biggest effect on the number over time:",
+        ],
         bullets: [
           "Creative quality — a scroll-stopping video or image consistently outperforms generic stock imagery",
           "Targeting and radius — a tightly defined, relevant audience wastes less spend than a broad one",
@@ -7019,7 +7084,8 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "meta-instagram-ads-for-trade-home-services",
-    title: "Meta & Instagram Ads for Trade & Home Service Businesses: A Practical Guide",
+    title:
+      "Meta & Instagram Ads for Trade & Home Service Businesses: A Practical Guide",
     description:
       "How plumbers, electricians, and builders can use Meta & Instagram ads to generate qualified local leads — without wasting spend on the wrong customers.",
     publishedAt: "2026-08-07",
@@ -7071,7 +7137,9 @@ export const blogPosts: BlogPost[] = [
       },
       {
         heading: "Common mistakes to avoid",
-        paragraphs: ["A few patterns show up again and again in underperforming trade campaigns:"],
+        paragraphs: [
+          "A few patterns show up again and again in underperforming trade campaigns:",
+        ],
         bullets: [
           "Targeting a whole city or region instead of a realistic service radius",
           "Using the same ad for emergency call-outs and planned larger jobs",
@@ -7090,7 +7158,8 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "missed-call-text-back-recovers-lost-leads",
-    title: "Missed-Call Text-Back: How It Recovers Leads You're Already Paying For",
+    title:
+      "Missed-Call Text-Back: How It Recovers Leads You're Already Paying For",
     description:
       "A missed call from a paid ad often means a lost customer. Here's how automatic missed-call text-back keeps that enquiry alive without you lifting a finger.",
     publishedAt: "2026-08-06",
@@ -7142,9 +7211,10 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "how-fast-should-you-reply-to-a-lead",
-    title: "How Fast Should You Reply to a Lead? (And What It Costs You If You Don't)",
+    title:
+      "How Fast Should You Reply to a Lead? (And What It Costs You If You Don't)",
     description:
-      "Why speed to lead matters more than most businesses realise, what counts as \"fast\" in practice, and how to close the gap without hiring a receptionist.",
+      'Why speed to lead matters more than most businesses realise, what counts as "fast" in practice, and how to close the gap without hiring a receptionist.',
     publishedAt: "2026-08-05",
     keywords: [
       "speed to lead",
@@ -7167,7 +7237,7 @@ export const blogPosts: BlogPost[] = [
         ],
       },
       {
-        heading: "What actually counts as \"fast\"",
+        heading: 'What actually counts as "fast"',
         paragraphs: [
           "There's no single magic number, but a useful way to think about it: reply while the enquiry is still front-of-mind for the person who sent it. In practice that means minutes during business hours, not the end of the day — and ideally some kind of acknowledgement outside business hours too, even if the full reply comes later.",
           "A simple test: if you enquired with your own business right now, would you be impressed with how long it took to hear back?",
@@ -7175,7 +7245,9 @@ export const blogPosts: BlogPost[] = [
       },
       {
         heading: "Why replies end up slow in the first place",
-        paragraphs: ["It's rarely a lack of care — it's usually a structural problem:"],
+        paragraphs: [
+          "It's rarely a lack of care — it's usually a structural problem:",
+        ],
         bullets: [
           "Enquiries arrive across several channels (Instagram DMs, Facebook Messenger, missed calls, a contact form) with no single place to see them all",
           "Nobody's specifically responsible for watching for new enquiries, so they sit until someone happens to check",
@@ -7185,7 +7257,9 @@ export const blogPosts: BlogPost[] = [
       },
       {
         heading: "Closing the gap",
-        paragraphs: ["A few changes make the biggest difference, roughly in order of effort:"],
+        paragraphs: [
+          "A few changes make the biggest difference, roughly in order of effort:",
+        ],
         bullets: [
           "Get every channel into one place you actually check — a unified inbox beats switching between four apps",
           "Turn on instant notifications for new enquiries rather than checking periodically",
@@ -7204,9 +7278,10 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "boosting-a-post-vs-real-ad-campaign",
-    title: "Boosting a Post vs Running a Real Ad Campaign: What's the Difference?",
+    title:
+      "Boosting a Post vs Running a Real Ad Campaign: What's the Difference?",
     description:
-      "Why the \"Boost Post\" button and a proper Meta Ads Manager campaign aren't the same tool — and which one actually generates leads for your business.",
+      'Why the "Boost Post" button and a proper Meta Ads Manager campaign aren\'t the same tool — and which one actually generates leads for your business.',
     publishedAt: "2026-08-04",
     keywords: [
       "boost post vs ads manager",
@@ -7217,7 +7292,7 @@ export const blogPosts: BlogPost[] = [
     sections: [
       {
         paragraphs: [
-          "That blue \"Boost Post\" button under your latest Instagram or Facebook post is the single biggest reason small businesses think they've \"tried Meta ads\" and it \"didn't work.\" It's not that boosting is useless — it's that it's a different tool solving a different problem, and using it to generate leads is a bit like using a bicycle to move house.",
+          'That blue "Boost Post" button under your latest Instagram or Facebook post is the single biggest reason small businesses think they\'ve "tried Meta ads" and it "didn\'t work." It\'s not that boosting is useless — it\'s that it\'s a different tool solving a different problem, and using it to generate leads is a bit like using a bicycle to move house.',
           "Here's what actually separates the two, and how to tell which one your business needs.",
         ],
       },
@@ -7230,7 +7305,9 @@ export const blogPosts: BlogPost[] = [
       },
       {
         heading: "What a real campaign gives you that boosting doesn't",
-        paragraphs: ["Building a campaign properly in Ads Manager (rather than tapping Boost) unlocks the parts that actually drive leads and sales:"],
+        paragraphs: [
+          "Building a campaign properly in Ads Manager (rather than tapping Boost) unlocks the parts that actually drive leads and sales:",
+        ],
         bullets: [
           "Objective-based optimisation — telling Meta to specifically find people likely to submit a lead form or message you, not just people likely to tap like",
           "Multiple ad sets tested against each other, so underperforming audiences or creative get cut and budget shifts to what's working",
@@ -7247,7 +7324,9 @@ export const blogPosts: BlogPost[] = [
       },
       {
         heading: "Signs it's time to move off the Boost button",
-        paragraphs: ["A few reliable signs the Boost button has stopped being enough for what you actually need:"],
+        paragraphs: [
+          "A few reliable signs the Boost button has stopped being enough for what you actually need:",
+        ],
         bullets: [
           "You're boosting posts regularly but can't point to any leads or bookings that came from it",
           "You've never seen a cost-per-lead or cost-per-result number, only reach and engagement stats",
@@ -7265,7 +7344,8 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "meta-instagram-ads-budget-guide-uk-small-business",
-    title: "How Much Should You Spend on Meta & Instagram Ads? A UK Small Business Guide",
+    title:
+      "How Much Should You Spend on Meta & Instagram Ads? A UK Small Business Guide",
     description:
       "A practical guide to setting a realistic Meta & Instagram ads budget for UK small businesses — what ad spend actually buys, and where the money should go first.",
     publishedAt: "2026-08-02",
@@ -7293,12 +7373,14 @@ export const blogPosts: BlogPost[] = [
         heading: "What's a sensible starting ad spend?",
         paragraphs: [
           "Rather than picking an arbitrary figure, work backwards from your numbers. If your average customer is worth £500 and you're comfortable paying £50 to acquire one, that's your target cost per lead — everything else follows from there.",
-          "Meta's own ad platform also performs best once an ad set has gathered enough data to exit its \"learning phase\" — in practice this means a campaign needs a consistent, sustained budget for several weeks rather than a small burst of spend followed by silence. A modest, steady budget run consistently for 4–6 weeks will almost always outperform a larger budget switched on and off unpredictably.",
+          'Meta\'s own ad platform also performs best once an ad set has gathered enough data to exit its "learning phase" — in practice this means a campaign needs a consistent, sustained budget for several weeks rather than a small burst of spend followed by silence. A modest, steady budget run consistently for 4–6 weeks will almost always outperform a larger budget switched on and off unpredictably.',
         ],
       },
       {
         heading: "Where the budget actually goes to work",
-        paragraphs: ["A few things determine whether a given budget performs well or gets wasted, regardless of how much you spend:"],
+        paragraphs: [
+          "A few things determine whether a given budget performs well or gets wasted, regardless of how much you spend:",
+        ],
         bullets: [
           "Creative quality — a scroll-stopping video or image matters more to cost-per-result than almost anything else",
           "Landing page or lead form quality — sending clicks to a slow or confusing page wastes spend that already did its job",
@@ -7337,14 +7419,16 @@ export const blogPosts: BlogPost[] = [
         heading: "Why Instagram works for car buyers",
         paragraphs: [
           "Instagram's visual, video-first format suits vehicles better than almost any other product category. A well-shot reel of a car's interior, a walkaround video, or a short clip of a test drive consistently outperforms static image ads for engagement — and engagement is what Meta's algorithm rewards with cheaper distribution.",
-          "Just as importantly, Instagram and Facebook Messenger give buyers a low-friction way to ask a quick question — \"is this still available?\", \"what's the finance option?\" — without picking up the phone. Dealerships that respond fast to these messages convert a meaningfully higher share of them into showroom visits.",
+          'Just as importantly, Instagram and Facebook Messenger give buyers a low-friction way to ask a quick question — "is this still available?", "what\'s the finance option?" — without picking up the phone. Dealerships that respond fast to these messages convert a meaningfully higher share of them into showroom visits.',
         ],
       },
       {
         heading: "What a strong automotive campaign structure looks like",
-        paragraphs: ["A campaign built for lead generation (rather than just brand awareness) typically includes:"],
+        paragraphs: [
+          "A campaign built for lead generation (rather than just brand awareness) typically includes:",
+        ],
         bullets: [
-          "Vehicle-specific ad sets for higher-margin or higher-demand stock, rather than one generic \"visit our dealership\" ad",
+          'Vehicle-specific ad sets for higher-margin or higher-demand stock, rather than one generic "visit our dealership" ad',
           "Video-first creative — walkarounds, feature highlights, and short customer-facing clips",
           "A lead form or landing page that captures interest without forcing a phone call",
           "Retargeting for anyone who engaged with a previous ad but didn't enquire",
@@ -7384,11 +7468,13 @@ export function relatedPosts(slug: string, limit = 3): BlogPost[] {
     .filter((post) => post.slug !== slug)
     .map((post) => ({
       post,
-      overlap: post.keywords.filter((k) => keywords.has(k.toLowerCase())).length,
+      overlap: post.keywords.filter((k) => keywords.has(k.toLowerCase()))
+        .length,
     }))
     .sort(
       (a, b) =>
-        b.overlap - a.overlap || b.post.publishedAt.localeCompare(a.post.publishedAt)
+        b.overlap - a.overlap ||
+        b.post.publishedAt.localeCompare(a.post.publishedAt),
     )
     .slice(0, limit)
     .map((entry) => entry.post);
