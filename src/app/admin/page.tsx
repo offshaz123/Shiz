@@ -350,6 +350,29 @@ export default async function AdminPage() {
 function SchedulerStatus({ cron }: { cron: CronHealth }) {
   const neverRun = cron.lastRunAt === null;
   const stale = cron.hoursSince !== null && cron.hoursSince >= 48;
+  // The job ran, so nothing above fires — but it refused to send anything
+  // because it could not read the inbox to see who had already replied. That
+  // is a frozen pipeline wearing a healthy scheduler's clothes.
+  const held = cron.lastDetail?.startsWith("inbox unreadable") ?? false;
+
+  if (!neverRun && !stale && held) {
+    return (
+      <div className="mt-8 rounded-2xl border border-amber-500/50 bg-amber-500/5 p-5">
+        <h2 className="text-sm font-semibold text-foreground">
+          Prospect follow-ups are being held back
+        </h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted">
+          The daily job is running, but it cannot read the inbox to check who has already
+          replied — so it is sending nothing rather than risk a follow-up landing under
+          somebody&apos;s answer. {cron.lastDetail}.
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-muted">
+          That is an IMAP problem on the mailbox: the host, the password, or the port. Audit
+          follow-ups to leads are unaffected and still going out.
+        </p>
+      </div>
+    );
+  }
 
   if (neverRun || stale) {
     return (

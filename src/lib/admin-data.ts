@@ -132,6 +132,8 @@ export type CronHealth = {
   hoursSince: number | null;
   sentLast7Days: number;
   runsLast7Days: number;
+  /** What the most recent run said it did. */
+  lastDetail: string | null;
 };
 
 interface CronRow extends RowDataPacket {
@@ -139,12 +141,14 @@ interface CronRow extends RowDataPacket {
   hours_since: number | null;
   runs: number;
   sent: number;
+  detail: string | null;
 }
 
 export async function getCronHealth(): Promise<CronHealth | null> {
   return withDb(async (db) => {
     const [[row]] = await db.query<CronRow[]>(
       `SELECT MAX(created_at) AS last_run,
+              SUBSTRING_INDEX(GROUP_CONCAT(detail ORDER BY created_at DESC SEPARATOR '|~|'), '|~|', 1) AS detail,
               TIMESTAMPDIFF(HOUR, MAX(created_at), NOW()) AS hours_since,
               SUM(created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)) AS runs,
               SUM(CASE WHEN created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) THEN sent ELSE 0 END) AS sent
@@ -159,6 +163,10 @@ export async function getCronHealth(): Promise<CronHealth | null> {
         : Number(row.hours_since),
       runsLast7Days: Number(row?.runs ?? 0),
       sentLast7Days: Number(row?.sent ?? 0),
+      // What the last run said about itself. "nobody was due" is the normal
+      // case; the one worth showing is a run that held follow-ups back
+      // because it could not read the inbox.
+      lastDetail: row?.detail ? String(row.detail) : null,
     };
   });
 }

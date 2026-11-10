@@ -59,9 +59,17 @@ const STATUS_STYLE: Record<ProspectStatus, string> = {
   customer: "border-emerald-500/50 bg-emerald-500/20 text-emerald-400",
 };
 
+/**
+ * The status filter.
+ *
+ * "Any status" rather than "Everyone", because the tabs above already have an
+ * Everyone, and two buttons on one screen carrying the same word for
+ * different things is how somebody new ends up looking at the wrong list and
+ * ringing a customer.
+ */
 const FILTERS = [
-  { value: "to-call", label: "To call" },
-  { value: "all", label: "Everyone" },
+  { value: "to-call", label: "Not answered yet" },
+  { value: "all", label: "Any status" },
   { value: "interested", label: "Interested" },
   { value: "not-interested", label: "Not interested" },
   { value: "customer", label: "Customers" },
@@ -674,21 +682,24 @@ export function ProspectFinder() {
             <option value={4.5}>4.5+</option>
           </select>
         </div>
-        <div className="flex flex-wrap gap-1.5">
-          {FILTERS.map((f) => (
-            <button
-              key={f.value}
-              type="button"
-              onClick={() => setStatus(f.value)}
-              className={`rounded-lg border px-3 py-2 text-xs font-semibold ${
-                status === f.value
-                  ? "border-brand-pink text-foreground"
-                  : "border-border text-muted hover:text-foreground"
-              }`}
-            >
-              {f.label}
-            </button>
-          ))}
+        <div>
+          <span className="mb-1.5 block text-xs text-muted">Status</span>
+          <div className="flex flex-wrap gap-1.5">
+            {FILTERS.map((f) => (
+              <button
+                key={f.value}
+                type="button"
+                onClick={() => setStatus(f.value)}
+                className={`rounded-lg border px-3 py-2 text-xs font-semibold ${
+                  status === f.value
+                    ? "border-brand-pink text-foreground"
+                    : "border-border text-muted hover:text-foreground"
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
         </div>
         <div>
           <label htmlFor="f-town" className="mb-1.5 block text-xs text-muted">

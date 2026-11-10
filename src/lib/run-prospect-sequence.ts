@@ -43,6 +43,10 @@ export type SequenceSummary = {
   considered: number;
   /** False when the inbox could not be read, which is why nothing was sent. */
   repliesChecked: boolean;
+  /** Live sequences left untouched because the inbox could not be read. The
+   *  number matters: one is a quiet day, thirty is a stalled pipeline that
+   *  nobody has noticed. */
+  held: number;
 };
 
 /**
@@ -84,6 +88,7 @@ export async function runProspectSequence(): Promise<SequenceSummary> {
     replied: 0,
     considered: 0,
     repliesChecked: true,
+    held: 0,
   };
 
   const replies = await stopAnyoneWhoReplied();
@@ -93,7 +98,14 @@ export async function runProspectSequence(): Promise<SequenceSummary> {
   // Not knowing whether anyone has replied is a reason to send nothing at
   // all. A day's delay on a follow-up costs very little; a follow-up landing
   // under a reply costs the conversation.
-  if (!replies.checked) return summary;
+  if (!replies.checked) {
+    // Say how much is waiting on it. A held sequence that reports nothing is
+    // indistinguishable from a quiet week, which is how a dead scheduler
+    // went unnoticed here once already.
+    const waiting = await listSequenceDue(MAX_PER_RUN);
+    summary.held = waiting?.length ?? 0;
+    return summary;
+  }
 
   const due = await listSequenceDue(MAX_PER_RUN);
   if (!due) return summary;

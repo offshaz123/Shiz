@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { RowDataPacket } from "mysql2";
 import { withDb } from "@/lib/db";
 import { sendFollowUp } from "@/lib/send-follow-up";
-import { runProspectSequence } from "@/lib/run-prospect-sequence";
+import { runProspectSequence, type SequenceSummary } from "@/lib/run-prospect-sequence";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -174,7 +174,7 @@ async function run(request: Request) {
     return null;
   });
 
-  await recordRun(due.length, summary, prospects?.sent ?? 0);
+  await recordRun(due.length, summary, prospects);
 
   return NextResponse.json({ ok: true, ...summary, prospects });
 }
@@ -193,23 +193,28 @@ async function run(request: Request) {
 async function recordRun(
   considered: number,
   summary: Record<string, number>,
-  prospectsSent: number,
+  prospects: SequenceSummary | null,
 ) {
+  const sent = summary.sent + (prospects?.sent ?? 0);
+
+  // What this run actually did, in the words the admin page will repeat. The
+  // held case is the one that matters: the sequence stops itself when it
+  // cannot read the inbox, and saying "nobody was due" for that would be a
+  // scheduler reporting health while the pipeline is frozen.
+  let detail: string | null = null;
+  if (prospects && !prospects.repliesChecked) {
+    detail = `inbox unreadable — ${prospects.held} prospect follow-up(s) held`;
+  } else if (prospects && prospects.sent > 0) {
+    detail = `${prospects.sent} prospect follow-up(s)`;
+  } else if (considered === 0 && sent === 0) {
+    detail = "nobody was due";
+  }
+
   await withDb(async (db) => {
     await db.execute(
       `INSERT INTO cron_runs (job, sent, failed, skipped, considered, detail)
        VALUES ('follow-ups', ?, ?, ?, ?, ?)`,
-      [
-        summary.sent + prospectsSent,
-        summary.failed,
-        summary.skipped,
-        considered,
-        considered === 0 && prospectsSent === 0
-          ? "nobody was due"
-          : prospectsSent > 0
-            ? `${prospectsSent} prospect follow-up(s)`
-            : null,
-      ],
+      [sent, summary.failed, summary.skipped, considered, detail],
     );
   }).catch(() => null);
 }
