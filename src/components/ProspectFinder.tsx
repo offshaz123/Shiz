@@ -363,13 +363,17 @@ export function ProspectFinder() {
       if (!res.ok) {
         setError(ERRORS[data?.error] ?? "That search didn't work.");
       } else {
-        // A fresh search shows everything it found, whatever filter was set.
+        // A fresh search shows what it found under whatever status, but it
+        // stays on the people still to approach. Dropping back to "everyone"
+        // put businesses already emailed back in among the new ones, which
+        // is the one thing this page is meant to keep apart.
         setStatus("all");
-        setContact("all");
+        setContact("not-contacted");
         // A search that just ran in Barking should not come back filtered to
         // Romford because that is where you were working an hour ago.
         setTownFilter("");
         setProspects(data.prospects as Prospect[]);
+        if (data.counts) setCounts(data.counts as { notContacted: number; contacted: number });
         setSearchNote(searchOutcome(text, Number(data.found), Number(data.dropped), maxReviews));
         if (!data.saved) setError(ERRORS.no_database);
       }
@@ -1013,6 +1017,14 @@ function Row({
             ) : null}
             {copied && <span className="font-semibold text-brand-pink">{copied}</span>}
           </>
+        )}
+        {/* How this one came to be on the contacted list: an email, a status
+            set by hand, or both. Without it the Contacted tab says that
+            something happened but never what. */}
+        {p.calledAt && p.status !== "new" && (
+          <span className="font-semibold text-foreground" title={p.calledAt}>
+            {STATUS_LABEL[p.status]} · {p.calledAt.slice(0, 10)}
+          </span>
         )}
         {p.category && <span>{p.category}</span>}
         {p.address && <span className="truncate">{p.address}</span>}

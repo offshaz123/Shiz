@@ -111,13 +111,27 @@ export async function POST(request: Request) {
   const town = typeof body?.town === "string" ? body.town.trim().slice(0, 80) : "";
   await saveProspects(result.businesses, query, industry, town);
 
-  const prospects = await listProspects({ maxReviews, status: "all", industry });
+  // A search answers "who else could I approach", so it comes back with the
+  // people still to approach — not with everyone already emailed mixed back
+  // in. The counts come with it so the tabs are right immediately rather
+  // than after a second request.
+  const searchFilters = {
+    maxReviews,
+    status: "all" as const,
+    industry,
+    contact: "not-contacted" as const,
+  };
+  const [prospects, counts] = await Promise.all([
+    listProspects(searchFilters),
+    countByContact(searchFilters),
+  ]);
 
   return NextResponse.json({
     found: result.found,
     dropped: result.dropped,
     matched: result.businesses.length,
     prospects: prospects ?? [],
+    counts,
     saved: prospects !== null,
   });
 }
