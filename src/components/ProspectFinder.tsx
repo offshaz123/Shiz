@@ -5,6 +5,7 @@ import { STATUSES, type Prospect, type ProspectStatus } from "@/lib/prospect-typ
 import { industries } from "@/content/industries";
 import { areaGroups } from "@/content/areas";
 import { siteConfig } from "@/lib/site-config";
+import { outreachLine, servicesLine } from "@/lib/outreach-lines";
 
 /**
  * The call list.
@@ -115,35 +116,54 @@ const SIGNATURE: string[] = [
 /**
  * The draft that gets sent to a prospect: subject, body, and his signature.
  *
- * Deliberately a draft and never a send button. This is one person writing to
- * one business about their own website, which he reads before it goes — not a
- * campaign fired from a server. It is also the honest side of the line under
- * PECR, where a sole trader is an individual subscriber and cold bulk email
- * to one needs consent that we do not have.
+ * Written as a person writes, not as the report reads. The findings go
+ * through outreachLine, which turns the audit's shorthand into a sentence the
+ * owner of a nail salon can read without knowing what a meta description is,
+ * and what we actually do is said out loud rather than left to be guessed at
+ * from a link.
+ *
+ * Deliberately a draft and never a send-without-looking. This is one person
+ * writing to one business about their own website, which he reads before it
+ * goes — not a campaign fired from a server.
  */
 function buildDraft(p: Prospect): { subject: string; body: string } {
-  const first = p.findings[0];
   const lines = [
     `Hi,`,
     ``,
-    `I run a marketing agency in London and I had a look at your website this morning.`,
+    `I run a marketing agency in London and I had a look at the ${p.name} website.`,
     ``,
     ...(p.findings.length
       ? [
-          `A couple of things stood out:`,
+          p.findings.length === 1 ? `One thing stood out:` : `A few things stood out:`,
           ``,
-          ...p.findings.map((f) => `- ${f.label}${f.why ? `: ${f.why}` : ""}`),
-          ``,
+          ...p.findings.flatMap((f) => [`- ${outreachLine(f)}`, ``]),
         ]
       : []),
-    `Happy to send over the full report, it is free and there is no obligation.`,
+    `Fixing that sort of thing is part of what we do. The rest of it is ${servicesLine()} — so whether the problem is that not enough people are finding you or that the ones who do are not getting in touch, it is the same conversation.`,
+    ``,
+    `Happy to send over the full report on your site. It is free, there is no obligation, and it is yours to act on with or without us.`,
+    ``,
+    // Said plainly because it is the objection, and because an offer to be
+    // compared is worth more than a claim to be better: one can be checked
+    // in a minute, the other is what every email of this kind says.
+    `If you are already working with someone, that is fine and I am not trying to talk you out of it. Tell me what you are paying and I will tell you straight whether we would beat it. Our prices are on the website either way.`,
+    ``,
+    // The owner saying he will take the call himself is the one thing in
+    // here an agency with a sales floor cannot say back.
+    `Reply here or give me a ring on ${siteConfig.phoneDisplay}. If it is easier to go through it properly, I do these calls myself — I am Walid Shah, I own the business — and we can sit on a Google Meet for twenty minutes and go through what is worth doing for you.`,
+    ...(siteConfig.demoBookingUrl ? [``, `You can pick a time straight out of my diary here: ${siteConfig.demoBookingUrl}`] : []),
     ``,
     `If you would rather I did not email you again, just reply and say so.`,
     ``,
     ...SIGNATURE,
   ];
   return {
-    subject: first ? `${p.name} - ${first.label.toLowerCase()}` : `${p.name} - your website`,
+    // Written to them, not to us. The old subject was the internal shorthand
+    // off the call list — "Melody Nail Spa - meta description" — which reads
+    // like a support ticket landing in a stranger's inbox.
+    subject: p.findings.length
+      ? `${p.name} — a couple of things on your website`
+      : `${p.name} — your website`,
     body: lines.join("\n"),
   };
 }
