@@ -33,7 +33,7 @@ export const siteConfig = {
   social: {
     instagram: "https://www.instagram.com/shaz.marketing/",
     facebook: "",
-    linkedin: "",
+    linkedin: "https://www.linkedin.com/company/shaz-marketing-group/",
     x: "",
     youtube: "",
     tiktok: "",
