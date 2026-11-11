@@ -173,6 +173,12 @@ function searchOutcome(query: string, found: number, dropped: number, cap: numbe
   return `Found ${found} for "${query}", all kept.`;
 }
 
+export type Speed = {
+  score: number;
+  fromRealUsers: boolean;
+  metrics: { label: string; value: string; rating: string; why: string }[];
+};
+
 export type SentEmail = {
   subject: string;
   body: string;
@@ -1038,6 +1044,8 @@ function Row({
   const [history, setHistory] = useState<SentEmail[] | null>(null);
   const [openEmail, setOpenEmail] = useState<number | null>(null);
   const [typingEmail, setTypingEmail] = useState<string | null>(null);
+  const [speed, setSpeed] = useState<Speed | null>(null);
+  const [speedState, setSpeedState] = useState<"idle" | "running" | "failed">("idle");
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState("");
   const [sendError, setSendError] = useState("");
@@ -1068,6 +1076,31 @@ function Row({
       setHistory(data?.sent ?? []);
     } catch {
       setHistory([]);
+    }
+  }
+
+  /**
+   * Google's own speed measurement for this business's site.
+   *
+   * On a button rather than part of the scan: a call is a real browser
+   * loading the page somewhere, which takes the better part of half a
+   * minute. Worth it for one business you are about to ring, hopeless
+   * across a list of forty.
+   */
+  async function checkSpeed() {
+    if (!p.website || speedState === "running") return;
+    setSpeedState("running");
+    try {
+      const res = await fetch(`/api/admin/pagespeed?url=${encodeURIComponent(p.website)}`);
+      const data = await res.json();
+      if (!res.ok) {
+        setSpeedState("failed");
+        return;
+      }
+      setSpeed(data as Speed);
+      setSpeedState("idle");
+    } catch {
+      setSpeedState("failed");
     }
   }
 
@@ -1471,6 +1504,61 @@ function Row({
               }
             />
           </div>
+
+          {p.website && (
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-bold uppercase tracking-wide text-muted">
+                  How fast their site really is
+                </span>
+                <button
+                  type="button"
+                  onClick={checkSpeed}
+                  disabled={speedState === "running"}
+                  className="rounded-lg border border-border px-2.5 py-1 font-semibold hover:border-brand-pink hover:text-foreground disabled:opacity-50"
+                >
+                  {speedState === "running" ? "Measuring… (30s)" : speed ? "Measure again" : "Measure"}
+                </button>
+                {speed && (
+                  <span className={`font-bold ${tone(speed.score / 10)}`}>
+                    {speed.score}/100 on a phone
+                  </span>
+                )}
+                {speedState === "failed" && <span className="text-red-500">couldn&apos;t measure</span>}
+              </div>
+              {speed && (
+                <>
+                  <ul className="mt-1.5 flex flex-col gap-1">
+                    {speed.metrics.map((m) => (
+                      <li key={m.label} className="leading-relaxed text-muted">
+                        <span className="font-semibold text-foreground">{m.label}:</span> {m.value}{" "}
+                        <span
+                          className={
+                            m.rating === "good"
+                              ? "font-semibold text-emerald-500"
+                              : m.rating === "average"
+                                ? "font-semibold text-amber-500"
+                                : m.rating === "poor"
+                                  ? "font-semibold text-red-500"
+                                  : "text-muted"
+                          }
+                        >
+                          {m.rating === "unknown" ? "" : m.rating}
+                        </span>
+                        <br />
+                        {m.why}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-1.5 text-muted">
+                    {speed.fromRealUsers
+                      ? "These are real visitors on their site over the last month, not a test — which is why it is worth saying out loud on a call."
+                      : "Measured by loading the page once. Google has not got enough real visitors on that site to report what people actually experience."}
+                  </p>
+                </>
+              )}
+            </div>
+          )}
 
           <div>
             <div className="font-bold uppercase tracking-wide text-muted">
