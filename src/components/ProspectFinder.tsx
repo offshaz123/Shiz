@@ -233,7 +233,10 @@ export function ProspectFinder() {
   const [industry, setIndustry] = useState("");
   const [maxReviews, setMaxReviews] = useState(50);
   const [minRating, setMinRating] = useState(0);
-  const [status, setStatus] = useState<string>("to-call");
+  // Any status by default. The To contact / Contacted tabs already decide
+  // what you are looking at, and opening the page pre-filtered on top of
+  // that hid rows for a reason nobody had chosen.
+  const [status, setStatus] = useState<string>("all");
 
   const [prospects, setProspects] = useState<Prospect[]>([]);
   const [busy, setBusy] = useState<Record<number, Busy>>({});
