@@ -19,7 +19,7 @@ export const siteConfig = {
   // Google Analytics 4 measurement ID, from Admin -> Data streams. Looks like
   // "G-XXXXXXXXXX". Leave empty to disable. Both this and the Pixel only load
   // once a visitor has accepted cookies.
-  googleAnalyticsId: "",
+  googleAnalyticsId: "G-E2E96L33Z6",
   address: {
     line1: "Level 39",
     line2: "One Canada Square",
