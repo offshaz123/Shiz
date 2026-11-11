@@ -20,6 +20,7 @@ import { siteConfig } from "@/lib/site-config";
 
 const PAGES = [
   { href: "/admin", label: "Overview", hint: "What the machinery has done" },
+  { href: "/admin/leads", label: "Leads", hint: "People who came to us" },
   { href: "/admin/prospects", label: "Who to call", hint: "The call list" },
   { href: "/admin/company", label: "Company check", hint: "The official register" },
   { href: "/admin/scan", label: "Scan a site", hint: "Audit any website" },

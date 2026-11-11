@@ -150,7 +150,7 @@ export async function getEngineRoom(): Promise<EngineRoom | null> {
         ? `${places.today} searches today`
         : "no Places key — searching is off",
       live: places.hasKey,
-      href: "/admin/prospects",
+      href: places.hasKey ? "/admin/prospects" : "/admin/health",
     },
     {
       id: "scanner",
@@ -180,7 +180,7 @@ export async function getEngineRoom(): Promise<EngineRoom | null> {
       unit: "emails sent",
       state: n(counts.emails_today) > 0 ? `${n(counts.emails_today)} today` : "nothing sent today",
       live: true,
-      href: "/admin/health",
+      href: "/admin/prospects",
     },
     {
       id: "nudger",
@@ -194,7 +194,9 @@ export async function getEngineRoom(): Promise<EngineRoom | null> {
           ? `last run ${cron?.hoursSince ?? 0}h ago`
           : "the daily job has never run",
       live: cronRan && !held,
-      href: "/admin/health",
+      // Somewhere useful rather than somewhere clever: the call list while
+      // it is working, the system check only when it is the thing to fix.
+      href: cronRan && !held ? "/admin/prospects" : "/admin/health",
     },
     {
       id: "listener",
@@ -204,7 +206,7 @@ export async function getEngineRoom(): Promise<EngineRoom | null> {
       unit: "replies caught",
       state: held ? "can't reach the mailbox" : "checks on every run",
       live: !held,
-      href: "/admin/health",
+      href: held ? "/admin/health" : "/admin/prospects",
     },
   ];
 
@@ -258,11 +260,6 @@ export async function getEngineRoom(): Promise<EngineRoom | null> {
           : "nothing sent yet",
       },
       {
-        label: "Sequences running",
-        value: String(n(counts.sequences)),
-        note: "day 3 and day 5 go on their own",
-      },
-      {
         label: "Opted out",
         value: String(n(counts.unsubscribed)),
         note: "never contacted again",
@@ -271,11 +268,6 @@ export async function getEngineRoom(): Promise<EngineRoom | null> {
         label: "Found today",
         value: String(n(counts.found_today)),
         note: `${unscanned} still to scan`,
-      },
-      {
-        label: "Website leads",
-        value: String(n(counts.leads)),
-        note: "people who came to us",
       },
     ],
     running: cronRan && !held,

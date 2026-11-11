@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { EngineRoom as Engine, Station } from "@/lib/engine-room";
+import { EngineLive } from "./EngineLive";
 
 /**
  * The board: what the machinery is doing, as a picture.
@@ -47,13 +48,15 @@ function StationCard({ station }: { station: Station }) {
   const tone = TONE[station.id] ?? TONE.finder;
   const inner = (
     <div
-      className={`flex h-full flex-col gap-2 rounded-2xl border bg-gradient-to-b p-4 transition hover:brightness-125 ${tone.card}`}
+      className={`relative flex h-full flex-col gap-2 overflow-hidden rounded-2xl border bg-gradient-to-b p-4 transition hover:brightness-125 ${tone.card} ${
+        station.live ? "engine-sweep" : ""
+      }`}
     >
       <div className="flex items-start justify-between gap-2">
         <Bot tone={tone.bot} asleep={!station.live} />
         <span
           className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${
-            station.live ? "bg-emerald-400" : "bg-slate-500"
+            station.live ? "engine-dot bg-emerald-400" : "bg-slate-500"
           }`}
           title={station.live ? "working" : "not running"}
         />
@@ -107,19 +110,42 @@ export function EngineRoom({ engine }: { engine: Engine }) {
         </p>
       )}
 
-      <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-6">
-        {engine.stations.map((station) => (
-          <StationCard key={station.id} station={station} />
-        ))}
+      <div className="relative mt-5">
+        {/* The work moving down the line, drawn behind the cards. Six
+            stations in a row is a flow, and a flow with nothing travelling
+            along it looks like a diagram of something switched off. */}
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-6">
+          {engine.stations.map((station) => (
+            <StationCard key={station.id} station={station} />
+          ))}
+        </div>
+
+        {/* The rail the work travels along, under the row rather than
+            through it — drawn across the cards it cut straight through
+            their text, because the cards are deliberately translucent. */}
+        <svg className="mt-2 hidden h-2 w-full lg:block" aria-hidden="true">
+          <line
+            x1="4%"
+            y1="4"
+            x2="96%"
+            y2="4"
+            stroke={engine.running ? "#34d399" : "#64748b"}
+            strokeOpacity="0.5"
+            strokeWidth="2"
+            className={engine.running ? "engine-line" : ""}
+          />
+        </svg>
       </div>
 
-      <div className="mt-6 grid gap-5 lg:grid-cols-2">
+      <EngineLive running={engine.running} />
+
+      <div className="mt-5 grid gap-4 lg:grid-cols-2">
         <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
           <h3 className="text-sm font-bold text-white">Where every business gets to</h3>
           <p className="mt-0.5 text-[11px] text-slate-400">
             Each line counts businesses, not emails. Share of everything ever found.
           </p>
-          <ul className="mt-3 flex flex-col gap-2">
+          <ul className="mt-2.5 flex flex-col gap-1.5">
             {engine.funnel.map((step) => {
               const pct = step.of > 0 ? (step.value / step.of) * 100 : 0;
               return (
@@ -150,7 +176,7 @@ export function EngineRoom({ engine }: { engine: Engine }) {
             <p className="mt-6 text-xs text-slate-400">Nothing sent in the last fortnight.</p>
           ) : (
             <>
-              <div className="mt-4 flex gap-1.5">
+              <div className="mt-3 flex gap-1.5">
                 {engine.days.map((day) => (
                   <div key={day.date} className="flex flex-1 flex-col items-center gap-1">
                     {/* Each bar is sized against the busiest day, from the
@@ -158,7 +184,7 @@ export function EngineRoom({ engine }: { engine: Engine }) {
                         inside a flex item with no height of its own
                         collapses to nothing. */}
                     <div
-                      className="flex h-28 w-full flex-col justify-end"
+                      className="flex h-20 w-full flex-col justify-end"
                       title={`${day.date}: ${day.first} first, ${day.followUp} follow-up`}
                     >
                       <span
@@ -187,9 +213,9 @@ export function EngineRoom({ engine }: { engine: Engine }) {
         </div>
       </div>
 
-      <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
+      <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-5">
         {engine.tiles.map((tile) => (
-          <div key={tile.label} className="rounded-2xl border border-slate-800 bg-slate-900/40 p-3.5">
+          <div key={tile.label} className="rounded-2xl border border-slate-800 bg-slate-900/40 px-3.5 py-3">
             <div className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
               {tile.label}
             </div>
