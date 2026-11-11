@@ -499,3 +499,27 @@ export async function lookupGoogleBusiness(
   if (result.status !== "unavailable") cache.set(scannedHost, { at: Date.now(), value: result });
   return result;
 }
+
+/**
+ * What the Places allowance has been spent on, for the health page.
+ *
+ * Counted in memory, so it resets whenever the app restarts — a deploy, or
+ * Hostinger recycling the process. It is a guard against one runaway
+ * afternoon, not an accounting record, and the page says so rather than
+ * presenting it as the month's true total.
+ */
+export function placesBudget(): {
+  hasKey: boolean;
+  today: number;
+  thisMonth: number;
+  dailyBudget: number;
+  monthlyBudget: number;
+} {
+  return {
+    hasKey: Boolean(process.env.GOOGLE_PLACES_KEY),
+    today: spend.today,
+    thisMonth: spend.thisMonth,
+    dailyBudget: DAILY_BUDGET,
+    monthlyBudget: MONTHLY_BUDGET,
+  };
+}

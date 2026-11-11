@@ -115,3 +115,37 @@ export async function sendersSince(since: Date): Promise<Set<string> | null> {
     }
   });
 }
+
+/**
+ * Can we reach the mailbox at all, and is there a Sent folder to file into?
+ *
+ * For the health page. Everything else in this file swallows its errors so a
+ * mail problem cannot break a send or a cron run — which is right, and which
+ * is also why nothing anywhere said the follow-ups were frozen. This one
+ * hands the reason back so a person can read it.
+ */
+export async function checkMailbox(): Promise<{ ok: boolean; detail: string }> {
+  const host = imapHost();
+  if (!host) return { ok: false, detail: "No IMAP host, and no SMTP_HOST to derive one from." };
+
+  const c = client();
+  if (!c) return { ok: false, detail: "Mail credentials are not set on the server." };
+
+  try {
+    await c.connect();
+    const boxes = await c.list();
+    const sent = boxes.find((b) => b.specialUse === "\\Sent")?.path;
+    await c.logout().catch(() => c.close());
+    return sent
+      ? { ok: true, detail: `Connected to ${host}, filing copies in "${sent}".` }
+      : {
+          ok: false,
+          detail: `Connected to ${host}, but no Sent folder was found, so copies cannot be filed.`,
+        };
+  } catch (err) {
+    await c.logout().catch(() => c.close());
+    // The message, not the stack: it is read by a person, and it usually
+    // says exactly what is wrong — wrong password, host not found, refused.
+    return { ok: false, detail: `${host}: ${err instanceof Error ? err.message : String(err)}` };
+  }
+}
