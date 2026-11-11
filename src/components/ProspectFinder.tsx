@@ -193,14 +193,14 @@ export type SentEmail = {
  * everything, a reply beats the sequence, and the sequence beats a nudge to
  * write to them.
  */
-function nextMove(p: Prospect, emails: SentEmail[]): string {
+function nextMove(p: Prospect): string {
   if (p.unsubscribedAt) return "Leave them. They asked not to be contacted again.";
   if (p.status === "not-interested") return "Leave them. Marked not interested.";
   if (p.status === "customer") return "They are a customer. Nothing to chase here.";
   if (p.repliedAt) return "They have written back — the follow-ups have stopped. Answer them yourself.";
   if (p.status === "interested") return "Interested: ring them and get a time in the diary.";
 
-  const sent = emails.filter((e) => e.status === "sent");
+  const sent = { length: p.emailCount };
   if (!p.website) return `No website at all — which is the pitch. Ring them on ${p.phone || "the number on their listing"}.`;
   if (p.scannedAt === null) return "Scan their site first, so there is something to open with.";
   if (!p.email) return `No email published on their site. Ring them on ${p.phone || "the listing number"}.`;
@@ -737,12 +737,25 @@ export function ProspectFinder() {
 
       {/* Six words on what the colours mean, because a worker who has not
           been told will otherwise ask, or worse, guess. */}
-      <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted">
-        <span className="border-l-4 border-l-emerald-500 pl-2">emailed, waiting</span>
-        <span className="border-l-4 border-l-amber-500 pl-2">rung</span>
-        <span className="border-l-4 border-l-sky-500 pl-2">interested or replied</span>
-        <span className="border-l-4 border-l-violet-500 pl-2">customer</span>
-        <span className="border-l-4 border-l-red-500/70 pl-2">unsubscribed</span>
+      <p className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-[11px] text-muted">
+        <span className="border-l-4 border-l-emerald-500 pl-2">
+          <b className="text-foreground">Green</b> — email sent, nothing else yet
+        </span>
+        <span className="border-l-4 border-l-amber-500 pl-2">
+          <b className="text-foreground">Amber</b> — rung, no answer or called back
+        </span>
+        <span className="border-l-4 border-l-sky-500 pl-2">
+          <b className="text-foreground">Blue</b> — they replied, or marked interested
+        </span>
+        <span className="border-l-4 border-l-violet-500 pl-2">
+          <b className="text-foreground">Purple</b> — a customer
+        </span>
+        <span className="border-l-4 border-l-red-500/70 pl-2">
+          <b className="text-foreground">Red</b> — unsubscribed, do not contact
+        </span>
+        <span className="border-l-4 border-l-border pl-2">
+          <b className="text-foreground">Grey</b> — not interested
+        </span>
       </p>
 
       {searchNote && (
@@ -1242,6 +1255,19 @@ function Row({
           ))}
       </div>
 
+      {/* What to do about this business, on the row.
+          It used to live inside the profile panel, which meant the one line
+          that answers "what now" was two clicks away on every single row.
+          Nothing worth knowing should be behind a button. */}
+      <p className="mt-2 text-xs font-semibold leading-relaxed text-foreground">
+        {nextMove(p)}
+        {p.emailCount > 0 && (
+          <span className="ml-2 font-normal text-muted">
+            {p.emailCount} email{p.emailCount === 1 ? "" : "s"} sent
+          </span>
+        )}
+      </p>
+
       {/* What the scanner found, which is the reason to ring them. Shown
           before the status buttons because it is what you read out loud. */}
       {p.findings.length > 0 && (
@@ -1340,7 +1366,7 @@ function Row({
           onClick={openProfile}
           className="ml-auto text-[11px] font-semibold text-muted hover:text-foreground"
         >
-          {profile ? "Close profile" : "Profile"}
+          {profile ? "Close emails" : "Read the emails"}
         </button>
         <button
           type="button"
@@ -1359,7 +1385,7 @@ function Row({
           <div>
             <div className="font-bold uppercase tracking-wide text-muted">Next move</div>
             <p className="mt-1 text-xs font-semibold leading-relaxed text-foreground">
-              {nextMove(p, history ?? [])}
+              {nextMove(p)}
             </p>
           </div>
 

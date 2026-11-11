@@ -63,6 +63,10 @@ export type Prospect = {
    *  server. Empty when there is no CRON_SECRET to sign with, in which case
    *  no email links to a page that could not work. */
   unsubscribeUrl: string;
+  /** How many emails have actually gone to them. On the row, because
+   *  "have we written to this business, and how often" is the first thing
+   *  anybody wants to know and the last thing worth hiding. */
+  emailCount: number;
   foundFor: string;
   /** Which of the site's industries this was found under. */
   industry: string;

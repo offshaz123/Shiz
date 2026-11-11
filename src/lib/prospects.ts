@@ -44,6 +44,7 @@ interface ProspectRow extends RowDataPacket {
   notes: string | null;
   called_at: string | null;
   emailed_at: string | null;
+  email_count?: number | null;
   sequence_started_at: string | null;
   sequence_stopped_at: string | null;
   sequence_stop_reason: string | null;
@@ -104,6 +105,7 @@ function toProspect(row: ProspectRow): Prospect {
     repliedAt: row.replied_at ? String(row.replied_at) : null,
     unsubscribedAt: row.unsubscribed_at ? String(row.unsubscribed_at) : null,
     unsubscribeUrl: prospectUnsubscribeUrl(row.id),
+    emailCount: Number(row.email_count ?? 0),
     foundFor: row.found_for ?? "",
     industry: row.industry ?? "",
     town: row.town ?? "",
@@ -264,7 +266,10 @@ export async function listProspects(filters: ProspectFilters = {}): Promise<Pros
 
   return withDb(async (db) => {
     const [rows] = await db.query<ProspectRow[]>(
-      `SELECT * FROM prospects
+      `SELECT p.*,
+              (SELECT COUNT(*) FROM prospect_emails e
+                WHERE e.prospect_id = p.id AND e.status = 'sent') AS email_count
+         FROM prospects p
        ${where.length ? `WHERE ${where.join(" AND ")}` : ""}
        ORDER BY ${
          sort === "worst-site"

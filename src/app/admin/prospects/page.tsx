@@ -32,6 +32,12 @@ export default async function AdminProspectsPage() {
         </div>
         <div className="flex items-center gap-2">
           <Link
+            href="/admin/company"
+            className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
+          >
+            Company check
+          </Link>
+          <Link
             href="/admin/health"
             className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
           >
