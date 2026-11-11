@@ -745,10 +745,14 @@ export async function logCall(
       ],
     );
 
+    // Anything where a human was on the other end counts as called, which
+    // includes getting the gatekeeper — you rang, you just did not get the
+    // person. A wrong number says nothing about the business, so it leaves
+    // the status alone.
     const status =
       call.outcome === "not-interested"
         ? "not-interested"
-        : call.outcome === "spoke"
+        : call.outcome === "spoke" || call.outcome === "call-back" || call.outcome === "gatekeeper"
           ? "called"
           : call.outcome === "no-answer" || call.outcome === "voicemail"
             ? "no-answer"
@@ -797,5 +801,30 @@ export async function listProspectCalls(id: number): Promise<ProspectCall[] | nu
       caller: r.caller ?? "",
       calledAt: String(r.called_at),
     }));
+  });
+}
+
+/** Specific prospects, built exactly the way the call list builds them, so a
+ *  row shown anywhere else is the same row rather than a thinner copy. */
+export async function listProspectsByIds(ids: number[]): Promise<Prospect[] | null> {
+  if (ids.length === 0) return [];
+  const clean = ids.filter((id) => Number.isInteger(id) && id > 0).slice(0, 100);
+  if (clean.length === 0) return [];
+
+  return withDb(async (db) => {
+    const [rows] = await db.query<ProspectRow[]>(
+      `SELECT p.*,
+              (SELECT COUNT(*) FROM prospect_emails e
+                WHERE e.prospect_id = p.id AND e.status = 'sent') AS email_count,
+              (SELECT c.outcome FROM prospect_calls c
+                WHERE c.prospect_id = p.id ORDER BY c.called_at DESC LIMIT 1) AS last_call_outcome,
+              (SELECT DATE_FORMAT(c.called_at, '%Y-%m-%d') FROM prospect_calls c
+                WHERE c.prospect_id = p.id ORDER BY c.called_at DESC LIMIT 1) AS last_call_at
+         FROM prospects p
+        WHERE p.id IN (${clean.map(() => "?").join(",")})
+        ORDER BY FIELD(p.id, ${clean.map(() => "?").join(",")})`,
+      [...clean, ...clean],
+    );
+    return rows.map(toProspect);
   });
 }
