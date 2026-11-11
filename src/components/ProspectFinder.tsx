@@ -1162,7 +1162,24 @@ function Row({
         {p.address && <span className="truncate">{p.address}</span>}
         {p.website &&
           (p.siteScore !== null ? (
-            <span className={`font-bold ${tone(p.siteScore)}`}>site {p.siteScore.toFixed(1)}</span>
+            <>
+              <span className={`font-bold ${tone(p.siteScore)}`}>site {p.siteScore.toFixed(1)}</span>
+              {/* A scored row had no way to be scanned again, because the
+                  button it would have used was replaced by the score. Fine
+                  until the scanner improves — and then every row already in
+                  the list is stuck with whatever the old one found, which is
+                  how two businesses sat here with a score and no address. */}
+              <button
+                type="button"
+                onClick={() => onScan(p)}
+                disabled={busy?.scanning}
+                className="rounded-lg border border-border px-2.5 py-1 font-semibold hover:border-brand-pink hover:text-foreground disabled:opacity-50"
+                title="Scan the site again — score, findings and email address"
+              >
+                {busy?.scanning ? "Scanning…" : "Rescan"}
+              </button>
+              {busy?.scanError && <span>{busy.scanError}</span>}
+            </>
           ) : busy?.scanError ? (
             <span>site {busy.scanError}</span>
           ) : (
