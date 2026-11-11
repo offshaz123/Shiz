@@ -1,6 +1,21 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // Start a new build worker only every fifty pages.
+    //
+    // The build died on the host with SIGABRT partway through generating
+    // 165 static pages across 55 workers. Fifty-five copies of Node on
+    // shared hosting is not a build, it is a fork bomb with a progress
+    // bar. Next sizes the pool from the CPUs it can see, so the number
+    // crept up as the blog grew and as the host reported more cores —
+    // which is why the same code built on Monday and not on Wednesday.
+    //
+    // Three or four workers build this site in about the same wall-clock
+    // time, because the limit here was never CPU.
+    staticGenerationMinPagesPerWorker: 50,
+  },
+
   async headers() {
     return [
       {
