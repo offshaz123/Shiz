@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { isAdmin } from "@/lib/admin-auth";
 import { getEngineRoom } from "@/lib/engine-room";
 import { EngineRoom } from "@/components/EngineRoom";
@@ -7,7 +6,7 @@ import { isDbConfigured } from "@/lib/db";
 import { getLeads, getStats, getCronHealth, type AdminLead, type CronHealth } from "@/lib/admin-data";
 import { getAllReviews, type Review } from "@/lib/reviews";
 import { LoginForm } from "./LoginForm";
-import { logout, moderateReview, removeReview, saveNote, sendStepNow, setContacted } from "./actions";
+import { moderateReview, removeReview, saveNote, sendStepNow, setContacted } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -242,40 +241,6 @@ export default async function AdminPage() {
     <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-bold tracking-tight text-foreground">Leads</h1>
-        <div className="flex items-center gap-2">
-          <Link
-            href="/admin/prospects"
-            className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
-          >
-            Who to call
-          </Link>
-          <Link
-            href="/admin/scan"
-            className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
-          >
-            Scan a site
-          </Link>
-          <Link
-            href="/admin/company"
-            className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
-          >
-            Company check
-          </Link>
-          <Link
-            href="/admin/health"
-            className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
-          >
-            System check
-          </Link>
-          <form action={logout}>
-            <button
-              type="submit"
-              className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
-            >
-              Log out
-            </button>
-          </form>
-        </div>
       </div>
 
       {!stats || !leads ? (

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { isAdmin } from "@/lib/admin-auth";
 import { LoginForm } from "../LoginForm";
 import { AdminScanner } from "@/components/AdminScanner";
@@ -30,12 +29,6 @@ export default async function AdminScanPage() {
             Safe to show a customer — nothing of ours is on this page.
           </p>
         </div>
-        <Link
-          href="/admin"
-          className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
-        >
-          Back to leads
-        </Link>
       </div>
 
       <div className="mt-8">

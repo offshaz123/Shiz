@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { isAdmin } from "@/lib/admin-auth";
 import { LoginForm } from "../LoginForm";
 import { CompanyLookup } from "@/components/CompanyLookup";
@@ -24,12 +23,6 @@ export default async function AdminCompanyPage() {
             what you are allowed to send them.
           </p>
         </div>
-        <Link
-          href="/admin/prospects"
-          className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
-        >
-          Who to call
-        </Link>
       </div>
 
       <div className="mt-7">

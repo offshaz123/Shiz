@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { isAdmin } from "@/lib/admin-auth";
 import { LoginForm } from "../LoginForm";
 import { ProspectFinder } from "@/components/ProspectFinder";
@@ -29,32 +28,6 @@ export default async function AdminProspectsPage() {
           <p className="mt-1 text-sm text-muted">
             Keep this one to yourself — it has other businesses on it.
           </p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Link
-            href="/admin/company"
-            className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
-          >
-            Company check
-          </Link>
-          <Link
-            href="/admin/health"
-            className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
-          >
-            System check
-          </Link>
-          <Link
-            href="/admin/scan"
-            className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
-          >
-            Scan a site
-          </Link>
-          <Link
-            href="/admin"
-            className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
-          >
-            Back to leads
-          </Link>
         </div>
       </div>
 

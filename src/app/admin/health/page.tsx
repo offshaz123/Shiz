@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { isAdmin } from "@/lib/admin-auth";
 import { LoginForm } from "../LoginForm";
 import { runHealthChecks, type Check } from "@/lib/health";
@@ -64,12 +63,6 @@ export default async function AdminHealthPage() {
             Run fresh every time you open this page. Nothing here is cached.
           </p>
         </div>
-        <Link
-          href="/admin"
-          className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
-        >
-          Back to leads
-        </Link>
       </div>
 
       <p className="mt-6 text-sm font-semibold text-foreground">
