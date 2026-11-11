@@ -5,7 +5,7 @@ import { Reviews } from "@/components/Reviews";
 import { HomeHero } from "@/components/HomeHero";
 import { StatsBar } from "@/components/StatsBar";
 import { ProblemGrid } from "@/components/ProblemGrid";
-import { ServicesGrid } from "@/components/ServicesGrid";
+import { ServicesShowcase } from "@/components/ServicesShowcase";
 import { HomeScanner } from "@/components/HomeScanner";
 import { HowWeWork } from "@/components/HowWeWork";
 import { GoogleCalendarBadge } from "@/components/GoogleCalendarBadge";
@@ -62,7 +62,7 @@ export default function Home() {
           people actually reach. It used to be section six, about 4,900px
           down, which meant most visitors never saw it. */}
       <HomeScanner />
-      <ServicesGrid />
+      <ServicesShowcase />
       <HowWeWork />
       <RealResultsSection />
 

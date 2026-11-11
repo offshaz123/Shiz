@@ -362,3 +362,141 @@ body {
     animation: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Services showcase
+   ---------------------------------------------------------------------------
+   Each service gets a small working picture of itself rather than a paragraph
+   saying that it works. Everything is CSS keyframes with staggered delays,
+   replayed by remounting the panel when the tab changes, so there is no
+   animation library and nothing runs on the main thread between tabs.
+--------------------------------------------------------------------------- */
+
+@keyframes svc-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes svc-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.84);
+  }
+  65% {
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes svc-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes svc-type {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes svc-caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* The highlighted row climbing the rankings. --svc-climb is the distance. */
+@keyframes svc-climb {
+  0%,
+  18% {
+    transform: translateY(var(--svc-climb, 0));
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.svc-rise {
+  animation: svc-rise 0.5s ease-out both;
+}
+
+.svc-pop {
+  animation: svc-pop 0.45s ease-out both;
+}
+
+.svc-grow {
+  transform-origin: left;
+  animation: svc-grow 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+.svc-type {
+  overflow: hidden;
+  white-space: nowrap;
+  animation: svc-type 1.3s steps(30, end) both;
+}
+
+.svc-caret {
+  animation: svc-caret 0.9s steps(1, end) infinite;
+}
+
+.svc-climb {
+  animation: svc-climb 2.2s cubic-bezier(0.3, 0.9, 0.3, 1) both;
+}
+
+/* Fills across the dwell time, so the tab that is about to change says so
+   before it does. Duration comes from the component as an inline style. */
+.svc-dwell {
+  transform-origin: left;
+  animation: svc-grow linear both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svc-rise,
+  .svc-pop,
+  .svc-grow,
+  .svc-type,
+  .svc-caret,
+  .svc-climb,
+  .svc-dwell {
+    animation: none;
+  }
+
+  .svc-type {
+    width: auto;
+  }
+
+  .svc-dwell {
+    transform: scaleX(1);
+  }
+}
+
+/* A row that scrolls sideways on a phone without a scrollbar sitting under it. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
