@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { STATUSES, type Prospect, type ProspectStatus } from "@/lib/prospect-types";
+import {
+  CALL_LABEL,
+  CALL_OUTCOMES,
+  STATUSES,
+  type CallOutcome,
+  type Prospect,
+  type ProspectStatus,
+} from "@/lib/prospect-types";
 import { industries } from "@/content/industries";
 import { areaGroups, cities } from "@/content/areas";
 import { siteConfig } from "@/lib/site-config";
@@ -201,6 +208,11 @@ export type SentEmail = {
  */
 function nextMove(p: Prospect): string {
   if (p.unsubscribedAt) return "Leave them. They asked not to be contacted again.";
+  if (p.callbackAt) {
+    const due = p.callbackAt.slice(0, 10);
+    const today = new Date().toISOString().slice(0, 10);
+    if (due <= today) return `You said you would ring them back on ${due}. Ring them.`;
+  }
   if (p.status === "not-interested") return "Leave them. Marked not interested.";
   if (p.status === "customer") return "They are a customer. Nothing to chase here.";
   if (p.repliedAt) return "They have written back — the follow-ups have stopped. Answer them yourself.";
@@ -964,6 +976,7 @@ export function ProspectFinder() {
               onSave={save}
               onScan={scan}
               onContacted={markContacted}
+              onLogged={load}
             />
           ))}
         </Section>
@@ -982,6 +995,7 @@ export function ProspectFinder() {
               onSave={save}
               onScan={scan}
               onContacted={markContacted}
+              onLogged={load}
             />
           ))}
         </Section>
@@ -1026,12 +1040,14 @@ function Row({
   onSave,
   onScan,
   onContacted,
+  onLogged,
 }: {
   p: Prospect;
   busy?: Busy;
   onSave: (id: number, changes: { status?: ProspectStatus; notes?: string; email?: string }) => void;
   onScan: (p: Prospect) => void;
   onContacted: (id: number, name: string) => void;
+  onLogged: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const [notes, setNotes] = useState(p.notes);
@@ -1042,8 +1058,18 @@ function Row({
   const [seq, setSeq] = useState<"unchanged" | "started" | "stopped">("unchanged");
   const [profile, setProfile] = useState(false);
   const [history, setHistory] = useState<SentEmail[] | null>(null);
+  const [calls, setCalls] = useState<
+    { outcome: CallOutcome; notes: string; minutes: number | null; caller: string; calledAt: string }[]
+  | null>(null);
   const [openEmail, setOpenEmail] = useState<number | null>(null);
   const [typingEmail, setTypingEmail] = useState<string | null>(null);
+  const [callForm, setCallForm] = useState<{
+    outcome: CallOutcome;
+    notes: string;
+    minutes: string;
+    callbackAt: string;
+  } | null>(null);
+  const [loggingCall, setLoggingCall] = useState(false);
   const [speed, setSpeed] = useState<Speed | null>(null);
   const [speedState, setSpeedState] = useState<"idle" | "running" | "failed">("idle");
   const [sending, setSending] = useState(false);
@@ -1071,11 +1097,15 @@ function Row({
     setProfile(next);
     if (!next || history) return;
     try {
-      const res = await fetch(`/api/admin/prospects/email?id=${p.id}`);
-      const data = (await res.json().catch(() => null)) as { sent?: SentEmail[] } | null;
-      setHistory(data?.sent ?? []);
+      const [emails, phoned] = await Promise.all([
+        fetch(`/api/admin/prospects/email?id=${p.id}`).then((r) => r.json()).catch(() => null),
+        fetch(`/api/admin/prospects/call?id=${p.id}`).then((r) => r.json()).catch(() => null),
+      ]);
+      setHistory(emails?.sent ?? []);
+      setCalls(phoned?.calls ?? []);
     } catch {
       setHistory([]);
+      setCalls([]);
     }
   }
 
@@ -1101,6 +1131,28 @@ function Row({
       setSpeedState("idle");
     } catch {
       setSpeedState("failed");
+    }
+  }
+
+  /** Writes the call down and moves the row on, so nobody rings them again
+   *  tomorrow not knowing. */
+  async function saveCall() {
+    if (!callForm || loggingCall) return;
+    setLoggingCall(true);
+    try {
+      const res = await fetch("/api/admin/prospects/call", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: p.id, ...callForm, minutes: Number(callForm.minutes) || 0 }),
+      });
+      if (res.ok) {
+        setCallForm(null);
+        onLogged();
+      }
+    } catch {
+      // Left open with what was typed still in it, so nothing is lost.
+    } finally {
+      setLoggingCall(false);
     }
   }
 
@@ -1302,6 +1354,42 @@ function Row({
         {/* How this one came to be on the contacted list: an email, a status
             set by hand, or both. Without it the Contacted tab says that
             something happened but never what. */}
+        <button
+          type="button"
+          onClick={() =>
+            setCallForm(
+              callForm
+                ? null
+                : { outcome: "spoke", notes: "", minutes: "", callbackAt: "" },
+            )
+          }
+          className="rounded-lg border border-border px-2.5 py-1 font-semibold hover:border-brand-pink hover:text-foreground"
+          title="Write down what happened on the phone"
+        >
+          {callForm ? "Close" : "Log a call"}
+        </button>
+        {/* What happened last time, before you dial. The single most useful
+            thing to know and it used to be buried in a notes box that the
+            next call overwrote. */}
+        {p.lastCall && (
+          <span title={`Last call ${p.lastCall.at}`}>
+            last call {p.lastCall.at.slice(5)} ·{" "}
+            <span className="font-semibold text-foreground">
+              {CALL_LABEL[p.lastCall.outcome as CallOutcome] ?? p.lastCall.outcome}
+            </span>
+          </span>
+        )}
+        {p.callbackAt && (
+          <span
+            className={`font-bold ${
+              p.callbackAt.slice(0, 10) <= new Date().toISOString().slice(0, 10)
+                ? "text-brand-pink"
+                : "text-foreground"
+            }`}
+          >
+            ring back {p.callbackAt.slice(0, 10)}
+          </span>
+        )}
         {p.calledAt && p.status !== "new" && (
           <span className="font-semibold text-foreground" title={p.calledAt}>
             {STATUS_LABEL[p.status]} · {p.calledAt.slice(0, 10)}
@@ -1342,6 +1430,68 @@ function Row({
             </button>
           ))}
       </div>
+
+      {callForm && (
+        <div className="mt-3 flex flex-col gap-2 rounded-xl border border-border bg-background px-3 py-3">
+          <div className="flex flex-wrap gap-1.5">
+            {CALL_OUTCOMES.map((outcome) => (
+              <button
+                key={outcome}
+                type="button"
+                onClick={() => setCallForm({ ...callForm, outcome })}
+                className={`rounded-lg border px-2.5 py-1 text-[11px] font-semibold ${
+                  callForm.outcome === outcome
+                    ? "border-brand-pink text-foreground"
+                    : "border-border text-muted hover:text-foreground"
+                }`}
+              >
+                {CALL_LABEL[outcome]}
+              </button>
+            ))}
+          </div>
+
+          <textarea
+            value={callForm.notes}
+            onChange={(e) => setCallForm({ ...callForm, notes: e.target.value })}
+            rows={2}
+            placeholder="What they said. Who you spoke to. Anything the next person needs."
+            className="rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-brand-pink"
+          />
+
+          <div className="flex flex-wrap items-end gap-3 text-[11px]">
+            <label className="flex flex-col gap-1">
+              <span className="text-muted">Ring back on</span>
+              <input
+                type="date"
+                value={callForm.callbackAt}
+                onChange={(e) => setCallForm({ ...callForm, callbackAt: e.target.value })}
+                className="rounded-lg border border-border bg-surface px-2.5 py-1.5 text-foreground outline-none focus:border-brand-pink"
+              />
+            </label>
+            <label className="flex flex-col gap-1">
+              <span className="text-muted">Minutes</span>
+              <input
+                value={callForm.minutes}
+                onChange={(e) => setCallForm({ ...callForm, minutes: e.target.value })}
+                placeholder="5"
+                className="w-16 rounded-lg border border-border bg-surface px-2.5 py-1.5 text-foreground outline-none focus:border-brand-pink"
+              />
+            </label>
+            <button
+              type="button"
+              onClick={saveCall}
+              disabled={loggingCall}
+              className="rounded-lg bg-brand-pink px-3 py-1.5 font-bold text-white disabled:opacity-50"
+            >
+              {loggingCall ? "Saving…" : "Save the call"}
+            </button>
+            <span className="text-muted">
+              Saving also sets the status and stamps the date, so nobody rings them again tomorrow
+              not knowing.
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* What to do about this business, on the row.
           It used to live inside the profile panel, which meant the one line
@@ -1557,6 +1707,31 @@ function Row({
                   </p>
                 </>
               )}
+            </div>
+          )}
+
+          {calls && calls.length > 0 && (
+            <div>
+              <div className="font-bold uppercase tracking-wide text-muted">
+                Calls ({calls.length})
+              </div>
+              <ul className="mt-1 flex flex-col gap-1">
+                {calls.map((c, i) => (
+                  <li key={`${c.calledAt}-${i}`} className="rounded-lg border border-border px-2.5 py-1.5">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-bold text-foreground">
+                        {CALL_LABEL[c.outcome] ?? c.outcome}
+                      </span>
+                      <span className="text-muted">{c.calledAt.slice(0, 10)}</span>
+                      {c.minutes ? <span className="text-muted">{c.minutes} min</span> : null}
+                      {c.caller ? <span className="text-muted">· {c.caller}</span> : null}
+                    </div>
+                    {c.notes && (
+                      <p className="mt-1 leading-relaxed text-muted">{c.notes}</p>
+                    )}
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
 

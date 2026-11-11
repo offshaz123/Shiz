@@ -176,6 +176,29 @@ const SCHEMA = [
     KEY idx_reviews (reviews)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
+  // One row per phone call, with what came of it.
+  //
+  // Notes on a prospect are a single field that gets rewritten, so the third
+  // call overwrites the first two and the history of a conversation exists
+  // only in somebody's memory. That is survivable with one person and
+  // impossible with two: a worker needs to see what was said last time
+  // before they dial, and Walid needs to see what was said at all.
+  `CREATE TABLE IF NOT EXISTS prospect_calls (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    prospect_id INT UNSIGNED NOT NULL,
+    outcome VARCHAR(20) NOT NULL,
+    notes TEXT NULL,
+    minutes TINYINT UNSIGNED NULL,
+    -- Who made the call. One shared login today, so this is whatever was
+    -- typed; it becomes real the day there are separate accounts.
+    caller VARCHAR(60) NULL,
+    called_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    KEY idx_prospect (prospect_id, called_at),
+    CONSTRAINT fk_prospect_calls_prospect FOREIGN KEY (prospect_id)
+      REFERENCES prospects (id) ON DELETE CASCADE
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
   // One row per outreach email sent from the admin page, with the text that
   // went out.
   //
@@ -257,6 +280,10 @@ const ADDED_COLUMNS: {
   // town. Rows from a free-text search that does not look like that keep an
   // empty town and simply never match a town filter, which is right —
   // guessing a location onto a business is worse than having none.
+  // When to ring them back. The single most expensive field on the row: more
+  // leads go cold from a forgotten callback than from a bad pitch, and until
+  // now "ring Thursday" lived in a free-text note where nothing could find it.
+  { table: "prospects", column: "callback_at", definition: "DATETIME NULL AFTER called_at" },
   // When we last asked Google for a phone number and website for a company
   // that came off the register. Set whether or not anything was found, so a
   // business Google has never heard of is asked about once and then left

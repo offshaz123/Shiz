@@ -19,6 +19,48 @@ export const STATUSES = [
 
 export type ProspectStatus = (typeof STATUSES)[number];
 
+/**
+ * How a call went.
+ *
+ * Separate from the status on purpose: the status is where the business has
+ * got to overall, a call outcome is what happened on one attempt. Three "no
+ * answer" calls and then a conversation is a story the status alone cannot
+ * tell.
+ */
+export const CALL_OUTCOMES = [
+  "spoke",
+  "no-answer",
+  "voicemail",
+  "call-back",
+  "gatekeeper",
+  "wrong-number",
+  "not-interested",
+] as const;
+
+export type CallOutcome = (typeof CALL_OUTCOMES)[number];
+
+export const CALL_LABEL: Record<CallOutcome, string> = {
+  spoke: "Spoke to them",
+  "no-answer": "No answer",
+  voicemail: "Left a voicemail",
+  "call-back": "Asked to call back",
+  gatekeeper: "Got the gatekeeper",
+  "wrong-number": "Wrong number",
+  "not-interested": "Not interested",
+};
+
+export function isCallOutcome(value: unknown): value is CallOutcome {
+  return typeof value === "string" && (CALL_OUTCOMES as readonly string[]).includes(value);
+}
+
+export type ProspectCall = {
+  outcome: CallOutcome;
+  notes: string;
+  minutes: number | null;
+  caller: string;
+  calledAt: string;
+};
+
 export function isStatus(value: unknown): value is ProspectStatus {
   return typeof value === "string" && (STATUSES as readonly string[]).includes(value);
 }
@@ -49,6 +91,10 @@ export type Prospect = {
   status: ProspectStatus;
   notes: string;
   calledAt: string | null;
+  /** When to ring them back, if a call said so. */
+  callbackAt: string | null;
+  /** The last call's outcome and when it was, for the row. */
+  lastCall: { outcome: string; at: string } | null;
   /** When an email was last sent to them from the admin page. */
   emailedAt: string | null;
   /** Set when the first email was sent by hand, which is what starts the two

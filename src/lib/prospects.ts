@@ -7,6 +7,9 @@ import {
   type Prospect,
   type ProspectStatus,
   type ProspectFinding,
+  isCallOutcome,
+  type CallOutcome,
+  type ProspectCall,
 } from "./prospect-types";
 
 /**
@@ -43,6 +46,9 @@ interface ProspectRow extends RowDataPacket {
   status: string;
   notes: string | null;
   called_at: string | null;
+  callback_at: string | null;
+  last_call_outcome?: string | null;
+  last_call_at?: string | null;
   emailed_at: string | null;
   email_count?: number | null;
   listing_checked_at: string | null;
@@ -99,6 +105,10 @@ function toProspect(row: ProspectRow): Prospect {
     status: isValidStatus(row.status) ? row.status : "new",
     notes: row.notes ?? "",
     calledAt: row.called_at ? String(row.called_at) : null,
+    callbackAt: row.callback_at ? String(row.callback_at) : null,
+    lastCall: row.last_call_outcome
+      ? { outcome: String(row.last_call_outcome), at: String(row.last_call_at ?? "") }
+      : null,
     emailedAt: row.emailed_at ? String(row.emailed_at) : null,
     sequenceStartedAt: row.sequence_started_at ? String(row.sequence_started_at) : null,
     sequenceStoppedAt: row.sequence_stopped_at ? String(row.sequence_stopped_at) : null,
@@ -269,7 +279,11 @@ export async function listProspects(filters: ProspectFilters = {}): Promise<Pros
     const [rows] = await db.query<ProspectRow[]>(
       `SELECT p.*,
               (SELECT COUNT(*) FROM prospect_emails e
-                WHERE e.prospect_id = p.id AND e.status = 'sent') AS email_count
+                WHERE e.prospect_id = p.id AND e.status = 'sent') AS email_count,
+              (SELECT c.outcome FROM prospect_calls c
+                WHERE c.prospect_id = p.id ORDER BY c.called_at DESC LIMIT 1) AS last_call_outcome,
+              (SELECT DATE_FORMAT(c.called_at, '%Y-%m-%d') FROM prospect_calls c
+                WHERE c.prospect_id = p.id ORDER BY c.called_at DESC LIMIT 1) AS last_call_at
          FROM prospects p
        ${where.length ? `WHERE ${where.join(" AND ")}` : ""}
        ORDER BY ${
@@ -697,4 +711,91 @@ export async function markListingChecked(id: number): Promise<void> {
   await withDb(async (db) => {
     await db.execute("UPDATE prospects SET listing_checked_at = NOW() WHERE id = ?", [id]);
   }).catch(() => null);
+}
+
+/**
+ * Writes down a call.
+ *
+ * Also moves the row on, because a call that leaves the list looking
+ * untouched is a call somebody else makes again tomorrow. The outcome sets
+ * the status where there is an obvious mapping and leaves it alone where
+ * there is not — "no answer" is not a judgement about the business, so it
+ * does not overwrite "interested".
+ */
+export async function logCall(
+  id: number,
+  call: {
+    outcome: CallOutcome;
+    notes: string;
+    minutes: number | null;
+    caller: string;
+    callbackAt: string;
+  },
+): Promise<boolean> {
+  const done = await withDb(async (db) => {
+    await db.execute(
+      `INSERT INTO prospect_calls (prospect_id, outcome, notes, minutes, caller)
+       VALUES (?, ?, ?, ?, ?)`,
+      [
+        id,
+        call.outcome,
+        call.notes.slice(0, 4000) || null,
+        call.minutes && call.minutes > 0 ? Math.min(255, call.minutes) : null,
+        call.caller.slice(0, 60) || null,
+      ],
+    );
+
+    const status =
+      call.outcome === "not-interested"
+        ? "not-interested"
+        : call.outcome === "spoke"
+          ? "called"
+          : call.outcome === "no-answer" || call.outcome === "voicemail"
+            ? "no-answer"
+            : null;
+
+    await db.execute(
+      `UPDATE prospects
+          SET called_at = NOW(),
+              callback_at = ?,
+              status = CASE
+                -- A decision already made is not undone by a later call that
+                -- went to voicemail.
+                WHEN status IN ('interested', 'customer') THEN status
+                WHEN ? IS NULL THEN status
+                ELSE ?
+              END
+        WHERE id = ?`,
+      [call.callbackAt || null, status, status, id],
+    );
+    return true;
+  });
+  return done ?? false;
+}
+
+/** Every call made to one business, newest first. */
+export async function listProspectCalls(id: number): Promise<ProspectCall[] | null> {
+  return withDb(async (db) => {
+    const [rows] = await db.query<
+      (RowDataPacket & {
+        outcome: string;
+        notes: string | null;
+        minutes: number | null;
+        caller: string | null;
+        called_at: string;
+      })[]
+    >(
+      `SELECT outcome, notes, minutes, caller, called_at
+         FROM prospect_calls WHERE prospect_id = ?
+        ORDER BY called_at DESC LIMIT 25`,
+      [id],
+    );
+    return rows.map((r) => ({
+      outcome: (isCallOutcome(r.outcome) ? r.outcome : "spoke") as CallOutcome,
+      notes: r.notes ?? "",
+      minutes: r.minutes === null ? null : Number(r.minutes),
+      caller: r.caller ?? "",
+      calledAt: String(r.called_at),
+    }));
+  });
 }
