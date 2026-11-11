@@ -42,6 +42,8 @@ import { buildDraft } from "@/lib/prospect-outreach";
  */
 const SCAN_ERRORS: Record<string, string> = {
   unreachable: "their server returned an error",
+  unreadable: "their site couldn't be read",
+  no_website: "no website on file",
   blocked_by_site: "their host blocked our scanner",
   dns_failed: "domain doesn't resolve",
   not_html: "not a web page",
@@ -463,20 +465,35 @@ export function ProspectFinder() {
     }).catch(() => null);
   }
 
+  /**
+   * Scans one business, the same way the batch does.
+   *
+   * It used to call the free-audit endpoint, which returns a score and
+   * nothing else — so a row scanned from this button got a number and never
+   * got an email address or the findings to open a call with, while a row
+   * scanned by the batch got all three. Two businesses sat in the list
+   * showing a site score and no address while publishing one in a plain
+   * mailto link on their homepage.
+   */
   async function scan(p: Prospect) {
     if (!p.website || busy[p.id]?.scanning) return;
     setBusy((b) => ({ ...b, [p.id]: { scanning: true } }));
 
     try {
-      const res = await fetch("/api/audit", {
+      const res = await fetch("/api/admin/prospects/scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: p.website }),
+        body: JSON.stringify({ id: p.id }),
       });
       const data = await res.json();
       if (res.ok) {
         setBusy((b) => ({ ...b, [p.id]: {} }));
-        await save(p.id, { siteScore: data.score });
+        // Straight from the server rather than guessed at locally: the scan
+        // writes the score, the findings and the address, and the row should
+        // show what was actually written.
+        const payload = await fetchList();
+        setProspects(payload.prospects);
+        setCounts(payload.counts);
       } else {
         const reason = typeof data?.error === "string" ? data.error : "";
         setBusy((b) => ({

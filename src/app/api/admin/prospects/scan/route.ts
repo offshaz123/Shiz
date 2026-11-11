@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/admin-auth";
-import { listUnscanned, requeueUnresolved, saveProspectScan } from "@/lib/prospects";
+import {
+  getProspect,
+  listUnscanned,
+  requeueUnresolved,
+  saveProspectScan,
+} from "@/lib/prospects";
 import { scanProspectSite } from "@/lib/prospect-scan";
 
 export const runtime = "nodejs";
@@ -32,6 +37,24 @@ export async function POST(request: Request) {
   if (body?.action === "requeue") {
     const requeued = await requeueUnresolved();
     return NextResponse.json({ requeued });
+  }
+
+  // One named prospect, for the Scan button on a single row. It has to be
+  // this scanner and not the free audit: the audit returns a score and
+  // nothing else, so a row scanned that way got a number and never got an
+  // address, which is exactly how two businesses ended up showing a site
+  // score and no email while publishing one in plain sight.
+  const single = Number(body?.id);
+  if (Number.isInteger(single) && single > 0) {
+    const prospect = await getProspect(single);
+    if (!prospect) return NextResponse.json({ error: "no_prospect" }, { status: 404 });
+    if (!prospect.website) return NextResponse.json({ error: "no_website" }, { status: 400 });
+
+    const result = await scanProspectSite(prospect.website);
+    await saveProspectScan(prospect.id, result);
+    return result
+      ? NextResponse.json({ scanned: 1, score: result.score, email: result.email })
+      : NextResponse.json({ error: "unreadable" }, { status: 422 });
   }
 
   const pending = await listUnscanned(BATCH);
