@@ -1,24 +1,31 @@
 # Image prompts for the site
 
-Thirteen images: five service pages that have none, and all eight industry
-pages, which have none at all. The site currently has four images in total,
-so this is the gap.
+Seventeen prompts: thirteen page images, four brand mock-ups.
 
-Paste each prompt into Higgsfield, set the output to **16:9**, and save the
-result. Name does not matter — tell me when they are done and I will pull
-them from your generation history, match them up, compress them to WebP and
-put them on the right pages with proper alt text.
+Paste each into Higgsfield, set **16:9**, and save. Names do not matter —
+tell me when they are done and I will pull them from your generation
+history, match them up, compress to WebP and place them with alt text.
 
-## House style (already included in every prompt below)
+## Which model
+
+| For | Use | Why |
+|---|---|---|
+| The 13 page images | **Nano Banana 2**, 2k | Photorealistic scenes, and it is on the unlim list |
+| The 4 brand mock-ups | **Nano Banana Pro** or **GPT Image 2** | The only two tagged for text rendering |
+
+Use one model across all thirteen page images so the set looks consistent.
+
+## House style
 
 > Photographic, natural daylight, shallow depth of field, muted colour, British setting. No text, no words, no lettering, no logos, no signage, no watermarks. No direct eye contact with the camera. Unposed and ordinary rather than stock-photo cheerful.
 
-Two rules are deliberate. **No text in any image** — models still render type
-as mush, and headlines go on afterwards in code where they are sharp and a
-screen reader can read them. And **nothing implying work we have not done**:
-no faces that read as a named client, no signage, no logos.
+No text in the page images: models render type as mush, and headlines go on
+afterwards in code where they are sharp and a screen reader can read them.
+No faces that read as a named client, and nothing implying work we have not done.
 
 ---
+
+## The 13 page images
 
 ### service-meta-ads
 
@@ -96,4 +103,40 @@ A small independent gym early in the morning, racks and plates, nobody there yet
 
 ```
 The counter of a small independent shop, card machine and packaging, stock on shelves behind, daylight from the front window. Photographic, natural daylight, shallow depth of field, muted colour, British setting. No text, no words, no lettering, no logos, no signage, no watermarks. No direct eye contact with the camera. Unposed and ordinary rather than stock-photo cheerful.
+```
+
+---
+
+## The 4 brand mock-ups
+
+These break the no-text rule on purpose — the name on the surface is the
+point. Re-roll until the spelling is right and **read it letter by letter**
+before using it; models misspell constantly.
+
+Safer alternative for anything that must be exact: generate the scene with a
+blank wall or plain cup, then composite `public/logo.png` on top. Sharp,
+correctly spelled, and the real mark rather than a model impression of it.
+
+### brand-wall-sign
+
+```
+Brushed metal letters reading "SHAZ MARKETING GROUP" mounted on a plain white plaster wall in a small modern office, lit from above, a corner of a desk and a plant just in frame at the edge. Shallow depth of field, photographic.
+```
+
+### brand-cup
+
+```
+A white ceramic mug on a wooden desk beside a closed laptop and a notebook, the words "SHAZ MARKETING GROUP" printed small on the side of the mug in a clean sans-serif. Morning light from a window, shallow depth of field, photographic.
+```
+
+### brand-desk
+
+```
+A dark notebook with "SHAZ MARKETING GROUP" foil-stamped small on the cover, a pen across it, on a desk beside a phone and a coffee. Overhead flat lay, natural light, photographic.
+```
+
+### brand-office-wide
+
+```
+A group of about twelve people standing together in a bright open-plan office, talking and laughing, mid-conversation rather than posed in a row. Mixed ages, ordinary work clothes, British. Natural window light, photographic, shallow depth of field. No text, no signage, no logos.
 ```

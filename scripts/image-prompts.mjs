@@ -129,3 +129,59 @@ export const PROMPTS = [
       "shelves behind, daylight from the front window.",
   },
 ];
+
+/**
+ * Brand mock-ups.
+ *
+ * These are the one exception to the no-text rule: the whole point is the
+ * name on a surface. Generate them with Nano Banana Pro or GPT Image 2 —
+ * those two are tagged for text rendering; most models turn lettering to
+ * mush. Expect to re-roll a few times until the spelling comes out right,
+ * and read it letter by letter before using it.
+ *
+ * The safer route for anything that has to be exact: generate the scene with
+ * a BLANK wall or a PLAIN cup, then composite public/logo.png (512x512) on
+ * top. Sharp, correctly spelled, and it is the real mark rather than a
+ * model's impression of it.
+ */
+export const BRAND_PROMPTS = [
+  {
+    name: "brand-wall-sign",
+    ratio: "16:9",
+    seed: 201,
+    prompt:
+      "Brushed metal letters reading \"SHAZ MARKETING GROUP\" mounted on a plain " +
+      "white plaster wall in a small modern office, lit from above, a corner of a " +
+      "desk and a plant just in frame at the edge. Shallow depth of field, " +
+      "photographic.",
+  },
+  {
+    name: "brand-cup",
+    ratio: "16:9",
+    seed: 202,
+    prompt:
+      "A white ceramic mug on a wooden desk beside a closed laptop and a notebook, " +
+      "the words \"SHAZ MARKETING GROUP\" printed small on the side of the mug in a " +
+      "clean sans-serif. Morning light from a window, shallow depth of field, " +
+      "photographic.",
+  },
+  {
+    name: "brand-desk",
+    ratio: "16:9",
+    seed: 203,
+    prompt:
+      "A dark notebook with \"SHAZ MARKETING GROUP\" foil-stamped small on the " +
+      "cover, a pen across it, on a desk beside a phone and a coffee. Overhead " +
+      "flat lay, natural light, photographic.",
+  },
+  {
+    name: "brand-office-wide",
+    ratio: "16:9",
+    seed: 204,
+    prompt:
+      "A group of about twelve people standing together in a bright open-plan " +
+      "office, talking and laughing, mid-conversation rather than posed in a row. " +
+      "Mixed ages, ordinary work clothes, British. Natural window light, " +
+      "photographic, shallow depth of field. No text, no signage, no logos.",
+  },
+];
