@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { isAdmin } from "@/lib/admin-auth";
+import { getEngineRoom } from "@/lib/engine-room";
+import { EngineRoom } from "@/components/EngineRoom";
 import { isDbConfigured } from "@/lib/db";
 import { getLeads, getStats, getCronHealth, type AdminLead, type CronHealth } from "@/lib/admin-data";
 import { getAllReviews, type Review } from "@/lib/reviews";
@@ -226,17 +228,18 @@ function NoDatabase() {
 export default async function AdminPage() {
   if (!(await isAdmin())) return <LoginForm />;
 
-  const [stats, leads, reviews, cron] = await Promise.all([
+  const [stats, leads, reviews, cron, engine] = await Promise.all([
     getStats(),
     getLeads(),
     getAllReviews(),
     getCronHealth(),
+    getEngineRoom(),
   ]);
 
   const pendingReviews = (reviews ?? []).filter((r) => r.status === "pending").length;
 
   return (
-    <div className="mx-auto max-w-5xl px-5 py-12 sm:px-8">
+    <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-bold tracking-tight text-foreground">Leads</h1>
         <div className="flex items-center gap-2">
@@ -281,6 +284,7 @@ export default async function AdminPage() {
         </div>
       ) : (
         <>
+          {engine && <EngineRoom engine={engine} />}
           {cron && <SchedulerStatus cron={cron} />}
 
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-5">
