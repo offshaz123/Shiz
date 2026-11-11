@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { isAdmin } from "@/lib/admin-auth";
 import { LoginForm } from "../LoginForm";
 import { CompanyLookup } from "@/components/CompanyLookup";
+import { RegisterFinder } from "@/components/RegisterFinder";
 
 export const dynamic = "force-dynamic";
 
@@ -27,6 +28,10 @@ export default async function AdminCompanyPage() {
 
       <div className="mt-7">
         <CompanyLookup />
+      </div>
+
+      <div className="mt-8">
+        <RegisterFinder />
       </div>
 
       <p className="mt-8 text-xs leading-relaxed text-muted">

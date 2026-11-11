@@ -87,6 +87,7 @@ function address(a: RawAddress = {}): string {
 type RawSearchItem = {
   company_number?: string;
   title?: string;
+  company_name?: string;
   company_status?: string;
   company_type?: string;
   address?: RawAddress;
@@ -188,5 +189,83 @@ export async function companyProfile(number: string): Promise<ChResult<CompanyDe
           resigned: Boolean(o.resigned_on),
         })),
     },
+  };
+}
+
+/**
+ * Newly incorporated companies, by trade and area.
+ *
+ * The best cold prospect there is: a company three months old has no agency,
+ * often no website, and a budget it has not spent yet. Google Places finds
+ * businesses that are already established enough to have reviews; the
+ * register finds them on the day they start.
+ *
+ * SIC codes are the register's own description of what a company does,
+ * grouped here into the sectors this business sells into — the same grouping
+ * scripts/find-prospects.mjs already uses, kept in step with it by hand
+ * because the script runs on a laptop and this runs on the server.
+ */
+export const SECTORS: { slug: string; label: string; codes: string[] }[] = [
+  { slug: "automotive", label: "Automotive", codes: ["45111", "45112", "45190", "45200", "45320"] },
+  {
+    slug: "hospitality",
+    label: "Restaurants & Hospitality",
+    codes: ["56101", "56102", "56103", "56302"],
+  },
+  { slug: "beauty", label: "Health, Beauty & Wellness", codes: ["96020", "93130", "96040"] },
+  {
+    slug: "trades",
+    label: "Home & Trade Services",
+    codes: ["43210", "43220", "43290", "43390", "41202"],
+  },
+  {
+    slug: "professional",
+    label: "Professional Services",
+    codes: ["69201", "69202", "69102", "70229", "68310"],
+  },
+];
+
+export type RegisterHit = CompanyHit & { sic: string[] };
+
+type RawAdvanced = {
+  items?: (RawSearchItem & { sic_codes?: string[]; registered_office_address?: RawAddress })[];
+};
+
+export async function searchRegister(opts: {
+  sector: string;
+  location: string;
+  months: number;
+  size: number;
+}): Promise<ChResult<RegisterHit[]>> {
+  const sector = SECTORS.find((s) => s.slug === opts.sector);
+  if (!sector) return { ok: true, data: [] };
+
+  const to = new Date();
+  const from = new Date(to.getTime() - Math.max(1, opts.months) * 30.44 * 86_400_000);
+  const params = new URLSearchParams({
+    incorporated_from: from.toISOString().slice(0, 10),
+    incorporated_to: to.toISOString().slice(0, 10),
+    company_status: "active",
+    size: String(Math.min(50, Math.max(1, opts.size))),
+  });
+  for (const code of sector.codes) params.append("sic_codes", code);
+  // The register matches this against the registered office address, so a
+  // town works and a postcode district works better.
+  if (opts.location.trim()) params.append("location", opts.location.trim().slice(0, 60));
+
+  const result = await call<RawAdvanced>(`/advanced-search/companies?${params}`);
+  if (!result.ok) return result;
+
+  return {
+    ok: true,
+    data: (result.data.items ?? []).map((item) => ({
+      number: item.company_number ?? "",
+      title: item.title ?? item.company_name ?? "",
+      status: item.company_status ?? "",
+      kind: kindOf(item.company_type),
+      address: address(item.registered_office_address ?? item.address),
+      incorporatedOn: item.date_of_creation ?? "",
+      sic: item.sic_codes ?? [],
+    })),
   };
 }
