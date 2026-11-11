@@ -66,34 +66,6 @@ export default function Home() {
       <HowWeWork />
       <RealResultsSection />
 
-      {/* AI receptionist highlight */}
-      {siteConfig.demoBookingUrl && (
-        <section className="border-y border-border bg-surface">
-          <div className="mx-auto max-w-4xl px-5 py-24 text-center sm:px-8">
-            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
-              Book a Demo
-            </span>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-              See it in action before you commit
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl text-muted">
-              Pick a time that works for you — fifteen minutes. We&apos;ll show you exactly
-              how this would work for your business, then get instant confirmation with a Google
-              Meet link sent straight to your inbox.
-            </p>
-            <a
-              href={siteConfig.demoBookingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="brand-gradient-bg mt-8 inline-flex rounded-full px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-black/10 transition-transform hover:scale-[1.03]"
-            >
-              Book Yourself In For a Demo →
-            </a>
-            <GoogleCalendarBadge />
-          </div>
-        </section>
-      )}
-
       {/* Pricing teaser (full plans on /pricing) */}
       <section className="mx-auto max-w-4xl px-5 py-24 text-center sm:px-8">
         <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
@@ -128,12 +100,25 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="mt-12 space-y-6">
+          {/* Open one at a time rather than all at once. Every answer is
+              still in the HTML, so the FAQ schema and anything reading the
+              page sees the lot — it just does not cost eleven hundred pixels
+              of a phone screen to say so. <details> rather than React state,
+              because it needs no JavaScript to work. */}
+          <div className="mt-10 flex flex-col gap-3">
             {faqs.map((faq) => (
-              <div key={faq.question} className="rounded-2xl border border-border bg-background p-6">
-                <h3 className="text-base font-semibold text-foreground">{faq.question}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{faq.answer}</p>
-              </div>
+              <details
+                key={faq.question}
+                className="group rounded-2xl border border-border bg-background px-6 py-4"
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-foreground">
+                  {faq.question}
+                  <span className="shrink-0 text-brand-pink transition-transform group-open:rotate-45">
+                    +
+                  </span>
+                </summary>
+                <p className="mt-3 text-sm leading-relaxed text-muted">{faq.answer}</p>
+              </details>
             ))}
           </div>
         </div>
@@ -189,6 +174,16 @@ export default function Home() {
         </section>
       )}
 
+      {/*
+        Proof before the ask, which is the way round it should always have
+        been. It used to sit under the form, where it was read by people who
+        had already decided — and missed entirely by everybody still making
+        their mind up.
+
+        Renders nothing until a review has been approved in the admin page.
+      */}
+      <Reviews />
+
       {/* Final CTA + form */}
       <section id="lead-form" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
@@ -223,6 +218,31 @@ export default function Home() {
                 Or message us directly on WhatsApp
               </p>
             </div>
+
+            {/* The demo had a section of its own in the middle of the page,
+                which made three separate places to get in touch. It belongs
+                here, next to the form, as the other way of doing the same
+                thing. */}
+            {siteConfig.demoBookingUrl && (
+              <div className="mt-8 rounded-2xl border border-border bg-surface p-5">
+                <p className="text-sm font-semibold text-foreground">
+                  Rather talk it through first?
+                </p>
+                <p className="mt-1 text-sm leading-relaxed text-muted">
+                  Fifteen minutes with Walid, who owns the business and does the work. Pick a time
+                  and you get a Google Meet link straight away.
+                </p>
+                <a
+                  href={siteConfig.demoBookingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-brand-pink"
+                >
+                  Book a time →
+                </a>
+                <GoogleCalendarBadge />
+              </div>
+            )}
           </div>
 
           <div className="rounded-3xl border border-border bg-surface p-6 sm:p-8">
@@ -231,14 +251,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/*
-        Last thing above the footer. Somebody who has read this far and filled
-        nothing in is deciding whether to trust us, and other people's words
-        answer that better than another paragraph of ours.
 
-        Renders nothing until a review has been approved in the admin page.
-      */}
-      <Reviews />
     </div>
   );
 }

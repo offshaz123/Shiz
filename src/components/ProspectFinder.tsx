@@ -147,6 +147,23 @@ function tradesFor(slug: string): string[] {
   return (industry?.examples ?? []).map((e) => e.replace(/\s*&\s*/g, " "));
 }
 
+/**
+ * Every trade across every industry, for when no industry is picked.
+ *
+ * Picking "All industries" used to hide the search panel entirely, so the
+ * one view that shows everything was also the one view you could not search
+ * from. You can still type anything into the box at the top, but a row of
+ * buttons you can see beats a box you have to think of something to put in.
+ */
+function allTrades(): { industry: string; trades: string[] }[] {
+  return industries
+    .map((i) => ({
+      industry: i.name,
+      trades: (i.examples ?? []).map((e) => e.replace(/\s*&\s*/g, " ")),
+    }))
+    .filter((group) => group.trades.length > 0);
+}
+
 function tone(score: number): string {
   if (score >= 8) return "text-emerald-500";
   if (score >= 6) return "text-amber-500";
@@ -672,83 +689,112 @@ export function ProspectFinder() {
         <p className="mt-2 text-xs text-muted">
           {industry
             ? "The list below is filtered to this industry. Pick a trade to find more."
-            : "Showing every business you have ever searched for. Pick an industry to narrow it down and to search for more."}
+            : "Showing every business you have ever searched for. Pick a trade below to go and find more, or an industry above to narrow this list down."}
         </p>
       </div>
 
-      {industry && (
-        <div className="mt-4 rounded-xl border border-border bg-surface p-4">
-          <label htmlFor="prospect-town" className="mb-1.5 block text-xs text-muted">
-            Town or area to search in
-          </label>
-          <div className="flex flex-wrap items-center gap-2">
-            <input
-              id="prospect-town"
-              value={town}
-              onChange={(e) => setTown(e.target.value)}
-              placeholder="Romford"
-              className="w-full max-w-xs rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand-pink"
-            />
-            {/* A whole city, for when you want to cast wider than the
-                suburbs below. It fills the box rather than searching on its
-                own, so the trade is still chosen the same way. */}
-            <select
-              value={cities.includes(town.trim()) ? town.trim() : ""}
-              onChange={(e) => e.target.value && setTown(e.target.value)}
-              className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted outline-none focus:border-brand-pink"
-              aria-label="Pick a city"
-            >
-              <option value="">Or pick a city…</option>
-              {cities.map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </select>
-          </div>
-          {cities.includes(town.trim()) && (
-            <p className="mt-2 text-xs text-muted">
-              A whole city mostly returns the big operators who already have an agency. If it comes
-              back thin, try a suburb of it below.
-            </p>
-          )}
+      {/* Always on. It used to be hidden unless an industry was picked, which
+          made "All industries" the one view you could not search from. */}
+      <div className="mt-4 rounded-xl border border-border bg-surface p-4">
+        <label htmlFor="prospect-town" className="mb-1.5 block text-xs text-muted">
+          Town or area to search in
+        </label>
+        <div className="flex flex-wrap items-center gap-2">
+          <input
+            id="prospect-town"
+            value={town}
+            onChange={(e) => setTown(e.target.value)}
+            placeholder="Romford"
+            className="w-full max-w-xs rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand-pink"
+          />
+          {/* A whole city, for when you want to cast wider than the
+              suburbs below. It fills the box rather than searching on its
+              own, so the trade is still chosen the same way. */}
+          <select
+            value={cities.includes(town.trim()) ? town.trim() : ""}
+            onChange={(e) => e.target.value && setTown(e.target.value)}
+            className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted outline-none focus:border-brand-pink"
+            aria-label="Pick a city"
+          >
+            <option value="">Or pick a city…</option>
+            {cities.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </div>
+        {cities.includes(town.trim()) && (
+          <p className="mt-2 text-xs text-muted">
+            A whole city mostly returns the big operators who already have an agency. If it comes
+            back thin, try a suburb of it below.
+          </p>
+        )}
 
-          {/*
-            Typing a town every time means thinking of one every time, and the
-            ones that come to mind are the big names — which are precisely the
-            searches that return four-hundred-review operators. These are
-            suburbs, closest first. The box above still takes anything.
-          */}
-          <div className="mt-3 flex flex-col gap-2">
-            {areaGroups.map((group) => (
-              <div key={group.name} className="flex flex-wrap items-center gap-1.5">
-                <span
-                  title={group.note}
-                  className="mr-1 w-full text-[11px] uppercase tracking-wide text-muted sm:w-auto"
+        {/*
+          Typing a town every time means thinking of one every time, and the
+          ones that come to mind are the big names — which are precisely the
+          searches that return four-hundred-review operators. These are
+          suburbs, closest first. The box above still takes anything.
+        */}
+        <div className="mt-3 flex flex-col gap-2">
+          {areaGroups.map((group) => (
+            <div key={group.name} className="flex flex-wrap items-center gap-1.5">
+              <span
+                title={group.note}
+                className="mr-1 w-full text-[11px] uppercase tracking-wide text-muted sm:w-auto"
+              >
+                {group.name}
+              </span>
+              {group.areas.map((area) => (
+                <button
+                  key={area}
+                  type="button"
+                  onClick={() => setTown(area)}
+                  className={`rounded-md border px-2 py-0.5 text-[11px] ${
+                    town === area
+                      ? "border-brand-pink text-foreground"
+                      : "border-border text-muted hover:text-foreground"
+                  }`}
                 >
-                  {group.name}
-                </span>
-                {group.areas.map((area) => (
+                  {area}
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        <p className="mt-4 text-xs font-semibold text-foreground">
+          {town.trim() ? `Search ${town.trim()} for:` : "Pick an area, then a trade:"}
+        </p>
+        {!industry && (
+          <p className="mt-1 text-xs text-muted">
+            Every trade we cover. Each one is a separate Google search, so pick the one you
+            actually want rather than working along the row.
+          </p>
+        )}
+        {!industry &&
+          allTrades().map((group) => (
+            <div key={group.industry} className="mt-3">
+              <span className="text-[11px] font-semibold uppercase tracking-wide text-muted">
+                {group.industry}
+              </span>
+              <div className="mt-1.5 flex flex-wrap gap-2">
+                {group.trades.map((trade) => (
                   <button
-                    key={area}
+                    key={`${group.industry}-${trade}`}
                     type="button"
-                    onClick={() => setTown(area)}
-                    className={`rounded-md border px-2 py-0.5 text-[11px] ${
-                      town === area
-                        ? "border-brand-pink text-foreground"
-                        : "border-border text-muted hover:text-foreground"
-                    }`}
+                    disabled={!town.trim() || searching}
+                    onClick={() => search(undefined, `${trade} in ${town.trim()}`)}
+                    className="rounded-full border border-border px-3 py-1.5 text-xs text-muted hover:border-brand-pink hover:text-foreground disabled:opacity-40"
                   >
-                    {area}
+                    {trade}
                   </button>
                 ))}
               </div>
-            ))}
-          </div>
-
-          <p className="mt-4 text-xs font-semibold text-foreground">
-            {town.trim() ? `Search ${town.trim()} for:` : "Pick an area, then a trade:"}
-          </p>
+            </div>
+          ))}
+        {industry && (
           <div className="mt-2 flex flex-wrap gap-2">
             {tradesFor(industry).map((trade) => (
               <button
@@ -762,14 +808,14 @@ export function ProspectFinder() {
               </button>
             ))}
           </div>
-          {!town.trim() && (
-            <p className="mt-2 text-xs text-muted">
-              Pick an area first. A suburb finds smaller operators than &ldquo;London&rdquo; does —
-              searching a whole city mostly returns the big firms who don&apos;t need us.
-            </p>
-          )}
-        </div>
-      )}
+        )}
+        {!town.trim() && (
+          <p className="mt-2 text-xs text-muted">
+            Pick an area first. A suburb finds smaller operators than &ldquo;London&rdquo; does —
+            searching a whole city mostly returns the big firms who don&apos;t need us.
+          </p>
+        )}
+      </div>
 
       {/* The two lists. Everything found by a search starts on the left; the
           moment it is emailed or rung it moves to the right, so the left is
