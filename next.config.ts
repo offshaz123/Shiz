@@ -2,18 +2,22 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   experimental: {
-    // Start a new build worker only every fifty pages.
+    // Four build workers, not fifty-five.
     //
-    // The build died on the host with SIGABRT partway through generating
-    // 165 static pages across 55 workers. Fifty-five copies of Node on
-    // shared hosting is not a build, it is a fork bomb with a progress
-    // bar. Next sizes the pool from the CPUs it can see, so the number
-    // crept up as the blog grew and as the host reported more cores —
-    // which is why the same code built on Monday and not on Wednesday.
+    // The host reports 55 CPUs and Next sizes its static-generation pool
+    // from that, so building 165 pages forked 55 copies of Node and the
+    // pool was killed with SIGABRT partway through. It is a memory limit,
+    // not a CPU one, and the two do not move together on shared hosting.
     //
-    // Three or four workers build this site in about the same wall-clock
-    // time, because the limit here was never CPU.
-    staticGenerationMinPagesPerWorker: 50,
+    // `cpus` is the setting that actually sizes the pool — see
+    // getNumberOfWorkers in next/dist/build/index.js, which reads this and
+    // falls back to the machine's core count.
+    // staticGenerationMinPagesPerWorker was the obvious-looking knob and
+    // did nothing: Next logged it as applied and still forked 55.
+    //
+    // This site builds its 165 pages in under three seconds on three
+    // workers, because the limit here was never CPU.
+    cpus: 4,
   },
 
   async headers() {
