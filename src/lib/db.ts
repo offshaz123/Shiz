@@ -257,6 +257,15 @@ const ADDED_COLUMNS: {
   // town. Rows from a free-text search that does not look like that keep an
   // empty town and simply never match a town filter, which is right —
   // guessing a location onto a business is worse than having none.
+  // When we last asked Google for a phone number and website for a company
+  // that came off the register. Set whether or not anything was found, so a
+  // business Google has never heard of is asked about once and then left
+  // alone rather than costing a lookup on every batch.
+  {
+    table: "prospects",
+    column: "listing_checked_at",
+    definition: "DATETIME NULL AFTER scanned_at",
+  },
   {
     table: "prospects",
     column: "town",

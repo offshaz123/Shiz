@@ -398,6 +398,52 @@ export function ProspectFinder() {
     }
   }
 
+  /**
+   * Phone numbers for the companies that came off the register.
+   *
+   * They arrive with a name and a registered address and nothing to ring,
+   * because the register lists legal entities rather than shop fronts. This
+   * asks Google for the rest, five at a time, because each one spends a
+   * lookup out of the same daily allowance the search uses.
+   */
+  async function findListings() {
+    setScanAllState({ running: true, done: 0 });
+    setError("");
+    try {
+      let found = 0;
+      let missing = 0;
+      for (let round = 0; round < 20; round++) {
+        const res = await fetch("/api/admin/prospects/scan", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "find-listings" }),
+        });
+        const data = await res.json();
+        found += Number(data.found ?? 0);
+        missing += Number(data.missing ?? 0);
+        setScanAllState({ running: true, done: found });
+        if (!res.ok) {
+          setError(ERRORS[data?.error] ?? "Couldn't look those up.");
+          break;
+        }
+        if (data.done) break;
+      }
+      const payload = await fetchList();
+      setProspects(payload.prospects);
+      setCounts(payload.counts);
+      setTowns(payload.towns);
+      setSearchNote(
+        found || missing
+          ? `Found numbers for ${found}. ${missing} aren't on Google yet — ring the registered address or leave them.`
+          : "Nothing waiting for a number.",
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Couldn't reach the server.");
+    } finally {
+      setScanAllState((s) => ({ running: false, done: s.done }));
+    }
+  }
+
   /** The Refresh button. An event handler, so it can show progress. */
   async function load() {
     setLoading(true);
@@ -866,6 +912,15 @@ export function ProspectFinder() {
           title="Scans again every business that came back with no score or no email address"
         >
           Retry the empty ones
+        </button>
+        <button
+          type="button"
+          onClick={findListings}
+          disabled={scanAllState.running}
+          className="rounded-lg border border-border px-3 py-2 text-xs font-semibold text-muted hover:text-foreground disabled:opacity-50"
+          title="Asks Google for the phone number and website of companies found on the register"
+        >
+          Find their numbers
         </button>
         <button
           type="button"

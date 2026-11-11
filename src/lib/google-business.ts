@@ -523,3 +523,53 @@ export function placesBudget(): {
     monthlyBudget: MONTHLY_BUDGET,
   };
 }
+
+/**
+ * One business, by name and area.
+ *
+ * For the companies that come off the register, which arrive with a name and
+ * a registered address and nothing to ring. Google knows the phone number and
+ * the website; the register does not, because it lists legal entities rather
+ * than shop fronts.
+ *
+ * Returns the closest match or null. Deliberately strict about what counts as
+ * a match: attaching the wrong phone number to a business is worse than
+ * attaching none, because somebody then rings a stranger and opens with the
+ * name of a company they have never heard of.
+ */
+export async function findBusiness(
+  name: string,
+  area: string,
+): Promise<GoogleBusiness | null | "no_key" | "budget"> {
+  const key = process.env.GOOGLE_PLACES_KEY;
+  if (!key) return "no_key";
+  if (!withinBudget()) return "budget";
+
+  const clean = name.replace(/\b(ltd|limited|llp|plc)\b\.?/gi, "").trim();
+  if (clean.length < 3) return null;
+
+  recordSpend();
+
+  let places: Place[];
+  try {
+    places = await searchOnce(`${clean} ${area}`.trim(), key);
+  } catch {
+    return null;
+  }
+
+  const open = places.filter((p) => !p.businessStatus || p.businessStatus === "OPERATIONAL");
+  if (open.length === 0) return null;
+
+  // The register's name and Google's rarely match character for character —
+  // "J & S MOTORS LTD" against "J&S Motors". Compare on letters and digits
+  // only, and require one to contain the other rather than merely overlap.
+  const key1 = clean.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const match = open
+    .map(toBusiness)
+    .find((b) => {
+      const key2 = b.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+      return key1.length > 4 && key2.length > 4 && (key1.includes(key2) || key2.includes(key1));
+    });
+
+  return match ?? null;
+}

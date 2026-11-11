@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/admin-auth";
 import {
+  attachListing,
   getProspect,
+  listUncontactable,
   listUnscanned,
+  markListingChecked,
   requeueUnresolved,
   saveProspectScan,
 } from "@/lib/prospects";
+import { findBusiness } from "@/lib/google-business";
 import { scanProspectSite } from "@/lib/prospect-scan";
 
 export const runtime = "nodejs";
@@ -23,6 +27,10 @@ export const dynamic = "force-dynamic";
 
 const BATCH = 8;
 const CONCURRENCY = 2;
+
+/** Smaller again, because each one of these costs a Places lookup out of a
+ *  daily allowance of sixty. */
+const ENRICH_BATCH = 5;
 
 export async function POST(request: Request) {
   if (!(await isAdmin())) {
@@ -44,6 +52,45 @@ export async function POST(request: Request) {
   // nothing else, so a row scanned that way got a number and never got an
   // address, which is exactly how two businesses ended up showing a site
   // score and no email while publishing one in plain sight.
+  // Phone numbers and websites for the companies that came off the register,
+  // which arrive with a name and an address and nothing to ring. One Google
+  // lookup each, out of the same daily allowance the search spends, so this
+  // is a small batch behind a button rather than something that runs on its
+  // own and quietly empties the budget.
+  if (body?.action === "find-listings") {
+    const waiting = await listUncontactable(ENRICH_BATCH);
+    if (waiting === null) {
+      return NextResponse.json({ error: "db_unavailable" }, { status: 503 });
+    }
+    if (waiting.length === 0) {
+      return NextResponse.json({ found: 0, missing: 0, done: true });
+    }
+
+    let found = 0;
+    let missing = 0;
+    for (const prospect of waiting) {
+      const listing = await findBusiness(prospect.name, prospect.town || prospect.address);
+      if (listing === "no_key" || listing === "budget") {
+        // Out of allowance, or never had a key. Stop rather than mark the
+        // rest as checked — they have not been.
+        return NextResponse.json(
+          { error: listing, found, missing, done: false },
+          { status: listing === "no_key" ? 503 : 429 },
+        );
+      }
+      if (listing) {
+        await attachListing(prospect.id, listing);
+        found += 1;
+      } else {
+        missing += 1;
+      }
+      await markListingChecked(prospect.id);
+    }
+
+    const left = await listUncontactable(1);
+    return NextResponse.json({ found, missing, done: !left || left.length === 0 });
+  }
+
   const single = Number(body?.id);
   if (Number.isInteger(single) && single > 0) {
     const prospect = await getProspect(single);

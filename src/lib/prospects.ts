@@ -45,6 +45,7 @@ interface ProspectRow extends RowDataPacket {
   called_at: string | null;
   emailed_at: string | null;
   email_count?: number | null;
+  listing_checked_at: string | null;
   sequence_started_at: string | null;
   sequence_stopped_at: string | null;
   sequence_stop_reason: string | null;
@@ -624,4 +625,76 @@ export async function requeueUnresolved(): Promise<number> {
     return res.affectedRows;
   });
   return changed ?? 0;
+}
+
+/**
+ * Companies off the register that still have no way to be contacted.
+ *
+ * They arrive with a name and a registered address, because that is all the
+ * register holds. Until a phone number is attached they sit on the call list
+ * as something nobody can act on.
+ */
+export async function listUncontactable(limit = 5): Promise<Prospect[] | null> {
+  return withDb(async (db) => {
+    const [rows] = await db.query<ProspectRow[]>(
+      `SELECT * FROM prospects
+        WHERE place_id LIKE 'ch:%'
+          AND listing_checked_at IS NULL
+          AND (phone IS NULL OR phone = '')
+          AND (website IS NULL OR website = '')
+        ORDER BY created_at DESC
+        LIMIT ?`,
+      [limit],
+    );
+    return rows.map(toProspect);
+  });
+}
+
+/**
+ * Attaches what Google knows to a company we found on the register.
+ *
+ * Only fills what is empty. A phone number typed in by hand, or a website
+ * someone corrected, is not overwritten by a lookup — the same rule the scan
+ * follows for addresses.
+ */
+export async function attachListing(
+  id: number,
+  found: {
+    phone: string;
+    websiteUri: string;
+    mapsUri: string;
+    category: string;
+    reviews: number;
+    rating: number | null;
+  },
+): Promise<void> {
+  await withDb(async (db) => {
+    await db.execute(
+      `UPDATE prospects
+          SET phone = COALESCE(NULLIF(phone, ''), ?),
+              website = COALESCE(NULLIF(website, ''), ?),
+              maps_uri = COALESCE(NULLIF(maps_uri, ''), ?),
+              category = COALESCE(NULLIF(category, ''), ?),
+              reviews = GREATEST(reviews, ?),
+              rating = COALESCE(rating, ?)
+        WHERE id = ?`,
+      [
+        found.phone.slice(0, 60) || null,
+        found.websiteUri.slice(0, 255) || null,
+        found.mapsUri.slice(0, 500) || null,
+        found.category.slice(0, 120) || null,
+        found.reviews,
+        found.rating,
+        id,
+      ],
+    );
+  }).catch(() => null);
+}
+
+/** Stamps a company as looked up, found or not, so the next batch moves on
+ *  rather than asking Google the same question forever. */
+export async function markListingChecked(id: number): Promise<void> {
+  await withDb(async (db) => {
+    await db.execute("UPDATE prospects SET listing_checked_at = NOW() WHERE id = ?", [id]);
+  }).catch(() => null);
 }
