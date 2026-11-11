@@ -285,7 +285,7 @@ export async function listProspects(filters: ProspectFilters = {}): Promise<Pros
 /** What the admin writes on a row after ringing. */
 export async function updateProspect(
   id: number,
-  changes: { status?: ProspectStatus; notes?: string; siteScore?: number },
+  changes: { status?: ProspectStatus; notes?: string; siteScore?: number; email?: string },
 ): Promise<boolean> {
   const sets: string[] = [];
   const params: (string | number | null)[] = [];
@@ -303,6 +303,13 @@ export async function updateProspect(
   if (typeof changes.siteScore === "number") {
     sets.push("site_score = ?");
     params.push(changes.siteScore);
+  }
+  // Typed in by hand, when the scanner could not find one or found the wrong
+  // one. It wins over anything a later scan turns up, which is what the
+  // NULLIF/COALESCE in saveProspectScan is there to guarantee.
+  if (changes.email !== undefined) {
+    sets.push("email = ?");
+    params.push(changes.email.trim().slice(0, 200) || null);
   }
   if (sets.length === 0) return false;
 
@@ -345,10 +352,16 @@ export async function saveProspectScan(
 ): Promise<void> {
   await withDb(async (db) => {
     await db.execute(
-      // COALESCE on email keeps anything already there: a corrected address
-      // typed in by hand must not be overwritten by a rescan of the page.
+      // Keeps anything already there: a corrected address typed in by hand
+      // must not be overwritten by a rescan of the page. NULLIF as well as
+      // COALESCE, because an empty string is not an address — without it a
+      // row that once stored "" would refuse every address found afterwards
+      // and look, from the page, exactly like a scan that found nothing.
       `UPDATE prospects
-         SET site_score = ?, site_findings = ?, email = COALESCE(email, ?), scanned_at = NOW()
+         SET site_score = ?,
+             site_findings = ?,
+             email = COALESCE(NULLIF(email, ''), ?),
+             scanned_at = NOW()
        WHERE id = ?`,
       [
         scan ? scan.score : null,

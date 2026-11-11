@@ -451,7 +451,10 @@ export function ProspectFinder() {
     setProspects((list) => list.map((p) => (p.id === id ? { ...p, ...changes } : p)));
   }
 
-  async function save(id: number, changes: { status?: ProspectStatus; notes?: string; siteScore?: number }) {
+  async function save(
+    id: number,
+    changes: { status?: ProspectStatus; notes?: string; siteScore?: number; email?: string },
+  ) {
     patch(id, changes as Partial<Prospect>);
     await fetch("/api/admin/prospects", {
       method: "PATCH",
@@ -887,7 +890,7 @@ function Row({
 }: {
   p: Prospect;
   busy?: Busy;
-  onSave: (id: number, changes: { status?: ProspectStatus; notes?: string }) => void;
+  onSave: (id: number, changes: { status?: ProspectStatus; notes?: string; email?: string }) => void;
   onScan: (p: Prospect) => void;
   onContacted: (id: number, name: string) => void;
 }) {
@@ -901,6 +904,7 @@ function Row({
   const [profile, setProfile] = useState(false);
   const [history, setHistory] = useState<SentEmail[] | null>(null);
   const [openEmail, setOpenEmail] = useState<number | null>(null);
+  const [typingEmail, setTypingEmail] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState("");
   const [sendError, setSendError] = useState("");
@@ -1030,6 +1034,56 @@ function Row({
             Maps ↗
           </a>
         )}
+        {/* No address found. Often there is one on the site and the scanner
+            could not see it — a page built in JavaScript, or a host that
+            blocks us. Typing it in beats waiting for the scanner to improve,
+            and a hand-typed address is never overwritten by a later scan. */}
+        {!p.email &&
+          (typingEmail === null ? (
+            <button
+              type="button"
+              onClick={() => setTypingEmail("")}
+              className="rounded-lg border border-border px-2.5 py-1 font-semibold hover:border-brand-pink hover:text-foreground"
+              title="Type in the address from their website"
+            >
+              Add email
+            </button>
+          ) : (
+            <span className="flex items-center gap-1.5">
+              <input
+                autoFocus
+                value={typingEmail}
+                onChange={(e) => setTypingEmail(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && typingEmail.includes("@")) {
+                    onSave(p.id, { email: typingEmail.trim() });
+                    setTypingEmail(null);
+                  }
+                  if (e.key === "Escape") setTypingEmail(null);
+                }}
+                placeholder="info@theirsite.co.uk"
+                className="w-56 rounded-lg border border-border bg-background px-2.5 py-1 text-[11px] text-foreground outline-none focus:border-brand-pink"
+              />
+              <button
+                type="button"
+                disabled={!typingEmail.includes("@")}
+                onClick={() => {
+                  onSave(p.id, { email: typingEmail.trim() });
+                  setTypingEmail(null);
+                }}
+                className="rounded-lg border border-border px-2.5 py-1 font-semibold hover:border-brand-pink hover:text-foreground disabled:opacity-40"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                onClick={() => setTypingEmail(null)}
+                className="font-semibold text-muted hover:text-foreground"
+              >
+                Cancel
+              </button>
+            </span>
+          ))}
         {p.email && (
           <>
             <button

@@ -148,8 +148,14 @@ export async function PATCH(request: Request) {
   const status: ProspectStatus | undefined = isStatus(body?.status) ? body.status : undefined;
   const notes = typeof body?.notes === "string" ? body.notes : undefined;
   const siteScore = num(body?.siteScore);
+  // A plain shape check, not validation of the address itself: the person
+  // typing it is reading it off the business's own website.
+  const email =
+    typeof body?.email === "string" && (body.email.trim() === "" || body.email.includes("@"))
+      ? body.email
+      : undefined;
 
-  const ok = await updateProspect(id, { status, notes, siteScore });
+  const ok = await updateProspect(id, { status, notes, siteScore, email });
   if (!ok) return NextResponse.json({ error: "not_saved" }, { status: 500 });
 
   return NextResponse.json({ ok: true });
