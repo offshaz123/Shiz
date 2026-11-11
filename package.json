@@ -7,9 +7,11 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --import ./tests/resolve-ts.mjs --test tests/*.test.ts"
+    "test": "node --experimental-strip-types --import ./tests/resolve-ts.mjs --test tests/*.test.ts",
+    "higgsfield:example": "node --env-file=.env.local --experimental-strip-types index.ts"
   },
   "dependencies": {
+    "@higgsfield/client": "^0.2.6",
     "imapflow": "^1.4.1",
     "mysql2": "^3.24.6",
     "next": "^16.4.6",
