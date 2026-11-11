@@ -13,6 +13,12 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "incremental": true,
+    // The tests import "../src/lib/x.ts" with the extension, because they are
+    // run by node --experimental-strip-types rather than by a bundler, and
+    // Node's resolver wants one. Nothing is emitted from this config, so
+    // allowing it costs nothing and keeps the tests type-checked with
+    // everything else rather than excluded from the build's own check.
+    "allowImportingTsExtensions": true,
     "plugins": [
       {
         "name": "next"

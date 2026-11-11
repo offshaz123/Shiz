@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "node --experimental-strip-types --import ./tests/resolve-ts.mjs --test tests/*.test.ts"
   },
   "dependencies": {
     "imapflow": "^1.4.1",

@@ -133,6 +133,29 @@ export function parseTarget(raw: string): URL | null {
   return target;
 }
 
+/**
+ * One more page off the same site, as HTML, or "" if it will not come.
+ *
+ * Used to go and look at a contact page when the homepage has no address on
+ * it. Deliberately returns a string rather than throwing: a contact page that
+ * 404s or is not HTML is an ordinary outcome of guessing at a URL, not an
+ * error worth stopping a scan for.
+ *
+ * Goes through safeFetch like everything else, so the private-address check
+ * applies to it and to each redirect it follows. A page we chose by reading a
+ * link off somebody else's site is exactly the case that check exists for.
+ */
+export async function fetchExtraPage(target: URL, signal: AbortSignal): Promise<string> {
+  try {
+    const { res } = await safeFetch(target, signal);
+    if (!res.ok) return "";
+    if (!(res.headers.get("content-type") ?? "").includes("html")) return "";
+    return await readCapped(res);
+  } catch {
+    return "";
+  }
+}
+
 export type FetchedPage = {
   html: string;
   finalUrl: string;
