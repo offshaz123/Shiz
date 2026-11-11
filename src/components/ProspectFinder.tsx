@@ -72,6 +72,35 @@ const STATUS_LABEL: Record<ProspectStatus, string> = {
   customer: "Customer",
 };
 
+/**
+ * The colour down the left edge of a row: what has happened to this business.
+ *
+ * On the Contacted list everything has had something done to it, and until
+ * now they all looked identical — a business that has had one email and not
+ * replied read exactly like one that was rung and said no. The distinction
+ * that matters most is the first one: emailed and nothing else, which means
+ * a sequence is running and there is nothing to do but wait.
+ */
+function edge(p: Prospect): string {
+  if (p.unsubscribedAt) return "border-l-4 border-l-red-500/70";
+  if (p.repliedAt) return "border-l-4 border-l-sky-500";
+  switch (p.status) {
+    case "customer":
+      return "border-l-4 border-l-violet-500";
+    case "interested":
+      return "border-l-4 border-l-sky-500";
+    case "not-interested":
+      return "border-l-4 border-l-border";
+    case "called":
+    case "no-answer":
+      return "border-l-4 border-l-amber-500";
+    default:
+      // Emailed and nothing since. Green, because it is the state where the
+      // machinery is doing the work on its own.
+      return p.emailedAt ? "border-l-4 border-l-emerald-500" : "";
+  }
+}
+
 const STATUS_STYLE: Record<ProspectStatus, string> = {
   new: "border-border text-muted",
   called: "border-border text-foreground",
@@ -450,7 +479,16 @@ export function ProspectFinder() {
   }
 
   function patch(id: number, changes: Partial<Prospect>) {
-    setProspects((list) => list.map((p) => (p.id === id ? { ...p, ...changes } : p)));
+    setProspects((list) => {
+      const next = list.map((p) => (p.id === id ? { ...p, ...changes } : p));
+      // Setting a status lifts that row to the top of its group, so the thing
+      // you just did is in front of you rather than somewhere down a list of
+      // forty. Only for a status: retyping a note should not move the row
+      // out from under the cursor.
+      if (!changes.status) return next;
+      const moved = next.find((p) => p.id === id);
+      return moved ? [moved, ...next.filter((p) => p.id !== id)] : next;
+    });
   }
 
   async function save(
@@ -696,6 +734,16 @@ export function ProspectFinder() {
         ))}
         {moved && <span className="text-xs font-bold text-emerald-500">{moved}</span>}
       </div>
+
+      {/* Six words on what the colours mean, because a worker who has not
+          been told will otherwise ask, or worse, guess. */}
+      <p className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-muted">
+        <span className="border-l-4 border-l-emerald-500 pl-2">emailed, waiting</span>
+        <span className="border-l-4 border-l-amber-500 pl-2">rung</span>
+        <span className="border-l-4 border-l-sky-500 pl-2">interested or replied</span>
+        <span className="border-l-4 border-l-violet-500 pl-2">customer</span>
+        <span className="border-l-4 border-l-red-500/70 pl-2">unsubscribed</span>
+      </p>
 
       {searchNote && (
         <p className="mt-3 rounded-xl border border-border bg-surface px-4 py-3 text-xs font-semibold text-foreground">
@@ -1006,7 +1054,7 @@ function Row({
   }
 
   return (
-    <li className="rounded-xl border border-border bg-surface px-4 py-3">
+    <li className={`rounded-xl border border-border bg-surface px-4 py-3 ${edge(p)}`}>
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <span className="font-semibold text-foreground">{p.name}</span>
         <span className="text-xs text-muted">
