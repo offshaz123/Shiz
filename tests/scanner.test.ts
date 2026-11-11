@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { extractEmail } from "../src/lib/prospect-scan.ts";
-import { isBlockedAddress } from "../src/lib/scan-site.ts";
+import { isBlockedAddress, isChallengePage } from "../src/lib/scan-site.ts";
 import { buildReport } from "../src/lib/site-audit.ts";
 
 /**
@@ -88,4 +88,28 @@ test("a site with no consent banner is told plainly what is missing", () => {
   });
   const tracking = report.categories.find((c) => c.name === "Tracking & Advertising");
   assert.ok(tracking?.checks.some((c) => c.severity === "critical" || c.severity === "warning"));
+});
+
+test("a bot challenge is never mistaken for the business's website", () => {
+  // The exact stub SiteGround served for a prospect: a 200, 167 bytes, and a
+  // meta refresh to a captcha. Scored as a website it reads as a terrible
+  // one, which is how it produced three findings about a page nobody saw.
+  const siteground =
+    '<html><head><link rel="icon" href="data:;"><meta http-equiv="refresh" ' +
+    'content="0;/.well-known/sgcaptcha/?r=%2F&y=ipr:1.2.3.4:17943"></meta></head></html>';
+  assert.equal(isChallengePage(siteground), true);
+
+  assert.equal(
+    isChallengePage('<html><body>Checking your browser before accessing the site.</body></html>'),
+    true,
+  );
+
+  // A real page that happens to be short is not a challenge.
+  assert.equal(
+    isChallengePage(
+      '<html><head><title>Barking Detailing</title></head><body><h1>Barking Detailing</h1>' +
+        "<p>Mobile valeting across east London. Ring 07700 900111 for a price.</p></body></html>",
+    ),
+    false,
+  );
 });

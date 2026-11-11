@@ -17,6 +17,13 @@ const TIMEOUT_MS = 12_000;
 /** Which failures are the caller's fault and which are the site's. */
 const BAD_REQUEST = new Set(["invalid_url", "blocked_address", "unsupported_port", "unsupported_protocol"]);
 
+/**
+ * blocked_by_site is deliberately not in there. The caller did nothing wrong
+ * and neither did we: the site's host decided an automated request was not
+ * welcome, which is its right. 422 says "we could not do this", which is the
+ * truth.
+ */
+
 export async function POST(request: Request) {
   const body = await request.json().catch(() => null);
   const raw = typeof body?.url === "string" ? body.url : "";

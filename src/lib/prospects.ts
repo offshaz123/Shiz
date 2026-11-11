@@ -576,3 +576,34 @@ export async function listTowns(
     return rows.map((r) => ({ town: r.town, n: Number(r.n) }));
   });
 }
+
+/**
+ * Marks for re-scanning everything that came back without a score or without
+ * an address.
+ *
+ * The scanner only looks at prospects it has never seen, which is right —
+ * nobody wants every batch re-fetching the whole list. But it means an
+ * improvement to the scanner never reaches the businesses already in the
+ * list, and three landed in one day: reading the contact page, decoding
+ * obfuscated addresses, and a user agent that firewalls stop rejecting.
+ *
+ * Only the rows that failed. Anything with both a score and an address is
+ * left alone, because re-fetching a site to confirm what we already know is
+ * somebody else's bandwidth spent for nothing.
+ *
+ * Touches scanned_at and nothing else: status, notes, emails sent and the
+ * sequence are all untouched.
+ */
+export async function requeueUnresolved(): Promise<number> {
+  const changed = await withDb(async (db) => {
+    const [res] = await db.execute<ResultSetHeader>(
+      `UPDATE prospects
+          SET scanned_at = NULL
+        WHERE website IS NOT NULL AND website <> ''
+          AND scanned_at IS NOT NULL
+          AND (site_score IS NULL OR email IS NULL OR email = '')`,
+    );
+    return res.affectedRows;
+  });
+  return changed ?? 0;
+}

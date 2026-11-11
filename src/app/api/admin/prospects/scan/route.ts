@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/admin-auth";
-import { listUnscanned, saveProspectScan } from "@/lib/prospects";
+import { listUnscanned, requeueUnresolved, saveProspectScan } from "@/lib/prospects";
 import { scanProspectSite } from "@/lib/prospect-scan";
 
 export const runtime = "nodejs";
@@ -19,9 +19,19 @@ export const dynamic = "force-dynamic";
 const BATCH = 8;
 const CONCURRENCY = 2;
 
-export async function POST() {
+export async function POST(request: Request) {
   if (!(await isAdmin())) {
     return NextResponse.json({ error: "unauthorised" }, { status: 401 });
+  }
+
+  // Putting the failures back in the queue, so an improvement to the scanner
+  // reaches the businesses already on the list rather than only the ones
+  // found after it shipped. Separate from the scanning itself: this marks
+  // them, the normal batches then work through them.
+  const body = await request.json().catch(() => null);
+  if (body?.action === "requeue") {
+    const requeued = await requeueUnresolved();
+    return NextResponse.json({ requeued });
   }
 
   const pending = await listUnscanned(BATCH);

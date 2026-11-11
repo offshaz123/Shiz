@@ -173,6 +173,56 @@ export async function fetchExtraPage(target: URL, signal: AbortSignal): Promise<
   }
 }
 
+/**
+ * Pages that are not the site: a bot challenge wearing a 200.
+ *
+ * Found on a real prospect. SiteGround answered our scanner with 167 bytes —
+ * a meta refresh to /.well-known/sgcaptcha/ — and nothing about that response
+ * says "error". The audit read it as the business's homepage, scored it 4.1,
+ * and reported no Meta Pixel, no Analytics and no retargeting. Every one of
+ * those findings was about a captcha stub, and any of them could have gone
+ * into an email telling a business what was wrong with a website we had
+ * never actually seen.
+ *
+ * That is the failure that matters here. A scan we cannot do is a minor
+ * inconvenience; a scan that invents faults is a false accusation sent to a
+ * stranger under Walid's name.
+ *
+ * Detected and refused, never worked around. These challenges exist because
+ * the site's owner wants automated traffic to stop, and that is an answer we
+ * take rather than one we get past.
+ */
+const CHALLENGE_SIGNALS = [
+  "sgcaptcha",
+  "cf-browser-verification",
+  "cf_chl_opt",
+  "challenge-platform",
+  "checking your browser before",
+  "enable javascript and cookies to continue",
+  "ddos protection by",
+  "__cf_bm",
+  "incapsula incident id",
+  "please verify you are a human",
+];
+
+export function isChallengePage(html: string): boolean {
+  const lower = html.toLowerCase();
+  if (CHALLENGE_SIGNALS.some((signal) => lower.includes(signal))) return true;
+
+  // The shape of one, for the hosts we have not met yet: a tiny document
+  // whose only instruction is to go somewhere else immediately. A real page
+  // that redirects does so with content behind it; this has none.
+  if (html.length < 2000 && /<meta[^>]+http-equiv=["']?refresh/i.test(html)) {
+    const text = html
+      .replace(/<script[\s\S]*?<\/script>/gi, " ")
+      .replace(/<[^>]+>/g, " ")
+      .trim();
+    if (text.length < 120) return true;
+  }
+
+  return false;
+}
+
 export type FetchedPage = {
   html: string;
   finalUrl: string;
@@ -187,7 +237,8 @@ export type FetchedPage = {
  * the listing from the Places search and would only be paying twice.
  *
  * Throws a coded Error: invalid_url, unreachable, not_html, blocked_address,
- * unsupported_port, dns_failed, too_many_redirects, or an abort.
+ * unsupported_port, dns_failed, too_many_redirects, blocked_by_site, or an
+ * abort.
  */
 export async function fetchForAudit(raw: string, timeoutMs = 12_000): Promise<FetchedPage> {
   const target = parseTarget(raw);
@@ -207,6 +258,9 @@ export async function fetchForAudit(raw: string, timeoutMs = 12_000): Promise<Fe
     if (!type.includes("html")) throw new Error("not_html");
 
     const html = await readCapped(res);
+    // Before anything is measured. A challenge page scores like a very bad
+    // website, which is exactly how this went unnoticed.
+    if (isChallengePage(html)) throw new Error("blocked_by_site");
     const [robots, sitemap] = await Promise.all([
       exists(finalUrl, "/robots.txt", controller.signal),
       exists(finalUrl, "/sitemap.xml", controller.signal),

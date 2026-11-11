@@ -42,6 +42,7 @@ import { buildDraft } from "@/lib/prospect-outreach";
  */
 const SCAN_ERRORS: Record<string, string> = {
   unreachable: "their server returned an error",
+  blocked_by_site: "their host blocked our scanner",
   dns_failed: "domain doesn't resolve",
   not_html: "not a web page",
   invalid_url: "bad web address",
@@ -325,13 +326,27 @@ export function ProspectFinder() {
    * this hosting would be a long-running process and a timeout. The count
    * climbs as it goes so a long run does not look like a hang.
    */
-  async function scanAll() {
+  async function scanAll(retryFailed = false) {
     setScanAllState({ running: true, done: 0 });
     setError("");
     try {
+      // Everything that came back without a score or an address goes back in
+      // the queue first, so improvements to the scanner reach the businesses
+      // already on the list and not only the ones found after.
+      if (retryFailed) {
+        await fetch("/api/admin/prospects/scan", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "requeue" }),
+        }).catch(() => null);
+      }
       let total = 0;
       for (let round = 0; round < 40; round++) {
-        const res = await fetch("/api/admin/prospects/scan", { method: "POST" });
+        const res = await fetch("/api/admin/prospects/scan", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({}),
+        });
         const data = await res.json();
         if (!res.ok) throw new Error(ERRORS[data?.error] ?? "Couldn't scan.");
         total += Number(data.scanned ?? 0) + Number(data.unreadable ?? 0);
@@ -753,11 +768,20 @@ export function ProspectFinder() {
         </select>
         <button
           type="button"
-          onClick={scanAll}
+          onClick={() => scanAll()}
           disabled={scanAllState.running}
           className="rounded-lg border border-border px-3 py-2 text-xs font-semibold text-muted hover:text-foreground disabled:opacity-50"
         >
           {scanAllState.running ? `Scanning… ${scanAllState.done}` : "Scan all sites"}
+        </button>
+        <button
+          type="button"
+          onClick={() => scanAll(true)}
+          disabled={scanAllState.running}
+          className="rounded-lg border border-border px-3 py-2 text-xs font-semibold text-muted hover:text-foreground disabled:opacity-50"
+          title="Scans again every business that came back with no score or no email address"
+        >
+          Retry the empty ones
         </button>
         <button
           type="button"
