@@ -16,6 +16,85 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "why-your-business-doesnt-show-on-google-maps-from-across-town",
+    title: "Why Your Business Doesn't Show on Google Maps From Across Town",
+    description:
+      "You search your own business and it's right there. Your mate two miles away searches the same thing and you're nowhere. Here is why that happens, and which parts of it you can actually change.",
+    publishedAt: "2026-11-11",
+    keywords: [
+      "why isn't my business showing on Google Maps",
+      "Google Maps ranking distance",
+      "business not showing in local search UK",
+      "Google Business Profile not appearing",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You type your trade and your town into your phone and there you are, second in the map pack, looking exactly as you should.",
+          "Then somebody who lives on the other side of town tries the same search and cannot find you at all. They scroll, they give up, they ring the place that did come up.",
+          "Nothing is broken. Nobody has hidden your listing. You are both getting the right answer to a slightly different question.",
+        ],
+      },
+      {
+        heading: "The map moves with the person searching, not with you",
+        paragraphs: [
+          "A normal Google search is roughly the same for everybody. Local results are not. They are assembled around wherever the phone is standing when the search is typed.",
+          "So there is no single position you hold. You rank differently on the high street than you do in the estate at the edge of town, and differently again two streets from that. One business can be first in the map pack for somebody outside their unit and invisible to somebody four miles away looking for exactly the same thing.",
+          "This is why checking your own ranking from your own premises is close to useless as a measurement. You are standing on the single best spot on earth for your listing, logged into the account that owns it, with a search history full of your own name. Of course you come first.",
+        ],
+      },
+      {
+        heading: "The three things Google says it is weighing",
+        paragraphs: [
+          "Google has been consistent for years about what decides local results, and it is worth knowing because two of the three are things you can genuinely work on.",
+        ],
+        bullets: [
+          "Relevance — how well what your listing says matches what was typed. Your primary category is doing most of this work.",
+          "Distance — how far you are from the searcher, or from the area they named if they named one.",
+          "Prominence — how well known the business is, which pulls on reviews, your wider presence online, and what your website says about you.",
+        ],
+      },
+      {
+        heading: "What \"service area\" does and does not do",
+        paragraphs: [
+          "Distance is the one you cannot argue with. You cannot move your unit, and no amount of optimising makes you nearer to somebody than you are. What you can do is make the other two strong enough that distance has to work harder to rule you out.",
+          "Most people, told they are not showing across town, go into their listing and add every town within thirty miles to the service area. It feels like it should fix it. It does not.",
+          "Setting a service area tells Google where you are willing to travel. It does not move the pin, and it does not make you a local business in a town you have no presence in. A mobile valeter in Barking who lists Watford is still, as far as the map is concerned, in Barking.",
+          "That is not a reason to leave it blank if you genuinely travel. It is a reason not to expect it to do something it was never built to do, and a reason not to list half of England in the hope that one sticks.",
+        ],
+      },
+      {
+        heading: "The parts that are actually yours to fix",
+        paragraphs: [
+          "Before you conclude that distance has beaten you, go through the things that have nothing to do with where you are standing.",
+        ],
+        bullets: [
+          "Primary category. Not the most impressive one, the most accurate one — it does more for relevance than any other single field.",
+          "Reviews, and recent ones. A listing with thirty reviews spread across three years reads differently to one with thirty in the last six months.",
+          "Your actual opening hours, kept true. A business shown as closed when somebody is looking is a business they scroll past.",
+          "Photos that are yours, of your work and your premises, rather than stock pictures of a generic shop front.",
+          "A website that says where you are, in text, on the page — not only in an image of a letterhead in the footer.",
+        ],
+      },
+      {
+        heading: "When distance really has beaten you",
+        paragraphs: [
+          "None of those are tricks and none of them work overnight. They are the difference between being ruled out at four miles and being worth showing at six.",
+          "Sometimes, though, the honest answer is that you are too far away, and no amount of profile work changes it. If you are twelve miles out and somebody in the town centre is surrounded by competitors doing the same job, you are not going to appear in their map pack. That is the system working as intended, not a fault.",
+          "That is the point at which paid search earns its place, because an advert is not bound by the same proximity rules in the same way. It is also the point to be honest with yourself about whether that town is a market you actually want, or just one you would like to appear in.",
+          "There is a cheaper answer too, and it is the one most businesses skip: get properly dominant in the three or four miles you really do own before spending anything trying to be visible in a town you have never worked in.",
+        ],
+      },
+      {
+        heading: "The short version",
+        paragraphs: [
+          "You do not have a ranking. You have a different ranking for every place a person might be standing, and the one you see from your own doorstep is the most flattering of all of them.",
+          "Check it the way a customer would — someone else's phone, somewhere else in town, not logged into anything. Then spend your effort on category, reviews and what your site actually says, because those are the levers that exist. The distance one does not.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "what-to-do-in-your-first-week-with-a-new-ad-account",
     title: "What to Do in Your First Week With a New Ad Account",
     description:

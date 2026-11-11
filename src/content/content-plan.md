@@ -457,6 +457,43 @@ actually says", because that gap has produced the strongest posts this month.
 - [x] What to Do in Your First Week With a New Ad Account — target: "new Facebook ad account
       warm up", "first week running Meta ads"
 
+## Backlog — added 2026-11-11 research round
+
+Research note: this round deliberately avoids anything that turns on Meta's or Google's own
+documentation, because four of the six items left on the backlog were blocked on exactly that —
+help.instagram.com, Meta's attribution pages and Google's duplicate-listing page would not load,
+and the agency blogs that fill the gap contradict each other. A search for 2026 Google Business
+Profile changes came back almost entirely vendor posts with no named source, so nothing from it
+is written up as fact here. Everything below can be written from first principles, from what the
+site audit tool actually measures, or from a primary source that does load.
+
+- [x] Why Your Business Doesn't Show on Google Maps From Across Town — target: "why isn't my
+      business showing on Google Maps", "Google Maps ranking distance", "business not showing in
+      local search UK" (relevance / distance / prominence are Google's own long-stated local
+      ranking factors; the post claims no radius figures, because there are none to claim)
+- [ ] What a Contact Page Should Actually Have on It — target: "contact page best practices small
+      business", "what to put on a contact page"
+- [ ] Why Your Enquiry Form Gets Spam, and What Actually Stops It — target: "stop contact form
+      spam UK", "contact form spam small business"
+- [ ] How Many Pages Does a Small Business Website Really Need? — target: "how many pages should a
+      small business website have", "small business website structure"
+- [ ] What Happens to a Lead When Nobody Answers the Phone — target: "missed calls losing
+      business", "responding to enquiries fast"
+- [ ] The Four Numbers a Small Business Actually Needs From Its Marketing — target: "marketing
+      metrics for small business", "what to measure marketing small business"
+- [ ] Is a Paid Directory Listing Worth It? — target: "are paid directory listings worth it UK",
+      "Yell advertising worth it"
+- [ ] Writing a Google Business Profile Description That Does Something — target: "Google Business
+      Profile description tips", "business description examples local"
+- [ ] Your Title Tag: The Sixty Characters That Decide the Click — target: "title tag length SEO",
+      "page title for local business"
+- [ ] Does a Small Business Need a Blog If Nobody Reads It? — target: "does a small business need
+      a blog", "blogging worth it small business UK"
+- [ ] What "Service Area" Really Does on a Google Listing — target: "Google Business Profile
+      service area", "service area business vs storefront UK"
+- [ ] Why Two Businesses on the Same Street Rank Differently — target: "local SEO ranking factors
+      small business", "why competitor ranks higher Google Maps"
+
 ## Notes for whoever (human or Routine) picks the next topic
 - Rotate categories — don't publish 3 industry guides in a row
 - Real, specific keyword phrases in the `keywords` array of each post help internal search intent
