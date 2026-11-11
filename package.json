@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "test": "node --experimental-strip-types --import ./tests/resolve-ts.mjs --test tests/*.test.ts",
-    "higgsfield:example": "node --env-file=.env.local --experimental-strip-types index.ts"
+    "higgsfield:example": "node --env-file=.env.local --experimental-strip-types index.ts",
+    "images": "NODE_USE_ENV_PROXY=1 node scripts/generate-images.mjs",
+    "images:estimate": "NODE_USE_ENV_PROXY=1 node scripts/generate-images.mjs --estimate"
   },
   "dependencies": {
     "@higgsfield/client": "^0.2.6",

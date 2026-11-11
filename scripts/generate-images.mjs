@@ -12,6 +12,14 @@
  * is sent and replaced on the way out.
  *
  * Usage
+ *   npm run images:estimate     price one image, generate nothing
+ *   npm run images              generate everything still missing
+ *
+ * Both set NODE_USE_ENV_PROXY=1. Node's built-in fetch ignores HTTPS_PROXY
+ * unless told not to, so without it every request leaves unproxied and comes
+ * back 401 even when the credential is configured correctly.
+ *
+ * Or directly:
  *   node scripts/generate-images.mjs --estimate        price it, generate nothing
  *   node scripts/generate-images.mjs --only=automotive just that one
  *   node scripts/generate-images.mjs                   generate everything missing
@@ -24,7 +32,7 @@ import { mkdir, writeFile, access } from "node:fs/promises";
 import { join } from "node:path";
 
 const API = "https://api.higgsfield.ai";
-const MODEL = "/higgsfield/ads-studio/v1.0";
+const MODEL = "/alibaba/qwen-image-3/text-to-image";
 const OUT_DIR = "public/images/generated";
 
 /** Sent verbatim unless a proxy replaces it. */
@@ -166,7 +174,7 @@ async function estimate(job) {
   const res = await fetch(`${API}/estimate${MODEL}`, {
     method: "POST",
     headers: headers(),
-    body: JSON.stringify({ prompt: job.prompt, aspect_ratio: job.ratio, batch_size: 1 }),
+    body: JSON.stringify({ prompt: job.prompt, aspect_ratio: job.ratio, resolution: "2k" }),
   });
   const text = await res.text();
   if (!res.ok) throw new Error(`estimate ${res.status}: ${text.slice(0, 300)}`);
@@ -180,7 +188,7 @@ async function submit(job) {
     body: JSON.stringify({
       prompt: `${job.prompt} ${STYLE}`,
       aspect_ratio: job.ratio,
-      batch_size: 1,
+      resolution: "2k",
     }),
   });
   const text = await res.text();
