@@ -32,6 +32,25 @@ import { buildDraft } from "@/lib/prospect-outreach";
  * about and it is saved against them.
  */
 
+/**
+ * Why a scan did not produce a score, in words you could say on the phone.
+ *
+ * "Wouldn't load" covered all of these, which threw away the most useful
+ * part: a business whose domain does not resolve at all is a different
+ * conversation from one whose server hiccupped for a second, and both are
+ * different from a page that is a PDF.
+ */
+const SCAN_ERRORS: Record<string, string> = {
+  unreachable: "their server returned an error",
+  dns_failed: "domain doesn't resolve",
+  not_html: "not a web page",
+  invalid_url: "bad web address",
+  too_many_redirects: "too many redirects",
+  blocked_address: "address not allowed",
+  unsupported_port: "address not allowed",
+  unsupported_protocol: "address not allowed",
+};
+
 const ERRORS: Record<string, string> = {
   no_key: "GOOGLE_PLACES_KEY isn't set on the server, so searching won't work.",
   budget: "This month's Google lookup allowance is spent. It resets on the 1st.",
@@ -438,10 +457,14 @@ export function ProspectFinder() {
         setBusy((b) => ({ ...b, [p.id]: {} }));
         await save(p.id, { siteScore: data.score });
       } else {
-        setBusy((b) => ({ ...b, [p.id]: { scanError: "wouldn't load" } }));
+        const reason = typeof data?.error === "string" ? data.error : "";
+        setBusy((b) => ({
+          ...b,
+          [p.id]: { scanError: SCAN_ERRORS[reason] ?? "wouldn't load" },
+        }));
       }
     } catch {
-      setBusy((b) => ({ ...b, [p.id]: { scanError: "failed" } }));
+      setBusy((b) => ({ ...b, [p.id]: { scanError: "couldn't reach the server" } }));
     }
   }
 

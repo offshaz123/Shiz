@@ -13,8 +13,25 @@ import { lookup } from "node:dns/promises";
 const MAX_BYTES = 2 * 1024 * 1024;
 const MAX_REDIRECTS = 3;
 
-export const AUDIT_UA =
-  "Mozilla/5.0 (compatible; ShazMarketingAudit/1.0; +https://shazmarketing.com/free-audit)";
+/**
+ * Who we say we are when we fetch somebody's site.
+ *
+ * Still an honest identification — the name of the tool and a page that
+ * explains it — but without the "Mozilla/5.0 (compatible; ...)" wrapper it
+ * used to carry. That prefix is the classic signature of a crawler dressed
+ * as a browser, and firewalls match on it.
+ *
+ * Found on a real prospect: car-recovery-services.co.uk answered 502 to the
+ * old string and 200 to this one, at the same moment, from the same machine.
+ * Their site was working perfectly; the call list said "site wouldn't load",
+ * and we would have rung them to discuss a problem that was ours.
+ *
+ * Deliberately not a browser's user agent. We are a tool fetching a page on
+ * behalf of a business that may be about to write to them, and saying so is
+ * the right default. A site that blocks us when we are named has made a
+ * choice we should respect rather than work around.
+ */
+export const AUDIT_UA = "ShazMarketingAudit/1.0 (+https://shazmarketing.com/free-audit)";
 
 /**
  * Blocks anything that is not a public address. Without this, whoever can
