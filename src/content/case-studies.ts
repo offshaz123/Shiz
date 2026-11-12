@@ -71,8 +71,9 @@ export const clientResults: ClientResult[] = [
     client: "Auto Wrap Manchester",
     sector: "Automotive — vehicle wrapping, PPF & window tinting",
     website: "https://autowrapmanchester.co.uk",
+    logo: "/clients/auto-wrap-manchester.png",
     period: "Past client",
-    services: ["Meta & Instagram Ads"],
+    services: ["Meta & Instagram Ads", "CRM & Automation"],
     headline: "6,920 leads at £2.89 each.",
     summary:
       "A Trafford Park wrapping and paint protection specialist, working on cars, vans and fleets. We ran the Meta and Instagram advertising: £20,000 of ad spend over the course of the work, and an average cost per lead of £2.89.",
@@ -80,12 +81,37 @@ export const clientResults: ClientResult[] = [
       "Built and ran the Meta and Instagram campaigns, optimised for enquiries rather than engagement.",
       "Wrote and tested the creative, with several versions running against each other so the weaker ones could be switched off.",
       "Tracked cost per lead across the whole account, which is the number that decides whether the spend is working.",
+      "Built the CRM behind it, so the enquiries the ads produced landed somewhere they could be worked through rather than in a busy inbox.",
     ],
     stats: [
       { value: "6,920", label: "Leads generated" },
       { value: "£2.89", label: "Average cost per lead" },
       { value: "850+", label: "Estimated customers" },
       { value: "£20,000", label: "Ad spend managed" },
+    ],
+  },
+  {
+    slug: "la-modz",
+    client: "LA MODZ",
+    sector: "Automotive — window tinting & vehicle modification",
+    website: "https://lamodz.co.uk",
+    logo: "/clients/la-modz.png",
+    period: "Past client",
+    services: ["Google Ads", "CRM & Automation"],
+    headline: "9,259 leads at £2.70 each.",
+    summary:
+      "A Birmingham window tinting and vehicle modification specialist. We ran the Google Ads and built the CRM behind them: \u00a325,000 of ad spend over the course of the work, at an average cost per lead of \u00a32.70.",
+    work: [
+      "Built and ran the Google Ads account, targeting the searches people make when they already want the work done.",
+      "Managed negative keywords continuously, which is the ongoing job that stops budget going on searches that were never going to convert.",
+      "Tracked calls and form submissions as conversions, so the cost per lead was measured against real enquiries rather than clicks.",
+      "Built the CRM behind it, so every enquiry had somewhere to live and a follow-up already set up.",
+    ],
+    stats: [
+      { value: "9,259", label: "Leads generated" },
+      { value: "£2.70", label: "Average cost per lead" },
+      { value: "1,200", label: "Estimated customers" },
+      { value: "£25,000", label: "Ad spend managed" },
     ],
   },
   {
