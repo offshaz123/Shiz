@@ -11,6 +11,7 @@ import { PublicOnly } from "@/components/PublicOnly";
 import { PageViewTracker } from "@/components/PageViewTracker";
 import { CookieBanner } from "@/components/CookieConsent";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import { siteConfig } from "@/lib/site-config";
 
 const geistSans = Geist({
@@ -97,6 +98,13 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
+        {/* Without JavaScript the reveal classes never get switched on, so the
+            sections would stay at opacity 0. This hands the whole page over
+            as-is instead. The component also has its own 1.5s backstop for
+            when JavaScript is present but something goes wrong. */}
+        <noscript>
+          <style>{".reveal{opacity:1!important;transform:none!important}"}</style>
+        </noscript>
         <PublicOnly>
           <PageViewTracker />
           <MetaPixel />
@@ -106,6 +114,7 @@ export default function RootLayout({
         </PublicOnly>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <PublicOnly>
+            <ScrollProgress />
             <Header />
           </PublicOnly>
           <main className="flex-1">{children}</main>

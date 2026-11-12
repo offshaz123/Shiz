@@ -184,4 +184,13 @@ export const BRAND_PROMPTS = [
       "Mixed ages, ordinary work clothes, British. Natural window light, " +
       "photographic, shallow depth of field. No text, no signage, no logos.",
   },
+  {
+    name: "brand-phones-duo",
+    ratio: "16:9",
+    seed: 205,
+    prompt:
+      "Two hands holding two iPhones side by side, both screens facing the camera " +
+      "straight on and filled with plain mid-grey, plain soft grey studio " +
+      "background, even light, no reflections on the glass. Photographic, sharp.",
+  },
 ];

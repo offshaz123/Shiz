@@ -12,6 +12,7 @@ import { GoogleCalendarBadge } from "@/components/GoogleCalendarBadge";
 import { FaqJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
 import { blogPosts } from "@/content/blog";
+import { Reveal } from "@/components/Reveal";
 
 /**
  * The reviews section reads from the database, so a fully static homepage
@@ -56,17 +57,30 @@ export default function Home() {
     <div>
       <HomeHero />
 
-      <StatsBar />
-      <ProblemGrid />
+      <Reveal>
+        <StatsBar />
+      </Reveal>
+      <Reveal>
+        <ProblemGrid />
+      </Reveal>
       {/* The scanner is the strongest thing on this page, so it sits where
           people actually reach. It used to be section six, about 4,900px
           down, which meant most visitors never saw it. */}
-      <HomeScanner />
-      <ServicesShowcase />
-      <HowWeWork />
-      <RealResultsSection />
+      <Reveal>
+        <HomeScanner />
+      </Reveal>
+      <Reveal>
+        <ServicesShowcase />
+      </Reveal>
+      <Reveal>
+        <HowWeWork />
+      </Reveal>
+      <Reveal>
+        <RealResultsSection />
+      </Reveal>
 
       {/* Pricing teaser (full plans on /pricing) */}
+      <Reveal>
       <section className="mx-auto max-w-4xl px-5 py-24 text-center sm:px-8">
         <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
           Pricing
@@ -87,8 +101,10 @@ export default function Home() {
           See Full Pricing →
         </Link>
       </section>
+      </Reveal>
 
       {/* FAQ */}
+      <Reveal>
       <section className="border-t border-border bg-surface">
         <div className="mx-auto max-w-3xl px-5 py-24 sm:px-8">
           <div className="text-center">
@@ -124,6 +140,7 @@ export default function Home() {
         </div>
         <FaqJsonLd items={faqs} />
       </section>
+      </Reveal>
 
       {/* From the blog */}
       {blogPosts.length > 0 && (
@@ -182,9 +199,12 @@ export default function Home() {
 
         Renders nothing until a review has been approved in the admin page.
       */}
-      <Reviews />
+      <Reveal>
+        <Reviews />
+      </Reveal>
 
       {/* Final CTA + form */}
+      <Reveal>
       <section id="lead-form" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
           <div>
@@ -250,8 +270,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-
+      </Reveal>
     </div>
   );
 }

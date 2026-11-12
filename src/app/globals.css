@@ -500,3 +500,38 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
+/* ---------------------------------------------------------------------------
+   Scroll reveals
+   ---------------------------------------------------------------------------
+   Sections rise into place as they reach the screen, so a long page reads as
+   alive rather than as a static document.
+
+   The hidden state is a transition rather than an animation, so an element
+   that is revealed before JavaScript arrives (by the backstop, by noscript,
+   or by reduced motion) simply shows — there is no half-finished keyframe to
+   get stuck in.
+--------------------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.75, 0.3, 1),
+    transform 0.7s cubic-bezier(0.2, 0.75, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
