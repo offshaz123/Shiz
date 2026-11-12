@@ -15,9 +15,6 @@ export function ClientResultCard({ result }: { result: ClientResult }) {
         <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
           <h3 className="text-2xl font-bold text-foreground">{result.client}</h3>
           <span className="text-sm text-muted">{result.sector}</span>
-          <span className="rounded-full border border-border px-3 py-1 text-xs font-semibold text-muted">
-            {result.period}
-          </span>
         </div>
       </div>
 

@@ -77,7 +77,7 @@ export function HeroResultCard() {
               {result.client}
             </p>
             <p className="text-sm text-white/55">
-              {result.sector} · {result.period}
+              {result.sector}
             </p>
           </div>
         </div>

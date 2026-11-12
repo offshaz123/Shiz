@@ -25,7 +25,12 @@ export type ClientResult = {
   website?: string;
   /** The client's own mark, in /public/clients. Falls back to a monogram. */
   logo?: string;
-  period: string;
+  /**
+   * How long the work ran. Deliberately unset on every client: a date beside
+   * a finished campaign invites the reader to wonder why it finished, which
+   * is a question the page cannot answer and does not need to raise.
+   */
+  period?: string;
   /** What we run for them, as service names. */
   services: string[];
   /** The one line that does the selling, drawn from the figures below. */
@@ -43,7 +48,6 @@ export const clientResults: ClientResult[] = [
     sector: "Financial services — international payments",
     website: "https://cobanq.com",
     logo: "/clients/cobanq.png",
-    period: "Ongoing, 13 months so far",
     services: [
       "Website Design & Build",
       "Meta & Instagram Ads",
@@ -72,7 +76,6 @@ export const clientResults: ClientResult[] = [
     sector: "Automotive — vehicle wrapping, PPF & window tinting",
     website: "https://autowrapmanchester.co.uk",
     logo: "/clients/auto-wrap-manchester.png",
-    period: "9.5 months",
     services: ["Meta & Instagram Ads", "CRM & Automation"],
     headline: "6,920 leads at £2.89 each.",
     summary:
@@ -96,7 +99,6 @@ export const clientResults: ClientResult[] = [
     sector: "Automotive — window tinting & vehicle modification",
     website: "https://lamodz.co.uk",
     logo: "/clients/la-modz.png",
-    period: "Past client",
     services: ["Google Ads", "CRM & Automation"],
     headline: "9,259 leads at £2.70 each.",
     summary:
@@ -120,7 +122,6 @@ export const clientResults: ClientResult[] = [
     sector: "Hospitality — independent coffee shop, Slater Street, Liverpool",
     website: "https://coffeerules.uk",
     logo: "/clients/coffee-rules.png",
-    period: "9.5 months",
     services: ["Meta & Instagram Ads"],
     headline: "3,286 leads at \u00a32.57 each, over nine and a half months.",
     summary:
@@ -143,7 +144,6 @@ export const clientResults: ClientResult[] = [
     sector: "Software — websites, apps, custom CRMs and automation",
     website: "https://www.thefxsoft.com",
     logo: "/clients/thefxsoft.svg",
-    period: "Ongoing since 2025",
     services: ["Meta & Instagram Ads"],
     headline: "2,502 leads at \u00a34.67, and 87 of them became subscribers.",
     summary:
@@ -166,7 +166,6 @@ export const clientResults: ClientResult[] = [
     sector: "Financial services — international money transfer",
     website: "https://ftftpay.com",
     logo: "/clients/ftft-pay.png",
-    period: "Ongoing",
     services: ["Meta & Instagram Ads"],
     headline: "4,863 leads at \u00a31.08 each, and 1,284 customers.",
     summary:
@@ -189,7 +188,6 @@ export const clientResults: ClientResult[] = [
     sector: "Automotive — 24/7 vehicle recovery, Edinburgh",
     website: "https://towmycar.uk",
     logo: "/clients/towmycar.png",
-    period: "9 months from December 2025",
     services: ["Meta & Instagram Ads"],
     headline: "1,047 recoveries booked, at \u00a34 of advertising each.",
     summary:
@@ -207,12 +205,32 @@ export const clientResults: ClientResult[] = [
     ],
   },
   {
+    slug: "federation-gym",
+    client: "Federation Gym",
+    sector: "Fitness — gym memberships",
+    website: "https://federationgym.co.uk",
+    services: ["Meta & Instagram Ads", "Google Ads"],
+    headline: "95 memberships from \u00a36,000 \u2014 \u00a363 each.",
+    summary:
+      "Facebook, Instagram and Google running together for a gym. \u00a36,000 split across the three brought 6,500 clicks at an average of 92p, and 95 memberships \u2014 \u00a363 of advertising per member signed up.",
+    work: [
+      "Split the budget across Facebook, Instagram and Google rather than betting it all on one: \u00a32,400, \u00a31,350 and \u00a32,250.",
+      "Meta brought the cheaper clicks at 75p; Google brought the dearer ones at \u00a31.50, and the intent to match.",
+      "Measured against memberships sold rather than clicks or sign-up forms, because a gym is paid when somebody joins.",
+    ],
+    stats: [
+      { value: "95", label: "Memberships sold" },
+      { value: "£63", label: "Cost per membership" },
+      { value: "6,500", label: "Clicks" },
+      { value: "£6,000", label: "Ad spend managed" },
+    ],
+  },
+  {
     slug: "executive-tints",
     client: "Executive Tints & Repairs",
     sector: "Automotive — window tinting & servicing",
     website: "https://executiveontop.com",
     logo: "/clients/executive-tints.png",
-    period: "12 months",
     services: [
       "Website Design & Build",
       "SEO & Local Search",
@@ -239,7 +257,6 @@ export const clientResults: ClientResult[] = [
     slug: "detailmatics",
     client: "Detailmatics",
     sector: "Automotive — servicing & detailing",
-    period: "6 months",
     services: ["Meta & Instagram Ads", "CRM & Automation"],
     headline: "150+ customers through the door on £913 of ad spend.",
     summary:
@@ -262,7 +279,6 @@ export const clientResults: ClientResult[] = [
     sector: "Security services — SIA licensed manned guarding",
     website: "https://alliancesecuritygrp.com",
     logo: "/clients/alliance-security-group.svg",
-    period: "3 months",
     services: ["Website Design & Build", "SEO & Local Search"],
     headline: "9 clients signed in the first three months, from search alone.",
     summary:
