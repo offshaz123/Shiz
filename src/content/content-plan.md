@@ -477,7 +477,7 @@ site audit tool actually measures, or from a primary source that does load.
       spam UK", "contact form spam small business"
 - [ ] How Many Pages Does a Small Business Website Really Need? — target: "how many pages should a
       small business website have", "small business website structure"
-- [ ] What Happens to a Lead When Nobody Answers the Phone — target: "missed calls losing
+- [x] What Happens to a Lead When Nobody Answers the Phone — target: "missed calls losing
       business", "responding to enquiries fast"
 - [ ] The Four Numbers a Small Business Actually Needs From Its Marketing — target: "marketing
       metrics for small business", "what to measure marketing small business"

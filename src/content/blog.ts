@@ -16,6 +16,74 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "what-happens-to-a-lead-when-nobody-answers-the-phone",
+    title: "What Happens to a Lead When Nobody Answers the Phone",
+    description:
+      "A missed call is not a lead waiting patiently for you to ring back. Here is what the caller actually does in the next few minutes, and the cheapest ways to stop losing them.",
+    publishedAt: "2026-11-12",
+    keywords: [
+      "missed calls losing business",
+      "responding to enquiries fast",
+      "missed call text back small business",
+      "why customers don't leave voicemails",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You are under a car, on a roof, mid-treatment, or driving. The phone rings and you cannot get to it. By the time you are free it is two hours later, there is a missed call from a number you do not recognise, and no voicemail.",
+          "Most people treat that as a job to do later. Ring them back this evening, see what they wanted.",
+          "The problem is that the person on the other end did not experience it as a pause. They experienced it as an answer.",
+        ],
+      },
+      {
+        heading: "What the caller does in the next four minutes",
+        paragraphs: [
+          "Somebody ringing a local business about a problem is almost never ringing one local business. They are working down a list, and your number happened to be at the top of it.",
+          "When you do not pick up, they do not sit and wonder about you. They press back and ring the next one. If that one answers, your enquiry is over before you have even seen that it existed. You will ring back later and get a polite \"sorry, I\'ve already booked someone in\" — and you will never know whether it was price, timing, or simply that you were second to the phone.",
+          "This is the part that makes missed calls so expensive and so invisible. A lost quote leaves a trace. A missed call leaves nothing but a number.",
+        ],
+      },
+      {
+        heading: "Voicemail is not the safety net you think it is",
+        paragraphs: [
+          "The instinct is to point people at voicemail and assume that catches the serious ones. In practice very few people leave one. Leaving a voicemail means saying your problem out loud to a machine, giving your number slowly and clearly, and then waiting an unknown length of time to be rung back by somebody who may be about to tell you they cannot help anyway.",
+          "Pressing back and ringing the next listing takes four seconds and gets a human. Most people choose the four seconds.",
+          "Voicemail does still earn its place for the callers who genuinely want you specifically — an existing customer, a referral who was given your name. It just does not catch the cold enquiry, and the cold enquiry is the one your advertising paid for.",
+        ],
+      },
+      {
+        heading: "The cheapest fix is an automatic text",
+        paragraphs: [
+          "If a missed call triggers an immediate text message, the dynamic changes completely. The caller gets something back within seconds, from you, while they still have your name on the screen.",
+          "It works because it costs them nothing. They do not have to explain themselves to a machine or hold a slot in their day open. They can reply with a sentence about what they need and get on with their morning, and the conversation is now in writing where you can pick it up between jobs.",
+          "The message does not need to be clever. It needs to say who you are, that you have seen the call, and what happens next:",
+        ],
+        bullets: [
+          "Name the business, so it is obvious who is texting.",
+          "Say plainly that you missed the call and are on a job.",
+          "Give a realistic time you will ring back — and make it one you will actually hit.",
+          "Invite them to text what they need, so you have something to work with before you call.",
+        ],
+      },
+      {
+        heading: "If you have no system at all, do these two things",
+        paragraphs: [
+          "Not everybody is ready to put software behind their phone, and you do not need to in order to stop the worst of the bleeding.",
+          "First, change the voicemail greeting. Most are the network default or a mumbled line recorded in a car park years ago. Record one that names the business, says you are likely on a job, and tells people they will get a faster answer by texting the same number. That one change turns a dead end into a route.",
+          "Second, decide who the phone belongs to when you cannot hold it. For a lot of one and two person businesses the honest answer is nobody, which is how calls go unanswered all day. Diverting to a family member, a part-time answering service, or even a second handset in the office is not glamorous, but a human voice beats every piece of automation ever built.",
+        ],
+      },
+      {
+        heading: "The number worth actually knowing",
+        paragraphs: [
+          "Almost nobody running a small business knows how many calls they miss in a week. They know the feeling of a busy phone, and they know roughly what they booked, and the gap between those two things never gets counted.",
+          "It is worth counting, because it reframes the whole conversation about advertising. If you are paying for ads to make the phone ring and a meaningful share of those rings go unanswered, the problem is not the campaign and more budget will not fix it. You are paying to generate enquiries and then losing them at the last step, which is the most expensive place to lose anything.",
+          "Count the missed calls for two weeks. Not an estimate — the actual log on the handset. Then decide whether the next bit of money goes on more leads, or on making sure you answer the ones you already get.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "why-your-business-doesnt-show-on-google-maps-from-across-town",
     title: "Why Your Business Doesn't Show on Google Maps From Across Town",
     description:
