@@ -174,7 +174,7 @@ export const industries: Industry[] = [
     slug: "retail-ecommerce",
     image: {
       src: "/images/site/ind-retail.webp",
-      alt: "The counter of a small independent shop, with a card machine and stock behind",
+      alt: "A lit independent shop on a British street at dusk",
       width: 1600,
       height: 900,
     },

@@ -607,3 +607,91 @@ body {
     transform: scaleX(1);
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Scanner preview — the report writing itself beside the address box.
+--------------------------------------------------------------------------- */
+
+/* The dial sweeps round to its score. A conic gradient with a ring mask, so
+   there is no arc maths and nothing running in JavaScript. */
+@property --scan-sweep {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes scan-fill {
+  0% {
+    --scan-sweep: 0deg;
+  }
+  45%,
+  88% {
+    --scan-sweep: 230deg;
+  }
+  100% {
+    --scan-sweep: 0deg;
+  }
+}
+
+.scan-dial {
+  border-radius: 9999px;
+  background: conic-gradient(
+    var(--brand-pink) var(--scan-sweep),
+    var(--border) var(--scan-sweep)
+  );
+  animation: scan-fill 7s cubic-bezier(0.3, 0.8, 0.3, 1) infinite;
+}
+
+@keyframes scan-score {
+  0%,
+  22% {
+    opacity: 0;
+  }
+  40%,
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.scan-score {
+  animation: scan-score 7s ease-in-out infinite;
+}
+
+/* Each check lands, holds, then clears before the next round. */
+@keyframes scan-row {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  12%,
+  82% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  95%,
+  100% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+}
+
+.scan-row {
+  animation: scan-row 7s ease-out infinite both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scan-dial,
+  .scan-score,
+  .scan-row {
+    animation: none;
+  }
+
+  /* Browsers without @property support land here too, which is the point:
+     a static dial at its score rather than an empty ring. */
+  .scan-dial {
+    background: conic-gradient(var(--brand-pink) 230deg, var(--border) 230deg);
+  }
+}

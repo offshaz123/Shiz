@@ -7,6 +7,7 @@ import { LeadForm } from "@/components/LeadForm";
 import { BreadcrumbJsonLd, ServiceJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
 import { ogImage } from "@/lib/seo";
+import { ServiceDemo } from "@/components/ServiceDemos";
 
 export function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }));
@@ -98,6 +99,18 @@ export default async function ServicePage({
               Talk To Walid About This
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* The same working picture as the home page showcase, on the page for
+          the service it illustrates. A paragraph saying the work gets done is
+          weaker than the work appearing to get done. */}
+      <section className="mx-auto max-w-2xl px-5 pt-16 sm:px-8">
+        <div className="rounded-3xl border border-white/10 bg-[#121218] p-6 sm:p-8">
+          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-brand-pink">
+            What it looks like working
+          </p>
+          <ServiceDemo slug={service.slug} />
         </div>
       </section>
 
