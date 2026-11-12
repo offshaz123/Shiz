@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { StartProjectCta } from "@/components/StartProjectCta";
+import { PhotoBand } from "@/components/PhotoBand";
 import { LondonOfficeSection } from "@/components/LondonOffice";
 import { ogImage } from "@/lib/seo";
 
@@ -44,7 +45,10 @@ const values = [
 export default function AboutPage() {
   return (
     <div>
-      <section className="relative overflow-hidden">
+      {/* The name on the wall, behind the page that introduces the company.
+          Centre focus, because the heading here is centred — the scrim has to
+          fall away from the middle rather than from one side. */}
+      <PhotoBand src="/images/site/sign-wall.webp" focus="centre">
         <div
           aria-hidden
           className="pointer-events-none absolute -top-40 left-1/2 h-[480px] w-[800px] -translate-x-1/2 rounded-full opacity-20 blur-3xl brand-gradient-bg"
@@ -62,7 +66,7 @@ export default function AboutPage() {
             technology to manage every lead that comes in.
           </p>
         </div>
-      </section>
+      </PhotoBand>
 
       <section className="mx-auto max-w-6xl px-5 pb-20 sm:px-8">
         <div className="grid items-center gap-10 lg:grid-cols-2">
