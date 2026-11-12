@@ -1,23 +1,98 @@
 # Image prompts
 
-21 prompts: 13 page images, 5 brand mock-ups, 3 re-rolls.
+31 prompts in four groups. **Start with the backgrounds** — those are the ones
+that change how the site looks.
 
-## Which model
+## Which model, and what size
 
-| For | Use |
-|---|---|
-| The 13 page images and the re-rolls | **Nano Banana 2**, 2k |
-| Anything with the name on it (wall, mug, notebook) | **Nano Banana Pro** or **GPT Image 2** |
+| Group | Model | Ratio |
+|---|---|---|
+| Backgrounds | **Nano Banana 2**, 2k | **21:9** if offered, else 16:9 |
+| Page photos and re-rolls | **Nano Banana 2**, 2k | 16:9 |
+| Anything with the name on it | **Nano Banana Pro** or **GPT Image 2** | 16:9 |
 
-Soul Cinema grades beautifully but pulls everything towards *film still* — it
-is why the van shot worked and the garage and team shot did not. Nano Banana 2
-reads as a photograph, and it is on the unlimited list so re-rolls cost nothing.
-
-Set every one to **16:9**.
+Soul Cinema grades beautifully but pulls everything towards *film still* and
+towards the wrong country. Nano Banana 2 reads as a photograph, and it is on
+the unlimited list so re-rolls cost nothing.
 
 ---
 
-## Re-rolls — start here
+## 1. Backgrounds — do these first
+
+A background photo has a different job from a page photo, and most generated
+images fail at it for the same three reasons: the subject sits dead centre
+where the headline goes, the exposure is even so white text has nothing to sit
+against, and every corner is in focus so the eye has nowhere to rest.
+
+Each of these asks for the opposite — **subject in the right third, left half
+dark and empty for text, most of the frame out of focus**. That is what makes
+a site look like TheFXSoft rather than like a brochure.
+
+Generate all ten, then we pick.
+
+### bg-office-desk
+
+```
+A dark modern office at dusk, one desk lit by a monitor and a desk lamp, the rest of the room falling away into shadow. Nobody in shot. Cinematic editorial photograph. The subject sits in the right third; the left half is darker, uncluttered and deliberately empty so white text can be laid over it. Shallow depth of field with most of the frame thrown out of focus. Moody low-key lighting, deep shadows, muted desaturated colour, one warm practical light source. Shot on a 35mm lens at a wide aperture. No text, no words, no lettering, no logos, no signage, no watermarks. Nobody looking at the camera. United Kingdom, present day.
+```
+
+### bg-office-meeting
+
+```
+Two people leaning over a laptop at the far right of a dim open-plan office, seen from across the room, both turned away from the camera. Cinematic editorial photograph. The subject sits in the right third; the left half is darker, uncluttered and deliberately empty so white text can be laid over it. Shallow depth of field with most of the frame thrown out of focus. Moody low-key lighting, deep shadows, muted desaturated colour, one warm practical light source. Shot on a 35mm lens at a wide aperture. No text, no words, no lettering, no logos, no signage, no watermarks. Nobody looking at the camera. United Kingdom, present day.
+```
+
+### bg-working-late
+
+```
+Someone at a desk from behind, silhouetted against a bright window, a city evening outside, the foreground almost black. Cinematic editorial photograph. The subject sits in the right third; the left half is darker, uncluttered and deliberately empty so white text can be laid over it. Shallow depth of field with most of the frame thrown out of focus. Moody low-key lighting, deep shadows, muted desaturated colour, one warm practical light source. Shot on a 35mm lens at a wide aperture. No text, no words, no lettering, no logos, no signage, no watermarks. Nobody looking at the camera. United Kingdom, present day.
+```
+
+### bg-phone-in-hand
+
+```
+A hand holding a phone at the right edge of the frame, screen glow on the fingers, everything beyond it a dark blur of a room. Cinematic editorial photograph. The subject sits in the right third; the left half is darker, uncluttered and deliberately empty so white text can be laid over it. Shallow depth of field with most of the frame thrown out of focus. Moody low-key lighting, deep shadows, muted desaturated colour, one warm practical light source. Shot on a 35mm lens at a wide aperture. No text, no words, no lettering, no logos, no signage, no watermarks. Nobody looking at the camera. United Kingdom, present day.
+```
+
+### bg-workshop-night
+
+```
+The open roller door of a small workshop at night, warm light spilling onto wet tarmac, the shutter and the dark yard filling the left. Cinematic editorial photograph. The subject sits in the right third; the left half is darker, uncluttered and deliberately empty so white text can be laid over it. Shallow depth of field with most of the frame thrown out of focus. Moody low-key lighting, deep shadows, muted desaturated colour, one warm practical light source. Shot on a 35mm lens at a wide aperture. No text, no words, no lettering, no logos, no signage, no watermarks. Nobody looking at the camera. United Kingdom, present day.
+```
+
+### bg-high-street
+
+```
+A British high street at dusk in the rain, shop lights reflected on the pavement, shot from across the road with the near side in darkness. Cinematic editorial photograph. The subject sits in the right third; the left half is darker, uncluttered and deliberately empty so white text can be laid over it. Shallow depth of field with most of the frame thrown out of focus. Moody low-key lighting, deep shadows, muted desaturated colour, one warm practical light source. Shot on a 35mm lens at a wide aperture. No text, no words, no lettering, no logos, no signage, no watermarks. Nobody looking at the camera. United Kingdom, present day.
+```
+
+### bg-van-dawn
+
+```
+A work van parked on a quiet residential street before sunrise, parking lights on, the street still dark, mist in the air. Cinematic editorial photograph. The subject sits in the right third; the left half is darker, uncluttered and deliberately empty so white text can be laid over it. Shallow depth of field with most of the frame thrown out of focus. Moody low-key lighting, deep shadows, muted desaturated colour, one warm practical light source. Shot on a 35mm lens at a wide aperture. No text, no words, no lettering, no logos, no signage, no watermarks. Nobody looking at the camera. United Kingdom, present day.
+```
+
+### bg-notebook-desk
+
+```
+An overhead view of the right-hand corner of a dark wooden desk — a closed notebook, a pen, a phone face down, a cup — with the rest of the surface empty and in shadow. Cinematic editorial photograph. The subject sits in the right third; the left half is darker, uncluttered and deliberately empty so white text can be laid over it. Shallow depth of field with most of the frame thrown out of focus. Moody low-key lighting, deep shadows, muted desaturated colour, one warm practical light source. Shot on a 35mm lens at a wide aperture. No text, no words, no lettering, no logos, no signage, no watermarks. Nobody looking at the camera. United Kingdom, present day.
+```
+
+### bg-handshake
+
+```
+Two people shaking hands at the right of the frame, cropped at the shoulders so no faces are visible, a softly blurred office behind them. Cinematic editorial photograph. The subject sits in the right third; the left half is darker, uncluttered and deliberately empty so white text can be laid over it. Shallow depth of field with most of the frame thrown out of focus. Moody low-key lighting, deep shadows, muted desaturated colour, one warm practical light source. Shot on a 35mm lens at a wide aperture. No text, no words, no lettering, no logos, no signage, no watermarks. Nobody looking at the camera. United Kingdom, present day.
+```
+
+### bg-abstract-light
+
+```
+Abstract out-of-focus light through textured glass in deep magenta and violet against near black, no recognisable objects, like a photograph of a lit room taken far out of focus. Cinematic editorial photograph. The subject sits in the right third; the left half is darker, uncluttered and deliberately empty so white text can be laid over it. Shallow depth of field with most of the frame thrown out of focus. Moody low-key lighting, deep shadows, muted desaturated colour, one warm practical light source. Shot on a 35mm lens at a wide aperture. No text, no words, no lettering, no logos, no signage, no watermarks. Nobody looking at the camera. United Kingdom, present day.
+```
+
+---
+
+## 2. Re-rolls
 
 ### industry-automotive-v2
 
@@ -37,12 +112,6 @@ Eight people in their twenties and thirties standing and talking in a bright mod
 A person in a plain dark jumper holding two phones, one in each hand, looking down at them with a slight smile, head tilted. Both screens face the camera and are filled with flat plain mid-grey — no interface, no numbers, no charts. Soft office background thrown well out of focus, natural light from the side. Photographic, sharp on the hands.
 ```
 
-**Why each changed**
-
-- **Garage** — the first came back with a Cyrillic plate. The UK line below is now baked in.
-- **Office** — the first was a 1990s American film still. Now says present day, eight people, contemporary clothing.
-- **Phones** — screens left plain grey on purpose. Send it over and I will composite real screenshots of your own site in, so the glass shows something genuinely yours and sharp rather than a model inventing an interface with invented figures on it.
-
 ### The UK line
 
 Append to any street, vehicle or shopfront scene.
@@ -53,7 +122,7 @@ United Kingdom, present day. British vehicles with yellow rear number plates bea
 
 ---
 
-## The 13 page images
+## 3. Page photos
 
 ### service-meta-ads
 
@@ -135,11 +204,11 @@ The counter of a small independent shop, card machine and packaging, stock on sh
 
 ---
 
-## Brand mock-ups
+## 4. Brand mock-ups
 
-These break the no-text rule on purpose. Re-roll until the spelling is right and
-**read it letter by letter** — models misspell constantly. Safer route: generate
-with a blank wall or plain cup and I composite your real logo on top.
+These break the no-text rule on purpose. **Read the spelling letter by letter**
+before using one. Safer: generate with a blank wall or plain cup and I
+composite your real logo on top.
 
 ### brand-wall-sign
 
@@ -170,11 +239,3 @@ A group of about twelve people standing together in a bright open-plan office, t
 ```
 Two hands holding two iPhones side by side, both screens facing the camera straight on and filled with plain mid-grey, plain soft grey studio background, even light, no reflections on the glass. Photographic, sharp.
 ```
-
----
-
-## House style
-
-Already included in the 13 page prompts above.
-
-> Photographic, natural daylight, shallow depth of field, muted colour, British setting. No text, no words, no lettering, no logos, no signage, no watermarks. No direct eye contact with the camera. Unposed and ordinary rather than stock-photo cheerful.

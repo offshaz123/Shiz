@@ -245,3 +245,113 @@ export const REROLL_PROMPTS = [
       "natural light from the side. Photographic, sharp on the hands.",
   },
 ];
+
+/**
+ * Background imagery.
+ *
+ * A background photograph has a different job from a page photograph, and
+ * most generated images fail at it for the same three reasons: the subject
+ * sits dead centre where the headline goes, the exposure is even so white
+ * text has nothing to sit against, and every corner is in focus so the eye
+ * has nowhere to rest.
+ *
+ * So each of these asks for the same three things, which BACKGROUND_STYLE
+ * below carries: a dark or shadowed half for text, the subject pushed to one
+ * side, and most of the frame thrown out of focus.
+ *
+ * Generate at 21:9 where the model offers it — a hero band is wider than a
+ * photograph — and otherwise 16:9. Nano Banana 2 at 2k.
+ */
+export const BACKGROUND_STYLE =
+  "Cinematic editorial photograph. The subject sits in the right third; the " +
+  "left half is darker, uncluttered and deliberately empty so white text can " +
+  "be laid over it. Shallow depth of field with most of the frame thrown out " +
+  "of focus. Moody low-key lighting, deep shadows, muted desaturated colour, " +
+  "one warm practical light source. Shot on a 35mm lens at a wide aperture. " +
+  "No text, no words, no lettering, no logos, no signage, no watermarks. " +
+  "Nobody looking at the camera. United Kingdom, present day.";
+
+export const BACKGROUND_PROMPTS = [
+  {
+    name: "bg-office-desk",
+    ratio: "21:9",
+    seed: 401,
+    prompt:
+      "A dark modern office at dusk, one desk lit by a monitor and a desk lamp, " +
+      "the rest of the room falling away into shadow. Nobody in shot.",
+  },
+  {
+    name: "bg-office-meeting",
+    ratio: "21:9",
+    seed: 402,
+    prompt:
+      "Two people leaning over a laptop at the far right of a dim open-plan " +
+      "office, seen from across the room, both turned away from the camera.",
+  },
+  {
+    name: "bg-working-late",
+    ratio: "21:9",
+    seed: 403,
+    prompt:
+      "Someone at a desk from behind, silhouetted against a bright window, " +
+      "a city evening outside, the foreground almost black.",
+  },
+  {
+    name: "bg-phone-in-hand",
+    ratio: "21:9",
+    seed: 404,
+    prompt:
+      "A hand holding a phone at the right edge of the frame, screen glow on " +
+      "the fingers, everything beyond it a dark blur of a room.",
+  },
+  {
+    name: "bg-workshop-night",
+    ratio: "21:9",
+    seed: 405,
+    prompt:
+      "The open roller door of a small workshop at night, warm light spilling " +
+      "onto wet tarmac, the shutter and the dark yard filling the left.",
+  },
+  {
+    name: "bg-high-street",
+    ratio: "21:9",
+    seed: 406,
+    prompt:
+      "A British high street at dusk in the rain, shop lights reflected on the " +
+      "pavement, shot from across the road with the near side in darkness.",
+  },
+  {
+    name: "bg-van-dawn",
+    ratio: "21:9",
+    seed: 407,
+    prompt:
+      "A work van parked on a quiet residential street before sunrise, parking " +
+      "lights on, the street still dark, mist in the air.",
+  },
+  {
+    name: "bg-notebook-desk",
+    ratio: "21:9",
+    seed: 408,
+    prompt:
+      "An overhead view of the right-hand corner of a dark wooden desk — a " +
+      "closed notebook, a pen, a phone face down, a cup — with the rest of the " +
+      "surface empty and in shadow.",
+  },
+  {
+    name: "bg-handshake",
+    ratio: "21:9",
+    seed: 409,
+    prompt:
+      "Two people shaking hands at the right of the frame, cropped at the " +
+      "shoulders so no faces are visible, a softly blurred office behind them.",
+  },
+  {
+    name: "bg-abstract-light",
+    ratio: "21:9",
+    seed: 410,
+    prompt:
+      "Abstract out-of-focus light through textured glass in deep magenta and " +
+      "violet against near black, no recognisable objects, like a photograph " +
+      "of a lit room taken far out of focus.",
+  },
+];
