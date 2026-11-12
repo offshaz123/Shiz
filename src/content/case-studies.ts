@@ -43,7 +43,7 @@ export const clientResults: ClientResult[] = [
     sector: "Financial services — international payments",
     website: "https://cobanq.com",
     logo: "/clients/cobanq.png",
-    period: "6 months",
+    period: "13 months",
     services: [
       "Website Design & Build",
       "Meta & Instagram Ads",
@@ -72,7 +72,7 @@ export const clientResults: ClientResult[] = [
     sector: "Automotive — vehicle wrapping, PPF & window tinting",
     website: "https://autowrapmanchester.co.uk",
     logo: "/clients/auto-wrap-manchester.png",
-    period: "Past client",
+    period: "9.5 months",
     services: ["Meta & Instagram Ads", "CRM & Automation"],
     headline: "6,920 leads at £2.89 each.",
     summary:
