@@ -17,12 +17,6 @@ export type Industry = {
 export const industries: Industry[] = [
   {
     slug: "automotive",
-    image: {
-      src: "/images/site/industry-automotive.webp",
-      alt: "A car raised on a two-post lift in a small independent British garage",
-      width: 1600,
-      height: 900,
-    },
     name: "Automotive",
     teaser: "Detailing, tinting, wrapping, trackers, garages and dealers. Our strongest sector, with published numbers behind it.",
     examples: ["Car detailing", "Ceramic coating", "Window tinting", "Vehicle wrapping", "Trackers", "Garages & MOT", "Used car dealers"],
@@ -61,12 +55,6 @@ export const industries: Industry[] = [
   },
   {
     slug: "hospitality",
-    image: {
-      src: "/images/site/industry-hospitality.webp",
-      alt: "The pass of a small restaurant kitchen during service",
-      width: 1600,
-      height: 900,
-    },
     name: "Restaurants & Hospitality",
     teaser: "Independents, cafés, takeaways and venues. Filling quiet nights rather than shouting into the void.",
     examples: ["Restaurants", "Cafés", "Takeaways", "Bars", "Function venues", "Caterers"],
@@ -85,12 +73,6 @@ export const industries: Industry[] = [
   },
   {
     slug: "home-trades",
-    image: {
-      src: "/images/site/industry-home-trades.webp",
-      alt: "A trade van with its back doors open on a residential street, tools and ladders inside",
-      width: 1600,
-      height: 900,
-    },
     name: "Home & Trade Services",
     teaser: "Plumbers, electricians, builders, roofers and cleaners. High job values, and most competitors run no ads at all.",
     examples: ["Plumbers", "Electricians", "Builders", "Roofers", "Cleaning companies", "Landscapers", "Installers"],
@@ -109,12 +91,6 @@ export const industries: Industry[] = [
   },
   {
     slug: "professional-services",
-    image: {
-      src: "/images/site/industry-professional-services.webp",
-      alt: "A group of people talking in a bright open-plan office",
-      width: 1600,
-      height: 900,
-    },
     name: "Professional Services",
     teaser: "Accountants, solicitors and consultants. Long decisions, high client value, and almost no competition on social.",
     examples: ["Accountants", "Bookkeepers", "Solicitors", "Consultants", "Financial advisers", "Recruiters"],
@@ -172,12 +148,6 @@ export const industries: Industry[] = [
   },
   {
     slug: "retail-ecommerce",
-    image: {
-      src: "/images/site/industry-retail.webp",
-      alt: "The counter of a small independent shop, with a card machine and stock on the shelves behind",
-      width: 1600,
-      height: 900,
-    },
     name: "Retail & E-commerce",
     teaser: "Shops and online stores, where the product does the advertising if you let it.",
     examples: ["Online stores", "Independent retail", "Boutiques", "Product brands", "Local shops"],

@@ -46,12 +46,6 @@ export const services: Service[] = [
       anchor: "meta-ads",
     },
     readMore: { label: "What makes ad creative actually convert", href: "/blog/what-makes-ad-creative-actually-convert" },
-    image: {
-      src: "/images/site/service-meta-ads.webp",
-      alt: "A tradesperson sitting in a van cab, scrolling a social feed on their phone",
-      width: 1600,
-      height: 900,
-    },
   },
   {
     slug: "google-ads",
@@ -157,12 +151,6 @@ export const services: Service[] = [
       anchor: "web-design",
     },
     readMore: { label: "Seven signs your landing page is losing you leads", href: "/blog/signs-your-landing-page-is-losing-leads" },
-    image: {
-      src: "/images/site/service-web-design.webp",
-      alt: "Two phones held side by side, each showing a mobile website",
-      width: 1600,
-      height: 900,
-    },
   },
   {
     slug: "social-media-management",
@@ -189,12 +177,6 @@ export const services: Service[] = [
       anchor: "social-media-management",
     },
     readMore: { label: "Organic social vs paid ads: why you need both", href: "/blog/organic-social-vs-paid-ads" },
-    image: {
-      src: "/images/site/service-social.webp",
-      alt: "Someone looking at two phones, checking how posts are performing",
-      width: 1600,
-      height: 900,
-    },
   },
 ];
 
