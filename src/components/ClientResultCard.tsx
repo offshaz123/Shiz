@@ -75,12 +75,20 @@ export function ClientResultCard({ result }: { result: ClientResult }) {
         ))}
       </ul>
 
-      <Link
-        href="/free-audit"
-        className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-pink hover:underline"
-      >
-        Want numbers like these for your business? <span aria-hidden="true">→</span>
-      </Link>
+      <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2">
+        <Link
+          href={`/case-studies/client/${result.slug}`}
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-pink hover:underline"
+        >
+          Read the full case study <span aria-hidden="true">→</span>
+        </Link>
+        <Link
+          href="/free-audit"
+          className="text-sm font-semibold text-muted hover:text-foreground"
+        >
+          Want numbers like these?
+        </Link>
+      </div>
     </article>
   );
 }

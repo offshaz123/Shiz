@@ -99,7 +99,7 @@ export function HeroResultCard() {
 
       <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2">
         <Link
-          href={`/case-studies/${result.slug}`}
+          href={`/case-studies/client/${result.slug}`}
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:underline"
         >
           See how we did it <span aria-hidden="true">→</span>

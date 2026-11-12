@@ -163,7 +163,7 @@ export default async function NichePage({ params }: { params: Promise<{ slug: st
             </p>
             <p className="mt-3 text-sm text-muted">{niche.proof.client}</p>
             <Link
-              href={`/case-studies/${niche.proof.slug}`}
+              href={`/case-studies/client/${niche.proof.slug}`}
               className="mt-6 inline-block text-sm font-semibold text-brand-pink hover:underline"
             >
               Read what we did →
