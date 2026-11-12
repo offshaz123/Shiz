@@ -138,6 +138,29 @@ export const clientResults: ClientResult[] = [
     ],
   },
   {
+    slug: "thefxsoft",
+    client: "TheFXSoft",
+    sector: "Software — websites, apps, custom CRMs and automation",
+    website: "https://www.thefxsoft.com",
+    logo: "/clients/thefxsoft.svg",
+    period: "Ongoing since 2025",
+    services: ["Meta & Instagram Ads"],
+    headline: "2,502 leads at \u00a34.67, and 87 of them became subscribers.",
+    summary:
+      "A software company selling websites, apps, custom CRMs and automation to other businesses. We run the advertising. \u00a311,684.90 of spend has produced 2,502 leads at an average of \u00a34.67, and 87 of those have gone on to subscribe.",
+    work: [
+      "Run the Meta and Instagram campaigns, aimed at business owners rather than at a consumer audience.",
+      "Write and test the creative, with versions running against each other so the weaker ones get switched off.",
+      "Track cost per lead across the account, which on a subscription product is what decides whether the spend pays for itself.",
+    ],
+    stats: [
+      { value: "2,502", label: "Leads generated" },
+      { value: "£4.67", label: "Average cost per lead" },
+      { value: "87", label: "Software subscribers" },
+      { value: "£11,684.90", label: "Ad spend managed" },
+    ],
+  },
+  {
     slug: "executive-tints",
     client: "Executive Tints & Repairs",
     sector: "Automotive — window tinting & servicing",

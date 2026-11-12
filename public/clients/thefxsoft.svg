@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 64" width="300" height="64" role="img" aria-label="TheFXSoft">
+  <!-- top layer: faceted diamond -->
+  <polygon points="32,4 58,20 32,36 6,20" fill="#2F6E69"/>
+  <polygon points="32,4 58,20 32,20" fill="#5EA69C"/>
+  <polygon points="32,4 6,20 32,20" fill="#4A918A"/>
+  <polygon points="6,20 32,36 32,20" fill="#1F4F4B"/>
+  <polygon points="58,20 32,36 32,20" fill="#2B625E"/>
+  <polygon points="32,12 45,20 32,28 19,20" fill="#3C7F79"/>
+  <!-- middle chevron -->
+  <polygon points="6,30 32,46 58,30 58,36 32,52 6,36" fill="#2F6E69"/>
+  <polygon points="6,30 32,46 32,52 6,36" fill="#1F4F4B"/>
+  <!-- bottom chevron -->
+  <polygon points="6,42 32,58 58,42 58,48 32,64 6,48" fill="#2F6E69"/>
+  <polygon points="6,42 32,58 32,64 6,48" fill="#1F4F4B"/>
+<text x="78" y="46" font-family="Inter Variable, Inter, system-ui, sans-serif" font-size="34" letter-spacing="-1" fill="#163C3A"><tspan font-weight="700">TheFX</tspan><tspan font-weight="400" fill="#2F6E69">Soft</tspan></text>
+</svg>
