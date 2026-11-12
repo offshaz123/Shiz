@@ -50,9 +50,9 @@ export const clientResults: ClientResult[] = [
       "Social Media Management",
       "CRM & Automation",
     ],
-    headline: "19 clients on board from £228 of advertising.",
+    headline: "8,427 leads at £1.86 each, and 2,371 accounts opened.",
     summary:
-      "We built the website, we run the Meta and Instagram advertising, and we write and post the social content ourselves. Every message from every platform lands in one CRM inbox, so an enquiry gets answered whichever way it arrives.",
+      "We built the website, we run the Meta and Instagram advertising, and we write and post the social content ourselves. Every message from every platform lands in one CRM inbox, so an enquiry gets answered whichever way it arrives. £15,638.75 of ad spend has produced 8,427 leads at an average of £1.86, and 2,371 of those have gone on to open an account.",
     work: [
       "Built the website from scratch, with the tracking installed and verified from day one.",
       "Run the Meta and Instagram campaigns that bring the enquiries in.",
@@ -60,10 +60,10 @@ export const clientResults: ClientResult[] = [
       "Every message from Instagram, Messenger and WhatsApp syncs into one CRM inbox, with the follow-up already set up.",
     ],
     stats: [
-      { value: "35", label: "Leads generated" },
-      { value: "£6.50", label: "Average cost per lead" },
-      { value: "19", label: "Clients on board" },
-      { value: "£228", label: "Total ad spend" },
+      { value: "8,427", label: "Leads generated" },
+      { value: "£1.86", label: "Average cost per lead" },
+      { value: "2,371", label: "Accounts opened" },
+      { value: "£15,638.75", label: "Total ad spend" },
     ],
   },
   {
