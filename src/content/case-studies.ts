@@ -220,9 +220,9 @@ export const clientResults: ClientResult[] = [
     ],
     stats: [
       { value: "95", label: "Memberships sold" },
-      { value: "£63", label: "Cost per membership" },
-      { value: "6,500", label: "Clicks" },
-      { value: "£6,000", label: "Ad spend managed" },
+      { value: "£63.16", label: "Cost per membership" },
+      { value: "92p", label: "Average cost per click" },
+      { value: "£2,400 / £1,350 / £2,250", label: "Meta, Instagram, Google spend" },
     ],
   },
   {
