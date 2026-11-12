@@ -441,6 +441,39 @@ export function ProspectFinder() {
    * asks Google for the rest, five at a time, because each one spends a
    * lookup out of the same daily allowance the search uses.
    */
+  /**
+   * Clears everything that arrived from the Companies House register.
+   *
+   * The same action exists on the company page, but this is where the mess
+   * is visible, and sending somebody to another screen to undo what they are
+   * looking at is a poor way to arrange a tool.
+   */
+  async function removeRegisterAdds() {
+    if (
+      !window.confirm(
+        "Remove every company that came from the Companies House register?\n\nAnything you have already emailed or rung is kept. Businesses found through Google are not touched.",
+      )
+    ) {
+      return;
+    }
+    setSearchNote("Removing…");
+    try {
+      const res = await fetch("/api/admin/company", { method: "DELETE" });
+      const data = await res.json();
+      if (!res.ok) {
+        setSearchNote(data?.message ?? "Couldn't remove them.");
+        return;
+      }
+      setSearchNote(
+        `${data.deleted} removed.` +
+          (data.kept > 0 ? ` ${data.kept} kept — already emailed or rung.` : ""),
+      );
+      await load();
+    } catch {
+      setSearchNote("Couldn't reach the server.");
+    }
+  }
+
   async function findListings() {
     setScanAllState({ running: true, done: 0 });
     setError("");
@@ -985,6 +1018,14 @@ export function ProspectFinder() {
           title="Asks Google for the phone number and website of companies found on the register"
         >
           Find their numbers
+        </button>
+        <button
+          type="button"
+          onClick={removeRegisterAdds}
+          className="rounded-lg border border-border px-3 py-2 text-xs font-semibold text-muted hover:border-red-500/50 hover:text-foreground"
+          title="Removes every company added from the Companies House register. Businesses found through Google are untouched."
+        >
+          Remove register adds
         </button>
         <button
           type="button"

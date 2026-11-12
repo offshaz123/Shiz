@@ -847,31 +847,29 @@ export async function deleteProspectsFromRegister(): Promise<{
   deleted: number;
   kept: number;
 } | null> {
+  const CONTACTED_P = "(p.emailed_at IS NOT NULL OR p.called_at IS NOT NULL)";
+
   return withDb(async (db) => {
     const [countRows] = await db.query<RowDataPacket[]>(
       `SELECT
-         SUM(${CONTACTED_SQL}) AS contacted,
+         COALESCE(SUM(${CONTACTED_P}), 0) AS contacted,
          COUNT(*) AS total
-       FROM prospects
-       WHERE place_id LIKE 'ch:%'`,
+       FROM prospects p
+       WHERE p.place_id LIKE 'ch:%'`,
     );
 
     const total = Number(countRows[0]?.total ?? 0);
     const kept = Number(countRows[0]?.contacted ?? 0);
     if (total === 0) return { deleted: 0, kept: 0 };
 
-    // Child rows first. There should be none, since a prospect with a call
-    // against it counts as contacted and is kept — but a stray row would
-    // otherwise block the delete on the foreign key.
-    await db.execute(
-      `DELETE c FROM prospect_calls c
-         JOIN prospects p ON p.id = c.prospect_id
-        WHERE p.place_id LIKE 'ch:%' AND NOT ${CONTACTED_SQL}`,
-    );
-
+    // prospect_calls and prospect_emails are both ON DELETE CASCADE, so
+    // their rows go with the parent. An earlier version cleared them by hand
+    // first, which was unnecessary and was itself the bug: that join put
+    // prospect_calls in scope, and its own called_at column made the
+    // condition ambiguous enough for MySQL to refuse the statement.
     const [result] = await db.execute<ResultSetHeader>(
-      `DELETE FROM prospects
-        WHERE place_id LIKE 'ch:%' AND NOT ${CONTACTED_SQL}`,
+      `DELETE p FROM prospects p
+        WHERE p.place_id LIKE 'ch:%' AND NOT ${CONTACTED_P}`,
     );
 
     return { deleted: result.affectedRows, kept };
