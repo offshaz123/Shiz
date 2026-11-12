@@ -828,3 +828,52 @@ export async function listProspectsByIds(ids: number[]): Promise<Prospect[] | nu
     return rows.map(toProspect);
   });
 }
+
+/**
+ * Takes everything that came from the Companies House register back off the
+ * call list.
+ *
+ * The register's rows are the only ones whose place_id is prefixed "ch:", so
+ * they can be lifted out without touching a single business found through
+ * Google.
+ *
+ * Anything already emailed or rung is deliberately kept. Deleting a prospect
+ * you have spoken to throws away the call log and the email history with it,
+ * and "I pressed the wrong button" is not a good enough reason to lose a
+ * conversation that actually happened. Those are reported back instead so
+ * they can be dealt with one at a time.
+ */
+export async function deleteProspectsFromRegister(): Promise<{
+  deleted: number;
+  kept: number;
+} | null> {
+  return withDb(async (db) => {
+    const [countRows] = await db.query<RowDataPacket[]>(
+      `SELECT
+         SUM(${CONTACTED_SQL}) AS contacted,
+         COUNT(*) AS total
+       FROM prospects
+       WHERE place_id LIKE 'ch:%'`,
+    );
+
+    const total = Number(countRows[0]?.total ?? 0);
+    const kept = Number(countRows[0]?.contacted ?? 0);
+    if (total === 0) return { deleted: 0, kept: 0 };
+
+    // Child rows first. There should be none, since a prospect with a call
+    // against it counts as contacted and is kept — but a stray row would
+    // otherwise block the delete on the foreign key.
+    await db.execute(
+      `DELETE c FROM prospect_calls c
+         JOIN prospects p ON p.id = c.prospect_id
+        WHERE p.place_id LIKE 'ch:%' AND NOT ${CONTACTED_SQL}`,
+    );
+
+    const [result] = await db.execute<ResultSetHeader>(
+      `DELETE FROM prospects
+        WHERE place_id LIKE 'ch:%' AND NOT ${CONTACTED_SQL}`,
+    );
+
+    return { deleted: result.affectedRows, kept };
+  });
+}

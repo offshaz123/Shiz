@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/admin-auth";
 import { companyProfile, searchCompanies, searchRegister, SECTORS } from "@/lib/companies-house";
-import { saveProspects } from "@/lib/prospects";
+import { deleteProspectsFromRegister, saveProspects } from "@/lib/prospects";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -78,9 +78,31 @@ export async function POST(request: Request) {
 
   if (!body?.save) return NextResponse.json({ results: found.data });
 
+  /**
+   * Only the companies that were ticked.
+   *
+   * The register is re-searched above rather than the browser posting the
+   * rows back, so what gets written is still Companies House's data and not
+   * whatever the page happened to be holding. The selection only filters it.
+   *
+   * No selection means nothing is saved. An empty list used to mean "all of
+   * them", which is how fifty companies end up on the call list from one
+   * mis-aimed press.
+   */
+  const select: string[] = Array.isArray(body?.select)
+    ? body.select.filter((n: unknown): n is string => typeof n === "string")
+    : [];
+
+  if (select.length === 0) {
+    return NextResponse.json({ results: found.data, saved: 0 });
+  }
+
+  const wanted = new Set(select);
+  const chosen = found.data.filter((hit) => wanted.has(hit.number));
+
   const label = SECTORS.find((s) => s.slug === sector)?.label ?? sector;
   await saveProspects(
-    found.data.map((hit) => ({
+    chosen.map((hit) => ({
       // Prefixed so a company from the register and a listing from Google
       // can never collide on the same key, and so it is obvious later where
       // a row came from.
@@ -103,5 +125,25 @@ export async function POST(request: Request) {
     location.trim(),
   );
 
-  return NextResponse.json({ results: found.data, saved: found.data.length });
+  return NextResponse.json({ results: found.data, saved: chosen.length });
+}
+
+/**
+ * Undo for the button above.
+ *
+ * Adding fifty companies takes one press, so taking them off again should
+ * too — it is easy to hit "add all" meaning to look at the results first.
+ */
+export async function DELETE() {
+  if (!(await isAdmin())) {
+    return NextResponse.json({ error: "unauthorised" }, { status: 401 });
+  }
+
+  const result = await deleteProspectsFromRegister();
+
+  if (!result) {
+    return NextResponse.json({ error: "no_database" }, { status: 503 });
+  }
+
+  return NextResponse.json(result);
 }
