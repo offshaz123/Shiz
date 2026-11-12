@@ -12,6 +12,7 @@ import {
   type ContactFilter,
   type ProspectFilters,
   type ProspectStatus,
+  setProspectDeleted,
 } from "@/lib/prospects";
 
 export const runtime = "nodejs";
@@ -154,6 +155,15 @@ export async function PATCH(request: Request) {
     typeof body?.email === "string" && (body.email.trim() === "" || body.email.includes("@"))
       ? body.email
       : undefined;
+
+  // Moving to or out of the deleted folder is its own thing, not a status
+  // change: a deleted prospect keeps whatever status it had, so that putting
+  // it back does not quietly reset it to new.
+  if (typeof body?.deleted === "boolean") {
+    const moved = await setProspectDeleted(id, body.deleted);
+    if (!moved) return NextResponse.json({ error: "not_saved" }, { status: 500 });
+    return NextResponse.json({ ok: true });
+  }
 
   const ok = await updateProspect(id, { status, notes, siteScore, email });
   if (!ok) return NextResponse.json({ error: "not_saved" }, { status: 500 });

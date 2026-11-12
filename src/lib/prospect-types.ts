@@ -97,6 +97,8 @@ export type Prospect = {
   lastCall: { outcome: string; at: string } | null;
   /** When an email was last sent to them from the admin page. */
   emailedAt: string | null;
+  /** Set when the row is in the deleted folder. Never actually removed. */
+  deletedAt: string | null;
   /** Set when the first email was sent by hand, which is what starts the two
    *  that follow on their own. Null means no sequence is running. */
   sequenceStartedAt: string | null;

@@ -131,6 +131,7 @@ const FILTERS = [
   { value: "interested", label: "Interested" },
   { value: "not-interested", label: "Not interested" },
   { value: "customer", label: "Customers" },
+  { value: "deleted", label: "Deleted" },
 ] as const;
 
 /**
@@ -605,6 +606,25 @@ export function ProspectFinder() {
     });
   }
 
+  /** Moves a row to the deleted folder, or brings it back. */
+  async function setDeleted(id: number, deleted: boolean) {
+    try {
+      const res = await fetch("/api/admin/prospects", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, deleted }),
+      });
+      if (!res.ok) {
+        setSearchNote("Couldn't do that.");
+        return;
+      }
+      setSearchNote(deleted ? "Moved to Deleted." : "Put back on the list.");
+      await load();
+    } catch {
+      setSearchNote("Couldn't reach the server.");
+    }
+  }
+
   async function save(
     id: number,
     changes: { status?: ProspectStatus; notes?: string; siteScore?: number; email?: string },
@@ -1064,6 +1084,7 @@ export function ProspectFinder() {
               onScan={scan}
               onContacted={markContacted}
               onLogged={load}
+              onDelete={setDeleted}
             />
           ))}
         </Section>
@@ -1083,6 +1104,7 @@ export function ProspectFinder() {
               onScan={scan}
               onContacted={markContacted}
               onLogged={load}
+              onDelete={setDeleted}
             />
           ))}
         </Section>
@@ -1128,6 +1150,7 @@ function Row({
   onScan,
   onContacted,
   onLogged,
+  onDelete,
 }: {
   p: Prospect;
   busy?: Busy;
@@ -1135,6 +1158,7 @@ function Row({
   onScan: (p: Prospect) => void;
   onContacted: (id: number, name: string) => void;
   onLogged: () => void;
+  onDelete: (id: number, deleted: boolean) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [notes, setNotes] = useState(p.notes);
@@ -1699,6 +1723,17 @@ function Row({
           className="text-[11px] font-semibold text-muted hover:text-foreground"
         >
           {p.notes && !open ? "Notes ✓" : open ? "Close notes" : "Notes"}
+        </button>
+        {/* Nothing is destroyed: this moves the row to the Deleted folder,
+            where the same button brings it back. */}
+        <button
+          type="button"
+          onClick={() => onDelete(p.id, !p.deletedAt)}
+          className={`text-[11px] font-semibold ${
+            p.deletedAt ? "text-brand-pink hover:underline" : "text-muted hover:text-red-500"
+          }`}
+        >
+          {p.deletedAt ? "Put it back" : "Delete"}
         </button>
       </div>
 

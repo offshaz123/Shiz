@@ -50,6 +50,7 @@ interface ProspectRow extends RowDataPacket {
   last_call_outcome?: string | null;
   last_call_at?: string | null;
   emailed_at: string | null;
+  deleted_at: string | null;
   email_count?: number | null;
   listing_checked_at: string | null;
   sequence_started_at: string | null;
@@ -110,6 +111,7 @@ function toProspect(row: ProspectRow): Prospect {
       ? { outcome: String(row.last_call_outcome), at: String(row.last_call_at ?? "") }
       : null,
     emailedAt: row.emailed_at ? String(row.emailed_at) : null,
+    deletedAt: row.deleted_at ? String(row.deleted_at) : null,
     sequenceStartedAt: row.sequence_started_at ? String(row.sequence_started_at) : null,
     sequenceStoppedAt: row.sequence_stopped_at ? String(row.sequence_stopped_at) : null,
     sequenceStopReason: row.sequence_stop_reason ?? "",
@@ -198,7 +200,8 @@ const CONTACTED_SQL = "(emailed_at IS NOT NULL OR called_at IS NOT NULL)";
 export type ProspectFilters = {
   maxReviews?: number;
   minRating?: number;
-  status?: ProspectStatus | "all" | "to-call";
+  /** "deleted" is the folder, not a status a prospect can be set to. */
+  status?: ProspectStatus | "all" | "to-call" | "deleted";
   contact?: ContactFilter;
   industry?: string;
   /** One town, exactly as it is stored. Empty means every town. */
@@ -217,6 +220,11 @@ function whereFor(filters: ProspectFilters): { where: string[]; params: (string 
   const { maxReviews, minRating, status = "all", contact = "all", industry, town } = filters;
   const where: string[] = [];
   const params: (string | number)[] = [];
+
+  // The deleted folder. Everything hides what has been deleted except the
+  // folder itself, which shows nothing else — so a row is always in exactly
+  // one of the two places and can never quietly appear in both.
+  where.push(status === "deleted" ? "deleted_at IS NOT NULL" : "deleted_at IS NULL");
 
   if (typeof maxReviews === "number") {
     where.push("reviews <= ?");
@@ -239,7 +247,7 @@ function whereFor(filters: ProspectFilters): { where: string[]; params: (string 
   }
   if (status === "to-call") {
     where.push("status IN ('new', 'no-answer')");
-  } else if (status !== "all") {
+  } else if (status !== "all" && status !== "deleted") {
     where.push("status = ?");
     params.push(status);
   }
@@ -874,4 +882,24 @@ export async function deleteProspectsFromRegister(): Promise<{
 
     return { deleted: result.affectedRows, kept };
   });
+}
+
+/**
+ * Moves a prospect to the deleted folder, or brings it back.
+ *
+ * Nothing is destroyed. The usual reason for pressing delete on this page is
+ * a bulk action that went further than intended, and the usual thing wanted
+ * ten seconds later is it back — so the row keeps its notes, its call log and
+ * its email history, and simply stops appearing in the lists.
+ */
+export async function setProspectDeleted(id: number, deleted: boolean): Promise<boolean> {
+  const result = await withDb(async (db) => {
+    const [res] = await db.execute<ResultSetHeader>(
+      `UPDATE prospects SET deleted_at = ${deleted ? "NOW()" : "NULL"} WHERE id = ?`,
+      [id],
+    );
+    return res.affectedRows > 0;
+  });
+
+  return result ?? false;
 }

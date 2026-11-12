@@ -244,6 +244,11 @@ const ADDED_COLUMNS: {
   { table: "scan_leads", column: "audit_json", definition: "MEDIUMTEXT NULL AFTER score" },
   { table: "scan_leads", column: "unsubscribed_at", definition: "DATETIME NULL AFTER notes" },
   { table: "prospects", column: "industry", definition: "VARCHAR(40) NULL AFTER found_for" },
+  // Soft delete. A row taken off the call list goes to the deleted folder
+  // rather than out of the database, because the usual reason for pressing
+  // delete is a mis-aimed bulk action, and the usual thing wanted ten seconds
+  // later is it back. Nothing is ever actually destroyed here.
+  { table: "prospects", column: "deleted_at", definition: "DATETIME NULL" },
   // What the scanner found on their site, so the call list can show why they
   // are worth ringing before anyone dials. JSON, because it is only ever read
   // back whole and never queried into.
