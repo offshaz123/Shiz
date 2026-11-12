@@ -82,6 +82,7 @@ export default function Home() {
 
       {/* Pricing teaser (full plans on /pricing) */}
       <Reveal variant="lift">
+      <PhotoBand src="/images/site/bg-hero-room.webp" focus="centre">
       <section className="mx-auto max-w-4xl px-5 py-24 text-center sm:px-8">
         <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
           Pricing
@@ -102,6 +103,7 @@ export default function Home() {
           See Full Pricing →
         </Link>
       </section>
+      </PhotoBand>
       </Reveal>
 
       {/* FAQ */}

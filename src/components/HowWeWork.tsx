@@ -1,3 +1,5 @@
+import { PhotoBand } from "./PhotoBand";
+
 const icon = (d: string) => (
   <svg viewBox="0 0 24 24" fill="none" className="h-6 w-6" aria-hidden="true">
     <path d={d} stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" />
@@ -47,7 +49,8 @@ const steps = [
 
 export function HowWeWork() {
   return (
-    <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
+    <PhotoBand src="/images/site/bg-workshop.webp" focus="right">
+      <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
       <div className="mx-auto max-w-2xl text-center">
         <span className="inline-flex rounded-full border border-brand-pink/30 bg-brand-pink/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-brand-pink">
           How we work
@@ -89,6 +92,7 @@ export function HowWeWork() {
           </div>
         ))}
       </div>
-    </section>
+      </div>
+    </PhotoBand>
   );
 }
