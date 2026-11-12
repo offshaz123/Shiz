@@ -161,6 +161,29 @@ export const clientResults: ClientResult[] = [
     ],
   },
   {
+    slug: "ftft-pay",
+    client: "FTFT Pay",
+    sector: "Financial services — international money transfer",
+    website: "https://ftftpay.com",
+    logo: "/clients/ftft-pay.png",
+    period: "Past client",
+    services: ["Meta & Instagram Ads"],
+    headline: "4,863 leads at \u00a31.08 each, and 1,284 customers.",
+    summary:
+      "A money transfer service sending to over 130 countries. We ran the advertising: \u00a35,247.80 of spend produced 4,863 leads at an average of \u00a31.08, and 1,284 of those became customers.",
+    work: [
+      "Ran the Meta and Instagram campaigns, built around the corridors and currencies people were actually sending to.",
+      "Wrote and tested the creative, with versions running against each other so the weaker ones were switched off.",
+      "Handled the category compliance that financial services advertising sits under, so the account stayed in good standing.",
+    ],
+    stats: [
+      { value: "4,863", label: "Leads generated" },
+      { value: "£1.08", label: "Average cost per lead" },
+      { value: "1,284", label: "Customers acquired" },
+      { value: "£5,247.80", label: "Ad spend managed" },
+    ],
+  },
+  {
     slug: "executive-tints",
     client: "Executive Tints & Repairs",
     sector: "Automotive — window tinting & servicing",
