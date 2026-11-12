@@ -24,7 +24,39 @@ import { services } from "@/content/services";
  * underneath it.
  */
 
-const DWELL_MS = 8000;
+/**
+ * Google Ads leads, because its demo is the best of the six — a search being
+ * typed is the one that reads instantly. The grid on /services keeps the
+ * content file's own order; this is a display order for the showcase only.
+ */
+const ORDER = [
+  "google-ads",
+  "meta-instagram-ads",
+  "crm-automation",
+  "seo",
+  "web-design",
+  "social-media-management",
+];
+
+const TABS = ORDER.map((slug) => services.find((s) => s.slug === slug)).filter(
+  (s): s is (typeof services)[number] => Boolean(s),
+);
+
+/**
+ * How long each one stays up: its own animation, plus a couple of seconds to
+ * read the result. A single fixed dwell left the short demos sitting finished
+ * and cut the long ones off mid-way.
+ */
+const DWELL: Record<string, number> = {
+  "google-ads": 6200,
+  "meta-instagram-ads": 6800,
+  "crm-automation": 6400,
+  seo: 5600,
+  "web-design": 6400,
+  "social-media-management": 5000,
+};
+
+const DEFAULT_DWELL = 6000;
 
 /** One short label per service, shown above the name like a category. */
 const CATEGORY: Record<string, string> = {
@@ -67,13 +99,16 @@ export function ServicesShowcase() {
     return () => observer.disconnect();
   }, []);
 
+  // A timeout rather than an interval, because each service waits a
+  // different length of time — re-armed every time the tab changes.
   useEffect(() => {
     if (!playing || picked) return;
-    const timer = setInterval(() => setActive((i) => (i + 1) % services.length), DWELL_MS);
-    return () => clearInterval(timer);
-  }, [playing, picked]);
+    const wait = DWELL[TABS[active].slug] ?? DEFAULT_DWELL;
+    const timer = setTimeout(() => setActive((i) => (i + 1) % TABS.length), wait);
+    return () => clearTimeout(timer);
+  }, [playing, picked, active]);
 
-  const service = services[active];
+  const service = TABS[active];
   const running = playing && !picked;
 
   return (
@@ -98,7 +133,7 @@ export function ServicesShowcase() {
           aria-label="Services"
           className="no-scrollbar flex gap-2 overflow-x-auto border-b border-white/10 p-3 sm:flex-wrap sm:p-4"
         >
-          {services.map((s, i) => {
+          {TABS.map((s, i) => {
             const isActive = i === active;
             return (
               <button
@@ -123,7 +158,7 @@ export function ServicesShowcase() {
                   <span
                     key={`dwell-${active}`}
                     className="svc-dwell absolute inset-x-0 bottom-0 h-[2px] bg-white/70"
-                    style={{ animationDuration: `${DWELL_MS}ms` }}
+                    style={{ animationDuration: `${DWELL[s.slug] ?? DEFAULT_DWELL}ms` }}
                   />
                 )}
               </button>
@@ -132,7 +167,10 @@ export function ServicesShowcase() {
         </div>
 
         {/* Panel. The key remounts it so every animation replays. */}
-        <div key={service.slug} className="grid gap-10 p-6 sm:p-10 lg:grid-cols-2 lg:items-center">
+        <div
+          key={service.slug}
+          className="svc-slide grid gap-10 p-6 sm:p-10 lg:grid-cols-2 lg:items-center"
+        >
           <div>
             <p className="svc-rise text-xs font-semibold uppercase tracking-[0.18em] text-brand-pink">
               {CATEGORY[service.slug] ?? "Service"}
@@ -283,15 +321,19 @@ function AdsDemo() {
               <Bar w="85%" delay={v.delay + 0.3} />
               <Bar w="60%" delay={v.delay + 0.36} />
             </div>
+            {/* Runs on a loop. This panel used to finish in two seconds and
+                then sit still for the rest of its turn, which made the one
+                service whose whole point is continuous testing look the most
+                static of the six. */}
             <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
               <span
-                className="svc-grow block h-full rounded-full bg-brand-pink"
-                style={{ width: v.bar, animationDelay: `${v.delay + 0.5}s` }}
+                className="svc-race block h-full rounded-full bg-brand-pink"
+                style={{ width: v.bar, animationDelay: `${v.delay}s` }}
               />
             </div>
             <p
-              className="svc-rise mt-2 text-[10px] font-semibold"
-              style={{ animationDelay: `${v.delay + 1.3}s` }}
+              className="svc-verdict mt-2 text-[10px] font-semibold"
+              style={{ animationDelay: `${v.delay}s` }}
             >
               <span className={v.winner ? "text-brand-pink" : "text-white/35"}>
                 {v.winner ? "Enquiries coming in" : "Switched off"}
@@ -300,7 +342,7 @@ function AdsDemo() {
           </div>
         ))}
       </div>
-      <p className="svc-rise mt-4 text-xs text-white/45" style={{ animationDelay: "2s" }}>
+      <p className="svc-rise mt-4 text-xs text-white/45" style={{ animationDelay: "1.2s" }}>
         Whichever one your customers respond to gets the budget. The other stops. That is the whole
         job, repeated every week.
       </p>

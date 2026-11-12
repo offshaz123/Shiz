@@ -535,3 +535,75 @@ body {
     transition: none;
   }
 }
+
+/* The panel slides in from the right as the tab changes, so one service
+   hands over to the next rather than simply being replaced. */
+@keyframes svc-slide {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.svc-slide {
+  animation: svc-slide 0.45s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+
+/* The A/B race, run over and over. The ads panel finished in two seconds and
+   then sat still for the rest of its turn; the copy says the versions are
+   tested continuously, so the picture should show that happening. */
+@keyframes svc-race {
+  0% {
+    transform: scaleX(0);
+  }
+  45%,
+  82% {
+    transform: scaleX(1);
+  }
+  97%,
+  100% {
+    transform: scaleX(0);
+  }
+}
+
+.svc-race {
+  transform-origin: left;
+  animation: svc-race 4.2s cubic-bezier(0.3, 0.7, 0.4, 1) infinite;
+}
+
+/* The verdict under each version, fading in once its bar has run and out
+   again before the next round. */
+@keyframes svc-verdict {
+  0%,
+  40% {
+    opacity: 0;
+  }
+  55%,
+  85% {
+    opacity: 1;
+  }
+  97%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.svc-verdict {
+  animation: svc-verdict 4.2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svc-slide,
+  .svc-race,
+  .svc-verdict {
+    animation: none;
+  }
+
+  .svc-race {
+    transform: scaleX(1);
+  }
+}

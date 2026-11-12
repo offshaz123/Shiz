@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { industries, getIndustry } from "@/content/industries";
 import { LeadForm } from "@/components/LeadForm";
@@ -52,6 +53,23 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
             <span className="brand-gradient-text">{industry.name}</span>
           </h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">{industry.intro}</p>
+
+          {industry.image && (
+            <div className="mx-auto mt-10 max-w-3xl overflow-hidden rounded-3xl border border-border">
+              <Image
+                src={industry.image.src}
+                alt={industry.image.alt}
+                width={industry.image.width}
+                height={industry.image.height}
+                /* The page header, so it is the largest thing above the fold
+                   and should not wait for lazy loading. */
+                priority
+                sizes="(min-width: 768px) 48rem, 100vw"
+                className="h-auto w-full"
+              />
+            </div>
+          )}
+
           <div className="mt-8 flex flex-wrap justify-center gap-2">
             {industry.examples.map((example) => (
               <span key={example} className="rounded-full border border-border bg-surface px-4 py-2 text-xs font-medium text-muted">

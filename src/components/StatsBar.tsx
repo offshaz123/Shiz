@@ -1,4 +1,5 @@
 import { TrustpilotCard } from "./TrustpilotBadge";
+import { CountUp } from "./CountUp";
 
 const stats = [
   { value: "200+", label: "Projects", sub: "Delivered" },
@@ -81,9 +82,10 @@ export function StatsBar() {
             <div key={stat.label} className="text-center lg:text-left">
               <div className="flex items-baseline justify-center gap-2.5 lg:justify-start">
                 <span className="text-base font-semibold text-foreground">{stat.label}</span>
-                <span className="brand-gradient-text text-4xl font-bold tracking-tight">
-                  {stat.value}
-                </span>
+                <CountUp
+                  value={stat.value}
+                  className="brand-gradient-text text-4xl font-bold tracking-tight"
+                />
               </div>
               <p className="mt-1.5 text-sm text-muted">{stat.sub}</p>
               <Stars />
