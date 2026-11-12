@@ -29,6 +29,7 @@ export function PhotoBand({
   focus = "left",
   priority = false,
   className = "",
+  id,
   children,
 }: {
   src: string;
@@ -37,6 +38,8 @@ export function PhotoBand({
   focus?: "left" | "right" | "centre";
   priority?: boolean;
   className?: string;
+  /** For anchor links, since this often replaces a <section id="…">. */
+  id?: string;
   children: React.ReactNode;
 }) {
   const scrim =
@@ -47,7 +50,7 @@ export function PhotoBand({
         : "bg-gradient-to-r from-background via-background/85 to-background/25";
 
   return (
-    <section className={`relative isolate overflow-hidden ${className}`}>
+    <section id={id} className={`relative isolate overflow-hidden ${className}`}>
       <Image
         src={src}
         alt={alt}

@@ -61,16 +61,16 @@ export default function Home() {
       <Reveal>
         <StatsBar />
       </Reveal>
-      <Reveal>
+      <Reveal variant="soft">
         <ProblemGrid />
       </Reveal>
       {/* The scanner is the strongest thing on this page, so it sits where
           people actually reach. It used to be section six, about 4,900px
           down, which meant most visitors never saw it. */}
-      <Reveal>
+      <Reveal variant="soft">
         <HomeScanner />
       </Reveal>
-      <Reveal>
+      <Reveal variant="lift">
         <ServicesShowcase />
       </Reveal>
       <Reveal>
@@ -81,7 +81,7 @@ export default function Home() {
       </Reveal>
 
       {/* Pricing teaser (full plans on /pricing) */}
-      <Reveal>
+      <Reveal variant="lift">
       <section className="mx-auto max-w-4xl px-5 py-24 text-center sm:px-8">
         <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
           Pricing
@@ -205,7 +205,7 @@ export default function Home() {
       </Reveal>
 
       {/* Final CTA + form */}
-      <Reveal>
+      <Reveal variant="soft">
       <PhotoBand src="/images/site/bg-shopfront.webp" focus="centre">
       <section id="lead-form" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-start">

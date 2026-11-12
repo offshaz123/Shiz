@@ -72,16 +72,21 @@ export default async function ServicePage({
           aria-hidden
           className="brand-gradient-bg pointer-events-none absolute -top-40 left-1/2 h-[480px] w-[820px] -translate-x-1/2 rounded-full opacity-20 blur-3xl"
         />
-        <div className="relative mx-auto max-w-4xl px-5 pb-16 pt-20 text-center sm:px-8 sm:pt-24">
+        {/* Two columns rather than three stacked blocks. The working picture
+            used to be a section of its own below this one, which made the
+            page longer to say the same thing. Beside the words it reads as
+            one idea, and the page is shorter than before it existed. */}
+        <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-5 pb-16 pt-20 sm:px-8 sm:pt-24 lg:grid-cols-[1fr_0.95fr]">
+          <div className="text-center lg:text-left">
           <Link href="/services" className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-pink hover:underline">
             ← All services
           </Link>
           <h1 className="mt-6 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
             {service.name}
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-muted">{service.intro}</p>
+          <p className="mt-6 text-lg text-muted">{service.intro}</p>
 
-          <div className="mt-8 flex flex-wrap justify-center gap-2">
+          <div className="mt-8 flex flex-wrap justify-center gap-2 lg:justify-start">
             {service.tags.map((tag) => (
               <span
                 key={tag}
@@ -100,22 +105,16 @@ export default async function ServicePage({
               Talk To Walid About This
             </Link>
           </div>
-        </div>
-      </section>
+          </div>
 
-      {/* The same working picture as the home page showcase, on the page for
-          the service it illustrates. A paragraph saying the work gets done is
-          weaker than the work appearing to get done. */}
-      <Reveal>
-      <section className="mx-auto max-w-2xl px-5 pt-16 sm:px-8">
-        <div className="rounded-3xl border border-white/10 bg-[#121218] p-6 sm:p-8">
-          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-brand-pink">
-            What it looks like working
-          </p>
-          <ServiceDemo slug={service.slug} />
+          <div className="rounded-3xl border border-white/10 bg-[#121218] p-6 sm:p-7">
+            <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-brand-pink">
+              What it looks like working
+            </p>
+            <ServiceDemo slug={service.slug} />
+          </div>
         </div>
       </section>
-      </Reveal>
 
       {/* Capped at the asset's native width so it never upscales and softens. */}
       {service.image && (

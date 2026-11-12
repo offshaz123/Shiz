@@ -70,11 +70,22 @@ function armBackstop() {
 export function Reveal({
   children,
   delay = 0,
+  variant = "rise",
   className = "",
 }: {
   children: React.ReactNode;
   /** Seconds. For staggering siblings. */
   delay?: number;
+  /**
+   * How it arrives. Alternating these down a page is what stops the whole
+   * thing reading as one effect repeated twelve times.
+   *
+   * "rise"  — the default, up from below.
+   * "soft"  — settles in without moving, for full-width bands where a rise
+   *           makes the entire screen shift.
+   * "lift"  — further and slower, for a section that earns the emphasis.
+   */
+  variant?: "rise" | "soft" | "lift";
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -102,7 +113,7 @@ export function Reveal({
   return (
     <div
       ref={ref}
-      className={`reveal ${className}`}
+      className={`reveal ${variant === "rise" ? "" : `reveal-${variant}`} ${className}`}
       style={delay ? { transitionDelay: `${delay}s` } : undefined}
     >
       {children}

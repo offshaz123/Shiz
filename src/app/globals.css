@@ -760,3 +760,52 @@ body {
     transition: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Reveal variants
+   ---------------------------------------------------------------------------
+   Every section rising the same distance in the same direction reads as one
+   repeated effect rather than as a page that is alive. These give a page
+   something to alternate between.
+
+   All of them fade and scale or rise — none translates sideways, because a
+   horizontal transform on a full-width section can push the document wider
+   than the window and give the whole page a horizontal scrollbar for the
+   length of the animation.
+--------------------------------------------------------------------------- */
+
+/* Settles in rather than rising: for bands that are already full-width, where
+   a rise makes the whole screen move. */
+.reveal-soft {
+  opacity: 0;
+  transform: scale(0.985);
+}
+
+.reveal-soft.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Rises further and slower. For a section that deserves the emphasis — a
+   price list, a closing call to action. */
+.reveal-lift {
+  opacity: 0;
+  transform: translateY(34px);
+  transition-duration: 0.85s;
+}
+
+.reveal-lift.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal-soft,
+  .reveal-lift,
+  .reveal-soft.is-in,
+  .reveal-lift.is-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

@@ -1,9 +1,15 @@
+import { PhotoBand } from "./PhotoBand";
 import { ScanPreview } from "./ScanPreview";
 import { SiteScanner } from "./SiteScanner";
 
 export function HomeScanner() {
   return (
-    <section id="scanner" className="scroll-mt-24 border-y border-border bg-surface">
+    <PhotoBand
+      id="scanner"
+      src="/images/site/sign-wall.webp"
+      focus="centre"
+      className="scroll-mt-24 border-y border-border"
+    >
       <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
         <div className="mx-auto max-w-3xl text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
@@ -29,6 +35,6 @@ export function HomeScanner() {
           <ScanPreview />
         </div>
       </div>
-    </section>
+    </PhotoBand>
   );
 }
