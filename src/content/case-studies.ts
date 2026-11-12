@@ -115,6 +115,29 @@ export const clientResults: ClientResult[] = [
     ],
   },
   {
+    slug: "coffee-rules",
+    client: "Coffee Rules",
+    sector: "Hospitality — independent coffee shop, Slater Street, Liverpool",
+    website: "https://coffeerules.uk",
+    logo: "/clients/coffee-rules.png",
+    period: "9.5 months",
+    services: ["Meta & Instagram Ads"],
+    headline: "3,286 leads at \u00a32.57 each, over nine and a half months.",
+    summary:
+      "An independent coffee shop on Slater Street in Liverpool. We ran the Facebook and Instagram advertising for nine and a half months, on \u00a38,459 of ad spend, at an average cost per lead of \u00a32.57.",
+    work: [
+      "Ran the Facebook and Instagram campaigns, built around getting people through the door rather than building an audience.",
+      "Wrote and tested the creative, with versions running against each other so the weaker ones could be switched off.",
+      "Kept the cost per lead visible throughout, which on a hospitality budget is the number that decides whether the advertising is worth running at all.",
+    ],
+    stats: [
+      { value: "3,286", label: "Leads generated" },
+      { value: "£2.57", label: "Average cost per lead" },
+      { value: "497", label: "Estimated customers" },
+      { value: "£8,459", label: "Ad spend managed" },
+    ],
+  },
+  {
     slug: "executive-tints",
     client: "Executive Tints & Repairs",
     sector: "Automotive — window tinting & servicing",
