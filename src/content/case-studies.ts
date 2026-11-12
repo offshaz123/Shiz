@@ -67,6 +67,28 @@ export const clientResults: ClientResult[] = [
     ],
   },
   {
+    slug: "auto-wrap-manchester",
+    client: "Auto Wrap Manchester",
+    sector: "Automotive — vehicle wrapping, PPF & window tinting",
+    website: "https://autowrapmanchester.co.uk",
+    period: "Past client",
+    services: ["Meta & Instagram Ads"],
+    headline: "6,920 leads at £2.89 each.",
+    summary:
+      "A Trafford Park wrapping and paint protection specialist, working on cars, vans and fleets. We ran the Meta and Instagram advertising: £20,000 of ad spend over the course of the work, and an average cost per lead of £2.89.",
+    work: [
+      "Built and ran the Meta and Instagram campaigns, optimised for enquiries rather than engagement.",
+      "Wrote and tested the creative, with several versions running against each other so the weaker ones could be switched off.",
+      "Tracked cost per lead across the whole account, which is the number that decides whether the spend is working.",
+    ],
+    stats: [
+      { value: "6,920", label: "Leads generated" },
+      { value: "£2.89", label: "Average cost per lead" },
+      { value: "850+", label: "Estimated customers" },
+      { value: "£20,000", label: "Ad spend managed" },
+    ],
+  },
+  {
     slug: "executive-tints",
     client: "Executive Tints & Repairs",
     sector: "Automotive — window tinting & servicing",
