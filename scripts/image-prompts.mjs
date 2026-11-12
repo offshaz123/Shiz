@@ -355,3 +355,39 @@ export const BACKGROUND_PROMPTS = [
       "of a lit room taken far out of focus.",
   },
 ];
+
+/**
+ * Retail, take three.
+ *
+ * The first was a dated shop counter. The second was a British high street
+ * at dusk, which looked right until you read the signs: "The British
+ * Neutsirert", "Galliiacroui", "Foodrood". Shop fronts are the worst case
+ * for an image model, because a street of shops is a street of signs.
+ *
+ * So this one asks for retail with nothing written in frame at all.
+ */
+export const RETAIL_PROMPTS = [
+  {
+    name: "ind-retail-v3",
+    ratio: "16:9",
+    seed: 501,
+    prompt:
+      "The inside of a small modern independent shop, looking along a counter " +
+      "with a card machine and a roll of bags, stock on shelves behind, no " +
+      "signage and no price labels visible anywhere. Daylight from a window " +
+      "out of frame. Photographic, shallow depth of field, present day United " +
+      "Kingdom. No text, no words, no lettering, no logos, no packaging with " +
+      "writing on it. Nobody looking at the camera.",
+  },
+  {
+    name: "ind-retail-v3-alt",
+    ratio: "16:9",
+    seed: 502,
+    prompt:
+      "Close on a pair of hands wrapping an item in tissue paper on a shop " +
+      "counter, a card machine just in frame, the shop behind thrown out of " +
+      "focus. No faces. Photographic, warm daylight, present day United " +
+      "Kingdom. No text, no words, no lettering, no logos, no printed " +
+      "packaging.",
+  },
+];

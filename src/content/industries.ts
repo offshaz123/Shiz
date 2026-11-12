@@ -172,12 +172,6 @@ export const industries: Industry[] = [
   },
   {
     slug: "retail-ecommerce",
-    image: {
-      src: "/images/site/ind-retail.webp",
-      alt: "A lit independent shop on a British street at dusk",
-      width: 1600,
-      height: 900,
-    },
     name: "Retail & E-commerce",
     teaser: "Shops and online stores, where the product does the advertising if you let it.",
     examples: ["Online stores", "Independent retail", "Boutiques", "Product brands", "Local shops"],
