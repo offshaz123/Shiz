@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Reveal } from "@/components/Reveal";
 import Link from "next/link";
 import { industries } from "@/content/industries";
 import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/StructuredData";
@@ -33,8 +34,9 @@ export default function IndustriesPage() {
         </div>
       </section>
 
+      <Reveal>
       <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="stagger grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {industries.map((industry) => (
             <Link key={industry.slug} href={`/industries/${industry.slug}`} className="group flex flex-col rounded-2xl border border-border bg-surface p-7 transition-colors hover:border-brand-pink/45">
               <h2 className="text-lg font-semibold text-foreground group-hover:text-brand-pink">{industry.name}</h2>
@@ -51,6 +53,7 @@ export default function IndustriesPage() {
           ))}
         </div>
       </section>
+      </Reveal>
     </div>
   );
 }

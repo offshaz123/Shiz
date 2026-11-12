@@ -81,7 +81,7 @@ export function ProblemGrid() {
         </p>
       </div>
 
-      <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <div className="stagger mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {problems.map((problem) => (
           <Link
             key={problem.title}

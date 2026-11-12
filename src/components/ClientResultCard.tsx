@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CountUp } from "./CountUp";
 import type { ClientResult } from "@/content/case-studies";
 import { ClientLogo } from "./ClientLogo";
 
@@ -54,7 +55,10 @@ export function ClientResultCard({ result }: { result: ClientResult }) {
       <div className="mt-9 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {result.stats.map((stat) => (
           <div key={stat.label} className="rounded-2xl border border-border bg-background p-6">
-            <p className="brand-gradient-text text-4xl font-bold tracking-tight">{stat.value}</p>
+            <CountUp
+              value={stat.value}
+              className="brand-gradient-text block text-4xl font-bold tracking-tight"
+            />
             <p className="mt-2 text-sm text-muted">{stat.label}</p>
           </div>
         ))}

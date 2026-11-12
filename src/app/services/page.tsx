@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Reveal } from "@/components/Reveal";
 import Image from "next/image";
 import Link from "next/link";
 import { RealResultsSection } from "@/components/RealResults";
@@ -139,6 +140,7 @@ export default function ServicesPage() {
       </section>
 
       {/* Services grid */}
+      <Reveal>
       <section className="mx-auto max-w-7xl px-5 pb-4 sm:px-8">
         <div className="grid gap-6 sm:grid-cols-2">
           {services.map((service) => (
@@ -162,11 +164,13 @@ export default function ServicesPage() {
           ))}
         </div>
       </section>
+      </Reveal>
 
       <IndustryStatsSection />
       <RealResultsSection />
 
       {/* How it works */}
+      <Reveal>
       <section className="relative overflow-hidden border-y border-border bg-surface">
         {/* Blurred photographic texture so this band has some depth behind the
             numbered steps. Decorative only — heavily blurred and faded, so it
@@ -200,8 +204,10 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+      </Reveal>
 
       {/* Unified platform */}
+      <Reveal>
       <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <div>
@@ -250,8 +256,10 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+      </Reveal>
 
       {/* Website design */}
+      <Reveal>
       <section id="websites" className="border-y border-border bg-surface">
         <div className="mx-auto max-w-6xl px-5 py-24 sm:px-8">
           <div className="grid items-center gap-12 lg:grid-cols-2">
@@ -317,8 +325,10 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+      </Reveal>
 
       {/* Final CTA */}
+      <Reveal>
       <section className="mx-auto max-w-4xl px-5 pb-24 text-center sm:px-8">
         <div className="rounded-3xl border border-border bg-surface px-8 py-14">
           <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
@@ -345,6 +355,7 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+      </Reveal>
     </div>
   );
 }

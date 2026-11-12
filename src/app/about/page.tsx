@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Reveal } from "@/components/Reveal";
 import Image from "next/image";
 import Link from "next/link";
 import { StartProjectCta } from "@/components/StartProjectCta";
@@ -113,6 +114,7 @@ export default function AboutPage() {
         assistant, a person skim-reading — has nothing to hold onto in an
         anonymous company.
       */}
+      <Reveal>
       <section className="mx-auto max-w-4xl px-5 pb-20 sm:px-8">
         <div className="rounded-3xl border border-border bg-surface p-8 sm:p-10">
           <h2 className="text-2xl font-bold text-foreground">Who you&apos;ll be dealing with</h2>
@@ -149,7 +151,9 @@ export default function AboutPage() {
           </p>
         </div>
       </section>
+      </Reveal>
 
+      <Reveal>
       <section className="border-y border-border bg-surface">
         <div className="mx-auto max-w-6xl px-5 py-20 sm:px-8">
           <h2 className="text-center text-3xl font-bold tracking-tight text-foreground">
@@ -165,7 +169,9 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+      </Reveal>
 
+      <Reveal>
       <section className="mx-auto max-w-4xl px-5 py-20 text-center sm:px-8">
         <h2 className="text-3xl font-bold tracking-tight text-foreground">
           Ready to grow your business?
@@ -181,6 +187,7 @@ export default function AboutPage() {
           Get My Free Strategy Call
         </Link>
       </section>
+      </Reveal>
       <LondonOfficeSection />
       <StartProjectCta />
 

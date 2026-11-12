@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Reveal } from "@/components/Reveal";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -105,6 +106,7 @@ export default async function ServicePage({
       {/* The same working picture as the home page showcase, on the page for
           the service it illustrates. A paragraph saying the work gets done is
           weaker than the work appearing to get done. */}
+      <Reveal>
       <section className="mx-auto max-w-2xl px-5 pt-16 sm:px-8">
         <div className="rounded-3xl border border-white/10 bg-[#121218] p-6 sm:p-8">
           <p className="mb-5 text-xs font-semibold uppercase tracking-[0.18em] text-brand-pink">
@@ -113,6 +115,7 @@ export default async function ServicePage({
           <ServiceDemo slug={service.slug} />
         </div>
       </section>
+      </Reveal>
 
       {/* Capped at the asset's native width so it never upscales and softens. */}
       {service.image && (
@@ -132,6 +135,7 @@ export default async function ServicePage({
         </section>
       )}
 
+      <Reveal>
       <section className="mx-auto max-w-5xl px-5 py-20 sm:px-8">
         <div className="rounded-2xl border border-border bg-surface p-7 sm:p-9">
           <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-pink">
@@ -185,7 +189,9 @@ export default async function ServicePage({
           </p>
         )}
       </section>
+      </Reveal>
 
+      <Reveal>
       <section className="border-y border-border bg-surface">
         <div className="mx-auto max-w-5xl px-5 py-20 sm:px-8">
           <div className="mx-auto max-w-xl text-center">
@@ -202,7 +208,9 @@ export default async function ServicePage({
           </div>
         </div>
       </section>
+      </Reveal>
 
+      <Reveal>
       <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
         <h2 className="text-xl font-bold text-foreground">Other services</h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -217,6 +225,7 @@ export default async function ServicePage({
           ))}
         </div>
       </section>
+      </Reveal>
     </div>
   );
 }

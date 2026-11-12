@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Reveal } from "@/components/Reveal";
 import Link from "next/link";
 import { locations } from "@/content/locations";
 import { BreadcrumbJsonLd, ItemListJsonLd } from "@/components/StructuredData";
@@ -38,8 +39,9 @@ export default function LocationsPage() {
         </div>
       </section>
 
+      <Reveal>
       <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="stagger grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {locations.map((location) => (
             <Link
               key={location.slug}
@@ -64,6 +66,7 @@ export default function LocationsPage() {
           ))}
         </div>
       </section>
+      </Reveal>
     </div>
   );
 }

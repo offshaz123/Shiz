@@ -695,3 +695,68 @@ body {
     background: conic-gradient(var(--brand-pink) 230deg, var(--border) 230deg);
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Stagger
+   ---------------------------------------------------------------------------
+   Children of a revealed grid arrive one after another rather than together.
+   Applied to the grid; each child takes its turn from its position.
+
+   Capped at eight because beyond that the last card waits long enough to feel
+   broken rather than deliberate, and a twelve-item grid is common.
+--------------------------------------------------------------------------- */
+
+.reveal .stagger > * {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.55s cubic-bezier(0.2, 0.75, 0.3, 1),
+    transform 0.55s cubic-bezier(0.2, 0.75, 0.3, 1);
+}
+
+.reveal.is-in .stagger > * {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal.is-in .stagger > *:nth-child(1) { transition-delay: 0.04s; }
+.reveal.is-in .stagger > *:nth-child(2) { transition-delay: 0.1s; }
+.reveal.is-in .stagger > *:nth-child(3) { transition-delay: 0.16s; }
+.reveal.is-in .stagger > *:nth-child(4) { transition-delay: 0.22s; }
+.reveal.is-in .stagger > *:nth-child(5) { transition-delay: 0.28s; }
+.reveal.is-in .stagger > *:nth-child(6) { transition-delay: 0.34s; }
+.reveal.is-in .stagger > *:nth-child(7) { transition-delay: 0.4s; }
+.reveal.is-in .stagger > *:nth-child(n + 8) { transition-delay: 0.46s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal .stagger > *,
+  .reveal.is-in .stagger > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    transition-delay: 0s;
+  }
+}
+
+/* A card that lifts slightly under the pointer. Transform only, so it is
+   composited and costs nothing, and never on a touch screen where there is
+   no hover to speak of. */
+@media (hover: hover) and (pointer: fine) {
+  .lift {
+    transition:
+      transform 0.25s cubic-bezier(0.2, 0.8, 0.3, 1),
+      border-color 0.25s ease;
+  }
+
+  .lift:hover {
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lift,
+  .lift:hover {
+    transform: none;
+    transition: none;
+  }
+}

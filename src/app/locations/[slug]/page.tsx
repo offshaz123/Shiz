@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Reveal } from "@/components/Reveal";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { locations, getLocation, getLocationFaqs } from "@/content/locations";
@@ -60,6 +61,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
         </div>
       </section>
 
+      <Reveal>
       <section className="mx-auto max-w-4xl px-5 py-20 sm:px-8">
         <div
           className={`rounded-2xl border p-7 sm:p-9 ${
@@ -93,7 +95,9 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
           ))}
         </div>
       </section>
+      </Reveal>
 
+      <Reveal>
       <section className="border-y border-border bg-surface">
         <div className="mx-auto max-w-xl px-5 py-20 sm:px-8">
           <div className="text-center">
@@ -109,7 +113,9 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
           </div>
         </div>
       </section>
+      </Reveal>
 
+      <Reveal>
       <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
         <h2 className="text-xl font-bold text-foreground">Other locations</h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-3 lg:grid-cols-5">
@@ -120,6 +126,7 @@ export default async function LocationPage({ params }: { params: Promise<{ slug:
           ))}
         </div>
       </section>
+      </Reveal>
       <FaqSection items={faqs} />
     </div>
   );

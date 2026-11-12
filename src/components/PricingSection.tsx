@@ -126,7 +126,7 @@ export function PricingSection({
           </Link>
         </div>
 
-        <div className={`mt-12 grid gap-6 ${wide ? "" : "lg:grid-cols-3"}`}>
+        <div className={`stagger mt-12 grid gap-6 ${wide ? "" : "lg:grid-cols-3"}`}>
           {group.plans.map((plan) => (
             <PlanCard key={plan.name} plan={plan} wide={wide} />
           ))}

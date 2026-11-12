@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Reveal } from "@/components/Reveal";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { niches, getNiche, getNicheFaqs } from "@/content/niches";
@@ -70,6 +71,7 @@ export default async function NichePage({ params }: { params: Promise<{ slug: st
         </div>
       </section>
 
+      <Reveal>
       <section className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
         <div className="grid gap-6 sm:grid-cols-2">
           <div className="rounded-3xl border border-border bg-surface p-7">
@@ -90,12 +92,14 @@ export default async function NichePage({ params }: { params: Promise<{ slug: st
           <p className="mt-3 leading-relaxed text-muted">{niche.channel.body}</p>
         </div>
       </section>
+      </Reveal>
 
       {/*
         The findings section. This is the part of these pages worth reading: it
         comes from actually scanning these businesses' sites and Google
         listings, not from a list of generic advice. No business is named.
       */}
+      <Reveal>
       <section className="border-y border-border bg-surface">
         <div className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
           <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
@@ -130,7 +134,9 @@ export default async function NichePage({ params }: { params: Promise<{ slug: st
           </p>
         </div>
       </section>
+      </Reveal>
 
+      <Reveal>
       <section className="mx-auto max-w-4xl px-5 py-16 sm:px-8">
         <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
           What works for {niche.trade}
@@ -144,6 +150,7 @@ export default async function NichePage({ params }: { params: Promise<{ slug: st
           ))}
         </div>
       </section>
+      </Reveal>
 
       {niche.proof && (
         <section className="border-y border-border bg-surface">
@@ -165,6 +172,7 @@ export default async function NichePage({ params }: { params: Promise<{ slug: st
         </section>
       )}
 
+      <Reveal>
       <section className="mx-auto max-w-6xl px-5 py-16 sm:px-8">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
           <div>
@@ -184,12 +192,14 @@ export default async function NichePage({ params }: { params: Promise<{ slug: st
           </div>
         </div>
       </section>
+      </Reveal>
 
       <FaqSection
         items={faqs}
         intro={`The things ${niche.trade} ask before they spend anything. Straight answers, including where the answer is that it probably is not worth it.`}
       />
 
+      <Reveal>
       <section className="border-t border-border">
         <div className="mx-auto max-w-6xl px-5 py-14 sm:px-8">
           <h2 className="text-xl font-bold text-foreground">Other automotive trades we work with</h2>
@@ -206,6 +216,7 @@ export default async function NichePage({ params }: { params: Promise<{ slug: st
           </div>
         </div>
       </section>
+      </Reveal>
     </div>
   );
 }

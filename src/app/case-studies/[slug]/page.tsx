@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { Reveal } from "@/components/Reveal";
+import { CountUp } from "@/components/CountUp";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { approaches, getApproach, clientResults } from "@/content/case-studies";
@@ -72,6 +74,7 @@ export default async function ApproachPage({ params }: { params: Promise<{ slug:
         </div>
       </section>
 
+      <Reveal>
       <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
         <span className="inline-flex rounded-full border border-brand-pink/30 bg-brand-pink/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-brand-pink">
           How we work
@@ -105,7 +108,9 @@ export default async function ApproachPage({ params }: { params: Promise<{ slug:
           ))}
         </div>
       </section>
+      </Reveal>
 
+      <Reveal>
       <section className="border-y border-border bg-surface">
         <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
           <div className="flex flex-wrap items-center justify-between gap-4">
@@ -123,7 +128,9 @@ export default async function ApproachPage({ params }: { params: Promise<{ slug:
           </div>
         </div>
       </section>
+      </Reveal>
 
+      <Reveal>
       <section className="mx-auto max-w-3xl px-5 py-20 sm:px-8">
         <div className="text-center">
           <span className="inline-flex rounded-full border border-brand-pink/30 bg-brand-pink/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-brand-pink">
@@ -149,6 +156,7 @@ export default async function ApproachPage({ params }: { params: Promise<{ slug:
           ))}
         </div>
       </section>
+      </Reveal>
 
       {related.length > 0 && (
         <section className="mx-auto max-w-5xl px-5 pb-24 sm:px-8">
@@ -181,7 +189,10 @@ export default async function ApproachPage({ params }: { params: Promise<{ slug:
                 <div className="mt-7 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                   {result.stats.map((stat) => (
                     <div key={stat.label} className="rounded-2xl border border-border bg-background p-5">
-                      <p className="brand-gradient-text text-3xl font-bold">{stat.value}</p>
+                      <CountUp
+                        value={stat.value}
+                        className="brand-gradient-text block text-3xl font-bold"
+                      />
                       <p className="mt-1.5 text-sm text-muted">{stat.label}</p>
                     </div>
                   ))}

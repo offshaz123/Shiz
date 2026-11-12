@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Reveal } from "@/components/Reveal";
 import Link from "next/link";
 import { approaches, clientResults } from "@/content/case-studies";
 import { ClientResultCard } from "@/components/ClientResultCard";
@@ -44,6 +45,7 @@ export default function CaseStudiesPage() {
         </div>
       </section>
 
+      <Reveal>
       <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
         <div className="space-y-8">
           {clientResults.map((result) => (
@@ -76,12 +78,14 @@ export default function CaseStudiesPage() {
           </p>
         </div>
       </section>
+      </Reveal>
 
+      <Reveal>
       <section className="mx-auto max-w-7xl px-5 pb-24 sm:px-8">
         <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
           How we approach each area
         </h2>
-        <div className="mt-10 grid gap-6 md:grid-cols-2">
+        <div className="stagger mt-10 grid gap-6 md:grid-cols-2">
           {approaches.map((approach) => (
             <Link
               key={approach.slug}
@@ -102,6 +106,7 @@ export default function CaseStudiesPage() {
           ))}
         </div>
       </section>
+      </Reveal>
     </div>
   );
 }

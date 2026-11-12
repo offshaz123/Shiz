@@ -1,3 +1,5 @@
+import { CountUp } from "./CountUp";
+
 const industryStats = [
   { value: "16+", label: "Automotive clients" },
   { value: "50+", label: "Finance clients" },
@@ -22,7 +24,10 @@ export function IndustryStatsSection() {
             key={stat.label}
             className="rounded-3xl border border-border bg-surface p-8 text-center transition-colors hover:border-brand-pink/40"
           >
-            <p className="brand-gradient-text text-4xl font-bold">{stat.value}</p>
+            <CountUp
+              value={stat.value}
+              className="brand-gradient-text block text-4xl font-bold"
+            />
             <p className="mt-2 text-sm font-medium text-muted">{stat.label}</p>
           </div>
         ))}

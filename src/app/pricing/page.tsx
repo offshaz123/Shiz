@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Reveal } from "@/components/Reveal";
 import { PricingSection } from "@/components/PricingSection";
 import { BreadcrumbJsonLd, FaqJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
@@ -113,14 +114,16 @@ export default function PricingPage() {
       </section>
 
       {pricingGroups.map((group, i) => (
-        <PricingSection
-          key={group.id}
-          group={group}
-          className={i % 2 === 1 ? "border-t border-border bg-surface" : "border-t border-border"}
-        />
+        <Reveal key={group.id}>
+          <PricingSection
+            group={group}
+            className={i % 2 === 1 ? "border-t border-border bg-surface" : "border-t border-border"}
+          />
+        </Reveal>
       ))}
 
       {/* FAQ */}
+      <Reveal>
       <section className="border-t border-border">
         <div className="mx-auto max-w-3xl px-5 py-24 sm:px-8">
           <div className="text-center">
@@ -142,6 +145,7 @@ export default function PricingPage() {
         </div>
         <FaqJsonLd items={faqs} />
       </section>
+      </Reveal>
 
       <StartProjectCta />
     </div>

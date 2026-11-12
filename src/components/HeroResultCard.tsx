@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { clientResults } from "@/content/case-studies";
 import { ClientLogo } from "./ClientLogo";
+import { CountUp } from "./CountUp";
 
 /**
  * The result card in the hero, cycling through every client rather than
@@ -86,9 +87,10 @@ export function HeroResultCard() {
         <div className="mt-5 grid min-h-[7.5rem] grid-cols-2 gap-x-6 gap-y-4 content-start">
           {result.stats.map((stat) => (
             <div key={stat.label}>
-              <p className="text-2xl font-bold tracking-tight text-white sm:text-[1.75rem]">
-                {stat.value}
-              </p>
+              <CountUp
+                value={stat.value}
+                className="block text-2xl font-bold tracking-tight text-white sm:text-[1.75rem]"
+              />
               <p className="mt-0.5 text-xs leading-tight text-white/55">{stat.label}</p>
             </div>
           ))}

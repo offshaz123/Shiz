@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Reveal } from "@/components/Reveal";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -83,6 +84,7 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
         </div>
       </section>
 
+      <Reveal>
       <section className="mx-auto max-w-5xl px-5 py-20 sm:px-8">
         <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
           What actually works in this sector
@@ -114,7 +116,9 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
           </p>
         )}
       </section>
+      </Reveal>
 
+      <Reveal>
       <section className="border-y border-border bg-surface">
         <div className="mx-auto max-w-xl px-5 py-20 sm:px-8">
           <div className="text-center">
@@ -130,7 +134,9 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
           </div>
         </div>
       </section>
+      </Reveal>
 
+      <Reveal>
       <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8">
         <h2 className="text-xl font-bold text-foreground">Other industries we work with</h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -141,6 +147,7 @@ export default async function IndustryPage({ params }: { params: Promise<{ slug:
           ))}
         </div>
       </section>
+      </Reveal>
     </div>
   );
 }
