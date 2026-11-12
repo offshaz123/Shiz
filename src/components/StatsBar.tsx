@@ -97,23 +97,48 @@ export function StatsBar() {
           Five stars is the rating our clients give us across the feedback we collect.
         </p>
 
-        {/* Trustpilot leads this row deliberately. It is the only one of these
-            that a visitor can click and verify in a second; the rest ask to be
-            taken on trust. */}
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 border-t border-border pt-8 sm:gap-4">
-          <TrustpilotCard />
-          {partners.map((partner) => (
-            <div
-              key={partner.name}
-              className="flex items-center gap-3 rounded-2xl border border-border bg-background px-5 py-3.5"
-            >
-              {partner.mark}
-              <span className="text-left leading-tight">
-                <span className="block text-sm font-semibold text-foreground">{partner.name}</span>
-                <span className="block text-xs text-muted">{partner.role}</span>
-              </span>
-            </div>
-          ))}
+        {/* The credentials row.
+            Trustpilot leads it deliberately: it is the only one here a visitor
+            can click and verify in a second, and putting the checkable one
+            first is what makes the rest read as credentials rather than as
+            decoration. Each card carries a tick for the same reason — the row
+            should look like it is stating facts, not arranging logos. */}
+        <div className="mt-10 border-t border-border pt-9">
+          <p className="text-center text-[11px] font-semibold uppercase tracking-[0.2em] text-muted">
+            Certified &amp; partnered
+          </p>
+          <div className="stagger mt-6 flex flex-wrap items-stretch justify-center gap-3 sm:gap-4">
+            <TrustpilotCard />
+            {partners.map((partner) => (
+              <div
+                key={partner.name}
+                className="lift flex items-center gap-3 rounded-2xl border border-border bg-background px-5 py-3.5 shadow-sm shadow-black/[0.03]"
+              >
+                {partner.mark}
+                <span className="text-left leading-tight">
+                  <span className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
+                    {partner.name}
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="h-3.5 w-3.5 text-emerald-500"
+                      aria-hidden="true"
+                    >
+                      <circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.15" />
+                      <path
+                        d="M7.5 12.4l3 3 6-6.4"
+                        stroke="currentColor"
+                        strokeWidth="2.4"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        fill="none"
+                      />
+                    </svg>
+                  </span>
+                  <span className="block text-xs text-muted">{partner.role}</span>
+                </span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
