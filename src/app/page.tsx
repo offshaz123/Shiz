@@ -13,6 +13,7 @@ import { FaqJsonLd } from "@/components/StructuredData";
 import { siteConfig } from "@/lib/site-config";
 import { blogPosts } from "@/content/blog";
 import { Reveal } from "@/components/Reveal";
+import { PhotoBand } from "@/components/PhotoBand";
 
 /**
  * The reviews section reads from the database, so a fully static homepage
@@ -205,6 +206,7 @@ export default function Home() {
 
       {/* Final CTA + form */}
       <Reveal>
+      <PhotoBand src="/images/site/bg-shopfront.webp" focus="centre">
       <section id="lead-form" className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
           <div>
@@ -270,6 +272,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </PhotoBand>
       </Reveal>
     </div>
   );

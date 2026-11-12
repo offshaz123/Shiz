@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PhotoBand } from "./PhotoBand";
 
 type Problem = {
   title: string;
@@ -63,7 +64,8 @@ const problems: Problem[] = [
 
 export function ProblemGrid() {
   return (
-    <section className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
+    <PhotoBand src="/images/site/bg-street-night.webp" focus="left">
+      <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8">
       <div className="max-w-3xl">
         <span className="inline-flex rounded-full border border-brand-pink/30 bg-brand-pink/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-brand-pink">
           Sound familiar?
@@ -102,6 +104,7 @@ export function ProblemGrid() {
           </Link>
         ))}
       </div>
-    </section>
+      </div>
+    </PhotoBand>
   );
 }
