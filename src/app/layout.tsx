@@ -12,6 +12,7 @@ import { PageViewTracker } from "@/components/PageViewTracker";
 import { CookieBanner } from "@/components/CookieConsent";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { CursorGlow } from "@/components/CursorGlow";
 import { siteConfig } from "@/lib/site-config";
 
 const geistSans = Geist({
@@ -115,6 +116,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <PublicOnly>
             <ScrollProgress />
+            <CursorGlow />
             <Header />
           </PublicOnly>
           <main className="flex-1">{children}</main>

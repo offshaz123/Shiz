@@ -1,9 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { featuredResult } from "@/content/case-studies";
 import { ReviewBadge } from "./ReviewBadge";
 import { HeroBackdrop } from "./HeroBackdrop";
-import { ClientLogo } from "./ClientLogo";
+import { HeroResultCard } from "./HeroResultCard";
 
 export function HomeHero() {
   return (
@@ -96,59 +95,7 @@ export function HomeHero() {
             />
 
             <div className="relative rounded-[2.5rem] p-5 sm:p-6">
-            <div className="rounded-3xl border border-white/20 bg-[#0b0a0f]/85 p-6 shadow-2xl shadow-black/30 backdrop-blur">
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                </span>
-                <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/60">
-                  Real client result
-                </span>
-              </div>
-
-              <div className="mt-4 flex items-center gap-3">
-                <ClientLogo result={featuredResult} size={42} onDark />
-                <div>
-                  <p className="text-lg font-semibold leading-snug text-white">
-                    {featuredResult.client}
-                  </p>
-                  <p className="text-sm text-white/55">
-                    {featuredResult.sector} · {featuredResult.period}
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-5 grid grid-cols-2 gap-x-6 gap-y-4">
-                {featuredResult.stats.map((stat) => (
-                  <div key={stat.label}>
-                    <p className="text-2xl font-bold tracking-tight text-white sm:text-[1.75rem]">
-                      {stat.value}
-                    </p>
-                    <p className="mt-0.5 text-xs leading-tight text-white/55">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
-                <Link
-                  href="/case-studies"
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:underline"
-                >
-                  See how we did it <span aria-hidden="true">→</span>
-                </Link>
-                {featuredResult.website && (
-                  <a
-                    href={featuredResult.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-white/55 hover:text-white"
-                  >
-                    {featuredResult.website.replace(/^https?:\/\//, "")} ↗
-                  </a>
-                )}
-              </div>
-              </div>
+            <HeroResultCard />
             </div>
 
             {/* Projects badge, sitting over the corner like a sticker */}
