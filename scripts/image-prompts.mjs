@@ -230,7 +230,8 @@ export const REROLL_PROMPTS = [
       "Eight people in their twenties and thirties standing and talking in a " +
       "bright modern open-plan office, present day, laptops and monitors on the " +
       "desks behind them, contemporary casual clothing. Candid and " +
-      "mid-conversation, not lined up or posed. Natural window light. " + UK_PROOF,
+      "mid-conversation, not lined up or posed. Natural window light. " +
+      "United Kingdom, present day. No text, no signage, no logos.",
   },
   {
     name: "brand-phones-sales",
