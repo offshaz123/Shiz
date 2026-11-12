@@ -194,3 +194,53 @@ export const BRAND_PROMPTS = [
       "background, even light, no reflections on the glass. Photographic, sharp.",
   },
 ];
+
+/**
+ * Append this to any scene with a street, a vehicle or a shopfront in it.
+ *
+ * Soul Cinema in particular drifts towards Eastern European and 1990s
+ * American settings unless told otherwise — the first garage attempt came
+ * back with a Cyrillic number plate, which no British visitor would miss.
+ */
+export const UK_PROOF =
+  "United Kingdom, present day. British vehicles with yellow rear number " +
+  "plates bearing Latin characters only, right-hand drive, British street " +
+  "furniture and signage shapes. No foreign lettering anywhere.";
+
+/**
+ * Re-rolls. Same scenes as above, tightened where the first attempt went
+ * wrong, and worth running on Nano Banana 2 rather than Soul Cinema: it
+ * reads as a photograph where Soul Cinema reads as a film still.
+ */
+export const REROLL_PROMPTS = [
+  {
+    name: "industry-automotive-v2",
+    ratio: "16:9",
+    seed: 301,
+    prompt:
+      "A car raised on a two-post lift in a small independent British garage, " +
+      "one mechanic working underneath, fluorescent strip lighting, oil-stained " +
+      "concrete floor, tool trolley and tyres against the wall. " + UK_PROOF,
+  },
+  {
+    name: "brand-office-wide-v2",
+    ratio: "16:9",
+    seed: 302,
+    prompt:
+      "Eight people in their twenties and thirties standing and talking in a " +
+      "bright modern open-plan office, present day, laptops and monitors on the " +
+      "desks behind them, contemporary casual clothing. Candid and " +
+      "mid-conversation, not lined up or posed. Natural window light. " + UK_PROOF,
+  },
+  {
+    name: "brand-phones-sales",
+    ratio: "16:9",
+    seed: 303,
+    prompt:
+      "A person in a plain dark jumper holding two phones, one in each hand, " +
+      "looking down at them with a slight smile, head tilted. Both screens face " +
+      "the camera and are filled with flat plain mid-grey — no interface, no " +
+      "numbers, no charts. Soft office background thrown well out of focus, " +
+      "natural light from the side. Photographic, sharp on the hands.",
+  },
+];
