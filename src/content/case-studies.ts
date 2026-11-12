@@ -43,7 +43,7 @@ export const clientResults: ClientResult[] = [
     sector: "Financial services — international payments",
     website: "https://cobanq.com",
     logo: "/clients/cobanq.png",
-    period: "13 months",
+    period: "Ongoing, 13 months so far",
     services: [
       "Website Design & Build",
       "Meta & Instagram Ads",
@@ -166,7 +166,7 @@ export const clientResults: ClientResult[] = [
     sector: "Financial services — international money transfer",
     website: "https://ftftpay.com",
     logo: "/clients/ftft-pay.png",
-    period: "Past client",
+    period: "Ongoing",
     services: ["Meta & Instagram Ads"],
     headline: "4,863 leads at \u00a31.08 each, and 1,284 customers.",
     summary:
@@ -181,6 +181,29 @@ export const clientResults: ClientResult[] = [
       { value: "£1.08", label: "Average cost per lead" },
       { value: "1,284", label: "Customers acquired" },
       { value: "£5,247.80", label: "Ad spend managed" },
+    ],
+  },
+  {
+    slug: "towmycar",
+    client: "TowMyCar",
+    sector: "Automotive — 24/7 vehicle recovery, Edinburgh",
+    website: "https://towmycar.uk",
+    logo: "/clients/towmycar.png",
+    period: "9 months from December 2025",
+    services: ["Meta & Instagram Ads"],
+    headline: "1,047 recoveries booked, at \u00a34 of advertising each.",
+    summary:
+      "A 24/7 vehicle recovery service covering Edinburgh. \u00a34,186.75 of ad spend produced 3,286 enquiries at \u00a31.27 each, and 1,047 of those were booked in \u2014 a 31.9% enquiry-to-booking rate, which works out at \u00a34 of advertising per job on the truck.",
+    work: [
+      "Ran the Meta and Instagram campaigns across the Edinburgh areas they cover.",
+      "Built the campaigns around urgency, which is what recovery work actually is: nobody plans a breakdown.",
+      "Tracked bookings rather than enquiries, so the number that mattered was the job on the truck and not the form fill.",
+    ],
+    stats: [
+      { value: "3,286", label: "Enquiries" },
+      { value: "£1.27", label: "Cost per enquiry" },
+      { value: "1,047", label: "Recoveries booked" },
+      { value: "£4,186.75", label: "Ad spend managed" },
     ],
   },
   {
