@@ -473,7 +473,7 @@ site audit tool actually measures, or from a primary source that does load.
       ranking factors; the post claims no radius figures, because there are none to claim)
 - [ ] What a Contact Page Should Actually Have on It — target: "contact page best practices small
       business", "what to put on a contact page"
-- [ ] Why Your Enquiry Form Gets Spam, and What Actually Stops It — target: "stop contact form
+- [x] Why Your Enquiry Form Gets Spam, and What Actually Stops It — target: "stop contact form
       spam UK", "contact form spam small business"
 - [ ] How Many Pages Does a Small Business Website Really Need? — target: "how many pages should a
       small business website have", "small business website structure"

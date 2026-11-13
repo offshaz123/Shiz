@@ -16,6 +16,72 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "why-your-enquiry-form-gets-spam-and-what-actually-stops-it",
+    title: "Why Your Enquiry Form Gets Spam, and What Actually Stops It",
+    description:
+      "Form spam is almost never a person. It is a script that found your form the same way Google did. Here is what actually stops it, and what only makes the form harder for real customers.",
+    publishedAt: "2026-11-13",
+    keywords: [
+      "stop contact form spam UK",
+      "contact form spam small business",
+      "why do I get spam through my website form",
+      "honeypot field contact form",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You put a form on your website so customers could reach you. What arrives instead is three messages a day offering SEO services, a few in alphabets you do not read, and the occasional one that is just a link.",
+          "The real enquiries are still in there. They are just buried, and after a fortnight of deleting rubbish you stop opening the notifications properly — which is the actual cost. The spam does not waste your time. It teaches you to ignore the inbox the customers use.",
+        ],
+      },
+      {
+        heading: "It is not a person, and you were not targeted",
+        paragraphs: [
+          "Almost none of this is typed by anybody. It is a script working through a list of websites, filling in whatever fields it finds and pressing submit. Your form was found the same way Google found it: it is on a public page.",
+          "That matters because it tells you what will and will not work. There is nobody to block. Changing your email address does nothing. The script does not care what your business does, where you are, or how big you are — a plumber in Dudley and a law firm in Leeds get the same volume from the same sources.",
+          "It also means the fix is mechanical. You are not outwitting a human. You are making your form marginally more expensive to submit than the thousand other forms on the list.",
+        ],
+      },
+      {
+        heading: "The honeypot: one hidden field, most of the problem gone",
+        paragraphs: [
+          "Add a field to the form that nobody can see. Hide it with CSS, label it something a script would want to fill in, and tell real browsers to skip it. A human never knows it exists. A script fills in every field it can find, because that is all it does.",
+          "Then throw away any submission where that field has something in it.",
+          "It costs nothing, it loads nothing, and it removes a large share of automated submissions on its own. It is the first thing to do and most sites never do it.",
+        ],
+      },
+      {
+        heading: "Timing, which catches most of the rest",
+        paragraphs: [
+          "Record when the form was loaded and check how long it took to submit. A person reading a page, deciding to make contact and typing their details takes several seconds at the very least. A script does it instantly.",
+          "Reject anything that comes back faster than about three seconds and you catch most of what the honeypot missed, again without a real customer ever noticing.",
+          "Between those two, a small business form usually goes from a daily nuisance to the occasional stray.",
+        ],
+      },
+      {
+        heading: "What to be careful with",
+        paragraphs: [
+          "The instinct is to reach for a CAPTCHA, and it does work. The trade is that you have put a puzzle between a customer and contacting you, and some of them will not finish it — the ones on a bad connection, the ones using a screen reader, the ones who simply cannot be bothered. On a form that generates enquiries you are paying to receive, that is a real cost.",
+          "If you do add one, use an invisible or score-based version that only challenges the suspicious, rather than making everybody identify traffic lights.",
+          "Two other things worth knowing:",
+        ],
+        bullets: [
+          "Required fields and minimum lengths stop almost nothing. Scripts fill in every field, and they are happy to type two hundred characters.",
+          "Never put a bare email address in the page's HTML as a link. It will be harvested. Use a form, or write the address in a way a script cannot read as one.",
+          "If your form sends from your own domain, make sure SPF and DKIM are set up. Otherwise your enquiry notifications land in your own spam folder, which looks exactly like having no enquiries.",
+        ],
+      },
+      {
+        heading: "The part people skip",
+        paragraphs: [
+          "Whatever you do, some will get through. The thing that keeps it manageable is not the filter — it is making sure a real enquiry cannot be lost among the ones that are not.",
+          "That means enquiries landing somewhere with a status, rather than in an inbox with everything else. A form submission that becomes a row you can mark as answered is one you cannot accidentally delete at eight in the morning along with four pieces of rubbish.",
+          "Spam is annoying. Spam plus an inbox with no system behind it is how businesses lose work they already paid to generate.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "what-happens-to-a-lead-when-nobody-answers-the-phone",
     title: "What Happens to a Lead When Nobody Answers the Phone",
     description:
