@@ -5,7 +5,7 @@ import { services } from "@/content/services";
 import { industries } from "@/content/industries";
 import { locations } from "@/content/locations";
 import { niches } from "@/content/niches";
-import { approaches } from "@/content/case-studies";
+import { approaches, clientResults } from "@/content/case-studies";
 import { projects, hasProjects } from "@/content/projects";
 
 export const dynamic = "force-static";
@@ -87,6 +87,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
+  // The page per client. These were added without being listed here, so for a
+  // day the strongest proof on the site was the only thing Google was not
+  // being pointed at.
+  const clientEntries = clientResults.map((result) => ({
+    url: `${siteConfig.url}/case-studies/client/${result.slug}`,
+    lastModified: siteUpdated,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
+
   const projectEntries = hasProjects
     ? [
         {
@@ -118,6 +128,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...nicheEntries,
     ...locationEntries,
     ...approachEntries,
+    ...clientEntries,
     ...projectEntries,
     ...blogEntries,
   ];

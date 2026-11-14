@@ -10,6 +10,7 @@ import { siteConfig, whatsappHref, hasPublishedReviews } from "@/lib/site-config
 import { TrustpilotLink } from "./TrustpilotBadge";
 import { services } from "@/content/services";
 import { industries } from "@/content/industries";
+import { niches } from "@/content/niches";
 import { locations } from "@/content/locations";
 
 const partnerBadges = [
@@ -235,6 +236,26 @@ export function Footer() {
             {industries.map((industry) => (
               <Link key={industry.slug} href={`/industries/${industry.slug}`} className="hover:text-foreground">
                 {industry.name}
+              </Link>
+            ))}
+          </div>
+
+          {/* The trade pages were in the sitemap and linked from nowhere on
+              the site — orphans, which Google crawls less often and ranks
+              worse because nothing internal vouches for them. These are the
+              most specific commercial pages we have, so they are the last
+              ones that should have been hard to reach. */}
+          <h3 className="mt-8 text-xs font-semibold uppercase tracking-[0.16em] text-muted">
+            Marketing for your trade
+          </h3>
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2.5 text-sm text-muted">
+            {niches.map((niche) => (
+              <Link
+                key={niche.slug}
+                href={`/marketing-for/${niche.slug}`}
+                className="hover:text-foreground"
+              >
+                {niche.name}
               </Link>
             ))}
           </div>
