@@ -485,7 +485,7 @@ site audit tool actually measures, or from a primary source that does load.
       "Yell advertising worth it"
 - [ ] Writing a Google Business Profile Description That Does Something — target: "Google Business
       Profile description tips", "business description examples local"
-- [ ] Your Title Tag: The Sixty Characters That Decide the Click — target: "title tag length SEO",
+- [x] Your Title Tag: The Sixty Characters That Decide the Click — target: "title tag length SEO",
       "page title for local business"
 - [ ] Does a Small Business Need a Blog If Nobody Reads It? — target: "does a small business need
       a blog", "blogging worth it small business UK"

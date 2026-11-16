@@ -16,6 +16,71 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "your-title-tag-the-sixty-characters-that-decide-the-click",
+    title: "Your Title Tag: The Sixty Characters That Decide the Click",
+    description:
+      "The title tag is the blue line people click in Google. Here is how long it can actually be, what belongs in it, and the mistake nearly every small business site makes.",
+    publishedAt: "2026-11-16",
+    keywords: [
+      "title tag length SEO",
+      "page title for local business",
+      "how long should a page title be",
+      "title tag best practice UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "The title tag is the blue line in Google. It is not the heading on your page, and on most sites it is not the same text — it is a separate field, set in the page's code, and it is the single thing that decides whether somebody clicks you or the business below you.",
+          "It gets less attention than almost anything else on a website, usually because nobody can see it while they are building the page.",
+        ],
+      },
+      {
+        heading: "Sixty characters, give or take",
+        paragraphs: [
+          "Google does not count characters, it measures pixel width, which is why there is no exact number anyone can give you. In practice titles start getting cut off somewhere around 580 pixels, which lands at roughly 55 to 60 characters in the font Google uses.",
+          "Past that you get an ellipsis. The page still ranks exactly as well — truncation is not a penalty — but the end of your sentence is gone, and if that is where you put the useful part, you have wasted it.",
+          "The practical rule: write the title so it still makes sense if the last third disappears.",
+        ],
+      },
+      {
+        heading: "The mistake nearly everyone makes",
+        paragraphs: [
+          "Most small business sites put the company name first. \"Smith & Sons Plumbing — Emergency Plumber, Leeds\" spends its first twenty characters on something the searcher has never heard of, and pushes what they actually typed to the end, where it may get cut.",
+          "Turn it round. The thing they searched for goes first; your name goes last, where it is still visible on most results and does no harm if it is not.",
+          "\"Emergency Plumber in Leeds — Smith & Sons\" is the same information in the order that matters.",
+        ],
+        bullets: [
+          "What the page is about, in the words a customer would use.",
+          "Where you are, if you serve a place — this is doing a lot of work in local search.",
+          "Your business name, last.",
+        ],
+      },
+      {
+        heading: "One per page, and no two the same",
+        paragraphs: [
+          "Every page needs its own title. Sites built in a hurry often ship with the same one on every page, or with the template's default still sitting there, and that tells Google the pages are interchangeable.",
+          "Duplicate titles also make your own search results unreadable. If somebody sees four identical blue lines from your site, they have no way to pick the right one, so they pick somebody else's.",
+          "This is worth actually checking rather than assuming. View the page source and look for the title element, or search Google for your domain and read what comes back.",
+        ],
+      },
+      {
+        heading: "Write it for the click, not the robot",
+        paragraphs: [
+          "Stuffing a title with keywords used to work and now mostly reads as spam to the person deciding whether to click. \"Plumber Leeds | Plumbing Leeds | Emergency Plumbing Leeds | Boiler Repair Leeds\" is a title that nobody clicks.",
+          "A plain, specific, human sentence beats a list of search terms. Google is also perfectly willing to rewrite a title it thinks is unhelpful, and when it rewrites one it usually pulls from your page heading instead — so a bad title is not just ignored, it hands the decision to an algorithm.",
+          "Where you genuinely have something a competitor does not, put it in. Open 24 hours. No call-out fee. Same-day. Those earn their characters.",
+        ],
+      },
+      {
+        heading: "Worth half an hour",
+        paragraphs: [
+          "Go through your main pages — home, each service, each location — and read the titles out loud as if you were the customer. Does each one say what the page is, where it is, and why click this one?",
+          "It is one of the few changes you can make in an afternoon that affects every search result you already appear in. You are not trying to rank higher. You are trying to get clicked by the people who already found you, which is a much shorter distance to travel.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "why-your-enquiry-form-gets-spam-and-what-actually-stops-it",
     title: "Why Your Enquiry Form Gets Spam, and What Actually Stops It",
     description:
