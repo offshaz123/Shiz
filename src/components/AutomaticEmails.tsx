@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { AutomaticEmailLog } from "@/lib/admin-data";
 
 /**
@@ -81,9 +82,22 @@ export function AutomaticEmails({ log }: { log: AutomaticEmailLog }) {
         <ul className="mt-5 divide-y divide-border">
           {recent.map((email) => (
             <li key={email.id} className="flex flex-wrap items-baseline gap-x-3 gap-y-1 py-3">
-              <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
-                {email.to}
-              </span>
+              {/* Outreach rows open the business's profile: what was sent,
+                  how they were found and what the scan said, which is what
+                  you want in front of you before ringing them. Audit
+                  follow-ups go to leads, who have no profile page. */}
+              {email.prospectId === null ? (
+                <span className="min-w-0 flex-1 truncate text-sm font-medium text-foreground">
+                  {email.to}
+                </span>
+              ) : (
+                <Link
+                  href={`/admin/prospects/${email.prospectId}`}
+                  className="min-w-0 flex-1 truncate text-sm font-medium text-foreground hover:underline"
+                >
+                  {email.to}
+                </Link>
+              )}
               <span className="text-xs text-muted">
                 {STEP_LABEL[`${email.kind}-${email.step}`] ??
                   `${email.kind === "audit" ? "Audit follow-up" : "Outreach"}, step ${email.step}`}

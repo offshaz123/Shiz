@@ -204,6 +204,10 @@ export type AutomaticEmail = {
   sentAt: string;
   /** Which sequence: cold outreach, or an audit follow-up. */
   kind: "outreach" | "audit";
+  /** The prospect this belongs to, so the row can link to their profile.
+   *  Null for audit follow-ups, which are leads rather than prospects and
+   *  have no profile page to go to. */
+  prospectId: number | null;
 };
 
 export type AutomaticEmailLog = {
@@ -215,6 +219,7 @@ export type AutomaticEmailLog = {
 
 interface AutoRow extends RowDataPacket {
   id: number;
+  prospect_id: number | null;
   to_name: string | null;
   recipient: string | null;
   subject: string;
@@ -231,6 +236,7 @@ export async function getAutomaticEmails(limit = 40): Promise<AutomaticEmailLog 
     // that is only sorted within each half.
     const [rows] = await db.query<AutoRow[]>(
       `(SELECT e.id,
+               e.prospect_id,
                p.name AS to_name,
                e.recipient,
                e.subject,
@@ -243,6 +249,7 @@ export async function getAutomaticEmails(limit = 40): Promise<AutomaticEmailLog 
          WHERE e.sent_by = 'auto')
        UNION ALL
        (SELECT e.id,
+               NULL AS prospect_id,
                l.name AS to_name,
                l.email AS recipient,
                e.subject,
@@ -281,6 +288,7 @@ export async function getAutomaticEmails(limit = 40): Promise<AutomaticEmailLog 
         failed: row.status !== "sent",
         sentAt: String(row.sent_at),
         kind: row.kind,
+        prospectId: row.prospect_id === null ? null : Number(row.prospect_id),
       })),
       sentToday: Number(totals?.today ?? 0),
       sentLast7Days: Number(totals?.week ?? 0),

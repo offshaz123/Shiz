@@ -93,7 +93,12 @@ export default async function AdminTodayPage() {
                   key={p.id}
                   className="flex flex-wrap items-center gap-x-4 gap-y-1 rounded-xl border border-border bg-surface px-4 py-3 text-xs"
                 >
-                  <span className="text-sm font-bold text-foreground">{p.name}</span>
+                  <Link
+                    href={`/admin/prospects/${p.id}`}
+                    className="text-sm font-bold text-foreground hover:underline"
+                  >
+                    {p.name}
+                  </Link>
 
                   {p.phone ? (
                     <a href={`tel:${p.phone}`} className="font-semibold underline">
@@ -104,6 +109,22 @@ export default async function AdminTodayPage() {
                   )}
 
                   {p.town && <span className="text-muted">{p.town}</span>}
+
+                  {/* Why this one is a call rather than an email. Without
+                      it the cold list reads as an undifferentiated pile,
+                      and these two are a different pitch: one has nothing
+                      to criticise, the other cannot be reached any other
+                      way. */}
+                  {group.id === "fresh" && !p.website && (
+                    <span className="rounded-full border border-border px-2 py-0.5 text-[11px] text-muted">
+                      no website
+                    </span>
+                  )}
+                  {group.id === "fresh" && p.website && !p.email && (
+                    <span className="rounded-full border border-border px-2 py-0.5 text-[11px] text-muted">
+                      no email found
+                    </span>
+                  )}
 
                   {/* How many emails they have actually had, on the row of
                       the group that exists because of them. "Three emails"

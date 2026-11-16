@@ -68,6 +68,7 @@ interface SentEmailRow extends RowDataPacket {
   body: string;
   step: number | null;
   status: string;
+  sent_by: string | null;
   sent_at: string;
 }
 
@@ -641,14 +642,20 @@ export async function unsubscribeProspect(id: number): Promise<boolean> {
 }
 
 /** What has already gone out to one prospect, newest first. */
-export async function listProspectEmails(
-  id: number,
-): Promise<
-  { subject: string; body: string; step: number; status: string; sentAt: string }[] | null
-> {
+export type SentEmail = {
+  subject: string;
+  body: string;
+  step: number;
+  status: string;
+  /** The scheduler, or a person pressing send. */
+  sentBy: "auto" | "hand";
+  sentAt: string;
+};
+
+export async function listProspectEmails(id: number): Promise<SentEmail[] | null> {
   return withDb(async (db) => {
     const [rows] = await db.query<SentEmailRow[]>(
-      `SELECT subject, body, step, status, sent_at FROM prospect_emails
+      `SELECT subject, body, step, status, sent_by, sent_at FROM prospect_emails
        WHERE prospect_id = ? ORDER BY id ASC LIMIT 20`,
       [id],
     );
@@ -657,6 +664,7 @@ export async function listProspectEmails(
       body: r.body,
       step: Number(r.step ?? 1),
       status: r.status,
+      sentBy: r.sent_by === "hand" ? "hand" : "auto",
       sentAt: String(r.sent_at),
     }));
   });
