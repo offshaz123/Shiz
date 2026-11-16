@@ -508,6 +508,71 @@ export async function listSequenceDue(limit = 20): Promise<SequenceDue[] | null>
   });
 }
 
+/**
+ * Prospects the first email can be sent to automatically.
+ *
+ * Until now nothing automatic ever wrote to a business a person had not
+ * written to first: step 1 was Walid pressing send, one row at a time. He has
+ * asked for that step to send itself, so this is the query that decides who
+ * it may write to, and it is deliberately the strictest one in this file.
+ *
+ * The conditions that are about not being a nuisance:
+ *
+ *  - Never written to before (sequence_started_at IS NULL), so this can
+ *    never re-open a finished conversation.
+ *  - Not unsubscribed, not already replied, not in the deleted folder, and
+ *    not marked interested, not interested or a customer — at which point a
+ *    cold opener is the wrong thing to send whichever way it went.
+ *
+ * And the one that is about the email being true. The first email opens "I
+ * had a look at the <name> website, and these things are costing you
+ * enquiries", then lists them. Sent to an unscanned row that sentence is a
+ * claim nobody checked, and the fallback wording is vague enough to be
+ * worthless anyway. So: scanned, and with findings to show. A row with no
+ * findings is not a prospect this should write to, it is a row that needs
+ * scanning first.
+ *
+ * Oldest first, so a backlog is worked through in the order it was found
+ * rather than the newest arrivals jumping the queue forever.
+ */
+export async function listNeverContacted(limit = 10): Promise<Prospect[] | null> {
+  return withDb(async (db) => {
+    const [rows] = await db.query<ProspectRow[]>(
+      `SELECT * FROM prospects
+        WHERE sequence_started_at IS NULL
+          AND deleted_at IS NULL
+          AND replied_at IS NULL
+          AND unsubscribed_at IS NULL
+          AND email IS NOT NULL AND email <> ''
+          AND scanned_at IS NOT NULL
+          AND site_findings IS NOT NULL AND site_findings <> ''
+          AND status NOT IN ('interested', 'not-interested', 'customer')
+        ORDER BY created_at ASC
+        LIMIT ?`,
+      [limit],
+    );
+    return rows.map(toProspect);
+  });
+}
+
+/**
+ * How many first emails have ever actually gone out.
+ *
+ * Feeds the warm-up ramp. A domain that has sent a couple of hundred emails
+ * in its life and then starts sending fifty cold ones a day looks exactly
+ * like a domain that has been compromised, and the mailboxes receiving them
+ * treat it accordingly. Counting what has already been sent is the cheapest
+ * honest way to know where on that curve we are.
+ */
+export async function countStepOneSent(): Promise<number | null> {
+  return withDb(async (db) => {
+    const [[row]] = await db.query<(RowDataPacket & { n: number })[]>(
+      `SELECT COUNT(*) AS n FROM prospect_emails WHERE step = 1 AND status = 'sent'`,
+    );
+    return Number(row?.n ?? 0);
+  });
+}
+
 /** Takes a prospect out of the sequence for good, with the reason why. */
 export async function stopSequence(id: number, reason: string): Promise<void> {
   await withDb(async (db) => {

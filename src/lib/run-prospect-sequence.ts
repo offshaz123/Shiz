@@ -1,19 +1,39 @@
 import { buildDraft, STEP_DAYS, type OutreachStep } from "./prospect-outreach";
 import { sendProspectEmail } from "./send-prospect-email";
 import { prospectUnsubscribeUrl } from "./unsubscribe-url";
-import { listSequenceAddresses, listSequenceDue, markReplied } from "./prospects";
+import {
+  countStepOneSent,
+  listNeverContacted,
+  listSequenceAddresses,
+  listSequenceDue,
+  markReplied,
+} from "./prospects";
 import { sendersSince } from "./mail-store";
+import { newPerRun } from "./outreach-warm-up";
 
 /**
- * The two follow-ups that send themselves: day three and day five.
+ * The whole prospect sequence: the first email, then day three and day five.
  *
- * Step 1 is never in here. A prospect only enters this at all once Walid has
- * read their first email and pressed send, which is what sets
- * sequence_started_at — so nothing automatic ever writes to a business a
- * person has not written to first.
+ * Step 1 used to be Walid pressing send on one row at a time, and the comment
+ * here used to say that nothing automatic would ever write to a business a
+ * person had not written to first. He has asked for that to change, so it
+ * has: startNewSequences below opens them by itself.
  *
- * Run from the existing follow-ups cron rather than a new job of its own.
- * There is one scheduler on this hosting, getting a second one onto hPanel is
+ * That removes the human read-through before first contact, which was the
+ * main thing keeping the volume honest, so three limits take its place:
+ *
+ *  - Only scanned rows with real findings, because the first email's opening
+ *    sentence is a claim about their website. See listNeverContacted.
+ *  - Only rows with a working one-click unsubscribe link. Automated cold mail
+ *    without a working opt-out is the thing the regulations actually care
+ *    about, and a link that cannot be signed is not a link.
+ *  - A warm-up ramp on how many go out per day, because these now leave from
+ *    the same domain as the client work and the enquiry replies. Walid chose
+ *    that deliberately; it means the domain's reputation is the thing at
+ *    stake, so the volume climbs slowly instead of starting where it ends.
+ *
+ * Run from the existing follow-ups cron rather than a job of its own. There
+ * is one scheduler on this hosting, getting a second one onto hPanel is
  * fiddly and easy to get wrong, and a sequence nobody notices has stopped is
  * exactly the failure this site has already had once.
  */
@@ -37,6 +57,10 @@ const REPLY_WINDOW_DAYS = 14;
 
 export type SequenceSummary = {
   sent: number;
+  /** First emails opened by this run, counted separately from follow-ups:
+   *  "we wrote to four new businesses" and "we chased four" are different
+   *  days and should never read the same on the admin page. */
+  started: number;
   failed: number;
   skipped: number;
   replied: number;
@@ -80,9 +104,50 @@ async function stopAnyoneWhoReplied(): Promise<{ replied: number; checked: boole
   return { replied, checked: true };
 }
 
+/**
+ * Opens sequences for businesses nobody has written to yet.
+ *
+ * Runs after the follow-ups, not before. A chase to someone already in a
+ * conversation is worth more than an opener to a stranger, so if the mail
+ * server starts refusing halfway through a run it should be the openers that
+ * are lost.
+ *
+ * Returns how many were actually opened. A row that cannot be given a signed
+ * unsubscribe link is skipped and left for the next run rather than sent
+ * without one — if CRON_SECRET ever goes missing the right outcome is that
+ * automated cold mail stops, not that it goes out with no way to opt out.
+ */
+async function startNewSequences(summary: SequenceSummary): Promise<void> {
+  const everSent = await countStepOneSent();
+  // Not knowing how many have gone out means not knowing where on the ramp
+  // we are, and guessing low is still guessing. Send none.
+  if (everSent === null) return;
+
+  const allowed = newPerRun(everSent);
+  const fresh = await listNeverContacted(allowed);
+  if (!fresh || fresh.length === 0) return;
+
+  for (const prospect of fresh) {
+    const unsubscribeUrl = prospectUnsubscribeUrl(prospect.id);
+    if (!unsubscribeUrl) {
+      summary.skipped += 1;
+      continue;
+    }
+
+    const draft = buildDraft(1, prospect, unsubscribeUrl);
+    const result = await sendProspectEmail(prospect.id, draft.subject, draft.body, 1);
+    // sendProspectEmail stamps sequence_started_at on a successful step 1,
+    // which is what puts them into listSequenceDue for days three and five.
+    if (result.ok) summary.started += 1;
+    else if (result.reason === "send_failed") summary.failed += 1;
+    else summary.skipped += 1;
+  }
+}
+
 export async function runProspectSequence(): Promise<SequenceSummary> {
   const summary: SequenceSummary = {
     sent: 0,
+    started: 0,
     failed: 0,
     skipped: 0,
     replied: 0,
@@ -134,6 +199,8 @@ export async function runProspectSequence(): Promise<SequenceSummary> {
     else if (result.reason === "send_failed") summary.failed += 1;
     else summary.skipped += 1;
   }
+
+  await startNewSequences(summary);
 
   return summary;
 }

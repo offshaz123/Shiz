@@ -195,7 +195,10 @@ async function recordRun(
   summary: Record<string, number>,
   prospects: SequenceSummary | null,
 ) {
-  const sent = summary.sent + (prospects?.sent ?? 0);
+  // Openers count as sent mail too. Leaving them out of this total would
+  // have the admin page report a quiet day on the day the site first wrote
+  // to eight strangers, which is the one day worth being able to see.
+  const sent = summary.sent + (prospects?.sent ?? 0) + (prospects?.started ?? 0);
 
   // What this run actually did, in the words the admin page will repeat. The
   // held case is the one that matters: the sequence stops itself when it
@@ -204,8 +207,13 @@ async function recordRun(
   let detail: string | null = null;
   if (prospects && !prospects.repliesChecked) {
     detail = `inbox unreadable — ${prospects.held} prospect follow-up(s) held`;
-  } else if (prospects && prospects.sent > 0) {
-    detail = `${prospects.sent} prospect follow-up(s)`;
+  } else if (prospects && (prospects.sent > 0 || prospects.started > 0)) {
+    // Said separately on purpose: four openers and four chases are different
+    // days, and reading them as one number hides which.
+    const parts: string[] = [];
+    if (prospects.started > 0) parts.push(`${prospects.started} first email(s)`);
+    if (prospects.sent > 0) parts.push(`${prospects.sent} prospect follow-up(s)`);
+    detail = parts.join(", ");
   } else if (considered === 0 && sent === 0) {
     detail = "nobody was due";
   }
