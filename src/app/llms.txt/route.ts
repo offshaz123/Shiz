@@ -75,7 +75,10 @@ export function GET() {
     "Named clients with real figures, not anonymised percentages.",
     "",
     ...clientResults.map(
-      (c) => `- [${c.client}](${url}/case-studies/${c.slug}) (${c.sector}): ${c.headline}`
+      // /case-studies/<slug> is the approach pages; a client lives under
+      // /case-studies/client/<slug>. Pointed at the wrong one, every model
+      // reading this file followed a dead link to the best proof we have.
+      (c) => `- [${c.client}](${url}/case-studies/client/${c.slug}) (${c.sector}): ${c.headline}`
     ),
     "",
     "## Locations",
