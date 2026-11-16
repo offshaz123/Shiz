@@ -208,6 +208,13 @@ export type AutomaticEmail = {
    *  Null for audit follow-ups, which are leads rather than prospects and
    *  have no profile page to go to. */
   prospectId: number | null;
+  /** How many of the three have now gone to this business, so a row can say
+   *  "2 of 3" and where that leaves them. A list of names and step numbers
+   *  tells you what happened; this is what tells you what happens next. */
+  ofThree: number;
+  /** True once all three have gone and nobody replied: the row that turns
+   *  into a phone call. */
+  readyToCall: boolean;
 };
 
 export type AutomaticEmailLog = {
@@ -220,6 +227,8 @@ export type AutomaticEmailLog = {
 interface AutoRow extends RowDataPacket {
   id: number;
   prospect_id: number | null;
+  of_three: number | null;
+  replied: number | null;
   to_name: string | null;
   recipient: string | null;
   subject: string;
@@ -243,7 +252,10 @@ export async function getAutomaticEmails(limit = 40): Promise<AutomaticEmailLog 
                e.step,
                e.status,
                e.sent_at,
-               'outreach' AS kind
+               'outreach' AS kind,
+               (SELECT COUNT(*) FROM prospect_emails c
+                 WHERE c.prospect_id = e.prospect_id AND c.status = 'sent') AS of_three,
+               (p.replied_at IS NOT NULL OR p.unsubscribed_at IS NOT NULL) AS replied
           FROM prospect_emails e
           JOIN prospects p ON p.id = e.prospect_id
          WHERE e.sent_by = 'auto')
@@ -256,7 +268,9 @@ export async function getAutomaticEmails(limit = 40): Promise<AutomaticEmailLog 
                e.step,
                e.status,
                e.sent_at,
-               'audit' AS kind
+               'audit' AS kind,
+               NULL AS of_three,
+               NULL AS replied
           FROM lead_emails e
           JOIN scan_leads l ON l.id = e.lead_id)
        ORDER BY sent_at DESC
@@ -289,6 +303,9 @@ export async function getAutomaticEmails(limit = 40): Promise<AutomaticEmailLog 
         sentAt: String(row.sent_at),
         kind: row.kind,
         prospectId: row.prospect_id === null ? null : Number(row.prospect_id),
+        ofThree: Number(row.of_three ?? 0),
+        readyToCall:
+          row.kind === "outreach" && Number(row.of_three ?? 0) >= 3 && !Number(row.replied ?? 0),
       })),
       sentToday: Number(totals?.today ?? 0),
       sentLast7Days: Number(totals?.week ?? 0),

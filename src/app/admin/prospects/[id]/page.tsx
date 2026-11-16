@@ -7,6 +7,8 @@ import { LoginForm } from "../../LoginForm";
 import { getProspect, listProspectCalls, listProspectEmails } from "@/lib/prospects";
 import { CALL_LABEL, type CallOutcome } from "@/lib/prospect-types";
 import { outreachLine } from "@/lib/outreach-lines";
+import { callScript } from "@/lib/call-script";
+import { CallScript } from "@/components/CallScript";
 
 export const dynamic = "force-dynamic";
 
@@ -94,6 +96,8 @@ export default async function ProspectProfile({
                 ? "Scanned, but nothing worth writing about was found, so the first email has nothing true to say."
                 : "Scanned, has findings and an address: due a first email on the next run.";
 
+  const script = callScript(prospect, sent.length);
+
   return (
     <div className="mx-auto max-w-3xl px-5 py-8 sm:px-8">
       <Link
@@ -143,6 +147,12 @@ export default async function ProspectProfile({
           </a>
         )}
       </div>
+
+      {prospect.phone && (
+        <div className="mt-7">
+          <CallScript script={script} />
+        </div>
+      )}
 
       <section className="mt-7 rounded-2xl border border-border bg-surface px-5 py-2">
         <dl className="divide-y divide-border">

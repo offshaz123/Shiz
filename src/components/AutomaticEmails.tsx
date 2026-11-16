@@ -47,7 +47,7 @@ export function AutomaticEmails({ log }: { log: AutomaticEmailLog }) {
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h2 className="text-sm font-semibold text-foreground">Automatic emails sent</h2>
         <span className="text-xs text-muted">
-          Everything the site sent without you pressing send
+          Sent without you pressing send. Click a name for the full story.
         </span>
       </div>
 
@@ -102,6 +102,21 @@ export function AutomaticEmails({ log }: { log: AutomaticEmailLog }) {
                 {STEP_LABEL[`${email.kind}-${email.step}`] ??
                   `${email.kind === "audit" ? "Audit follow-up" : "Outreach"}, step ${email.step}`}
               </span>
+
+              {/* Where that business has got to, so the row answers "what
+                  now" without being opened. A list of names and step
+                  numbers says what happened; this says what happens next,
+                  which is the thing worth knowing at a glance. */}
+              {email.kind === "outreach" && email.ofThree > 0 && (
+                <span className="text-xs tabular-nums text-muted">
+                  {Math.min(email.ofThree, 3)} of 3
+                </span>
+              )}
+              {email.readyToCall && (
+                <span className="rounded-full border border-brand-pink/40 px-2 py-0.5 text-[11px] font-semibold text-brand-pink">
+                  ring them
+                </span>
+              )}
               {email.failed && (
                 <span className="rounded-full border border-red-500/50 bg-red-500/10 px-2 py-0.5 text-[11px] font-medium text-foreground">
                   failed

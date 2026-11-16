@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   CALL_LABEL,
@@ -1320,7 +1321,15 @@ function Row({
   return (
     <li className={`rounded-xl border border-border bg-surface px-4 py-3 ${edge(p)}`}>
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <span className="font-semibold text-foreground">{p.name}</span>
+        {/* Their profile, which is where the call script lives. The name is
+            the thing anybody clicks when they want to know more about a
+            row, so it is the link rather than a separate button. */}
+        <Link
+          href={`/admin/prospects/${p.id}`}
+          className="font-semibold text-foreground hover:underline"
+        >
+          {p.name}
+        </Link>
         <span className="text-xs text-muted">
           {p.reviews === 1 ? "1 review" : `${p.reviews} reviews`}
           {p.rating !== null && ` · ${p.rating.toFixed(1)}★`}

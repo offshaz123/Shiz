@@ -6,6 +6,7 @@ import { LoginForm } from "../LoginForm";
 import { getToday } from "@/lib/today";
 import { listProspectsByIds } from "@/lib/prospects";
 import { CALL_LABEL, type CallOutcome } from "@/lib/prospect-types";
+import { callScript } from "@/lib/call-script";
 
 export const dynamic = "force-dynamic";
 
@@ -141,6 +142,18 @@ export default async function AdminTodayPage() {
                     <span className="font-bold text-brand-pink">
                       promised {p.callbackAt.slice(0, 10)}
                     </span>
+                  )}
+
+                  {(group.id === "fresh" || group.id === "emailed") && (
+                    <p className="w-full text-xs leading-relaxed text-muted">
+                      {callScript(p, p.emailCount).reason}{" "}
+                      <Link
+                        href={`/admin/prospects/${p.id}`}
+                        className="font-semibold text-brand-pink hover:underline"
+                      >
+                        What to say →
+                      </Link>
+                    </p>
                   )}
 
                   {p.lastCall && (
