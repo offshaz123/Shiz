@@ -9,6 +9,7 @@ import { CALL_LABEL, type CallOutcome } from "@/lib/prospect-types";
 import { outreachLine } from "@/lib/outreach-lines";
 import { callScript } from "@/lib/call-script";
 import { CallScript } from "@/components/CallScript";
+import { LogCall } from "@/components/LogCall";
 
 export const dynamic = "force-dynamic";
 
@@ -146,6 +147,10 @@ export default async function ProspectProfile({
             Google listing ↗
           </a>
         )}
+      </div>
+
+      <div className="mt-5">
+        <LogCall id={prospect.id} status={prospect.status} />
       </div>
 
       {prospect.phone && (
