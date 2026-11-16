@@ -10,6 +10,7 @@ import {
 } from "./prospects";
 import { sendersSince } from "./mail-store";
 import { newPerRun } from "./outreach-warm-up";
+import { scanBatch } from "./scan-batch";
 
 /**
  * The whole prospect sequence: the first email, then day three and day five.
@@ -71,6 +72,9 @@ export type SequenceSummary = {
    *  number matters: one is a quiet day, thirty is a stalled pipeline that
    *  nobody has noticed. */
   held: number;
+  /** Websites read this run, which is what makes tomorrow's first emails
+   *  possible: nothing is written to a business that has not been scanned. */
+  scanned: number;
 };
 
 /**
@@ -154,6 +158,7 @@ export async function runProspectSequence(): Promise<SequenceSummary> {
     considered: 0,
     repliesChecked: true,
     held: 0,
+    scanned: 0,
   };
 
   const replies = await stopAnyoneWhoReplied();
@@ -201,6 +206,19 @@ export async function runProspectSequence(): Promise<SequenceSummary> {
   }
 
   await startNewSequences(summary);
+
+  // Last, and never allowed to take the run down with it.
+  //
+  // After the sending rather than before, because the emails are the point
+  // and a batch of slow websites must not delay or fail them. What is
+  // scanned here feeds tomorrow's first emails, not today's, which is the
+  // right way round: a scan finishing seconds before a cold email goes to
+  // the same business is a race nobody needs.
+  const scan = await scanBatch().catch((err) => {
+    console.error("Prospect scan batch:", err);
+    return null;
+  });
+  summary.scanned = scan?.scanned ?? 0;
 
   return summary;
 }

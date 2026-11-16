@@ -214,6 +214,11 @@ async function recordRun(
     if (prospects.started > 0) parts.push(`${prospects.started} first email(s)`);
     if (prospects.sent > 0) parts.push(`${prospects.sent} prospect follow-up(s)`);
     detail = parts.join(", ");
+  } else if (prospects && prospects.scanned > 0) {
+    // A run that sent nothing and scanned twelve websites is a working run
+    // that has just made tomorrow's sending possible. Reporting it as
+    // "nobody was due" hides the one thing it did.
+    detail = `nobody due, scanned ${prospects.scanned} website(s)`;
   } else if (considered === 0 && sent === 0) {
     detail = "nobody was due";
   }

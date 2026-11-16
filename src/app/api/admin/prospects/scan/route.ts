@@ -11,6 +11,7 @@ import {
 } from "@/lib/prospects";
 import { findBusiness } from "@/lib/google-business";
 import { scanProspectSite } from "@/lib/prospect-scan";
+import { scanBatch } from "@/lib/scan-batch";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -25,8 +26,9 @@ export const dynamic = "force-dynamic";
  * time in flight, is slower and will not fall over.
  */
 
+/** How many this button scans per press. The pool size that goes with it
+ *  now lives in scan-batch.ts, with the loop that uses it. */
 const BATCH = 8;
-const CONCURRENCY = 2;
 
 /** Smaller again, because each one of these costs a Places lookup out of a
  *  daily allowance of sixty. */
@@ -112,24 +114,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ scanned: 0, remaining: 0, done: true });
   }
 
-  let scanned = 0;
-  let unreadable = 0;
-
-  // A simple worker pool: CONCURRENCY workers pulling off one shared queue,
-  // so a slow site holds up only itself rather than the whole batch.
-  const queue = [...pending];
-  await Promise.all(
-    Array.from({ length: Math.min(CONCURRENCY, queue.length) }, async () => {
-      for (;;) {
-        const next = queue.shift();
-        if (!next) return;
-        const result = await scanProspectSite(next.website);
-        await saveProspectScan(next.id, result);
-        if (result) scanned++;
-        else unreadable++;
-      }
-    })
-  );
+  // The same batch the daily job runs, rather than a second copy of the
+  // worker pool that would drift from it.
+  const batch = await scanBatch(BATCH);
+  if (batch === null) {
+    return NextResponse.json({ error: "db_unavailable" }, { status: 503 });
+  }
+  const { scanned, unreadable } = batch;
 
   // Whether more are waiting, so the client knows to call again.
   const left = await listUnscanned(1);
