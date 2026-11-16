@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { isAdmin } from "@/lib/admin-auth";
 import { LoginForm } from "./LoginForm";
-import { getCronHealth } from "@/lib/admin-data";
+import { getAutomaticEmails, getCronHealth } from "@/lib/admin-data";
 import { getEngineRoom } from "@/lib/engine-room";
 import { EngineRoom } from "@/components/EngineRoom";
 import { SchedulerStatus } from "@/components/SchedulerStatus";
+import { AutomaticEmails } from "@/components/AutomaticEmails";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +25,11 @@ export const metadata: Metadata = {
 export default async function AdminPage() {
   if (!(await isAdmin())) return <LoginForm />;
 
-  const [engine, cron] = await Promise.all([getEngineRoom(), getCronHealth()]);
+  const [engine, cron, automatic] = await Promise.all([
+    getEngineRoom(),
+    getCronHealth(),
+    getAutomaticEmails(),
+  ]);
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
@@ -36,6 +41,7 @@ export default async function AdminPage() {
         </p>
       )}
       {cron && <SchedulerStatus cron={cron} />}
+      {automatic && <AutomaticEmails log={automatic} />}
     </div>
   );
 }

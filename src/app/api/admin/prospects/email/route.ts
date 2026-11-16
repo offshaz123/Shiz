@@ -50,7 +50,10 @@ export async function POST(request: Request) {
 
   // Always step one from here. Steps two and three exist only for a prospect
   // whose first email a person read and sent, and they are sent by the cron.
-  const result = await sendProspectEmail(id, subject, text, 1);
+  // "hand": this is the one path where a person has read the email and
+  // pressed send. Everything else goes out as "auto", which is what the
+  // admin page's automatic-email section reads.
+  const result = await sendProspectEmail(id, subject, text, 1, "hand");
   if (!result.ok) {
     return NextResponse.json(
       { error: result.reason, message: MESSAGES[result.reason] ?? result.reason },

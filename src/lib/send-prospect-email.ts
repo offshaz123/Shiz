@@ -16,13 +16,23 @@ import { prospectUnsubscribeUrl } from "./unsubscribe-url";
  * can log into /admin — a phone on a job, a borrowed laptop — with no mail
  * client set up and no webmail password to hand.
  *
- * The first email is never sent by anything but a person pressing send after
- * reading it. Steps 2 and 3 are sent by the cron, but only for a prospect
- * whose step 1 went out by hand, and they stop on a reply, an unsubscribe, or
- * any status that says the answer is already known. There is no "email all"
- * button and there should not be one: a sole trader is an individual
- * subscriber under PECR, and bulk cold email to one needs consent we do not
- * have.
+ * All three emails can now be sent by the scheduler, including the first.
+ * That used to be untrue and this comment used to say so at length: step 1
+ * was a person pressing send after reading it, and there was no "email all"
+ * button because a sole trader is an individual subscriber under PECR and
+ * bulk cold email to one needs consent we do not have.
+ *
+ * Walid was asked about exactly that and chose to send to everyone on the
+ * list. The PECR position has not changed, so it is written down here rather
+ * than quietly dropped: limited companies may be emailed with an opt-out,
+ * sole traders strictly need consent first, and nothing in this file can
+ * tell the two apart. What it does enforce is the part that is enforceable
+ * — a working one-click unsubscribe on every message, honoured immediately
+ * and checked here as well as in the cron, so no button or scheduler can
+ * write to somebody who has used it.
+ *
+ * Every send is stamped with whether the scheduler or a person sent it, so
+ * the admin page can show what the site has done on its own.
  *
  * The recipient is read from the database and never taken from the request,
  * so this can only ever write to an address the scanner found on a prospect's
@@ -51,6 +61,10 @@ export async function sendProspectEmail(
   subject: string,
   body: string,
   step = 1,
+  /** Defaults to the scheduler: the admin route is the one that must say so,
+   *  because a person pressing send is now the exception rather than the
+   *  rule. */
+  sentBy: "auto" | "hand" = "auto",
 ): Promise<SendProspectResult> {
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
   if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS) return { ok: false, reason: "no_smtp" };
@@ -111,6 +125,7 @@ export async function sendProspectEmail(
       body: cleanBody,
       step,
       status: "failed",
+      sentBy,
       error: String(err),
     });
     return { ok: false, reason: "send_failed" };
@@ -127,6 +142,7 @@ export async function sendProspectEmail(
     body: cleanBody,
     step,
     status: "sent",
+    sentBy,
   });
 
   return { ok: true, recipient: prospect.email, filedInSent };

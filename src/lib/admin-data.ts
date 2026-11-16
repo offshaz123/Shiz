@@ -170,3 +170,121 @@ export async function getCronHealth(): Promise<CronHealth | null> {
     };
   });
 }
+
+/**
+ * Everything the site has emailed on its own, newest first.
+ *
+ * Walid asked for this as its own section so he can see what is being sent
+ * without his hand on it. That question had no answer until now: the first
+ * prospect email used to be a person pressing send, so the step number told
+ * you who sent it, and once the scheduler started sending step 1 as well the
+ * step number stopped meaning anything. Hence sent_by on prospect_emails.
+ *
+ * Two sources, because there are two sequences and both are automatic:
+ *
+ *  - prospect_emails where sent_by = 'auto'. Cold outreach to businesses off
+ *    the call list, steps 1, 2 and 3.
+ *  - lead_emails, all of it. The day 1, 3 and 6 follow-ups to people who
+ *    asked for a website audit. There is no hand-sent path into that table,
+ *    so there is nothing to filter.
+ *
+ * A failed send is included deliberately and labelled. "Nothing went out
+ * today" and "four tried and the mail server refused all four" look
+ * identical on a page that only lists successes, and the second one is the
+ * one worth getting out of bed for.
+ */
+export type AutomaticEmail = {
+  id: string;
+  /** The business or person it went to. */
+  to: string;
+  recipient: string;
+  subject: string;
+  step: number;
+  failed: boolean;
+  sentAt: string;
+  /** Which sequence: cold outreach, or an audit follow-up. */
+  kind: "outreach" | "audit";
+};
+
+export type AutomaticEmailLog = {
+  recent: AutomaticEmail[];
+  sentToday: number;
+  sentLast7Days: number;
+  failedLast7Days: number;
+};
+
+interface AutoRow extends RowDataPacket {
+  id: number;
+  to_name: string | null;
+  recipient: string | null;
+  subject: string;
+  step: number;
+  status: string;
+  sent_at: string;
+  kind: "outreach" | "audit";
+}
+
+export async function getAutomaticEmails(limit = 40): Promise<AutomaticEmailLog | null> {
+  return withDb(async (db) => {
+    // UNION ALL rather than two round trips, so the ordering across both
+    // sequences is the database's job and the page cannot show a mixed list
+    // that is only sorted within each half.
+    const [rows] = await db.query<AutoRow[]>(
+      `(SELECT e.id,
+               p.name AS to_name,
+               e.recipient,
+               e.subject,
+               e.step,
+               e.status,
+               e.sent_at,
+               'outreach' AS kind
+          FROM prospect_emails e
+          JOIN prospects p ON p.id = e.prospect_id
+         WHERE e.sent_by = 'auto')
+       UNION ALL
+       (SELECT e.id,
+               l.name AS to_name,
+               l.email AS recipient,
+               e.subject,
+               e.step,
+               e.status,
+               e.sent_at,
+               'audit' AS kind
+          FROM lead_emails e
+          JOIN scan_leads l ON l.id = e.lead_id)
+       ORDER BY sent_at DESC
+       LIMIT ?`,
+      [limit],
+    );
+
+    const [[totals]] = await db.query<
+      (RowDataPacket & { today: number; week: number; failed: number })[]
+    >(
+      `SELECT
+         SUM(sent_at >= CURDATE() AND status = 'sent') AS today,
+         SUM(sent_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) AND status = 'sent') AS week,
+         SUM(sent_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) AND status <> 'sent') AS failed
+       FROM (
+         SELECT sent_at, status FROM prospect_emails WHERE sent_by = 'auto'
+         UNION ALL
+         SELECT sent_at, status FROM lead_emails
+       ) AS automatic`,
+    );
+
+    return {
+      recent: rows.map((row) => ({
+        id: `${row.kind}-${row.id}`,
+        to: row.to_name ? String(row.to_name) : "(deleted)",
+        recipient: row.recipient ? String(row.recipient) : "",
+        subject: String(row.subject),
+        step: Number(row.step),
+        failed: row.status !== "sent",
+        sentAt: String(row.sent_at),
+        kind: row.kind,
+      })),
+      sentToday: Number(totals?.today ?? 0),
+      sentLast7Days: Number(totals?.week ?? 0),
+      failedLast7Days: Number(totals?.failed ?? 0),
+    };
+  });
+}

@@ -428,13 +428,16 @@ export async function recordProspectEmail(
     body: string;
     step: number;
     status: "sent" | "failed";
+    /** The scheduler, or a person pressing send. */
+    sentBy: "auto" | "hand";
     error?: string;
   },
 ): Promise<void> {
   await withDb(async (db) => {
     await db.execute(
-      `INSERT INTO prospect_emails (prospect_id, recipient, subject, body, step, status, error)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO prospect_emails
+         (prospect_id, recipient, subject, body, step, status, sent_by, error)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         id,
         email.recipient.slice(0, 200),
@@ -442,6 +445,7 @@ export async function recordProspectEmail(
         email.body,
         email.step,
         email.status,
+        email.sentBy,
         email.error ? email.error.slice(0, 500) : null,
       ],
     );

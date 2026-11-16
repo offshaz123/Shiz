@@ -31,7 +31,12 @@ import type { Prospect } from "./prospect-types";
 export const SIGNATURE: string[] = [
   "Walid Shah",
   siteConfig.name,
-  `${siteConfig.phoneDisplay} · ${siteConfig.email}`,
+  // Phone and email on separate lines rather than joined by a middle dot.
+  // Nobody types a · on a phone keyboard, and a signature that has clearly
+  // been laid out is one more thing telling the reader this was assembled
+  // rather than written.
+  siteConfig.phoneDisplay,
+  siteConfig.email,
   siteConfig.url.replace(/^https?:\/\//, ""),
 ];
 
@@ -45,32 +50,52 @@ export const STEP_DAYS: Record<2 | 3, number> = { 2: 3, 3: 5 };
 const booking = siteConfig.demoBookingUrl;
 
 /**
+ * How many things we found, in words.
+ *
+ * "Three things on it are losing you enquiries" is a sentence a person
+ * writes. "A few things" is what you write when you have not actually
+ * counted, and the whole credibility of a cold email about somebody's
+ * website rests on it being obvious that someone looked.
+ */
+const COUNT_WORDS = ["", "One", "Two", "Three", "Four", "Five", "Six"];
+
+/**
  * The first email: short on purpose.
  *
  * A cold email that opens with six paragraphs is deleted on the first one.
- * This one says what is wrong, what we do about it, and how to answer — and
- * stops. Everything else can wait for a reply or for step 2.
+ * This one says what is wrong, what we do about it, and how to answer, then
+ * stops.
+ *
+ * Written to read as though a person typed it, because a person is signing
+ * it. No em dashes, no bullet list of hyphens, no "short version", none of
+ * the three-part rhythm that gives away text a machine assembled. The
+ * findings are numbered because somebody who checked three things writes
+ * 1, 2, 3.
  */
 function stepOne(p: Prospect, unsubscribeUrl: string): Draft {
-  const findings = p.findings.length
+  const count = p.findings.length;
+  const word = COUNT_WORDS[count] ?? String(count);
+
+  const findings = count
     ? [
-        p.findings.length === 1
-          ? `I had a look at the ${p.name} website, and one thing on it is quietly costing you enquiries:`
-          : `I had a look at the ${p.name} website, and a few things on it are quietly costing you enquiries:`,
+        count === 1
+          ? `I had a look at the ${p.name} website. One thing on it is losing you enquiries:`
+          : `I had a look at the ${p.name} website. ${word} things on it are losing you enquiries:`,
         ``,
-        ...p.findings.flatMap((f) => [`- ${outreachLine(f)}`, ``]),
+        ...p.findings.map((f, i) => `${i + 1}. ${outreachLine(f)}`),
       ]
-    : [`I had a look at the ${p.name} website and there are a few things on it worth putting right.`, ``];
+    : [`I had a look at the ${p.name} website and there are a few things on it worth putting right.`];
 
   return {
-    subject: `${p.name} — a couple of things on your website`,
+    subject: `A couple of things on the ${p.name} website`,
     body: [
       `Hi,`,
       ``,
       ...findings,
-      `That's the sort of thing we fix, alongside running the Google and Meta ads that bring people to the site in the first place.`,
       ``,
-      `Want the full report? Reply and I'll send it over — free, no obligation. Or ring me on ${siteConfig.phoneDisplay}: I'm Walid Shah, I own the business, and I take the calls myself.`,
+      `We fix that sort of thing, and run the Google and Meta ads that bring people to the site in the first place.`,
+      ``,
+      `Want the full report? Reply and I'll send it over, free. Or ring me on ${siteConfig.phoneDisplay}. I'm Walid Shah, I own the business and I take the calls myself.`,
       ``,
       ...SIGNATURE,
       // One click rather than "reply and say so". Asking somebody to compose
@@ -86,30 +111,36 @@ function stepOne(p: Prospect, unsubscribeUrl: string): Draft {
 /**
  * The second, three days later: the one that explains itself.
  *
+ * The "Re:" keeps it in the same thread as the first. Worth knowing: the
+ * subject lost an em dash when the copy was rewritten, so anybody who was
+ * mid-sequence at that moment gets a step 2 whose subject does not quite
+ * match their step 1 and threads as a new message. One day of recipients,
+ * against every email after it reading as though a person typed it.
+ *
  * Longer because by now they have decided not to reply once, and the only
  * thing that changes that is understanding what the first email was actually
- * about. No invented numbers — what is lost here is described, not counted,
+ * about. No invented numbers. What is lost here is described, not counted,
  * because we have not measured their business and will not pretend to have.
  */
 function stepTwo(p: Prospect, unsubscribeUrl: string): Draft {
   return {
-    subject: `Re: ${p.name} — a couple of things on your website`,
+    subject: `Re: A couple of things on the ${p.name} website`,
     body: [
       `Hi,`,
       ``,
       `Following up on what I sent about the ${p.name} website.`,
       ``,
-      `The reason I'm bothering you again is what those things add up to. They are all the same story: somebody looking for exactly what you sell finds you, something small gets in the way — nothing to tap, nothing that answers them, nothing that follows up — and they go back to the search results and ring the next one instead. You never see it happen. It just looks like a quiet week.`,
+      `Those things are all the same story. Somebody looking for exactly what you sell finds you, something small gets in the way, and they go back to the search results and ring the next one instead. You never see it happen. It just looks like a quiet week.`,
       ``,
       `What we would actually do, in order:`,
       ``,
-      `- Fix what's losing people on the site now, which is the list in my last email.`,
-      `- Put Google Ads in front of the people already searching for what you do in your area, and Meta and Instagram ads in front of the ones who haven't thought of you yet.`,
-      `- Set you up with a CRM so every enquiry — form, WhatsApp, phone, Instagram — lands in one place and gets followed up, instead of sitting in somebody's phone.`,
+      `1. Fix what's losing people on the site now. That's the list in my last email.`,
+      `2. Put Google Ads in front of the people already searching for what you do in your area, and Meta and Instagram ads in front of the ones who haven't thought of you yet.`,
+      `3. Set you up with a CRM so every enquiry, whether that's a form, WhatsApp, a phone call or Instagram, lands in one place and gets followed up instead of sitting in somebody's phone.`,
       ``,
       `The full list of what we do is ${servicesLine()}.`,
       ``,
-      `Our prices are on the website, which is more than most will tell you up front. If you're already working with someone, tell me what you're paying and I'll tell you straight whether we'd beat it — and if we wouldn't, I'll say so.`,
+      `Our prices are on the website, which is more than most will tell you up front. If you're already working with someone, tell me what you're paying and I'll tell you straight whether we'd beat it. If we wouldn't, I'll say so.`,
       ``,
       `Twenty minutes on a Google Meet with me is usually enough to know whether any of it's worth doing.${booking ? ` You can take a slot out of my diary here: ${booking}` : ""}`,
       ``,
@@ -131,19 +162,19 @@ function stepTwo(p: Prospect, unsubscribeUrl: string): Draft {
  */
 function stepThree(p: Prospect, unsubscribeUrl: string): Draft {
   return {
-    subject: `Re: ${p.name} — a couple of things on your website`,
+    subject: `Re: A couple of things on the ${p.name} website`,
     body: [
       `Hi,`,
       ``,
       `Last one from me, as promised.`,
       ``,
-      `Short version: the ${p.name} website is losing enquiries it doesn't need to lose, I can show you exactly where, and the report's free whether or not you ever work with us.`,
+      `The ${p.name} website is losing enquiries it doesn't need to lose. I can show you exactly where, and the report is free whether or not you ever work with us.`,
       ``,
-      `If the timing's wrong, or you already have somebody, or it's simply not the thing you need this month — all completely fair. I won't email you again either way.`,
+      `If the timing's wrong, or you already have somebody, or it's simply not the thing you need this month, that's fair enough. I won't email you again either way.`,
       ``,
       `If it ever does become the thing: ${siteConfig.phoneDisplay}, ${siteConfig.email}, and the prices are on ${siteConfig.url}.${booking ? ` My diary is at ${booking}.` : ""}`,
       ``,
-      `All the best with it either way.`,
+      `All the best with it.`,
       ``,
       ...SIGNATURE,
       ``,

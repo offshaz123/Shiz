@@ -28,7 +28,7 @@ const LINES: Record<string, string> = {
   "Google Ads tracking":
     "If you ever run Google Ads there's nothing set up to tell you which clicks turned into enquiries, so you'd be paying without knowing what's working.",
   "Retargeting ready":
-    "Most people don't buy on the first visit, and at the moment there's no way to reach them again afterwards — which is the cheapest advertising there is.",
+    "Most people don't buy on the first visit. At the moment there's no way to reach them again afterwards, which is the cheapest advertising there is.",
 
   // On-page SEO
   "Page title":
@@ -40,7 +40,7 @@ const LINES: Record<string, string> = {
   "Canonical tag":
     "The site doesn't tell Google which address is the real one for a page, so if it can be reached more than one way Google has to guess.",
   "Structured data":
-    "Nothing on the site tells Google your business name, address, phone and hours in a form it can read — which is also where ChatGPT and Google's AI answers get their facts from.",
+    "Nothing on the site tells Google your business name, address, phone and hours in a form it can read. That's also where ChatGPT and Google's AI answers get their facts from.",
   "Image descriptions":
     "Most of your images have no description attached, so they don't show up in image search and the site is hard to use for anyone on a screen reader.",
   "Amount of content":
@@ -48,7 +48,7 @@ const LINES: Record<string, string> = {
 
   // Getting in touch
   "Tappable phone number":
-    "Your phone number isn't tappable on a mobile — someone on their phone has to copy it out by hand to ring you.",
+    "Your phone number isn't tappable on a mobile. Someone on their phone has to copy it out by hand to ring you.",
   "WhatsApp link":
     "There's no WhatsApp link anywhere. Plenty of people will send a message who would never fill in a form or pick up the phone.",
   "Email address":

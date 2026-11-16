@@ -11,7 +11,8 @@
     "higgsfield:example": "node --env-file=.env.local --experimental-strip-types index.ts",
     "images": "NODE_USE_ENV_PROXY=1 node scripts/generate-images.mjs",
     "images:estimate": "NODE_USE_ENV_PROXY=1 node scripts/generate-images.mjs --estimate",
-    "images:free": "node scripts/generate-images-free.mjs"
+    "images:free": "node scripts/generate-images-free.mjs",
+    "emails": "node --experimental-strip-types --import ./tests/resolve-ts.mjs scripts/preview-emails.mjs"
   },
   "dependencies": {
     "@higgsfield/client": "^0.2.6",

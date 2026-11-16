@@ -307,6 +307,30 @@ const ADDED_COLUMNS: {
                 WHERE (town IS NULL OR town = '')
                   AND found_for LIKE '% in %'`,
   },
+  // Who sent it: the cron, or Walid pressing send.
+  //
+  // Needed because the first email now sends itself. Before that the step
+  // number answered this on its own — step 1 was always a person, steps 2
+  // and 3 were always the scheduler — and now step 1 can be either, so
+  // "what has the site sent on its own?" is a question the table could no
+  // longer answer. The admin page is supposed to show exactly that.
+  //
+  // Defaults to 'auto' rather than 'hand' on purpose. Every caller passes a
+  // value explicitly, so the default only matters if one is ever added that
+  // forgets to — and a hand-sent email mislabelled as automatic is a much
+  // smaller problem than automatic sending hidden under a label that says a
+  // person did it.
+  //
+  // The backfill is exactly right rather than a guess: every row that
+  // existed before this column did was sent under the old rule, so step 1
+  // was a person and anything later was the scheduler.
+  {
+    table: "prospect_emails",
+    column: "sent_by",
+    definition: "VARCHAR(6) NOT NULL DEFAULT 'auto' AFTER status",
+    backfill: `UPDATE prospect_emails
+                  SET sent_by = CASE WHEN step = 1 THEN 'hand' ELSE 'auto' END`,
+  },
 ];
 
 interface CountRow extends RowDataPacket {
