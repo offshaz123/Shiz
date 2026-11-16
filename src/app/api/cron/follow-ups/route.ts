@@ -1,81 +1,23 @@
 import { NextResponse } from "next/server";
-import type { RowDataPacket } from "mysql2";
-import { withDb } from "@/lib/db";
-import { sendFollowUp } from "@/lib/send-follow-up";
-import { runProspectSequence, type SequenceSummary } from "@/lib/run-prospect-sequence";
+import { runFollowUps } from "@/lib/run-follow-ups";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * Sends the day 1, 3 and 6 follow-ups. Fired by a cron job, guarded by
- * CRON_SECRET — without that anyone who found this URL could run the whole
- * sequence at will.
+ * Starts a follow-up run on demand, guarded by CRON_SECRET — without that
+ * anyone who found this URL could run the whole sequence at will.
  *
- * Safe to run as often as you like and safe to run twice. What has already
- * gone out is decided by rows in lead_emails, and the unique key on
- * (lead_id, step) means a duplicate send is rejected by the database rather
- * than relying on this code getting it right.
+ * This is no longer the only way a run starts. The site schedules itself now
+ * (src/lib/scheduler.ts), because this route behind a hPanel cron job is
+ * exactly the arrangement that sat dead for a week: the job was listed, on a
+ * sensible schedule, and nothing ever ran. The route stays because being able
+ * to fire a run by hand is worth keeping, and because an external scheduler
+ * is a reasonable belt to the in-process braces.
  *
- * One email per person per run, always the earliest one they are still owed.
- * This matters whenever the scheduler has not run for a while: a lead who has
- * been waiting six days is due all three at once, and firing them within the
- * same second would land as three emails stacked in an inbox, in a sequence
- * that reads as though it was written to be spread over a week. Sending the
- * earliest and letting the rest follow on later runs keeps the order and the
- * spacing intact, at the cost of the sequence finishing a few days later than
- * the day numbers suggest. That is the right way round.
- *
- * A lead stops receiving these the moment any of these is true: marked
- * contacted in the admin page, unsubscribed, or past step 6.
- */
-
-/**
- * All three go to everyone who submitted their details, by Walid's decision.
- *
- * The basis is PECR's soft opt-in: someone who hands a marketing agency their
- * details to get a website audit is in negotiations for a sale, and the form
- * tells them plainly that the report and follow-ups are what they are signing
- * up for. What keeps that defensible rather than reckless is the unsubscribe
- * link on every email and the fact that it is honoured immediately — see the
- * unsubscribed_at check in the query below, which is not optional and must
- * not be removed.
- */
-const STEPS = [
-  { step: 1, afterDays: 1 },
-  { step: 3, afterDays: 3 },
-  { step: 6, afterDays: 6 },
-];
-
-/** Kept small so a run finishes well inside any request timeout. */
-const MAX_PER_RUN = 25;
-
-/**
- * Minimum gap between two emails to the same person.
- *
- * Without this the spacing of the sequence is a property of how often the
- * cron happens to run, not of the data. Anyone firing the route twice in an
- * afternoon — testing it, or catching up after an outage — would walk a
- * backlogged lead through the whole sequence in minutes. Twenty hours rather
- * than a full day so a daily job that drifts by an hour still fires.
- */
-const MIN_GAP_HOURS = 20;
-
-interface DueRow extends RowDataPacket {
-  id: number;
-  age_days: number;
-  sent_steps: string | null;
-  hours_since_last: number | null;
-}
-
-/**
- * Three outcomes, not two.
- *
- * A missing CRON_SECRET and a wrong one used to both answer 401, which meant
- * a silently dead scheduler looked identical from outside to one being
- * probed by a stranger. Saying which is which costs nothing — it reveals
- * only whether an environment variable exists, never its value — and it is
- * the difference between diagnosing this in a second and guessing at it.
+ * The work itself lives in run-follow-ups.ts and is safe to run twice, so a
+ * hPanel cron job and the in-process timer can both exist without the
+ * sequence being walked through twice.
  */
 function authorised(request: Request): "ok" | "wrong_key" | "not_configured" {
   const secret = process.env.CRON_SECRET;
@@ -97,6 +39,15 @@ export async function GET(request: Request) {
   return run(request);
 }
 
+/**
+ * Three outcomes, not two.
+ *
+ * A missing CRON_SECRET and a wrong one used to both answer 401, which meant
+ * a silently dead scheduler looked identical from outside to one being
+ * probed by a stranger. Saying which is which costs nothing — it reveals
+ * only whether an environment variable exists, never its value — and it is
+ * the difference between diagnosing this in a second and guessing at it.
+ */
 async function run(request: Request) {
   const auth = authorised(request);
   if (auth === "not_configured") {
@@ -112,109 +63,11 @@ async function run(request: Request) {
     return NextResponse.json({ error: "unauthorised" }, { status: 401 });
   }
 
-  const summary: Record<string, number> = { sent: 0, failed: 0, skipped: 0 };
-
-  // Everyone who could be owed something: not contacted, not unsubscribed,
-  // and old enough for at least the first step.
-  const due = await withDb(async (db) => {
-    const [rows] = await db.query<DueRow[]>(
-      `SELECT l.id,
-              TIMESTAMPDIFF(DAY, l.created_at, NOW()) AS age_days,
-              GROUP_CONCAT(e.step) AS sent_steps,
-              TIMESTAMPDIFF(HOUR, MAX(e.sent_at), NOW()) AS hours_since_last
-       FROM scan_leads l
-       LEFT JOIN lead_emails e ON e.lead_id = l.id
-       WHERE l.contacted = 0
-         AND l.unsubscribed_at IS NULL
-         AND l.created_at <= DATE_SUB(NOW(), INTERVAL ? DAY)
-       GROUP BY l.id
-       ORDER BY l.created_at ASC
-       LIMIT ?`,
-      [STEPS[0].afterDays, MAX_PER_RUN],
-    );
-    return rows;
-  });
-
-  if (!due) {
-    return NextResponse.json({ error: "no_database" }, { status: 500 });
+  const result = await runFollowUps();
+  if (!result.ok) {
+    return NextResponse.json({ error: result.error }, { status: 500 });
   }
 
-  for (const row of due) {
-    // Any existing row counts as attempted, including a failed one. Retrying
-    // a bad address on every run forever helps nobody and harms the domain's
-    // sending reputation.
-    const already = new Set(
-      (row.sent_steps ?? "").split(",").filter(Boolean).map(Number),
-    );
-
-    // Nothing within twenty hours of the last one, whatever the schedule did.
-    if (row.hours_since_last !== null && row.hours_since_last < MIN_GAP_HOURS) {
-      continue;
-    }
-
-    const next = STEPS.find(
-      (candidate) => row.age_days >= candidate.afterDays && !already.has(candidate.step),
-    );
-    if (!next) continue;
-    const step = next.step;
-
-    const result = await sendFollowUp(row.id, step);
-    if (result.ok) summary.sent += 1;
-    else if (result.reason === "send_failed") summary.failed += 1;
-    else summary.skipped += 1;
-  }
-
-  // The call list's own three-email sequence rides on this same job rather
-  // than a second cron entry in hPanel. One scheduler to keep alive, one
-  // place to look when it stops, and the admin page's "did the cron run"
-  // check covers both. It never throws: a mail server refusing IMAP must not
-  // take down the audit follow-ups that were already sent above.
-  const prospects = await runProspectSequence().catch((err) => {
-    console.error("Prospect sequence:", err);
-    return null;
-  });
-
-  await recordRun(due.length, summary, prospects);
-
-  return NextResponse.json({ ok: true, ...summary, prospects });
-}
-
-/**
- * Leaves a record that this run happened, whether or not it sent anything.
- *
- * A run that finds nobody due is the normal case and looks exactly like a
- * scheduler that never fired — which is how this sequence managed to sit dead
- * for a week with a cron job sitting in hPanel looking perfectly healthy. The
- * row is the proof it ran; the admin page reads it and says so.
- *
- * Deliberately never throws. Failing to write the diary must not fail the
- * send that just happened.
- */
-async function recordRun(
-  considered: number,
-  summary: Record<string, number>,
-  prospects: SequenceSummary | null,
-) {
-  const sent = summary.sent + (prospects?.sent ?? 0);
-
-  // What this run actually did, in the words the admin page will repeat. The
-  // held case is the one that matters: the sequence stops itself when it
-  // cannot read the inbox, and saying "nobody was due" for that would be a
-  // scheduler reporting health while the pipeline is frozen.
-  let detail: string | null = null;
-  if (prospects && !prospects.repliesChecked) {
-    detail = `inbox unreadable — ${prospects.held} prospect follow-up(s) held`;
-  } else if (prospects && prospects.sent > 0) {
-    detail = `${prospects.sent} prospect follow-up(s)`;
-  } else if (considered === 0 && sent === 0) {
-    detail = "nobody was due";
-  }
-
-  await withDb(async (db) => {
-    await db.execute(
-      `INSERT INTO cron_runs (job, sent, failed, skipped, considered, detail)
-       VALUES ('follow-ups', ?, ?, ?, ?, ?)`,
-      [sent, summary.failed, summary.skipped, considered, detail],
-    );
-  }).catch(() => null);
+  const { sent, failed, skipped, prospects } = result;
+  return NextResponse.json({ ok: true, sent, failed, skipped, prospects });
 }
