@@ -10,10 +10,6 @@ import type { CronHealth } from "@/lib/admin-data";
  * on this page said anything was wrong, because nothing on this page was
  * looking.
  *
- * That cron job is no longer what drives it — the server schedules itself
- * now — but this check is, if anything, more worth keeping: an in-process
- * timer is invisible from outside too.
- *
  * It is deliberately loud when the job hasn't run and quiet when it has.
  */
 export function SchedulerStatus({ cron }: { cron: CronHealth }) {
@@ -55,16 +51,9 @@ export function SchedulerStatus({ cron }: { cron: CronHealth }) {
             : `The daily job last finished ${cron.hoursSince} hours ago. It should run every day.`}
         </p>
         <p className="mt-2 text-sm leading-relaxed text-muted">
-          The site schedules itself now — a timer inside the running server, no cron job
-          needed — so this box appearing means the server has not managed a run since it
-          last started. Give it an hour after a deploy before worrying: it waits two
-          minutes to settle, then only sends between 9am and 6pm, and never twice in
-          twenty hours.
-        </p>
-        <p className="mt-2 text-sm leading-relaxed text-muted">
-          If it is still red after that, the thing to check is the database — the scheduler
-          reads the last run from it and sends nothing when it cannot. The database check
-          further down this page will say.
+          Check the cron job in hPanel under Advanced → Cron Jobs. The two things that break
+          it are the script path being wrong and CRON_SECRET missing from the file the cron
+          reads, which is not necessarily the same place the website reads it from.
         </p>
       </div>
     );

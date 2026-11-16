@@ -175,7 +175,7 @@ async function schedulerCheck(): Promise<Check> {
       name: "The daily job",
       state: "fail",
       detail: "It has never reported finishing a run.",
-      fix: "The server schedules itself, so there is no cron job to fix. It waits two minutes after starting, then only sends between 9am and 6pm UK time — so give it an hour after a deploy. Still nothing means it cannot read the database.",
+      fix: "Check the cron job in hPanel under Advanced → Cron Jobs. Nothing automatic happens without it: no follow-ups, no prospect sequence.",
     };
   }
 
@@ -187,7 +187,7 @@ async function schedulerCheck(): Promise<Check> {
       name: "The daily job",
       state: "fail",
       detail: `Last finished ${cron.hoursSince} hours ago. It should run every day.`,
-      fix: "The scheduler lives inside the running server, so the usual cause is the server having restarted repeatedly or the database being unreachable when it woke up. See the database check.",
+      fix: "Check the cron job in hPanel under Advanced → Cron Jobs.",
     };
   }
 
