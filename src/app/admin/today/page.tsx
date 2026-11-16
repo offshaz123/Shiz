@@ -73,6 +73,20 @@ export default async function AdminTodayPage() {
             </h2>
             <p className="mt-1 text-xs leading-relaxed text-muted">{group.why}</p>
 
+            {group.id === "emailed" && (
+              <p className="mt-2 rounded-xl border border-border bg-surface px-4 py-2.5 text-xs leading-relaxed text-muted">
+                Something to open with:{" "}
+                <span className="text-foreground">
+                  &ldquo;Hi, it&rsquo;s Walid from Shaz Marketing Group. I sent you a few emails
+                  last week about a couple of things on your website that are losing you
+                  enquiries. I won&rsquo;t keep you, I just wanted to check they reached you,
+                  because I know emails get buried.&rdquo;
+                </span>{" "}
+                It is true, it explains the call, and it gives them an easy way out, which is
+                what stops it sounding like a cold call.
+              </p>
+            )}
+
             <ul className="mt-3 flex flex-col gap-2">
               {group.prospects.map((p) => (
                 <li
@@ -90,6 +104,17 @@ export default async function AdminTodayPage() {
                   )}
 
                   {p.town && <span className="text-muted">{p.town}</span>}
+
+                  {/* How many emails they have actually had, on the row of
+                      the group that exists because of them. "Three emails"
+                      is the reason the call is not cold, so it belongs
+                      where the number is dialled rather than in a note
+                      somewhere else. */}
+                  {group.id === "emailed" && p.emailCount > 0 && (
+                    <span className="rounded-full border border-border px-2 py-0.5 font-semibold text-foreground">
+                      {p.emailCount} {p.emailCount === 1 ? "email" : "emails"} sent
+                    </span>
+                  )}
 
                   {p.callbackAt && (
                     <span className="font-bold text-brand-pink">

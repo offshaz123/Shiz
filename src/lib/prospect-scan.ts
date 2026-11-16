@@ -143,12 +143,52 @@ export function extractEmail(html: string): string {
  * Links are taken from the page itself rather than guessed at, so we only
  * ever ask for a URL the site says exists, and only on the same host.
  */
-const CONTACT_WORDS = /contact|get-in-touch|getintouch|enquir|about|reach-us|book/i;
-const MAX_EXTRA_PAGES = 2;
+/**
+ * Which links are worth following for an address.
+ *
+ * Ordered by how likely the page is to carry one, because only the first
+ * few are fetched and a site with a dozen matching links should spend them
+ * on the contact page rather than on "about".
+ *
+ * The legal pages earn their place: a privacy policy has to name a way to
+ * reach the data controller, and on a small business site that is almost
+ * always the same inbox the contact page would have given, sometimes when
+ * the contact page itself is a form with no address on it at all.
+ */
+const CONTACT_WORDS =
+  /contact|get-in-touch|getintouch|enquir|reach-us|book|about|privacy|terms|imprint|legal/i;
 
-function contactLinks(html: string, base: URL): URL[] {
+/** Roughly best-first, so the budget is not spent on "about". */
+const LINK_RANK = [
+  /contact|get-in-touch|getintouch/i,
+  /enquir|reach-us|book/i,
+  /privacy|imprint|legal/i,
+  /about|terms/i,
+];
+
+function linkRank(href: string): number {
+  const i = LINK_RANK.findIndex((rx) => rx.test(href));
+  return i === -1 ? LINK_RANK.length : i;
+}
+
+/**
+ * Three rather than two.
+ *
+ * Each one is an HTTP request against somebody else's site during a scan
+ * that already made one, so this is not free and is not a number to raise
+ * casually. Three covers the common shape: a contact page that turns out to
+ * be a bare form, and then the privacy page that does carry the address.
+ */
+const MAX_EXTRA_PAGES = 3;
+
+export function contactLinks(html: string, base: URL): URL[] {
   const found: URL[] = [];
   const seen = new Set<string>();
+
+  // Collected with their rank first, then sorted, because the best link is
+  // often near the bottom of the markup: a contact link in the footer loses
+  // to an "about" link in the header if the first match simply wins.
+  const ranked: { url: URL; rank: number }[] = [];
 
   for (const m of html.matchAll(/href=["']([^"'#]+)["']/gi)) {
     const raw = m[1];
@@ -166,7 +206,12 @@ function contactLinks(html: string, base: URL): URL[] {
     const key = url.toString();
     if (seen.has(key) || key === base.toString()) continue;
     seen.add(key);
-    found.push(url);
+    ranked.push({ url, rank: linkRank(raw) });
+  }
+
+  ranked.sort((a, b) => a.rank - b.rank);
+  for (const entry of ranked) {
+    found.push(entry.url);
     if (found.length >= MAX_EXTRA_PAGES) break;
   }
 

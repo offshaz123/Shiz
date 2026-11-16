@@ -56,6 +56,39 @@ export async function getToday(
         WHERE status = 'interested'
         ORDER BY updated_at DESC LIMIT 25`,
     );
+    // The hand-off from email to phone.
+    //
+    // Three emails go out over five days and then the sequence stops, and
+    // until now that was the end of it: a business that had read three
+    // emails and not replied sat in the list looking exactly like one
+    // nobody had ever touched. That is the worst moment to drop somebody.
+    // They know the name by now, which is the whole point of having sent
+    // three, and the call opens with a reason to be ringing rather than
+    // cold.
+    //
+    // Two days after the last email, not the same day. A reply to email
+    // three usually arrives the morning after it, and ringing somebody who
+    // is about to write back is how you turn a warm lead into an annoyed
+    // one.
+    //
+    // They need a phone number for this to be a call at all, and anyone who
+    // replied, unsubscribed, was already rung, or has a status saying the
+    // answer is known is out.
+    const [emailed] = await db.query<IdRow[]>(
+      `SELECT p.id
+         FROM prospects p
+         JOIN prospect_emails e
+           ON e.prospect_id = p.id AND e.status = 'sent' AND e.step = 3
+        WHERE p.replied_at IS NULL
+          AND p.unsubscribed_at IS NULL
+          AND p.called_at IS NULL
+          AND p.deleted_at IS NULL
+          AND p.phone IS NOT NULL AND p.phone <> ''
+          AND p.status NOT IN ('customer', 'not-interested', 'interested')
+          AND e.sent_at <= DATE_SUB(NOW(), INTERVAL 2 DAY)
+        ORDER BY e.sent_at ASC
+        LIMIT 25`,
+    );
     const [fresh] = await db.query<IdRow[]>(
       `SELECT id FROM prospects
         WHERE emailed_at IS NULL AND called_at IS NULL
@@ -64,6 +97,7 @@ export async function getToday(
         LIMIT 10`,
     );
     return {
+      emailed: emailed.map((r) => r.id),
       replied: replied.map((r) => r.id),
       callbacks: callbacks.map((r) => r.id),
       interested: interested.map((r) => r.id),
@@ -73,10 +107,11 @@ export async function getToday(
 
   if (!picked) return null;
 
-  const [replied, callbacks, interested, fresh] = await Promise.all([
+  const [replied, callbacks, interested, emailed, fresh] = await Promise.all([
     rowsFor(picked.replied, byIds),
     rowsFor(picked.callbacks, byIds),
     rowsFor(picked.interested, byIds),
+    rowsFor(picked.emailed, byIds),
     rowsFor(picked.fresh, byIds),
   ]);
 
@@ -98,6 +133,12 @@ export async function getToday(
       title: "Said they were interested",
       why: "Warm and waiting. If there is nothing booked with them, that is the call to make.",
       prospects: interested,
+    },
+    {
+      id: "emailed",
+      title: "Had all three emails, never replied",
+      why: "Ring these before the cold ones. They have had three emails from you over five days, so the name is not new to them, and the call has a reason to exist: you are following up something you already sent. Two days after the last email, so anybody about to reply has had the chance.",
+      prospects: emailed,
     },
     {
       id: "fresh",
