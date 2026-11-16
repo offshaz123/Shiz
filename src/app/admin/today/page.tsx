@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { isAdmin } from "@/lib/admin-auth";
+import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../LoginForm";
 import { getToday } from "@/lib/today";
 import { listProspectsByIds } from "@/lib/prospects";
@@ -37,15 +38,14 @@ export default async function AdminTodayPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-5 py-8 sm:px-8">
-      <h1 className="text-2xl font-bold tracking-tight text-foreground">Today</h1>
-      <p className="mt-1 text-sm text-muted">
-        {today} ·{" "}
+      <AdminHeading title="Today">
+        {today}{" · "}
         {groups === null
           ? "No database connection."
           : total === 0
             ? "Nothing waiting on you."
             : `${total} ${total === 1 ? "thing" : "things"} worth doing, most urgent first.`}
-      </p>
+      </AdminHeading>
 
       {groups !== null && total === 0 && (
         <p className="mt-8 rounded-2xl border border-border bg-surface p-6 text-sm leading-relaxed text-muted">

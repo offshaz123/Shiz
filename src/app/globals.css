@@ -13,6 +13,22 @@
   --brand-pink: #e0218a;
   --brand-orange: #f7941e;
   --brand-blue: #0866ff;
+
+  /* Chart series colours for the admin dashboard.
+   *
+   * Deliberately not the brand pink and purple. These are read, not
+   * admired: two series on a stacked bar have to stay apart for somebody
+   * with colour-blindness, and the brand gradient's two ends are both
+   * violet-ish and fail that outright.
+   *
+   * Blue and orange, validated as a pair against this surface rather than
+   * eyeballed: CVD separation dE 24.7 (protan), normal-vision dE 33.6, both
+   * well clear of the 8 and 15 floors. Orange lands at 2.96:1 against the
+   * light surface, just under 3:1, which is why every value on these charts
+   * is also written out as a number and every chart has a table underneath.
+   */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
 }
 
 .dark {
@@ -26,6 +42,11 @@
   --brand-pink: #ff3ea5;
   --brand-orange: #ffab2e;
   --brand-blue: #3b8bff;
+
+  /* The same two hues stepped for the dark surface, not an automatic flip.
+   * Validated separately against #111114: all checks pass, contrast >= 3:1. */
+  --series-1: #3987e5;
+  --series-2: #d95926;
 }
 
 @theme inline {
@@ -39,6 +60,8 @@
   --color-brand-pink: var(--brand-pink);
   --color-brand-orange: var(--brand-orange);
   --color-brand-blue: var(--brand-blue);
+  --color-series-1: var(--series-1);
+  --color-series-2: var(--series-2);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

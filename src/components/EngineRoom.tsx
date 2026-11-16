@@ -1,229 +1,303 @@
 import Link from "next/link";
-import type { EngineRoom as Engine, Station } from "@/lib/engine-room";
+import type { EngineRoom as Engine, Day, Station, Step } from "@/lib/engine-room";
 import { EngineLive } from "./EngineLive";
+import { StatTiles } from "./StatTiles";
 
 /**
- * The board: what the machinery is doing, as a picture.
+ * The overview dashboard: what the machinery is doing, and what it has done.
  *
- * It exists because the work is invisible. The scanner runs in a batch, the
- * follow-ups go out at six in the morning, the inbox is read by a cron job —
- * and from the admin page all of that looked like a list of businesses that
- * occasionally changed. Somebody new would have no idea anything was
- * happening at all.
+ * This replaced a version with six cartoon robots on it, one per job, on
+ * saturated gradient cards inside a dark navy panel that ignored the site's
+ * own light and dark themes. Walid's word for it was "weird", and he was
+ * right for a reason worth writing down: thick saturated blocks and six
+ * competing hues read as loud and faintly childish, and every one of those
+ * six hues was carrying a story that was actually a single number. A stat
+ * tile shows one number better than a decorated card does.
  *
- * Every number on it is counted from the database. There are no estimates,
- * no targets dressed as results, and nothing is shown for a part of the
- * pipeline that cannot be measured. A board that flatters itself is worse
- * than no board, because you stop checking the thing it is lying about.
+ * None of the data changed. Every figure here is still counted from the
+ * database, nothing is estimated, and a part of the pipeline that cannot be
+ * measured still shows no number rather than a plausible one.
+ *
+ * What changed is the presentation: site tokens so it follows the theme,
+ * thin marks, hairline rules, two chart colours instead of six, and a table
+ * under each chart so no value is reachable only by colour or only by hover.
  */
 
-/** One robot, drawn rather than fetched: a sprite per station would be six
- *  more requests for something that is six rounded rectangles. */
-function Bot({ tone, asleep }: { tone: string; asleep: boolean }) {
+/**
+ * One way of writing a number on this page.
+ *
+ * The stat tiles arrive pre-formatted from the lib and read "1,284" while
+ * the jobs list and the funnel were printing the raw count as "1284". Two
+ * spellings of the same figure on one screen makes a reader check whether
+ * they are the same figure.
+ */
+const count = (n: number) => n.toLocaleString("en-GB");
+
+/* ---------------------------------------------------------------- jobs --- */
+
+/**
+ * The six jobs, as a list rather than a row of characters.
+ *
+ * Status is a dot and a word, never the dot alone: colour on its own is not
+ * a state anybody can read if they cannot see the colour.
+ */
+function Jobs({ stations }: { stations: Station[] }) {
   return (
-    <svg viewBox="0 0 48 52" className="h-11 w-11" aria-hidden="true">
-      <line x1="24" y1="2" x2="24" y2="9" stroke={tone} strokeWidth="2" strokeLinecap="round" />
-      <circle cx="24" cy="3" r="3" fill={tone} />
-      <rect x="6" y="9" width="36" height="26" rx="9" fill={tone} opacity={asleep ? 0.45 : 1} />
-      <rect x="13" y="18" width="22" height="9" rx="4.5" fill="#0b1020" />
-      <circle cx="19" cy="22.5" r="2.6" fill={asleep ? "#64748b" : "#e2e8f0"} />
-      <circle cx="29" cy="22.5" r="2.6" fill={asleep ? "#64748b" : "#e2e8f0"} />
-      <rect x="11" y="37" width="26" height="11" rx="4" fill={tone} opacity={asleep ? 0.3 : 0.75} />
-      <rect x="2" y="15" width="4" height="13" rx="2" fill={tone} opacity={asleep ? 0.3 : 0.7} />
-      <rect x="42" y="15" width="4" height="13" rx="2" fill={tone} opacity={asleep ? 0.3 : 0.7} />
-    </svg>
+    <section className="rounded-2xl border border-border bg-surface">
+      <div className="border-b border-border px-5 py-4">
+        <h2 className="text-sm font-semibold text-foreground">The jobs</h2>
+        <p className="mt-0.5 text-xs text-muted">
+          Six of them share the work. Every number is counted, not estimated.
+        </p>
+      </div>
+      <ul className="divide-y divide-border">
+        {stations.map((station) => {
+          const row = (
+            <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1 px-5 py-3.5">
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <span
+                    aria-hidden
+                    className={`h-2 w-2 shrink-0 rounded-full ${
+                      station.live ? "bg-emerald-500" : "bg-muted/50"
+                    }`}
+                  />
+                  <span className="truncate text-sm font-medium text-foreground">
+                    {station.name}
+                  </span>
+                  <span
+                    className={`text-[10px] font-semibold uppercase tracking-wide ${
+                      station.live ? "text-emerald-600 dark:text-emerald-400" : "text-muted"
+                    }`}
+                  >
+                    {station.live ? "working" : "idle"}
+                  </span>
+                </div>
+                <p className="mt-0.5 pl-4 text-xs leading-snug text-muted">{station.does}</p>
+              </div>
+              <div className="pl-4 text-right">
+                <span className="text-base font-bold tabular-nums text-foreground">
+                  {count(station.value)}
+                </span>
+                <span className="ml-1.5 text-xs text-muted">{station.unit}</span>
+                <p className="mt-0.5 text-[11px] text-muted">{station.state}</p>
+              </div>
+            </div>
+          );
+
+          return (
+            <li key={station.id}>
+              {station.href ? (
+                <Link href={station.href} className="block hover:bg-background">
+                  {row}
+                </Link>
+              ) : (
+                row
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }
 
-const TONE: Record<string, { bot: string; card: string }> = {
-  finder: { bot: "#60a5fa", card: "from-sky-500/20 to-sky-500/5 border-sky-500/30" },
-  scanner: { bot: "#818cf8", card: "from-indigo-500/20 to-indigo-500/5 border-indigo-500/30" },
-  writer: { bot: "#a78bfa", card: "from-violet-500/20 to-violet-500/5 border-violet-500/30" },
-  postman: { bot: "#34d399", card: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/30" },
-  nudger: { bot: "#fbbf24", card: "from-amber-500/20 to-amber-500/5 border-amber-500/30" },
-  listener: { bot: "#f472b6", card: "from-pink-500/20 to-pink-500/5 border-pink-500/30" },
-};
+/* -------------------------------------------------------------- funnel --- */
 
-function StationCard({ station }: { station: Station }) {
-  const tone = TONE[station.id] ?? TONE.finder;
-  const inner = (
-    <div
-      className={`relative flex h-full flex-col gap-2 overflow-hidden rounded-2xl border bg-gradient-to-b p-4 transition hover:brightness-125 ${tone.card} ${
-        station.live ? "engine-sweep" : ""
-      }`}
-    >
-      <div className="flex items-start justify-between gap-2">
-        <Bot tone={tone.bot} asleep={!station.live} />
-        <span
-          className={`mt-1 h-2.5 w-2.5 shrink-0 rounded-full ${
-            station.live ? "engine-dot bg-emerald-400" : "bg-slate-500"
-          }`}
-          title={station.live ? "working" : "not running"}
-        />
-      </div>
-      <div>
-        <div className="text-sm font-bold text-white">{station.name}</div>
-        <div className="text-[11px] leading-snug text-slate-300">{station.does}</div>
-      </div>
-      <div className="mt-auto">
-        <div className="text-2xl font-bold tabular-nums text-white">{station.value}</div>
-        <div className="text-[11px] text-slate-300">{station.unit}</div>
-        <div className="mt-1 text-[11px] font-semibold text-slate-400">{station.state}</div>
-      </div>
-    </div>
-  );
-
-  return station.href ? (
-    <Link href={station.href} className="block h-full">
-      {inner}
-    </Link>
-  ) : (
-    inner
+/**
+ * Where every business gets to.
+ *
+ * Ordered steps of one measure, so one series and therefore one colour for
+ * every bar. Shading each bar by its own size would burn the only free
+ * channel on information the bar's length already carries.
+ *
+ * The number and the percentage are written out beside each bar, so the
+ * chart is readable with the colour ignored entirely.
+ */
+function Funnel({ funnel }: { funnel: Step[] }) {
+  return (
+    <section className="rounded-2xl border border-border bg-surface p-5">
+      <h2 className="text-sm font-semibold text-foreground">Where every business gets to</h2>
+      <p className="mt-0.5 text-xs text-muted">
+        Each line counts businesses, not emails, as a share of everything ever found.
+      </p>
+      <ul className="mt-4 flex flex-col gap-2.5">
+        {funnel.map((step) => {
+          const pct = step.of > 0 ? (step.value / step.of) * 100 : 0;
+          return (
+            <li key={step.label} className="flex items-center gap-3" title={step.note}>
+              <span className="w-32 shrink-0 text-xs text-muted sm:w-40">{step.label}</span>
+              <span className="h-2 flex-1 overflow-hidden rounded-full bg-background">
+                <span
+                  className="block h-full rounded-full bg-series-1"
+                  style={{ width: `${Math.max(pct, step.value > 0 ? 1.5 : 0)}%` }}
+                />
+              </span>
+              <span className="w-24 shrink-0 text-right text-xs tabular-nums text-muted">
+                <b className="font-semibold text-foreground">{count(step.value)}</b>
+                {step.of > 0 && <span className="ml-1">{Math.round(pct * 10) / 10}%</span>}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </section>
   );
 }
+
+/* --------------------------------------------------------- emails/day --- */
+
+/**
+ * Emails sent per day over the last fortnight.
+ *
+ * Two series stacked, so the pair needs to stay apart under colour-blindness
+ * as well as for everybody else. Blue and orange, validated against both
+ * surfaces rather than chosen by eye.
+ *
+ * Three things make it readable without the colour: a legend that is always
+ * present, a 2px gap of surface between the two segments rather than a
+ * border drawn round them, and the table underneath, which is the same data
+ * in text. Only the busiest day is labelled directly — a number over every
+ * bar is noise and goes unread.
+ */
+function EmailsPerDay({ days }: { days: Day[] }) {
+  const busiest = Math.max(1, ...days.map((d) => d.first + d.followUp));
+  const peak = days.reduce(
+    (best, day) => (day.first + day.followUp > best.first + best.followUp ? day : best),
+    days[0],
+  );
+
+  return (
+    <section className="rounded-2xl border border-border bg-surface p-5">
+      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+        <h2 className="text-sm font-semibold text-foreground">Emails sent per day</h2>
+        <div className="flex items-center gap-3 text-[11px] text-muted">
+          <span className="flex items-center gap-1.5">
+            <span aria-hidden className="h-2 w-2 rounded-sm bg-series-1" />
+            First emails
+          </span>
+          <span className="flex items-center gap-1.5">
+            <span aria-hidden className="h-2 w-2 rounded-sm bg-series-2" />
+            Follow-ups
+          </span>
+        </div>
+      </div>
+      <p className="mt-0.5 text-xs text-muted">Last fourteen days.</p>
+
+      {days.length === 0 ? (
+        <p className="mt-6 text-xs text-muted">Nothing sent in the last fortnight.</p>
+      ) : (
+        <>
+          {/* Height covers the plot and the date band under it, so the card
+              never grows a tiny nested scrollbar to reach the labels. */}
+          <div className="mt-4 flex items-end gap-1.5">
+            {days.map((day) => {
+              const total = day.first + day.followUp;
+              return (
+                <div key={day.date} className="flex flex-1 flex-col items-center gap-1">
+                  <span className="text-[10px] font-semibold tabular-nums text-foreground">
+                    {day.date === peak?.date && total > 0 ? total : " "}
+                  </span>
+                  <div
+                    className="flex h-24 w-full flex-col justify-end"
+                    title={`${day.date}: ${day.first} first, ${day.followUp} follow-up`}
+                  >
+                    {day.followUp > 0 && (
+                      <span
+                        className="w-full rounded-t bg-series-2"
+                        style={{ height: `${(day.followUp / busiest) * 100}%` }}
+                      />
+                    )}
+                    {/* The gap is surface showing through, not a border drawn
+                        around the marks. Only when both segments exist. */}
+                    {day.followUp > 0 && day.first > 0 && <span className="h-0.5 w-full" />}
+                    {day.first > 0 && (
+                      <span
+                        className={`w-full bg-series-1 ${day.followUp > 0 ? "" : "rounded-t"}`}
+                        style={{ height: `${(day.first / busiest) * 100}%` }}
+                      />
+                    )}
+                  </div>
+                  <span className="text-[9px] tabular-nums text-muted">{day.date.slice(8)}</span>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* The table twin. Every value above is reachable as text, so
+              nothing on this chart depends on seeing a colour or on
+              managing to hover the right two-pixel bar. */}
+          <details className="mt-4 border-t border-border pt-3">
+            <summary className="cursor-pointer text-xs font-medium text-muted hover:text-foreground">
+              Show as a table
+            </summary>
+            <table className="mt-3 w-full text-left text-xs">
+              <thead>
+                <tr className="text-muted">
+                  <th scope="col" className="py-1 font-medium">Day</th>
+                  <th scope="col" className="py-1 text-right font-medium">First</th>
+                  <th scope="col" className="py-1 text-right font-medium">Follow-ups</th>
+                  <th scope="col" className="py-1 text-right font-medium">Total</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border">
+                {days.map((day) => (
+                  <tr key={day.date}>
+                    <td className="py-1.5 tabular-nums text-foreground">{day.date}</td>
+                    <td className="py-1.5 text-right tabular-nums text-muted">{day.first}</td>
+                    <td className="py-1.5 text-right tabular-nums text-muted">{day.followUp}</td>
+                    <td className="py-1.5 text-right font-semibold tabular-nums text-foreground">
+                      {day.first + day.followUp}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </details>
+        </>
+      )}
+    </section>
+  );
+}
+
+/* ----------------------------------------------------------------- all --- */
 
 export function EngineRoom({ engine }: { engine: Engine }) {
-  const busiest = Math.max(1, ...engine.days.map((d) => d.first + d.followUp));
-
   return (
-    <section className="mt-8 overflow-hidden rounded-3xl border border-slate-800 bg-[#0b1020] p-5 sm:p-6">
+    <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center gap-3">
-        <h2 className="text-lg font-bold text-white">Engine room</h2>
         <span
-          className={`flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-bold ${
-            engine.running ? "bg-emerald-500/20 text-emerald-300" : "bg-amber-500/20 text-amber-300"
+          className={`flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+            engine.running
+              ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400"
+              : "bg-amber-500/10 text-amber-700 dark:text-amber-400"
           }`}
         >
           <span
-            className={`h-2 w-2 rounded-full ${engine.running ? "bg-emerald-400" : "bg-amber-400"}`}
+            aria-hidden
+            className={`h-1.5 w-1.5 rounded-full ${
+              engine.running ? "bg-emerald-500" : "bg-amber-500"
+            }`}
           />
-          {engine.running ? "RUNNING" : "ATTENTION"}
+          {engine.running ? "Running" : "Needs attention"}
         </span>
-        <p className="text-xs text-slate-400">
-          Six jobs share the work. Every number here is counted, not estimated.
-        </p>
+        <EngineLive />
       </div>
 
       {engine.halted && (
-        <p className="mt-3 rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-2.5 text-xs font-semibold text-amber-200">
+        <p className="rounded-xl border border-amber-500/40 bg-amber-500/5 px-4 py-2.5 text-xs font-medium text-foreground">
           {engine.halted}
         </p>
       )}
 
-      <div className="relative mt-5">
-        {/* The work moving down the line, drawn behind the cards. Six
-            stations in a row is a flow, and a flow with nothing travelling
-            along it looks like a diagram of something switched off. */}
-        <div className="grid grid-cols-2 gap-3 lg:grid-cols-6">
-          {engine.stations.map((station) => (
-            <StationCard key={station.id} station={station} />
-          ))}
-        </div>
+      <StatTiles tiles={engine.tiles} />
 
-        {/* The rail the work travels along, under the row rather than
-            through it — drawn across the cards it cut straight through
-            their text, because the cards are deliberately translucent. */}
-        <svg className="mt-2 hidden h-2 w-full lg:block" aria-hidden="true">
-          <line
-            x1="4%"
-            y1="4"
-            x2="96%"
-            y2="4"
-            stroke={engine.running ? "#34d399" : "#64748b"}
-            strokeOpacity="0.5"
-            strokeWidth="2"
-            className={engine.running ? "engine-line" : ""}
-          />
-        </svg>
+      <Jobs stations={engine.stations} />
+
+      <div className="grid gap-5 lg:grid-cols-2">
+        <Funnel funnel={engine.funnel} />
+        <EmailsPerDay days={engine.days} />
       </div>
-
-      <EngineLive running={engine.running} />
-
-      <div className="mt-5 grid gap-4 lg:grid-cols-2">
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
-          <h3 className="text-sm font-bold text-white">Where every business gets to</h3>
-          <p className="mt-0.5 text-[11px] text-slate-400">
-            Each line counts businesses, not emails. Share of everything ever found.
-          </p>
-          <ul className="mt-2.5 flex flex-col gap-1.5">
-            {engine.funnel.map((step) => {
-              const pct = step.of > 0 ? (step.value / step.of) * 100 : 0;
-              return (
-                <li key={step.label} className="flex items-center gap-3">
-                  <span className="w-36 shrink-0 text-[11px] text-slate-300">{step.label}</span>
-                  <span className="h-2.5 flex-1 overflow-hidden rounded-full bg-slate-800">
-                    <span
-                      className="block h-full rounded-full bg-sky-400"
-                      style={{ width: `${Math.max(pct, step.value > 0 ? 1.5 : 0)}%` }}
-                    />
-                  </span>
-                  <span className="w-20 shrink-0 text-right text-[11px] tabular-nums text-slate-300">
-                    <b className="text-white">{step.value}</b>{" "}
-                    {step.of > 0 && <span>{Math.round(pct * 10) / 10}%</span>}
-                  </span>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-
-        <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-4">
-          <h3 className="text-sm font-bold text-white">Emails sent per day</h3>
-          <p className="mt-0.5 text-[11px] text-slate-400">
-            First emails and follow-ups, last fourteen days.
-          </p>
-          {engine.days.length === 0 ? (
-            <p className="mt-6 text-xs text-slate-400">Nothing sent in the last fortnight.</p>
-          ) : (
-            <>
-              <div className="mt-3 flex gap-1.5">
-                {engine.days.map((day) => (
-                  <div key={day.date} className="flex flex-1 flex-col items-center gap-1">
-                    {/* Each bar is sized against the busiest day, from the
-                        bottom of a box with a real height — a percentage
-                        inside a flex item with no height of its own
-                        collapses to nothing. */}
-                    <div
-                      className="flex h-20 w-full flex-col justify-end"
-                      title={`${day.date}: ${day.first} first, ${day.followUp} follow-up`}
-                    >
-                      <span
-                        className="w-full rounded-t-sm bg-emerald-400"
-                        style={{ height: `${(day.followUp / busiest) * 100}%` }}
-                      />
-                      <span
-                        className="w-full bg-sky-400"
-                        style={{ height: `${(day.first / busiest) * 100}%` }}
-                      />
-                    </div>
-                    <span className="text-[9px] text-slate-500">{day.date.slice(8)}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-3 flex gap-4 text-[11px] text-slate-400">
-                <span className="flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-sm bg-sky-400" /> first emails
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-sm bg-emerald-400" /> follow-ups
-                </span>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-
-      <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-5">
-        {engine.tiles.map((tile) => (
-          <div key={tile.label} className="rounded-2xl border border-slate-800 bg-slate-900/40 px-3.5 py-3">
-            <div className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
-              {tile.label}
-            </div>
-            <div className="mt-1 text-2xl font-bold tabular-nums text-white">{tile.value}</div>
-            <div className="mt-0.5 text-[11px] leading-snug text-slate-400">{tile.note}</div>
-          </div>
-        ))}
-      </div>
-    </section>
+    </div>
   );
 }

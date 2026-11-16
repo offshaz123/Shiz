@@ -6,6 +6,7 @@ import { getEngineRoom } from "@/lib/engine-room";
 import { EngineRoom } from "@/components/EngineRoom";
 import { SchedulerStatus } from "@/components/SchedulerStatus";
 import { AutomaticEmails } from "@/components/AutomaticEmails";
+import { AdminHeading } from "@/components/AdminHeading";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,17 @@ export default async function AdminPage() {
   ]);
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
+    <div className="mx-auto flex max-w-6xl flex-col gap-6 px-5 py-8 sm:px-8">
+      <AdminHeading title="Overview">
+        What the system is doing and what it has sent. Everything here is counted from the
+        database, never estimated.
+      </AdminHeading>
+
+      {/* The scheduler first. Nothing below it means anything if the daily
+          job has stopped, and a figure that stopped moving yesterday looks
+          exactly like a quiet day until something says otherwise. */}
+      {cron && <SchedulerStatus cron={cron} />}
+
       {engine ? (
         <EngineRoom engine={engine} />
       ) : (
@@ -40,7 +51,7 @@ export default async function AdminPage() {
           No database connection, so there is nothing to show here. The system check will say why.
         </p>
       )}
-      {cron && <SchedulerStatus cron={cron} />}
+
       {automatic && <AutomaticEmails log={automatic} />}
     </div>
   );

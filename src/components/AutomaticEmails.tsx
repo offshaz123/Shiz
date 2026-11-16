@@ -42,7 +42,7 @@ export function AutomaticEmails({ log }: { log: AutomaticEmailLog }) {
   const { recent, sentToday, sentLast7Days, failedLast7Days } = log;
 
   return (
-    <section className="mt-8 rounded-2xl border border-border bg-surface p-5 sm:p-6">
+    <section className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h2 className="text-sm font-semibold text-foreground">Automatic emails sent</h2>
         <span className="text-xs text-muted">

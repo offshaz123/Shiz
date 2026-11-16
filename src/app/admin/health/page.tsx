@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { isAdmin } from "@/lib/admin-auth";
+import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../LoginForm";
 import { runHealthChecks, type Check } from "@/lib/health";
 
@@ -55,15 +56,10 @@ export default async function AdminHealthPage() {
   const watch = checks.filter((c) => c.state === "warn").length;
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-12 sm:px-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">System check</h1>
-          <p className="mt-1 text-sm text-muted">
-            Run fresh every time you open this page. Nothing here is cached.
-          </p>
-        </div>
-      </div>
+    <div className="mx-auto max-w-3xl px-5 py-8 sm:px-8">
+      <AdminHeading title="System check">
+        Run fresh every time you open this page. Nothing here is cached.
+      </AdminHeading>
 
       <p className="mt-6 text-sm font-semibold text-foreground">
         {broken > 0

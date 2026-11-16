@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { isAdmin } from "@/lib/admin-auth";
+import { AdminHeading } from "@/components/AdminHeading";
 import { isDbConfigured } from "@/lib/db";
 import { getLeads, getStats, type AdminLead } from "@/lib/admin-data";
 import { getAllReviews, type Review } from "@/lib/reviews";
@@ -234,10 +235,10 @@ export default async function AdminLeadsPage() {
   const pendingReviews = (reviews ?? []).filter((r) => r.status === "pending").length;
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-12 sm:px-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">Leads</h1>
-      </div>
+    <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
+      <AdminHeading title="Leads">
+        People who asked us for something, and what they have been sent since.
+      </AdminHeading>
 
       {!stats || !leads ? (
         <div className="mt-8">

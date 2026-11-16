@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { isAdmin } from "@/lib/admin-auth";
+import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../LoginForm";
 import { CompanyLookup } from "@/components/CompanyLookup";
 import { RegisterFinder } from "@/components/RegisterFinder";
@@ -15,16 +16,10 @@ export default async function AdminCompanyPage() {
   if (!(await isAdmin())) return <LoginForm />;
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-12 sm:px-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Company check</h1>
-          <p className="mt-1 text-sm text-muted">
-            The official register. Limited company or a person trading under a name — which decides
-            what you are allowed to send them.
-          </p>
-        </div>
-      </div>
+    <div className="mx-auto max-w-3xl px-5 py-8 sm:px-8">
+      <AdminHeading title="Company check">
+        The official register. A limited company or a person trading under a name, which decides what you are allowed to send them.
+      </AdminHeading>
 
       <div className="mt-7">
         <CompanyLookup />

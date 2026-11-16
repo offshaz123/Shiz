@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { isAdmin } from "@/lib/admin-auth";
+import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../LoginForm";
 import { ProspectFinder } from "@/components/ProspectFinder";
 
@@ -21,15 +22,10 @@ export default async function AdminProspectsPage() {
   if (!(await isAdmin())) return <LoginForm />;
 
   return (
-    <div className="mx-auto max-w-5xl px-5 py-12 sm:px-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Who to call</h1>
-          <p className="mt-1 text-sm text-muted">
-            Keep this one to yourself — it has other businesses on it.
-          </p>
-        </div>
-      </div>
+    <div className="mx-auto max-w-5xl px-5 py-8 sm:px-8">
+      <AdminHeading title="Who to call">
+        Keep this one to yourself. It has other businesses on it.
+      </AdminHeading>
 
       <div className="mt-8">
         <ProspectFinder />

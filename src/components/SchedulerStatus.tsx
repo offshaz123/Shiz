@@ -22,7 +22,7 @@ export function SchedulerStatus({ cron }: { cron: CronHealth }) {
 
   if (!neverRun && !stale && held) {
     return (
-      <div className="mt-8 rounded-2xl border border-amber-500/50 bg-amber-500/5 p-5">
+      <div className="rounded-2xl border border-amber-500/50 bg-amber-500/5 p-5">
         <h2 className="text-sm font-semibold text-foreground">
           Prospect follow-ups are being held back
         </h2>
@@ -41,7 +41,7 @@ export function SchedulerStatus({ cron }: { cron: CronHealth }) {
 
   if (neverRun || stale) {
     return (
-      <div className="mt-8 rounded-2xl border border-red-500/50 bg-red-500/5 p-5">
+      <div className="rounded-2xl border border-red-500/50 bg-red-500/5 p-5">
         <h2 className="text-sm font-semibold text-foreground">
           Follow-up emails are not being sent automatically
         </h2>
@@ -60,7 +60,7 @@ export function SchedulerStatus({ cron }: { cron: CronHealth }) {
   }
 
   return (
-    <div className="mt-8 rounded-2xl border border-border bg-surface px-5 py-4">
+    <div className="rounded-2xl border border-border bg-surface px-5 py-4">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
         <h2 className="text-sm font-semibold text-foreground">Follow-up scheduler</h2>
         <span className="text-xs text-muted">

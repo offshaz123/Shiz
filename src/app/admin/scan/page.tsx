@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { isAdmin } from "@/lib/admin-auth";
+import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../LoginForm";
 import { AdminScanner } from "@/components/AdminScanner";
 
@@ -21,15 +22,10 @@ export default async function AdminScanPage() {
   if (!(await isAdmin())) return <LoginForm />;
 
   return (
-    <div className="mx-auto max-w-5xl px-5 py-12 sm:px-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-foreground">Scan a site</h1>
-          <p className="mt-1 text-sm text-muted">
-            Safe to show a customer — nothing of ours is on this page.
-          </p>
-        </div>
-      </div>
+    <div className="mx-auto max-w-5xl px-5 py-8 sm:px-8">
+      <AdminHeading title="Scan a site">
+        Safe to show a customer. Nothing of ours is on this page.
+      </AdminHeading>
 
       <div className="mt-8">
         <AdminScanner />
