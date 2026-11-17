@@ -1064,12 +1064,41 @@ export function ProspectFinder() {
         </p>
       )}
 
+      {/* Why the list can look empty when the database is not.
+          Everything moves to Contacted the moment it is emailed, and the
+          daily job emails without being asked, so this tab drains on its
+          own overnight. A page that just shows one row and says nothing
+          reads as broken rather than as working. */}
       {loaded && !error && prospects.length === 0 && (
-        <p className="mt-6 rounded-xl border border-border bg-surface px-4 py-3 text-sm text-muted">
-          Nothing here yet. Search a trade and a town above — try a suburb rather than
-          &ldquo;London&rdquo;, it surfaces the smaller operators.
+        <p className="mt-6 rounded-xl border border-border bg-surface px-4 py-3 text-sm leading-relaxed text-muted">
+          {contact === "not-contacted" && (counts?.contacted ?? 0) > 0 ? (
+            <>
+              Nobody left to approach. All {counts?.contacted} businesses found so far have been
+              emailed or rung, so they are on the <b className="text-foreground">Contacted</b> tab.
+              More are found and scanned automatically at 6:17 each morning, and the first emails
+              go at 10:15. You can also search a trade and a town above to add some now.
+            </>
+          ) : (
+            <>
+              Nothing here yet. Businesses are found automatically at 6:17 each morning, one trade
+              a day. You can also search a trade and a town above to add some now — try a suburb
+              rather than &ldquo;London&rdquo;, it surfaces the smaller operators.
+            </>
+          )}
         </p>
       )}
+
+      {/* The same point when the tab is nearly empty rather than empty,
+          which is the state that actually confuses: one row on screen and
+          no explanation for where the rest went. */}
+      {loaded && !error && contact === "not-contacted" && prospects.length > 0 &&
+        prospects.length <= 3 && (counts?.contacted ?? 0) > 0 && (
+          <p className="mt-6 rounded-xl border border-border bg-surface px-4 py-3 text-sm leading-relaxed text-muted">
+            Only {prospects.length} left to approach. The other {counts?.contacted} have already
+            been emailed or rung and are on the <b className="text-foreground">Contacted</b> tab.
+            This list refills on its own at 6:17 each morning.
+          </p>
+        )}
 
       {noSite.length > 0 && (
         <Section
