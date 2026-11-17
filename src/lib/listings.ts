@@ -70,7 +70,8 @@ export function listing(style: StyleId, kind: Kind): Listing {
     description: `${s.blurb} ${k.text}${legal} Same day dispatch when you order before ${site.dispatchCutoff} on a working day.`,
     config,
     price: unitPrice({ ...defaultConfig, ...config }),
-    image: `${site.url}/api/product-image?${new URLSearchParams({ style, kind })}`,
+    // v= changes when the pictures are redrawn, so Google fetches them again.
+    image: `${site.url}/api/product-image?${new URLSearchParams({ style, kind, v: "2" })}`,
   };
 }
 

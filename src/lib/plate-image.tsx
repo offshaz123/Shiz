@@ -79,29 +79,41 @@ export async function renderPlate(q: URLSearchParams) {
   // blur over about 3px made the thicker styles (4D, 5mm/7mm gel) fail to
   // draw at all. The solid offset gives the raised look; the blur only softens it.
   const blur = (b: number) => Math.min(b, 3);
-  const shadow =
-    depth > 0
+  // Product pictures (hero=1): the letters drawn as solid pieces, with their
+  // sides showing as if seen from slightly above and left, as thick as the
+  // real thing (style.thickness mm), plus the soft shadow they cast. Built
+  // from solid shadows only, so it stays cheap to draw.
+  const hero = q.get("hero") === "1";
+  // Solid layers of the letters, each a little further down and right and a
+  // little darker: the sides of the raised letters. (Text shadows come out
+  // see-through in these pictures, so the sides are drawn as letters.)
+  const heroT = style.thickness * PX * 0.75;
+  const heroLayers = heroT > 0 ? Math.max(2, Math.round(heroT)) : 0;
+  const gel = style.look === "gel";
+  const shadow = hero
+    ? heroT > 0
+      ? [1, 2, 3, 4].map((n) => `${(heroT * 0.55 + n * 1.6).toFixed(1)}px ${(heroT + n * 2.6).toFixed(1)}px 0px rgba(0,0,0,${(0.1 / n).toFixed(3)})`).join(", ")
+      : "none"
+    : depth > 0
       ? style.look === "acrylic"
         ? `${depth * 0.6}px ${depth}px 0px #4a4a4a, ${depth * 0.8}px ${depth * 2}px ${blur(depth * 2)}px rgba(0,0,0,0.45)`
         : `${depth * 0.4}px ${depth * 1.2}px ${blur(1 + depth)}px rgba(0,0,0,0.5)`
       : "none";
 
-  const gel = style.look === "gel";
-
   // The registration, drawn once for the letters and again (gel only) for
   // their shine. `shift` moves everything up, for drawing inside a shine band.
-  const letters = (look: React.CSSProperties, shift = 0) =>
+  const letters = (look: React.CSSProperties, shift = 0, dx = 0, keyPrefix = "") =>
     lines.flatMap((line, li) => {
       const row = rows[li];
       const layout = layouts?.[li];
       if (!layout)
         return [
           <div
-            key={li}
+            key={`${keyPrefix}${li}`}
             style={{
               position: "absolute",
-              left: bandW,
-              right: 0,
+              left: bandW + dx,
+              right: -dx,
               top: row.top - shift,
               height: row.height,
               display: "flex",
@@ -120,10 +132,10 @@ export async function renderPlate(q: URLSearchParams) {
       const startX = bandW + (W - bandW - layout.width * scale * px) / 2;
       return layout.cells.map((cell, i) => (
         <div
-          key={`${li}-${i}`}
+          key={`${keyPrefix}${li}-${i}`}
           style={{
             position: "absolute",
-            left: startX + (cell.centre - dims.charW / 2) * scale * px,
+            left: startX + (cell.centre - dims.charW / 2) * scale * px + dx,
             width: dims.charW * scale * px,
             top: row.top - shift,
             height: row.height,
@@ -146,8 +158,8 @@ export async function renderPlate(q: URLSearchParams) {
   const shineBands = rows.slice(0, lines.length).flatMap((row) => {
     const letterTop = row.top + row.height / 2 - capPx / 2;
     return [
-      { top: letterTop + capPx * 0.03, height: capPx * 0.5, alpha: 0.09 },
-      { top: letterTop + capPx * 0.17, height: Math.max(4, capPx * 0.05), alpha: 0.24 },
+      { top: letterTop + capPx * 0.03, height: capPx * 0.5, alpha: hero ? 0.13 : 0.09 },
+      ...(hero ? [] : [{ top: letterTop + capPx * 0.17, height: Math.max(4, capPx * 0.05), alpha: 0.24 }]),
     ];
   });
 
@@ -211,7 +223,14 @@ export async function renderPlate(q: URLSearchParams) {
         {border === "black" && (
           <div style={{ position: "absolute", left: 10, top: 10, right: 10, bottom: 10, border: "6px solid #111", borderRadius: 10 }} />
         )}
-        {letters({ color: "#111", textShadow: shadow })}
+        {/* The cast shadow first, then the sides from the back forward, then the face. */}
+        {hero && heroT > 0 && letters({ color: "transparent", textShadow: shadow }, 0, 0, "cast")}
+        {Array.from({ length: heroLayers }, (_, j) => {
+          const k = (heroLayers - j) / heroLayers;
+          const shade = Math.round(14 + (1 - k) * 40);
+          return letters({ color: `rgb(${shade},${shade},${shade})`, textShadow: "none" }, -k * heroT, k * heroT * 0.55, `side${j}-`);
+        })}
+        {letters({ color: "#111", textShadow: hero ? "none" : shadow }, 0, 0, "face")}
         {/* Gel letters are domed, glossy resin: a soft sheen on the upper part of */}
         {/* each letter and a bright streak where the light catches it. Images */}
         {/* can't fill text with a gradient, so these are bands of the letters cut out in white. */}

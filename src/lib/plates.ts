@@ -186,6 +186,8 @@ type StyleDef = {
   // How the characters are drawn in the preview.
   look: "flat" | "gel" | "acrylic";
   depth: number;
+  // How far the letters stand off the plate, in mm (for product pictures).
+  thickness: number;
   // Today's prices (pence), after any price change.
   readonly pair: number;
   readonly single: number;
@@ -198,6 +200,7 @@ const baseStyles: (Omit<StyleDef, "pair" | "single"> & { pair: number; single: n
     blurb: "Classic flat print with a crisp, factory-fresh finish.",
     look: "flat",
     depth: 0,
+    thickness: 0,
     pair: 2999,
     single: 1799,
   },
@@ -207,6 +210,7 @@ const baseStyles: (Omit<StyleDef, "pair" | "single"> & { pair: number; single: n
     blurb: "Raised, glossy resin gel letters that catch the light.",
     look: "gel",
     depth: 1,
+    thickness: 1.5,
     pair: 3999,
     single: 2399,
   },
@@ -216,6 +220,7 @@ const baseStyles: (Omit<StyleDef, "pair" | "single"> & { pair: number; single: n
     blurb: "3mm laser-cut acrylic letters for a sharp, raised look.",
     look: "acrylic",
     depth: 1.6,
+    thickness: 3,
     pair: 4499,
     single: 2699,
   },
@@ -225,6 +230,7 @@ const baseStyles: (Omit<StyleDef, "pair" | "single"> & { pair: number; single: n
     blurb: "Deeper 5mm laser-cut acrylic letters for a bolder finish.",
     look: "acrylic",
     depth: 2.6,
+    thickness: 5,
     pair: 4999,
     single: 2999,
   },
@@ -234,6 +240,7 @@ const baseStyles: (Omit<StyleDef, "pair" | "single"> & { pair: number; single: n
     blurb: "5mm acrylic letters topped with glossy gel.",
     look: "gel",
     depth: 2.6,
+    thickness: 5.5,
     pair: 5499,
     single: 3299,
   },
@@ -243,6 +250,7 @@ const baseStyles: (Omit<StyleDef, "pair" | "single"> & { pair: number; single: n
     blurb: "Our deepest 7mm gel letters. Maximum impact.",
     look: "gel",
     depth: 3.6,
+    thickness: 7,
     pair: 6499,
     single: 3899,
   },
