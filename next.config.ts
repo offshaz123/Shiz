@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Stops Next announcing itself in a response header. It tells an attacker
+  // which framework and therefore which published vulnerabilities to try
+  // first, and it tells a visitor nothing at all.
+  poweredByHeader: false,
+
   experimental: {
     // Four build workers, not fifty-five.
     //
@@ -39,6 +44,59 @@ const nextConfig: NextConfig = {
           {
             key: "Cache-Control",
             value: "public, max-age=0, must-revalidate",
+          },
+        ],
+      },
+      {
+        /**
+         * The security headers, which this site had none of.
+         *
+         * Worth saying why each is here rather than pasting a block from
+         * somewhere, because a header nobody understands is a header nobody
+         * will dare change later.
+         *
+         * Deliberately NOT here: a real Content-Security-Policy. This site
+         * loads Google Tag Manager, the Meta pixel and Google Fonts, and a
+         * CSP written without testing every one of those breaks tracking
+         * silently — the page still renders, the scripts just stop. That is
+         * a worse outcome than no CSP, and it is its own job with its own
+         * testing.
+         */
+        source: "/:path*",
+        headers: [
+          {
+            // Tells browsers to refuse plain HTTP to this domain for a year.
+            // Safe here because the site is already HTTPS-only. No preload:
+            // getting on the preload list is easy and getting off it takes
+            // months, so that is not a decision to make in passing.
+            key: "Strict-Transport-Security",
+            value: "max-age=31536000; includeSubDomains",
+          },
+          {
+            // Stops a browser second-guessing a file's declared type, which
+            // is how an uploaded "image" ends up being run as a script.
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            // Nobody may frame this site. Clickjacking works by putting a
+            // real page under an invisible one, and a quote form is exactly
+            // the sort of thing worth hijacking.
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+          {
+            // Send the full URL within our own site, only the domain to
+            // anyone else. Without this, a page address with a token or an
+            // email in it leaks to every third party the page talks to.
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            // This site has no reason to ask for a camera, a microphone or
+            // a location, so nothing embedded in it should be able to.
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=(), interest-cohort=()",
           },
         ],
       },

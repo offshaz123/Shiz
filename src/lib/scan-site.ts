@@ -229,7 +229,31 @@ export type FetchedPage = {
   robots: boolean;
   sitemap: boolean;
   ms: number;
+  /** The response headers the audit asks about, lower-cased. Only the few
+   *  that are checked, rather than the whole set: the rest would be stored
+   *  on every prospect row for nothing. */
+  headers: Record<string, string>;
 };
+
+/** The headers worth reading off a response. */
+const KEPT_HEADERS = [
+  "strict-transport-security",
+  "x-content-type-options",
+  "x-frame-options",
+  "content-security-policy",
+  "referrer-policy",
+  "server",
+  "x-powered-by",
+];
+
+function keptHeaders(res: Response): Record<string, string> {
+  const kept: Record<string, string> = {};
+  for (const name of KEPT_HEADERS) {
+    const value = res.headers.get(name);
+    if (value) kept[name] = value;
+  }
+  return kept;
+}
 
 /**
  * Everything buildReport needs about a site, with the Google lookup left to
@@ -266,7 +290,7 @@ export async function fetchForAudit(raw: string, timeoutMs = 12_000): Promise<Fe
       exists(finalUrl, "/sitemap.xml", controller.signal),
     ]);
 
-    return { html, finalUrl: finalUrl.toString(), robots, sitemap, ms };
+    return { html, finalUrl: finalUrl.toString(), robots, sitemap, ms, headers: keptHeaders(res) };
   } finally {
     clearTimeout(timer);
   }

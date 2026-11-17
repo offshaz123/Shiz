@@ -87,11 +87,16 @@ type Input = {
   robots: boolean;
   sitemap: boolean;
   ms: number;
+  /** Response headers, lower-cased. Optional so an older stored scan, or a
+   *  caller that never collected them, reads as "not checked" rather than
+   *  as "all missing" — accusing a site of a fault we did not look for is
+   *  worse than saying nothing. */
+  headers?: Record<string, string>;
   /** Omitted when the Places lookup isn't configured or didn't get to run. */
   google?: GoogleBusinessLookup;
 };
 
-export function buildReport({ html, finalUrl, robots, sitemap, ms, google }: Input): AuditResult {
+export function buildReport({ html, finalUrl, robots, sitemap, ms, google, headers }: Input): AuditResult {
   const body = visibleHtml(html);
   const https = finalUrl.startsWith("https://");
   const consentGated = has(html, ...CONSENT_SIGNALS);
@@ -341,6 +346,7 @@ export function buildReport({ html, finalUrl, robots, sitemap, ms, google }: Inp
           "This tells search engines what they can and can't look at.", "warning"),
       ],
     },
+    ...securitySection(headers, https),
     {
       id: "info",
       name: "Website Information",
@@ -689,4 +695,103 @@ export function projectedScore(categories: AuditCategory[], fixedIds: Set<string
 
   if (scores.length === 0) return 0;
   return Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 10) / 10;
+}
+
+/**
+ * Basic web security hygiene.
+ *
+ * Added because it is the one part of a website audit that almost nobody
+ * else's free report covers, and because every check here is objectively
+ * true or false rather than a judgement — a header is present or it is not.
+ *
+ * Scoped carefully. This is not a penetration test and must never be sold
+ * as one: it reads the headers that came back with the homepage and says
+ * which standard ones are missing. It does not probe anything, try any
+ * input, or look for a vulnerability, and the wording is written so nobody
+ * reading the report could think otherwise.
+ *
+ * Everything here is a warning rather than critical. A missing header is
+ * worth fixing and is not an emergency, and a report that cries emergency
+ * about a Referrer-Policy has spent credibility it will need for the
+ * things that actually cost money.
+ *
+ * Returns nothing at all when the headers were never collected, so an old
+ * stored scan does not suddenly accuse a site of faults nobody looked for.
+ */
+function securitySection(
+  headers: Record<string, string> | undefined,
+  https: boolean,
+): AuditCategory[] {
+  if (!headers) return [];
+
+  const has = (name: string) => Boolean(headers[name]);
+  const csp = headers["content-security-policy"] ?? "";
+  // "upgrade-insecure-requests" on its own is not a content policy; it is
+  // one useful line that hosts often add for you. Counting it as a CSP
+  // would tell somebody they are protected when they are not.
+  const realCsp = csp.length > 0 && csp.replace(/upgrade-insecure-requests;?/gi, "").trim().length > 0;
+
+  return [
+    {
+      id: "security",
+      name: "Website Security",
+      score: 0,
+      checks: [
+        check(
+          "hsts",
+          "Forced HTTPS",
+          https && has("strict-transport-security"),
+          "Enabled",
+          "Not enabled",
+          "Without this a visitor can still be sent to an insecure version of your site before the redirect happens, which is where details get intercepted.",
+          "warning",
+        ),
+        check(
+          "nosniff",
+          "File type protection",
+          has("x-content-type-options"),
+          "Enabled",
+          "Not set",
+          "Tells browsers to trust the file types you declare. Without it, a file uploaded to your site can sometimes be made to run as code.",
+          "warning",
+        ),
+        check(
+          "frame",
+          "Clickjacking protection",
+          has("x-frame-options") || /frame-ancestors/i.test(csp),
+          "Enabled",
+          "Not set",
+          "Stops anyone loading your site inside their own page. That trick is used to get people clicking your forms while they think they are somewhere else.",
+          "warning",
+        ),
+        check(
+          "csp",
+          "Content security policy",
+          realCsp,
+          "In place",
+          "Not set",
+          "The rule that says which scripts are allowed to run on your pages. It is the main thing that limits the damage if anything is ever injected into your site.",
+          "warning",
+        ),
+        check(
+          "referrer",
+          "Referrer policy",
+          has("referrer-policy"),
+          "Set",
+          "Not set",
+          "Controls how much of your page address is handed to other sites. Without it, addresses containing a customer's details can leak to third parties.",
+          "warning",
+        ),
+        check(
+          "banner",
+          "Software version hidden",
+          !has("x-powered-by"),
+          "Hidden",
+          "Announced",
+          "Your site tells anyone who asks which software it runs. That is the first thing someone checks when looking for a known way in.",
+          "warning",
+        ),
+      ],
+    },
+  ];
 }
