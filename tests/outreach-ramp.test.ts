@@ -12,19 +12,19 @@ import { newPerRun } from "../src/lib/outreach-warm-up.ts";
  */
 
 test("a domain with no sending history starts at the bottom of the ramp", () => {
-  assert.equal(newPerRun(0), 3);
+  assert.equal(newPerRun(0), 8);
 });
 
 test("the ramp does not open up until enough have been sent", () => {
-  assert.equal(newPerRun(24), 3);
-  assert.equal(newPerRun(25), 5);
-  assert.equal(newPerRun(74), 5);
-  assert.equal(newPerRun(75), 8);
+  assert.equal(newPerRun(39), 8);
+  assert.equal(newPerRun(40), 12);
+  assert.equal(newPerRun(119), 12);
+  assert.equal(newPerRun(120), 15);
 });
 
 test("the ramp has a ceiling and never climbs past it", () => {
-  assert.equal(newPerRun(1_000), 8);
-  assert.equal(newPerRun(1_000_000), 8);
+  assert.equal(newPerRun(1_000), 15);
+  assert.equal(newPerRun(1_000_000), 15);
 });
 
 /**
@@ -32,5 +32,5 @@ test("the ramp has a ceiling and never climbs past it", () => {
  * the safe reading is "no history", not "unlimited".
  */
 test("a nonsense count falls back to the slowest tier", () => {
-  assert.equal(newPerRun(-5), 3);
+  assert.equal(newPerRun(-5), 8);
 });

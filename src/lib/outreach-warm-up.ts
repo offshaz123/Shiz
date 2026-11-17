@@ -12,21 +12,27 @@
 /**
  * The ramp, keyed on how many first emails have ever actually been sent.
  *
- * These leave from the same mailbox as the client work and the enquiry
- * replies — Walid's deliberate choice — so the domain's own reputation is
- * what is at stake. A domain that has sent a couple of hundred emails in its
- * life and then starts sending fifty cold ones a day looks exactly like a
- * domain that has been taken over, and the mailboxes receiving them treat it
- * that way. So the volume climbs slowly instead of starting where it ends.
+ * Raised to Walid's numbers. He has said the mailbox is warmed up and that
+ * fifteen to twenty a day is what he wants, and that is his call to make:
+ * it is his domain and his sending reputation. The ramp is kept rather than
+ * replaced with a flat fifteen, because the first few days of a brand new
+ * sending pattern are still the risky ones and climbing over a week costs
+ * nothing against a list that takes weeks to work through anyway.
  *
- * Twelve follow-ups plus eight openers is around twenty emails on the
- * busiest day, which one mailbox sends without anyone noticing. Raise these
- * once there are weeks of clean DMARC reports behind them, not before.
+ * What has not changed is why there is a ceiling at all. These leave from
+ * the same mailbox as the client work and the enquiry replies, so the
+ * domain's own reputation is what is at stake, and bounces and complaints
+ * land on the address Walid's customers write to.
+ *
+ * One number nobody has verified: the Hostinger Free Business Email plan
+ * has its own daily sending limit and we have not confirmed what it is. If
+ * sends start failing in batches, that limit is the first thing to check
+ * and this table is the second.
  */
 export const WARM_UP: readonly { after: number; perRun: number }[] = [
-  { after: 0, perRun: 3 },
-  { after: 25, perRun: 5 },
-  { after: 75, perRun: 8 },
+  { after: 0, perRun: 8 },
+  { after: 40, perRun: 12 },
+  { after: 120, perRun: 15 },
 ];
 
 export function newPerRun(everSent: number): number {

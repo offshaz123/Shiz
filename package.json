@@ -13,7 +13,8 @@
     "images:estimate": "NODE_USE_ENV_PROXY=1 node scripts/generate-images.mjs --estimate",
     "images:free": "node scripts/generate-images-free.mjs",
     "emails": "node --experimental-strip-types --import ./tests/resolve-ts.mjs scripts/preview-emails.mjs",
-    "script": "node --experimental-strip-types --import ./tests/resolve-ts.mjs scripts/preview-call-script.mjs"
+    "script": "node --experimental-strip-types --import ./tests/resolve-ts.mjs scripts/preview-call-script.mjs",
+    "searches": "node --experimental-strip-types --import ./tests/resolve-ts.mjs scripts/preview-searches.mjs"
   },
   "dependencies": {
     "@higgsfield/client": "^0.2.6",
