@@ -1,6 +1,34 @@
 import { checkAdminLogin, failDelay, isAdminEmail, startAdminSession, startUserSession, verifyPassword } from "@/lib/auth";
 import { isDbConfigured, query } from "@/lib/db";
 import { clientIp, rateLimited } from "@/lib/places";
+import { notifyShop } from "@/lib/push";
+
+// The admin password gets a much stricter limit than customers' logins: 5
+// wrong tries from one connection locks it out of the admin for 15 minutes,
+// and the shop's phones are told someone is guessing.
+const ADMIN_TRIES = 5;
+const ADMIN_LOCK = 15 * 60_000;
+const adminFails = new Map<string, { n: number; until: number }>();
+
+function adminLocked(ip: string) {
+  const f = adminFails.get(ip);
+  return Boolean(f && f.n >= ADMIN_TRIES && f.until > Date.now());
+}
+
+function adminFailed(ip: string) {
+  const now = Date.now();
+  const f = adminFails.get(ip);
+  const next = f && f.until > now ? { n: f.n + 1, until: now + ADMIN_LOCK } : { n: 1, until: now + ADMIN_LOCK };
+  if (adminFails.size > 5000) adminFails.clear();
+  adminFails.set(ip, next);
+  if (next.n === ADMIN_TRIES)
+    notifyShop({
+      title: "⚠️ Admin login blocked",
+      body: `${ADMIN_TRIES} wrong admin passwords in a row. That connection is locked out for 15 minutes. If it wasn't you, change ADMIN_PASSWORD in Hostinger.`,
+      url: "/admin",
+      tag: "admin-login",
+    }).catch(() => {});
+}
 
 export async function POST(req: Request) {
   // Slows down anyone guessing passwords (including the admin one).
@@ -30,7 +58,16 @@ async function handle(req: Request) {
 
   // The shop owner's email logs into the admin portal.
   if (isAdminEmail(email)) {
-    if (!checkAdminLogin(email, password)) return wrong();
+    const ip = clientIp(req);
+    if (adminLocked(ip)) {
+      await failDelay();
+      return Response.json({ error: "Too many wrong passwords. Please wait 15 minutes and try again." }, { status: 429 });
+    }
+    if (!checkAdminLogin(email, password)) {
+      adminFailed(ip);
+      return wrong();
+    }
+    adminFails.delete(ip);
     await startAdminSession();
     return Response.json({ ok: true, redirect: "/admin" });
   }

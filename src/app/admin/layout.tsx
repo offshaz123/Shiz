@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AdminBlank } from "@/components/AdminBlank";
 
 export const metadata: Metadata = {
   title: { default: "Admin", template: "%s | PlatedUp Admin" },
@@ -9,7 +10,7 @@ export const metadata: Metadata = {
   icons: { apple: "/icons/admin-180.png" },
 };
 
-// Visit recordings (Microsoft Clarity) never show what's on admin pages.
+// Visit recordings (Microsoft Clarity) never see admin pages (AdminBlank).
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return <div data-clarity-mask="true">{children}</div>;
+  return <AdminBlank>{children}</AdminBlank>;
 }
