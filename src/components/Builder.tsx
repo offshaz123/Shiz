@@ -144,6 +144,9 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
   // Set up as a show plate only because the text from the link wasn't a
   // registration (not chosen by the customer): typing a real one switches back.
   const [autoShow, setAutoShow] = useState(showPlateNotice);
+  // A real registration typed on a show plate (e.g. after a "show plates"
+  // advert): ask plainly whether it's for their car, as many want road legal.
+  const [keepShow, setKeepShow] = useState(false);
 
   const set = (patch: Partial<PlateConfig>) => setC((prev) => ({ ...prev, ...patch }));
   const style = styles.find((s) => s.id === c.style)!;
@@ -359,6 +362,23 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                 )}
               </div>
 
+
+              {c.type === "show" && isValidReg(c.reg) && !keepShow && (
+                <div role="alert" className="mt-4 rounded-xl border-2 border-gold bg-gold-soft p-3 text-sm text-ink">
+                  <p className="font-bold">
+                    {formatReg(c.reg)} is a UK registration. Is it for your car?
+                  </p>
+                  <p className="mt-1">Show plates can&apos;t be used on the road. Road legal plates are made to the DVLA standard for driving.</p>
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    <button type="button" className="btn btn-gold min-h-11 text-xs sm:text-sm" onClick={() => set({ type: "legal", reg: formatReg(c.reg) })}>
+                      Yes, make it road legal
+                    </button>
+                    <button type="button" className="btn btn-white min-h-11 text-xs sm:text-sm" onClick={() => setKeepShow(true)}>
+                      No, keep show plate
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {notice && c.type === "show" && !isValidReg(c.reg) && (
                 <div className="mt-4 rounded-xl border border-[#f1c9a5] bg-[#fff5ec] p-3 text-sm text-[#8a4a12]">
