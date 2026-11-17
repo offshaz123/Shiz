@@ -32,7 +32,7 @@ export const pricingGroups: PricingGroup[] = [
     plans: [
       {
         name: "Starter",
-        price: "£499",
+        price: "From £499",
         priceSuffix: "/month",
         tagline: "For businesses ready to switch on Meta and Instagram lead generation.",
         features: [
@@ -47,7 +47,7 @@ export const pricingGroups: PricingGroup[] = [
       },
       {
         name: "Growth",
-        price: "£699",
+        price: "From £699",
         priceSuffix: "/month",
         tagline: "Our most popular plan, built to turn ad spend into a real pipeline.",
         popular: true,
@@ -64,7 +64,7 @@ export const pricingGroups: PricingGroup[] = [
       },
       {
         name: "Scale",
-        price: "£1,399",
+        price: "From £1,399",
         priceSuffix: "/month",
         tagline: "For businesses ready to dominate their market across every channel.",
         features: [
@@ -85,19 +85,19 @@ export const pricingGroups: PricingGroup[] = [
   {
     id: "google-ads",
     eyebrow: "Google Ads",
-    title: "Google Ads management, one flat price",
+    title: "Google Ads management, one fee covers everything",
     intro:
-      "Most agencies charge you a management fee and then charge again for the landing page, again for tracking and again for the system that holds your leads. We don't. One price covers the lot, and the work carries on every month rather than stopping the day the campaign goes live.",
+      "Most agencies charge you a management fee and then charge again for the landing page, again for tracking and again for the system that holds your leads. We don't. Whatever your monthly fee is, it covers the lot, and the work carries on every month rather than stopping the day the campaign goes live. Where it starts depends on how big the account is and how much is being built; it does not grow add-on by add-on afterwards.",
     serviceSlug: "google-ads",
     serviceLabel: "More on Google Ads",
     plans: [
       {
         name: "Google Ads Management",
-        price: "£600",
+        price: "From £600",
         priceSuffix: "/month",
         popular: true,
         tagline:
-          "Everything needed to run Google Ads properly, in one monthly fee. No setup charge and no add-ons.",
+          "Everything needed to run Google Ads properly, in one monthly fee. No setup charge and no add-ons, whatever the fee is.",
         features: [
           "Full Google Ads account build, or a rebuild of the one you already have",
           "Keyword research and a negative keyword list that keeps growing",
@@ -119,13 +119,13 @@ export const pricingGroups: PricingGroup[] = [
     eyebrow: "SEO & Local Search",
     title: "SEO and local search",
     intro:
-      "SEO is not a switch, it's a build. The first month is groundwork, the results come later. That's why these plans run on a minimum term. It isn't us tying you in, it's us making sure you don't pay for the foundations and walk away before the house is on top of them.",
+      "SEO is not a switch, it's a build. The first month is groundwork, the results come later. That's why these plans run on a minimum term. It isn't us tying you in, it's us making sure you don't pay for the foundations and walk away before the house is on top of them. Every plan now covers being found in AI answers as well as in Google, at the same price.",
     serviceSlug: "seo",
     serviceLabel: "More on SEO",
     plans: [
       {
         name: "Local SEO",
-        price: "£350",
+        price: "From £350",
         priceSuffix: "/month",
         term: "3 month minimum",
         tagline:
@@ -136,12 +136,13 @@ export const pricingGroups: PricingGroup[] = [
           "Review generation system so new reviews come in on their own",
           "One location or service page written every month",
           "On-page fixes to the pages that matter most",
+          "Set up to be quoted by ChatGPT, Google AI and Copilot, not just ranked",
           "Monthly ranking report for your area",
         ],
       },
       {
         name: "SEO Growth",
-        price: "£650",
+        price: "From £650",
         priceSuffix: "/month",
         term: "6 month minimum",
         popular: true,
@@ -154,12 +155,13 @@ export const pricingGroups: PricingGroup[] = [
           "On-page optimisation across the whole site",
           "Internal linking structure built out",
           "Link building on a steady monthly basis",
+          "AI answer tracking: what the chatbots say about you, and what they get wrong",
           "Monthly strategy call",
         ],
       },
       {
         name: "SEO Scale",
-        price: "£1,200",
+        price: "From £1,200",
         priceSuffix: "/month",
         term: "6 month minimum",
         tagline:
@@ -169,6 +171,7 @@ export const pricingGroups: PricingGroup[] = [
           "Four content pieces a month",
           "Serious link acquisition and digital PR",
           "Competitor gap analysis, refreshed quarterly",
+          "Content written to be cited by AI answers, not only to rank",
           "Conversion rate work on the pages that already rank",
           "Multi-location or national campaigns",
           "Fortnightly reporting and calls",
@@ -176,7 +179,7 @@ export const pricingGroups: PricingGroup[] = [
       },
     ],
     footnote:
-      "We will never promise you a position on Google, and be careful of anyone who does. What we promise is the work, done every month, and reporting honest enough that you can see it happening.",
+      "GEO is included in all three. It stands for generative engine optimisation, which is the work that gets a business mentioned when somebody asks ChatGPT or Google's AI for a recommendation rather than typing a search. It is largely the same groundwork as SEO done with a second audience in mind, so we do not charge twice for it. We will never promise you a position on Google or a mention in an AI answer, and be careful of anyone who does. What we promise is the work, done every month, and reporting honest enough that you can see it happening.",
   },
   {
     id: "web-design",

@@ -42,7 +42,7 @@ export const services: Service[] = [
     ],
     pricing: {
       headline: "From £499 a month",
-      note: "Three plans: £499, £699 and £1,399 a month depending on how many campaigns you want running and how much automation you need behind them. Ad spend is separate and paid directly to Meta. No long-term contract.",
+      note: "Three plans, from £499, £699 and £1,399 a month depending on how many campaigns you want running and how much automation you need behind them. Ad spend is separate and paid directly to Meta. No long-term contract.",
       anchor: "meta-ads",
     },
     readMore: { label: "What makes ad creative actually convert", href: "/blog/what-makes-ad-creative-actually-convert" },
@@ -67,8 +67,8 @@ export const services: Service[] = [
       { title: "Conversion tracking", body: "Calls and form submissions tracked properly, so you can see which searches produce customers." },
     ],
     pricing: {
-      headline: "£600 a month, flat",
-      note: "One price covers the account build, the campaigns, a landing page built for the campaign, the conversion and call tracking, a CRM if you need one, and the monthly optimisation. No setup fee and no add-ons. Ad spend is separate and paid directly to Google.",
+      headline: "From £600 a month",
+      note: "One monthly fee covers the account build, the campaigns, a landing page built for the campaign, the conversion and call tracking, a CRM if you need one, and the monthly optimisation. No setup fee and no add-ons. Ad spend is separate and paid directly to Google.",
       anchor: "google-ads",
     },
     readMore: { label: "Meta Ads vs Google Ads: which is right for you", href: "/blog/meta-ads-vs-google-ads-which-is-right" },
@@ -104,13 +104,19 @@ export const services: Service[] = [
     slug: "seo",
     name: "SEO & Local Search",
     teaser:
-      "Being found when people search, and making sure your Google listing does the work it's capable of.",
-    tags: ["Local SEO", "Google Business Profile", "On-Page SEO", "Content"],
+      "Being found when people search, and being named when they ask an AI instead. Both, for one price.",
+    tags: ["Local SEO", "GEO / AI Search", "Google Business Profile", "On-Page SEO", "Content"],
     intro:
-      "For a local business the free Google listing is often seen more than the website is, and it's usually the least maintained thing they own. Search captures demand that already exists, which makes it the natural companion to advertising rather than an alternative to it.",
+      "For a local business the free Google listing is often seen more than the website is, and it's usually the least maintained thing they own. Search captures demand that already exists, which makes it the natural companion to advertising rather than an alternative to it. More of that demand now arrives through an AI answer rather than a list of blue links, so the work covers both: ranking in Google, and being the business ChatGPT names when somebody asks it for a recommendation. That second part is called GEO, and it is included rather than sold separately, because it is largely the same groundwork aimed at a second audience.",
     metaDescription:
-      "SEO and local search for UK businesses. Google Business Profile optimisation, business listings, on-page work and content that earns its place.",
-    keywords: ["local SEO UK", "Google Business Profile optimisation", "SEO agency small business"],
+      "SEO and GEO for UK businesses, both included in one price. Rank in Google and get named in ChatGPT and AI answers. Google Business Profile, on-page work and content.",
+    keywords: [
+      "local SEO UK",
+      "GEO generative engine optimisation UK",
+      "get my business mentioned in ChatGPT",
+      "Google Business Profile optimisation",
+      "SEO agency small business",
+    ],
     whoFor:
       "Local businesses serving a defined area, and anyone whose customers search before they buy.",
     includes: [
@@ -121,7 +127,7 @@ export const services: Service[] = [
     ],
     pricing: {
       headline: "From £350 a month",
-      note: "Local SEO £350, SEO Growth £650, SEO Scale £1,200. There's a 3 or 6 month minimum term depending on the plan, because SEO takes time to show and we'd rather say that up front than let you pay for groundwork and leave before it pays.",
+      note: "Local SEO from £350, SEO Growth from £650, SEO Scale from £1,200. GEO, getting you mentioned in ChatGPT and Google AI answers, is included in all three at no extra cost. There's a 3 or 6 month minimum term depending on the plan, because SEO takes time to show and we'd rather say that up front than let you pay for groundwork and leave before it pays.",
       anchor: "seo",
     },
     readMore: { label: "Your Google Business Profile is doing more work than your website", href: "/blog/google-business-profile-does-more-than-your-website" },
