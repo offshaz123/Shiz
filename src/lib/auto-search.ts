@@ -41,13 +41,20 @@ const INDUSTRY_ORDER = [
 /**
  * Searches per run.
  *
- * Each one costs a Places lookup out of a daily allowance of sixty, so six
- * is a tenth of it and leaves plenty for the register lookups and anything
- * done by hand. Six searches returning up to twenty businesses each is far
- * more than the day's email cap needs, which is the right way round: the
- * list should be waiting on the sending, not the other way about.
+ * Started at six on the theory that six searches of up to twenty results
+ * each would outrun the sending cap comfortably. The first real run settled
+ * that: six searches of automotive in Barking returned nineteen businesses,
+ * of which six had a website worth scanning. At that rate the list gains
+ * roughly six emailable businesses a day against a cap that wants fifteen,
+ * so the sending would stay starved and the call list would stay thin.
+ *
+ * Twenty is a third of the daily Places allowance of sixty, which still
+ * leaves room for the register lookups and anything searched by hand. It
+ * also spans more towns, which the cold-call list wants anyway: it takes
+ * one trade at a time in turn, and that only produces variety if there is
+ * variety to draw from.
  */
-const SEARCHES_PER_RUN = 6;
+const SEARCHES_PER_RUN = 20;
 
 /**
  * The review ceiling.
@@ -95,7 +102,20 @@ export function industryForDay(day: number): string {
  * round it is looking at different towns rather than repeating the first
  * day exactly.
  */
-export function searchesForDay(day: number, count = SEARCHES_PER_RUN): { query: string; industry: string; town: string }[] {
+export function searchesForDay(
+  day: number,
+  count = SEARCHES_PER_RUN,
+  /**
+   * Skip this many pairs before taking any.
+   *
+   * The rotation is a function of the date, which is what keeps it honest,
+   * and that means running the job twice in one day would otherwise repeat
+   * the same searches and spend the allowance on results already saved.
+   * The offset is how a run is nudged forward by hand when the list is low
+   * and tomorrow is too late.
+   */
+  offset = 0,
+): { query: string; industry: string; town: string }[] {
   const industry = industryForDay(day);
   const trades = tradesFor(industry);
   if (trades.length === 0 || TOWNS.length === 0) return [];
@@ -108,7 +128,7 @@ export function searchesForDay(day: number, count = SEARCHES_PER_RUN): { query: 
   }
 
   const cycle = Math.floor((day - ANCHOR_DAY) / INDUSTRY_ORDER.length);
-  const start = ((cycle * count) % pairs.length + pairs.length) % pairs.length;
+  const start = ((cycle * count + offset) % pairs.length + pairs.length) % pairs.length;
 
   const picked: { query: string; industry: string; town: string }[] = [];
   for (let i = 0; i < Math.min(count, pairs.length); i += 1) {
@@ -129,9 +149,13 @@ export type AutoSearchResult = {
   stopped: string;
 };
 
-export async function runAutoSearch(now = new Date()): Promise<AutoSearchResult> {
+export async function runAutoSearch(
+  now = new Date(),
+  count = SEARCHES_PER_RUN,
+  offset = 0,
+): Promise<AutoSearchResult> {
   const day = dayIndex(now);
-  const planned = searchesForDay(day);
+  const planned = searchesForDay(day, count, offset);
   const result: AutoSearchResult = {
     industry: industryForDay(day),
     searches: 0,

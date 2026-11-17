@@ -57,7 +57,16 @@ async function run(request: Request) {
 
   // Search first: today's new businesses are then scannable in the same run
   // rather than waiting a day to be seen.
-  const search = await runAutoSearch().catch((err) => {
+  // Both optional and both only for a nudge by hand: the daily run passes
+  // neither. `offset` skips past searches a previous run today already did,
+  // so a second call adds new businesses rather than re-finding the same
+  // ones; `count` is capped because the Places allowance is sixty a day and
+  // a typo in a URL should not spend it.
+  const params = new URL(request.url).searchParams;
+  const offset = Math.max(0, Math.min(2000, Number(params.get("offset")) || 0));
+  const count = Math.max(1, Math.min(40, Number(params.get("count")) || 20));
+
+  const search = await runAutoSearch(new Date(), count, offset).catch((err) => {
     console.error("Auto search:", err);
     return null;
   });

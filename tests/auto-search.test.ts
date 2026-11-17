@@ -67,3 +67,14 @@ test("the day index advances by one per day", () => {
   const b = dayIndex(new Date("2026-11-18T09:00:00Z"));
   assert.equal(b - a, 1);
 });
+
+test("an offset moves the slice, so a second run today finds new ground", () => {
+  const first = searchesForDay(ANCHOR_DAY, 6, 0).map((s) => s.query);
+  const second = searchesForDay(ANCHOR_DAY, 6, 6).map((s) => s.query);
+  assert.equal(new Set([...first, ...second]).size, 12, "the two slices overlapped");
+});
+
+test("an offset past the end of the list wraps rather than returning nothing", () => {
+  const out = searchesForDay(ANCHOR_DAY, 5, 10_000);
+  assert.equal(out.length, 5);
+});
