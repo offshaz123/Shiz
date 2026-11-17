@@ -16,6 +16,72 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "why-pausing-the-wrong-thing-resets-your-campaign",
+    title: "Why Pausing the Wrong Thing Resets Your Campaign",
+    description:
+      "Meta's learning phase sits on the ad set, not the campaign or the ad. Knowing that changes which switch you are allowed to touch, and which costs you a week.",
+    publishedAt: "2026-11-17",
+    keywords: [
+      "Facebook ads learning phase reset",
+      "pausing ad vs ad set",
+      "Meta ads significant edit",
+      "why did my Facebook campaign restart learning",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Somebody tells you a Meta ad is underperforming, so you pause it. A week later the whole thing is spending worse than it was before you touched anything, and nobody can tell you why.",
+          "Usually it is because the switch that got flicked was not the one that was meant to be flicked. Meta's three levels look like a tidy hierarchy and behave like nothing of the sort.",
+        ],
+      },
+      {
+        heading: "The learning phase lives on the ad set",
+        paragraphs: [
+          "This is the fact everything else hangs off, and it is worth being precise about it. Meta's own help page is titled \"About the learning phase for ad sets in Meta Ads Manager\". Not campaigns. Not ads. Ad sets.",
+          "An ad set is the middle layer: the budget, the audience, the placements, the thing you are optimising for. When Meta talks about an ad set \"learning\", it means the delivery system is working out who to show your ads to and what a result costs, and it is doing that per ad set.",
+          "So the question to ask before changing anything is not \"is this a big change\". It is \"does this change land on an ad set\".",
+        ],
+      },
+      {
+        heading: "Pausing an ad is not the same as pausing an ad set",
+        paragraphs: [
+          "Turning off one ad inside an ad set that has three of them leaves the ad set running. The budget stays where it is, the audience stays where it is, and the other two ads carry on.",
+          "Pausing the ad set stops all of it. The budget stops spending, and when you switch it back on you may not get back the delivery you had — Meta has been learning on that ad set, and a long enough gap means it starts that work again.",
+          "The same logic applies to editing. Rewording one ad's text is a change to an ad. Changing the audience, the budget, the placements or the optimisation event is a change to the ad set, which is the layer that is learning.",
+        ],
+        bullets: [
+          "Pausing one ad of several: the ad set keeps running.",
+          "Pausing the ad set: everything under it stops, and you risk the learning with it.",
+          "Pausing the campaign: everything under that stops, across every ad set in it.",
+        ],
+      },
+      {
+        heading: "The thresholds nobody can actually pin down",
+        paragraphs: [
+          "Here is where most advice gets confident and should not. Search for how much you can change a budget before learning resets and you will be told twenty per cent, with no source. Search for how long an ad set can be paused before it loses its learning and you will be told seven days, also with no source.",
+          "Those numbers may well be right. We could not confirm either from Meta's own documentation — its help pages are built in a way that does not hand their text over to anything but a browser — and the third-party guides that state them do not agree with each other on whether bid changes count, or whether adding a new ad to a working ad set resets anything.",
+          "So treat them as rules of thumb held loosely. The direction is reliable even where the number is not: small, infrequent changes are safer than large, frequent ones, and changes to an ad set are riskier than changes to an ad.",
+        ],
+      },
+      {
+        heading: "What the learning phase is actually waiting for",
+        paragraphs: [
+          "The widely cited figure, and the one Meta has published guidance around, is roughly fifty optimisation events in the seven days after the last significant edit. An optimisation event is whatever you told the ad set to go and get: a lead, a purchase, a message.",
+          "Read that back and the real problem appears. If your ad set is getting eight leads a week, it does not matter how carefully you avoid resetting anything, because it was never going to reach fifty in seven days in the first place.",
+          "A lot of small accounts are permanently in learning, and no amount of leaving it alone fixes that. The fix is fewer ad sets sharing the same budget, or optimising for an event that happens more often, not more patience.",
+        ],
+      },
+      {
+        heading: "A workable rule",
+        paragraphs: [
+          "Decide what you are testing before you touch anything, then change one thing at the ad set level and leave it alone for a week. If the thing you want to change is an ad, change the ad and stop worrying about it.",
+          "Resist the daily tidy-up. Pausing an ad set on Tuesday because Monday looked bad, then turning it back on Wednesday, is two significant events in a window where there should have been none, and you will never know what the ad set would have done because it never got to find out either.",
+          "And check which level you are on before you click. In Ads Manager the three tabs look almost identical, the toggles look identical, and the one that costs you a week looks exactly like the one that costs you nothing.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "your-title-tag-the-sixty-characters-that-decide-the-click",
     title: "Your Title Tag: The Sixty Characters That Decide the Click",
     description:

@@ -316,8 +316,14 @@ keywords, dealership social strategy).
       so rather than picking one. The Creative Limited / Creative Fatigue delivery statuses are
       described consistently by third parties — cost per result up vs roughly doubled — but
       Meta's own help page could not be reached, so the post flags that wording as unconfirmed.)
-- [ ] Why Pausing the Wrong Thing Resets Your Campaign — target: "Facebook ads learning phase
-      reset", "pausing ad vs ad set"
+- [x] Why Pausing the Wrong Thing Resets Your Campaign — target: "Facebook ads learning phase
+      reset", "pausing ad vs ad set" (researched 2026-11-17: Meta's own help pages are
+      JavaScript-rendered and return only a title to a fetch, so the body could not be read.
+      The page title "About the learning phase for ad sets in Meta Ads Manager" does confirm
+      the learning phase is an ad-set-level concept, which the post leans on. The 20% budget
+      threshold and the 7-day pause threshold are third-party only and the sources disagree
+      with each other, so the post says so rather than picking a number. The ~50 optimisation
+      events in 7 days figure is widely cited and consistent across sources.)
 - [ ] What Happens to Your Ads When You Change the Budget Mid-Flight — target: "changing Facebook
       ad budget resets learning"
 
