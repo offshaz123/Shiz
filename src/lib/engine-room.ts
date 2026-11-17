@@ -2,6 +2,7 @@ import type { RowDataPacket } from "mysql2";
 import { withDb } from "./db";
 import { getCronHealth } from "./admin-data";
 import { placesBudget } from "./google-business";
+import { dayIndex, industryForDay } from "./auto-search";
 
 /**
  * What the machinery has actually done, for the board on the admin page.
@@ -143,11 +144,11 @@ export async function getEngineRoom(): Promise<EngineRoom | null> {
     {
       id: "finder",
       name: "Finder",
-      does: "searches Google for businesses",
+      does: "searches Google daily, one trade at a time",
       value: n(counts.prospects),
       unit: "on the list",
       state: places.hasKey
-        ? `${places.today} searches today`
+        ? `${industryForDay(dayIndex())} today, 6 searches at 06:17`
         : "no Places key — searching is off",
       live: places.hasKey,
       href: places.hasKey ? "/admin/prospects" : "/admin/health",
@@ -155,7 +156,7 @@ export async function getEngineRoom(): Promise<EngineRoom | null> {
     {
       id: "scanner",
       name: "Scanner",
-      does: "reads each website and scores it",
+      does: "reads each website and scores it, daily at 06:17",
       value: n(counts.scanned),
       unit: "sites scanned",
       state: unscanned > 0 ? `${unscanned} waiting` : "nothing waiting",
@@ -163,19 +164,9 @@ export async function getEngineRoom(): Promise<EngineRoom | null> {
       href: "/admin/prospects",
     },
     {
-      id: "writer",
-      name: "Writer",
-      does: "builds each email out of what the scan found",
-      value: n(counts.with_email),
-      unit: "have an address",
-      state: "drafts on demand, never sends by itself",
-      live: true,
-      href: "/admin/prospects",
-    },
-    {
       id: "postman",
       name: "Postman",
-      does: "sends from info@, one at a time",
+      does: "sends the first email by itself, daily at 10:15",
       value: n(counts.emails),
       unit: "emails sent",
       state: n(counts.emails_today) > 0 ? `${n(counts.emails_today)} today` : "nothing sent today",
@@ -234,7 +225,7 @@ export async function getEngineRoom(): Promise<EngineRoom | null> {
         of: total,
         note: "can be emailed at all",
       },
-      { label: "First email sent", value: steps?.first ?? 0, of: total, note: "sent by hand" },
+      { label: "First email sent", value: steps?.first ?? 0, of: total, note: "sent by the daily job" },
       { label: "Day 3 follow-up", value: steps?.second ?? 0, of: total, note: "sent by the cron" },
       { label: "Day 5 follow-up", value: steps?.third ?? 0, of: total, note: "the last one" },
       { label: "Replied", value: n(counts.replied), of: total, note: "wrote back" },

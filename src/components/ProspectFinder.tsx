@@ -1444,9 +1444,9 @@ function Row({
             {!sent && p.emailedAt && (
               <span title={p.emailedAt}>emailed {p.emailedAt.slice(0, 10)}</span>
             )}
-            {/* Where the three-email sequence has got to. The first one only
-                ever goes out by hand; these two follow on their own unless
-                something here says they should not. */}
+            {/* Where the three-email sequence has got to. All three send
+                themselves now; the Write email button is for the one you
+                want to word yourself rather than the normal route in. */}
             {p.unsubscribedAt ? (
               <span className="font-semibold text-red-500">unsubscribed</span>
             ) : p.repliedAt ? (
@@ -1655,6 +1655,11 @@ function Row({
             Sending this starts the sequence: a longer follow-up goes on day 3 and a last one on
             day 5, both with an unsubscribe link. They stop on their own the moment this business
             replies, unsubscribes, or you mark them interested, not interested or a customer.
+          </div>
+          <div className="text-[11px] leading-relaxed text-muted">
+            You do not have to use this. The daily job sends a first email to anyone scanned,
+            with findings and an address, who has not been written to. This is for the one you
+            want to word yourself.
           </div>
           <input
             value={compose.subject}

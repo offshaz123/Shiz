@@ -26,9 +26,10 @@ export const metadata: Metadata = {
 export default async function AdminPage() {
   if (!(await isAdmin())) return <LoginForm />;
 
-  const [engine, cron, automatic] = await Promise.all([
+  const [engine, cron, finder, automatic] = await Promise.all([
     getEngineRoom(),
     getCronHealth(),
+    getCronHealth("find-and-scan"),
     getAutomaticEmails(),
   ]);
 
@@ -42,7 +43,7 @@ export default async function AdminPage() {
       {/* The scheduler first. Nothing below it means anything if the daily
           job has stopped, and a figure that stopped moving yesterday looks
           exactly like a quiet day until something says otherwise. */}
-      {cron && <SchedulerStatus cron={cron} />}
+      {cron && <SchedulerStatus cron={cron} finder={finder} />}
 
       {engine ? (
         <EngineRoom engine={engine} />

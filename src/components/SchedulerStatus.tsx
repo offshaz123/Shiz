@@ -12,7 +12,16 @@ import type { CronHealth } from "@/lib/admin-data";
  *
  * It is deliberately loud when the job hasn't run and quiet when it has.
  */
-export function SchedulerStatus({ cron }: { cron: CronHealth }) {
+export function SchedulerStatus({
+  cron,
+  finder,
+}: {
+  cron: CronHealth;
+  /** The 06:17 job that finds and scans. Optional only so the component
+   *  still renders if that read fails; when it is missing the line is left
+   *  off rather than guessed at. */
+  finder?: CronHealth | null;
+}) {
   const neverRun = cron.lastRunAt === null;
   const stale = cron.hoursSince !== null && cron.hoursSince >= 48;
   // The job ran, so nothing above fires — but it refused to send anything
@@ -67,10 +76,40 @@ export function SchedulerStatus({ cron }: { cron: CronHealth }) {
           {cron.hoursSince === 0 ? "ran within the hour" : `ran ${cron.hoursSince}h ago`}
         </span>
       </div>
+      <FinderLine finder={finder} />
       <p className="mt-1 text-sm text-muted">
         {cron.runsLast7Days} {cron.runsLast7Days === 1 ? "run" : "runs"} in the last 7 days,{" "}
         {cron.sentLast7Days} {cron.sentLast7Days === 1 ? "email" : "emails"} sent.
       </p>
     </div>
+  );
+}
+
+/**
+ * The finding job, in one line under the sending one.
+ *
+ * Its own line rather than its own box: two jobs are a thing to glance at,
+ * not a section to read. It is loud only when it has stopped, on the same
+ * reasoning as everything else here — a list that quietly stops growing is
+ * the slowest possible way to notice a broken scheduler.
+ */
+function FinderLine({ finder }: { finder?: CronHealth | null }) {
+  if (!finder) return null;
+
+  if (finder.lastRunAt === null) {
+    return (
+      <p className="mt-1 text-sm text-amber-600 dark:text-amber-400">
+        The 6:17am job that finds and scans businesses has never reported a run.
+      </p>
+    );
+  }
+
+  const stale = finder.hoursSince !== null && finder.hoursSince >= 48;
+  return (
+    <p className={`mt-1 text-sm ${stale ? "text-amber-600 dark:text-amber-400" : "text-muted"}`}>
+      Finding and scanning ran {finder.hoursSince ?? 0}h ago
+      {finder.lastDetail ? `: ${finder.lastDetail}` : ""}
+      {stale ? ". It should run every morning." : "."}
+    </p>
   );
 }

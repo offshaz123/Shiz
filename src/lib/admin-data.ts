@@ -144,7 +144,31 @@ interface CronRow extends RowDataPacket {
   detail: string | null;
 }
 
-export async function getCronHealth(): Promise<CronHealth | null> {
+/**
+ * Leaves a record that a scheduled job ran, whatever it found to do.
+ *
+ * Shared, because there are two jobs now and the second one shipped without
+ * this. A job that runs and finds nothing to do is indistinguishable from
+ * one that never ran, and that exact confusion cost this site a week of
+ * dead follow-ups once already.
+ *
+ * Never throws. Failing to write the diary must not fail the work that
+ * just happened.
+ */
+export async function recordCronRun(
+  job: string,
+  run: { sent?: number; failed?: number; skipped?: number; considered?: number; detail?: string },
+): Promise<void> {
+  await withDb(async (db) => {
+    await db.execute(
+      `INSERT INTO cron_runs (job, sent, failed, skipped, considered, detail)
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [job, run.sent ?? 0, run.failed ?? 0, run.skipped ?? 0, run.considered ?? 0, run.detail ?? null],
+    );
+  }).catch(() => null);
+}
+
+export async function getCronHealth(job = "follow-ups"): Promise<CronHealth | null> {
   return withDb(async (db) => {
     const [[row]] = await db.query<CronRow[]>(
       `SELECT MAX(created_at) AS last_run,
@@ -153,7 +177,8 @@ export async function getCronHealth(): Promise<CronHealth | null> {
               SUM(created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)) AS runs,
               SUM(CASE WHEN created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) THEN sent ELSE 0 END) AS sent
          FROM cron_runs
-        WHERE job = 'follow-ups'`,
+        WHERE job = ?`,
+      [job],
     );
 
     return {

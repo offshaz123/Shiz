@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { runAutoSearch } from "@/lib/auto-search";
 import { scanBatch } from "@/lib/scan-batch";
+import { recordCronRun } from "@/lib/admin-data";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -64,6 +65,17 @@ async function run(request: Request) {
   const scan = await scanBatch(SCAN_BATCH).catch((err) => {
     console.error("Scan batch:", err);
     return null;
+  });
+
+  // The diary entry. Without it this job is invisible: it sends nothing, so
+  // there is no email anywhere to prove it ran, and a silent stop would
+  // look exactly like a quiet week until the list stopped growing.
+  await recordCronRun("find-and-scan", {
+    considered: search?.found ?? 0,
+    detail: search
+      ? `${search.industry}: ${search.searches} searches, ${search.found} found, ` +
+        `${scan?.scanned ?? 0} scanned${search.stopped ? ` (stopped: ${search.stopped})` : ""}`
+      : "search failed",
   });
 
   console.log(
