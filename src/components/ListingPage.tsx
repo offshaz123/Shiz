@@ -14,7 +14,7 @@ export function ListingPage({ listing }: { listing: Listing }) {
     description: listing.description,
     sku: listing.id,
     brand: { "@type": "Brand", name: site.name },
-    image: [listing.image],
+    image: listing.images,
     offers: {
       "@type": "Offer",
       price: (listing.price / 100).toFixed(2),

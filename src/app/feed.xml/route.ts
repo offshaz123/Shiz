@@ -27,7 +27,10 @@ export async function GET() {
       <title>${esc(`${l.title} | ${site.name}`)}</title>
       <description>${esc(l.description)}</description>
       <link>${esc(`${site.url}${l.path}`)}</link>
-      <g:image_link>${esc(l.image)}</g:image_link>
+      <g:image_link>${esc(l.image)}</g:image_link>${l.images
+        .slice(1)
+        .map((src) => `\n      <g:additional_image_link>${esc(src)}</g:additional_image_link>`)
+        .join("")}
       <g:price>${gbp(l.price)}</g:price>
       <g:availability>in_stock</g:availability>
       <g:condition>new</g:condition>

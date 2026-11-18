@@ -58,8 +58,13 @@ const nextConfig: NextConfig = {
         // renames the JavaScript files, so a page cached for longer can point
         // at files that no longer exist and nothing on it works (menus,
         // login, the plate builder).
-        source: `/((?!_next/static|_next/image|api|${PERSONAL}).*)`,
+        source: `/((?!_next/static|_next/image|api|product-photos|${PERSONAL}).*)`,
         headers: [{ key: "Cache-Control", value: "public, max-age=0, s-maxage=60, stale-while-revalidate=60" }],
+      },
+      {
+        // Product pictures for Google Shopping: a new ?v= when they change.
+        source: "/product-photos/:file*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=604800" }],
       },
       {
         // Pages that show someone's own details are never cached anywhere.

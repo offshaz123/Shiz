@@ -83,11 +83,19 @@ export async function renderPlate(q: URLSearchParams) {
   // sides showing as if seen from slightly above and left, as thick as the
   // real thing (style.thickness mm), plus the soft shadow they cast. Built
   // from solid shadows only, so it stays cheap to draw.
-  const hero = q.get("hero") === "1";
+  // hero=side: seen from further round to the side, so more of the letters' sides show.
+  const heroMode = q.get("hero");
+  const hero = heroMode === "1" || heroMode === "side";
+  const sideView = heroMode === "side";
+  // only=face: just the faces of the letters on a see-through background, so
+  // the picture tool (scripts/product-photos.py) can add the gloss to them.
+  const onlyFace = q.get("only") === "face";
   // Solid layers of the letters, each a little further down and right and a
   // little darker: the sides of the raised letters. (Text shadows come out
   // see-through in these pictures, so the sides are drawn as letters.)
-  const heroT = style.thickness * PX * 0.75;
+  const heroT = style.thickness * PX * (sideView ? 1.3 : 0.75);
+  const heroDx = sideView ? 1.0 : 0.55;
+  const heroDy = sideView ? 0.35 : 1;
   const heroLayers = heroT > 0 ? Math.max(2, Math.round(heroT)) : 0;
   const gel = style.look === "gel";
   const shadow = hero
@@ -163,6 +171,16 @@ export async function renderPlate(q: URLSearchParams) {
     ];
   });
 
+  if (onlyFace)
+    return new ImageResponse(
+      (
+        <div style={{ width: W, height: H, display: "flex", position: "relative" }}>
+          {letters({ color: "#000", textShadow: "none" }, 0, 0, "face")}
+        </div>
+      ),
+      { width: W, height: H, fonts: [{ name: "Plate", data: fontData, style: "normal", weight: 600 }] },
+    );
+
   return new ImageResponse(
     (
       <div
@@ -228,13 +246,14 @@ export async function renderPlate(q: URLSearchParams) {
         {Array.from({ length: heroLayers }, (_, j) => {
           const k = (heroLayers - j) / heroLayers;
           const shade = Math.round(14 + (1 - k) * 40);
-          return letters({ color: `rgb(${shade},${shade},${shade})`, textShadow: "none" }, -k * heroT, k * heroT * 0.55, `side${j}-`);
+          return letters({ color: `rgb(${shade},${shade},${shade})`, textShadow: "none" }, -k * heroT * heroDy, k * heroT * heroDx, `side${j}-`);
         })}
         {letters({ color: "#111", textShadow: hero ? "none" : shadow }, 0, 0, "face")}
         {/* Gel letters are domed, glossy resin: a soft sheen on the upper part of */}
         {/* each letter and a bright streak where the light catches it. Images */}
         {/* can't fill text with a gradient, so these are bands of the letters cut out in white. */}
         {gel &&
+          q.get("shine") !== "0" &&
           shineBands.map(({ top, height, alpha }) => (
             <div key={top} style={{ position: "absolute", left: 0, top, width: W, height, overflow: "hidden", display: "flex" }}>
               {letters({ color: `rgba(255,255,255,${alpha})`, textShadow: "none" }, top)}
