@@ -90,6 +90,9 @@ export function InvoiceDocument({
           Billed to
         </p>
         <p className="mt-1.5 text-base font-semibold">{invoice.customerName}</p>
+        {invoice.customerCompany && (
+          <p className="text-sm font-medium">{invoice.customerCompany}</p>
+        )}
         {invoice.customerAddress && (
           <p className="mt-0.5 text-[#4b5563]">
             <Lines text={invoice.customerAddress} />
@@ -140,6 +143,18 @@ export function InvoiceDocument({
             <dt className="text-[#4b5563]">Subtotal</dt>
             <dd className="tabular-nums">{pounds(invoice.subtotalPence)}</dd>
           </div>
+          {invoice.discountPence > 0 && (
+            <div className="flex justify-between py-1.5">
+              <dt className="text-[#4b5563]">
+                Discount
+                {invoice.discount.kind === "percent" && ` (${invoice.discount.percent}%)`}
+              </dt>
+              {/* Shown as a negative, because a line that reads "Discount
+                  £25.00" beside a subtotal leaves the reader working out
+                  which way it went. */}
+              <dd className="tabular-nums">−{pounds(invoice.discountPence)}</dd>
+            </div>
+          )}
           {invoice.vatRate > 0 && (
             <div className="flex justify-between py-1.5">
               <dt className="text-[#4b5563]">VAT at {invoice.vatRate}%</dt>

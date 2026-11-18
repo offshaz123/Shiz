@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { pounds, totals } from "@/lib/invoice-maths";
+import { pounds, totals, type Discount } from "@/lib/invoice-maths";
+import { formatAddress } from "@/lib/business-profile";
 
 /**
  * Writing an invoice.
@@ -42,11 +43,20 @@ export function InvoiceBuilder() {
   const [error, setError] = useState("");
 
   const [customerName, setCustomerName] = useState("");
+  const [customerCompany, setCustomerCompany] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
-  const [customerAddress, setCustomerAddress] = useState("");
+  // Separate boxes for the same reason their own address has them: typed
+  // into one box, every invoice lays the address out differently and the
+  // postcode comes out however it was typed.
+  const [line1, setLine1] = useState("");
+  const [line2, setLine2] = useState("");
+  const [city, setCity] = useState("");
+  const [postcode, setPostcode] = useState("");
   const [issuedOn, setIssuedOn] = useState(today());
   const [dueOn, setDueOn] = useState(inFourteenDays());
   const [vatRate, setVatRate] = useState("0");
+  const [discountKind, setDiscountKind] = useState<Discount["kind"]>("none");
+  const [discountValue, setDiscountValue] = useState("");
   const [notes, setNotes] = useState("");
   const [rows, setRows] = useState<Row[]>([{ ...EMPTY }]);
 
@@ -59,6 +69,11 @@ export function InvoiceBuilder() {
   const sums = totals(
     lines.filter((line) => line.description.trim() !== ""),
     Number(vatRate) || 0,
+    {
+      kind: discountKind,
+      percent: Number(discountValue) || 0,
+      pence: Math.round((Number(discountValue) || 0) * 100),
+    },
   );
 
   function setRow(index: number, changes: Partial<Row>) {
@@ -74,11 +89,15 @@ export function InvoiceBuilder() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           customerName,
+          customerCompany,
           customerEmail,
-          customerAddress,
+          customerAddress: formatAddress({ line1, line2, city, postcode, country: "" }),
           issuedOn,
           dueOn,
           vatRate: Number(vatRate) || 0,
+          discountKind,
+          discountPercent: Number(discountValue) || 0,
+          discountAmount: Number(discountValue) || 0,
           notes,
           lines: rows.map((row) => ({
             description: row.description,
@@ -122,6 +141,15 @@ export function InvoiceBuilder() {
             />
           </label>
           <label className="flex flex-col gap-1.5">
+            <span className="text-xs font-medium text-muted">Company (if it is a business)</span>
+            <input
+              value={customerCompany}
+              onChange={(e) => setCustomerCompany(e.target.value)}
+              placeholder="Whitfield Joinery Ltd"
+              className={FIELD}
+            />
+          </label>
+          <label className="flex flex-col gap-1.5 sm:col-span-2">
             <span className="text-xs font-medium text-muted">Their email</span>
             <input
               value={customerEmail}
@@ -135,18 +163,48 @@ export function InvoiceBuilder() {
             />
             <span className="text-[11px] text-muted">Needed to email it to them.</span>
           </label>
-        </div>
 
-        <label className="mt-3 flex flex-col gap-1.5">
-          <span className="text-xs font-medium text-muted">Their address</span>
-          <textarea
-            value={customerAddress}
-            onChange={(e) => setCustomerAddress(e.target.value)}
-            rows={3}
-            placeholder={"14 Oakfield Road\nManchester\nM20 3PQ"}
-            className={`${FIELD} leading-relaxed`}
-          />
-        </label>
+          <label className="flex flex-col gap-1.5 sm:col-span-2">
+            <span className="text-xs font-medium text-muted">Street address</span>
+            <input
+              value={line1}
+              onChange={(e) => setLine1(e.target.value)}
+              placeholder="14 Oakfield Road"
+              className={FIELD}
+            />
+          </label>
+          <label className="flex flex-col gap-1.5 sm:col-span-2">
+            <span className="text-xs font-medium text-muted">Second line (if they have one)</span>
+            <input
+              value={line2}
+              onChange={(e) => setLine2(e.target.value)}
+              placeholder="Didsbury"
+              className={FIELD}
+            />
+          </label>
+          <label className="flex flex-col gap-1.5">
+            <span className="text-xs font-medium text-muted">Town or city</span>
+            <input
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="Manchester"
+              className={FIELD}
+            />
+          </label>
+          <label className="flex flex-col gap-1.5">
+            <span className="text-xs font-medium text-muted">Postcode</span>
+            <input
+              value={postcode}
+              onChange={(e) => setPostcode(e.target.value)}
+              autoCapitalize="characters"
+              autoCorrect="off"
+              spellCheck={false}
+              placeholder="M20 3PQ"
+              className={FIELD}
+            />
+            <span className="text-[11px] text-muted">Capitals and spaces sort themselves out.</span>
+          </label>
+        </div>
       </section>
 
       <section className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
@@ -213,6 +271,33 @@ export function InvoiceBuilder() {
               <dt className="text-muted">Subtotal</dt>
               <dd className="tabular-nums text-foreground">{pounds(sums.subtotalPence)}</dd>
             </div>
+            <div className="flex items-center justify-between gap-3 py-1">
+              <dt className="flex min-w-0 items-center gap-1.5 text-muted">
+                <select
+                  value={discountKind}
+                  onChange={(e) => setDiscountKind(e.target.value as Discount["kind"])}
+                  aria-label="Kind of discount"
+                  className="rounded-lg border border-border bg-background px-2 py-1 text-xs text-foreground"
+                >
+                  <option value="none">No discount</option>
+                  <option value="percent">Discount %</option>
+                  <option value="fixed">Discount £</option>
+                </select>
+                {discountKind !== "none" && (
+                  <input
+                    value={discountValue}
+                    onChange={(e) => setDiscountValue(e.target.value)}
+                    inputMode="decimal"
+                    aria-label={discountKind === "percent" ? "Discount percentage" : "Amount off"}
+                    placeholder={discountKind === "percent" ? "10" : "25.00"}
+                    className="w-16 rounded-lg border border-border bg-background px-2 py-1 text-xs text-foreground"
+                  />
+                )}
+              </dt>
+              <dd className="tabular-nums text-foreground">
+                {sums.discountPence > 0 ? `−${pounds(sums.discountPence)}` : "—"}
+              </dd>
+            </div>
             <div className="flex items-center justify-between py-1">
               <dt className="flex items-center gap-2 text-muted">
                 VAT
@@ -233,8 +318,9 @@ export function InvoiceBuilder() {
             </div>
           </dl>
         </div>
-        <p className="mt-1 text-right text-[11px] text-muted">
-          Leave VAT at 0 if you are not registered.
+        <p className="mt-1 text-right text-[11px] leading-relaxed text-muted">
+          Leave VAT at 0 if you are not registered. A discount comes off before VAT, which is
+          the way round HMRC expects.
         </p>
       </section>
 

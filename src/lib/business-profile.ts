@@ -72,6 +72,27 @@ export function tidyWebsite(input: string): string {
     .toLowerCase();
 }
 
+/**
+ * A sort code as it is written on a bank card: 00-00-00.
+ *
+ * Six digits however they arrive — typed plain, with spaces, or with the
+ * hyphens already in. Anything that is not six digits is handed back
+ * trimmed rather than forced into a shape it does not have, because a
+ * building society account can carry something else entirely and refusing
+ * it would leave somebody unable to be paid.
+ */
+export function tidySortCode(input: string): string {
+  const digits = input.replace(/\D/g, "");
+  if (digits.length !== 6) return input.trim();
+  return `${digits.slice(0, 2)}-${digits.slice(2, 4)}-${digits.slice(4)}`;
+}
+
+/** An account number with the spaces taken out; the digits are not touched. */
+export function tidyAccountNumber(input: string): string {
+  const digits = input.replace(/\D/g, "");
+  return digits || input.trim();
+}
+
 export type Address = {
   line1: string;
   line2: string;
@@ -79,6 +100,39 @@ export type Address = {
   postcode: string;
   country: string;
 };
+
+export type BankDetails = {
+  accountName: string;
+  sortCode: string;
+  accountNumber: string;
+  /** A payment link, "card on the day", anything else they want to say. */
+  note: string;
+};
+
+/**
+ * The "how to pay" block, built from the parts.
+ *
+ * Labelled on each line rather than left as bare numbers, because the
+ * person reading it is typing it into their banking app and a stray
+ * six-digit number with nothing beside it is one they have to guess at.
+ * A part left blank is left out, so a client who only takes card gets
+ * their one sentence and no empty bank lines above it.
+ */
+export function formatBankDetails(bank: BankDetails): string {
+  const lines: string[] = [];
+  if (bank.accountName.trim()) lines.push(`Account name: ${bank.accountName.trim()}`);
+  if (bank.sortCode.trim()) lines.push(`Sort code: ${tidySortCode(bank.sortCode)}`);
+  if (bank.accountNumber.trim()) {
+    lines.push(`Account number: ${tidyAccountNumber(bank.accountNumber)}`);
+  }
+  if (bank.note.trim()) {
+    // A blank line between the numbers and the sentence, but not at the
+    // top when the numbers are the part that is missing.
+    if (lines.length > 0) lines.push("");
+    lines.push(bank.note.trim());
+  }
+  return lines.join("\n");
+}
 
 /**
  * The address as it goes on a letter: one part per line, nothing empty.

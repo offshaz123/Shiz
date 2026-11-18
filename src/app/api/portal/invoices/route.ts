@@ -28,6 +28,10 @@ function text(body: unknown, name: string): string {
   return typeof value === "string" ? value : "";
 }
 
+function discountKind(value: string): "none" | "percent" | "fixed" {
+  return value === "percent" || value === "fixed" ? value : "none";
+}
+
 export async function GET() {
   const client = await currentClient();
   if (!client) return NextResponse.json({ error: "unauthorised" }, { status: 401 });
@@ -49,11 +53,18 @@ export async function POST(request: Request) {
 
   const id = await createInvoice(client.id, {
     customerName: text(body, "customerName"),
+    customerCompany: text(body, "customerCompany"),
     customerEmail: text(body, "customerEmail"),
     customerAddress: text(body, "customerAddress"),
     issuedOn: text(body, "issuedOn"),
     dueOn: text(body, "dueOn"),
     vatRate: Number((body as { vatRate?: unknown })?.vatRate) || 0,
+    discount: {
+      kind: discountKind(text(body, "discountKind")),
+      percent: Number((body as { discountPercent?: unknown })?.discountPercent) || 0,
+      // Pounds on the way in, pence from here on, the same as a line price.
+      pence: Math.round((Number((body as { discountAmount?: unknown })?.discountAmount) || 0) * 100),
+    },
     notes: text(body, "notes"),
     lines: rawLines.map((line) => ({
       description: typeof line.description === "string" ? line.description : "",
@@ -121,6 +132,9 @@ const PROFILE_FIELDS = [
   "website",
   "vatNumber",
   "paymentDetails",
+  "bankAccountName",
+  "bankSortCode",
+  "bankAccountNumber",
   "line1",
   "line2",
   "city",

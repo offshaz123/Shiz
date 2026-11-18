@@ -21,6 +21,16 @@ export type InvoiceLine = {
   unitPence: number;
 };
 
+export type Discount = {
+  kind: "none" | "percent" | "fixed";
+  /** Used when kind is "percent": 10 means ten per cent. */
+  percent: number;
+  /** Used when kind is "fixed". Pence, like everything else here. */
+  pence: number;
+};
+
+export const NO_DISCOUNT: Discount = { kind: "none", percent: 0, pence: 0 };
+
 /**
  * Totals, worked out in pence and rounded once per line.
  *
@@ -28,14 +38,42 @@ export type InvoiceLine = {
  * rounded figure is what the line shows on the page, and a total that does
  * not match the lines added up is the one thing nobody forgives on an
  * invoice.
+ *
+ * The discount comes off before VAT, which is the order HMRC expects and
+ * the order that is in the customer's favour: VAT is due on what is
+ * actually charged, so taking it off afterwards would overcharge the tax.
+ *
+ * A discount can never take an invoice below zero. A percentage over a
+ * hundred or a fixed amount larger than the bill is a typo, and the right
+ * answer to a typo is nothing owed rather than money flowing backwards.
  */
-export function totals(lines: InvoiceLine[], vatRate: number) {
+export function totals(
+  lines: InvoiceLine[],
+  vatRate: number,
+  discount: Discount = NO_DISCOUNT,
+) {
   const subtotalPence = lines.reduce(
     (sum, line) => sum + Math.round(line.quantity * line.unitPence),
     0,
   );
-  const vatPence = Math.round((subtotalPence * vatRate) / 100);
-  return { subtotalPence, vatPence, totalPence: subtotalPence + vatPence };
+
+  const asked =
+    discount.kind === "percent"
+      ? Math.round((subtotalPence * Math.max(0, discount.percent)) / 100)
+      : discount.kind === "fixed"
+        ? Math.max(0, Math.round(discount.pence))
+        : 0;
+  const discountPence = Math.min(asked, subtotalPence);
+
+  const afterDiscount = subtotalPence - discountPence;
+  const vatPence = Math.round((afterDiscount * vatRate) / 100);
+  return {
+    subtotalPence,
+    discountPence,
+    afterDiscountPence: afterDiscount,
+    vatPence,
+    totalPence: afterDiscount + vatPence,
+  };
 }
 
 export function pounds(pence: number): string {

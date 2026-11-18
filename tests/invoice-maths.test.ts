@@ -46,11 +46,49 @@ test("no VAT registration means nothing is added", () => {
 });
 
 test("an empty invoice is zero rather than a crash", () => {
-  assert.deepEqual(totals([], 20), { subtotalPence: 0, vatPence: 0, totalPence: 0 });
+  assert.deepEqual(totals([], 20), {
+    subtotalPence: 0,
+    discountPence: 0,
+    afterDiscountPence: 0,
+    vatPence: 0,
+    totalPence: 0,
+  });
 });
 
 test("pence always print, and thousands are grouped", () => {
   assert.equal(pounds(0), "£0.00");
   assert.equal(pounds(5), "£0.05");
   assert.equal(pounds(325000), "£3,250.00");
+});
+
+test("a percentage discount comes off before VAT", () => {
+  // £100 less 10% is £90; VAT at 20% is £18; £108 due. Taking the
+  // discount off after VAT would charge tax on money nobody paid.
+  const sums = totals([line(1, 10000)], 20, { kind: "percent", percent: 10, pence: 0 });
+  assert.equal(sums.discountPence, 1000);
+  assert.equal(sums.vatPence, 1800);
+  assert.equal(sums.totalPence, 10800);
+});
+
+test("a fixed discount comes off the same way", () => {
+  const sums = totals([line(1, 10000)], 0, { kind: "fixed", percent: 0, pence: 2500 });
+  assert.equal(sums.discountPence, 2500);
+  assert.equal(sums.totalPence, 7500);
+});
+
+test("a discount bigger than the bill leaves nothing owed, not money back", () => {
+  const sums = totals([line(1, 5000)], 20, { kind: "fixed", percent: 0, pence: 999999 });
+  assert.equal(sums.discountPence, 5000);
+  assert.equal(sums.totalPence, 0);
+});
+
+test("a percentage over a hundred is a typo, not a refund", () => {
+  const sums = totals([line(1, 5000)], 0, { kind: "percent", percent: 150, pence: 0 });
+  assert.equal(sums.totalPence, 0);
+});
+
+test("no discount changes nothing", () => {
+  const sums = totals([line(2, 2500)], 20);
+  assert.equal(sums.discountPence, 0);
+  assert.equal(sums.totalPence, 6000);
 });

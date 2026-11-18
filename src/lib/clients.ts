@@ -1,5 +1,6 @@
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import { withDb } from "./db";
+import { logoUrlFor, logoUrlFrom } from "./client-logo";
 import { normaliseAccountName } from "./account-name";
 import { hashPassword } from "./client-auth";
 
@@ -345,6 +346,7 @@ export async function listClients(): Promise<AdminClient[] | null> {
         logo_url: string | null;
         auto_reply_on: number;
         auto_reply_text: string | null;
+        logo_updated_at: string | null;
         last_lead_at: string | null;
         last_login_at: string | null;
       })[]
@@ -352,6 +354,8 @@ export async function listClients(): Promise<AdminClient[] | null> {
       `SELECT c.id, c.slug, c.name, c.contact_email, c.is_active, c.password_hash, c.created_at,
               c.review_link, c.review_requests_on, c.default_lead_value,
               c.logo_url, c.auto_reply_on, c.auto_reply_text, c.last_login_at,
+              (SELECT l.updated_at FROM client_logos l WHERE l.client_id = c.id)
+                AS logo_updated_at,
               (SELECT COUNT(*) FROM client_leads l WHERE l.client_id = c.id) AS leads,
               (SELECT MAX(l.created_at) FROM client_leads l WHERE l.client_id = c.id)
                 AS last_lead_at
@@ -370,7 +374,7 @@ export async function listClients(): Promise<AdminClient[] | null> {
       reviewLink: r.review_link ?? "",
       reviewRequestsOn: Boolean(r.review_requests_on),
       defaultLeadValue: r.default_lead_value === null ? null : Number(r.default_lead_value),
-      logoUrl: r.logo_url ?? "",
+      logoUrl: logoUrlFrom(r.slug, r.logo_updated_at ? String(r.logo_updated_at) : null, r.logo_url ?? ""),
       autoReplyOn: Boolean(r.auto_reply_on),
       autoReplyText: r.auto_reply_text ?? "",
       lastLeadAt: r.last_lead_at === null ? "" : String(r.last_lead_at),
@@ -596,15 +600,16 @@ export async function recordClientLead(
   return done ?? null;
 }
 
+/**
+ * Kept as a name the pages already call, now answered by one helper.
+ *
+ * It used to read `logo_url` alone, which is the address an admin types
+ * in. Once clients could upload their own, that meant the logo showed on
+ * their invoices and not in their own side column — the same business
+ * looking like two different ones on two screens of the same site.
+ */
 export async function getClientLogo(clientId: number): Promise<string> {
-  const found = await withDb(async (db) => {
-    const [rows] = await db.query<(RowDataPacket & { logo_url: string | null })[]>(
-      "SELECT logo_url FROM clients WHERE id = ? LIMIT 1",
-      [clientId],
-    );
-    return rows[0]?.logo_url ?? "";
-  });
-  return found ?? "";
+  return logoUrlFor(clientId);
 }
 
 export async function getClientBySlug(slug: string): Promise<{ id: number } | null> {

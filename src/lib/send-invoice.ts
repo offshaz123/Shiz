@@ -60,6 +60,14 @@ export function invoiceEmailHtml(invoice: Invoice, sender: InvoiceSender): strin
     )
     .join("");
 
+  const discountRow =
+    invoice.discountPence > 0
+      ? `<tr><td style="padding:6px 0;color:${GREY};">Discount${
+          invoice.discount.kind === "percent" ? ` (${invoice.discount.percent}%)` : ""
+        }</td>
+         <td style="padding:6px 0;text-align:right;">&minus;${pounds(invoice.discountPence)}</td></tr>`
+      : "";
+
   const vatRow =
     invoice.vatRate > 0
       ? `<tr><td style="padding:6px 0;color:${GREY};">VAT at ${invoice.vatRate}%</td>
@@ -97,6 +105,7 @@ export function invoiceEmailHtml(invoice: Invoice, sender: InvoiceSender): strin
     <div style="padding:20px 0 4px;font-size:13px;line-height:1.6;">
       <div style="font-size:11px;letter-spacing:0.05em;text-transform:uppercase;color:#6b7280;">Billed to</div>
       <strong style="font-size:15px;">${escape(invoice.customerName)}</strong><br>
+      ${invoice.customerCompany ? `${escape(invoice.customerCompany)}<br>` : ""}
       ${invoice.customerAddress ? `<span style="color:${GREY};">${block(invoice.customerAddress)}</span>` : ""}
     </div>
 
@@ -115,6 +124,7 @@ export function invoiceEmailHtml(invoice: Invoice, sender: InvoiceSender): strin
         <td style="padding:6px 0;color:${GREY};">Subtotal</td>
         <td style="padding:6px 0;text-align:right;">${pounds(invoice.subtotalPence)}</td>
       </tr>
+      ${discountRow}
       ${vatRow}
       <tr>
         <td style="padding:10px 0;border-top:2px solid #111827;font-size:15px;font-weight:bold;">Total due</td>
@@ -154,6 +164,7 @@ function plainText(invoice: Invoice, sender: InvoiceSender): string {
         )}`,
     ),
     ``,
+    ...(invoice.discountPence > 0 ? [`Discount: -${pounds(invoice.discountPence)}`] : []),
     `Total due: ${pounds(invoice.totalPence)}`,
     ``,
     `How to pay:`,

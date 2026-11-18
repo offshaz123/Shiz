@@ -1,6 +1,7 @@
 import type { RowDataPacket } from "mysql2/promise";
 import { withDb } from "./db";
 import { MAX_LOGO_BYTES } from "./client-logo-limits";
+import { siteConfig } from "./site-config";
 
 export { MAX_LOGO_BYTES };
 
@@ -86,6 +87,48 @@ export async function readLogo(
     return row ? { mime: row.mime, bytes: row.bytes, updatedAt: String(row.updated_at) } : null;
   });
   return found ?? null;
+}
+
+/**
+ * Where a client's logo is served from, with a stamp on the end.
+ *
+ * One function because four screens need the answer — the side column,
+ * the invoice, the emailed invoice and the browser tab — and three copies
+ * of this is how a logo ends up correct on an invoice and still showing
+ * the old one in the tab.
+ *
+ * The stamp is what makes a replaced logo actually appear. The image is
+ * cached for a year on purpose, since every email client that opens an
+ * invoice fetches it, so without something changing in the address a
+ * client who uploads a new logo keeps seeing the old one with no idea why.
+ *
+ * Falls back to the address an admin typed in, for clients set up before
+ * they could upload one themselves.
+ */
+export function logoUrlFrom(slug: string, stamp: string | null, fallback: string): string {
+  if (!stamp) return fallback;
+  const version = Date.parse(stamp);
+  return `${siteConfig.url.replace(/\/$/, "")}/api/logo/${slug}?v=${
+    Number.isFinite(version) ? version : 0
+  }`;
+}
+
+/** The same, looked up by id, for anything that holds only that. */
+export async function logoUrlFor(clientId: number): Promise<string> {
+  const found = await withDb(async (db) => {
+    const [rows] = await db.query<
+      (RowDataPacket & { slug: string; logo_url: string | null; updated_at: string | null })[]
+    >(
+      `SELECT c.slug, c.logo_url, l.updated_at
+         FROM clients c LEFT JOIN client_logos l ON l.client_id = c.id
+        WHERE c.id = ? LIMIT 1`,
+      [clientId],
+    );
+    const row = rows[0];
+    if (!row) return "";
+    return logoUrlFrom(row.slug, row.updated_at ? String(row.updated_at) : null, row.logo_url ?? "");
+  });
+  return found ?? "";
 }
 
 /** Whether there is one, without pulling the bytes back to find out. */

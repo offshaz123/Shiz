@@ -141,6 +141,16 @@ function Box({
 
 export function BusinessDetails({ profile }: { profile: BusinessProfile }) {
   const router = useRouter();
+  // The bank block is the one thing here with a Save button. The boxes
+  // belong together — a sort code saved without its account number is
+  // half a payment instruction — and the button is the moment to check
+  // the numbers before they go on a document asking somebody for money.
+  const [bank, setBank] = useState({
+    bankAccountName: profile.bankAccountName,
+    bankSortCode: profile.bankSortCode,
+    bankAccountNumber: profile.bankAccountNumber,
+  });
+  const [savingBank, setSavingBank] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
   const [saved, setSaved] = useState("");
@@ -162,6 +172,26 @@ export function BusinessDetails({ profile }: { profile: BusinessProfile }) {
       router.refresh();
     } catch {
       setError("That did not save. Try again in a moment.");
+    }
+  }
+
+  async function saveBank() {
+    setSavingBank(true);
+    setError("");
+    setSaved("");
+    try {
+      const res = await fetch("/api/portal/invoices", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(bank),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      setSaved("Bank details saved.");
+      router.refresh();
+    } catch {
+      setError("Your bank details did not save. Try again in a moment.");
+    } finally {
+      setSavingBank(false);
     }
   }
 
@@ -342,17 +372,62 @@ export function BusinessDetails({ profile }: { profile: BusinessProfile }) {
 
       <Section
         title="How your customers pay you"
-        note="Printed at the bottom of every invoice. Whatever you would normally write — bank details, a payment link, or that you take card on the day."
+        note="Printed at the bottom of every invoice, each line labelled, so your customer can copy it straight into their banking app."
       >
-        <Box
+        <div className="grid gap-3 sm:grid-cols-2">
+          <label className="flex flex-col gap-1.5 sm:col-span-2">
+            <span className="text-xs font-medium text-muted">Account name</span>
+            <input
+              value={bank.bankAccountName}
+              onChange={(e) => setBank({ ...bank, bankAccountName: e.target.value })}
+              placeholder="The name on your bank account"
+              className={FIELD}
+            />
+          </label>
+          <label className="flex flex-col gap-1.5">
+            <span className="text-xs font-medium text-muted">Sort code</span>
+            <input
+              value={bank.bankSortCode}
+              onChange={(e) => setBank({ ...bank, bankSortCode: e.target.value })}
+              inputMode="numeric"
+              placeholder="12-34-56"
+              className={FIELD}
+            />
+            <span className="text-[11px] text-muted">
+              Type the six digits — the dashes go in by themselves.
+            </span>
+          </label>
+          <label className="flex flex-col gap-1.5">
+            <span className="text-xs font-medium text-muted">Account number</span>
+            <input
+              value={bank.bankAccountNumber}
+              onChange={(e) => setBank({ ...bank, bankAccountNumber: e.target.value })}
+              inputMode="numeric"
+              placeholder="12345678"
+              className={FIELD}
+            />
+          </label>
+        </div>
+
+        <button
+          type="button"
+          onClick={saveBank}
+          disabled={savingBank}
+          className="brand-gradient-bg mt-4 rounded-full px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+        >
+          {savingBank ? "Saving…" : "Save bank details"}
+        </button>
+
+        <div className="mt-5 border-t border-border pt-4">
+          <Box
             value={profile.paymentDetails}
             onSave={(next) => save("paymentDetails", next, profile.paymentDetails)}
-          label="Payment details"
-          rows={5}
-          placeholder={
-            "Bank transfer\nSort code 00-00-00\nAccount 12345678\nReference: the invoice number"
-          }
-        />
+            label="Anything else about paying you"
+            rows={3}
+            note="Goes under the bank details. A payment link, your terms, or that you take card on the day. Leave it blank if the bank details are enough. This box saves when you click away."
+            placeholder={"Reference: the invoice number\nCard taken on the day if you prefer."}
+          />
+        </div>
       </Section>
     </div>
   );

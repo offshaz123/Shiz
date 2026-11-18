@@ -2,7 +2,10 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   formatAddress,
+  formatBankDetails,
+  tidyAccountNumber,
   tidyEmail,
+  tidySortCode,
   tidyPostcode,
   tidyVatNumber,
   tidyWebsite,
@@ -71,6 +74,53 @@ test("an address has no blank lines in the middle of it", () => {
 test("an empty address is empty rather than a stack of blank lines", () => {
   assert.equal(
     formatAddress({ line1: "", line2: "", city: "", postcode: "", country: "" }),
+    "",
+  );
+});
+
+test("a sort code comes out as it is written on a card", () => {
+  for (const typed of ["123456", "12 34 56", "12-34-56", " 123456 "]) {
+    assert.equal(tidySortCode(typed), "12-34-56", typed);
+  }
+});
+
+test("something that is not six digits is not forced into a sort code", () => {
+  assert.equal(tidySortCode("1234"), "1234");
+  assert.equal(tidySortCode(""), "");
+});
+
+test("an account number loses its spaces and keeps its digits", () => {
+  assert.equal(tidyAccountNumber("1234 5678"), "12345678");
+  assert.equal(tidyAccountNumber("12345678"), "12345678");
+});
+
+test("how-to-pay is labelled so it can be typed into a banking app", () => {
+  assert.equal(
+    formatBankDetails({
+      accountName: "Plated Up Ltd",
+      sortCode: "123456",
+      accountNumber: "1234 5678",
+      note: "",
+    }),
+    "Account name: Plated Up Ltd\nSort code: 12-34-56\nAccount number: 12345678",
+  );
+});
+
+test("a business that only takes card gets its sentence and no empty lines", () => {
+  assert.equal(
+    formatBankDetails({
+      accountName: "",
+      sortCode: "",
+      accountNumber: "",
+      note: "Card taken on the day.",
+    }),
+    "Card taken on the day.",
+  );
+});
+
+test("nothing filled in is nothing printed", () => {
+  assert.equal(
+    formatBankDetails({ accountName: "", sortCode: "", accountNumber: "", note: "" }),
     "",
   );
 });

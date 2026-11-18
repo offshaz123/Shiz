@@ -1,15 +1,20 @@
 import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { withDb } from "./db";
-import { pounds, totals, type InvoiceLine } from "./invoice-maths";
+import { pounds, totals, type Discount, type InvoiceLine } from "./invoice-maths";
+
+export type { Discount };
 import {
   formatAddress,
+  formatBankDetails,
+  tidyAccountNumber,
   tidyEmail,
+  tidySortCode,
   tidyPhone,
   tidyPostcode,
   tidyVatNumber,
   tidyWebsite,
 } from "./business-profile";
-import { siteConfig } from "./site-config";
+import { logoUrlFrom } from "./client-logo";
 
 // Re-exported so a server file has one place to import from, while the
 // browser-side pages take them straight from invoice-maths and never pull
@@ -48,12 +53,14 @@ export type Invoice = {
   id: number;
   number: number;
   customerName: string;
+  customerCompany: string;
   customerEmail: string;
   customerAddress: string;
   /** YYYY-MM-DD. */
   issuedOn: string;
   dueOn: string;
   vatRate: number;
+  discount: Discount;
   notes: string;
   status: InvoiceStatus;
   sentAt: string;
@@ -61,6 +68,8 @@ export type Invoice = {
   lines: InvoiceLine[];
   /** All pence. */
   subtotalPence: number;
+  discountPence: number;
+  afterDiscountPence: number;
   vatPence: number;
   totalPence: number;
 };
@@ -80,6 +89,9 @@ export type InvoiceSender = {
 
 /** The same business, in the separate boxes they fill in. */
 export type BusinessProfile = {
+  bankAccountName: string;
+  bankSortCode: string;
+  bankAccountNumber: string;
   /** What we file them under; not editable from their side. */
   accountName: string;
   invoiceName: string;
@@ -101,11 +113,15 @@ interface InvoiceRow extends RowDataPacket {
   id: number;
   number: number;
   customer_name: string;
+  customer_company: string | null;
   customer_email: string | null;
   customer_address: string | null;
   issued_on: string;
   due_on: string | null;
   vat_rate: string;
+  discount_kind: string;
+  discount_percent: string;
+  discount_pence: number;
   notes: string | null;
   status: string;
   sent_at: string | null;
@@ -135,16 +151,26 @@ function asStatus(value: string): InvoiceStatus {
 
 function build(row: InvoiceRow, lines: InvoiceLine[]): Invoice {
   const vatRate = Number(row.vat_rate);
-  const sums = totals(lines, vatRate);
+  const discount: Discount = {
+    kind:
+      row.discount_kind === "percent" || row.discount_kind === "fixed"
+        ? row.discount_kind
+        : "none",
+    percent: Number(row.discount_percent) || 0,
+    pence: Number(row.discount_pence) || 0,
+  };
+  const sums = totals(lines, vatRate, discount);
   return {
     id: row.id,
     number: row.number,
     customerName: row.customer_name,
+    customerCompany: row.customer_company ?? "",
     customerEmail: row.customer_email ?? "",
     customerAddress: row.customer_address ?? "",
     issuedOn: day(row.issued_on),
     dueOn: day(row.due_on),
     vatRate,
+    discount,
     notes: row.notes ?? "",
     status: asStatus(row.status),
     sentAt: row.sent_at ? String(row.sent_at) : "",
@@ -163,8 +189,9 @@ function toLine(row: LineRow): InvoiceLine {
   };
 }
 
-const INVOICE_COLUMNS = `id, number, customer_name, customer_email, customer_address,
-  issued_on, due_on, vat_rate, notes, status, sent_at, paid_at`;
+const INVOICE_COLUMNS = `id, number, customer_name, customer_company, customer_email, customer_address,
+  issued_on, due_on, vat_rate, discount_kind, discount_percent, discount_pence,
+  notes, status, sent_at, paid_at`;
 
 /** Every invoice this client has, newest first, with its lines. */
 export async function listInvoices(clientId: number): Promise<Invoice[] | null> {
@@ -225,11 +252,13 @@ export async function getInvoice(clientId: number, id: number): Promise<Invoice 
 
 export type NewInvoice = {
   customerName: string;
+  customerCompany: string;
   customerEmail: string;
   customerAddress: string;
   issuedOn: string;
   dueOn: string;
   vatRate: number;
+  discount: Discount;
   notes: string;
   lines: { description: string; quantity: number; unitPence: number }[];
 };
@@ -267,18 +296,23 @@ export async function createInvoice(
 
     const [result] = await db.execute<ResultSetHeader>(
       `INSERT INTO client_invoices
-         (client_id, number, customer_name, customer_email, customer_address,
-          issued_on, due_on, vat_rate, notes)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         (client_id, number, customer_name, customer_company, customer_email,
+          customer_address, issued_on, due_on, vat_rate,
+          discount_kind, discount_percent, discount_pence, notes)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         clientId,
         seq.next,
         name,
+        input.customerCompany.trim().slice(0, 160) || null,
         input.customerEmail.trim().slice(0, 200) || null,
         input.customerAddress.trim().slice(0, 1000) || null,
         input.issuedOn,
         DATE.test(input.dueOn) ? input.dueOn : null,
         Number.isFinite(input.vatRate) ? Math.min(Math.max(input.vatRate, 0), 100) : 0,
+        input.discount.kind,
+        Math.min(Math.max(Number(input.discount.percent) || 0, 0), 100),
+        Math.max(Math.round(Number(input.discount.pence) || 0), 0),
         input.notes.trim().slice(0, 2000) || null,
       ],
     );
@@ -329,7 +363,8 @@ export async function setInvoiceStatus(
 
 /** The business details that have to appear on what they send out. */
 const PROFILE_COLUMNS = `name, invoice_name, slug, contact_email, business_phone, business_website,
-  vat_number, payment_details, address_line1, address_line2, city, postcode, country`;
+  vat_number, payment_details, address_line1, address_line2, city, postcode, country,
+  bank_account_name, bank_sort_code, bank_account_number`;
 
 type ProfileRow = RowDataPacket & {
   name: string;
@@ -345,24 +380,10 @@ type ProfileRow = RowDataPacket & {
   city: string | null;
   postcode: string | null;
   country: string | null;
+  bank_account_name: string | null;
+  bank_sort_code: string | null;
+  bank_account_number: string | null;
 };
-
-/**
- * Where their logo is served from, with a stamp on the end.
- *
- * The stamp is what makes a replaced logo actually appear. The image is
- * cached for a year on purpose — it is fetched by every email client that
- * opens an invoice — so without something changing in the URL, a client
- * who uploads a new logo would keep seeing the old one and have no idea
- * why.
- */
-function logoUrlFor(slug: string, stamp: string | null): string {
-  if (!stamp) return "";
-  const version = Date.parse(stamp);
-  return `${siteConfig.url.replace(/\/$/, "")}/api/logo/${slug}?v=${
-    Number.isFinite(version) ? version : 0
-  }`;
-}
 
 async function readProfile(
   clientId: number,
@@ -393,7 +414,7 @@ export async function getSender(clientId: number): Promise<InvoiceSender | null>
     // The invoice name wins when they have set one: we file them as "Auto
     // Wrap Manchester" but the invoice may need to say "A W Manchester Ltd".
     name: row.invoice_name?.trim() || row.name,
-    logoUrl: logoUrlFor(row.slug, logoStamp),
+    logoUrl: logoUrlFrom(row.slug, logoStamp, ""),
     email: tidyEmail(row.contact_email ?? ""),
     address: formatAddress({
       line1: row.address_line1 ?? "",
@@ -405,7 +426,14 @@ export async function getSender(clientId: number): Promise<InvoiceSender | null>
     phone: tidyPhone(row.business_phone ?? ""),
     website: tidyWebsite(row.business_website ?? ""),
     vatNumber: tidyVatNumber(row.vat_number ?? ""),
-    paymentDetails: (row.payment_details ?? "").trim(),
+    // Built from the boxes rather than taken as typed, so each line is
+    // labelled for the person copying it into a banking app.
+    paymentDetails: formatBankDetails({
+      accountName: row.bank_account_name ?? "",
+      sortCode: row.bank_sort_code ?? "",
+      accountNumber: row.bank_account_number ?? "",
+      note: row.payment_details ?? "",
+    }),
   };
 }
 
@@ -428,7 +456,10 @@ export async function getBusinessProfile(clientId: number): Promise<BusinessProf
     city: row.city ?? "",
     postcode: row.postcode ?? "",
     country: row.country ?? "",
-    logoUrl: logoUrlFor(row.slug, logoStamp),
+    bankAccountName: row.bank_account_name ?? "",
+    bankSortCode: row.bank_sort_code ?? "",
+    bankAccountNumber: row.bank_account_number ?? "",
+    logoUrl: logoUrlFrom(row.slug, logoStamp, ""),
   };
 }
 
@@ -451,6 +482,9 @@ export async function setBusinessProfile(
     website: { column: "business_website", tidy: tidyWebsite },
     vatNumber: { column: "vat_number", tidy: tidyVatNumber },
     paymentDetails: { column: "payment_details" },
+    bankAccountName: { column: "bank_account_name" },
+    bankSortCode: { column: "bank_sort_code", tidy: tidySortCode },
+    bankAccountNumber: { column: "bank_account_number", tidy: tidyAccountNumber },
     line1: { column: "address_line1" },
     line2: { column: "address_line2" },
     city: { column: "city" },

@@ -666,6 +666,44 @@ const ADDED_COLUMNS: {
   // know them by. We file them as "Auto Wrap Manchester"; the invoice may
   // need to say "A W Manchester Ltd".
   { table: "clients", column: "invoice_name", definition: "VARCHAR(160) NULL" },
+
+  // Bank details in their own boxes rather than as one block of text.
+  // Somebody typing their sort code into a free box writes it six
+  // different ways; in a box of its own it prints as 00-00-00 whatever
+  // they typed, and the invoice can label each line so the customer's
+  // banking app gets the right number in the right field.
+  { table: "clients", column: "bank_account_name", definition: "VARCHAR(160) NULL" },
+  { table: "clients", column: "bank_sort_code", definition: "VARCHAR(20) NULL" },
+  { table: "clients", column: "bank_account_number", definition: "VARCHAR(34) NULL" },
+
+  // The customer's company, when there is one. "Mrs J Whitfield" and
+  // "Whitfield Joinery Ltd" are two different lines on an invoice, and a
+  // business being billed needs its own name on the document.
+  {
+    table: "client_invoices",
+    column: "customer_company",
+    definition: "VARCHAR(160) NULL AFTER customer_name",
+  },
+
+  // A discount, either a percentage or an amount off. Two columns rather
+  // than one with a meaning that changes: a single column holding pence
+  // sometimes and a rate other times is the kind of thing that reads
+  // fine and then charges somebody 20p instead of 20%.
+  {
+    table: "client_invoices",
+    column: "discount_kind",
+    definition: "VARCHAR(10) NOT NULL DEFAULT 'none'",
+  },
+  {
+    table: "client_invoices",
+    column: "discount_percent",
+    definition: "DECIMAL(5,2) NOT NULL DEFAULT 0",
+  },
+  {
+    table: "client_invoices",
+    column: "discount_pence",
+    definition: "INT NOT NULL DEFAULT 0",
+  },
 ];
 
 interface CountRow extends RowDataPacket {
