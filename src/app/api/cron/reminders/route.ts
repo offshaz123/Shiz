@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { sendTodaySummaries, sendTomorrowReminders } from "@/lib/booking-reminders";
 import { recordCronRun } from "@/lib/admin-data";
+import { sendReviewRequests } from "@/lib/review-requests";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -34,7 +35,25 @@ async function run(request: Request) {
   }
   if (auth !== "ok") return NextResponse.json({ error: "unauthorised" }, { status: 401 });
 
-  const kind = new URL(request.url).searchParams.get("kind") === "today" ? "today" : "tomorrow";
+  const asked = new URL(request.url).searchParams.get("kind");
+  const kind = asked === "today" ? "today" : asked === "reviews" ? "reviews" : "tomorrow";
+
+  // Review requests ride on the morning run rather than a fourth cron
+  // entry. They are the day after a job, so the hour does not matter, and
+  // one fewer thing in hPanel is one fewer thing to notice has stopped.
+  if (kind === "reviews") {
+    const reviews = await sendReviewRequests().catch((err) => {
+      console.error("Review requests:", err);
+      return null;
+    });
+    await recordCronRun("review-requests", {
+      sent: reviews?.sent ?? 0,
+      failed: reviews?.failed ?? 0,
+      considered: reviews?.considered ?? 0,
+      detail: reviews ? `${reviews.sent} review request(s)` : "failed",
+    });
+    return NextResponse.json({ ok: true, kind, ...(reviews ?? {}) });
+  }
 
   const result =
     kind === "today"

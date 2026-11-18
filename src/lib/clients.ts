@@ -231,6 +231,8 @@ export type AdminClient = {
   hasPassword: boolean;
   leads: number;
   createdAt: string;
+  reviewLink: string;
+  reviewRequestsOn: boolean;
 };
 
 export async function listClients(): Promise<AdminClient[] | null> {
@@ -245,9 +247,12 @@ export async function listClients(): Promise<AdminClient[] | null> {
         password_hash: string | null;
         created_at: string;
         leads: number;
+        review_link: string | null;
+        review_requests_on: number;
       })[]
     >(
       `SELECT c.id, c.slug, c.name, c.contact_email, c.is_active, c.password_hash, c.created_at,
+              c.review_link, c.review_requests_on,
               (SELECT COUNT(*) FROM client_leads l WHERE l.client_id = c.id) AS leads
          FROM clients c
         ORDER BY c.is_active DESC, c.name ASC`,
@@ -261,6 +266,8 @@ export async function listClients(): Promise<AdminClient[] | null> {
       hasPassword: Boolean(r.password_hash),
       leads: Number(r.leads),
       createdAt: String(r.created_at),
+      reviewLink: r.review_link ?? "",
+      reviewRequestsOn: Boolean(r.review_requests_on),
     }));
   });
 }
@@ -305,6 +312,44 @@ export async function setClientActive(id: number, active: boolean): Promise<bool
     const [result] = await db.execute<ResultSetHeader>(
       "UPDATE clients SET is_active = ? WHERE id = ?",
       [active ? 1 : 0, id],
+    );
+    return result.affectedRows > 0;
+  });
+  return done ?? false;
+}
+
+/**
+ * Their review link, and whether to use it.
+ *
+ * Switching it on without a link does nothing on purpose: the send query
+ * requires both, so a half-finished setup sends nothing rather than
+ * sending something broken.
+ */
+export async function setClientReviews(
+  id: number,
+  changes: { reviewLink?: string; reviewRequestsOn?: boolean },
+): Promise<boolean> {
+  const sets: string[] = [];
+  const params: (string | number)[] = [];
+
+  if (changes.reviewLink !== undefined) {
+    const link = changes.reviewLink.trim().slice(0, 500);
+    // Either a real link or nothing. A half-typed address would be mailed
+    // to their customers.
+    if (link && !/^https?:\/\//i.test(link)) return false;
+    sets.push("review_link = ?");
+    params.push(link);
+  }
+  if (changes.reviewRequestsOn !== undefined) {
+    sets.push("review_requests_on = ?");
+    params.push(changes.reviewRequestsOn ? 1 : 0);
+  }
+  if (sets.length === 0) return false;
+
+  const done = await withDb(async (db) => {
+    const [result] = await db.execute<ResultSetHeader>(
+      `UPDATE clients SET ${sets.join(", ")} WHERE id = ?`,
+      [...params, id],
     );
     return result.affectedRows > 0;
   });

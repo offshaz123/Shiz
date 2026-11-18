@@ -289,6 +289,50 @@ export function ClientManager() {
                     </button>
                   </div>
 
+                  <div className="mt-3 flex flex-wrap items-end gap-2 border-t border-border pt-3">
+                    <label className="flex min-w-0 flex-1 flex-col gap-1">
+                      <span className="text-[11px] text-muted">
+                        Their Google review link
+                      </span>
+                      <input
+                        defaultValue={client.reviewLink}
+                        onBlur={(e) => {
+                          if (e.target.value !== client.reviewLink) {
+                            void patch(
+                              client.id,
+                              { reviewLink: e.target.value },
+                              "That did not look like a link. It needs to start with https://",
+                            );
+                          }
+                        }}
+                        placeholder="https://g.page/r/..."
+                        className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      disabled={busy || (!client.reviewLink && !client.reviewRequestsOn)}
+                      onClick={() =>
+                        patch(
+                          client.id,
+                          { reviewRequestsOn: !client.reviewRequestsOn },
+                          "Not changed.",
+                        )
+                      }
+                      className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold disabled:opacity-40 ${
+                        client.reviewRequestsOn
+                          ? "border-emerald-500/50 text-emerald-600 dark:text-emerald-400"
+                          : "border-border text-muted"
+                      }`}
+                    >
+                      {client.reviewRequestsOn ? "Review asks on" : "Review asks off"}
+                    </button>
+                  </div>
+                  <p className="mt-1.5 text-[11px] leading-relaxed text-muted">
+                    When a job is marked done, their customer gets one email the next day asking
+                    for a review. Needs the link, and only ever sends once per job.
+                  </p>
+
                   <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs">
                     <button
                       type="button"

@@ -5,6 +5,7 @@ import {
   listClients,
   setClientActive,
   setClientPassword,
+  setClientReviews,
   setClientSpend,
 } from "@/lib/clients";
 
@@ -75,6 +76,17 @@ export async function PATCH(request: Request) {
   if (typeof body?.isActive === "boolean") {
     const ok = await setClientActive(id, body.isActive);
     return ok ? NextResponse.json({ ok: true }) : NextResponse.json({ error: "not_saved" }, { status: 503 });
+  }
+
+  if (typeof body?.reviewLink === "string" || typeof body?.reviewRequestsOn === "boolean") {
+    const ok = await setClientReviews(id, {
+      reviewLink: typeof body?.reviewLink === "string" ? body.reviewLink : undefined,
+      reviewRequestsOn:
+        typeof body?.reviewRequestsOn === "boolean" ? body.reviewRequestsOn : undefined,
+    });
+    return ok
+      ? NextResponse.json({ ok: true })
+      : NextResponse.json({ error: "bad_review_link" }, { status: 400 });
   }
 
   if (typeof body?.month === "string") {

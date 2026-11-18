@@ -1,4 +1,5 @@
 import type { ClientLead, ClientSummary, MonthPoint } from "@/lib/clients";
+import { LeadList } from "./LeadList";
 
 /**
  * What a client sees about their own marketing.
@@ -32,14 +33,6 @@ const SOURCE_LABEL: Record<string, string> = {
   phone: "Phone",
 };
 
-const STATUS_LABEL: Record<string, string> = {
-  new: "New",
-  contacted: "Contacted",
-  quoted: "Quoted",
-  customer: "Customer",
-  lost: "Lost",
-};
-
 function money(amount: number): string {
   return `£${amount.toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
@@ -48,12 +41,6 @@ function monthName(iso: string): string {
   const at = new Date(`${iso}T00:00:00Z`);
   if (Number.isNaN(at.getTime())) return iso;
   return at.toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" });
-}
-
-function when(value: string): string {
-  const at = new Date(value.replace(" ", "T"));
-  if (Number.isNaN(at.getTime())) return value;
-  return at.toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 }
 
 /** Hours read badly past a day or two, which is exactly where it matters. */
@@ -258,62 +245,12 @@ export function ClientDashboard({
         <div className="border-b border-border px-5 py-4">
           <h2 className="text-sm font-semibold text-foreground">Your enquiries</h2>
           <p className="mt-0.5 text-xs text-muted">
-            Newest first. Everyone who got in touch, and how they found you.
+            Newest first. Mark one answered and move it along as you go — that is where the
+            customer count and the reply time above come from.
           </p>
         </div>
 
-        {leads.length === 0 ? (
-          <p className="px-5 py-6 text-sm text-muted">
-            Nothing yet. Enquiries appear here the moment they come in.
-          </p>
-        ) : (
-          <ul className="divide-y divide-border">
-            {leads.map((lead) => (
-              <li key={lead.id} className="px-5 py-4">
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <span className="text-sm font-semibold text-foreground">
-                    {lead.name || "No name given"}
-                  </span>
-                  <span className="rounded-full border border-border px-2 py-0.5 text-[11px] text-muted">
-                    {SOURCE_LABEL[lead.source] ?? lead.source}
-                  </span>
-                  <span className="text-[11px] text-muted">
-                    {STATUS_LABEL[lead.status] ?? lead.status}
-                  </span>
-                  <span className="ml-auto text-xs tabular-nums text-muted">
-                    {when(lead.createdAt)}
-                  </span>
-                </div>
-
-                <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 text-xs">
-                  {lead.phone && (
-                    <a href={`tel:${lead.phone}`} className="font-medium text-foreground hover:underline">
-                      {lead.phone}
-                    </a>
-                  )}
-                  {lead.email && (
-                    <a href={`mailto:${lead.email}`} className="break-all text-muted hover:text-foreground">
-                      {lead.email}
-                    </a>
-                  )}
-                  {lead.hoursToReply === null ? (
-                    <span className="font-medium text-amber-600 dark:text-amber-400">
-                      not answered yet
-                    </span>
-                  ) : (
-                    <span className="text-muted">answered in {waited(lead.hoursToReply)}</span>
-                  )}
-                </div>
-
-                {lead.message && (
-                  <p className="mt-2 whitespace-pre-wrap text-xs leading-relaxed text-muted">
-                    {lead.message}
-                  </p>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
+        <LeadList leads={leads} readOnly={isSample} />
       </section>
 
       {isSample && (

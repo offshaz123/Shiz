@@ -445,6 +445,30 @@ const ADDED_COLUMNS: {
   // The backfill is exactly right rather than a guess: every row that
   // existed before this column did was sent under the old rule, so step 1
   // was a person and anything later was the scheduler.
+  // Where a client's customers are asked to leave a review.
+  //
+  // Their own Google review link, which is per business and cannot be
+  // guessed. No link means no review requests go out for that client,
+  // which is the right default: an email asking somebody to leave a review
+  // with nowhere to leave it is worse than no email.
+  {
+    table: "clients",
+    column: "review_link",
+    definition: "VARCHAR(500) NULL AFTER contact_email",
+  },
+  // Off unless switched on. Asking a client's customers for anything is
+  // the client's call to make, not ours to assume.
+  {
+    table: "clients",
+    column: "review_requests_on",
+    definition: "TINYINT(1) NOT NULL DEFAULT 0 AFTER review_link",
+  },
+  // Stamped when the ask went, so one job can only ever produce one.
+  {
+    table: "client_bookings",
+    column: "review_sent_at",
+    definition: "DATETIME NULL AFTER reminded_at",
+  },
   {
     table: "prospect_emails",
     column: "sent_by",
