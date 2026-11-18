@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { chances, tips } from "../src/lib/opportunities.ts";
+import { chances, forecast, gaps, tips } from "../src/lib/opportunities.ts";
 import type { ClientLead, ClientSummary } from "../src/lib/clients.ts";
 import type { Booking } from "../src/lib/bookings.ts";
 import type { Invoice } from "../src/lib/invoices.ts";
@@ -169,4 +169,60 @@ test("the list is never long enough to be ignored", () => {
     hasLogo: false, hasAddress: false, quotesEverSent: 0,
   });
   assert.ok(advice.length <= 5);
+});
+
+test("the forecast is open work times how often they actually win", () => {
+  // Four won, four lost: half. £1,000 open should read £500.
+  const decided = [
+    ...Array.from({ length: 4 }, (_, i) => lead({ id: 100 + i, status: "customer" })),
+    ...Array.from({ length: 4 }, (_, i) => lead({ id: 200 + i, status: "lost" })),
+  ];
+  const open = [lead({ id: 1, value: 1000 })];
+  const cols = chances(open, [], [], [], null, NOW);
+  const f = forecast(summary, cols, [...decided, ...open]);
+  assert.equal(f.winRate, 50);
+  assert.equal(f.openPence, 100000);
+  assert.equal(f.likelyPence, 50000);
+});
+
+test("too little decided work means no rate rather than a made-up one", () => {
+  const thin = [lead({ id: 1, status: "customer" }), lead({ id: 2, status: "lost" })];
+  const f = forecast(summary, chances(thin, [], [], [], null, NOW), thin);
+  assert.equal(f.winRate, null);
+  assert.equal(f.likelyPence, null);
+});
+
+test("work still sitting there is not counted as a loss", () => {
+  // Eight decided, all won, plus twelve still waiting. That is 100%, not 40%.
+  const decided = Array.from({ length: 8 }, (_, i) => lead({ id: 100 + i, status: "customer" }));
+  const waiting = Array.from({ length: 12 }, (_, i) => lead({ id: 200 + i }));
+  const all = [...decided, ...waiting];
+  const f = forecast(summary, chances(all, [], [], [], null, NOW), all);
+  assert.equal(f.winRate, 100);
+});
+
+test("money already earned is not in the forecast", () => {
+  const done = booking({ customerName: "Paid Up", status: "done", price: 400 });
+  const cols = chances([], [], [done], [], null, NOW);
+  const f = forecast(summary, cols, []);
+  assert.equal(f.openPence, 0);
+});
+
+test("a gap is only reported when it is actually dragging a figure down", () => {
+  const withValue = gaps([lead({ value: null })], [], [], 500, NOW);
+  assert.ok(!withValue.some((g) => g.id === "lead-values"));
+
+  const without = gaps([lead({ value: null })], [], [], null, NOW);
+  assert.ok(without.some((g) => g.id === "lead-values"));
+});
+
+test("a quote with no date is flagged, because it can never run out", () => {
+  const dated = invoice({ kind: "quote", status: "sent", validUntil: "2026-12-03" });
+  const undated = invoice({ id: 2, kind: "quote", status: "sent", validUntil: "" });
+  assert.ok(!gaps([], [], [dated], 500, NOW).some((g) => g.id === "quote-dates"));
+  assert.ok(gaps([], [], [undated], 500, NOW).some((g) => g.id === "quote-dates"));
+});
+
+test("a business with nothing missing is shown nothing", () => {
+  assert.deepEqual(gaps([lead({ value: 500 })], [], [], 500, NOW), []);
 });

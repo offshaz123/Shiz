@@ -4,7 +4,7 @@ import { currentClient } from "@/lib/client-auth";
 import { getAdminClient, getClientSummary, listClientLeads } from "@/lib/clients";
 import { listBookingsBetween } from "@/lib/bookings";
 import { listInvoices, pounds } from "@/lib/invoices";
-import { chances, tips } from "@/lib/opportunities";
+import { chances, forecast, gaps, tips } from "@/lib/opportunities";
 import { LoginForm } from "../LoginForm";
 
 export const dynamic = "force-dynamic";
@@ -85,6 +85,8 @@ export default async function OpportunitiesPage() {
 
   const onTheTable = columns.reduce((sum, column) => sum + column.totalPence, 0);
   const waitingCount = columns.reduce((n, column) => n + column.chances.length, 0);
+  const outlook = summary ? forecast(summary, columns, leads ?? []) : null;
+  const missing = gaps(leads ?? [], bookings ?? [], quotes ?? [], admin?.defaultLeadValue ?? null);
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-7 sm:px-8 lg:py-10">
@@ -95,18 +97,46 @@ export default async function OpportunitiesPage() {
         Everything sitting there waiting to be picked up, priced at what you said a job is worth.
       </p>
 
-      {waitingCount > 0 && (
-        <div className="mt-6 rounded-2xl border border-border bg-surface p-5 sm:p-6">
-          <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">
-            Sitting there right now
-          </p>
-          <p className="mt-2 text-3xl font-bold leading-none tracking-tight text-foreground sm:text-4xl">
-            {onTheTable > 0 ? pounds(onTheTable) : `${waitingCount} to chase`}
-          </p>
-          <p className="mt-2.5 text-xs leading-relaxed text-muted">
-            Across {waitingCount} {waitingCount === 1 ? "thing" : "things"}. Not a forecast —
-            these are people who have already been in touch.
-          </p>
+      {waitingCount > 0 && outlook && (
+        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+          <div className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">
+              Sitting there right now
+            </p>
+            <p className="mt-2 text-2xl font-bold leading-none tracking-tight text-foreground sm:text-3xl">
+              {onTheTable > 0 ? pounds(onTheTable) : `${waitingCount} to chase`}
+            </p>
+            <p className="mt-2.5 text-[11px] leading-relaxed text-muted">
+              Across {waitingCount} {waitingCount === 1 ? "thing" : "things"}. Not a forecast —
+              these are people who have already been in touch.
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">
+              Likely to land
+            </p>
+            <p className="mt-2 text-2xl font-bold leading-none tracking-tight text-foreground sm:text-3xl">
+              {outlook.likelyPence === null ? "—" : pounds(outlook.likelyPence)}
+            </p>
+            <p className="mt-2.5 text-[11px] leading-relaxed text-muted">
+              {outlook.winRate === null
+                ? `Needs a few more jobs won or lost before this means anything — ${outlook.decided} so far.`
+                : `You win ${outlook.winRate}% of the ${outlook.decided} that got an answer, so that much of what is open above. A sum, not a promise.`}
+            </p>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">
+              Won this month
+            </p>
+            <p className="mt-2 text-2xl font-bold leading-none tracking-tight text-foreground sm:text-3xl">
+              {pounds(outlook.wonThisMonthPence)}
+            </p>
+            <p className="mt-2.5 text-[11px] leading-relaxed text-muted">
+              Already in the bag. This is the one that is not a guess.
+            </p>
+          </div>
         </div>
       )}
 
@@ -207,6 +237,32 @@ export default async function OpportunitiesPage() {
           ))}
         </div>
       </section>
+
+      {missing.length > 0 && (
+        <section className="mt-8">
+          <h2 className="text-sm font-bold text-foreground">Make these numbers better</h2>
+          <p className="mt-0.5 text-xs leading-relaxed text-muted">
+            Each of these is dragging a figure on this page down right now.
+          </p>
+
+          <ul className="mt-4 divide-y divide-border rounded-2xl border border-border bg-surface">
+            {missing.map((gap) => (
+              <li key={gap.id} className="flex flex-wrap items-start gap-x-4 gap-y-2 px-5 py-4">
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-semibold text-foreground">{gap.label}</p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-muted">{gap.why}</p>
+                </div>
+                <Link
+                  href={gap.href}
+                  className="shrink-0 rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground"
+                >
+                  Fix it
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <p className="mt-7 text-xs leading-relaxed text-muted">
         Missed calls are not on here. Nothing in this system touches your phone line, so it

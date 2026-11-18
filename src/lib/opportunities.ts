@@ -369,3 +369,132 @@ export function tips(
 
   return out.sort((a, b) => b.weight - a.weight).slice(0, 5);
 }
+
+export type Forecast = {
+  /** Everything still in play, at what it is priced at. */
+  openPence: number;
+  /**
+   * What that is likely to come to, going by how often they actually win.
+   * Null when there is not enough decided work to say, because a win rate
+   * off two jobs is not a win rate.
+   */
+  likelyPence: number | null;
+  /** Percent, or null for the same reason. */
+  winRate: number | null;
+  /** How many decided enquiries the rate is counted from. */
+  decided: number;
+  wonThisMonthPence: number;
+};
+
+/** Below this, a win rate is an anecdote rather than a figure. */
+const ENOUGH_TO_JUDGE = 8;
+
+/**
+ * What is open, and what it is likely to come to.
+ *
+ * The rate is counted only from enquiries that actually reached a
+ * decision — won or lost. Counting the ones still sitting there as
+ * losses would make a busy month look like a terrible one, and counting
+ * them as wins would be a sales pitch rather than a forecast.
+ *
+ * It is a multiplication they can check, not a model. If they win two in
+ * five and have £10,000 open, it says £4,000, and says where both halves
+ * came from.
+ */
+export function forecast(
+  summary: ClientSummary,
+  columns: Column[],
+  leads: ClientLead[],
+): Forecast {
+  const openPence = columns
+    .filter((column) => column.key !== "not-invoiced")
+    .reduce((sum, column) => sum + column.totalPence, 0);
+
+  const won = leads.filter((lead) => lead.status === "customer").length;
+  const lost = leads.filter((lead) => lead.status === "lost").length;
+  const decided = won + lost;
+
+  const enough = decided >= ENOUGH_TO_JUDGE;
+  const winRate = enough ? Math.round((won / decided) * 100) : null;
+
+  return {
+    openPence,
+    likelyPence: winRate === null ? null : Math.round((openPence * winRate) / 100),
+    winRate,
+    decided,
+    wonThisMonthPence: Math.round(summary.wonValue * 100),
+  };
+}
+
+export type Gap = {
+  id: string;
+  label: string;
+  count: number;
+  /** Why it matters, in terms of what it does to the figures above. */
+  why: string;
+  href: string;
+};
+
+/**
+ * Things missing that make the figures above worse than they could be.
+ *
+ * Not a nag list. Each one is here because it is actively dragging a
+ * number on this page down — an enquiry with no value counts as nothing
+ * towards what is on the table, and a quote with no date can never show
+ * as having run out, so it sits in the wrong column forever.
+ */
+export function gaps(
+  leads: ClientLead[],
+  bookings: Booking[],
+  quotes: Invoice[],
+  defaultLeadValue: number | null,
+  now = Date.now(),
+): Gap[] {
+  const out: Gap[] = [];
+
+  // Only when there is no fallback: with a job value set, nothing is
+  // counting as zero and there is nothing to fix.
+  if (defaultLeadValue === null) {
+    const unpriced = leads.filter(
+      (lead) => lead.value === null && lead.status !== "lost",
+    ).length;
+    if (unpriced > 0) {
+      out.push({
+        id: "lead-values",
+        label: `${unpriced} ${unpriced === 1 ? "enquiry has" : "enquiries have"} no value on them`,
+        count: unpriced,
+        why: "They count as nothing towards what is on the table. Set what a job is typically worth and every one of them gets priced at once.",
+        href: "/portal/business",
+      });
+    }
+  }
+
+  const unpricedJobs = bookings.filter(
+    (booking) => booking.status === "done" && booking.price === null,
+  ).length;
+  if (unpricedJobs > 0) {
+    out.push({
+      id: "job-prices",
+      label: `${unpricedJobs} finished ${unpricedJobs === 1 ? "job has" : "jobs have"} no price`,
+      count: unpricedJobs,
+      why: "Put the price on a job when you book it and the figures here stop being a guess.",
+      href: "/portal/calendar",
+    });
+  }
+
+  const noDate = quotes.filter(
+    (quote) => quote.status === "sent" && !quote.validUntil,
+  ).length;
+  if (noDate > 0) {
+    out.push({
+      id: "quote-dates",
+      label: `${noDate} sent ${noDate === 1 ? "quote has" : "quotes have"} no date on them`,
+      count: noDate,
+      why: "A quote with no date never runs out, so it sits in “waiting” forever instead of telling you to chase it.",
+      href: "/portal/quotes",
+    });
+  }
+
+  void now;
+  return out;
+}
