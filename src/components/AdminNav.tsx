@@ -22,6 +22,7 @@ const PAGES = [
   { href: "/admin", label: "Overview", hint: "What the system has done on its own" },
   { href: "/admin/today", label: "Today", hint: "What to do now" },
   { href: "/admin/leads", label: "Leads", hint: "People who came to us" },
+  { href: "/admin/clients", label: "Clients", hint: "Who pays us, their logins and their ad spend" },
   { href: "/admin/prospects", label: "Who to call", hint: "Every business found, and what has been sent to each" },
   { href: "/admin/company", label: "Company check", hint: "The official register" },
   { href: "/admin/scan", label: "Scan a site", hint: "Audit any website — safe to show a customer" },

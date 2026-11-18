@@ -1,0 +1,29 @@
+import type { Metadata } from "next";
+import { isAdmin } from "@/lib/admin-auth";
+import { AdminHeading } from "@/components/AdminHeading";
+import { LoginForm } from "../LoginForm";
+import { ClientManager } from "@/components/ClientManager";
+
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Clients",
+  robots: { index: false, follow: false },
+};
+
+export default async function AdminClientsPage() {
+  if (!(await isAdmin())) return <LoginForm />;
+
+  return (
+    <div className="mx-auto max-w-4xl px-5 py-8 sm:px-8">
+      <AdminHeading title="Clients">
+        The businesses who pay us, their logins, and what they spent on advertising. This is the
+        only place their figures can be changed.
+      </AdminHeading>
+
+      <div className="mt-6">
+        <ClientManager />
+      </div>
+    </div>
+  );
+}

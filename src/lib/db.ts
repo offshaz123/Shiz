@@ -142,6 +142,87 @@ const SCHEMA = [
     KEY idx_created (created_at)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
+  // The businesses who pay us, which the site had no record of at all.
+  //
+  // Everything else in this database is about our own marketing: who we
+  // found, who we wrote to, who replied. A paying client appeared nowhere,
+  // which is why there was nothing to put on a client dashboard.
+  //
+  // `slug` is what appears in their login and their lead form URL, so it is
+  // unique and never reused. The password is stored as a hash with its own
+  // salt rather than in the open: these are other people's credentials, and
+  // a database dump should not hand somebody every client's login.
+  `CREATE TABLE IF NOT EXISTS clients (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    slug VARCHAR(60) NOT NULL,
+    name VARCHAR(160) NOT NULL,
+    contact_email VARCHAR(200) NULL,
+    password_hash VARCHAR(255) NULL,
+    password_salt VARCHAR(64) NULL,
+    /** Switched off rather than deleted: their leads must survive the end
+     *  of the relationship, because they were their leads. */
+    is_active TINYINT(1) NOT NULL DEFAULT 1,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uniq_slug (slug)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  // One enquiry that came in for a client.
+  //
+  // `source` is the whole point of the table. "Forty enquiries" is a number
+  // nobody can act on; "twenty-eight from Google, nine from the map listing,
+  // three from Instagram" decides where next month's budget goes.
+  //
+  // `first_replied_at` is how long the client took to answer. It is the
+  // cheapest of the four numbers to improve and the one nobody measures,
+  // and it can only be recorded here because nowhere else knows.
+  `CREATE TABLE IF NOT EXISTS client_leads (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    client_id INT UNSIGNED NOT NULL,
+    name VARCHAR(160) NULL,
+    email VARCHAR(200) NULL,
+    phone VARCHAR(60) NULL,
+    message TEXT NULL,
+    source VARCHAR(40) NOT NULL DEFAULT 'website',
+    /** Where it landed, for a client with more than one page running. */
+    landing_page VARCHAR(255) NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'new',
+    first_replied_at DATETIME NULL,
+    notes TEXT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    KEY idx_client_created (client_id, created_at),
+    KEY idx_client_source (client_id, source),
+    CONSTRAINT fk_client_leads_client FOREIGN KEY (client_id)
+      REFERENCES clients (id) ON DELETE CASCADE
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  // What a client spent on advertising in a given month, per channel.
+  //
+  // Entered by hand for now. Cost per enquiry is the single most useful
+  // figure in small business marketing and it cannot be worked out without
+  // this, and the Google Ads API needs a developer token that takes weeks
+  // to be approved. A number typed in once a month beats an empty panel
+  // waiting on an application.
+  //
+  // Keyed on client, month and channel so re-entering a figure corrects it
+  // rather than adding a second one.
+  `CREATE TABLE IF NOT EXISTS client_spend (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    client_id INT UNSIGNED NOT NULL,
+    /** First day of the month it belongs to. */
+    month DATE NOT NULL,
+    channel VARCHAR(40) NOT NULL DEFAULT 'google',
+    amount DECIMAL(10,2) NOT NULL DEFAULT 0,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uniq_client_month_channel (client_id, month, channel),
+    CONSTRAINT fk_client_spend_client FOREIGN KEY (client_id)
+      REFERENCES clients (id) ON DELETE CASCADE
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
   // Businesses we might ring, and what happened when we did.
   //
   // Keyed on Google's own place ID so the same business found twice — once
