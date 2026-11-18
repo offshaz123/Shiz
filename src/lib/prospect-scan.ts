@@ -1,5 +1,6 @@
 import { buildReport, type AuditCheck } from "./site-audit";
 import { fetchForAudit, fetchExtraPage } from "./scan-site";
+import { domainAcceptsMail } from "./mx-check";
 
 /**
  * Scanning a prospect's website before you ring them.
@@ -268,6 +269,11 @@ export async function scanProspectSite(website: string): Promise<ProspectScan | 
         clearTimeout(timer);
       }
     }
+
+    // An address nobody can receive at is worse than no address: it sends
+    // the business into the email list instead of the call list, and the
+    // bounce lands on our own sending reputation.
+    if (email && !(await domainAcceptsMail(email))) email = "";
 
     return { score: report.score, findings, email };
   } catch {
