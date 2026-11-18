@@ -29,6 +29,16 @@ const PAGES = [
     ),
   },
   {
+    href: "/portal/opportunities",
+    label: "Money on the table",
+    note: "What is waiting to be picked up",
+    icon: (
+      <>
+        <path d="M12 2v20M17 6.5c0-1.9-2.2-3-5-3s-5 1.1-5 3 2.2 2.6 5 3.2 5 1.3 5 3.3-2.2 3-5 3-5-1.1-5-3" />
+      </>
+    ),
+  },
+  {
     href: "/portal/calendar",
     label: "Diary",
     note: "Jobs booked in",
