@@ -4,10 +4,16 @@ import { clientLogin } from "./actions";
 /**
  * The client's way in.
  *
- * Their account name rather than an email address, because it is the thing
- * printed on their invoice and the thing in their dashboard URL, and
- * because an email box invites somebody to try their own address and
- * conclude the system is broken when it does not work.
+ * Either their account name or their email address, because the two are
+ * sent to them in the same message and nobody remembers which one the box
+ * wanted. The account name is matched forgivingly — case, spaces and
+ * missing hyphens all folded away.
+ *
+ * The box turns off autocapitalise, autocorrect and spellcheck, which is
+ * not a nicety. On a phone the keyboard capitalises the first letter of a
+ * field by default and autocorrect rewrites a word it does not know, so an
+ * account name typed correctly can arrive as something else entirely and
+ * the person has no way to see that it happened.
  *
  * It carries the mark because the portal does not sit inside the website's
  * header any more: with no chrome at all, a password box on a dark screen
@@ -26,10 +32,13 @@ export function LoginForm({ failed }: { failed: boolean }) {
 
       <form action={clientLogin} className="mt-8 flex flex-col gap-3">
         <label className="flex flex-col gap-1.5">
-          <span className="text-xs font-medium text-muted">Account name</span>
+          <span className="text-xs font-medium text-muted">Account name or email</span>
           <input
             name="slug"
             autoComplete="username"
+            autoCapitalize="none"
+            autoCorrect="off"
+            spellCheck={false}
             required
             className="rounded-xl border border-border bg-surface px-4 py-3 text-sm text-foreground outline-none focus:border-brand-pink"
           />
@@ -47,7 +56,8 @@ export function LoginForm({ failed }: { failed: boolean }) {
 
         {failed && (
           <p className="text-sm font-medium text-red-500">
-            That did not work. Check the account name and password, or ask us to reset it.
+            That did not work. Try your email address instead, or give us a ring and we will
+            reset it.
           </p>
         )}
 

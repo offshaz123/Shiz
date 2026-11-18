@@ -1,6 +1,7 @@
 import { createHmac, createHash, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { withDb } from "./db";
+import { looksLikeEmail, normaliseAccountName, squashAccountName } from "./account-name";
 import type { RowDataPacket } from "mysql2";
 
 /**
@@ -73,16 +74,52 @@ interface ClientRow extends RowDataPacket {
 export type ClientAccount = { id: number; slug: string; name: string };
 
 /** Null for a wrong password, an unknown client, or one switched off. */
+/**
+ * Signs a client in by their account name or their email address.
+ *
+ * Either, because the two are told to them in the same chat message and
+ * nobody remembers which one the box wanted. The account name is matched
+ * forgivingly — case, spaces and missing hyphens all folded away — because
+ * the stored name is something we generated from their business name and
+ * they are reading it off a message on a phone.
+ *
+ * Whatever is typed, the password still has to be right, and a failure of
+ * any kind gives the same answer to the caller.
+ */
 export async function checkClientLogin(
-  slug: string,
+  typed: string,
   password: string,
 ): Promise<ClientAccount | null> {
+  const name = normaliseAccountName(typed);
+  const squashed = squashAccountName(typed);
+  const email = typed.trim().toLowerCase();
+  if (!name && !email) return null;
+
   const found = await withDb(async (db) => {
+    // Fetched by the two things that can be unique and then matched here,
+    // because "the hyphens might be missing" is not something SQL can be
+    // asked. The candidate set is at most a handful of rows: an exact
+    // account name, and whoever shares that email address.
     const [rows] = await db.query<ClientRow[]>(
-      "SELECT id, slug, name, password_hash, password_salt, is_active FROM clients WHERE slug = ? LIMIT 1",
-      [slug.trim().toLowerCase()],
+      `SELECT id, slug, name, password_hash, password_salt, is_active
+         FROM clients
+        WHERE slug = ? OR (? <> '' AND LOWER(contact_email) = ?)
+        LIMIT 10`,
+      [name, looksLikeEmail(typed) ? email : "", email],
     );
-    return rows[0] ?? null;
+    if (rows.length === 0) {
+      // Nothing matched exactly, so try the awkward case: a stored name
+      // with a hyphen in it that nobody typed. One query rather than a
+      // scan, and only reached when the straightforward one found nothing.
+      const [all] = await db.query<ClientRow[]>(
+        `SELECT id, slug, name, password_hash, password_salt, is_active
+           FROM clients WHERE is_active = 1`,
+      );
+      return all.find((row) => squashAccountName(row.slug) === squashed) ?? null;
+    }
+    // An exact account name beats an email, so that a client whose email we
+    // also hold against somebody else still lands on their own account.
+    return rows.find((row) => row.slug === name) ?? rows[0];
   });
 
   if (!found || !found.is_active) return null;

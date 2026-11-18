@@ -1,5 +1,6 @@
 import type { ResultSetHeader, RowDataPacket } from "mysql2";
 import { withDb } from "./db";
+import { normaliseAccountName } from "./account-name";
 import { hashPassword } from "./client-auth";
 
 /**
@@ -402,7 +403,10 @@ export async function createClient(input: {
   contactEmail: string;
   password: string;
 }): Promise<number | null> {
-  const slug = input.slug.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-").slice(0, 60);
+  // The same fold the login box puts what gets typed through, so that a
+  // client typing their business name the way they write it lands on the
+  // name this made for them.
+  const slug = normaliseAccountName(input.slug);
   if (!slug || !input.name.trim() || input.password.length < 8) return null;
 
   const { hash, salt } = hashPassword(input.password);
