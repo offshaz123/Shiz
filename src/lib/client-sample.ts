@@ -41,6 +41,12 @@ export const sampleSummary: ClientSummary = {
   answered: 21,
   wonValue: 3250,
   openValue: 1870,
+  funnel: [
+    { stage: "enquired", label: "Enquiries", reached: 24, fromPrevious: null },
+    { stage: "answered", label: "Answered", reached: 21, fromPrevious: 87.5 },
+    { stage: "quoted", label: "Quoted", reached: 11, fromPrevious: 52.4 },
+    { stage: "customer", label: "Won", reached: 5, fromPrevious: 45.5 },
+  ],
   returnOnSpend: 6.8,
 };
 

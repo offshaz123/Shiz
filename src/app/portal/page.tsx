@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { currentClient } from "@/lib/client-auth";
+import { getClientLogo } from "@/lib/clients";
 import { getClientSummary, getClientTrend, listClientLeads } from "@/lib/clients";
 import { ClientDashboard } from "@/components/ClientDashboard";
 import { sampleLeads, sampleSummary, sampleTrend } from "@/lib/client-sample";
@@ -40,22 +41,36 @@ export default async function PortalPage({
     return <LoginForm failed={error === "1"} />;
   }
 
-  const [summary, trend, leads] = await Promise.all([
+  const [summary, trend, leads, logo] = await Promise.all([
     getClientSummary(client.id),
     getClientTrend(client.id),
     listClientLeads(client.id),
+    getClientLogo(client.id),
   ]);
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-8 sm:px-8">
       <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-5">
-        <div>
+        <div className="flex items-center gap-3">
+          {/* Their mark, not ours. A plain img rather than next/image
+              because it is an address somebody typed into a box and the
+              optimiser would need every client's domain allow-listed. */}
+          {logo && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={logo}
+              alt=""
+              className="h-10 w-10 shrink-0 rounded-lg object-contain"
+            />
+          )}
+          <div>
           <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
             {client.name}
           </h1>
           <p className="mt-1 text-sm text-muted">
             Your enquiries and what they cost, updated as they come in.
           </p>
+          </div>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <PortalNav />

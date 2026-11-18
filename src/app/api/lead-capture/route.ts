@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getClientBySlug, recordClientLead } from "@/lib/clients";
+import { sendAutoReply } from "@/lib/auto-reply";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -72,7 +73,7 @@ export async function POST(request: Request) {
     return reply({ error: "no_contact" }, 400);
   }
 
-  const saved = await recordClientLead(client.id, {
+  const leadId = await recordClientLead(client.id, {
     name,
     email,
     phone,
@@ -81,7 +82,16 @@ export async function POST(request: Request) {
     landingPage: field(body, "page"),
   });
 
-  return saved ? reply({ ok: true }) : reply({ error: "not_saved" }, 503);
+  if (!leadId) return reply({ error: "not_saved" }, 503);
+
+  // Awaited rather than left running, because this route finishes and the
+  // request ends: a promise nobody is waiting on can be cut off mid-send.
+  // It never throws and never fails the response, so the worst case is a
+  // visitor waiting an extra moment for a form they have already
+  // submitted successfully.
+  if (email) await sendAutoReply(client.id, leadId, email);
+
+  return reply({ ok: true });
 }
 
 /** Browsers preflight a cross-origin JSON post, so this has to answer. */

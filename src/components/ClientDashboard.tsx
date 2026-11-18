@@ -1,5 +1,6 @@
 import type { ClientLead, ClientSummary, MonthPoint } from "@/lib/clients";
 import { LeadViews } from "./LeadViews";
+import { ClientFunnel } from "./ClientFunnel";
 
 /**
  * What a client sees about their own marketing.
@@ -162,6 +163,8 @@ export function ClientDashboard({
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
+        <ClientFunnel funnel={summary.funnel} />
+
         <section className="rounded-2xl border border-border bg-surface p-5">
           <h2 className="text-sm font-semibold text-foreground">Where your enquiries came from</h2>
           <p className="mt-0.5 text-xs text-muted">

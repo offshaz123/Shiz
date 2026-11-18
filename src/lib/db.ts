@@ -445,6 +445,38 @@ const ADDED_COLUMNS: {
   // The backfill is exactly right rather than a guess: every row that
   // existed before this column did was sent under the old rule, so step 1
   // was a person and anything later was the scheduler.
+  // The instant reply a new enquiry gets.
+  //
+  // The highest-value automation a local business has, and the one that
+  // moves the reply-time figure from days to minutes. Somebody who fills
+  // in a form at nine at night has usually filled in three others, and the
+  // first business to answer is the one still in the running at breakfast.
+  //
+  // Off until switched on, with wording the client can change: an
+  // auto-reply that does not sound like them is worse than none.
+  {
+    table: "clients",
+    column: "auto_reply_on",
+    definition: "TINYINT(1) NOT NULL DEFAULT 0 AFTER default_lead_value",
+  },
+  {
+    table: "clients",
+    column: "auto_reply_text",
+    definition: "TEXT NULL AFTER auto_reply_on",
+  },
+  // Their logo, so the portal reads as their system rather than ours.
+  {
+    table: "clients",
+    column: "logo_url",
+    definition: "VARCHAR(500) NULL AFTER name",
+  },
+  // Stamped when the instant reply went, so it can never go twice and so
+  // the dashboard can tell an auto-reply from a human one.
+  {
+    table: "client_leads",
+    column: "auto_replied_at",
+    definition: "DATETIME NULL AFTER first_replied_at",
+  },
   // What a lead is worth to this business, on average.
   //
   // Set once per client, and every enquiry that arrives inherits it. The

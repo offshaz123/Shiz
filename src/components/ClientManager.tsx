@@ -289,6 +289,67 @@ export function ClientManager() {
                     </button>
                   </div>
 
+                  <div className="mt-3 border-t border-border pt-3">
+                    <div className="flex flex-wrap items-end gap-2">
+                      <label className="flex min-w-0 flex-1 flex-col gap-1">
+                        <span className="text-[11px] text-muted">Logo URL for their portal</span>
+                        <input
+                          defaultValue={client.logoUrl}
+                          onBlur={(e) => {
+                            if (e.target.value !== client.logoUrl) {
+                              void patch(
+                                client.id,
+                                { logoUrl: e.target.value },
+                                "That did not look like a link. It needs to start with https://",
+                              );
+                            }
+                          }}
+                          placeholder="https://theirsite.co.uk/logo.png"
+                          className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() =>
+                          patch(client.id, { autoReplyOn: !client.autoReplyOn }, "Not changed.")
+                        }
+                        className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold disabled:opacity-40 ${
+                          client.autoReplyOn
+                            ? "border-emerald-500/50 text-emerald-600 dark:text-emerald-400"
+                            : "border-border text-muted"
+                        }`}
+                      >
+                        {client.autoReplyOn ? "Instant reply on" : "Instant reply off"}
+                      </button>
+                    </div>
+                    <label className="mt-2 flex flex-col gap-1">
+                      <span className="text-[11px] text-muted">
+                        What the instant reply says
+                      </span>
+                      <textarea
+                        defaultValue={client.autoReplyText}
+                        onBlur={(e) => {
+                          if (e.target.value !== client.autoReplyText) {
+                            void patch(
+                              client.id,
+                              { autoReplyText: e.target.value },
+                              "That did not save.",
+                            );
+                          }
+                        }}
+                        rows={3}
+                        placeholder={"Thanks for getting in touch. I've got your message and I'll come back to you shortly.\n\nIf it's urgent, give me a ring."}
+                        className="w-full rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs leading-relaxed text-foreground"
+                      />
+                      <span className="text-[11px] leading-relaxed text-muted">
+                        Sent within seconds of an enquiry arriving, signed with their business
+                        name. Leave it blank for the wording above. It does not count as them
+                        answering, so their reply time stays honest.
+                      </span>
+                    </label>
+                  </div>
+
                   <div className="mt-3 flex flex-wrap items-end gap-2 border-t border-border pt-3">
                     <label className="flex flex-col gap-1">
                       <span className="text-[11px] text-muted">Average job value £</span>

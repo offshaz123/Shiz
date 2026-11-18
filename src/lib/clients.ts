@@ -54,6 +54,25 @@ export type ClientSummary = {
   returnOnSpend: number | null;
   /** Still in play: everything not yet won or lost. */
   openValue: number;
+  /** Every enquiry that reached each stage, newest stage last. */
+  funnel: FunnelStep[];
+};
+
+/**
+ * One rung of the funnel.
+ *
+ * `reached` counts everybody who got this far or further, not everybody
+ * sitting on this stage right now. A lead that is Won reached Contacted
+ * and Quoted on the way, and a funnel that forgot that would show the
+ * business shrinking as it succeeded.
+ */
+export type FunnelStep = {
+  stage: string;
+  label: string;
+  reached: number;
+  /** Share of everybody who made it from the stage before. Null on the
+   *  first rung, which has nothing to be a share of. */
+  fromPrevious: number | null;
 };
 
 export type MonthPoint = { month: string; leads: number; customers: number; spend: number };
@@ -179,6 +198,22 @@ export async function getClientSummary(
       [clientId, start, start],
     );
 
+    // Counted once and sliced here rather than six more queries. The
+    // statuses are a path, so reaching one means having reached the
+    // earlier ones, whether or not it was recorded at the time.
+    const [stageRows] = await db.query<(RowDataPacket & { status: string; n: number })[]>(
+      `SELECT status, COUNT(*) AS n
+         FROM client_leads
+        WHERE client_id = ?
+          AND created_at >= ?
+          AND created_at < DATE_ADD(?, INTERVAL 1 MONTH)
+        GROUP BY status`,
+      [clientId, start, start],
+    );
+    const byStatus = new Map(stageRows.map((r) => [r.status, Number(r.n)]));
+    const count = (...names: string[]) =>
+      names.reduce((sum, name) => sum + (byStatus.get(name) ?? 0), 0);
+
     const leads = Number(totals?.leads ?? 0);
     const spend = Number(spendRow?.total ?? 0);
     const wonValue = Number(totals?.won_value ?? 0);
@@ -202,6 +237,29 @@ export async function getClientSummary(
       medianHoursToReply: median,
       wonValue,
       openValue: Number(totals?.open_value ?? 0),
+      funnel: (() => {
+        const rungs = [
+          { stage: "enquired", label: "Enquiries", reached: leads },
+          {
+            stage: "answered",
+            label: "Answered",
+            reached: Number(totals?.answered ?? 0),
+          },
+          {
+            stage: "quoted",
+            label: "Quoted",
+            reached: count("quoted", "customer", "lost"),
+          },
+          { stage: "customer", label: "Won", reached: count("customer") },
+        ];
+        return rungs.map((rung, i) => ({
+          ...rung,
+          fromPrevious:
+            i === 0 || rungs[i - 1].reached === 0
+              ? null
+              : Math.round((rung.reached / rungs[i - 1].reached) * 1000) / 10,
+        }));
+      })(),
       returnOnSpend:
         spend > 0 && wonValue > 0 ? Math.round((wonValue / spend) * 10) / 10 : null,
     };
@@ -258,6 +316,9 @@ export type AdminClient = {
   reviewLink: string;
   reviewRequestsOn: boolean;
   defaultLeadValue: number | null;
+  logoUrl: string;
+  autoReplyOn: boolean;
+  autoReplyText: string;
 };
 
 export async function listClients(): Promise<AdminClient[] | null> {
@@ -275,10 +336,14 @@ export async function listClients(): Promise<AdminClient[] | null> {
         review_link: string | null;
         review_requests_on: number;
         default_lead_value: string | null;
+        logo_url: string | null;
+        auto_reply_on: number;
+        auto_reply_text: string | null;
       })[]
     >(
       `SELECT c.id, c.slug, c.name, c.contact_email, c.is_active, c.password_hash, c.created_at,
               c.review_link, c.review_requests_on, c.default_lead_value,
+              c.logo_url, c.auto_reply_on, c.auto_reply_text,
               (SELECT COUNT(*) FROM client_leads l WHERE l.client_id = c.id) AS leads
          FROM clients c
         ORDER BY c.is_active DESC, c.name ASC`,
@@ -295,6 +360,9 @@ export async function listClients(): Promise<AdminClient[] | null> {
       reviewLink: r.review_link ?? "",
       reviewRequestsOn: Boolean(r.review_requests_on),
       defaultLeadValue: r.default_lead_value === null ? null : Number(r.default_lead_value),
+      logoUrl: r.logo_url ?? "",
+      autoReplyOn: Boolean(r.auto_reply_on),
+      autoReplyText: r.auto_reply_text ?? "",
     }));
   });
 }
@@ -352,6 +420,42 @@ export async function setClientActive(id: number, active: boolean): Promise<bool
  * requires both, so a half-finished setup sends nothing rather than
  * sending something broken.
  */
+/** The instant reply, and the logo on their portal. */
+export async function setClientBranding(
+  id: number,
+  changes: { logoUrl?: string; autoReplyOn?: boolean; autoReplyText?: string },
+): Promise<boolean> {
+  const sets: string[] = [];
+  const params: (string | number)[] = [];
+
+  if (changes.logoUrl !== undefined) {
+    const url = changes.logoUrl.trim().slice(0, 500);
+    // Either a real address or nothing. A half-typed one renders as a
+    // broken image at the top of their dashboard.
+    if (url && !/^https?:\/\//i.test(url)) return false;
+    sets.push("logo_url = ?");
+    params.push(url);
+  }
+  if (changes.autoReplyOn !== undefined) {
+    sets.push("auto_reply_on = ?");
+    params.push(changes.autoReplyOn ? 1 : 0);
+  }
+  if (changes.autoReplyText !== undefined) {
+    sets.push("auto_reply_text = ?");
+    params.push(changes.autoReplyText.slice(0, 2000));
+  }
+  if (sets.length === 0) return false;
+
+  const done = await withDb(async (db) => {
+    const [result] = await db.execute<ResultSetHeader>(
+      `UPDATE clients SET ${sets.join(", ")} WHERE id = ?`,
+      [...params, id],
+    );
+    return result.affectedRows > 0;
+  });
+  return done ?? false;
+}
+
 export async function setDefaultLeadValue(
   id: number,
   value: number | null,
@@ -419,6 +523,7 @@ export async function setClientSpend(
 }
 
 /** One enquiry arriving, from a client's form. */
+/** Returns the new lead's id, so the instant reply knows what to stamp. */
 export async function recordClientLead(
   clientId: number,
   lead: {
@@ -429,7 +534,7 @@ export async function recordClientLead(
     source: string;
     landingPage: string;
   },
-): Promise<boolean> {
+): Promise<number | null> {
   const done = await withDb(async (db) => {
     // The client's own figure, read at the moment the lead arrives rather
     // than joined at read time. A business that puts its average job up
@@ -451,9 +556,23 @@ export async function recordClientLead(
         clientId,
       ],
     );
-    return true;
+    const [[row]] = await db.query<(RowDataPacket & { id: number })[]>(
+      "SELECT LAST_INSERT_ID() AS id",
+    );
+    return Number(row?.id ?? 0) || null;
   });
-  return done ?? false;
+  return done ?? null;
+}
+
+export async function getClientLogo(clientId: number): Promise<string> {
+  const found = await withDb(async (db) => {
+    const [rows] = await db.query<(RowDataPacket & { logo_url: string | null })[]>(
+      "SELECT logo_url FROM clients WHERE id = ? LIMIT 1",
+      [clientId],
+    );
+    return rows[0]?.logo_url ?? "";
+  });
+  return found ?? "";
 }
 
 export async function getClientBySlug(slug: string): Promise<{ id: number } | null> {

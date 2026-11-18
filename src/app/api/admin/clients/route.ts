@@ -5,6 +5,7 @@ import {
   listClients,
   setClientActive,
   setClientPassword,
+  setClientBranding,
   setClientReviews,
   setClientSpend,
   setDefaultLeadValue,
@@ -77,6 +78,21 @@ export async function PATCH(request: Request) {
   if (typeof body?.isActive === "boolean") {
     const ok = await setClientActive(id, body.isActive);
     return ok ? NextResponse.json({ ok: true }) : NextResponse.json({ error: "not_saved" }, { status: 503 });
+  }
+
+  if (
+    typeof body?.logoUrl === "string" ||
+    typeof body?.autoReplyOn === "boolean" ||
+    typeof body?.autoReplyText === "string"
+  ) {
+    const ok = await setClientBranding(id, {
+      logoUrl: typeof body?.logoUrl === "string" ? body.logoUrl : undefined,
+      autoReplyOn: typeof body?.autoReplyOn === "boolean" ? body.autoReplyOn : undefined,
+      autoReplyText: typeof body?.autoReplyText === "string" ? body.autoReplyText : undefined,
+    });
+    return ok
+      ? NextResponse.json({ ok: true })
+      : NextResponse.json({ error: "bad_branding" }, { status: 400 });
   }
 
   if (body?.defaultLeadValue !== undefined) {
