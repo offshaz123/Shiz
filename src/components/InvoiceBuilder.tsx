@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { pounds, totals, type Discount } from "@/lib/invoice-maths";
+import { PAID_METHODS, PAID_METHOD_WORD, type PaidMethod } from "@/lib/invoice-kinds";
 import { formatAddress } from "@/lib/business-profile";
 
 /**
@@ -19,6 +20,12 @@ import { formatAddress } from "@/lib/business-profile";
  * Everything is kept as the string that was typed rather than as a number,
  * so a half-typed "1." does not become 1 under the cursor and a cleared box
  * does not fill itself back in with a zero.
+ *
+ * It ends with the question that decides what the document is. Most of
+ * these businesses are paid as the job finishes, standing next to the
+ * customer, so the usual answer is "paid now" and the usual document is a
+ * receipt. The other answer is there for the commercial job that genuinely
+ * is on terms, and the default is the common case rather than the tidy one.
  */
 
 type Row = { description: string; quantity: string; unitPrice: string };
@@ -59,6 +66,8 @@ export function InvoiceBuilder() {
   const [discountValue, setDiscountValue] = useState("");
   const [notes, setNotes] = useState("");
   const [rows, setRows] = useState<Row[]>([{ ...EMPTY }]);
+  const [paidNow, setPaidNow] = useState(true);
+  const [paidMethod, setPaidMethod] = useState<PaidMethod>("card");
 
   const lines = rows.map((row) => ({
     id: 0,
@@ -99,6 +108,8 @@ export function InvoiceBuilder() {
           discountPercent: Number(discountValue) || 0,
           discountAmount: Number(discountValue) || 0,
           notes,
+          paidNow,
+          paidMethod,
           lines: rows.map((row) => ({
             description: row.description,
             quantity: Number(row.quantity) || 0,
@@ -360,6 +371,56 @@ export function InvoiceBuilder() {
         </label>
       </section>
 
+      <section className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
+        <h2 className="text-sm font-semibold text-foreground">Has it been paid?</h2>
+        <p className="mt-0.5 text-xs leading-relaxed text-muted">
+          Most jobs are paid as they finish. Say so and this becomes a receipt rather than a
+          bill — it will never show up as money you are owed.
+        </p>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          {[
+            { value: true, label: "Paid already" },
+            { value: false, label: "To be paid later" },
+          ].map((choice) => (
+            <button
+              key={String(choice.value)}
+              type="button"
+              onClick={() => setPaidNow(choice.value)}
+              aria-pressed={paidNow === choice.value}
+              className={`rounded-full border px-4 py-2 text-xs font-semibold transition ${
+                paidNow === choice.value
+                  ? "border-transparent bg-foreground text-background"
+                  : "border-border text-muted hover:text-foreground"
+              }`}
+            >
+              {choice.label}
+            </button>
+          ))}
+        </div>
+
+        {paidNow && (
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="text-xs text-muted">Paid by</span>
+            {PAID_METHODS.map((method) => (
+              <button
+                key={method}
+                type="button"
+                onClick={() => setPaidMethod(method)}
+                aria-pressed={paidMethod === method}
+                className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold capitalize transition ${
+                  paidMethod === method
+                    ? "border-emerald-500/60 text-emerald-600 dark:text-emerald-400"
+                    : "border-border text-muted hover:text-foreground"
+                }`}
+              >
+                {PAID_METHOD_WORD[method]}
+              </button>
+            ))}
+          </div>
+        )}
+      </section>
+
       <div className="flex flex-wrap items-center gap-3">
         <button
           type="button"
@@ -367,10 +428,12 @@ export function InvoiceBuilder() {
           disabled={busy}
           className="brand-gradient-bg rounded-full px-6 py-3 text-sm font-semibold text-white disabled:opacity-60"
         >
-          {busy ? "Saving…" : "Save this invoice"}
+          {busy ? "Saving…" : paidNow ? "Save this receipt" : "Save this invoice"}
         </button>
         <p className="text-xs text-muted">
-          It saves as a draft. Nothing goes to your customer until you send it.
+          {paidNow
+            ? "Nothing is emailed until you press send on the next screen."
+            : "It saves as a draft. Nothing goes to your customer until you send it."}
         </p>
       </div>
     </div>

@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 /**
- * Everything they have invoiced, and what has come back.
+ * Everything they have billed, and what has come in.
  *
  * A table on a wide screen and a card per row on a phone — the same rows
  * either way. A table squeezed onto a phone becomes four columns of two
@@ -22,6 +22,12 @@ export const metadata: Metadata = {
  * Overdue is worked out here rather than stored. A date passing is not an
  * event anything fires on, so a stored "overdue" flag would be wrong from
  * the moment it was written until something came along to correct it.
+ *
+ * The tiles are takings, not debts. These businesses are paid as the job
+ * finishes, so "waiting to be paid" would sit at zero forever and teach
+ * somebody to stop looking at that part of the screen. What is worth
+ * seeing is what came in today and this month — and anything genuinely
+ * outstanding, which only appears when there is some.
  */
 
 const STATUS_LOOK: Record<string, string> = {
@@ -32,8 +38,8 @@ const STATUS_LOOK: Record<string, string> = {
 };
 
 const STATUS_WORD: Record<string, string> = {
-  draft: "Draft",
-  sent: "Sent",
+  draft: "Not sent",
+  sent: "Awaiting payment",
   paid: "Paid",
   cancelled: "Cancelled",
 };
@@ -56,15 +62,49 @@ export default async function InvoicesPage() {
 
   const invoices = (await listInvoices(client.id)) ?? [];
 
+  const paidOn = (iso: string) => {
+    const at = new Date(iso);
+    return Number.isNaN(at.getTime()) ? null : at;
+  };
+
+  // Local days, because a job finished at nine on Friday evening belongs
+  // to Friday wherever UTC happens to be.
+  const now = new Date();
+  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const startOfWeek = new Date(startOfToday);
+  startOfWeek.setDate(startOfWeek.getDate() - ((startOfWeek.getDay() + 6) % 7));
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+  const takenSince = (from: Date) =>
+    invoices
+      .filter((i) => i.status === "paid")
+      .filter((i) => {
+        const at = paidOn(i.paidAt);
+        return at !== null && at >= from;
+      })
+      .reduce((sum, i) => sum + i.totalPence, 0);
+
   const outstanding = invoices
     .filter((i) => i.status === "sent")
-    .reduce((sum, i) => sum + i.totalPence, 0);
-  const paid = invoices
-    .filter((i) => i.status === "paid")
     .reduce((sum, i) => sum + i.totalPence, 0);
   const overdue = invoices
     .filter((i) => isOverdue(i.dueOn, i.status))
     .reduce((sum, i) => sum + i.totalPence, 0);
+
+  const tiles: { label: string; value: number; tone: string }[] = [
+    { label: "Taken today", value: takenSince(startOfToday), tone: "" },
+    { label: "This week", value: takenSince(startOfWeek), tone: "" },
+    { label: "This month", value: takenSince(startOfMonth), tone: "" },
+  ];
+  // Only shown when there is something to show, so it never becomes a
+  // permanent zero nobody reads.
+  if (outstanding > 0) {
+    tiles.push({
+      label: overdue > 0 ? "Owed, some overdue" : "Still owed",
+      value: outstanding,
+      tone: overdue > 0 ? "text-amber-600 dark:text-amber-400" : "",
+    });
+  }
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-7 sm:px-8 lg:py-10">
@@ -74,7 +114,7 @@ export default async function InvoicesPage() {
             Invoices
           </h1>
           <p className="mt-1.5 text-sm text-muted">
-            Bill your customers, email it to them, and see what has come back.
+            Bill a customer, or write a receipt for a job already paid for.
           </p>
         </div>
         <Link
@@ -85,16 +125,12 @@ export default async function InvoicesPage() {
         </Link>
       </div>
 
-      <div className="mt-6 grid grid-cols-3 gap-3">
-        {[
-          { label: "Waiting to be paid", value: outstanding, tone: "" },
-          {
-            label: "Overdue",
-            value: overdue,
-            tone: overdue > 0 ? "text-amber-600 dark:text-amber-400" : "",
-          },
-          { label: "Paid, all time", value: paid, tone: "" },
-        ].map((tile) => (
+      <div
+        className={`mt-6 grid gap-3 ${
+          tiles.length === 4 ? "grid-cols-2 lg:grid-cols-4" : "grid-cols-3"
+        }`}
+      >
+        {tiles.map((tile) => (
           <div key={tile.label} className="rounded-2xl border border-border bg-surface p-4 sm:p-5">
             <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">
               {tile.label}

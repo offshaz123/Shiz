@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { InvoiceStatus } from "@/lib/invoices";
+import { PAID_METHODS, PAID_METHOD_WORD, type PaidMethod } from "@/lib/invoice-kinds";
+import type { InvoiceStatus } from "@/lib/invoice-kinds-status";
 
 /**
  * The buttons above an invoice: send it, mark it paid, save it as a PDF.
@@ -29,6 +30,7 @@ export function InvoiceActions({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [sent, setSent] = useState("");
+  const [asking, setAsking] = useState(false);
 
   async function act(body: Record<string, unknown>, failure: string, done: string) {
     setBusy(true);
@@ -60,7 +62,7 @@ export function InvoiceActions({
   return (
     <div className="print-hide">
       <div className="flex flex-wrap gap-2">
-        {status === "draft" && (
+        {status !== "cancelled" && (
           <button
             type="button"
             disabled={busy || !hasEmail}
@@ -69,15 +71,16 @@ export function InvoiceActions({
             }
             className="brand-gradient-bg rounded-full px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
           >
-            {busy ? "Sending…" : "Email it to them"}
+            {busy ? "Sending…" : status === "paid" ? "Email the receipt" : "Email it to them"}
           </button>
         )}
 
-        {status === "sent" && (
+        {status !== "paid" && status !== "cancelled" && (
           <button
             type="button"
             disabled={busy}
-            onClick={() => act({ status: "paid" }, "Not changed.", "Marked as paid.")}
+            onClick={() => setAsking(!asking)}
+            aria-expanded={asking}
             className="rounded-full border border-emerald-500/50 px-5 py-2.5 text-sm font-semibold text-emerald-600 disabled:opacity-50 dark:text-emerald-400"
           >
             Mark as paid
@@ -104,7 +107,33 @@ export function InvoiceActions({
         )}
       </div>
 
-      {status === "draft" && !hasEmail && (
+      {/* Asked at the moment it is marked paid rather than left blank,
+          because "how did they pay" is a question somebody can answer now
+          and cannot answer at all in three weeks. */}
+      {asking && (
+        <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl border border-border px-4 py-3">
+          <span className="text-xs text-muted">Paid by</span>
+          {PAID_METHODS.map((method: PaidMethod) => (
+            <button
+              key={method}
+              type="button"
+              disabled={busy}
+              onClick={() =>
+                act(
+                  { status: "paid", paidMethod: method },
+                  "Not changed.",
+                  `Marked as paid by ${PAID_METHOD_WORD[method]}.`,
+                ).then(() => setAsking(false))
+              }
+              className="rounded-full border border-border px-3.5 py-1.5 text-xs font-semibold capitalize text-foreground disabled:opacity-50"
+            >
+              {PAID_METHOD_WORD[method]}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {status !== "paid" && !hasEmail && (
         <p className="mt-2.5 text-xs text-muted">
           No email address on this one, so it cannot be emailed. Save it as a PDF and send it
           however you like.

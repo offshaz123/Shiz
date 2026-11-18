@@ -6,6 +6,7 @@ import {
   getSender,
   listInvoices,
   setInvoiceStatus,
+  asPaidMethod,
   setBusinessProfile,
   type InvoiceStatus,
 } from "@/lib/invoices";
@@ -66,6 +67,8 @@ export async function POST(request: Request) {
       pence: Math.round((Number((body as { discountAmount?: unknown })?.discountAmount) || 0) * 100),
     },
     notes: text(body, "notes"),
+    paidNow: (body as { paidNow?: unknown })?.paidNow === true,
+    paidMethod: asPaidMethod(text(body, "paidMethod")),
     lines: rawLines.map((line) => ({
       description: typeof line.description === "string" ? line.description : "",
       quantity: Number(line.quantity) || 0,
@@ -118,7 +121,12 @@ export async function PATCH(request: Request) {
     return NextResponse.json({ error: "bad_status" }, { status: 400 });
   }
 
-  const done = await setInvoiceStatus(client.id, id, status as InvoiceStatus);
+  const done = await setInvoiceStatus(
+    client.id,
+    id,
+    status as InvoiceStatus,
+    asPaidMethod(text(body, "paidMethod")),
+  );
   return done
     ? NextResponse.json({ ok: true })
     : NextResponse.json({ error: "not_changed" }, { status: 400 });

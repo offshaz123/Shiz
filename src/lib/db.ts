@@ -704,6 +704,16 @@ const ADDED_COLUMNS: {
     column: "discount_pence",
     definition: "INT NOT NULL DEFAULT 0",
   },
+
+  // How the money arrived. Most of these businesses are paid when the job
+  // is finished, standing next to the customer, so an invoice is usually a
+  // receipt rather than a request — and a receipt that does not say how it
+  // was paid is no use to the person keeping the books.
+  {
+    table: "client_invoices",
+    column: "paid_method",
+    definition: "VARCHAR(20) NULL",
+  },
 ];
 
 interface CountRow extends RowDataPacket {

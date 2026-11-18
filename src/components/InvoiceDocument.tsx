@@ -1,5 +1,5 @@
 import type { Invoice, InvoiceSender } from "@/lib/invoices";
-import { pounds } from "@/lib/invoices";
+import { PAID_METHOD_WORD, pounds } from "@/lib/invoices";
 import { siteConfig } from "@/lib/site-config";
 
 /**
@@ -18,12 +18,27 @@ import { siteConfig } from "@/lib/site-config";
  * no way to pay is printed as a line asking for it, because an invoice sent
  * with no payment details is worse than one not sent at all: the customer
  * has been asked for money and given no way to send it.
+ *
+ * Paid, it is a receipt rather than an invoice, and it says so in every
+ * place that would otherwise be asking: the word at the top, "Total paid"
+ * instead of "Total due", no due date, and the bank details replaced by
+ * what was actually handed over. A document that says "Total due" on money
+ * somebody has already given you is the fastest way to be paid twice or
+ * accused of asking.
  */
 
 function date(iso: string): string {
   if (!iso) return "";
   const at = new Date(`${iso}T12:00:00`);
   if (Number.isNaN(at.getTime())) return iso;
+  return at.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+}
+
+/** A stored timestamp, which is a moment rather than a day. */
+function stamp(value: string): string {
+  if (!value) return "";
+  const at = new Date(value);
+  if (Number.isNaN(at.getTime())) return "";
   return at.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
 }
 
@@ -47,6 +62,8 @@ export function InvoiceDocument({
   invoice: Invoice;
   sender: InvoiceSender;
 }) {
+  const paid = invoice.status === "paid";
+
   return (
     <article className="mx-auto w-full max-w-[820px] bg-white p-7 text-[#111827] sm:p-10">
       <header className="flex flex-wrap items-start justify-between gap-6 border-b border-[#e5e7eb] pb-7">
@@ -76,12 +93,24 @@ export function InvoiceDocument({
         </div>
 
         <div className="text-right text-[13px]">
-          <p className="text-2xl font-bold tracking-tight">INVOICE</p>
+          <p className="text-2xl font-bold tracking-tight">{paid ? "RECEIPT" : "INVOICE"}</p>
           <p className="mt-1 font-semibold tabular-nums">
             No. {String(invoice.number).padStart(4, "0")}
           </p>
-          <p className="mt-2 text-[#4b5563]">Issued {date(invoice.issuedOn)}</p>
-          {invoice.dueOn && <p className="text-[#4b5563]">Due {date(invoice.dueOn)}</p>}
+          <p className="mt-2 text-[#4b5563]">
+            {paid ? stamp(invoice.paidAt) || date(invoice.issuedOn) : `Issued ${date(invoice.issuedOn)}`}
+          </p>
+          {/* A due date on something already settled is a question the
+              customer should never have to ask themselves. */}
+          {!paid && invoice.dueOn && (
+            <p className="text-[#4b5563]">Due {date(invoice.dueOn)}</p>
+          )}
+          {paid && (
+            <p className="mt-2 inline-block rounded border-2 border-[#047857] px-2.5 py-1 text-[13px] font-bold tracking-wide text-[#047857]">
+              PAID
+              {invoice.paidMethod ? ` · ${PAID_METHOD_WORD[invoice.paidMethod]}` : ""}
+            </p>
+          )}
         </div>
       </header>
 
@@ -162,26 +191,41 @@ export function InvoiceDocument({
             </div>
           )}
           <div className="mt-1 flex justify-between border-t-2 border-[#111827] py-2.5 text-base font-bold">
-            <dt>Total due</dt>
+            <dt>{paid ? "Total paid" : "Total due"}</dt>
             <dd className="tabular-nums">{pounds(invoice.totalPence)}</dd>
           </div>
         </dl>
       </div>
 
       <footer className="mt-8 border-t border-[#e5e7eb] pt-5 text-[12px] leading-relaxed">
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-[#6b7280]">
-          How to pay
-        </p>
-        {sender.paymentDetails ? (
-          <p className="mt-1.5 text-[#374151]">
-            <Lines text={sender.paymentDetails} />
-          </p>
+        {paid ? (
+          <>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-[#6b7280]">
+              Payment received
+            </p>
+            <p className="mt-1.5 text-[#374151]">
+              {pounds(invoice.totalPence)} received
+              {invoice.paidMethod ? ` by ${PAID_METHOD_WORD[invoice.paidMethod]}` : ""}
+              {stamp(invoice.paidAt) ? ` on ${stamp(invoice.paidAt)}` : ""}. Thank you.
+            </p>
+          </>
         ) : (
-          // Said on the document rather than only in the dashboard, because
-          // this is the version that gets looked at before it is sent.
-          <p className="mt-1.5 font-medium text-[#b45309]">
-            No payment details yet — add them in Business details before you send this.
-          </p>
+          <>
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-[#6b7280]">
+              How to pay
+            </p>
+            {sender.paymentDetails ? (
+              <p className="mt-1.5 text-[#374151]">
+                <Lines text={sender.paymentDetails} />
+              </p>
+            ) : (
+              // Said on the document rather than only in the dashboard,
+              // because this is the version looked at before it is sent.
+              <p className="mt-1.5 font-medium text-[#b45309]">
+                No payment details yet — add them in Business details before you send this.
+              </p>
+            )}
+          </>
         )}
 
         {invoice.notes && (

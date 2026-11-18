@@ -1,6 +1,17 @@
 import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { withDb } from "./db";
 import { pounds, totals, type Discount, type InvoiceLine } from "./invoice-maths";
+import {
+  PAID_METHODS,
+  PAID_METHOD_WORD,
+  asPaidMethod,
+  type PaidMethod,
+} from "./invoice-kinds";
+
+import { INVOICE_STATUSES, asStatus, type InvoiceStatus } from "./invoice-kinds-status";
+
+export { PAID_METHODS, PAID_METHOD_WORD, asPaidMethod, INVOICE_STATUSES };
+export type { PaidMethod, InvoiceStatus };
 
 export type { Discount };
 import {
@@ -40,14 +51,7 @@ export type { InvoiceLine };
  * when it is created and keeps it even if it is later cancelled.
  */
 
-export type InvoiceStatus = "draft" | "sent" | "paid" | "cancelled";
 
-export const INVOICE_STATUSES: readonly InvoiceStatus[] = [
-  "draft",
-  "sent",
-  "paid",
-  "cancelled",
-];
 
 export type Invoice = {
   id: number;
@@ -65,6 +69,7 @@ export type Invoice = {
   status: InvoiceStatus;
   sentAt: string;
   paidAt: string;
+  paidMethod: PaidMethod | null;
   lines: InvoiceLine[];
   /** All pence. */
   subtotalPence: number;
@@ -126,6 +131,7 @@ interface InvoiceRow extends RowDataPacket {
   status: string;
   sent_at: string | null;
   paid_at: string | null;
+  paid_method: string | null;
 }
 
 interface LineRow extends RowDataPacket {
@@ -141,12 +147,6 @@ function day(value: string | Date | null): string {
   if (!value) return "";
   if (value instanceof Date) return value.toISOString().slice(0, 10);
   return String(value).slice(0, 10);
-}
-
-function asStatus(value: string): InvoiceStatus {
-  return (INVOICE_STATUSES as readonly string[]).includes(value)
-    ? (value as InvoiceStatus)
-    : "draft";
 }
 
 function build(row: InvoiceRow, lines: InvoiceLine[]): Invoice {
@@ -175,6 +175,7 @@ function build(row: InvoiceRow, lines: InvoiceLine[]): Invoice {
     status: asStatus(row.status),
     sentAt: row.sent_at ? String(row.sent_at) : "",
     paidAt: row.paid_at ? String(row.paid_at) : "",
+    paidMethod: asPaidMethod(row.paid_method ?? ""),
     lines,
     ...sums,
   };
@@ -191,7 +192,7 @@ function toLine(row: LineRow): InvoiceLine {
 
 const INVOICE_COLUMNS = `id, number, customer_name, customer_company, customer_email, customer_address,
   issued_on, due_on, vat_rate, discount_kind, discount_percent, discount_pence,
-  notes, status, sent_at, paid_at`;
+  notes, status, sent_at, paid_at, paid_method`;
 
 /** Every invoice this client has, newest first, with its lines. */
 export async function listInvoices(clientId: number): Promise<Invoice[] | null> {
@@ -261,6 +262,13 @@ export type NewInvoice = {
   discount: Discount;
   notes: string;
   lines: { description: string; quantity: number; unitPence: number }[];
+  /**
+   * Set when the money was taken as the job finished, which is how most of
+   * these businesses work. The invoice is then a receipt from the moment
+   * it exists and never appears as something owed.
+   */
+  paidNow: boolean;
+  paidMethod: PaidMethod | null;
 };
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -298,8 +306,9 @@ export async function createInvoice(
       `INSERT INTO client_invoices
          (client_id, number, customer_name, customer_company, customer_email,
           customer_address, issued_on, due_on, vat_rate,
-          discount_kind, discount_percent, discount_pence, notes)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          discount_kind, discount_percent, discount_pence, notes,
+          status, paid_at, paid_method)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         clientId,
         seq.next,
@@ -314,6 +323,9 @@ export async function createInvoice(
         Math.min(Math.max(Number(input.discount.percent) || 0, 0), 100),
         Math.max(Math.round(Number(input.discount.pence) || 0), 0),
         input.notes.trim().slice(0, 2000) || null,
+        input.paidNow ? "paid" : "draft",
+        input.paidNow ? new Date() : null,
+        input.paidNow ? (input.paidMethod ?? "other") : null,
       ],
     );
 
@@ -342,19 +354,28 @@ export async function setInvoiceStatus(
   clientId: number,
   id: number,
   status: InvoiceStatus,
+  method: PaidMethod | null = null,
 ): Promise<boolean> {
-  const stamp =
-    status === "paid"
-      ? ", paid_at = COALESCE(paid_at, NOW())"
-      : status === "sent"
-        ? ", sent_at = COALESCE(sent_at, NOW())"
-        : "";
+  const sets = ["status = ?"];
+  const params: (string | number)[] = [status];
+
+  if (status === "paid") {
+    sets.push("paid_at = COALESCE(paid_at, NOW())");
+    // Only written when it is given, so marking an already-paid invoice
+    // paid again cannot wipe how it was paid the first time.
+    if (method) {
+      sets.push("paid_method = ?");
+      params.push(method);
+    }
+  } else if (status === "sent") {
+    sets.push("sent_at = COALESCE(sent_at, NOW())");
+  }
 
   const done = await withDb(async (db) => {
     const [result] = await db.execute<ResultSetHeader>(
-      `UPDATE client_invoices SET status = ?${stamp}
+      `UPDATE client_invoices SET ${sets.join(", ")}
         WHERE id = ? AND client_id = ? AND status <> 'cancelled'`,
-      [status, id, clientId],
+      [...params, id, clientId],
     );
     return result.affectedRows > 0;
   });
