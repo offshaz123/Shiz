@@ -319,6 +319,11 @@ export type AdminClient = {
   logoUrl: string;
   autoReplyOn: boolean;
   autoReplyText: string;
+  /** When the last enquiry arrived, or "" if none ever has. A client who
+   *  has gone quiet is the one thing on the list worth noticing. */
+  lastLeadAt: string;
+  /** When they last signed in, or "" if they never have. */
+  lastLoginAt: string;
 };
 
 export async function listClients(): Promise<AdminClient[] | null> {
@@ -339,12 +344,16 @@ export async function listClients(): Promise<AdminClient[] | null> {
         logo_url: string | null;
         auto_reply_on: number;
         auto_reply_text: string | null;
+        last_lead_at: string | null;
+        last_login_at: string | null;
       })[]
     >(
       `SELECT c.id, c.slug, c.name, c.contact_email, c.is_active, c.password_hash, c.created_at,
               c.review_link, c.review_requests_on, c.default_lead_value,
-              c.logo_url, c.auto_reply_on, c.auto_reply_text,
-              (SELECT COUNT(*) FROM client_leads l WHERE l.client_id = c.id) AS leads
+              c.logo_url, c.auto_reply_on, c.auto_reply_text, c.last_login_at,
+              (SELECT COUNT(*) FROM client_leads l WHERE l.client_id = c.id) AS leads,
+              (SELECT MAX(l.created_at) FROM client_leads l WHERE l.client_id = c.id)
+                AS last_lead_at
          FROM clients c
         ORDER BY c.is_active DESC, c.name ASC`,
     );
@@ -363,8 +372,27 @@ export async function listClients(): Promise<AdminClient[] | null> {
       logoUrl: r.logo_url ?? "",
       autoReplyOn: Boolean(r.auto_reply_on),
       autoReplyText: r.auto_reply_text ?? "",
+      lastLeadAt: r.last_lead_at === null ? "" : String(r.last_lead_at),
+      lastLoginAt: r.last_login_at === null ? "" : String(r.last_login_at),
     }));
   });
+}
+
+/**
+ * One client's whole record, by the name they sign in with.
+ *
+ * Reads the list rather than its own query: the list is already one row
+ * per client with every column the admin side shows, and a second query
+ * that selects nearly the same columns is a second place to forget a new
+ * one. There are tens of clients, not thousands.
+ *
+ * Deliberately not filtered by is_active. A paused client is exactly the
+ * one somebody needs to open, to see why and to switch them back on.
+ */
+export async function getAdminClient(slug: string): Promise<AdminClient | null> {
+  const wanted = slug.trim().toLowerCase();
+  const all = await listClients();
+  return all?.find((client) => client.slug === wanted) ?? null;
 }
 
 /** Returns the new client's id, or null if the slug is taken. */

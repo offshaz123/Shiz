@@ -89,12 +89,18 @@ export function ClientDashboard({
   trend,
   leads,
   isSample = false,
+  readOnly = false,
 }: {
   summary: ClientSummary;
   trend: MonthPoint[];
   leads: ClientLead[];
   /** True when there is nothing real yet and these are example figures. */
   isSample?: boolean;
+  /** Shown to somebody who is not the client — the admin side looking at
+   *  what the client sees. The figures are theirs to read and not ours to
+   *  change: marking an enquiry answered from here would put a reply time
+   *  on their page that nobody replied in. */
+  readOnly?: boolean;
 }) {
   const busiest = Math.max(1, ...trend.map((m) => m.leads));
   const unanswered = summary.leads - summary.answered;
@@ -295,7 +301,7 @@ export function ClientDashboard({
                   </p>
                 </div>
 
-                <LeadViews leads={leads} readOnly={isSample} />
+                <LeadViews leads={leads} readOnly={isSample || readOnly} />
               </section>
             ),
           },

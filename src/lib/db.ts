@@ -464,6 +464,15 @@ const ADDED_COLUMNS: {
     column: "auto_reply_text",
     definition: "TEXT NULL AFTER auto_reply_on",
   },
+  // Stamped each time a client signs in. The one honest answer to "are
+  // they actually using it", which matters before a renewal call: a client
+  // who has not opened their dashboard in two months did not read the
+  // figures we keep pointing them at.
+  {
+    table: "clients",
+    column: "last_login_at",
+    definition: "DATETIME NULL",
+  },
   // Their logo, so the portal reads as their system rather than ours.
   {
     table: "clients",

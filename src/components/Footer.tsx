@@ -32,6 +32,10 @@ const companyLinks = [
   { href: "/walid", label: "Talk to Walid" },
   { href: "/leave-a-review", label: "Leave a Review" },
   { href: "/contact", label: "Contact" },
+  // A client who has lost the link has nowhere to click otherwise, and the
+  // footer is where people look for a way in. It is a sign-in box, not a
+  // page with anything on it, so it gives nothing away by being listed.
+  { href: "/portal", label: "Client Login" },
   { href: "/privacy", label: "Privacy Policy" },
 ];
 

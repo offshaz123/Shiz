@@ -88,6 +88,17 @@ export async function checkClientLogin(
   if (!found || !found.is_active) return null;
   if (!found.password_hash || !found.password_salt) return null;
   if (!verifyPassword(password, found.password_hash, found.password_salt)) return null;
+
+  // Stamped here rather than in currentClient, which runs on every page
+  // view: this answers "when did they last come to look", and a write on
+  // each request would answer "when did they last load a page", besides
+  // writing to the clients table a few times a minute while they read.
+  // A failure to record it must not stop them signing in.
+  await withDb(async (db) => {
+    await db.execute("UPDATE clients SET last_login_at = NOW() WHERE id = ?", [found.id]);
+    return true;
+  });
+
   return { id: found.id, slug: found.slug, name: found.name };
 }
 
