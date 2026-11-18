@@ -16,6 +16,81 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "the-four-numbers-a-small-business-actually-needs-from-its-marketing",
+    title: "The Four Numbers a Small Business Actually Needs From Its Marketing",
+    description:
+      "Most marketing reports are twelve pages of numbers that change nothing. Here are the four worth knowing, and the popular ones quietly wasting your attention.",
+    publishedAt: "2026-11-18",
+    keywords: [
+      "marketing metrics for small business",
+      "what to measure marketing small business",
+      "cost per lead UK",
+      "marketing report small business",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Ask most agencies for a report and you get twelve pages. Impressions, reach, click-through rate, engagement, a graph that goes up and to the right, and somewhere near the back, if you are lucky, how many people actually got in touch.",
+          "Almost none of it changes what anybody does on Monday. Four numbers do.",
+        ],
+      },
+      {
+        heading: "1. How many enquiries, and from where",
+        paragraphs: [
+          "Not clicks. Not visits. People who rang, filled something in, or messaged you, counted separately by where they came from.",
+          "The \"from where\" is the part that gets skipped and it is the part that matters. Forty enquiries is a nice number and a useless one. Forty enquiries of which twenty-eight came from Google Ads, nine from the map listing and three from Instagram is a number you can act on, because now you know which one to put more into.",
+          "If nobody can tell you the split, nobody can tell you what is working, and every decision after that is a guess wearing a chart.",
+        ],
+      },
+      {
+        heading: "2. What each enquiry cost",
+        paragraphs: [
+          "Advertising spend divided by enquiries. That is the whole calculation, and it is the single most useful figure in small business marketing.",
+          "It is useful because it is comparable. It tells you whether this month beat last month, and whether the thing you changed helped. It also sets a ceiling: once you know an enquiry costs you a certain amount and you know how many enquiries become customers, you know what you can afford to spend before the maths stops working.",
+          "Be careful comparing it to anybody else's. Cost per enquiry varies enormously between trades, towns and seasons, so a figure that is excellent in one market is poor in another. The only comparison that means much is against your own last three months.",
+        ],
+      },
+      {
+        heading: "3. How many became customers",
+        paragraphs: [
+          "The number that stops you optimising the wrong thing.",
+          "Cheap enquiries are easy to manufacture. Widen the targeting, loosen the wording, ask for less on the form, and the cost per enquiry falls while the quality falls faster. The only way to catch that is to track what happens after the enquiry arrives.",
+          "This one usually has to come from you rather than from the ad account, because the sale happens in your diary and not on a platform. A column in a spreadsheet is enough to start. Without it, a report can show everything improving while the business gets quieter, which happens more often than anyone admits.",
+        ],
+      },
+      {
+        heading: "4. How fast you answer",
+        paragraphs: [
+          "The one nobody measures and most people lose work to.",
+          "An enquiry that sits for a day is competing with every other business the person contacted that afternoon. You do not need a study to know how that ends, because you have been the customer in that situation yourself.",
+          "Measuring it is simple: the time between the enquiry arriving and a real human responding. Watch it for a fortnight and most businesses find a pattern they did not know about, usually involving evenings, weekends, or whoever covers the phone on a Thursday.",
+          "It is also the cheapest of the four to fix. No budget, no new campaign, just answering faster.",
+        ],
+      },
+      {
+        heading: "What to stop looking at",
+        paragraphs: [
+          "Impressions and reach tell you a number was dialled, not that anybody picked up. Click-through rate matters to the person managing the ads and should not be the headline on a report to a business owner. Follower count has never in itself paid for a van.",
+          "None of these are fake numbers and none are useless to a specialist. They are just the wrong altitude for the person deciding whether to keep spending.",
+          "A reasonable test for any figure in a marketing report: if it went up by half, would you do anything differently? If not, it is decoration.",
+        ],
+        bullets: [
+          "Enquiries, split by where they came from.",
+          "Cost per enquiry, compared only to your own history.",
+          "How many became customers.",
+          "How long they waited for an answer.",
+        ],
+      },
+      {
+        heading: "Where the numbers come from",
+        paragraphs: [
+          "Enquiries and cost per enquiry come out of the ad platforms, provided conversion tracking is actually set up, which on a surprising number of accounts it is not. Customers and response time come from you.",
+          "That split is worth knowing when you read a report. An agency can hand you the first two honestly; the last two only exist if someone is writing them down. If nobody is, that is the first thing to fix, and it costs nothing but the habit.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "why-pausing-the-wrong-thing-resets-your-campaign",
     title: "Why Pausing the Wrong Thing Resets Your Campaign",
     description:

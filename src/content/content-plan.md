@@ -485,7 +485,7 @@ site audit tool actually measures, or from a primary source that does load.
       small business website have", "small business website structure"
 - [x] What Happens to a Lead When Nobody Answers the Phone — target: "missed calls losing
       business", "responding to enquiries fast"
-- [ ] The Four Numbers a Small Business Actually Needs From Its Marketing — target: "marketing
+- [x] The Four Numbers a Small Business Actually Needs From Its Marketing — target: "marketing
       metrics for small business", "what to measure marketing small business"
 - [ ] Is a Paid Directory Listing Worth It? — target: "are paid directory listings worth it UK",
       "Yell advertising worth it"
