@@ -39,6 +39,9 @@ export const sampleSummary: ClientSummary = {
   costPerLead: 20,
   medianHoursToReply: 2,
   answered: 21,
+  wonValue: 3250,
+  openValue: 1870,
+  returnOnSpend: 6.8,
 };
 
 export const sampleTrend: MonthPoint[] = (() => {
@@ -74,6 +77,7 @@ export const sampleLeads: ClientLead[] = [
     message: "This is what an enquiry looks like when it arrives. Yours will show here instead.",
     source: "google",
     status: "customer",
+    value: 850,
     createdAt: new Date(Date.now() - 6 * 3600_000).toISOString().slice(0, 19).replace("T", " "),
     firstRepliedAt: new Date(Date.now() - 5 * 3600_000).toISOString().slice(0, 19).replace("T", " "),
     hoursToReply: 1,
@@ -86,6 +90,7 @@ export const sampleLeads: ClientLead[] = [
     message: "Somebody who rang rather than filled anything in.",
     source: "maps",
     status: "new",
+    value: null,
     createdAt: new Date(Date.now() - 30 * 3600_000).toISOString().slice(0, 19).replace("T", " "),
     firstRepliedAt: null,
     hoursToReply: null,
@@ -98,6 +103,7 @@ export const sampleLeads: ClientLead[] = [
     message: "An enquiry from a Facebook or Instagram ad.",
     source: "meta",
     status: "quoted",
+    value: 420,
     createdAt: new Date(Date.now() - 52 * 3600_000).toISOString().slice(0, 19).replace("T", " "),
     firstRepliedAt: new Date(Date.now() - 50 * 3600_000).toISOString().slice(0, 19).replace("T", " "),
     hoursToReply: 2,

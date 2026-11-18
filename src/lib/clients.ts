@@ -25,6 +25,8 @@ export type ClientLead = {
   message: string;
   source: string;
   status: string;
+  /** What the job is worth, when they have put a number on it. */
+  value: number | null;
   createdAt: string;
   firstRepliedAt: string | null;
   /** Hours between arriving and being answered. Null while unanswered. */
@@ -45,6 +47,13 @@ export type ClientSummary = {
   /** Null until at least one lead has been answered. */
   medianHoursToReply: number | null;
   answered: number;
+  /** Total value of the leads marked won this month. */
+  wonValue: number;
+  /** Value won for every pound of advertising. Null without both figures,
+   *  because a return with no spend behind it is not a return. */
+  returnOnSpend: number | null;
+  /** Still in play: everything not yet won or lost. */
+  openValue: number;
 };
 
 export type MonthPoint = { month: string; leads: number; customers: number; spend: number };
@@ -57,6 +66,7 @@ interface LeadRow extends RowDataPacket {
   message: string | null;
   source: string;
   status: string;
+  value: string | null;
   created_at: string;
   first_replied_at: string | null;
   hours_to_reply: number | null;
@@ -71,13 +81,14 @@ function toLead(row: LeadRow): ClientLead {
     message: row.message ?? "",
     source: row.source,
     status: row.status,
+    value: row.value === null ? null : Number(row.value),
     createdAt: String(row.created_at),
     firstRepliedAt: row.first_replied_at ? String(row.first_replied_at) : null,
     hoursToReply: row.hours_to_reply === null ? null : Number(row.hours_to_reply),
   };
 }
 
-const LEAD_COLUMNS = `id, name, email, phone, message, source, status, created_at,
+const LEAD_COLUMNS = `id, name, email, phone, message, source, status, value, created_at,
          first_replied_at,
          TIMESTAMPDIFF(HOUR, created_at, first_replied_at) AS hours_to_reply`;
 
@@ -119,11 +130,19 @@ export async function getClientSummary(
 
   return withDb(async (db) => {
     const [[totals]] = await db.query<
-      (RowDataPacket & { leads: number; customers: number; answered: number })[]
+      (RowDataPacket & {
+        leads: number;
+        customers: number;
+        answered: number;
+        won_value: string | null;
+        open_value: string | null;
+      })[]
     >(
       `SELECT COUNT(*) AS leads,
               SUM(status = 'customer') AS customers,
-              SUM(first_replied_at IS NOT NULL) AS answered
+              SUM(first_replied_at IS NOT NULL) AS answered,
+              SUM(CASE WHEN status = 'customer' THEN value ELSE 0 END) AS won_value,
+              SUM(CASE WHEN status NOT IN ('customer', 'lost') THEN value ELSE 0 END) AS open_value
          FROM client_leads
         WHERE client_id = ?
           AND created_at >= ?
@@ -162,6 +181,7 @@ export async function getClientSummary(
 
     const leads = Number(totals?.leads ?? 0);
     const spend = Number(spendRow?.total ?? 0);
+    const wonValue = Number(totals?.won_value ?? 0);
     const hours = replied.map((r) => Number(r.hours)).sort((a, b) => a - b);
     const median =
       hours.length === 0
@@ -180,6 +200,10 @@ export async function getClientSummary(
       // No spend recorded is not the same as free, so it reads as unknown.
       costPerLead: spend > 0 && leads > 0 ? Math.round((spend / leads) * 100) / 100 : null,
       medianHoursToReply: median,
+      wonValue,
+      openValue: Number(totals?.open_value ?? 0),
+      returnOnSpend:
+        spend > 0 && wonValue > 0 ? Math.round((wonValue / spend) * 10) / 10 : null,
     };
   });
 }
@@ -233,6 +257,7 @@ export type AdminClient = {
   createdAt: string;
   reviewLink: string;
   reviewRequestsOn: boolean;
+  defaultLeadValue: number | null;
 };
 
 export async function listClients(): Promise<AdminClient[] | null> {
@@ -249,10 +274,11 @@ export async function listClients(): Promise<AdminClient[] | null> {
         leads: number;
         review_link: string | null;
         review_requests_on: number;
+        default_lead_value: string | null;
       })[]
     >(
       `SELECT c.id, c.slug, c.name, c.contact_email, c.is_active, c.password_hash, c.created_at,
-              c.review_link, c.review_requests_on,
+              c.review_link, c.review_requests_on, c.default_lead_value,
               (SELECT COUNT(*) FROM client_leads l WHERE l.client_id = c.id) AS leads
          FROM clients c
         ORDER BY c.is_active DESC, c.name ASC`,
@@ -268,6 +294,7 @@ export async function listClients(): Promise<AdminClient[] | null> {
       createdAt: String(r.created_at),
       reviewLink: r.review_link ?? "",
       reviewRequestsOn: Boolean(r.review_requests_on),
+      defaultLeadValue: r.default_lead_value === null ? null : Number(r.default_lead_value),
     }));
   });
 }
@@ -325,6 +352,21 @@ export async function setClientActive(id: number, active: boolean): Promise<bool
  * requires both, so a half-finished setup sends nothing rather than
  * sending something broken.
  */
+export async function setDefaultLeadValue(
+  id: number,
+  value: number | null,
+): Promise<boolean> {
+  if (value !== null && (!Number.isFinite(value) || value < 0 || value > 99_999_999)) return false;
+  const done = await withDb(async (db) => {
+    const [result] = await db.execute<ResultSetHeader>(
+      "UPDATE clients SET default_lead_value = ? WHERE id = ?",
+      [value === null ? null : Math.round(value * 100) / 100, id],
+    );
+    return result.affectedRows > 0;
+  });
+  return done ?? false;
+}
+
 export async function setClientReviews(
   id: number,
   changes: { reviewLink?: string; reviewRequestsOn?: boolean },
@@ -389,9 +431,15 @@ export async function recordClientLead(
   },
 ): Promise<boolean> {
   const done = await withDb(async (db) => {
+    // The client's own figure, read at the moment the lead arrives rather
+    // than joined at read time. A business that puts its average job up
+    // from £400 to £600 should not have last year's enquiries silently
+    // revalue themselves.
     await db.execute(
-      `INSERT INTO client_leads (client_id, name, email, phone, message, source, landing_page)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO client_leads
+         (client_id, name, email, phone, message, source, landing_page, value)
+       SELECT ?, ?, ?, ?, ?, ?, ?, default_lead_value
+         FROM clients WHERE id = ?`,
       [
         clientId,
         lead.name.slice(0, 160) || null,
@@ -400,6 +448,7 @@ export async function recordClientLead(
         lead.message.slice(0, 4000) || null,
         lead.source.slice(0, 40) || "website",
         lead.landingPage.slice(0, 255) || null,
+        clientId,
       ],
     );
     return true;
@@ -425,6 +474,29 @@ export async function markLeadAnswered(clientId: number, leadId: number): Promis
       `UPDATE client_leads SET first_replied_at = COALESCE(first_replied_at, NOW())
         WHERE id = ? AND client_id = ?`,
       [leadId, clientId],
+    );
+    return result.affectedRows > 0;
+  });
+  return done ?? false;
+}
+
+/**
+ * What the job came to.
+ *
+ * Separate from the status because the two do not always move together: a
+ * quote gets a number before anybody has won anything, and a figure gets
+ * corrected after the fact without the stage changing.
+ */
+export async function setLeadValue(
+  clientId: number,
+  leadId: number,
+  value: number | null,
+): Promise<boolean> {
+  if (value !== null && (!Number.isFinite(value) || value < 0 || value > 99_999_999)) return false;
+  const done = await withDb(async (db) => {
+    const [result] = await db.execute<ResultSetHeader>(
+      "UPDATE client_leads SET value = ? WHERE id = ? AND client_id = ?",
+      [value === null ? null : Math.round(value * 100) / 100, leadId, clientId],
     );
     return result.affectedRows > 0;
   });

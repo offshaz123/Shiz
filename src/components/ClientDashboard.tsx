@@ -1,5 +1,5 @@
 import type { ClientLead, ClientSummary, MonthPoint } from "@/lib/clients";
-import { LeadList } from "./LeadList";
+import { LeadViews } from "./LeadViews";
 
 /**
  * What a client sees about their own marketing.
@@ -110,7 +110,7 @@ export function ClientDashboard({
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
         <Tile
           label="Enquiries"
           value={String(summary.leads)}
@@ -136,6 +136,18 @@ export function ClientDashboard({
           }
         />
         <Tile
+          label="Won this month"
+          value={summary.wonValue > 0 ? money(summary.wonValue) : "—"}
+          tone={summary.wonValue > 0 ? "plain" : "quiet"}
+          note={
+            summary.returnOnSpend === null
+              ? summary.wonValue > 0
+                ? "No ad spend recorded to compare it against"
+                : "Nothing marked won yet"
+              : `£${summary.returnOnSpend} back for every £1 of advertising`
+          }
+        />
+        <Tile
           label="Typical reply time"
           value={summary.medianHoursToReply === null ? "—" : waited(summary.medianHoursToReply)}
           tone={summary.medianHoursToReply === null ? "quiet" : "plain"}
@@ -152,7 +164,10 @@ export function ClientDashboard({
       <div className="grid gap-5 lg:grid-cols-2">
         <section className="rounded-2xl border border-border bg-surface p-5">
           <h2 className="text-sm font-semibold text-foreground">Where your enquiries came from</h2>
-          <p className="mt-0.5 text-xs text-muted">{monthName(summary.month)}</p>
+          <p className="mt-0.5 text-xs text-muted">
+            {monthName(summary.month)}
+            {summary.openValue > 0 && ` · ${money(summary.openValue)} still in play`}
+          </p>
 
           {summary.bySource.length === 0 ? (
             <p className="mt-5 text-sm text-muted">No enquiries recorded this month yet.</p>
@@ -245,12 +260,12 @@ export function ClientDashboard({
         <div className="border-b border-border px-5 py-4">
           <h2 className="text-sm font-semibold text-foreground">Your enquiries</h2>
           <p className="mt-0.5 text-xs text-muted">
-            Newest first. Mark one answered and move it along as you go — that is where the
-            customer count and the reply time above come from.
+            Mark one answered and move it along as you go. That is where the customer count and
+            the reply time above come from.
           </p>
         </div>
 
-        <LeadList leads={leads} readOnly={isSample} />
+        <LeadViews leads={leads} readOnly={isSample} />
       </section>
 
       {isSample && (

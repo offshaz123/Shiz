@@ -290,6 +290,33 @@ export function ClientManager() {
                   </div>
 
                   <div className="mt-3 flex flex-wrap items-end gap-2 border-t border-border pt-3">
+                    <label className="flex flex-col gap-1">
+                      <span className="text-[11px] text-muted">Average job value £</span>
+                      <input
+                        defaultValue={client.defaultLeadValue ?? ""}
+                        onBlur={(e) => {
+                          const next = e.target.value.trim();
+                          if (next !== String(client.defaultLeadValue ?? "")) {
+                            void patch(
+                              client.id,
+                              { defaultLeadValue: next === "" ? null : Number(next) },
+                              "That value did not save.",
+                            );
+                          }
+                        }}
+                        placeholder="500"
+                        inputMode="decimal"
+                        className="w-24 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs text-foreground"
+                      />
+                    </label>
+                  </div>
+                  <p className="mt-1.5 text-[11px] leading-relaxed text-muted">
+                    What one job is worth to them on average. Every new enquiry comes in at this
+                    figure, so their revenue fills in by itself. They can change it on a single
+                    job that was bigger or smaller.
+                  </p>
+
+                  <div className="mt-3 flex flex-wrap items-end gap-2 border-t border-border pt-3">
                     <label className="flex min-w-0 flex-1 flex-col gap-1">
                       <span className="text-[11px] text-muted">
                         Their Google review link

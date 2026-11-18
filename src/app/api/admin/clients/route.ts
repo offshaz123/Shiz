@@ -7,6 +7,7 @@ import {
   setClientPassword,
   setClientReviews,
   setClientSpend,
+  setDefaultLeadValue,
 } from "@/lib/clients";
 
 export const runtime = "nodejs";
@@ -76,6 +77,15 @@ export async function PATCH(request: Request) {
   if (typeof body?.isActive === "boolean") {
     const ok = await setClientActive(id, body.isActive);
     return ok ? NextResponse.json({ ok: true }) : NextResponse.json({ error: "not_saved" }, { status: 503 });
+  }
+
+  if (body?.defaultLeadValue !== undefined) {
+    const raw = body.defaultLeadValue;
+    const value = raw === null || raw === "" ? null : Number(raw);
+    const ok = await setDefaultLeadValue(id, value);
+    return ok
+      ? NextResponse.json({ ok: true })
+      : NextResponse.json({ error: "bad_value" }, { status: 400 });
   }
 
   if (typeof body?.reviewLink === "string" || typeof body?.reviewRequestsOn === "boolean") {

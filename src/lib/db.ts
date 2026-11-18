@@ -445,6 +445,37 @@ const ADDED_COLUMNS: {
   // The backfill is exactly right rather than a guess: every row that
   // existed before this column did was sent under the old rule, so step 1
   // was a person and anything later was the scheduler.
+  // What a lead is worth to this business, on average.
+  //
+  // Set once per client, and every enquiry that arrives inherits it. The
+  // alternative is asking somebody to type a figure on every lead, which
+  // sounds reasonable and in practice means the revenue column stays empty
+  // forever: nobody does admin on the ten enquiries they did not win.
+  //
+  // One number set at setup is a worse estimate than ten typed by hand and
+  // a far better one than nothing, and the per-lead figure is still there
+  // for the job that was plainly not average.
+  {
+    table: "clients",
+    column: "default_lead_value",
+    definition: "DECIMAL(10,2) NULL AFTER review_requests_on",
+  },
+  // What the job was worth.
+  //
+  // The figure that turns a board into a business. Enquiries and cost per
+  // enquiry say what marketing cost; this is the only thing that says what
+  // it brought back, and "you spent six hundred and won four thousand two
+  // hundred" is the sentence every one of these conversations is actually
+  // about.
+  //
+  // On the lead rather than the booking, because a quote is worth tracking
+  // before anybody has booked anything in, and a lost quote's value is
+  // worth knowing too.
+  {
+    table: "client_leads",
+    column: "value",
+    definition: "DECIMAL(10,2) NULL AFTER status",
+  },
   // Where a client's customers are asked to leave a review.
   //
   // Their own Google review link, which is per business and cannot be
