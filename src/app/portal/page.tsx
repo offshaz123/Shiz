@@ -5,6 +5,8 @@ import { ClientDashboard } from "@/components/ClientDashboard";
 import { sampleLeads, sampleSummary, sampleTrend } from "@/lib/client-sample";
 import { LoginForm } from "./LoginForm";
 import { clientLogout } from "./actions";
+import { PortalNav } from "@/components/PortalNav";
+import { InstallPrompt } from "@/components/InstallPrompt";
 import { siteConfig } from "@/lib/site-config";
 
 export const dynamic = "force-dynamic";
@@ -55,17 +57,24 @@ export default async function PortalPage({
             Your enquiries and what they cost, updated as they come in.
           </p>
         </div>
-        <form action={clientLogout}>
-          <button
-            type="submit"
-            className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
-          >
-            Sign out
-          </button>
-        </form>
+        <div className="flex flex-wrap items-center gap-3">
+          <PortalNav />
+          <form action={clientLogout}>
+            <button
+              type="submit"
+              className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
+            >
+              Sign out
+            </button>
+          </form>
+        </div>
       </div>
 
       <div className="mt-6">
+        <InstallPrompt />
+      </div>
+
+      <div className="mt-5">
         {summary ? (
           // Nothing real yet means the page shows the shape of the thing
           // rather than an empty screen on the day they sign. The moment one

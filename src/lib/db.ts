@@ -223,6 +223,46 @@ const SCHEMA = [
       REFERENCES clients (id) ON DELETE CASCADE
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
+  // A job in a client's diary.
+  //
+  // The thing a local business actually runs its week on. An enquiry is
+  // only worth anything once it is a time in a diary, and until now the
+  // dashboard could show the enquiry and then lost sight of it.
+  //
+  // `lead_id` is optional and ON DELETE SET NULL: most bookings come from
+  // an enquiry, some are regulars who just ring up, and a booking must
+  // outlive the enquiry record it came from either way.
+  //
+  // Times are stored as a date and a time rather than one DATETIME because
+  // the reminders work on whole days — "tomorrow's jobs", "today's jobs" —
+  // and a date column makes that a comparison rather than a range.
+  `CREATE TABLE IF NOT EXISTS client_bookings (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    client_id INT UNSIGNED NOT NULL,
+    lead_id INT UNSIGNED NULL,
+    customer_name VARCHAR(160) NOT NULL,
+    phone VARCHAR(60) NULL,
+    email VARCHAR(200) NULL,
+    job VARCHAR(255) NULL,
+    notes TEXT NULL,
+    booked_on DATE NOT NULL,
+    starts_at TIME NULL,
+    duration_minutes SMALLINT UNSIGNED NULL,
+    price DECIMAL(10,2) NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'booked',
+    /** Stamped when the day-before reminder went, so it cannot go twice. */
+    reminded_at DATETIME NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    KEY idx_client_day (client_id, booked_on),
+    KEY idx_reminders (booked_on, reminded_at),
+    CONSTRAINT fk_bookings_client FOREIGN KEY (client_id)
+      REFERENCES clients (id) ON DELETE CASCADE,
+    CONSTRAINT fk_bookings_lead FOREIGN KEY (lead_id)
+      REFERENCES client_leads (id) ON DELETE SET NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
   // Businesses we might ring, and what happened when we did.
   //
   // Keyed on Google's own place ID so the same business found twice — once
