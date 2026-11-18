@@ -39,6 +39,28 @@ const PAGES = [
       </>
     ),
   },
+  {
+    href: "/portal/invoices",
+    label: "Invoices",
+    note: "Bill your customers",
+    icon: (
+      <>
+        <path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2V3z" />
+        <path d="M9 8h6M9 12h6" />
+      </>
+    ),
+  },
+  {
+    href: "/portal/business",
+    label: "Business details",
+    note: "What goes on your invoices",
+    icon: (
+      <>
+        <path d="M3 21h18M5 21V7l7-4 7 4v14" />
+        <path d="M10 21v-6h4v6" />
+      </>
+    ),
+  },
 ];
 
 function Mark({ name, logo, size }: { name: string; logo: string; size: string }) {
@@ -146,7 +168,9 @@ export function PortalShell({
             </button>
           </form>
         </div>
-        <nav className="flex gap-1 px-4 pb-3">
+        {/* Scrolls sideways rather than wrapping to two rows: four pills
+            stacked would be as much of the screen as the nav it replaced. */}
+        <nav className="flex gap-1.5 overflow-x-auto px-4 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {PAGES.map((page) => {
             const here = current === page.href;
             return (
@@ -154,7 +178,7 @@ export function PortalShell({
                 key={page.href}
                 href={page.href}
                 aria-current={here ? "page" : undefined}
-                className={`rounded-full px-4 py-2 text-xs font-semibold transition ${
+                className={`shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition ${
                   here ? "bg-brand-pink text-white" : "border border-border text-muted"
                 }`}
               >

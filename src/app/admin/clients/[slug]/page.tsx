@@ -11,6 +11,7 @@ import {
 import { listUpcoming } from "@/lib/bookings";
 import { ClientDashboard } from "@/components/ClientDashboard";
 import { ClientSettings } from "@/components/ClientSettings";
+import { ClientLoginLink } from "@/components/ClientLoginLink";
 import { LoginForm } from "../../LoginForm";
 
 export const dynamic = "force-dynamic";
@@ -118,7 +119,11 @@ export default async function AdminClientPage({
         </div>
       </div>
 
-      <section className="mt-7">
+      <div className="mt-7">
+        <ClientLoginLink slug={client.slug} name={client.name} />
+      </div>
+
+      <section className="mt-8">
         <h2 className="text-sm font-bold text-foreground">What they see</h2>
         <p className="mt-0.5 text-xs leading-relaxed text-muted">
           Their own dashboard, exactly as it looks to them. Read-only here — marking an enquiry

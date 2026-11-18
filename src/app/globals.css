@@ -909,3 +909,42 @@ body {
     animation: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Printing an invoice
+
+   The browser's own print dialog is how an invoice becomes a PDF: every
+   desktop browser and iOS Safari offer "Save as PDF" from it, and what
+   comes out is the document itself rather than a second rendering of it
+   written against a PDF library that would drift from the page on screen.
+
+   So everything that is not the invoice is removed for print: the side
+   column, the page heading, the buttons, and the dark background the rest
+   of the portal is painted on.
+--------------------------------------------------------------------------- */
+
+@media print {
+  .print-hide {
+    display: none !important;
+  }
+
+  /* The invoice is already white. The page around it has to stop being
+     anything at all, or a dark theme prints as a black sheet. */
+  html,
+  body {
+    background: #ffffff !important;
+  }
+
+  .print-sheet {
+    position: absolute;
+    inset: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  @page {
+    margin: 14mm;
+  }
+}

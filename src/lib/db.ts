@@ -343,6 +343,60 @@ const SCHEMA = [
     CONSTRAINT fk_prospect_emails_prospect FOREIGN KEY (prospect_id)
       REFERENCES prospects (id) ON DELETE CASCADE
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  // An invoice a client sends to their own customer.
+  //
+  // Money is held in pence as a whole number. A price kept as a float is
+  // a price that eventually adds up to 1p out, and the one place a penny
+  // matters is the document somebody is being asked to pay.
+  //
+  // The customer is copied onto the invoice rather than referenced. An
+  // invoice is a record of what was sent on a day: if their customer later
+  // moves or changes their name, last quarter's invoice must still say
+  // what it said when it went.
+  `CREATE TABLE IF NOT EXISTS client_invoices (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    client_id INT UNSIGNED NOT NULL,
+    lead_id INT UNSIGNED NULL,
+    /** Counts from 1 per client, never reused, never renumbered. */
+    number INT UNSIGNED NOT NULL,
+    customer_name VARCHAR(160) NOT NULL,
+    customer_email VARCHAR(200) NULL,
+    customer_address TEXT NULL,
+    issued_on DATE NOT NULL,
+    due_on DATE NULL,
+    /** Percent. Zero for the many sole traders who are not registered. */
+    vat_rate DECIMAL(5,2) NOT NULL DEFAULT 0,
+    notes TEXT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'draft',
+    sent_at DATETIME NULL,
+    paid_at DATETIME NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uniq_client_number (client_id, number),
+    KEY idx_client_status (client_id, status),
+    CONSTRAINT fk_invoices_client FOREIGN KEY (client_id)
+      REFERENCES clients (id) ON DELETE CASCADE,
+    CONSTRAINT fk_invoices_lead FOREIGN KEY (lead_id)
+      REFERENCES client_leads (id) ON DELETE SET NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  // One line on one invoice. Its own table rather than a blob of JSON,
+  // because "what did we charge for door seals last year" is a question
+  // somebody will ask and a blob cannot answer.
+  `CREATE TABLE IF NOT EXISTS client_invoice_lines (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    invoice_id INT UNSIGNED NOT NULL,
+    description VARCHAR(255) NOT NULL,
+    quantity DECIMAL(10,2) NOT NULL DEFAULT 1,
+    unit_pence INT NOT NULL DEFAULT 0,
+    position SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    PRIMARY KEY (id),
+    KEY idx_invoice (invoice_id, position),
+    CONSTRAINT fk_lines_invoice FOREIGN KEY (invoice_id)
+      REFERENCES client_invoices (id) ON DELETE CASCADE
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 ];
 
 /**
@@ -547,6 +601,35 @@ const ADDED_COLUMNS: {
     definition: "VARCHAR(6) NOT NULL DEFAULT 'auto' AFTER status",
     backfill: `UPDATE prospect_emails
                   SET sent_by = CASE WHEN step = 1 THEN 'hand' ELSE 'auto' END`,
+  },
+
+  // What has to appear on an invoice they send: who they are, where they
+  // are, and how somebody pays them. Blank until they fill it in, and the
+  // invoice page says plainly what is missing rather than printing a
+  // document with a hole in it.
+  {
+    table: "clients",
+    column: "business_address",
+    definition: "TEXT NULL",
+  },
+  {
+    table: "clients",
+    column: "business_phone",
+    definition: "VARCHAR(60) NULL",
+  },
+  {
+    table: "clients",
+    column: "vat_number",
+    definition: "VARCHAR(40) NULL",
+  },
+  // Free text rather than sort code and account number in their own
+  // columns: some are paid by bank transfer, some by card link, some on
+  // the day in cash, and a form that insists on a sort code is a form
+  // half of them cannot finish.
+  {
+    table: "clients",
+    column: "payment_details",
+    definition: "TEXT NULL",
   },
 ];
 
