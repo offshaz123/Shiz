@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { logout } from "@/app/admin/actions";
 import { siteConfig } from "@/lib/site-config";
 
@@ -16,6 +16,13 @@ import { siteConfig } from "@/lib/site-config";
  *
  * The current page is marked rather than hidden. Knowing where you are is
  * half of knowing how to get somewhere else.
+ *
+ * On a phone the same eight links wrapped onto four rows, so the top third
+ * of every screen was the way to leave it. Below `sm` they become a single
+ * picker instead: one line, and on a phone the operating system opens its
+ * own list, which beats anything built here. The hint for the page you are
+ * on sits under it, because a picker shows one label where the row showed
+ * all eight and that is the context the row gave for free.
  */
 
 const PAGES = [
@@ -33,6 +40,12 @@ export function AdminNav() {
   // Read rather than passed in, so adding a page means adding one line to
   // PAGES and nothing else anywhere.
   const current = usePathname();
+  const router = useRouter();
+
+  const active =
+    PAGES.find((page) =>
+      page.href === "/admin" ? current === "/admin" : current.startsWith(page.href),
+    ) ?? PAGES[0];
 
   return (
     <header className="border-b border-border bg-surface">
@@ -44,18 +57,17 @@ export function AdminNav() {
           </span>
         </Link>
 
-        <nav className="flex flex-wrap items-center gap-1">
+        <nav className="hidden flex-wrap items-center gap-1 sm:flex">
           {PAGES.map((page) => {
-            const active =
-              page.href === "/admin" ? current === "/admin" : current.startsWith(page.href);
+            const isHere = page.href === active.href;
             return (
               <Link
                 key={page.href}
                 href={page.href}
                 title={page.hint}
-                aria-current={active ? "page" : undefined}
+                aria-current={isHere ? "page" : undefined}
                 className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-                  active
+                  isHere
                     ? "bg-brand-pink text-white"
                     : "text-muted hover:bg-background hover:text-foreground"
                 }`}
@@ -77,6 +89,25 @@ export function AdminNav() {
             </button>
           </form>
         </div>
+      </div>
+
+      <div className="mx-auto max-w-6xl px-5 pb-3 sm:hidden">
+        <label className="sr-only" htmlFor="admin-page">
+          Go to
+        </label>
+        <select
+          id="admin-page"
+          value={active.href}
+          onChange={(e) => router.push(e.target.value)}
+          className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm font-semibold text-foreground"
+        >
+          {PAGES.map((page) => (
+            <option key={page.href} value={page.href}>
+              {page.label}
+            </option>
+          ))}
+        </select>
+        <p className="mt-1.5 px-1 text-[11px] text-muted">{active.hint}</p>
       </div>
     </header>
   );

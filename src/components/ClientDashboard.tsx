@@ -1,6 +1,7 @@
 import type { ClientLead, ClientSummary, MonthPoint } from "@/lib/clients";
 import { LeadViews } from "./LeadViews";
 import { ClientFunnel } from "./ClientFunnel";
+import { PhoneSections } from "./PhoneSections";
 
 /**
  * What a client sees about their own marketing.
@@ -14,6 +15,11 @@ import { ClientFunnel } from "./ClientFunnel";
  * Nothing here can reach a campaign, a keyword, an audience or another
  * client. That is a property of the queries behind it rather than of this
  * component: there is no code path from a client session to any of it.
+ *
+ * Split into four parts, because on a phone one long page means scrolling
+ * past three charts every time to reach the list of people who got in
+ * touch. The buttons only exist below `lg`; on a wide screen every part
+ * shows at once, which is the whole advantage of a wide screen.
  *
  * Honest about gaps rather than filling them. A cost per enquiry with no
  * spend recorded shows as "not recorded yet", because an unknown cost is
@@ -111,165 +117,190 @@ export function ClientDashboard({
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
-        <Tile
-          label="Enquiries"
-          value={String(summary.leads)}
-          note={monthName(summary.month)}
-        />
-        <Tile
-          label="Cost per enquiry"
-          value={summary.costPerLead === null ? "—" : money(summary.costPerLead)}
-          tone={summary.costPerLead === null ? "quiet" : "plain"}
-          note={
-            summary.costPerLead === null
-              ? "No ad spend recorded for this month yet"
-              : `${money(summary.spend)} of advertising`
-          }
-        />
-        <Tile
-          label="Became customers"
-          value={String(summary.customers)}
-          note={
-            summary.leads > 0
-              ? `${Math.round((summary.customers / summary.leads) * 100)}% of enquiries`
-              : "Nothing to measure yet"
-          }
-        />
-        <Tile
-          label="Won this month"
-          value={summary.wonValue > 0 ? money(summary.wonValue) : "—"}
-          tone={summary.wonValue > 0 ? "plain" : "quiet"}
-          note={
-            summary.returnOnSpend === null
-              ? summary.wonValue > 0
-                ? "No ad spend recorded to compare it against"
-                : "Nothing marked won yet"
-              : `£${summary.returnOnSpend} back for every £1 of advertising`
-          }
-        />
-        <Tile
-          label="Typical reply time"
-          value={summary.medianHoursToReply === null ? "—" : waited(summary.medianHoursToReply)}
-          tone={summary.medianHoursToReply === null ? "quiet" : "plain"}
-          note={
-            summary.medianHoursToReply === null
-              ? "Nothing marked as answered yet"
-              : unanswered > 0
-                ? `${unanswered} still waiting for a reply`
-                : "Everything has been answered"
-          }
-        />
-      </div>
-
-      <div className="grid gap-5 lg:grid-cols-2">
-        <ClientFunnel funnel={summary.funnel} />
-
-        <section className="rounded-2xl border border-border bg-surface p-5">
-          <h2 className="text-sm font-semibold text-foreground">Where your enquiries came from</h2>
-          <p className="mt-0.5 text-xs text-muted">
-            {monthName(summary.month)}
-            {summary.openValue > 0 && ` · ${money(summary.openValue)} still in play`}
-          </p>
-
-          {summary.bySource.length === 0 ? (
-            <p className="mt-5 text-sm text-muted">No enquiries recorded this month yet.</p>
-          ) : (
-            <ul className="mt-4 flex flex-col gap-2.5">
-              {summary.bySource.map((row) => {
-                const share = summary.leads > 0 ? (row.leads / summary.leads) * 100 : 0;
-                return (
-                  <li key={row.source} className="flex items-center gap-3">
-                    <span className="w-36 shrink-0 truncate text-xs text-muted">
-                      {SOURCE_LABEL[row.source] ?? row.source}
-                    </span>
-                    <span className="h-2 flex-1 overflow-hidden rounded-full bg-background">
-                      <span
-                        className="block h-full rounded-full bg-series-1"
-                        style={{ width: `${Math.max(share, row.leads > 0 ? 2 : 0)}%` }}
-                      />
-                    </span>
-                    <span className="w-20 shrink-0 text-right text-xs tabular-nums text-muted">
-                      <b className="font-semibold text-foreground">{row.leads}</b>{" "}
-                      {Math.round(share)}%
-                    </span>
-                  </li>
-                );
-              })}
-            </ul>
-          )}
-        </section>
-
-        <section className="rounded-2xl border border-border bg-surface p-5">
-          <h2 className="text-sm font-semibold text-foreground">Enquiries by month</h2>
-          <p className="mt-0.5 text-xs text-muted">The last six months.</p>
-
-          {trend.length === 0 ? (
-            <p className="mt-5 text-sm text-muted">Not enough history yet.</p>
-          ) : (
-            <>
-              <div className="mt-4 flex items-end gap-2">
-                {trend.map((m) => (
-                  <div key={m.month} className="flex flex-1 flex-col items-center gap-1">
-                    <span className="text-[10px] font-semibold tabular-nums text-foreground">
-                      {m.leads}
-                    </span>
-                    <div className="flex h-24 w-full flex-col justify-end">
-                      <span
-                        className="w-full rounded-t bg-series-1"
-                        style={{ height: `${(m.leads / busiest) * 100}%` }}
-                      />
-                    </div>
-                    <span className="text-[9px] text-muted">
-                      {monthName(m.month).slice(0, 3)}
-                    </span>
-                  </div>
-                ))}
+      <PhoneSections
+        sections={[
+          {
+            id: "results",
+            label: "Numbers",
+            content: (
+              <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+                <Tile
+                  label="Enquiries"
+                  value={String(summary.leads)}
+                  note={monthName(summary.month)}
+                />
+                <Tile
+                  label="Cost per enquiry"
+                  value={summary.costPerLead === null ? "—" : money(summary.costPerLead)}
+                  tone={summary.costPerLead === null ? "quiet" : "plain"}
+                  note={
+                    summary.costPerLead === null
+                      ? "No ad spend recorded for this month yet"
+                      : `${money(summary.spend)} of advertising`
+                  }
+                />
+                <Tile
+                  label="Became customers"
+                  value={String(summary.customers)}
+                  note={
+                    summary.leads > 0
+                      ? `${Math.round((summary.customers / summary.leads) * 100)}% of enquiries`
+                      : "Nothing to measure yet"
+                  }
+                />
+                <Tile
+                  label="Won this month"
+                  value={summary.wonValue > 0 ? money(summary.wonValue) : "—"}
+                  tone={summary.wonValue > 0 ? "plain" : "quiet"}
+                  note={
+                    summary.returnOnSpend === null
+                      ? summary.wonValue > 0
+                        ? "No ad spend recorded to compare it against"
+                        : "Nothing marked won yet"
+                      : `£${summary.returnOnSpend} back for every £1 of advertising`
+                  }
+                />
+                <Tile
+                  label="Typical reply time"
+                  value={summary.medianHoursToReply === null ? "—" : waited(summary.medianHoursToReply)}
+                  tone={summary.medianHoursToReply === null ? "quiet" : "plain"}
+                  note={
+                    summary.medianHoursToReply === null
+                      ? "Nothing marked as answered yet"
+                      : unanswered > 0
+                        ? `${unanswered} still waiting for a reply`
+                        : "Everything has been answered"
+                  }
+                />
               </div>
+            ),
+          },
+          {
+            id: "sources",
+            label: "Where from",
+            content: (
+              <div className="grid gap-5 lg:grid-cols-2">
+                <ClientFunnel funnel={summary.funnel} />
 
-              <details className="mt-4 border-t border-border pt-3">
-                <summary className="cursor-pointer text-xs font-medium text-muted hover:text-foreground">
-                  Show as a table
-                </summary>
-                <table className="mt-3 w-full text-left text-xs">
-                  <thead>
-                    <tr className="text-muted">
-                      <th scope="col" className="py-1 font-medium">Month</th>
-                      <th scope="col" className="py-1 text-right font-medium">Enquiries</th>
-                      <th scope="col" className="py-1 text-right font-medium">Customers</th>
-                      <th scope="col" className="py-1 text-right font-medium">Spend</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border">
-                    {trend.map((m) => (
-                      <tr key={m.month}>
-                        <td className="py-1.5 text-foreground">{monthName(m.month)}</td>
-                        <td className="py-1.5 text-right tabular-nums text-muted">{m.leads}</td>
-                        <td className="py-1.5 text-right tabular-nums text-muted">{m.customers}</td>
-                        <td className="py-1.5 text-right tabular-nums text-muted">
-                          {m.spend > 0 ? money(m.spend) : "—"}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </details>
-            </>
-          )}
-        </section>
-      </div>
+                <section className="rounded-2xl border border-border bg-surface p-5">
+                  <h2 className="text-sm font-semibold text-foreground">Where your enquiries came from</h2>
+                  <p className="mt-0.5 text-xs text-muted">
+                    {monthName(summary.month)}
+                    {summary.openValue > 0 && ` · ${money(summary.openValue)} still in play`}
+                  </p>
 
-      <section className="rounded-2xl border border-border bg-surface">
-        <div className="border-b border-border px-5 py-4">
-          <h2 className="text-sm font-semibold text-foreground">Your enquiries</h2>
-          <p className="mt-0.5 text-xs text-muted">
-            Mark one answered and move it along as you go. That is where the customer count and
-            the reply time above come from.
-          </p>
-        </div>
+                  {summary.bySource.length === 0 ? (
+                    <p className="mt-5 text-sm text-muted">No enquiries recorded this month yet.</p>
+                  ) : (
+                    <ul className="mt-4 flex flex-col gap-2.5">
+                      {summary.bySource.map((row) => {
+                        const share = summary.leads > 0 ? (row.leads / summary.leads) * 100 : 0;
+                        return (
+                          <li key={row.source} className="flex items-center gap-3">
+                            <span className="w-36 shrink-0 truncate text-xs text-muted">
+                              {SOURCE_LABEL[row.source] ?? row.source}
+                            </span>
+                            <span className="h-2 flex-1 overflow-hidden rounded-full bg-background">
+                              <span
+                                className="block h-full rounded-full bg-series-1"
+                                style={{ width: `${Math.max(share, row.leads > 0 ? 2 : 0)}%` }}
+                              />
+                            </span>
+                            <span className="w-20 shrink-0 text-right text-xs tabular-nums text-muted">
+                              <b className="font-semibold text-foreground">{row.leads}</b>{" "}
+                              {Math.round(share)}%
+                            </span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  )}
+                </section>
+              </div>
+            ),
+          },
+          {
+            id: "months",
+            label: "By month",
+            content: (
+              <section className="rounded-2xl border border-border bg-surface p-5">
+                <h2 className="text-sm font-semibold text-foreground">Enquiries by month</h2>
+                <p className="mt-0.5 text-xs text-muted">The last six months.</p>
 
-        <LeadViews leads={leads} readOnly={isSample} />
-      </section>
+                {trend.length === 0 ? (
+                  <p className="mt-5 text-sm text-muted">Not enough history yet.</p>
+                ) : (
+                  <>
+                    <div className="mt-4 flex items-end gap-2">
+                      {trend.map((m) => (
+                        <div key={m.month} className="flex flex-1 flex-col items-center gap-1">
+                          <span className="text-[10px] font-semibold tabular-nums text-foreground">
+                            {m.leads}
+                          </span>
+                          <div className="flex h-24 w-full flex-col justify-end">
+                            <span
+                              className="w-full rounded-t bg-series-1"
+                              style={{ height: `${(m.leads / busiest) * 100}%` }}
+                            />
+                          </div>
+                          <span className="text-[9px] text-muted">
+                            {monthName(m.month).slice(0, 3)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <details className="mt-4 border-t border-border pt-3">
+                      <summary className="cursor-pointer text-xs font-medium text-muted hover:text-foreground">
+                        Show as a table
+                      </summary>
+                      <table className="mt-3 w-full text-left text-xs">
+                        <thead>
+                          <tr className="text-muted">
+                            <th scope="col" className="py-1 font-medium">Month</th>
+                            <th scope="col" className="py-1 text-right font-medium">Enquiries</th>
+                            <th scope="col" className="py-1 text-right font-medium">Customers</th>
+                            <th scope="col" className="py-1 text-right font-medium">Spend</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-border">
+                          {trend.map((m) => (
+                            <tr key={m.month}>
+                              <td className="py-1.5 text-foreground">{monthName(m.month)}</td>
+                              <td className="py-1.5 text-right tabular-nums text-muted">{m.leads}</td>
+                              <td className="py-1.5 text-right tabular-nums text-muted">{m.customers}</td>
+                              <td className="py-1.5 text-right tabular-nums text-muted">
+                                {m.spend > 0 ? money(m.spend) : "—"}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </details>
+                  </>
+                )}
+              </section>
+            ),
+          },
+          {
+            id: "leads",
+            label: "Enquiries",
+            content: (
+              <section className="rounded-2xl border border-border bg-surface">
+                <div className="border-b border-border px-5 py-4">
+                  <h2 className="text-sm font-semibold text-foreground">Your enquiries</h2>
+                  <p className="mt-0.5 text-xs text-muted">
+                    Mark one answered and move it along as you go. That is where the customer
+                    count and the reply time come from.
+                  </p>
+                </div>
+
+                <LeadViews leads={leads} readOnly={isSample} />
+              </section>
+            ),
+          },
+        ]}
+      />
 
       {isSample && (
         <p className="rounded-2xl border border-border bg-surface px-5 py-4 text-sm leading-relaxed text-muted">

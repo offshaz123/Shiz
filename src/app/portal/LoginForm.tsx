@@ -1,3 +1,4 @@
+import { Logo } from "@/components/Logo";
 import { clientLogin } from "./actions";
 
 /**
@@ -7,10 +8,17 @@ import { clientLogin } from "./actions";
  * printed on their invoice and the thing in their dashboard URL, and
  * because an email box invites somebody to try their own address and
  * conclude the system is broken when it does not work.
+ *
+ * It carries the mark because the portal does not sit inside the website's
+ * header any more: with no chrome at all, a password box on a dark screen
+ * gives nobody a reason to believe it is ours.
  */
 export function LoginForm({ failed }: { failed: boolean }) {
   return (
-    <div className="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-5 py-16">
+    <div className="mx-auto flex min-h-[85vh] max-w-md flex-col justify-center px-5 py-16">
+      <div className="mb-8">
+        <Logo />
+      </div>
       <h1 className="text-2xl font-bold tracking-tight text-foreground">Your results</h1>
       <p className="mt-2 text-sm leading-relaxed text-muted">
         Sign in to see your enquiries, what they cost and where they came from.
