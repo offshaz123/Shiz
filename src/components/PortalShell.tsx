@@ -40,6 +40,17 @@ const PAGES = [
     ),
   },
   {
+    href: "/portal/quotes",
+    label: "Quotes",
+    note: "Price a job up",
+    icon: (
+      <>
+        <path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2V3z" />
+        <path d="M9 9h6M9 13h3" />
+      </>
+    ),
+  },
+  {
     href: "/portal/invoices",
     label: "Invoices",
     note: "Bill your customers",

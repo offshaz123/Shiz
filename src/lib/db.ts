@@ -714,6 +714,59 @@ const ADDED_COLUMNS: {
     column: "paid_method",
     definition: "VARCHAR(20) NULL",
   },
+
+  // A quote and an invoice are the same document with a different word on
+  // it, the same lines, the same totals and the same template, so they
+  // share a table. What differs is the word, when it runs out, and whether
+  // it has been accepted.
+  {
+    table: "client_invoices",
+    column: "kind",
+    definition: "VARCHAR(10) NOT NULL DEFAULT 'invoice'",
+  },
+  {
+    table: "client_invoices",
+    column: "valid_until",
+    definition: "DATE NULL",
+  },
+  {
+    table: "client_invoices",
+    column: "accepted_at",
+    definition: "DATETIME NULL",
+  },
+  // The invoice a quote turned into, so neither can be made twice and the
+  // quote can point at what became of it.
+  {
+    table: "client_invoices",
+    column: "became_invoice_id",
+    definition: "INT UNSIGNED NULL",
+  },
+];
+
+/**
+ * Indexes that have to change rather than simply appear.
+ *
+ * Only one so far, and it is the reason this exists: quotes and invoices
+ * count from 1 separately, so quote 0007 and invoice 0007 both have to be
+ * allowed. The old key said a client could not have two documents with the
+ * same number at all, which was right when there was only one kind.
+ *
+ * Gapless invoice numbering matters here. An accountant asked why invoice
+ * 12 is missing does not want to hear that it was a quote.
+ */
+const CHANGED_INDEXES: {
+  table: string;
+  /** Dropped only if it exists. */
+  drop: string;
+  add: string;
+  definition: string;
+}[] = [
+  {
+    table: "client_invoices",
+    drop: "uniq_client_number",
+    add: "uniq_client_kind_number",
+    definition: "UNIQUE KEY uniq_client_kind_number (client_id, kind, number)",
+  },
 ];
 
 interface CountRow extends RowDataPacket {
@@ -738,6 +791,20 @@ async function ensureSchema(db: mysql.Pool): Promise<void> {
       // cold start for the life of the site.
       if (backfill) await db.query(backfill).catch(() => null);
     }
+  }
+
+  for (const { table, drop, add, definition } of CHANGED_INDEXES) {
+    const [rows] = await db.query<CountRow[]>(
+      `SELECT COUNT(*) AS n FROM information_schema.STATISTICS
+       WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND INDEX_NAME = ?`,
+      [table, add],
+    );
+    if ((rows[0]?.n ?? 0) > 0) continue;
+
+    // Dropped first and separately: on a database that never had the old
+    // key, the drop fails and the add must still run.
+    await db.query(`ALTER TABLE \`${table}\` DROP INDEX \`${drop}\``).catch(() => null);
+    await db.query(`ALTER TABLE \`${table}\` ADD ${definition}`);
   }
 }
 

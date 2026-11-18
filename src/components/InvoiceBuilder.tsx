@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { pounds, totals, type Discount } from "@/lib/invoice-maths";
 import { PAID_METHODS, PAID_METHOD_WORD, type PaidMethod } from "@/lib/invoice-kinds";
+import { DOC_WORDS, type DocKind } from "@/lib/document-kinds";
 import { formatAddress } from "@/lib/business-profile";
 
 /**
@@ -44,7 +45,9 @@ function inFourteenDays(): string {
 const FIELD =
   "w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:border-brand-pink";
 
-export function InvoiceBuilder() {
+export function InvoiceBuilder({ kind = "invoice" }: { kind?: DocKind }) {
+  const words = DOC_WORDS[kind];
+  const isQuote = kind === "quote";
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -108,6 +111,8 @@ export function InvoiceBuilder() {
           discountPercent: Number(discountValue) || 0,
           discountAmount: Number(discountValue) || 0,
           notes,
+          kind,
+          validUntil: dueOn,
           paidNow,
           paidMethod,
           lines: rows.map((row) => ({
@@ -119,7 +124,7 @@ export function InvoiceBuilder() {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error ?? String(res.status));
-      router.push(`/portal/invoices/${data.id}`);
+      router.push(`${words.path}/${data.id}`);
     } catch (err) {
       setError(
         String(err).includes("needs_a_customer_and_a_line")
@@ -219,7 +224,9 @@ export function InvoiceBuilder() {
       </section>
 
       <section className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
-        <h2 className="text-sm font-semibold text-foreground">What they are being charged for</h2>
+        <h2 className="text-sm font-semibold text-foreground">
+          {isQuote ? "What the job includes" : "What they are being charged for"}
+        </h2>
 
         <div className="mt-4 flex flex-col gap-3">
           {rows.map((row, i) => (
@@ -340,7 +347,9 @@ export function InvoiceBuilder() {
 
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <label className="flex flex-col gap-1.5">
-            <span className="text-xs font-medium text-muted">Date of the invoice</span>
+            <span className="text-xs font-medium text-muted">
+              Date of the {words.one}
+            </span>
             <input
               type="date"
               value={issuedOn}
@@ -349,7 +358,9 @@ export function InvoiceBuilder() {
             />
           </label>
           <label className="flex flex-col gap-1.5">
-            <span className="text-xs font-medium text-muted">Payment due by</span>
+            <span className="text-xs font-medium text-muted">
+              {isQuote ? "This price holds until" : "Payment due by"}
+            </span>
             <input
               type="date"
               value={dueOn}
@@ -371,6 +382,7 @@ export function InvoiceBuilder() {
         </label>
       </section>
 
+      {!isQuote && (
       <section className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
         <h2 className="text-sm font-semibold text-foreground">Has it been paid?</h2>
         <p className="mt-0.5 text-xs leading-relaxed text-muted">
@@ -420,6 +432,7 @@ export function InvoiceBuilder() {
           </div>
         )}
       </section>
+      )}
 
       <div className="flex flex-wrap items-center gap-3">
         <button
@@ -428,12 +441,18 @@ export function InvoiceBuilder() {
           disabled={busy}
           className="brand-gradient-bg rounded-full px-6 py-3 text-sm font-semibold text-white disabled:opacity-60"
         >
-          {busy ? "Saving…" : paidNow ? "Save this receipt" : "Save this invoice"}
+          {busy
+            ? "Saving…"
+            : isQuote
+              ? "Save this quote"
+              : paidNow
+                ? "Save this receipt"
+                : "Save this invoice"}
         </button>
         <p className="text-xs text-muted">
-          {paidNow
-            ? "Nothing is emailed until you press send on the next screen."
-            : "It saves as a draft. Nothing goes to your customer until you send it."}
+          {isQuote || !paidNow
+            ? "It saves as a draft. Nothing goes to your customer until you send it."
+            : "Nothing is emailed until you press send on the next screen."}
         </p>
       </div>
     </div>

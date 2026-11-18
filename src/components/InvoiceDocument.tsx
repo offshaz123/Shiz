@@ -62,7 +62,8 @@ export function InvoiceDocument({
   invoice: Invoice;
   sender: InvoiceSender;
 }) {
-  const paid = invoice.status === "paid";
+  const quote = invoice.kind === "quote";
+  const paid = !quote && invoice.status === "paid";
 
   return (
     <article className="mx-auto w-full max-w-[820px] bg-white p-7 text-[#111827] sm:p-10">
@@ -93,7 +94,9 @@ export function InvoiceDocument({
         </div>
 
         <div className="text-right text-[13px]">
-          <p className="text-2xl font-bold tracking-tight">{paid ? "RECEIPT" : "INVOICE"}</p>
+          <p className="text-2xl font-bold tracking-tight">
+            {quote ? "QUOTE" : paid ? "RECEIPT" : "INVOICE"}
+          </p>
           <p className="mt-1 font-semibold tabular-nums">
             No. {String(invoice.number).padStart(4, "0")}
           </p>
@@ -102,7 +105,10 @@ export function InvoiceDocument({
           </p>
           {/* A due date on something already settled is a question the
               customer should never have to ask themselves. */}
-          {!paid && invoice.dueOn && (
+          {quote && invoice.validUntil && (
+            <p className="text-[#4b5563]">Valid until {date(invoice.validUntil)}</p>
+          )}
+          {!quote && !paid && invoice.dueOn && (
             <p className="text-[#4b5563]">Due {date(invoice.dueOn)}</p>
           )}
           {paid && (
@@ -116,7 +122,7 @@ export function InvoiceDocument({
 
       <section className="mt-7 text-[13px] leading-relaxed">
         <p className="text-[11px] font-semibold uppercase tracking-wide text-[#6b7280]">
-          Billed to
+          {quote ? "Prepared for" : "Billed to"}
         </p>
         <p className="mt-1.5 text-base font-semibold">{invoice.customerName}</p>
         {invoice.customerCompany && (
@@ -191,14 +197,27 @@ export function InvoiceDocument({
             </div>
           )}
           <div className="mt-1 flex justify-between border-t-2 border-[#111827] py-2.5 text-base font-bold">
-            <dt>{paid ? "Total paid" : "Total due"}</dt>
+            <dt>{quote ? "Total" : paid ? "Total paid" : "Total due"}</dt>
             <dd className="tabular-nums">{pounds(invoice.totalPence)}</dd>
           </div>
         </dl>
       </div>
 
       <footer className="mt-8 border-t border-[#e5e7eb] pt-5 text-[12px] leading-relaxed">
-        {paid ? (
+        {quote ? (
+          <>
+            {/* A quote has nothing to pay yet, so the footer says what to
+                do next instead of where to send money. */}
+            <p className="text-[11px] font-semibold uppercase tracking-wide text-[#6b7280]">
+              What happens next
+            </p>
+            <p className="mt-1.5 text-[#374151]">
+              Happy with this? Reply to this email or give {sender.name} a ring
+              {sender.phone ? ` on ${sender.phone}` : ""} and we will book you in.
+              {invoice.validUntil ? ` This price holds until ${date(invoice.validUntil)}.` : ""}
+            </p>
+          </>
+        ) : paid ? (
           <>
             <p className="text-[11px] font-semibold uppercase tracking-wide text-[#6b7280]">
               Payment received

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { PAID_METHODS, PAID_METHOD_WORD, type PaidMethod } from "@/lib/invoice-kinds";
 import type { InvoiceStatus } from "@/lib/invoice-kinds-status";
+import { quoteState, type DocKind } from "@/lib/document-kinds";
 
 /**
  * The buttons above an invoice: send it, mark it paid, save it as a PDF.
@@ -21,16 +22,24 @@ export function InvoiceActions({
   id,
   status,
   hasEmail,
+  kind = "invoice",
+  validUntil = "",
+  becameInvoiceId = null,
 }: {
   id: number;
   status: InvoiceStatus;
   hasEmail: boolean;
+  kind?: DocKind;
+  validUntil?: string;
+  becameInvoiceId?: number | null;
 }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [sent, setSent] = useState("");
   const [asking, setAsking] = useState(false);
+  const isQuote = kind === "quote";
+  const state = quoteState(status, validUntil);
 
   async function act(body: Record<string, unknown>, failure: string, done: string) {
     setBusy(true);
@@ -59,10 +68,35 @@ export function InvoiceActions({
     }
   }
 
+  /**
+   * Accepting a quote makes an invoice from it and goes there.
+   *
+   * Pressed twice, the second press lands on the same invoice rather than
+   * making another: the quote remembers what it became and the server
+   * hands that back.
+   */
+  async function accept() {
+    setBusy(true);
+    setError("");
+    try {
+      const res = await fetch("/api/portal/invoices", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, action: "accept" }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error ?? String(res.status));
+      router.push(`/portal/invoices/${data.id}`);
+    } catch {
+      setError("That did not work. Try again in a moment.");
+      setBusy(false);
+    }
+  }
+
   return (
     <div className="print-hide">
       <div className="flex flex-wrap gap-2">
-        {status !== "cancelled" && (
+        {(isQuote ? state !== "declined" && state !== "accepted" : status !== "cancelled") && (
           <button
             type="button"
             disabled={busy || !hasEmail}
@@ -71,11 +105,28 @@ export function InvoiceActions({
             }
             className="brand-gradient-bg rounded-full px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-50"
           >
-            {busy ? "Sending…" : status === "paid" ? "Email the receipt" : "Email it to them"}
+            {busy
+              ? "Sending…"
+              : isQuote
+                ? "Email the quote"
+                : status === "paid"
+                  ? "Email the receipt"
+                  : "Email it to them"}
           </button>
         )}
 
-        {status !== "paid" && status !== "cancelled" && (
+        {isQuote && state !== "accepted" && state !== "declined" && (
+          <button
+            type="button"
+            disabled={busy}
+            onClick={accept}
+            className="rounded-full border border-emerald-500/50 px-5 py-2.5 text-sm font-semibold text-emerald-600 disabled:opacity-50 dark:text-emerald-400"
+          >
+            {busy ? "Working…" : "They said yes"}
+          </button>
+        )}
+
+        {!isQuote && status !== "paid" && status !== "cancelled" && (
           <button
             type="button"
             disabled={busy}
@@ -95,14 +146,20 @@ export function InvoiceActions({
           Save as PDF
         </button>
 
-        {status !== "cancelled" && status !== "paid" && (
+        {(isQuote ? state !== "declined" && state !== "accepted" : status !== "cancelled" && status !== "paid") && (
           <button
             type="button"
             disabled={busy}
-            onClick={() => act({ status: "cancelled" }, "Not changed.", "Cancelled.")}
+            onClick={() =>
+              act(
+                { status: "cancelled" },
+                "Not changed.",
+                isQuote ? "Marked as declined." : "Cancelled.",
+              )
+            }
             className="rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-muted hover:text-foreground disabled:opacity-50"
           >
-            Cancel it
+            {isQuote ? "They said no" : "Cancel it"}
           </button>
         )}
       </div>
@@ -131,6 +188,25 @@ export function InvoiceActions({
             </button>
           ))}
         </div>
+      )}
+
+      {becameInvoiceId !== null && (
+        <p className="mt-3 text-xs text-muted">
+          This quote became{" "}
+          <a
+            href={`/portal/invoices/${becameInvoiceId}`}
+            className="font-semibold text-brand-pink hover:underline"
+          >
+            an invoice
+          </a>
+          .
+        </p>
+      )}
+
+      {state === "expired" && (
+        <p className="mt-3 text-xs font-medium text-amber-600 dark:text-amber-400">
+          This quote has passed the date you gave. Send it again if the price still stands.
+        </p>
       )}
 
       {status !== "paid" && !hasEmail && (

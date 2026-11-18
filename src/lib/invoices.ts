@@ -9,6 +9,10 @@ import {
 } from "./invoice-kinds";
 
 import { INVOICE_STATUSES, asStatus, type InvoiceStatus } from "./invoice-kinds-status";
+import { asDocKind, type DocKind } from "./document-kinds";
+
+export { asDocKind };
+export type { DocKind };
 
 export { PAID_METHODS, PAID_METHOD_WORD, asPaidMethod, INVOICE_STATUSES };
 export type { PaidMethod, InvoiceStatus };
@@ -55,6 +59,7 @@ export type { InvoiceLine };
 
 export type Invoice = {
   id: number;
+  kind: DocKind;
   number: number;
   customerName: string;
   customerCompany: string;
@@ -70,6 +75,11 @@ export type Invoice = {
   sentAt: string;
   paidAt: string;
   paidMethod: PaidMethod | null;
+  /** Quotes only: the day it runs out, or "" if it never does. */
+  validUntil: string;
+  acceptedAt: string;
+  /** Quotes only: the invoice this one turned into, if it has. */
+  becameInvoiceId: number | null;
   lines: InvoiceLine[];
   /** All pence. */
   subtotalPence: number;
@@ -132,6 +142,10 @@ interface InvoiceRow extends RowDataPacket {
   sent_at: string | null;
   paid_at: string | null;
   paid_method: string | null;
+  kind: string;
+  valid_until: string | null;
+  accepted_at: string | null;
+  became_invoice_id: number | null;
 }
 
 interface LineRow extends RowDataPacket {
@@ -162,6 +176,7 @@ function build(row: InvoiceRow, lines: InvoiceLine[]): Invoice {
   const sums = totals(lines, vatRate, discount);
   return {
     id: row.id,
+    kind: asDocKind(row.kind),
     number: row.number,
     customerName: row.customer_name,
     customerCompany: row.customer_company ?? "",
@@ -176,6 +191,9 @@ function build(row: InvoiceRow, lines: InvoiceLine[]): Invoice {
     sentAt: row.sent_at ? String(row.sent_at) : "",
     paidAt: row.paid_at ? String(row.paid_at) : "",
     paidMethod: asPaidMethod(row.paid_method ?? ""),
+    validUntil: day(row.valid_until),
+    acceptedAt: row.accepted_at ? String(row.accepted_at) : "",
+    becameInvoiceId: row.became_invoice_id,
     lines,
     ...sums,
   };
@@ -192,15 +210,19 @@ function toLine(row: LineRow): InvoiceLine {
 
 const INVOICE_COLUMNS = `id, number, customer_name, customer_company, customer_email, customer_address,
   issued_on, due_on, vat_rate, discount_kind, discount_percent, discount_pence,
-  notes, status, sent_at, paid_at, paid_method`;
+  notes, status, sent_at, paid_at, paid_method,
+  kind, valid_until, accepted_at, became_invoice_id`;
 
 /** Every invoice this client has, newest first, with its lines. */
-export async function listInvoices(clientId: number): Promise<Invoice[] | null> {
+export async function listInvoices(
+  clientId: number,
+  kind: DocKind = "invoice",
+): Promise<Invoice[] | null> {
   return withDb(async (db) => {
     const [rows] = await db.query<InvoiceRow[]>(
       `SELECT ${INVOICE_COLUMNS} FROM client_invoices
-        WHERE client_id = ? ORDER BY number DESC LIMIT 500`,
-      [clientId],
+        WHERE client_id = ? AND kind = ? ORDER BY number DESC LIMIT 500`,
+      [clientId, kind],
     );
     if (rows.length === 0) return [];
 
@@ -261,6 +283,9 @@ export type NewInvoice = {
   vatRate: number;
   discount: Discount;
   notes: string;
+  kind: DocKind;
+  /** Quotes only. */
+  validUntil: string;
   lines: { description: string; quantity: number; unitPence: number }[];
   /**
    * Set when the money was taken as the job finished, which is how most of
@@ -291,15 +316,20 @@ export async function createInvoice(
   // mistake, and saving it would take a number out of the sequence.
   if (!name || lines.length === 0) return null;
   if (!DATE.test(input.issuedOn)) return null;
+  const paidNow = input.kind === "invoice" && input.paidNow;
 
   const created = await withDb(async (db) => {
     // The number and the row are taken together, so two invoices started
     // in the same second cannot be handed the same number. The unique key
     // on (client_id, number) is what actually guarantees it; this just
     // makes the collision rare enough never to be seen.
+    // Counted per kind, so quote 0007 and invoice 0007 can both exist and
+    // the invoice run stays gapless. An accountant asked why invoice 12 is
+    // missing does not want to hear that it was a quote.
     const [[seq]] = await db.query<(RowDataPacket & { next: number })[]>(
-      "SELECT COALESCE(MAX(number), 0) + 1 AS next FROM client_invoices WHERE client_id = ?",
-      [clientId],
+      `SELECT COALESCE(MAX(number), 0) + 1 AS next
+         FROM client_invoices WHERE client_id = ? AND kind = ?`,
+      [clientId, input.kind],
     );
 
     const [result] = await db.execute<ResultSetHeader>(
@@ -307,8 +337,8 @@ export async function createInvoice(
          (client_id, number, customer_name, customer_company, customer_email,
           customer_address, issued_on, due_on, vat_rate,
           discount_kind, discount_percent, discount_pence, notes,
-          status, paid_at, paid_method)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          status, paid_at, paid_method, kind, valid_until)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         clientId,
         seq.next,
@@ -323,9 +353,11 @@ export async function createInvoice(
         Math.min(Math.max(Number(input.discount.percent) || 0, 0), 100),
         Math.max(Math.round(Number(input.discount.pence) || 0), 0),
         input.notes.trim().slice(0, 2000) || null,
-        input.paidNow ? "paid" : "draft",
-        input.paidNow ? new Date() : null,
-        input.paidNow ? (input.paidMethod ?? "other") : null,
+        paidNow ? "paid" : "draft",
+        paidNow ? new Date() : null,
+        paidNow ? (input.paidMethod ?? "other") : null,
+        input.kind,
+        input.kind === "quote" && DATE.test(input.validUntil) ? input.validUntil : null,
       ],
     );
 
@@ -380,6 +412,65 @@ export async function setInvoiceStatus(
     return result.affectedRows > 0;
   });
   return done ?? false;
+}
+
+/**
+ * Turns an accepted quote into an invoice.
+ *
+ * Copies rather than converts. The quote stays exactly as it was sent,
+ * because it is the record of what the customer agreed to and changing it
+ * afterwards would destroy the only thing it was for. The invoice is a new
+ * document with its own number, and the two point at each other.
+ *
+ * Refuses to run twice. The quote carries the id of what it became, and
+ * that is checked inside the same call that writes it, so pressing the
+ * button twice gives back the invoice that already exists rather than a
+ * second one with the same work on it.
+ *
+ * Returns the invoice's id, or null if there was nothing to accept.
+ */
+export async function acceptQuote(clientId: number, quoteId: number): Promise<number | null> {
+  const quote = await getInvoice(clientId, quoteId);
+  if (!quote || quote.kind !== "quote") return null;
+  if (quote.becameInvoiceId) return quote.becameInvoiceId;
+
+  const invoiceId = await createInvoice(clientId, {
+    customerName: quote.customerName,
+    customerCompany: quote.customerCompany,
+    customerEmail: quote.customerEmail,
+    customerAddress: quote.customerAddress,
+    // Dated today, not the day the quote was written. The invoice is a
+    // record of work done now; the quote keeps its own date.
+    issuedOn: new Date().toISOString().slice(0, 10),
+    dueOn: "",
+    vatRate: quote.vatRate,
+    discount: quote.discount,
+    notes: quote.notes,
+    kind: "invoice",
+    validUntil: "",
+    paidNow: false,
+    paidMethod: null,
+    lines: quote.lines.map((line) => ({
+      description: line.description,
+      quantity: line.quantity,
+      unitPence: line.unitPence,
+    })),
+  });
+  if (invoiceId === null) return null;
+
+  await withDb(async (db) => {
+    await db.execute(
+      `UPDATE client_invoices
+          SET status = 'accepted',
+              accepted_at = COALESCE(accepted_at, NOW()),
+              became_invoice_id = ?
+        WHERE id = ? AND client_id = ? AND became_invoice_id IS NULL`,
+      [invoiceId, quoteId, clientId],
+    );
+    return true;
+  });
+
+  return invoiceId;
 }
 
 /** The business details that have to appear on what they send out. */

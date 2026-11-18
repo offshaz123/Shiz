@@ -48,7 +48,8 @@ export default async function InvoicePage({ params }: { params: Promise<{ id: st
     getInvoice(client.id, invoiceId),
     getSender(client.id),
   ]);
-  if (!invoice || !sender) notFound();
+  // A quote reached by an invoice URL is not this page.
+  if (!invoice || !sender || invoice.kind !== "invoice") notFound();
 
   return (
     <div className="mx-auto max-w-4xl px-5 py-7 sm:px-8 lg:py-10">

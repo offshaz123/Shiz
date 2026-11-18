@@ -94,10 +94,20 @@ export function invoiceEmailHtml(invoice: Invoice, sender: InvoiceSender): strin
           ${sender.vatNumber ? `<span style="color:${GREY};">VAT no. ${escape(sender.vatNumber)}</span>` : ""}
         </td>
         <td style="vertical-align:top;text-align:right;font-size:13px;line-height:1.6;">
-          <span style="font-size:22px;font-weight:bold;letter-spacing:-0.5px;">INVOICE</span><br>
+          <span style="font-size:22px;font-weight:bold;letter-spacing:-0.5px;">${
+            invoice.kind === "quote" ? "QUOTE" : "INVOICE"
+          }</span><br>
           <strong>No. ${String(invoice.number).padStart(4, "0")}</strong><br>
           <span style="color:${GREY};">Issued ${date(invoice.issuedOn)}</span><br>
-          ${invoice.dueOn ? `<span style="color:${GREY};">Due ${date(invoice.dueOn)}</span>` : ""}
+          ${
+            invoice.kind === "quote"
+              ? invoice.validUntil
+                ? `<span style="color:${GREY};">Valid until ${date(invoice.validUntil)}</span>`
+                : ""
+              : invoice.dueOn
+                ? `<span style="color:${GREY};">Due ${date(invoice.dueOn)}</span>`
+                : ""
+          }
         </td>
       </tr>
     </table>
@@ -137,9 +147,19 @@ export function invoiceEmailHtml(invoice: Invoice, sender: InvoiceSender): strin
     <div style="clear:both;"></div>
 
     <div style="margin-top:72px;border-top:1px solid ${RULE};padding-top:16px;font-size:12px;line-height:1.6;">
-      <div style="font-size:11px;letter-spacing:0.05em;text-transform:uppercase;color:#6b7280;">How to pay</div>
+      <div style="font-size:11px;letter-spacing:0.05em;text-transform:uppercase;color:#6b7280;">${
+        invoice.kind === "quote" ? "What happens next" : "How to pay"
+      }</div>
       <div style="margin-top:6px;color:#374151;">${
-        sender.paymentDetails ? block(sender.paymentDetails) : escape(`Please contact ${sender.name}.`)
+        invoice.kind === "quote"
+          ? escape(
+              `Happy with this? Reply to this email${
+                sender.phone ? ` or ring ${sender.phone}` : ""
+              } and we will book you in.`,
+            )
+          : sender.paymentDetails
+            ? block(sender.paymentDetails)
+            : escape(`Please contact ${sender.name}.`)
       }</div>
       ${invoice.notes ? `<div style="margin-top:16px;color:${GREY};">${block(invoice.notes)}</div>` : ""}
       <div style="margin-top:24px;border-top:1px solid #f3f4f6;padding-top:12px;text-align:center;font-size:10px;color:#9ca3af;">
@@ -153,7 +173,10 @@ export function invoiceEmailHtml(invoice: Invoice, sender: InvoiceSender): strin
 
 function plainText(invoice: Invoice, sender: InvoiceSender): string {
   return [
-    `Invoice No. ${String(invoice.number).padStart(4, "0")} from ${sender.name}`,
+    `${invoice.kind === "quote" ? "Quote" : "Invoice"} No. ${String(invoice.number).padStart(
+      4,
+      "0",
+    )} from ${sender.name}`,
     ``,
     `Issued ${date(invoice.issuedOn)}${invoice.dueOn ? `, due ${date(invoice.dueOn)}` : ""}`,
     ``,
@@ -165,10 +188,11 @@ function plainText(invoice: Invoice, sender: InvoiceSender): string {
     ),
     ``,
     ...(invoice.discountPence > 0 ? [`Discount: -${pounds(invoice.discountPence)}`] : []),
-    `Total due: ${pounds(invoice.totalPence)}`,
+    `${invoice.kind === "quote" ? "Total" : "Total due"}: ${pounds(invoice.totalPence)}`,
     ``,
-    `How to pay:`,
-    sender.paymentDetails || `Please contact ${sender.name}.`,
+    ...(invoice.kind === "quote"
+      ? [`Happy with this? Reply to this email and we will book you in.`]
+      : [`How to pay:`, sender.paymentDetails || `Please contact ${sender.name}.`]),
     invoice.notes ? `\n${invoice.notes}` : ``,
     ``,
     `Powered by ${siteConfig.url.replace(/^https?:\/\//, "")}`,
@@ -202,7 +226,9 @@ export async function sendInvoice(
       from: `"${sender.name}" <${MAIL_FROM || SMTP_USER}>`,
       to: invoice.customerEmail,
       replyTo: sender.email || siteConfig.email,
-      subject: `Invoice ${String(invoice.number).padStart(4, "0")} from ${sender.name}`,
+      subject: `${invoice.kind === "quote" ? "Quote" : "Invoice"} ${String(
+        invoice.number,
+      ).padStart(4, "0")} from ${sender.name}`,
       text: plainText(invoice, sender),
       html: invoiceEmailHtml(invoice, sender),
     });

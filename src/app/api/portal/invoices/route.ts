@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { currentClient } from "@/lib/client-auth";
 import {
+  acceptQuote,
+  asDocKind,
   createInvoice,
   getInvoice,
   getSender,
@@ -33,11 +35,12 @@ function discountKind(value: string): "none" | "percent" | "fixed" {
   return value === "percent" || value === "fixed" ? value : "none";
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   const client = await currentClient();
   if (!client) return NextResponse.json({ error: "unauthorised" }, { status: 401 });
 
-  const invoices = await listInvoices(client.id);
+  const kind = asDocKind(new URL(request.url).searchParams.get("kind") ?? "");
+  const invoices = await listInvoices(client.id, kind);
   return invoices === null
     ? NextResponse.json({ error: "unavailable" }, { status: 503 })
     : NextResponse.json({ invoices });
@@ -67,6 +70,8 @@ export async function POST(request: Request) {
       pence: Math.round((Number((body as { discountAmount?: unknown })?.discountAmount) || 0) * 100),
     },
     notes: text(body, "notes"),
+    kind: asDocKind(text(body, "kind")),
+    validUntil: text(body, "validUntil"),
     paidNow: (body as { paidNow?: unknown })?.paidNow === true,
     paidMethod: asPaidMethod(text(body, "paidMethod")),
     lines: rawLines.map((line) => ({
@@ -99,6 +104,16 @@ export async function PATCH(request: Request) {
   const id = Number((body as { id?: unknown })?.id);
   if (!Number.isInteger(id) || id <= 0) {
     return NextResponse.json({ error: "bad_id" }, { status: 400 });
+  }
+
+  // Accepting a quote makes a new invoice from it, so it answers with the
+  // new document's id rather than just "ok" — the page needs somewhere to
+  // send them next.
+  if ((body as { action?: unknown })?.action === "accept") {
+    const invoiceId = await acceptQuote(client.id, id);
+    return invoiceId === null
+      ? NextResponse.json({ error: "not_a_quote" }, { status: 400 })
+      : NextResponse.json({ id: invoiceId });
   }
 
   if ((body as { action?: unknown })?.action === "send") {
