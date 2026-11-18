@@ -1,9 +1,8 @@
 """Makes the Google Shopping product pictures in public/product-photos/.
 
-Three pictures per product (lib/listings): "main", the plates at a slight
+Two pictures per product (lib/listings): "main", the plates at a slight
 angle like a product photo (no writing on it: Google's rule for the first
-picture); "side", one plate seen from the side so the depth of the raised
-letters shows; and "info", a PlatedUp card with the facts about it. The plates themselves are drawn by the website
+picture), and "info", a PlatedUp card with the facts about it. The plates themselves are drawn by the website
 (/api/plate-image with hero=1 / hero=side), in the legal font, exactly as
 the builder shows them; this script only adds what that can't draw: soft
 shadows, perspective, the plate's edge and the gloss of gel letters.
@@ -261,7 +260,8 @@ def main():
     for style in STYLES:
         for kind in KINDS:
             main_img = main_picture(style, kind)
-            pictures = {"main": main_img, "side": side_picture(style, kind), "info": info_picture(style, kind, main_img)}
+            # A side view (side_picture) was tried and looked fake, so it isn't used.
+            pictures = {"main": main_img, "info": info_picture(style, kind, main_img)}
             for name, img in pictures.items():
                 path = OUT / f"{style}-{kind}-{name}.jpg"
                 img.convert("RGB").save(path, quality=86, optimize=True, progressive=True)

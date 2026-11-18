@@ -53,7 +53,7 @@ export type Listing = {
   config: Partial<PlateConfig>;
   // Today's price in pence, the same as the builder shows.
   price: number;
-  // The main picture, then the side view and the PlatedUp info card.
+  // The main picture, then the PlatedUp info card.
   image: string;
   images: string[];
 };
@@ -61,7 +61,7 @@ export type Listing = {
 // The product pictures, made by scripts/product-photos.py (public/product-photos).
 // v= changes when they're redrawn, so Google fetches them again.
 const PHOTOS_VERSION = "3";
-const photo = (style: StyleId, kind: Kind, name: "main" | "side" | "info") =>
+const photo = (style: StyleId, kind: Kind, name: "main" | "info") =>
   `${site.url}/product-photos/${style}-${kind}-${name}.jpg?v=${PHOTOS_VERSION}`;
 
 export function listing(style: StyleId, kind: Kind): Listing {
@@ -79,7 +79,7 @@ export function listing(style: StyleId, kind: Kind): Listing {
     config,
     price: unitPrice({ ...defaultConfig, ...config }),
     image: photo(style, kind, "main"),
-    images: (["main", "side", "info"] as const).map((n) => photo(style, kind, n)),
+    images: (["main", "info"] as const).map((n) => photo(style, kind, n)),
   };
 }
 
