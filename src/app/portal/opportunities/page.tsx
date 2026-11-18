@@ -5,6 +5,7 @@ import { getAdminClient, getClientSummary, listClientLeads } from "@/lib/clients
 import { listBookingsBetween } from "@/lib/bookings";
 import { listInvoices, pounds } from "@/lib/invoices";
 import { chances, forecast, gaps, tips } from "@/lib/opportunities";
+import { AddEnquiry } from "@/components/AddEnquiry";
 import { LoginForm } from "../LoginForm";
 
 export const dynamic = "force-dynamic";
@@ -96,6 +97,12 @@ export default async function OpportunitiesPage() {
       <p className="mt-1.5 text-sm leading-relaxed text-muted">
         Everything sitting there waiting to be picked up, priced at what you said a job is worth.
       </p>
+
+      {/* Here as well as on the dashboard, because somebody looking at what
+          is outstanding is often doing it with the phone in their hand. */}
+      <div className="mt-5">
+        <AddEnquiry />
+      </div>
 
       {waitingCount > 0 && outlook && (
         <div className="mt-6 grid gap-3 sm:grid-cols-3">

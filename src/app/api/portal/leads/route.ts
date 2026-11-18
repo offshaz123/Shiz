@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { currentClient } from "@/lib/client-auth";
-import { markLeadAnswered, setLeadStatus } from "@/lib/clients";
+import { markLeadAnswered, recordClientLead, setLeadStatus } from "@/lib/clients";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,6 +18,50 @@ export const dynamic = "force-dynamic";
  * The client id comes from the session and is passed into every query, so
  * the id in the body can only ever name one of their own leads.
  */
+/**
+ * An enquiry the client takes themselves.
+ *
+ * Most of these businesses get as many jobs over the phone and off the
+ * van as they do through a form, and until now only the form ones
+ * existed. That made every figure on their dashboard a count of the
+ * website rather than a count of their business, which is the wrong
+ * thing to be measuring and the wrong thing to be judged on.
+ *
+ * Added after the fact, it can be marked as already answered. Somebody
+ * typing up Tuesday's phone call on Thursday should not have their reply
+ * time wrecked by their own book-keeping.
+ */
+export async function POST(request: Request) {
+  const client = await currentClient();
+  if (!client) return NextResponse.json({ error: "unauthorised" }, { status: 401 });
+
+  const body = await request.json().catch(() => null);
+  const text = (name: string) => {
+    const value = (body as Record<string, unknown>)?.[name];
+    return typeof value === "string" ? value.trim() : "";
+  };
+
+  const name = text("name");
+  if (!name) return NextResponse.json({ error: "needs_a_name" }, { status: 400 });
+
+  const typed = Number((body as { value?: unknown })?.value);
+  const id = await recordClientLead(client.id, {
+    name,
+    email: text("email"),
+    phone: text("phone"),
+    message: text("message"),
+    source: text("source") || "phone",
+    landingPage: "",
+    value: Number.isFinite(typed) && typed > 0 ? typed : null,
+    status: text("status"),
+    alreadyAnswered: (body as { alreadyAnswered?: unknown })?.alreadyAnswered === true,
+  });
+
+  return id === null
+    ? NextResponse.json({ error: "not_saved" }, { status: 503 })
+    : NextResponse.json({ id });
+}
+
 export async function PATCH(request: Request) {
   const client = await currentClient();
   if (!client) return NextResponse.json({ error: "unauthorised" }, { status: 401 });

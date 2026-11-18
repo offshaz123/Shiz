@@ -569,6 +569,18 @@ export async function recordClientLead(
     message: string;
     source: string;
     landingPage: string;
+    /**
+     * Set when the client typed it in themselves rather than it arriving
+     * from a form. Their own figure still fills in when this is null, so
+     * one typed by hand with no price on it behaves like any other.
+     */
+    value?: number | null;
+    /** Where it already is. Somebody adding a job they quoted last week
+     *  should not have to mark it twice. */
+    status?: string;
+    /** Set when it is being added after the fact and was answered at the
+     *  time, so their reply time is not ruined by their own book-keeping. */
+    alreadyAnswered?: boolean;
   },
 ): Promise<number | null> {
   const done = await withDb(async (db) => {
@@ -576,10 +588,16 @@ export async function recordClientLead(
     // than joined at read time. A business that puts its average job up
     // from £400 to £600 should not have last year's enquiries silently
     // revalue themselves.
+    const status =
+      lead.status && ["new", "contacted", "quoted", "customer", "lost"].includes(lead.status)
+        ? lead.status
+        : "new";
+
     await db.execute(
       `INSERT INTO client_leads
-         (client_id, name, email, phone, message, source, landing_page, value)
-       SELECT ?, ?, ?, ?, ?, ?, ?, default_lead_value
+         (client_id, name, email, phone, message, source, landing_page, value,
+          status, first_replied_at)
+       SELECT ?, ?, ?, ?, ?, ?, ?, COALESCE(?, default_lead_value), ?, ?
          FROM clients WHERE id = ?`,
       [
         clientId,
@@ -589,6 +607,9 @@ export async function recordClientLead(
         lead.message.slice(0, 4000) || null,
         lead.source.slice(0, 40) || "website",
         lead.landingPage.slice(0, 255) || null,
+        lead.value ?? null,
+        status,
+        lead.alreadyAnswered ? new Date() : null,
         clientId,
       ],
     );

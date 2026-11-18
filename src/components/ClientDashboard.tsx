@@ -2,6 +2,7 @@ import type { ClientLead, ClientSummary, MonthPoint } from "@/lib/clients";
 import { LeadViews } from "./LeadViews";
 import { ClientFunnel } from "./ClientFunnel";
 import { PhoneSections } from "./PhoneSections";
+import { AddEnquiry } from "./AddEnquiry";
 import { CountUp } from "./CountUp";
 import { Reveal } from "./Reveal";
 
@@ -322,10 +323,17 @@ export function ClientDashboard({
               <section className="rounded-2xl border border-border bg-surface">
                 <div className="border-b border-border px-5 py-4">
                   <h2 className="text-sm font-semibold text-foreground">Your enquiries</h2>
-                  <p className="mt-0.5 text-xs text-muted">
+                  <p className="mt-0.5 text-xs leading-relaxed text-muted">
                     Mark one answered and move it along as you go. That is where the customer
                     count and the reply time come from.
                   </p>
+                  {/* Phone calls and walk-ins belong in here too, or these
+                      figures only ever count the website. */}
+                  {!isSample && !readOnly && (
+                    <div className="mt-3">
+                      <AddEnquiry />
+                    </div>
+                  )}
                 </div>
 
                 <LeadViews leads={leads} readOnly={isSample || readOnly} />
