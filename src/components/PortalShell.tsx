@@ -72,6 +72,17 @@ const PAGES = [
       </>
     ),
   },
+  {
+    href: "/portal/app",
+    label: "Get the app",
+    note: "Put it on your phone",
+    icon: (
+      <>
+        <rect x="6" y="2" width="12" height="20" rx="2.5" />
+        <path d="M11 18h2" />
+      </>
+    ),
+  },
 ];
 
 function Mark({ name, logo, size }: { name: string; logo: string; size: string }) {

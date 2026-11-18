@@ -939,12 +939,20 @@ body {
     position: absolute;
     inset: 0;
     margin: 0 !important;
-    padding: 0 !important;
     max-width: none !important;
     width: 100% !important;
+    /* The page itself has no margin, so the white space around the
+       document is made here instead. */
+    padding: 12mm !important;
   }
 
+  /* Zero, and that is the point rather than a style choice.
+     A browser printing with any page margin puts its own header and
+     footer in it — the date, the page title and the full URL of the site
+     it came from. On a client's invoice that prints our name across the
+     top of their document. With no margin there is nowhere for the
+     browser to put them, so they are gone. */
   @page {
-    margin: 14mm;
+    margin: 0;
   }
 }
