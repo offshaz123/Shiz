@@ -397,6 +397,26 @@ const SCHEMA = [
     CONSTRAINT fk_lines_invoice FOREIGN KEY (invoice_id)
       REFERENCES client_invoices (id) ON DELETE CASCADE
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  // A client's own logo, held as bytes.
+  //
+  // In the database rather than on disk because every deploy replaces the
+  // site's files: a logo written into the app directory would vanish the
+  // next time anything was pushed, and it would vanish silently, showing
+  // up as a broken image on an invoice already sent to a customer.
+  //
+  // Its own table rather than a column on clients, so that the hundreds of
+  // queries that read a client do not drag a quarter of a megabyte of
+  // image along with them.
+  `CREATE TABLE IF NOT EXISTS client_logos (
+    client_id INT UNSIGNED NOT NULL,
+    mime VARCHAR(40) NOT NULL,
+    bytes MEDIUMBLOB NOT NULL,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (client_id),
+    CONSTRAINT fk_logo_client FOREIGN KEY (client_id)
+      REFERENCES clients (id) ON DELETE CASCADE
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 ];
 
 /**
@@ -631,6 +651,21 @@ const ADDED_COLUMNS: {
     column: "payment_details",
     definition: "TEXT NULL",
   },
+
+  // The address in parts rather than as one box of text. A single box
+  // means everybody formats it differently and the invoice shows whatever
+  // they did; separate boxes mean the invoice decides, and a postcode
+  // typed as "m124wd" still prints as "M12 4WD".
+  { table: "clients", column: "address_line1", definition: "VARCHAR(160) NULL" },
+  { table: "clients", column: "address_line2", definition: "VARCHAR(160) NULL" },
+  { table: "clients", column: "city", definition: "VARCHAR(100) NULL" },
+  { table: "clients", column: "postcode", definition: "VARCHAR(16) NULL" },
+  { table: "clients", column: "country", definition: "VARCHAR(80) NULL" },
+  { table: "clients", column: "business_website", definition: "VARCHAR(200) NULL" },
+  // What prints at the top of an invoice, when that is not the name we
+  // know them by. We file them as "Auto Wrap Manchester"; the invoice may
+  // need to say "A W Manchester Ltd".
+  { table: "clients", column: "invoice_name", definition: "VARCHAR(160) NULL" },
 ];
 
 interface CountRow extends RowDataPacket {

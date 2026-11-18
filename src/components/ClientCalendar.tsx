@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useState } from "react";
 import type { Booking } from "@/lib/bookings";
+import { WeekGrid } from "./WeekGrid";
+import { DAY_MS, isoDay, weekLabel, weekStart } from "@/lib/week";
 
 /**
  * The client's diary, as a month they can actually work from.
@@ -14,6 +16,13 @@ import type { Booking } from "@/lib/bookings";
  * next to a van, so the grid collapses to a readable week-by-week column on
  * a narrow screen, the tap targets are large, and adding a job is four
  * fields with everything else optional.
+ *
+ * Two views of the same data. The month answers "what is on this month".
+ * The week has the hours down the side and answers the question somebody
+ * actually has with a customer on the phone — "when am I free on Thursday"
+ * — which is a question about the gaps, and a month grid has no gaps in it.
+ * The choice is remembered for the session but not stored, because which
+ * one is wanted depends on what is being done rather than on a preference.
  */
 
 const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -67,7 +76,9 @@ const EMPTY = {
 };
 
 export function ClientCalendar() {
+  const [view, setView] = useState<"month" | "week">("month");
   const [month, setMonth] = useState(() => monthKey(new Date()));
+  const [week, setWeek] = useState(() => weekStart(new Date()));
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -75,10 +86,20 @@ export function ClientCalendar() {
   const [form, setForm] = useState({ ...EMPTY });
   const [saving, setSaving] = useState(false);
 
-  const load = useCallback(async (key: string) => {
+  // The month grid asks for a month; the week asks for seven days, because
+  // the week of the 30th is half one month and half the next.
+  const query = useCallback(
+    (which: "month" | "week", monthKeyValue: string, weekValue: Date) =>
+      which === "week"
+        ? `from=${isoDay(weekValue)}&to=${isoDay(new Date(weekValue.getTime() + 6 * DAY_MS))}`
+        : `month=${monthKeyValue}`,
+    [],
+  );
+
+  const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/portal/bookings?month=${key}`);
+      const res = await fetch(`/api/portal/bookings?${query(view, month, week)}`);
       if (!res.ok) throw new Error(String(res.status));
       const data = await res.json();
       setBookings(data.bookings as Booking[]);
@@ -88,11 +109,11 @@ export function ClientCalendar() {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [query, view, month, week]);
 
   useEffect(() => {
     let cancelled = false;
-    fetch(`/api/portal/bookings?month=${month}`)
+    fetch(`/api/portal/bookings?${query(view, month, week)}`)
       .then((res) => (res.ok ? res.json() : Promise.reject(new Error(String(res.status)))))
       .then((data) => {
         if (!cancelled) {
@@ -109,7 +130,7 @@ export function ClientCalendar() {
     return () => {
       cancelled = true;
     };
-  }, [month]);
+  }, [query, view, month, week]);
 
   const byDay = new Map<string, Booking[]>();
   for (const booking of bookings) {
@@ -119,8 +140,20 @@ export function ClientCalendar() {
   }
 
   function shift(by: number) {
-    const [y, m] = month.split("-").map(Number);
-    setMonth(monthKey(new Date(y, m - 1 + by, 1)));
+    if (view === "week") {
+      setWeek(new Date(week.getTime() + by * 7 * DAY_MS));
+    } else {
+      const [y, m] = month.split("-").map(Number);
+      setMonth(monthKey(new Date(y, m - 1 + by, 1)));
+    }
+    setSelected(null);
+  }
+
+  /** Back to now, whichever view is open. */
+  function goToday() {
+    const now = new Date();
+    setMonth(monthKey(now));
+    setWeek(weekStart(now));
     setSelected(null);
   }
 
@@ -135,7 +168,7 @@ export function ClientCalendar() {
       });
       if (!res.ok) throw new Error(String(res.status));
       setForm({ ...EMPTY });
-      await load(month);
+      await load();
     } catch {
       setError("That did not save. Write the details down before trying again.");
     } finally {
@@ -150,7 +183,7 @@ export function ClientCalendar() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id, status }),
       });
-      await load(month);
+      await load();
     } catch {
       setError("That did not save.");
     }
@@ -161,24 +194,53 @@ export function ClientCalendar() {
 
   return (
     <div className="flex flex-col gap-5">
-      <div className="flex items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <button
+          type="button"
+          onClick={goToday}
+          className="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground"
+        >
+          Today
+        </button>
         <button
           type="button"
           onClick={() => shift(-1)}
-          aria-label="Previous month"
-          className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-muted hover:text-foreground"
+          aria-label={view === "week" ? "Previous week" : "Previous month"}
+          className="rounded-full border border-border px-3 py-2 text-sm font-semibold text-muted hover:text-foreground"
         >
           ←
         </button>
-        <h2 className="text-base font-bold text-foreground">{monthLabel(month)}</h2>
         <button
           type="button"
           onClick={() => shift(1)}
-          aria-label="Next month"
-          className="rounded-full border border-border px-4 py-2 text-sm font-semibold text-muted hover:text-foreground"
+          aria-label={view === "week" ? "Next week" : "Next month"}
+          className="rounded-full border border-border px-3 py-2 text-sm font-semibold text-muted hover:text-foreground"
         >
           →
         </button>
+
+        <h2 className="ml-1 text-base font-bold text-foreground">
+          {view === "week" ? weekLabel(week) : monthLabel(month)}
+        </h2>
+
+        <div className="ml-auto flex rounded-full border border-border p-0.5">
+          {(["month", "week"] as const).map((which) => (
+            <button
+              key={which}
+              type="button"
+              onClick={() => {
+                setView(which);
+                setSelected(null);
+              }}
+              aria-pressed={view === which}
+              className={`rounded-full px-3.5 py-1.5 text-xs font-semibold capitalize transition ${
+                view === which ? "bg-foreground text-background" : "text-muted"
+              }`}
+            >
+              {which}
+            </button>
+          ))}
+        </div>
       </div>
 
       {error && (
@@ -187,6 +249,13 @@ export function ClientCalendar() {
         </p>
       )}
 
+      {view === "week" ? (
+        <WeekGrid
+          start={week}
+          bookings={bookings}
+          onPickDay={(day) => setSelected(selected === day ? null : day)}
+        />
+      ) : (
       <div className="rounded-2xl border border-border bg-surface p-2 sm:p-3">
         <div className="grid grid-cols-7 gap-1">
           {DAY_NAMES.map((name) => (
@@ -232,8 +301,10 @@ export function ClientCalendar() {
             );
           })}
         </div>
-        {loading && <p className="px-2 py-2 text-xs text-muted">Loading…</p>}
       </div>
+      )}
+
+      {loading && <p className="text-xs text-muted">Loading…</p>}
 
       {selected && (
         <section className="rounded-2xl border border-border bg-surface p-5">

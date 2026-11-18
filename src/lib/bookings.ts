@@ -97,6 +97,32 @@ export async function listBookingsForMonth(
   });
 }
 
+/**
+ * Everything between two dates, both ends included.
+ *
+ * The week view needs this because a week is not a month: the week of the
+ * 30th is half October and half November, and fetching by month would
+ * either miss half of it or need two requests stitched together in the
+ * browser.
+ */
+export async function listBookingsBetween(
+  clientId: number,
+  from: string,
+  to: string,
+): Promise<Booking[] | null> {
+  const DATE = /^\d{4}-\d{2}-\d{2}$/;
+  if (!DATE.test(from) || !DATE.test(to) || from > to) return null;
+  return withDb(async (db) => {
+    const [rows] = await db.query<BookingRow[]>(
+      `SELECT ${COLUMNS} FROM client_bookings
+        WHERE client_id = ? AND booked_on >= ? AND booked_on <= ?
+        ORDER BY booked_on ASC, starts_at ASC`,
+      [clientId, from, to],
+    );
+    return rows.map(toBooking);
+  });
+}
+
 /** What is coming, for the list under the grid and the app's front screen. */
 export async function listUpcoming(clientId: number, days = 14): Promise<Booking[] | null> {
   return withDb(async (db) => {

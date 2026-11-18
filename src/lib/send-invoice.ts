@@ -82,6 +82,7 @@ export function invoiceEmailHtml(invoice: Invoice, sender: InvoiceSender): strin
           ${sender.address ? `<span style="color:${GREY};">${block(sender.address)}</span><br>` : ""}
           ${sender.phone ? `<span style="color:${GREY};">${escape(sender.phone)}</span><br>` : ""}
           ${sender.email ? `<span style="color:${GREY};">${escape(sender.email)}</span><br>` : ""}
+          ${sender.website ? `<span style="color:${GREY};">${escape(sender.website)}</span><br>` : ""}
           ${sender.vatNumber ? `<span style="color:${GREY};">VAT no. ${escape(sender.vatNumber)}</span>` : ""}
         </td>
         <td style="vertical-align:top;text-align:right;font-size:13px;line-height:1.6;">

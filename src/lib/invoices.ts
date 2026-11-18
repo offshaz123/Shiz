@@ -1,6 +1,15 @@
 import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { withDb } from "./db";
 import { pounds, totals, type InvoiceLine } from "./invoice-maths";
+import {
+  formatAddress,
+  tidyEmail,
+  tidyPhone,
+  tidyPostcode,
+  tidyVatNumber,
+  tidyWebsite,
+} from "./business-profile";
+import { siteConfig } from "./site-config";
 
 // Re-exported so a server file has one place to import from, while the
 // browser-side pages take them straight from invoice-maths and never pull
@@ -61,10 +70,31 @@ export type InvoiceSender = {
   name: string;
   logoUrl: string;
   email: string;
+  /** Already laid out one part per line, ready to print. */
   address: string;
   phone: string;
+  website: string;
   vatNumber: string;
   paymentDetails: string;
+};
+
+/** The same business, in the separate boxes they fill in. */
+export type BusinessProfile = {
+  /** What we file them under; not editable from their side. */
+  accountName: string;
+  invoiceName: string;
+  email: string;
+  phone: string;
+  website: string;
+  vatNumber: string;
+  paymentDetails: string;
+  line1: string;
+  line2: string;
+  city: string;
+  postcode: string;
+  country: string;
+  /** Where their uploaded logo is served from, or "" if there is none. */
+  logoUrl: string;
 };
 
 interface InvoiceRow extends RowDataPacket {
@@ -298,59 +328,143 @@ export async function setInvoiceStatus(
 }
 
 /** The business details that have to appear on what they send out. */
-export async function getSender(clientId: number): Promise<InvoiceSender | null> {
+const PROFILE_COLUMNS = `name, invoice_name, slug, contact_email, business_phone, business_website,
+  vat_number, payment_details, address_line1, address_line2, city, postcode, country`;
+
+type ProfileRow = RowDataPacket & {
+  name: string;
+  invoice_name: string | null;
+  slug: string;
+  contact_email: string | null;
+  business_phone: string | null;
+  business_website: string | null;
+  vat_number: string | null;
+  payment_details: string | null;
+  address_line1: string | null;
+  address_line2: string | null;
+  city: string | null;
+  postcode: string | null;
+  country: string | null;
+};
+
+/**
+ * Where their logo is served from, with a stamp on the end.
+ *
+ * The stamp is what makes a replaced logo actually appear. The image is
+ * cached for a year on purpose — it is fetched by every email client that
+ * opens an invoice — so without something changing in the URL, a client
+ * who uploads a new logo would keep seeing the old one and have no idea
+ * why.
+ */
+function logoUrlFor(slug: string, stamp: string | null): string {
+  if (!stamp) return "";
+  const version = Date.parse(stamp);
+  return `${siteConfig.url.replace(/\/$/, "")}/api/logo/${slug}?v=${
+    Number.isFinite(version) ? version : 0
+  }`;
+}
+
+async function readProfile(
+  clientId: number,
+): Promise<{ row: ProfileRow; logoStamp: string | null } | null> {
   const found = await withDb(async (db) => {
-    const [rows] = await db.query<
-      (RowDataPacket & {
-        name: string;
-        logo_url: string | null;
-        contact_email: string | null;
-        business_address: string | null;
-        business_phone: string | null;
-        vat_number: string | null;
-        payment_details: string | null;
-      })[]
-    >(
-      `SELECT name, logo_url, contact_email, business_address, business_phone,
-              vat_number, payment_details
-         FROM clients WHERE id = ? LIMIT 1`,
+    const [rows] = await db.query<ProfileRow[]>(
+      `SELECT ${PROFILE_COLUMNS} FROM clients WHERE id = ? LIMIT 1`,
       [clientId],
     );
     const row = rows[0];
     if (!row) return null;
-    return {
-      name: row.name,
-      logoUrl: row.logo_url ?? "",
-      email: row.contact_email ?? "",
-      address: row.business_address ?? "",
-      phone: row.business_phone ?? "",
-      vatNumber: row.vat_number ?? "",
-      paymentDetails: row.payment_details ?? "",
-    };
+
+    const [logos] = await db.query<(RowDataPacket & { updated_at: string })[]>(
+      "SELECT updated_at FROM client_logos WHERE client_id = ? LIMIT 1",
+      [clientId],
+    );
+    return { row, logoStamp: logos[0] ? String(logos[0].updated_at) : null };
   });
   return found ?? null;
 }
 
-export async function setSender(
+export async function getSender(clientId: number): Promise<InvoiceSender | null> {
+  const found = await readProfile(clientId);
+  if (!found) return null;
+  const { row, logoStamp } = found;
+
+  return {
+    // The invoice name wins when they have set one: we file them as "Auto
+    // Wrap Manchester" but the invoice may need to say "A W Manchester Ltd".
+    name: row.invoice_name?.trim() || row.name,
+    logoUrl: logoUrlFor(row.slug, logoStamp),
+    email: tidyEmail(row.contact_email ?? ""),
+    address: formatAddress({
+      line1: row.address_line1 ?? "",
+      line2: row.address_line2 ?? "",
+      city: row.city ?? "",
+      postcode: row.postcode ?? "",
+      country: row.country ?? "",
+    }),
+    phone: tidyPhone(row.business_phone ?? ""),
+    website: tidyWebsite(row.business_website ?? ""),
+    vatNumber: tidyVatNumber(row.vat_number ?? ""),
+    paymentDetails: (row.payment_details ?? "").trim(),
+  };
+}
+
+/** The same details, in the boxes they are typed into. */
+export async function getBusinessProfile(clientId: number): Promise<BusinessProfile | null> {
+  const found = await readProfile(clientId);
+  if (!found) return null;
+  const { row, logoStamp } = found;
+
+  return {
+    accountName: row.name,
+    invoiceName: row.invoice_name ?? "",
+    email: row.contact_email ?? "",
+    phone: row.business_phone ?? "",
+    website: row.business_website ?? "",
+    vatNumber: row.vat_number ?? "",
+    paymentDetails: row.payment_details ?? "",
+    line1: row.address_line1 ?? "",
+    line2: row.address_line2 ?? "",
+    city: row.city ?? "",
+    postcode: row.postcode ?? "",
+    country: row.country ?? "",
+    logoUrl: logoUrlFor(row.slug, logoStamp),
+  };
+}
+
+/**
+ * Saves what they typed, tidied on the way in.
+ *
+ * Tidied here rather than only when printing, so that what they see in the
+ * box afterwards is what their customers will see. A form that silently
+ * prints something different from what it shows is a form nobody trusts
+ * the second time.
+ */
+export async function setBusinessProfile(
   clientId: number,
-  changes: Partial<Omit<InvoiceSender, "name" | "logoUrl">>,
+  changes: Record<string, string>,
 ): Promise<boolean> {
-  const map: Record<string, string> = {
-    email: "contact_email",
-    address: "business_address",
-    phone: "business_phone",
-    vatNumber: "vat_number",
-    paymentDetails: "payment_details",
+  const columns: Record<string, { column: string; tidy?: (v: string) => string }> = {
+    invoiceName: { column: "invoice_name" },
+    email: { column: "contact_email", tidy: tidyEmail },
+    phone: { column: "business_phone", tidy: tidyPhone },
+    website: { column: "business_website", tidy: tidyWebsite },
+    vatNumber: { column: "vat_number", tidy: tidyVatNumber },
+    paymentDetails: { column: "payment_details" },
+    line1: { column: "address_line1" },
+    line2: { column: "address_line2" },
+    city: { column: "city" },
+    postcode: { column: "postcode", tidy: tidyPostcode },
+    country: { column: "country" },
   };
 
   const sets: string[] = [];
   const params: string[] = [];
-  for (const [key, column] of Object.entries(map)) {
-    const value = changes[key as keyof typeof changes];
-    if (typeof value === "string") {
-      sets.push(`${column} = ?`);
-      params.push(value.trim().slice(0, 2000));
-    }
+  for (const [key, spec] of Object.entries(columns)) {
+    const value = changes[key];
+    if (typeof value !== "string") continue;
+    sets.push(`${spec.column} = ?`);
+    params.push((spec.tidy ? spec.tidy(value) : value.trim()).slice(0, 2000));
   }
   if (sets.length === 0) return false;
 

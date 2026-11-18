@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { currentClient } from "@/lib/client-auth";
-import { getSender } from "@/lib/invoices";
+import { getBusinessProfile } from "@/lib/invoices";
 import { BusinessDetails } from "@/components/BusinessDetails";
 import { LoginForm } from "../LoginForm";
 
@@ -16,8 +16,8 @@ export default async function BusinessPage() {
   const client = await currentClient();
   if (!client) return <LoginForm failed={false} />;
 
-  const sender = await getSender(client.id);
-  if (!sender) notFound();
+  const profile = await getBusinessProfile(client.id);
+  if (!profile) notFound();
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-7 sm:px-8 lg:py-10">
@@ -25,12 +25,13 @@ export default async function BusinessPage() {
         Business details
       </h1>
       <p className="mt-1.5 text-sm text-muted">
-        What appears on the invoices you send. Fill it in once; every invoice after that carries
-        it. Boxes save when you click away.
+        What appears on the invoices you send. Fill it in once and every invoice after that
+        carries it. Type it however you like — capitals, spaces, it sorts itself out. Boxes save
+        when you click away.
       </p>
 
       <div className="mt-6">
-        <BusinessDetails sender={sender} />
+        <BusinessDetails profile={profile} />
       </div>
     </div>
   );

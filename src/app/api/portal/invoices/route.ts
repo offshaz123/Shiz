@@ -6,7 +6,7 @@ import {
   getSender,
   listInvoices,
   setInvoiceStatus,
-  setSender,
+  setBusinessProfile,
   type InvoiceStatus,
 } from "@/lib/invoices";
 import { sendInvoice } from "@/lib/send-invoice";
@@ -114,18 +114,32 @@ export async function PATCH(request: Request) {
 }
 
 /** Their own business details, as they appear on what they send out. */
+const PROFILE_FIELDS = [
+  "invoiceName",
+  "email",
+  "phone",
+  "website",
+  "vatNumber",
+  "paymentDetails",
+  "line1",
+  "line2",
+  "city",
+  "postcode",
+  "country",
+];
+
 export async function PUT(request: Request) {
   const client = await currentClient();
   if (!client) return NextResponse.json({ error: "unauthorised" }, { status: 401 });
 
   const body = await request.json().catch(() => null);
   const changes: Record<string, string> = {};
-  for (const field of ["email", "address", "phone", "vatNumber", "paymentDetails"]) {
+  for (const field of PROFILE_FIELDS) {
     const value = (body as Record<string, unknown>)?.[field];
     if (typeof value === "string") changes[field] = value;
   }
 
-  const done = await setSender(client.id, changes);
+  const done = await setBusinessProfile(client.id, changes);
   return done
     ? NextResponse.json({ ok: true })
     : NextResponse.json({ error: "not_saved" }, { status: 400 });

@@ -3,6 +3,7 @@ import { currentClient } from "@/lib/client-auth";
 import {
   createBooking,
   deleteBooking,
+  listBookingsBetween,
   listBookingsForMonth,
   updateBookingStatus,
 } from "@/lib/bookings";
@@ -27,10 +28,19 @@ export async function GET(request: Request) {
   const client = await who();
   if (!client) return NextResponse.json({ error: "unauthorised" }, { status: 401 });
 
-  const month = new URL(request.url).searchParams.get("month") ?? "";
-  const bookings = await listBookingsForMonth(client.id, month);
+  const params = new URL(request.url).searchParams;
+  const from = params.get("from");
+  const to = params.get("to");
+
+  // A week straddles two months, so the week view asks for a range while
+  // the month grid still asks for a month.
+  const bookings =
+    from && to
+      ? await listBookingsBetween(client.id, from, to)
+      : await listBookingsForMonth(client.id, params.get("month") ?? "");
+
   return bookings === null
-    ? NextResponse.json({ error: "bad_month" }, { status: 400 })
+    ? NextResponse.json({ error: "bad_dates" }, { status: 400 })
     : NextResponse.json({ bookings });
 }
 

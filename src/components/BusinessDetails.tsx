@@ -1,29 +1,150 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { InvoiceSender } from "@/lib/invoices";
+import type { BusinessProfile } from "@/lib/invoices";
+import { MAX_LOGO_BYTES } from "@/lib/client-logo-limits";
 
 /**
- * The client's own details, as they appear on everything they send out.
+ * Their business, in boxes, so nobody has to get the formatting right.
  *
- * Saved when they click away from a box rather than behind a Save button.
- * There are five boxes here and somebody filling them in on a phone between
- * jobs should not lose the lot because they closed the tab on the last one.
+ * One box per thing rather than one box for the address, because a single
+ * box means every client lays theirs out differently and the invoice shows
+ * whatever they did. Separate boxes mean the document decides: a postcode
+ * typed "m124wd" is stored and printed as "M12 4WD", a VAT number typed
+ * "123 456 789" comes out "GB123456789", and a website pasted with
+ * https://www. on the front prints without it.
  *
- * The logo is not here. It is set from our side, because it is the one
- * field where a broken address shows up on their customer's invoice rather
- * than on their own screen, and a line saying who to ask is more use to
- * them than a box they can get wrong.
+ * What is never corrected is the business name. "McGrath" and "MOT4U" are
+ * not mistakes, and a tidy-up clever enough to title-case a name is a
+ * tidy-up that will get somebody's name wrong.
+ *
+ * Boxes save when you click away. There are a dozen of them and somebody
+ * filling this in on a phone between jobs should not lose the lot because
+ * they closed the tab on the last one.
  */
 
 const FIELD =
   "w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none focus:border-brand-pink";
 
-export function BusinessDetails({ sender }: { sender: InvoiceSender }) {
+/**
+ * Shrinks a picture in the browser before it is sent.
+ *
+ * The file is usually straight off a phone camera roll, which is several
+ * megabytes, and what is wanted is a logo a few hundred pixels across. The
+ * canvas does it here so the upload is quick on a phone signal, and the
+ * server checks the size again anyway.
+ *
+ * PNG out, so a logo with a transparent background keeps it. JPEG would
+ * fill the transparency with black, which on an invoice is a black box
+ * where their logo should be.
+ */
+async function shrink(file: File, max = 600): Promise<Blob> {
+  const url = URL.createObjectURL(file);
+  try {
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = () => reject(new Error("not an image"));
+      img.src = url;
+    });
+
+    const scale = Math.min(1, max / Math.max(image.width, image.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(image.width * scale));
+    canvas.height = Math.max(1, Math.round(image.height * scale));
+
+    const context = canvas.getContext("2d");
+    if (!context) throw new Error("no canvas");
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    return await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(
+        (blob) => (blob ? resolve(blob) : reject(new Error("could not convert"))),
+        "image/png",
+      );
+    });
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+function Section({
+  title,
+  note,
+  children,
+}: {
+  title: string;
+  note: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
+      <h2 className="text-sm font-semibold text-foreground">{title}</h2>
+      <p className="mt-0.5 text-xs leading-relaxed text-muted">{note}</p>
+      <div className="mt-4">{children}</div>
+    </section>
+  );
+}
+
+/**
+ * One labelled box that saves when you click away.
+ *
+ * Declared out here rather than inside the form. A component defined
+ * during a render is a new type on every render, so React tears the input
+ * down and builds it again — and an uncontrolled input rebuilt mid-edit
+ * loses whatever was half-typed in it.
+ */
+function Box({
+  label,
+  value,
+  onSave,
+  note,
+  placeholder,
+  rows,
+  className = "",
+}: {
+  label: string;
+  value: string;
+  onSave: (next: string) => void;
+  note?: string;
+  placeholder?: string;
+  rows?: number;
+  className?: string;
+}) {
+  return (
+    <label className={`flex flex-col gap-1.5 ${className}`}>
+      <span className="text-xs font-medium text-muted">{label}</span>
+      {rows ? (
+        <textarea
+          defaultValue={value}
+          rows={rows}
+          placeholder={placeholder}
+          onBlur={(e) => onSave(e.target.value)}
+          className={`${FIELD} leading-relaxed`}
+        />
+      ) : (
+        <input
+          defaultValue={value}
+          placeholder={placeholder}
+          autoCapitalize="none"
+          autoCorrect="off"
+          spellCheck={false}
+          onBlur={(e) => onSave(e.target.value)}
+          className={FIELD}
+        />
+      )}
+      {note && <span className="text-[11px] leading-relaxed text-muted">{note}</span>}
+    </label>
+  );
+}
+
+export function BusinessDetails({ profile }: { profile: BusinessProfile }) {
   const router = useRouter();
+  const fileInput = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   async function save(field: string, value: string, was: string) {
     if (value === was) return;
@@ -35,45 +156,59 @@ export function BusinessDetails({ sender }: { sender: InvoiceSender }) {
         body: JSON.stringify({ [field]: value }),
       });
       if (!res.ok) throw new Error(String(res.status));
-      setSaved(true);
+      setSaved("Saved.");
+      // Refreshed so the tidied version comes back into the box. What they
+      // see afterwards has to be what their customers will see.
       router.refresh();
     } catch {
       setError("That did not save. Try again in a moment.");
     }
   }
 
-  const boxes: {
-    field: keyof InvoiceSender;
-    label: string;
-    note?: string;
-    rows?: number;
-    placeholder?: string;
-  }[] = [
-    {
-      field: "address",
-      label: "Your business address",
-      rows: 3,
-      placeholder: "Unit 4, Barton Works\nStockport Road\nManchester M12 4WD",
-    },
-    { field: "phone", label: "Phone number on your invoices", placeholder: "0161 123 4567" },
-    { field: "email", label: "Email on your invoices", placeholder: "you@yourbusiness.co.uk" },
-    {
-      field: "vatNumber",
-      label: "VAT number",
-      note: "Leave blank if you are not VAT registered. Nothing about VAT appears on your invoices without it.",
-      placeholder: "GB123456789",
-    },
-    {
-      field: "paymentDetails",
-      label: "How your customers pay you",
-      rows: 4,
-      note: "Printed at the bottom of every invoice. Whatever you would normally write — bank details, a payment link, or that you take card on the day.",
-      placeholder: "Bank transfer\nSort code 00-00-00\nAccount 12345678\nReference: the invoice number",
-    },
-  ];
+  async function upload(file: File) {
+    setUploading(true);
+    setError("");
+    setSaved("");
+    try {
+      const small = await shrink(file);
+      if (small.size > MAX_LOGO_BYTES) throw new Error("too_big");
+
+      const body = new FormData();
+      body.append("logo", small, "logo.png");
+      const res = await fetch("/api/portal/logo", { method: "POST", body });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error ?? String(res.status));
+
+      setSaved("Logo saved.");
+      router.refresh();
+    } catch (err) {
+      setError(
+        String(err).includes("not an image")
+          ? "That file is not a picture. A JPG or PNG works."
+          : String(err).includes("too_big")
+            ? "That picture is too big even after shrinking. Try a smaller one."
+            : "The logo did not save. Try again in a moment.",
+      );
+    } finally {
+      setUploading(false);
+      if (fileInput.current) fileInput.current.value = "";
+    }
+  }
+
+  async function removeLogo() {
+    setError("");
+    try {
+      const res = await fetch("/api/portal/logo", { method: "DELETE" });
+      if (!res.ok) throw new Error(String(res.status));
+      setSaved("Logo removed.");
+      router.refresh();
+    } catch {
+      setError("That did not work. Try again in a moment.");
+    }
+  }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5">
       {(error || saved) && (
         <p
           className={`rounded-xl border px-4 py-2.5 text-xs font-medium ${
@@ -82,67 +217,143 @@ export function BusinessDetails({ sender }: { sender: InvoiceSender }) {
               : "border-emerald-500/40 text-emerald-600 dark:text-emerald-400"
           }`}
         >
-          {error || "Saved."}
+          {error || saved}
         </p>
       )}
 
-      <section className="rounded-2xl border border-border bg-surface p-5 sm:p-6">
-        <div className="flex items-center gap-3 border-b border-border pb-4">
-          {sender.logoUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={sender.logoUrl}
-              alt=""
-              className="h-12 w-12 shrink-0 rounded-xl object-contain"
+      <Section
+        title="Your logo"
+        note="Goes at the top of every invoice you send. A photo from your phone or a file from your computer — it is shrunk to the right size for you."
+      >
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex h-24 w-32 shrink-0 items-center justify-center rounded-xl border border-dashed border-border bg-background">
+            {profile.logoUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={profile.logoUrl}
+                alt="Your logo"
+                className="max-h-20 max-w-28 object-contain"
+              />
+            ) : (
+              <span className="text-[11px] text-muted">No logo yet</span>
+            )}
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <input
+              ref={fileInput}
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) void upload(file);
+              }}
             />
-          ) : (
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-border text-lg font-bold text-muted">
-              {sender.name.slice(0, 1).toUpperCase()}
-            </span>
-          )}
-          <div>
-            <p className="text-sm font-bold text-foreground">{sender.name}</p>
-            <p className="text-[11px] leading-relaxed text-muted">
-              {sender.logoUrl
-                ? "Your logo, as it appears on your invoices."
-                : "No logo yet — send us the file and we will put it on."}
-            </p>
+            <button
+              type="button"
+              disabled={uploading}
+              onClick={() => fileInput.current?.click()}
+              className="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground disabled:opacity-50"
+            >
+              {uploading ? "Saving…" : profile.logoUrl ? "Change it" : "Choose a picture"}
+            </button>
+            {profile.logoUrl && (
+              <button
+                type="button"
+                onClick={removeLogo}
+                className="rounded-full border border-border px-4 py-2 text-xs font-semibold text-muted hover:text-foreground"
+              >
+                Remove
+              </button>
+            )}
           </div>
         </div>
+      </Section>
 
-        <div className="mt-5 flex flex-col gap-4">
-          {boxes.map((box) => {
-            const was = sender[box.field] as string;
-            return (
-              <label key={box.field} className="flex flex-col gap-1.5">
-                <span className="text-xs font-medium text-muted">{box.label}</span>
-                {box.rows ? (
-                  <textarea
-                    defaultValue={was}
-                    rows={box.rows}
-                    placeholder={box.placeholder}
-                    onBlur={(e) => save(box.field, e.target.value, was)}
-                    className={`${FIELD} leading-relaxed`}
-                  />
-                ) : (
-                  <input
-                    defaultValue={was}
-                    placeholder={box.placeholder}
-                    autoCapitalize="none"
-                    autoCorrect="off"
-                    spellCheck={false}
-                    onBlur={(e) => save(box.field, e.target.value, was)}
-                    className={FIELD}
-                  />
-                )}
-                {box.note && (
-                  <span className="text-[11px] leading-relaxed text-muted">{box.note}</span>
-                )}
-              </label>
-            );
-          })}
+      <Section
+        title="Your business"
+        note="How you want to appear on an invoice. We have you down as a business name already — fill the first box in only if the invoice should say something different."
+      >
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Box
+            value={profile.invoiceName}
+            onSave={(next) => save("invoiceName", next, profile.invoiceName)}
+            label="Name on your invoices"
+            placeholder={profile.accountName}
+            note={`Left blank, invoices say “${profile.accountName}”.`}
+            className="sm:col-span-2"
+          />
+          <Box value={profile.email} onSave={(next) => save("email", next, profile.email)} label="Email" placeholder="you@yourbusiness.co.uk" />
+          <Box value={profile.phone} onSave={(next) => save("phone", next, profile.phone)} label="Phone" placeholder="0161 123 4567" />
+          <Box
+            value={profile.website}
+            onSave={(next) => save("website", next, profile.website)}
+            label="Website"
+            placeholder="yourbusiness.co.uk"
+            note="Paste it however you like — it prints tidily."
+          />
+          <Box
+            value={profile.vatNumber}
+            onSave={(next) => save("vatNumber", next, profile.vatNumber)}
+            label="VAT number"
+            placeholder="123456789"
+            note="Blank if you are not registered. Nothing about VAT appears on an invoice without it. The GB goes on by itself."
+          />
         </div>
-      </section>
+      </Section>
+
+      <Section
+        title="Your address"
+        note="One line each. It is laid out properly on the invoice, and blank boxes are left out rather than leaving a gap."
+      >
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Box
+            value={profile.line1}
+            onSave={(next) => save("line1", next, profile.line1)}
+            label="Street address"
+            placeholder="Unit 4, Barton Works"
+            className="sm:col-span-2"
+          />
+          <Box
+            value={profile.line2}
+            onSave={(next) => save("line2", next, profile.line2)}
+            label="Second line (if you have one)"
+            placeholder="Stockport Road"
+            className="sm:col-span-2"
+          />
+          <Box value={profile.city} onSave={(next) => save("city", next, profile.city)} label="Town or city" placeholder="Manchester" />
+          <Box
+            value={profile.postcode}
+            onSave={(next) => save("postcode", next, profile.postcode)}
+            label="Postcode"
+            placeholder="M12 4WD"
+            note="Capitals and spaces sort themselves out."
+          />
+          <Box
+            value={profile.country}
+            onSave={(next) => save("country", next, profile.country)}
+            label="Country (only if you need it on there)"
+            placeholder="United Kingdom"
+            className="sm:col-span-2"
+          />
+        </div>
+      </Section>
+
+      <Section
+        title="How your customers pay you"
+        note="Printed at the bottom of every invoice. Whatever you would normally write — bank details, a payment link, or that you take card on the day."
+      >
+        <Box
+            value={profile.paymentDetails}
+            onSave={(next) => save("paymentDetails", next, profile.paymentDetails)}
+          label="Payment details"
+          rows={5}
+          placeholder={
+            "Bank transfer\nSort code 00-00-00\nAccount 12345678\nReference: the invoice number"
+          }
+        />
+      </Section>
     </div>
   );
 }

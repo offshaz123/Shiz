@@ -68,6 +68,7 @@ export function InvoiceDocument({
             )}
             {sender.phone && <p className="mt-1 text-[#4b5563]">{sender.phone}</p>}
             {sender.email && <p className="text-[#4b5563]">{sender.email}</p>}
+            {sender.website && <p className="text-[#4b5563]">{sender.website}</p>}
             {sender.vatNumber && (
               <p className="mt-1 text-[#4b5563]">VAT no. {sender.vatNumber}</p>
             )}
