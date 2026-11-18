@@ -70,12 +70,17 @@ export function ClientFunnel({ funnel }: { funnel: FunnelStep[] }) {
 
                 <div className="flex items-center gap-3">
                   <span className="w-20 shrink-0 text-xs text-muted">{step.label}</span>
-                  <span className="h-7 flex-1 overflow-hidden rounded-lg bg-background">
+                  <span className="h-9 flex-1 overflow-hidden rounded-lg bg-background">
                     <span
-                      className="flex h-full items-center rounded-lg bg-series-1 px-2"
-                      style={{ width: `${Math.max(share, step.reached > 0 ? 8 : 0)}%` }}
+                      className="draw-bar flex h-full items-center rounded-lg bg-series-1 px-2.5"
+                      style={{
+                        width: `${Math.max(share, step.reached > 0 ? 10 : 0)}%`,
+                        animationDelay: `${i * 0.07}s`,
+                      }}
                     >
-                      <span className="text-xs font-bold tabular-nums text-white">
+                      {/* Held back until the bar has nearly stopped, because
+                          the bar is scaled and the digits scale with it. */}
+                      <span className="draw-bar-text text-xs font-bold tabular-nums text-white">
                         {step.reached}
                       </span>
                     </span>

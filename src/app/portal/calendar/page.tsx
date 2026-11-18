@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { currentClient } from "@/lib/client-auth";
-import { getClientLogo } from "@/lib/clients";
 import { listUpcoming } from "@/lib/bookings";
 import { ClientCalendar } from "@/components/ClientCalendar";
-import { PortalNav } from "@/components/PortalNav";
 import { InstallPrompt } from "@/components/InstallPrompt";
 import { LoginForm } from "../LoginForm";
 
@@ -26,35 +24,17 @@ export default async function CalendarPage() {
   const client = await currentClient();
   if (!client) return <LoginForm failed={false} />;
 
-  const [upcoming, logo] = await Promise.all([
-    listUpcoming(client.id),
-    getClientLogo(client.id),
-  ]);
+  const upcoming = await listUpcoming(client.id);
 
   return (
-    <div className="mx-auto max-w-3xl px-5 py-8 sm:px-8">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-5">
-        <div className="flex items-center gap-3">
-          {/* Same mark as the dashboard, so moving between the two pages does
-              not look like leaving their system. */}
-          {logo && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={logo}
-              alt=""
-              className="h-10 w-10 shrink-0 rounded-lg object-contain"
-            />
-          )}
-          <div>
-            <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-              Your diary
-            </h1>
-            <p className="mt-1 text-sm text-muted">
-              Every job booked in. We email you the night before and a list each morning.
-            </p>
-          </div>
-        </div>
-        <PortalNav />
+    <div className="mx-auto max-w-4xl px-5 py-7 sm:px-8 lg:py-10">
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+          Your diary
+        </h1>
+        <p className="mt-1.5 text-sm text-muted">
+          Every job booked in. We email you the night before, and a list of the day each morning.
+        </p>
       </div>
 
       <div className="mt-6">

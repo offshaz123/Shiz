@@ -832,3 +832,80 @@ body {
     transition: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Bars that draw themselves
+
+   A dashboard where every bar is already at its final length reads as a
+   printed report. Drawn, it reads as a thing that just measured something.
+
+   Done with a transform rather than by animating width, for two reasons:
+   width is laid out on every frame and a chart full of them stutters on a
+   phone, and the end width is set inline from the data, which a keyframe
+   cannot refer to. scaleX from 0 ends at whatever width the element was
+   given, whatever that happens to be.
+
+   The number sitting inside a bar would be squashed flat by its parent's
+   scale, so it is un-squashed by the same amount for the length of the
+   animation.
+--------------------------------------------------------------------------- */
+
+@keyframes draw-bar {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes draw-column {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+.draw-bar {
+  transform-origin: left center;
+  animation: draw-bar 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.draw-column {
+  transform-origin: bottom center;
+  animation: draw-column 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+/* Each bar starts a little after the one above it, so a chart reads in order
+   rather than arriving all at once. The delay is set inline from the row's
+   index, because every bar is the only child of its own row and nth-child
+   would give all of them the same answer.  */
+
+@media (prefers-reduced-motion: reduce) {
+  .draw-bar,
+  .draw-column {
+    animation: none;
+  }
+}
+
+/* The figure inside a bar.
+   Its parent is being scaled horizontally, which squashes the digits with
+   it, so the number waits until the bar is nearly its full width and the
+   distortion has gone. Same duration and the parent's own delay, so it
+   lands exactly as the bar stops. */
+@keyframes draw-bar-text {
+  0%,
+  70% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.draw-bar-text {
+  animation: draw-bar-text 0.75s ease both;
+  animation-delay: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .draw-bar-text {
+    animation: none;
+  }
+}

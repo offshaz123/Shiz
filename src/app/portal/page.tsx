@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
 import { currentClient } from "@/lib/client-auth";
-import { getClientLogo } from "@/lib/clients";
 import { getClientSummary, getClientTrend, listClientLeads } from "@/lib/clients";
 import { ClientDashboard } from "@/components/ClientDashboard";
 import { sampleLeads, sampleSummary, sampleTrend } from "@/lib/client-sample";
 import { LoginForm } from "./LoginForm";
-import { clientLogout } from "./actions";
-import { PortalNav } from "@/components/PortalNav";
 import { InstallPrompt } from "@/components/InstallPrompt";
 import { siteConfig } from "@/lib/site-config";
 
@@ -41,47 +38,22 @@ export default async function PortalPage({
     return <LoginForm failed={error === "1"} />;
   }
 
-  const [summary, trend, leads, logo] = await Promise.all([
+  const [summary, trend, leads] = await Promise.all([
     getClientSummary(client.id),
     getClientTrend(client.id),
     listClientLeads(client.id),
-    getClientLogo(client.id),
   ]);
 
   return (
-    <div className="mx-auto max-w-5xl px-5 py-8 sm:px-8">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-border pb-5">
-        <div className="flex items-center gap-3">
-          {/* Their mark, not ours. A plain img rather than next/image
-              because it is an address somebody typed into a box and the
-              optimiser would need every client's domain allow-listed. */}
-          {logo && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={logo}
-              alt=""
-              className="h-10 w-10 shrink-0 rounded-lg object-contain"
-            />
-          )}
-          <div>
-          <h1 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl">
-            {client.name}
+    <div className="mx-auto max-w-6xl px-5 py-7 sm:px-8 lg:py-10">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            Your results
           </h1>
-          <p className="mt-1 text-sm text-muted">
-            Your enquiries and what they cost, updated as they come in.
+          <p className="mt-1.5 text-sm text-muted">
+            Every enquiry your advertising brought in, and what each one cost.
           </p>
-          </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <PortalNav />
-          <form action={clientLogout}>
-            <button
-              type="submit"
-              className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
-            >
-              Sign out
-            </button>
-          </form>
         </div>
       </div>
 

@@ -2,6 +2,8 @@ import type { ClientLead, ClientSummary, MonthPoint } from "@/lib/clients";
 import { LeadViews } from "./LeadViews";
 import { ClientFunnel } from "./ClientFunnel";
 import { PhoneSections } from "./PhoneSections";
+import { CountUp } from "./CountUp";
+import { Reveal } from "./Reveal";
 
 /**
  * What a client sees about their own marketing.
@@ -40,8 +42,20 @@ const SOURCE_LABEL: Record<string, string> = {
   phone: "Phone",
 };
 
+/**
+ * Pence on small figures, none on large ones.
+ *
+ * A cost per enquiry of £20.00 wants its pence — the difference between
+ * £20.00 and £20.80 is four per cent of the number. A headline of
+ * £3,250.00 does not: the pence are two characters of noise on the biggest
+ * thing on the screen, and nobody has ever made a decision on them.
+ */
 function money(amount: number): string {
-  return `£${amount.toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const pence = Math.abs(amount) < 100;
+  return `£${amount.toLocaleString("en-GB", {
+    minimumFractionDigits: pence ? 2 : 0,
+    maximumFractionDigits: pence ? 2 : 0,
+  })}`;
 }
 
 function monthName(iso: string): string {
@@ -58,6 +72,19 @@ function waited(hours: number): string {
   return `${days} day${days === 1 ? "" : "s"}`;
 }
 
+/**
+ * One headline figure.
+ *
+ * The number is the largest thing on the card by a long way, because the
+ * card exists to be read across a room on a phone held at arm's length,
+ * not studied. It counts itself up on arrival: a figure that lands at its
+ * value reads as a measurement being taken, and the whole page is trying
+ * to say that somebody is counting.
+ *
+ * A value that is not a number — a dash where no spend was recorded, "under
+ * an hour" — is printed as it is. Counting up to a dash is nonsense, and
+ * CountUp leaves anything it cannot parse exactly as written.
+ */
 function Tile({
   label,
   value,
@@ -70,16 +97,16 @@ function Tile({
   tone?: "plain" | "quiet";
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-surface p-5">
-      <p className="text-xs font-medium text-muted">{label}</p>
+    <div className="rounded-2xl border border-border bg-surface p-5 transition-colors hover:border-border/80 sm:p-6">
+      <p className="text-[11px] font-semibold uppercase tracking-wide text-muted">{label}</p>
       <p
-        className={`mt-1.5 text-3xl font-bold leading-none ${
+        className={`mt-2.5 text-[2rem] font-bold leading-none tracking-tight sm:text-4xl ${
           tone === "quiet" ? "text-muted" : "text-foreground"
         }`}
       >
-        {value}
+        <CountUp value={value} />
       </p>
-      <p className="mt-2 text-[11px] leading-snug text-muted">{note}</p>
+      <p className="mt-2.5 text-[11px] leading-snug text-muted">{note}</p>
     </div>
   );
 }
@@ -129,7 +156,7 @@ export function ClientDashboard({
             id: "results",
             label: "Numbers",
             content: (
-              <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
+              <Reveal className="stagger grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-5">
                 <Tile
                   label="Enquiries"
                   value={String(summary.leads)}
@@ -163,7 +190,7 @@ export function ClientDashboard({
                       ? summary.wonValue > 0
                         ? "No ad spend recorded to compare it against"
                         : "Nothing marked won yet"
-                      : `£${summary.returnOnSpend} back for every £1 of advertising`
+                      : `£${summary.returnOnSpend.toFixed(2)} back for every £1 of advertising`
                   }
                 />
                 <Tile
@@ -178,7 +205,7 @@ export function ClientDashboard({
                         : "Everything has been answered"
                   }
                 />
-              </div>
+              </Reveal>
             ),
           },
           {
