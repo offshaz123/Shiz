@@ -123,6 +123,16 @@ export function PortalShell({
 }) {
   const current = usePathname();
 
+  // A print view gets no shell at all.
+  //
+  // Hiding it with CSS was not enough and could not be: an element hidden
+  // for print still takes up the space it would have taken, so the real
+  // page was still as tall as a dashboard and the invoice came out as the
+  // first of three pages with the side column printed behind it. Not
+  // rendering it is the only version of "nothing else is on this page"
+  // that is actually true.
+  if (current?.endsWith("/print")) return <>{children}</>;
+
   return (
     <div className="lg:flex lg:min-h-screen">
       {/* Down the side from lg up. Sticky, so the way out of a long page of

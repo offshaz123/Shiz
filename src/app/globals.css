@@ -911,48 +911,44 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
-   Printing an invoice
+   Printing a document
 
    The browser's own print dialog is how an invoice becomes a PDF: every
    desktop browser and iOS Safari offer "Save as PDF" from it, and what
    comes out is the document itself rather than a second rendering of it
    written against a PDF library that would drift from the page on screen.
 
-   So everything that is not the invoice is removed for print: the side
-   column, the page heading, the buttons, and the dark background the rest
-   of the portal is painted on.
+   The document has a page to itself, so there is nothing here that has to
+   hide the rest of the site. That was tried and could not work: an element
+   hidden for print still takes up the space it would have taken, so the
+   invoice printed as the first of three pages with the side column behind
+   it.
 --------------------------------------------------------------------------- */
 
 @media print {
+  /* The one link back, and anything else on a print page that is for the
+     person rather than for the document. */
   .print-hide {
     display: none !important;
   }
 
-  /* The invoice is already white. The page around it has to stop being
-     anything at all, or a dark theme prints as a black sheet. */
   html,
   body {
     background: #ffffff !important;
   }
 
-  .print-sheet {
-    position: absolute;
-    inset: 0;
-    margin: 0 !important;
-    max-width: none !important;
-    width: 100% !important;
-    /* The page itself has no margin, so the white space around the
-       document is made here instead. */
-    padding: 12mm !important;
-  }
-
   /* Zero, and that is the point rather than a style choice.
-     A browser printing with any page margin puts its own header and
-     footer in it — the date, the page title and the full URL of the site
-     it came from. On a client's invoice that prints our name across the
-     top of their document. With no margin there is nowhere for the
-     browser to put them, so they are gone. */
+     A browser printing with any page margin puts its own header and footer
+     in it — the date, the page title and the full URL of the site it came
+     from. On a client's invoice that prints our name across the top of
+     their document. With no margin there is nowhere to put them. */
   @page {
     margin: 0;
+  }
+
+  /* So the white space around the document is made by the document. */
+  article {
+    max-width: none !important;
+    padding: 14mm !important;
   }
 }

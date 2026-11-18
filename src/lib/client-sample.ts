@@ -1,4 +1,6 @@
 import type { ClientLead, ClientSummary, MonthPoint } from "./clients";
+import type { Booking } from "./bookings";
+import type { Invoice } from "./invoices";
 
 /**
  * What a client's page shows before they have any figures of their own.
@@ -113,5 +115,76 @@ export const sampleLeads: ClientLead[] = [
     createdAt: new Date(Date.now() - 52 * 3600_000).toISOString().slice(0, 19).replace("T", " "),
     firstRepliedAt: new Date(Date.now() - 50 * 3600_000).toISOString().slice(0, 19).replace("T", " "),
     hoursToReply: 2,
+  },
+];
+
+/**
+ * The same idea for the money-on-the-table page.
+ *
+ * It needs quotes, bookings and invoices as well as enquiries, because
+ * every column on it is built from a different one of those. Shown under
+ * the same band and withdrawn the moment anything real exists.
+ *
+ * Dated relative to today so the page always reads sensibly — a quote
+ * that ran out last week stays a quote that ran out last week, rather
+ * than one that expired in 2026 because that is when this was written.
+ */
+const day = (shift: number): string =>
+  new Date(Date.now() + shift * 86_400_000).toISOString().slice(0, 10);
+
+const stamp = (shift: number): string =>
+  new Date(Date.now() + shift * 86_400_000).toISOString().slice(0, 19).replace("T", " ");
+
+/** What the example business says a job is worth. */
+export const SAMPLE_LEAD_VALUE = 450;
+
+export const sampleQuotes: Invoice[] = [
+  {
+    id: -1, kind: "quote", number: 12, customerName: "D Hartley", customerCompany: "",
+    customerEmail: "d.hartley@example.co.uk", customerAddress: "",
+    issuedOn: day(-4), dueOn: "", vatRate: 0,
+    discount: { kind: "none", percent: 0, pence: 0 }, notes: "",
+    status: "sent", sentAt: stamp(-4), paidAt: "", paidMethod: null,
+    validUntil: day(10), acceptedAt: "", becameInvoiceId: null,
+    lines: [{ id: -1, description: "Front and rear bumper respray", quantity: 1, unitPence: 68000 }],
+    subtotalPence: 68000, discountPence: 0, afterDiscountPence: 68000,
+    vatPence: 0, totalPence: 68000,
+  },
+  {
+    id: -2, kind: "quote", number: 11, customerName: "Kaur Joinery", customerCompany: "",
+    customerEmail: "office@example.co.uk", customerAddress: "",
+    issuedOn: day(-21), dueOn: "", vatRate: 0,
+    discount: { kind: "none", percent: 0, pence: 0 }, notes: "",
+    status: "sent", sentAt: stamp(-21), paidAt: "", paidMethod: null,
+    validUntil: day(-3), acceptedAt: "", becameInvoiceId: null,
+    lines: [{ id: -2, description: "Two vans, full signwriting", quantity: 2, unitPence: 54000 }],
+    subtotalPence: 108000, discountPence: 0, afterDiscountPence: 108000,
+    vatPence: 0, totalPence: 108000,
+  },
+];
+
+export const sampleInvoices: Invoice[] = [
+  {
+    id: -3, kind: "invoice", number: 8, customerName: "R Okonkwo", customerCompany: "",
+    customerEmail: "", customerAddress: "", issuedOn: day(-6), dueOn: "", vatRate: 0,
+    discount: { kind: "none", percent: 0, pence: 0 }, notes: "",
+    status: "paid", sentAt: "", paidAt: stamp(-6), paidMethod: "card",
+    validUntil: "", acceptedAt: "", becameInvoiceId: null,
+    lines: [{ id: -3, description: "Alloy refurb, set of four", quantity: 1, unitPence: 32000 }],
+    subtotalPence: 32000, discountPence: 0, afterDiscountPence: 32000,
+    vatPence: 0, totalPence: 32000,
+  },
+];
+
+export const sampleBookings: Booking[] = [
+  {
+    id: -1, leadId: null, customerName: "M Sandhu", phone: "", email: "",
+    job: "Ceramic coating", notes: "", bookedOn: day(-5), startsAt: "09:00",
+    durationMinutes: 240, price: 380, status: "done",
+  },
+  {
+    id: -2, leadId: null, customerName: "T Byrne", phone: "", email: "",
+    job: "Headlight restoration", notes: "", bookedOn: day(2), startsAt: "14:00",
+    durationMinutes: 90, price: 95, status: "booked",
   },
 ];

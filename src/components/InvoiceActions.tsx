@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PAID_METHODS, PAID_METHOD_WORD, type PaidMethod } from "@/lib/invoice-kinds";
 import type { InvoiceStatus } from "@/lib/invoice-kinds-status";
@@ -13,8 +14,13 @@ import { quoteState, type DocKind } from "@/lib/document-kinds";
  * browser and iOS Safari offer "Save as PDF" from. What comes out is this
  * exact document rather than a second rendering of it built against a PDF
  * library, which would drift from what is on screen the first time either
- * changed. The button says what it does, because a print dialog appearing
- * when you asked for a PDF is a surprise worth heading off.
+ * changed.
+ *
+ * It is a link to a page carrying only the document, not a button that
+ * prints this one. Printing this page meant hiding the side column and
+ * the buttons, and an element hidden for print still takes the space it
+ * would have taken — so the invoice came out as the first of three pages
+ * with the dashboard printed behind it.
  *
  * Hidden when printing, along with everything else that is not the invoice.
  */
@@ -138,13 +144,12 @@ export function InvoiceActions({
           </button>
         )}
 
-        <button
-          type="button"
-          onClick={() => window.print()}
+        <Link
+          href={`/portal/${isQuote ? "quotes" : "invoices"}/${id}/print`}
           className="rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground"
         >
           Save as PDF
-        </button>
+        </Link>
 
         {(isQuote ? state !== "declined" && state !== "accepted" : status !== "cancelled" && status !== "paid") && (
           <button
@@ -228,8 +233,9 @@ export function InvoiceActions({
         </p>
       )}
 
-      <p className="mt-3 text-[11px] text-muted">
-        “Save as PDF” opens your browser’s print box — choose PDF as the destination.
+      <p className="mt-3 text-[11px] leading-relaxed text-muted">
+        “Save as PDF” opens the document on its own and brings up your browser’s print box —
+        choose PDF as the destination.
       </p>
     </div>
   );

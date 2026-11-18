@@ -6,6 +6,14 @@ import { listBookingsBetween } from "@/lib/bookings";
 import { listInvoices, pounds } from "@/lib/invoices";
 import { chances, forecast, gaps, tips } from "@/lib/opportunities";
 import { AddEnquiry } from "@/components/AddEnquiry";
+import {
+  SAMPLE_LEAD_VALUE,
+  sampleBookings,
+  sampleInvoices,
+  sampleLeads,
+  sampleQuotes,
+  sampleSummary,
+} from "@/lib/client-sample";
 import { LoginForm } from "../LoginForm";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +35,14 @@ export const metadata: Metadata = {
  * Nothing in this system touches a phone line, so nothing here pretends
  * to. The honest version of the same idea is the first column: people who
  * got in touch and are still waiting.
+ *
+ * With nothing real yet it shows the shape of it with made-up figures, so
+ * a client signing today sees what they are paying for and so Walid can
+ * show somebody the page without needing a live account. The whole risk
+ * of that is somebody mistaking the examples for their own, so it is
+ * never done quietly: a band across the top before any figure is
+ * readable, and every one of them gone the moment a single real enquiry,
+ * quote, job or invoice exists.
  */
 
 const COLUMN_LOOK: Record<string, string> = {
@@ -64,30 +80,59 @@ export default async function OpportunitiesPage() {
     getAdminClient(client.slug),
   ]);
 
+  // Nothing of their own anywhere yet.
+  const empty =
+    (leads?.length ?? 0) === 0 &&
+    (quotes?.length ?? 0) === 0 &&
+    (bookings?.length ?? 0) === 0 &&
+    (invoices?.length ?? 0) === 0;
+
+  const shown = empty
+    ? {
+        leads: sampleLeads,
+        quotes: sampleQuotes,
+        bookings: sampleBookings,
+        invoices: sampleInvoices,
+        summary: sampleSummary,
+        leadValue: SAMPLE_LEAD_VALUE as number | null,
+      }
+    : {
+        leads: leads ?? [],
+        quotes: quotes ?? [],
+        bookings: bookings ?? [],
+        invoices: invoices ?? [],
+        summary,
+        leadValue: admin?.defaultLeadValue ?? null,
+      };
+
   const columns = chances(
-    leads ?? [],
-    quotes ?? [],
-    bookings ?? [],
-    invoices ?? [],
-    admin?.defaultLeadValue ?? null,
+    shown.leads,
+    shown.quotes,
+    shown.bookings,
+    shown.invoices,
+    shown.leadValue,
   );
 
-  const advice = summary
-    ? tips(summary, columns, {
-        autoReplyOn: admin?.autoReplyOn ?? false,
-        reviewRequestsOn: admin?.reviewRequestsOn ?? false,
-        hasReviewLink: Boolean(admin?.reviewLink),
-        hasLogo: Boolean(admin?.logoUrl),
+  const advice = shown.summary
+    ? tips(shown.summary, columns, {
+        autoReplyOn: empty ? false : (admin?.autoReplyOn ?? false),
+        reviewRequestsOn: empty ? true : (admin?.reviewRequestsOn ?? false),
+        hasReviewLink: empty ? true : Boolean(admin?.reviewLink),
+        hasLogo: empty ? true : Boolean(admin?.logoUrl),
         hasAddress: true,
-        quotesEverSent: quotes?.length ?? 0,
-        defaultLeadValue: admin?.defaultLeadValue ?? null,
+        quotesEverSent: shown.quotes.length,
+        defaultLeadValue: shown.leadValue,
       })
     : [];
 
   const onTheTable = columns.reduce((sum, column) => sum + column.totalPence, 0);
   const waitingCount = columns.reduce((n, column) => n + column.chances.length, 0);
-  const outlook = summary ? forecast(summary, columns, leads ?? []) : null;
-  const missing = gaps(leads ?? [], bookings ?? [], quotes ?? [], admin?.defaultLeadValue ?? null);
+  const outlook = shown.summary ? forecast(shown.summary, columns, shown.leads) : null;
+  // Never shown against examples: telling somebody to go and fix data
+  // that is not theirs is nonsense.
+  const missing = empty
+    ? []
+    : gaps(leads ?? [], bookings ?? [], quotes ?? [], admin?.defaultLeadValue ?? null);
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-7 sm:px-8 lg:py-10">
@@ -97,6 +142,21 @@ export default async function OpportunitiesPage() {
       <p className="mt-1.5 text-sm leading-relaxed text-muted">
         Everything sitting there waiting to be picked up, priced at what you said a job is worth.
       </p>
+
+      {/* Before any figure is readable, not after. Somebody who scrolls
+          straight to a number has to have been told already. */}
+      {empty && (
+        <div className="mt-6 rounded-2xl border-2 border-amber-500/60 bg-amber-500/10 px-5 py-4">
+          <p className="text-sm font-bold text-foreground">
+            These are example figures, not yours.
+          </p>
+          <p className="mt-1 text-xs leading-relaxed text-muted">
+            Nothing has come in yet, so this is a preview of what the page will show once it
+            does. Every name and number on it is made up. The moment one real enquiry, quote,
+            job or invoice exists, all of this disappears for good.
+          </p>
+        </div>
+      )}
 
       {/* Here as well as on the dashboard, because somebody looking at what
           is outstanding is often doing it with the phone in their hand. */}
