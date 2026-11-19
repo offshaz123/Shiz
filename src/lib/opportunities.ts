@@ -245,7 +245,11 @@ export function tips(
       } still waiting on you`,
       body:
         waiting.totalPence > 0
-          ? `Worth about £${Math.round(waiting.totalPence / 100).toLocaleString("en-GB")} between them, going by what you said a job is worth. The oldest has been waiting ${oldest} ${oldest === 1 ? "day" : "days"}.`
+          ? `Worth about £${Math.round(waiting.totalPence / 100).toLocaleString("en-GB")}${
+              waiting.chances.length === 1 ? "" : " between them"
+            }, going by what you said a job is worth. ${
+              waiting.chances.length === 1 ? "It has" : "The oldest has"
+            } been waiting ${oldest} ${oldest === 1 ? "day" : "days"}.`
           : `The oldest has been waiting ${oldest} ${oldest === 1 ? "day" : "days"}. Put a job value in Business details and this will tell you what they are worth.`,
       action: { label: "Open your enquiries", href: "/portal" },
       weight: waiting.totalPence + 1,
@@ -260,7 +264,9 @@ export function tips(
       title: "Work you have done and not billed for",
       body: `${notBilled.chances.length} ${
         notBilled.chances.length === 1 ? "job is" : "jobs are"
-      } marked done in your diary with no invoice against them${
+      } marked done in your diary with nothing billed against ${
+        notBilled.chances.length === 1 ? "it" : "them"
+      }${
         notBilled.totalPence > 0
           ? `, worth about £${Math.round(notBilled.totalPence / 100).toLocaleString("en-GB")}`
           : ""
@@ -281,9 +287,13 @@ export function tips(
       title: "Quotes nobody has come back on",
       body: `${chaseCount} ${chaseCount === 1 ? "person was" : "people were"} given a price and went quiet${
         chaseable > 0
-          ? `, worth £${Math.round(chaseable / 100).toLocaleString("en-GB")} between them`
+          ? `, worth £${Math.round(chaseable / 100).toLocaleString("en-GB")}${
+              chaseCount === 1 ? "" : " between them"
+            }`
           : ""
-      }. One phone call each is the cheapest work you will do this week.`,
+      }. ${
+        chaseCount === 1 ? "One phone call" : "One phone call each"
+      } is the cheapest work you will do this week.`,
       weight: chaseable,
     });
   }

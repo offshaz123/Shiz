@@ -138,6 +138,53 @@ const stamp = (shift: number): string =>
 /** What the example business says a job is worth. */
 export const SAMPLE_LEAD_VALUE = 450;
 
+/**
+ * Enough settled work for the example to show a win rate.
+ *
+ * The forecast refuses to guess off fewer than eight decided enquiries,
+ * which is right — but it meant the example had a dash where its most
+ * interesting figure should be. These exist only to be counted: six won
+ * and three lost, so the rate is two in three and visibly not a round
+ * number somebody would suspect of being made up.
+ */
+const settled: ClientLead[] = [
+  ...Array.from({ length: 6 }, (_, i) => ({
+    id: -100 - i,
+    name: "Example enquiry",
+    email: "",
+    phone: "",
+    message: "",
+    source: "google",
+    status: "customer",
+    value: SAMPLE_LEAD_VALUE,
+    createdAt: stamp(-30 - i),
+    firstRepliedAt: stamp(-30 - i),
+    hoursToReply: 1,
+  })),
+  ...Array.from({ length: 3 }, (_, i) => ({
+    id: -200 - i,
+    name: "Example enquiry",
+    email: "",
+    phone: "",
+    message: "",
+    source: "meta",
+    status: "lost",
+    value: SAMPLE_LEAD_VALUE,
+    createdAt: stamp(-40 - i),
+    firstRepliedAt: stamp(-40 - i),
+    hoursToReply: 3,
+  })),
+];
+
+/**
+ * The example enquiries plus the settled ones behind them.
+ *
+ * The dashboard keeps using the short list: a page of nine identical
+ * example rows reads as a bug. This longer one is only for the pages
+ * that need a history to count from.
+ */
+export const sampleLeadsWithHistory: ClientLead[] = [...sampleLeads, ...settled];
+
 export const sampleQuotes: Invoice[] = [
   {
     id: -1, kind: "quote", number: 12, customerName: "D Hartley", customerCompany: "",

@@ -10,7 +10,7 @@ import {
   SAMPLE_LEAD_VALUE,
   sampleBookings,
   sampleInvoices,
-  sampleLeads,
+  sampleLeadsWithHistory,
   sampleQuotes,
   sampleSummary,
 } from "@/lib/client-sample";
@@ -36,14 +36,27 @@ export const metadata: Metadata = {
  * to. The honest version of the same idea is the first column: people who
  * got in touch and are still waiting.
  *
- * With nothing real yet it shows the shape of it with made-up figures, so
- * a client signing today sees what they are paying for and so Walid can
- * show somebody the page without needing a live account. The whole risk
- * of that is somebody mistaking the examples for their own, so it is
- * never done quietly: a band across the top before any figure is
- * readable, and every one of them gone the moment a single real enquiry,
- * quote, job or invoice exists.
+ * It is showing examples by default at the moment — see EXAMPLES_FIRST
+ * below. The whole risk of that is somebody mistaking them for their own
+ * figures, so it is never done quietly: a band across the top before any
+ * number is readable, and one tap to their real ones.
  */
+
+/**
+ * Examples before real figures, for now.
+ *
+ * Walid's call while the system is being shown around: the accounts used
+ * to demonstrate it have a couple of real things in them and a nearly
+ * empty board shows a prospect nothing worth looking at. It comes off
+ * when Google and Meta are connected and there are real numbers to fill
+ * it with — his word, not a date.
+ *
+ * To turn it off, set this to false. Nothing else needs changing: the
+ * page already falls back to examples on its own for a client with
+ * genuinely nothing yet, and ?demo=1 still forces them for a
+ * demonstration. Both links on the page follow this automatically.
+ */
+const EXAMPLES_FIRST = true;
 
 const COLUMN_LOOK: Record<string, string> = {
   unanswered: "border-red-500/40",
@@ -61,9 +74,18 @@ function ago(days: number): string {
   return `${Math.floor(days / 30)} months`;
 }
 
-export default async function OpportunitiesPage() {
+export default async function OpportunitiesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ demo?: string }>;
+}) {
   const client = await currentClient();
   if (!client) return <LoginForm failed={false} />;
+
+  const { demo } = await searchParams;
+  // ?demo=0 is the way back to their own figures while examples are the
+  // default; ?demo=1 forces examples once they are not.
+  const asked = demo === "1" || (EXAMPLES_FIRST && demo !== "0");
 
   // Two months back and a fortnight forward covers every job that could
   // plausibly be finished and unbilled, without reading the whole diary.
@@ -80,16 +102,17 @@ export default async function OpportunitiesPage() {
     getAdminClient(client.slug),
   ]);
 
-  // Nothing of their own anywhere yet.
-  const empty =
+  // Nothing of their own anywhere yet, or they asked to see an example.
+  const nothingYet =
     (leads?.length ?? 0) === 0 &&
     (quotes?.length ?? 0) === 0 &&
     (bookings?.length ?? 0) === 0 &&
     (invoices?.length ?? 0) === 0;
+  const empty = asked || nothingYet;
 
   const shown = empty
     ? {
-        leads: sampleLeads,
+        leads: sampleLeadsWithHistory,
         quotes: sampleQuotes,
         bookings: sampleBookings,
         invoices: sampleInvoices,
@@ -151,11 +174,33 @@ export default async function OpportunitiesPage() {
             These are example figures, not yours.
           </p>
           <p className="mt-1 text-xs leading-relaxed text-muted">
-            Nothing has come in yet, so this is a preview of what the page will show once it
-            does. Every name and number on it is made up. The moment one real enquiry, quote,
-            job or invoice exists, all of this disappears for good.
+            {nothingYet
+              ? "Nothing has come in yet, so this is a preview of what the page will show once it does. Every name and number on it is made up."
+              : "This page is showing an example while we finish connecting your Google and Facebook accounts. Every name and number on it is made up."}
           </p>
+          {!nothingYet && (
+            <Link
+              href="/portal/opportunities?demo=0"
+              className="mt-2.5 inline-block text-xs font-semibold text-foreground underline"
+            >
+              Show my own figures instead
+            </Link>
+          )}
         </div>
+      )}
+
+      {/* Only offered when examples are not already what is on screen. */}
+      {!empty && (
+        <p className="mt-4 text-xs text-muted">
+          Showing this to somebody?{" "}
+          <Link
+            href="/portal/opportunities?demo=1"
+            className="font-semibold text-brand-pink hover:underline"
+          >
+            See it with example figures
+          </Link>
+          .
+        </p>
       )}
 
       {/* Here as well as on the dashboard, because somebody looking at what
