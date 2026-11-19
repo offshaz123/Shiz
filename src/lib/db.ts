@@ -764,6 +764,15 @@ const ADDED_COLUMNS: {
     column: "deposit_at",
     definition: "DATETIME NULL",
   },
+
+  // What line of work they are in, so the ideas page talks about their
+  // trade rather than about businesses in general. Set from the admin
+  // side; blank falls back to advice anybody can use.
+  {
+    table: "clients",
+    column: "trade",
+    definition: "VARCHAR(40) NULL",
+  },
 ];
 
 /**

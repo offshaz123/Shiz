@@ -6,6 +6,7 @@ import {
   setClientActive,
   setClientPassword,
   setClientBranding,
+  setClientTrade,
   setClientReviews,
   setClientSpend,
   setDefaultLeadValue,
@@ -78,6 +79,13 @@ export async function PATCH(request: Request) {
   if (typeof body?.isActive === "boolean") {
     const ok = await setClientActive(id, body.isActive);
     return ok ? NextResponse.json({ ok: true }) : NextResponse.json({ error: "not_saved" }, { status: 503 });
+  }
+
+  if (typeof body?.trade === "string") {
+    const ok = await setClientTrade(id, body.trade);
+    return ok
+      ? NextResponse.json({ ok: true })
+      : NextResponse.json({ error: "not_changed" }, { status: 400 });
   }
 
   if (

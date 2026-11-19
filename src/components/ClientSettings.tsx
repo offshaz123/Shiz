@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { AdminClient } from "@/lib/clients";
 import { siteConfig } from "@/lib/site-config";
+import { TRADES, TRADE_WORD } from "@/lib/marketing-ideas";
 
 /**
  * Everything that can be changed about one client, on that client's page.
@@ -129,6 +130,27 @@ export function ClientSettings({ client }: { client: AdminClient }) {
           {error || saved}
         </p>
       )}
+
+      <Group
+        title="What line of work they are in"
+        note="Decides which ideas their More customers page shows. Left unset they get advice anybody can use, which is fine but duller."
+      >
+        <label className="flex flex-col gap-1">
+          <span className="text-[11px] text-muted">Trade</span>
+          <select
+            defaultValue={client.trade}
+            onChange={(e) => void patch({ trade: e.target.value }, "That did not save.")}
+            className={`w-full max-w-xs ${INPUT}`}
+          >
+            <option value="">Not set</option>
+            {TRADES.filter((trade) => trade !== "general").map((trade) => (
+              <option key={trade} value={trade}>
+                {TRADE_WORD[trade]}
+              </option>
+            ))}
+          </select>
+        </label>
+      </Group>
 
       <Group
         title="What a job is worth"

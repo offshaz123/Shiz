@@ -326,6 +326,8 @@ export type AdminClient = {
   lastLeadAt: string;
   /** When they last signed in, or "" if they never have. */
   lastLoginAt: string;
+  /** Their line of work, for the ideas page. "" means not set. */
+  trade: string;
 };
 
 export async function listClients(): Promise<AdminClient[] | null> {
@@ -349,11 +351,12 @@ export async function listClients(): Promise<AdminClient[] | null> {
         logo_updated_at: string | null;
         last_lead_at: string | null;
         last_login_at: string | null;
+        trade: string | null;
       })[]
     >(
       `SELECT c.id, c.slug, c.name, c.contact_email, c.is_active, c.password_hash, c.created_at,
               c.review_link, c.review_requests_on, c.default_lead_value,
-              c.logo_url, c.auto_reply_on, c.auto_reply_text, c.last_login_at,
+              c.logo_url, c.auto_reply_on, c.auto_reply_text, c.last_login_at, c.trade,
               (SELECT l.updated_at FROM client_logos l WHERE l.client_id = c.id)
                 AS logo_updated_at,
               (SELECT COUNT(*) FROM client_leads l WHERE l.client_id = c.id) AS leads,
@@ -379,6 +382,7 @@ export async function listClients(): Promise<AdminClient[] | null> {
       autoReplyText: r.auto_reply_text ?? "",
       lastLeadAt: r.last_lead_at === null ? "" : String(r.last_lead_at),
       lastLoginAt: r.last_login_at === null ? "" : String(r.last_login_at),
+      trade: r.trade ?? "",
     }));
   });
 }
@@ -457,6 +461,18 @@ export async function setClientActive(id: number, active: boolean): Promise<bool
  * sending something broken.
  */
 /** The instant reply, and the logo on their portal. */
+/** The line of work they are in, for the ideas page. */
+export async function setClientTrade(id: number, trade: string): Promise<boolean> {
+  const done = await withDb(async (db) => {
+    const [result] = await db.execute<ResultSetHeader>(
+      "UPDATE clients SET trade = ? WHERE id = ?",
+      [trade.trim().slice(0, 40) || null, id],
+    );
+    return result.affectedRows > 0;
+  });
+  return done ?? false;
+}
+
 export async function setClientBranding(
   id: number,
   changes: { logoUrl?: string; autoReplyOn?: boolean; autoReplyText?: string },

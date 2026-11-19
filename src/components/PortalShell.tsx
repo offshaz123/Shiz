@@ -39,6 +39,17 @@ const PAGES = [
     ),
   },
   {
+    href: "/portal/marketing",
+    label: "More customers",
+    note: "Things worth doing this week",
+    icon: (
+      <>
+        <path d="M3 17l5-5 4 3 8-8" />
+        <path d="M14 7h6v6" />
+      </>
+    ),
+  },
+  {
     href: "/portal/customers",
     label: "Customers",
     note: "Everyone, and their history",
