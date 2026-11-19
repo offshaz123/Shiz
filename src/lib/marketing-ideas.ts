@@ -21,6 +21,7 @@
 
 export type Trade =
   | "automotive"
+  | "number-plates"
   | "home-trades"
   | "health-beauty"
   | "hospitality"
@@ -32,6 +33,7 @@ export type Trade =
 
 export const TRADES: readonly Trade[] = [
   "automotive",
+  "number-plates",
   "home-trades",
   "health-beauty",
   "hospitality",
@@ -43,7 +45,8 @@ export const TRADES: readonly Trade[] = [
 ];
 
 export const TRADE_WORD: Record<Trade, string> = {
-  automotive: "Motor trade",
+  automotive: "Garages, detailing and bodywork",
+  "number-plates": "Number plates and registrations",
   "home-trades": "Home and trade services",
   "health-beauty": "Health and beauty",
   hospitality: "Food and hospitality",
@@ -185,6 +188,68 @@ const IDEAS: Idea[] = [
     effort: "an hour",
     cost: "free",
     trade: "automotive",
+  },
+
+  // ---- Number plates and registrations ----
+  //
+  // Its own trade rather than filed under the motor trade, because the
+  // advice is nearly the opposite. A garage is told to blur the plate
+  // before posting a car; here the plate is the entire product.
+  {
+    id: "plates-on-the-car",
+    title: "Ask every customer to send a photo once it is on",
+    body: "Say it as you send the plate out: “send us a picture when it is fitted.” A plate on a real car outside somebody's house is worth more than the same plate on a white background, and it costs you a sentence.",
+    effort: "ten minutes",
+    cost: "free",
+    trade: "number-plates",
+  },
+  {
+    id: "plates-names",
+    title: "Make a list of what you have that matches common first names",
+    body: "People search their own name, their kid's name and their business name before they search anything else. Pull out everything in stock that reads as a name and put them together on one page.",
+    effort: "an hour",
+    cost: "free",
+    trade: "number-plates",
+  },
+  {
+    id: "plates-legal",
+    title: "Say plainly which plates are road legal and which are show only",
+    body: "It is the question you get asked most and the one people are quietly worried about. Answering it straight, in writing, before they have to ask is the thing that makes somebody buy from you rather than from a cheaper listing.",
+    effort: "an hour",
+    cost: "free",
+    trade: "number-plates",
+  },
+  {
+    id: "plates-transfer",
+    title: "Explain the transfer in six steps, in plain words",
+    body: "Most people have never moved a registration and assume it is harder than it is. Write out what happens, who does what, and how long it takes. It removes the reason they put off buying.",
+    effort: "an hour",
+    cost: "free",
+    trade: "number-plates",
+  },
+  {
+    id: "plates-gift",
+    title: "Sell it as a present, not as a car part",
+    body: "A registration is a birthday, a retirement, a twenty-first. Say so out loud in the run-up to Christmas and put a gift note option on the order — you are not changing the product, you are changing who is buying it.",
+    effort: "ten minutes",
+    cost: "free",
+    trade: "number-plates",
+  },
+  {
+    id: "plates-price",
+    title: "Put the price next to the plate",
+    body: "“Enquire for price” loses the person who was ready to buy and keeps the one who wants to haggle. If a plate has a number on it, show the number.",
+    effort: "an hour",
+    cost: "free",
+    trade: "number-plates",
+  },
+  {
+    id: "plates-fitting",
+    title: "Film one plate being made, start to finish",
+    body: "Blank to finished, thirty seconds, no talking. People have no idea how it is done and it is the part of your business nobody else can copy by undercutting you.",
+    effort: "ten minutes",
+    cost: "free",
+    trade: "number-plates",
   },
 
   // ---- Home and trade services ----
