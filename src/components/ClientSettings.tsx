@@ -93,6 +93,8 @@ export function ClientSettings({ client }: { client: AdminClient }) {
   const [saved, setSaved] = useState("");
   const [snippet, setSnippet] = useState(false);
   const [spend, setSpend] = useState({ month: thisMonth(), channel: "google", amount: "" });
+  const [website, setWebsite] = useState(client.businessWebsite ?? "");
+  const [scanning, setScanning] = useState(false);
 
   async function patch(body: Record<string, unknown>, failure: string, ok = "Saved.") {
     setBusy(true);
@@ -130,6 +132,75 @@ export function ClientSettings({ client }: { client: AdminClient }) {
           {error || saved}
         </p>
       )}
+
+      <Group
+        title="Their website"
+        note="Put it in and scan it. The scan works out what they do, so their More customers page talks about their trade, and keeps the handful of things on their site most worth fixing."
+      >
+        <div className="flex flex-wrap items-end gap-2">
+          <label className="flex min-w-0 flex-1 flex-col gap-1">
+            <span className="text-[11px] text-muted">Website address</span>
+            <input
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              placeholder="platedup.co.uk"
+              autoCapitalize="none"
+              autoCorrect="off"
+              spellCheck={false}
+              className={`w-full ${INPUT}`}
+            />
+          </label>
+          <button
+            type="button"
+            disabled={scanning || !website.trim()}
+            onClick={async () => {
+              setScanning(true);
+              setError("");
+              setSaved("");
+              try {
+                const res = await fetch("/api/admin/clients/scan", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ slug: client.slug, url: website }),
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error ?? String(res.status));
+                setSaved(
+                  `Scanned: ${data.score} out of 100${
+                    data.guessed ? `, and set to ${data.trade.replace(/-/g, " ")}` : ""
+                  }.`,
+                );
+                router.refresh();
+              } catch (err) {
+                setError(
+                  String(err).includes("could_not_reach_it")
+                    ? "Could not reach that website. Check the address."
+                    : "The scan did not finish. Try again in a moment.",
+                );
+              } finally {
+                setScanning(false);
+              }
+            }}
+            className="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground disabled:opacity-40"
+          >
+            {scanning ? "Scanning…" : "Scan it"}
+          </button>
+        </div>
+
+        {client.siteScore !== null && (
+          <p className="mt-3 text-[11px] leading-relaxed text-muted">
+            Last scan: <b className="text-foreground">{client.siteScore} out of 100</b>
+            {client.siteIssues.length > 0 && (
+              <>
+                {" "}
+                · {client.siteIssues.length} thing
+                {client.siteIssues.length === 1 ? "" : "s"} worth fixing, shown on their
+                More customers page.
+              </>
+            )}
+          </p>
+        )}
+      </Group>
 
       <Group
         title="What line of work they are in"

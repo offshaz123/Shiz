@@ -773,6 +773,30 @@ const ADDED_COLUMNS: {
     column: "trade",
     definition: "VARCHAR(40) NULL",
   },
+
+  // What their own website scored when we last looked, and the handful of
+  // things most worth fixing. Stored rather than scanned on every page
+  // view: a scan is a dozen requests to somebody else's server and the
+  // answer does not change hour to hour.
+  //
+  // The issues are kept as JSON because they are a short list read back
+  // whole and never queried — a table for five rows that nobody filters
+  // is a table for the sake of it.
+  {
+    table: "clients",
+    column: "site_score",
+    definition: "TINYINT UNSIGNED NULL",
+  },
+  {
+    table: "clients",
+    column: "site_issues",
+    definition: "TEXT NULL",
+  },
+  {
+    table: "clients",
+    column: "site_scanned_at",
+    definition: "DATETIME NULL",
+  },
 ];
 
 /**

@@ -328,6 +328,12 @@ export type AdminClient = {
   lastLoginAt: string;
   /** Their line of work, for the ideas page. "" means not set. */
   trade: string;
+  /** What their website scored last time we looked, or null. */
+  siteScore: number | null;
+  siteIssues: { label: string; why: string }[];
+  siteScannedAt: string;
+  /** Their own website, as typed on the admin side. */
+  businessWebsite: string;
 };
 
 export async function listClients(): Promise<AdminClient[] | null> {
@@ -352,11 +358,16 @@ export async function listClients(): Promise<AdminClient[] | null> {
         last_lead_at: string | null;
         last_login_at: string | null;
         trade: string | null;
+        site_score: number | null;
+        site_issues: string | null;
+        site_scanned_at: string | null;
+        business_website: string | null;
       })[]
     >(
       `SELECT c.id, c.slug, c.name, c.contact_email, c.is_active, c.password_hash, c.created_at,
               c.review_link, c.review_requests_on, c.default_lead_value,
               c.logo_url, c.auto_reply_on, c.auto_reply_text, c.last_login_at, c.trade,
+              c.site_score, c.site_issues, c.site_scanned_at, c.business_website,
               (SELECT l.updated_at FROM client_logos l WHERE l.client_id = c.id)
                 AS logo_updated_at,
               (SELECT COUNT(*) FROM client_leads l WHERE l.client_id = c.id) AS leads,
@@ -383,6 +394,12 @@ export async function listClients(): Promise<AdminClient[] | null> {
       lastLeadAt: r.last_lead_at === null ? "" : String(r.last_lead_at),
       lastLoginAt: r.last_login_at === null ? "" : String(r.last_login_at),
       trade: r.trade ?? "",
+      siteScore: r.site_score === null ? null : Number(r.site_score),
+      // Written by us and read straight back, but still guarded: a row
+      // half-written by an interrupted deploy should not take a page down.
+      siteIssues: parseIssues(r.site_issues),
+      siteScannedAt: r.site_scanned_at === null ? "" : String(r.site_scanned_at),
+      businessWebsite: r.business_website ?? "",
     }));
   });
 }
@@ -461,6 +478,46 @@ export async function setClientActive(id: number, active: boolean): Promise<bool
  * sending something broken.
  */
 /** The instant reply, and the logo on their portal. */
+function parseIssues(raw: string | null): { label: string; why: string }[] {
+  if (!raw) return [];
+  try {
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter(
+        (row): row is { label: string; why: string } =>
+          typeof row === "object" &&
+          row !== null &&
+          typeof (row as { label?: unknown }).label === "string" &&
+          typeof (row as { why?: unknown }).why === "string",
+      )
+      .slice(0, 6);
+  } catch {
+    return [];
+  }
+}
+
+/** What their website scored, and the few things most worth fixing. */
+export async function setSiteScan(
+  id: number,
+  scan: { score: number; issues: { label: string; why: string }[] },
+): Promise<boolean> {
+  const done = await withDb(async (db) => {
+    const [result] = await db.execute<ResultSetHeader>(
+      `UPDATE clients
+          SET site_score = ?, site_issues = ?, site_scanned_at = NOW()
+        WHERE id = ?`,
+      [
+        Math.min(100, Math.max(0, Math.round(scan.score))),
+        JSON.stringify(scan.issues.slice(0, 6)),
+        id,
+      ],
+    );
+    return result.affectedRows > 0;
+  });
+  return done ?? false;
+}
+
 /** The line of work they are in, for the ideas page. */
 export async function setClientTrade(id: number, trade: string): Promise<boolean> {
   const done = await withDb(async (db) => {

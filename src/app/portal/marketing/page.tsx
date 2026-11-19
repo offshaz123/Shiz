@@ -79,6 +79,62 @@ export default async function MarketingPage() {
         </p>
       )}
 
+      {admin?.siteScore !== null && admin !== null && (
+        <section className="mt-6 rounded-2xl border border-border bg-surface p-5 sm:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
+            <div>
+              <h2 className="text-sm font-bold text-foreground">Your website</h2>
+              <p className="mt-0.5 text-xs text-muted">
+                {admin.businessWebsite || "Last time we looked at it"}
+              </p>
+            </div>
+            <div className="text-right">
+              <p
+                className={`text-3xl font-bold leading-none tracking-tight ${
+                  admin.siteScore >= 80
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : admin.siteScore >= 50
+                      ? "text-amber-600 dark:text-amber-400"
+                      : "text-red-600 dark:text-red-400"
+                }`}
+              >
+                {admin.siteScore}
+              </p>
+              <p className="text-[11px] text-muted">out of 100</p>
+            </div>
+          </div>
+
+          {admin.siteIssues.length > 0 ? (
+            <>
+              <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-muted">
+                Worth fixing
+              </p>
+              <ul className="mt-2 flex flex-col gap-2.5">
+                {admin.siteIssues.map((issue) => (
+                  <li key={issue.label} className="text-sm leading-relaxed">
+                    <span className="font-semibold text-foreground">{issue.label}</span>
+                    <span className="block text-xs leading-relaxed text-muted">{issue.why}</span>
+                  </li>
+                ))}
+              </ul>
+              <a
+                href={`mailto:${siteConfig.email}?subject=${encodeURIComponent(
+                  `${client.name} — website`,
+                )}`}
+                className="mt-4 inline-block rounded-full border border-brand-pink/50 px-4 py-2 text-xs font-semibold text-brand-pink"
+              >
+                Ask us to sort it
+              </a>
+            </>
+          ) : (
+            <p className="mt-3 text-sm leading-relaxed text-muted">
+              Nothing major wrong with it. Advertising into a site that works is money well
+              spent.
+            </p>
+          )}
+        </section>
+      )}
+
       <ol className="mt-6 flex flex-col gap-3">
         {ideas.map((idea, i) => (
           <li
