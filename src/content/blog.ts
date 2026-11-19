@@ -16,6 +16,75 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "writing-a-google-business-profile-description-that-does-something",
+    title: "Writing a Google Business Profile Description That Does Something",
+    description:
+      "The description box on your Google listing is usually empty or stuffed with keywords. Here is what Google will not allow in it, and what to write instead.",
+    publishedAt: "2026-11-19",
+    keywords: [
+      "Google Business Profile description tips",
+      "business description examples local",
+      "Google Business Profile description",
+      "local SEO Google listing",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Most Google Business Profile descriptions fall into one of two piles. Either the box is empty, because nobody got round to it, or it reads like this: \"We are the leading provider of professional, affordable, high-quality services in Manchester, Stockport, Oldham, Bolton and surrounding areas.\"",
+          "The second one is worse than the first. The empty box at least does not actively put anybody off.",
+        ],
+      },
+      {
+        heading: "It is not where your ranking comes from",
+        paragraphs: [
+          "This is the thing worth knowing before you write a word, because it changes what you write.",
+          "Where you appear in the map results is driven mostly by how close you are to the person searching, what your business categories say, and the general strength and consistency of your business information across the web. The description is not doing that work.",
+          "Which means the keyword-stuffed version is paying a real cost for nothing. It reads badly to the one audience it does reach, and that audience is people who have already found you and are deciding whether to ring.",
+          "So write it for them. The person reading your description is not browsing. They have searched for something, seen your name, and tapped it. The only question in their head is whether you are the right place to call.",
+        ],
+      },
+      {
+        heading: "What Google will not let you put in it",
+        paragraphs: [
+          "Descriptions go through a review, and a surprising number get quietly rejected or stripped. The rules are not obscure, they are just not advertised:",
+        ],
+        bullets: [
+          "No URLs or links of any kind.",
+          "No phone numbers or email addresses.",
+          "No offers, discounts or sales language — no \"20% off this month\", no \"call now for a free quote\".",
+          "No ALL CAPS beyond normal use, and no strings of special characters.",
+          "Nothing misleading about what you do or where you do it.",
+        ],
+      },
+      {
+        heading: "Say what you do, where, and who for",
+        paragraphs: [
+          "You get 750 characters. That sounds like a lot and is about a short paragraph.",
+          "Only the first couple of lines are visible before it collapses behind a \"more\" link, and exactly where that falls depends on the device somebody is holding. So the first sentence has to work on its own.",
+          "Put three things in it: what you actually do, the area you actually cover, and who you are for. Plain nouns beat adjectives every time. \"Professional, reliable service\" tells somebody nothing — every business on the page claims it. \"MOT, servicing and diagnostics for cars and vans\" tells them whether to ring.",
+          "After the first line, use the room for the things people genuinely want to know before calling: whether you do the specific thing they need, whether you cover their area, how long you have been going, and anything about you that is actually unusual.",
+        ],
+      },
+      {
+        heading: "A shape that works",
+        paragraphs: [
+          "Hypothetically, say you fit and repair tyres in Oldham. Something along these lines does the job:",
+          "\"Tyre fitting, puncture repairs and wheel alignment for cars and vans in Oldham and the surrounding area. We stock budget through to premium brands and can usually fit the same day. Family run since 2011, working from a two-bay unit off Chadderton Way, with free parking while you wait. We also come out to you for mobile fitting across Greater Manchester.\"",
+          "No adjectives doing the work. No list of twelve towns. It answers the questions somebody is actually holding: do you do my thing, can you do it soon, where are you, and can I park.",
+          "The things that make it useful are the specifics — same day, two bays, free parking, mobile fitting. Those are the bits a competitor cannot copy by writing \"professional\" harder.",
+        ],
+      },
+      {
+        heading: "What to do once it is written",
+        paragraphs: [
+          "Read it out loud. If any sentence would sound strange said to a customer on the phone, rewrite it. That one test removes most of the keyword stuffing on its own.",
+          "Then check it against your categories and your services list, because those are doing the ranking work the description is not. A description mentioning something you have not added as a service is a sign your profile is incomplete somewhere more important.",
+          "And leave it alone afterwards. The description is not something to rewrite monthly. Get it right, then spend the attention on the parts of the listing that do move things: photos, reviews, and keeping your opening hours honest.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "the-four-numbers-a-small-business-actually-needs-from-its-marketing",
     title: "The Four Numbers a Small Business Actually Needs From Its Marketing",
     description:

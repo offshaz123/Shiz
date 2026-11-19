@@ -489,7 +489,7 @@ site audit tool actually measures, or from a primary source that does load.
       metrics for small business", "what to measure marketing small business"
 - [ ] Is a Paid Directory Listing Worth It? — target: "are paid directory listings worth it UK",
       "Yell advertising worth it"
-- [ ] Writing a Google Business Profile Description That Does Something — target: "Google Business
+- [x] Writing a Google Business Profile Description That Does Something — target: "Google Business
       Profile description tips", "business description examples local"
 - [x] Your Title Tag: The Sixty Characters That Decide the Click — target: "title tag length SEO",
       "page title for local business"
