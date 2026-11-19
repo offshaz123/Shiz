@@ -81,12 +81,18 @@ export type Invoice = {
   /** Quotes only: the invoice this one turned into, if it has. */
   becameInvoiceId: number | null;
   lines: InvoiceLine[];
+  /** Taken before the balance: a deposit, or a part payment. */
+  depositPence: number;
+  depositMethod: PaidMethod | null;
+  depositAt: string;
   /** All pence. */
   subtotalPence: number;
   discountPence: number;
   afterDiscountPence: number;
   vatPence: number;
   totalPence: number;
+  /** What is still owed once the deposit is off. */
+  balancePence: number;
 };
 
 /** What the business sending it looks like on the page. */
@@ -146,6 +152,9 @@ interface InvoiceRow extends RowDataPacket {
   valid_until: string | null;
   accepted_at: string | null;
   became_invoice_id: number | null;
+  deposit_pence: number;
+  deposit_method: string | null;
+  deposit_at: string | null;
 }
 
 interface LineRow extends RowDataPacket {
@@ -173,7 +182,8 @@ function build(row: InvoiceRow, lines: InvoiceLine[]): Invoice {
     percent: Number(row.discount_percent) || 0,
     pence: Number(row.discount_pence) || 0,
   };
-  const sums = totals(lines, vatRate, discount);
+  const depositPence = Number(row.deposit_pence) || 0;
+  const sums = totals(lines, vatRate, discount, depositPence);
   return {
     id: row.id,
     kind: asDocKind(row.kind),
@@ -194,6 +204,8 @@ function build(row: InvoiceRow, lines: InvoiceLine[]): Invoice {
     validUntil: day(row.valid_until),
     acceptedAt: row.accepted_at ? String(row.accepted_at) : "",
     becameInvoiceId: row.became_invoice_id,
+    depositMethod: asPaidMethod(row.deposit_method ?? ""),
+    depositAt: row.deposit_at ? String(row.deposit_at) : "",
     lines,
     ...sums,
   };
@@ -211,7 +223,8 @@ function toLine(row: LineRow): InvoiceLine {
 const INVOICE_COLUMNS = `id, number, customer_name, customer_company, customer_email, customer_address,
   issued_on, due_on, vat_rate, discount_kind, discount_percent, discount_pence,
   notes, status, sent_at, paid_at, paid_method,
-  kind, valid_until, accepted_at, became_invoice_id`;
+  kind, valid_until, accepted_at, became_invoice_id,
+  deposit_pence, deposit_method, deposit_at`;
 
 /** Every invoice this client has, newest first, with its lines. */
 export async function listInvoices(
@@ -294,6 +307,9 @@ export type NewInvoice = {
    */
   paidNow: boolean;
   paidMethod: PaidMethod | null;
+  /** Pence already taken against it. */
+  depositPence: number;
+  depositMethod: PaidMethod | null;
 };
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -317,6 +333,11 @@ export async function createInvoice(
   if (!name || lines.length === 0) return null;
   if (!DATE.test(input.issuedOn)) return null;
   const paidNow = input.kind === "invoice" && input.paidNow;
+  // A quote has nothing to take a deposit against yet.
+  const deposit =
+    input.kind === "invoice" && Number.isFinite(input.depositPence)
+      ? Math.max(0, Math.round(input.depositPence))
+      : 0;
 
   const created = await withDb(async (db) => {
     // The number and the row are taken together, so two invoices started
@@ -337,8 +358,9 @@ export async function createInvoice(
          (client_id, number, customer_name, customer_company, customer_email,
           customer_address, issued_on, due_on, vat_rate,
           discount_kind, discount_percent, discount_pence, notes,
-          status, paid_at, paid_method, kind, valid_until)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          status, paid_at, paid_method, kind, valid_until,
+          deposit_pence, deposit_method, deposit_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         clientId,
         seq.next,
@@ -358,6 +380,9 @@ export async function createInvoice(
         paidNow ? (input.paidMethod ?? "other") : null,
         input.kind,
         input.kind === "quote" && DATE.test(input.validUntil) ? input.validUntil : null,
+        deposit,
+        deposit > 0 ? (input.depositMethod ?? "other") : null,
+        deposit > 0 ? new Date() : null,
       ],
     );
 
@@ -450,6 +475,8 @@ export async function acceptQuote(clientId: number, quoteId: number): Promise<nu
     validUntil: "",
     paidNow: false,
     paidMethod: null,
+    depositPence: 0,
+    depositMethod: null,
     lines: quote.lines.map((line) => ({
       description: line.description,
       quantity: line.quantity,

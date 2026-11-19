@@ -35,8 +35,9 @@ const invoice = (over: Partial<Invoice>): Invoice => ({
   vatRate: 0, discount: { kind: "none", percent: 0, pence: 0 }, notes: "",
   status: "paid", sentAt: "", paidAt: "", paidMethod: null, validUntil: "",
   acceptedAt: "", becameInvoiceId: null, lines: [],
+  depositPence: 0, depositMethod: null, depositAt: "",
   subtotalPence: 0, discountPence: 0, afterDiscountPence: 0, vatPence: 0,
-  totalPence: 0, ...over,
+  totalPence: 0, balancePence: 0, ...over,
 });
 
 const summary: ClientSummary = {

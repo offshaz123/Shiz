@@ -74,6 +74,9 @@ export async function POST(request: Request) {
     validUntil: text(body, "validUntil"),
     paidNow: (body as { paidNow?: unknown })?.paidNow === true,
     paidMethod: asPaidMethod(text(body, "paidMethod")),
+    // Pounds on the way in, pence from here on, like a line price.
+    depositPence: Math.round((Number((body as { deposit?: unknown })?.deposit) || 0) * 100),
+    depositMethod: asPaidMethod(text(body, "depositMethod")),
     lines: rawLines.map((line) => ({
       description: typeof line.description === "string" ? line.description : "",
       quantity: Number(line.quantity) || 0,

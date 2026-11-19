@@ -741,6 +741,29 @@ const ADDED_COLUMNS: {
     column: "became_invoice_id",
     definition: "INT UNSIGNED NULL",
   },
+
+  // Money taken before the job is finished — a deposit on booking, or a
+  // part payment. Common in the trades and currently impossible to
+  // record: an invoice was all or nothing.
+  //
+  // Its own date because it is taken on a different day from the rest,
+  // and the takings figures have to count it on the day it actually
+  // arrived rather than on the day the balance was settled.
+  {
+    table: "client_invoices",
+    column: "deposit_pence",
+    definition: "INT NOT NULL DEFAULT 0",
+  },
+  {
+    table: "client_invoices",
+    column: "deposit_method",
+    definition: "VARCHAR(20) NULL",
+  },
+  {
+    table: "client_invoices",
+    column: "deposit_at",
+    definition: "DATETIME NULL",
+  },
 ];
 
 /**

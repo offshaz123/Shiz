@@ -196,10 +196,36 @@ export function InvoiceDocument({
               <dd className="tabular-nums">{pounds(invoice.vatPence)}</dd>
             </div>
           )}
-          <div className="mt-1 flex justify-between border-t-2 border-[#111827] py-2.5 text-base font-bold">
-            <dt>{quote ? "Total" : paid ? "Total paid" : "Total due"}</dt>
+          {/* With a deposit the total is no longer the thing to pay, so it
+              stops being the last line and the balance takes its place. */}
+          <div
+            className={`mt-1 flex justify-between border-t-2 border-[#111827] py-2.5 ${
+              invoice.depositPence > 0 && !paid
+                ? "text-sm font-semibold"
+                : "text-base font-bold"
+            }`}
+          >
+            <dt>{quote ? "Total" : paid ? "Total paid" : invoice.depositPence > 0 ? "Total" : "Total due"}</dt>
             <dd className="tabular-nums">{pounds(invoice.totalPence)}</dd>
           </div>
+
+          {invoice.depositPence > 0 && (
+            <>
+              <div className="flex justify-between py-1.5 text-sm">
+                <dt className="text-[#4b5563]">
+                  Deposit received
+                  {invoice.depositMethod ? ` (${PAID_METHOD_WORD[invoice.depositMethod]})` : ""}
+                </dt>
+                <dd className="tabular-nums">−{pounds(invoice.depositPence)}</dd>
+              </div>
+              {!paid && (
+                <div className="flex justify-between border-t border-[#111827] py-2.5 text-base font-bold">
+                  <dt>Balance due</dt>
+                  <dd className="tabular-nums">{pounds(invoice.balancePence)}</dd>
+                </div>
+              )}
+            </>
+          )}
         </dl>
       </div>
 
@@ -225,7 +251,13 @@ export function InvoiceDocument({
             <p className="mt-1.5 text-[#374151]">
               {pounds(invoice.totalPence)} received
               {invoice.paidMethod ? ` by ${PAID_METHOD_WORD[invoice.paidMethod]}` : ""}
-              {stamp(invoice.paidAt) ? ` on ${stamp(invoice.paidAt)}` : ""}. Thank you.
+              {stamp(invoice.paidAt) ? ` on ${stamp(invoice.paidAt)}` : ""}
+              {invoice.depositPence > 0
+                ? `, including a ${pounds(invoice.depositPence)} deposit taken${
+                    stamp(invoice.depositAt) ? ` on ${stamp(invoice.depositAt)}` : " earlier"
+                  }`
+                : ""}
+              . Thank you.
             </p>
           </>
         ) : (

@@ -52,6 +52,8 @@ test("an empty invoice is zero rather than a crash", () => {
     afterDiscountPence: 0,
     vatPence: 0,
     totalPence: 0,
+    depositPence: 0,
+    balancePence: 0,
   });
 });
 
@@ -91,4 +93,38 @@ test("no discount changes nothing", () => {
   const sums = totals([line(2, 2500)], 20);
   assert.equal(sums.discountPence, 0);
   assert.equal(sums.totalPence, 6000);
+});
+
+test("a deposit leaves the balance, not the total", () => {
+  const sums = totals([line(1, 95000)], 0, undefined, 20000);
+  assert.equal(sums.totalPence, 95000);
+  assert.equal(sums.depositPence, 20000);
+  assert.equal(sums.balancePence, 75000);
+});
+
+test("a deposit is taken off after VAT, because VAT is on the whole job", () => {
+  // £100 of work, £20 VAT, £50 already paid: £120 total, £70 left.
+  const sums = totals([line(1, 10000)], 20, undefined, 5000);
+  assert.equal(sums.vatPence, 2000);
+  assert.equal(sums.totalPence, 12000);
+  assert.equal(sums.balancePence, 7000);
+});
+
+test("a deposit bigger than the bill owes nothing, never a negative", () => {
+  const sums = totals([line(1, 5000)], 0, undefined, 999999);
+  assert.equal(sums.depositPence, 5000);
+  assert.equal(sums.balancePence, 0);
+});
+
+test("no deposit leaves the balance equal to the total", () => {
+  const sums = totals([line(2, 2500)], 20);
+  assert.equal(sums.depositPence, 0);
+  assert.equal(sums.balancePence, sums.totalPence);
+});
+
+test("a discount and a deposit together still come to the right balance", () => {
+  // £1,000 less 10% is £900, VAT £180, total £1,080, less £300 = £780.
+  const sums = totals([line(1, 100000)], 20, { kind: "percent", percent: 10, pence: 0 }, 30000);
+  assert.equal(sums.totalPence, 108000);
+  assert.equal(sums.balancePence, 78000);
 });

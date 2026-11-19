@@ -44,6 +44,12 @@ const STATUS_WORD: Record<string, string> = {
   cancelled: "Cancelled",
 };
 
+/** A part-paid invoice is neither of the two words above. */
+function statusWord(status: string, depositPence: number): string {
+  if (depositPence > 0 && status === "sent") return "Part paid";
+  return STATUS_WORD[status] ?? status;
+}
+
 function date(iso: string): string {
   if (!iso) return "—";
   const at = new Date(`${iso}T12:00:00`);
@@ -75,21 +81,36 @@ export default async function InvoicesPage() {
   startOfWeek.setDate(startOfWeek.getDate() - ((startOfWeek.getDay() + 6) % 7));
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
-  const takenSince = (from: Date) =>
-    invoices
-      .filter((i) => i.status === "paid")
-      .filter((i) => {
-        const at = paidOn(i.paidAt);
-        return at !== null && at >= from;
-      })
-      .reduce((sum, i) => sum + i.totalPence, 0);
+  /**
+   * What actually came in since a date.
+   *
+   * A deposit counts on the day it was taken and the rest on the day the
+   * balance was settled, which is the only way "taken today" means what
+   * it says. Counting the whole invoice on its paid date would put a
+   * deposit from three weeks ago into today's figure.
+   */
+  const takenSince = (from: Date) => {
+    let total = 0;
+    for (const invoice of invoices) {
+      const depositAt = paidOn(invoice.depositAt);
+      if (invoice.depositPence > 0 && depositAt !== null && depositAt >= from) {
+        total += invoice.depositPence;
+      }
+      if (invoice.status === "paid") {
+        const at = paidOn(invoice.paidAt);
+        if (at !== null && at >= from) total += invoice.balancePence;
+      }
+    }
+    return total;
+  };
 
+  // What is owed is the balance, not the total: a deposit is already in.
   const outstanding = invoices
     .filter((i) => i.status === "sent")
-    .reduce((sum, i) => sum + i.totalPence, 0);
+    .reduce((sum, i) => sum + i.balancePence, 0);
   const overdue = invoices
     .filter((i) => isOverdue(i.dueOn, i.status))
-    .reduce((sum, i) => sum + i.totalPence, 0);
+    .reduce((sum, i) => sum + i.balancePence, 0);
 
   const tiles: { label: string; value: number; tone: string }[] = [
     { label: "Taken today", value: takenSince(startOfToday), tone: "" },
@@ -201,6 +222,11 @@ export default async function InvoicesPage() {
                       </td>
                       <td className="py-3.5 text-right font-semibold tabular-nums text-foreground">
                         {pounds(invoice.totalPence)}
+                        {invoice.depositPence > 0 && invoice.status !== "paid" && (
+                          <span className="block text-[11px] font-medium text-muted">
+                            {pounds(invoice.balancePence)} left
+                          </span>
+                        )}
                       </td>
                       <td className="px-5 py-3.5 text-right">
                         <span
@@ -208,7 +234,7 @@ export default async function InvoicesPage() {
                             STATUS_LOOK[invoice.status]
                           }`}
                         >
-                          {STATUS_WORD[invoice.status]}
+                          {statusWord(invoice.status, invoice.depositPence)}
                         </span>
                       </td>
                     </tr>
@@ -228,8 +254,15 @@ export default async function InvoicesPage() {
                         <span className="text-sm font-semibold text-foreground">
                           {invoice.customerName}
                         </span>
-                        <span className="text-sm font-bold tabular-nums text-foreground">
-                          {pounds(invoice.totalPence)}
+                        <span className="text-right">
+                          <span className="block text-sm font-bold tabular-nums text-foreground">
+                            {pounds(invoice.totalPence)}
+                          </span>
+                          {invoice.depositPence > 0 && invoice.status !== "paid" && (
+                            <span className="block text-[11px] font-medium text-muted">
+                              {pounds(invoice.balancePence)} left
+                            </span>
+                          )}
                         </span>
                       </span>
                       <span className="mt-1 flex items-center gap-2">
@@ -238,7 +271,7 @@ export default async function InvoicesPage() {
                             STATUS_LOOK[invoice.status]
                           }`}
                         >
-                          {STATUS_WORD[invoice.status]}
+                          {statusWord(invoice.status, invoice.depositPence)}
                         </span>
                         <span
                           className={`text-xs ${

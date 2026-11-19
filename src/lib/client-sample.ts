@@ -194,8 +194,9 @@ export const sampleQuotes: Invoice[] = [
     status: "sent", sentAt: stamp(-4), paidAt: "", paidMethod: null,
     validUntil: day(10), acceptedAt: "", becameInvoiceId: null,
     lines: [{ id: -1, description: "Front and rear bumper respray", quantity: 1, unitPence: 68000 }],
+    depositPence: 0, depositMethod: null, depositAt: "",
     subtotalPence: 68000, discountPence: 0, afterDiscountPence: 68000,
-    vatPence: 0, totalPence: 68000,
+    vatPence: 0, totalPence: 68000, balancePence: 68000,
   },
   {
     id: -2, kind: "quote", number: 11, customerName: "Kaur Joinery", customerCompany: "",
@@ -205,8 +206,9 @@ export const sampleQuotes: Invoice[] = [
     status: "sent", sentAt: stamp(-21), paidAt: "", paidMethod: null,
     validUntil: day(-3), acceptedAt: "", becameInvoiceId: null,
     lines: [{ id: -2, description: "Two vans, full signwriting", quantity: 2, unitPence: 54000 }],
+    depositPence: 0, depositMethod: null, depositAt: "",
     subtotalPence: 108000, discountPence: 0, afterDiscountPence: 108000,
-    vatPence: 0, totalPence: 108000,
+    vatPence: 0, totalPence: 108000, balancePence: 108000,
   },
 ];
 
@@ -218,8 +220,9 @@ export const sampleInvoices: Invoice[] = [
     status: "paid", sentAt: "", paidAt: stamp(-6), paidMethod: "card",
     validUntil: "", acceptedAt: "", becameInvoiceId: null,
     lines: [{ id: -3, description: "Alloy refurb, set of four", quantity: 1, unitPence: 32000 }],
+    depositPence: 0, depositMethod: null, depositAt: "",
     subtotalPence: 32000, discountPence: 0, afterDiscountPence: 32000,
-    vatPence: 0, totalPence: 32000,
+    vatPence: 0, totalPence: 32000, balancePence: 32000,
   },
 ];
 

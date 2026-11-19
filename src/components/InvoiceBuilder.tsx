@@ -71,6 +71,8 @@ export function InvoiceBuilder({ kind = "invoice" }: { kind?: DocKind }) {
   const [rows, setRows] = useState<Row[]>([{ ...EMPTY }]);
   const [paidNow, setPaidNow] = useState(true);
   const [paidMethod, setPaidMethod] = useState<PaidMethod>("card");
+  const [deposit, setDeposit] = useState("");
+  const [depositMethod, setDepositMethod] = useState<PaidMethod>("card");
 
   const lines = rows.map((row) => ({
     id: 0,
@@ -86,6 +88,7 @@ export function InvoiceBuilder({ kind = "invoice" }: { kind?: DocKind }) {
       percent: Number(discountValue) || 0,
       pence: Math.round((Number(discountValue) || 0) * 100),
     },
+    paidNow || isQuote ? 0 : Math.round((Number(deposit) || 0) * 100),
   );
 
   function setRow(index: number, changes: Partial<Row>) {
@@ -115,6 +118,8 @@ export function InvoiceBuilder({ kind = "invoice" }: { kind?: DocKind }) {
           validUntil: dueOn,
           paidNow,
           paidMethod,
+          deposit: paidNow ? 0 : Number(deposit) || 0,
+          depositMethod,
           lines: rows.map((row) => ({
             description: row.description,
             quantity: Number(row.quantity) || 0,
@@ -334,6 +339,20 @@ export function InvoiceBuilder({ kind = "invoice" }: { kind?: DocKind }) {
               <dt className="text-foreground">Total</dt>
               <dd className="tabular-nums text-foreground">{pounds(sums.totalPence)}</dd>
             </div>
+            {sums.depositPence > 0 && (
+              <>
+                <div className="flex justify-between py-1 text-sm">
+                  <dt className="text-muted">Deposit taken</dt>
+                  <dd className="tabular-nums text-foreground">
+                    −{pounds(sums.depositPence)}
+                  </dd>
+                </div>
+                <div className="flex justify-between border-t border-border py-2 text-base font-bold">
+                  <dt className="text-foreground">Balance due</dt>
+                  <dd className="tabular-nums text-foreground">{pounds(sums.balancePence)}</dd>
+                </div>
+              </>
+            )}
           </dl>
         </div>
         <p className="mt-1 text-right text-[11px] leading-relaxed text-muted">
@@ -410,6 +429,48 @@ export function InvoiceBuilder({ kind = "invoice" }: { kind?: DocKind }) {
             </button>
           ))}
         </div>
+
+        {!paidNow && (
+          <div className="mt-4 border-t border-border pt-4">
+            <label className="flex flex-col gap-1.5">
+              <span className="text-xs font-medium text-muted">
+                Has any of it been paid already? £
+              </span>
+              <input
+                value={deposit}
+                onChange={(e) => setDeposit(e.target.value)}
+                inputMode="decimal"
+                placeholder="200.00"
+                className="w-32 rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground"
+              />
+              <span className="text-[11px] leading-relaxed text-muted">
+                A deposit on booking, or anything they have put down so far. The invoice shows
+                the full price, what they have paid, and what is left.
+              </span>
+            </label>
+
+            {Number(deposit) > 0 && (
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <span className="text-xs text-muted">Deposit paid by</span>
+                {PAID_METHODS.map((method) => (
+                  <button
+                    key={method}
+                    type="button"
+                    onClick={() => setDepositMethod(method)}
+                    aria-pressed={depositMethod === method}
+                    className={`rounded-full border px-3.5 py-1.5 text-xs font-semibold capitalize transition ${
+                      depositMethod === method
+                        ? "border-emerald-500/60 text-emerald-600 dark:text-emerald-400"
+                        : "border-border text-muted hover:text-foreground"
+                    }`}
+                  >
+                    {PAID_METHOD_WORD[method]}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {paidNow && (
           <div className="mt-4 flex flex-wrap items-center gap-2">

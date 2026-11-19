@@ -137,11 +137,23 @@ export function invoiceEmailHtml(invoice: Invoice, sender: InvoiceSender): strin
       ${discountRow}
       ${vatRow}
       <tr>
-        <td style="padding:10px 0;border-top:2px solid #111827;font-size:15px;font-weight:bold;">Total due</td>
-        <td style="padding:10px 0;border-top:2px solid #111827;text-align:right;font-size:15px;font-weight:bold;">${pounds(
-          invoice.totalPence,
-        )}</td>
+        <td style="padding:10px 0;border-top:2px solid #111827;font-size:${
+          invoice.depositPence > 0 ? "13px" : "15px"
+        };font-weight:bold;">${invoice.depositPence > 0 ? "Total" : "Total due"}</td>
+        <td style="padding:10px 0;border-top:2px solid #111827;text-align:right;font-size:${
+          invoice.depositPence > 0 ? "13px" : "15px"
+        };font-weight:bold;">${pounds(invoice.totalPence)}</td>
       </tr>
+      ${
+        invoice.depositPence > 0
+          ? `<tr><td style="padding:6px 0;color:${GREY};">Deposit received</td>
+             <td style="padding:6px 0;text-align:right;">&minus;${pounds(invoice.depositPence)}</td></tr>
+             <tr><td style="padding:10px 0;border-top:1px solid #111827;font-size:15px;font-weight:bold;">Balance due</td>
+             <td style="padding:10px 0;border-top:1px solid #111827;text-align:right;font-size:15px;font-weight:bold;">${pounds(
+               invoice.balancePence,
+             )}</td></tr>`
+          : ""
+      }
     </table>
 
     <div style="clear:both;"></div>
@@ -188,7 +200,15 @@ function plainText(invoice: Invoice, sender: InvoiceSender): string {
     ),
     ``,
     ...(invoice.discountPence > 0 ? [`Discount: -${pounds(invoice.discountPence)}`] : []),
-    `${invoice.kind === "quote" ? "Total" : "Total due"}: ${pounds(invoice.totalPence)}`,
+    `${invoice.kind === "quote" || invoice.depositPence > 0 ? "Total" : "Total due"}: ${pounds(
+      invoice.totalPence,
+    )}`,
+    ...(invoice.depositPence > 0
+      ? [
+          `Deposit received: -${pounds(invoice.depositPence)}`,
+          `Balance due: ${pounds(invoice.balancePence)}`,
+        ]
+      : []),
     ``,
     ...(invoice.kind === "quote"
       ? [`Happy with this? Reply to this email and we will book you in.`]

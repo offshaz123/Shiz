@@ -51,6 +51,11 @@ export function totals(
   lines: InvoiceLine[],
   vatRate: number,
   discount: Discount = NO_DISCOUNT,
+  /**
+   * Money already taken against this invoice — a deposit on booking, or
+   * a part payment. Pence, like everything else.
+   */
+  depositPence = 0,
 ) {
   const subtotalPence = lines.reduce(
     (sum, line) => sum + Math.round(line.quantity * line.unitPence),
@@ -67,12 +72,23 @@ export function totals(
 
   const afterDiscount = subtotalPence - discountPence;
   const vatPence = Math.round((afterDiscount * vatRate) / 100);
+  const totalPence = afterDiscount + vatPence;
+
+  // A deposit larger than the bill is a typo or a job that shrank. Either
+  // way the balance is nothing owed rather than a negative, because an
+  // invoice that appears to owe the customer money is an invoice that
+  // starts a phone call.
+  const taken = Math.min(Math.max(0, Math.round(depositPence)), totalPence);
+
   return {
     subtotalPence,
     discountPence,
     afterDiscountPence: afterDiscount,
     vatPence,
-    totalPence: afterDiscount + vatPence,
+    totalPence,
+    depositPence: taken,
+    /** What is actually still owed. */
+    balancePence: totalPence - taken,
   };
 }
 
