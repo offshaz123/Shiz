@@ -1,8 +1,20 @@
 import type { Metadata } from "next";
 import { currentClient } from "@/lib/client-auth";
-import { getClientSummary, getClientTrend, listClientLeads } from "@/lib/clients";
+import { getAdminClient, getClientSummary, getClientTrend } from "@/lib/clients";
 import { ClientDashboard } from "@/components/ClientDashboard";
-import { sampleLeads, sampleSummary, sampleTrend } from "@/lib/client-sample";
+import {
+  SAMPLE_LEAD_VALUE,
+  sampleBookings,
+  sampleInvoices,
+  sampleLeads,
+  sampleQuotes,
+  sampleSummary,
+  sampleTrend,
+} from "@/lib/client-sample";
+
+import { loadEverything } from "@/lib/portal-data";
+import { chances } from "@/lib/opportunities";
+import { NeedsYou } from "@/components/NeedsYou";
 import { LoginForm } from "./LoginForm";
 import { InstallPrompt } from "@/components/InstallPrompt";
 import { siteConfig } from "@/lib/site-config";
@@ -38,11 +50,30 @@ export default async function PortalPage({
     return <LoginForm failed={error === "1"} />;
   }
 
-  const [summary, trend, leads] = await Promise.all([
+  const [summary, trend, everything, admin] = await Promise.all([
     getClientSummary(client.id),
     getClientTrend(client.id),
-    listClientLeads(client.id),
+    loadEverything(client.id),
+    getAdminClient(client.slug),
   ]);
+  const leads = everything.leads;
+
+  // Nothing real anywhere yet means the whole page shows the shape of the
+  // thing rather than an empty screen on the day they sign.
+  const isSample =
+    summary !== null && summary.leads === 0 && leads.length === 0;
+
+  // Built from whatever the page is showing, sample or real, so the panel
+  // and the figures under it can never disagree with each other.
+  const columns = isSample
+    ? chances(sampleLeads, sampleQuotes, sampleBookings, sampleInvoices, SAMPLE_LEAD_VALUE)
+    : chances(
+        leads,
+        everything.quotes,
+        everything.bookings,
+        everything.invoices,
+        admin?.defaultLeadValue ?? null,
+      );
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-7 sm:px-8 lg:py-10">
@@ -61,13 +92,17 @@ export default async function PortalPage({
         <InstallPrompt />
       </div>
 
+      {/* Above the figures, because it is the thing to act on and they are
+          the thing to read. */}
+      <div className="mt-5">
+        <NeedsYou columns={columns} />
+      </div>
+
       <div className="mt-5">
         {summary ? (
-          // Nothing real yet means the page shows the shape of the thing
-          // rather than an empty screen on the day they sign. The moment one
-          // genuine enquiry exists, isSample is false and none of the
-          // example data is reachable.
-          summary.leads === 0 && (leads?.length ?? 0) === 0 ? (
+          // The moment one genuine enquiry exists, isSample is false and
+          // none of the example data is reachable.
+          isSample ? (
             <ClientDashboard
               summary={sampleSummary}
               trend={sampleTrend}
@@ -75,7 +110,7 @@ export default async function PortalPage({
               isSample
             />
           ) : (
-            <ClientDashboard summary={summary} trend={trend ?? []} leads={leads ?? []} />
+            <ClientDashboard summary={summary} trend={trend ?? []} leads={leads} />
           )
         ) : (
           <p className="rounded-2xl border border-border bg-surface p-6 text-sm text-muted">
