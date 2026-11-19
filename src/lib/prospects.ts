@@ -134,6 +134,33 @@ function toProspect(row: ProspectRow): Prospect {
  * alone. Nothing a search returns should ever be able to wipe out the fact
  * that somebody already said no.
  */
+/**
+ * How much unworked list is already sitting there.
+ *
+ * Counts the businesses nobody has done anything with: not written to,
+ * not rung, not deleted, not already a customer and not one who has said
+ * no. That is the pile a sales assistant would actually be working
+ * through, and it is the number the daily search should be deciding
+ * against — searching while two hundred of these are waiting is paying
+ * Google to make a queue longer.
+ */
+export async function countUnworked(): Promise<number | null> {
+  return withDb(async (db) => {
+    const [[row]] = await db.query<(RowDataPacket & { n: number })[]>(
+      `SELECT COUNT(*) AS n
+         FROM prospects p
+        WHERE p.deleted_at IS NULL
+          AND p.status IN ('new', 'no-answer')
+          AND p.called_at IS NULL
+          AND p.unsubscribed_at IS NULL
+          AND NOT EXISTS (
+            SELECT 1 FROM prospect_emails e WHERE e.prospect_id = p.id
+          )`,
+    );
+    return Number(row?.n ?? 0);
+  });
+}
+
 export async function saveProspects(
   businesses: GoogleBusiness[],
   foundFor: string,

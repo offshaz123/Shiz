@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { URGENCY_WORD, planCall } from "@/lib/call-priority";
 import {
   CALL_LABEL,
   CALL_OUTCOMES,
@@ -1193,6 +1194,11 @@ function Row({
   const [open, setOpen] = useState(false);
   const [notes, setNotes] = useState(p.notes);
   const [copied, setCopied] = useState("");
+  // Fixed at mount. Worked out fresh on every render it would move under
+  // somebody mid-scroll, and "rung today" would flip to "rung yesterday"
+  // while they were looking at it.
+  const [now] = useState(() => Date.now());
+  const plan = planCall(p, now);
   const [compose, setCompose] = useState<{ subject: string; body: string } | null>(null);
   // What the row knows about the sequence after an action on this page, so a
   // send or a stop shows immediately rather than on the next load.
@@ -1359,11 +1365,44 @@ function Row({
         >
           {p.name}
         </Link>
-        <span className="text-xs text-muted">
+        <span className="flex items-center gap-2 text-xs text-muted">
+          {plan.urgency !== "when-you-can" && (
+            <span
+              className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                plan.urgency === "today"
+                  ? "border-red-500/50 text-red-600 dark:text-red-400"
+                  : plan.urgency === "this-week"
+                    ? "border-amber-500/50 text-amber-600 dark:text-amber-400"
+                    : "border-border text-muted"
+              }`}
+            >
+              {URGENCY_WORD[plan.urgency]}
+            </span>
+          )}
           {p.reviews === 1 ? "1 review" : `${p.reviews} reviews`}
           {p.rating !== null && ` · ${p.rating.toFixed(1)}★`}
         </span>
       </div>
+
+      {/* What to say, and why they are on the list. Both are already in
+          what the scan found — the only thing missing was putting them in
+          front of whoever is holding the phone. */}
+      {plan.opener && (
+        <p className="mt-2 rounded-lg border border-border bg-background px-3 py-2 text-xs leading-relaxed text-foreground">
+          <span className="font-semibold text-muted">Open with: </span>
+          &ldquo;{plan.opener}&rdquo;
+        </p>
+      )}
+
+      {plan.reasons.length > 0 && (
+        <ul className="mt-1.5 flex flex-col gap-0.5">
+          {plan.reasons.slice(0, 3).map((reason) => (
+            <li key={reason} className="text-[11px] leading-relaxed text-muted">
+              · {reason}
+            </li>
+          ))}
+        </ul>
+      )}
 
       <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted">
         {p.phone && (

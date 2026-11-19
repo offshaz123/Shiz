@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { runAutoSearch } from "@/lib/auto-search";
 import { scanBatch } from "@/lib/scan-batch";
+import { countUnworked } from "@/lib/prospects";
 import { recordCronRun } from "@/lib/admin-data";
 
 export const runtime = "nodejs";
@@ -21,7 +22,31 @@ export const dynamic = "force-dynamic";
  * unreadable site is not retried forever.
  */
 
-const SCAN_BATCH = 30;
+/**
+ * How many websites to read in one run.
+ *
+ * Raised because this, not the searching, is what decides how many
+ * businesses ever become contactable: the email address is found by
+ * reading their site, so a business that is never scanned is a phone
+ * number and nothing else. It costs nothing — these are our own requests
+ * to public pages, not an API with a meter on it.
+ */
+const SCAN_BATCH = 80;
+
+/**
+ * How big the unworked pile is allowed to get before the search stops.
+ *
+ * The whole point of the number. Finding is the only part of this that
+ * costs money, and it was running flat out whether or not anybody was
+ * getting through the last lot — up to two hundred found a day against
+ * fifteen emails and whatever the phone managed.
+ *
+ * So it now looks at what is already waiting and skips the search when
+ * there is plenty. Nobody has to tune it: a busy week on the phone empties
+ * the pile and searching starts again by itself, a quiet week leaves it
+ * full and we stop paying Google to lengthen a queue.
+ */
+const ENOUGH_WAITING = 150;
 
 function authorised(request: Request): "ok" | "wrong_key" | "not_configured" {
   const secret = process.env.CRON_SECRET;
@@ -66,10 +91,18 @@ async function run(request: Request) {
   const offset = Math.max(0, Math.min(2000, Number(params.get("offset")) || 0));
   const count = Math.max(1, Math.min(40, Number(params.get("count")) || 20));
 
-  const search = await runAutoSearch(new Date(), count, offset).catch((err) => {
-    console.error("Auto search:", err);
-    return null;
-  });
+  // Asked for by hand with a count means somebody wants it to run, so the
+  // backlog check is skipped. The daily job passes nothing and is checked.
+  const forced = params.get("count") !== null;
+  const waiting = forced ? null : await countUnworked();
+  const full = waiting !== null && waiting >= ENOUGH_WAITING;
+
+  const search = full
+    ? null
+    : await runAutoSearch(new Date(), count, offset).catch((err) => {
+        console.error("Auto search:", err);
+        return null;
+      });
 
   const scan = await scanBatch(SCAN_BATCH).catch((err) => {
     console.error("Scan batch:", err);
@@ -81,11 +114,21 @@ async function run(request: Request) {
   // look exactly like a quiet week until the list stopped growing.
   await recordCronRun("find-and-scan", {
     considered: search?.found ?? 0,
-    detail: search
-      ? `${search.industry}: ${search.searches} searches, ${search.found} found, ` +
-        `${scan?.scanned ?? 0} scanned${search.stopped ? ` (stopped: ${search.stopped})` : ""}`
-      : "search failed",
+    detail: full
+      ? `${waiting} still waiting to be worked, so no searching today. ` +
+        `${scan?.scanned ?? 0} scanned.`
+      : search
+        ? `${search.industry}: ${search.searches} searches, ${search.found} found, ` +
+          `${scan?.scanned ?? 0} scanned${search.stopped ? ` (stopped: ${search.stopped})` : ""}`
+        : "search failed",
   });
+
+  if (full) {
+    console.log(
+      `[find-and-scan] ${waiting} unworked, skipping the search. ` +
+        `${scan?.scanned ?? 0} scanned.`,
+    );
+  }
 
   console.log(
     `[find-and-scan] ${search?.industry ?? "?"}: ${search?.searches ?? 0} searches, ` +
@@ -93,5 +136,5 @@ async function run(request: Request) {
       `${scan?.unreadable ?? 0} unreadable${search?.stopped ? ` (stopped: ${search.stopped})` : ""}`,
   );
 
-  return NextResponse.json({ ok: true, search, scan });
+  return NextResponse.json({ ok: true, waiting, skippedSearch: full, search, scan });
 }
