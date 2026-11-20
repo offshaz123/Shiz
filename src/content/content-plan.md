@@ -425,7 +425,7 @@ actually says", because that gap has produced the strongest posts this month.
       "stars on Google Ads reviews" (verified 2026-10-31 against Google's own "About store ratings"
       page: no fixed review count, "most merchants" manage it at 100+, a 24-month window, 3.5 stars
       required for text ads, and a named partner list that does NOT include Google Business Profile)
-- [ ] Can You Run Instagram Ads Without a Facebook Page? — target: "Instagram ads without Facebook",
+- [x] Can You Run Instagram Ads Without a Facebook Page? — target: "Instagram ads without Facebook",
       "do I need a Facebook page for Instagram ads"
       BLOCKED 2026-11-01: Meta's own pages cannot be read. help.instagram.com/1338916436473267
       302-redirects to a login wall, and facebook.com/business/help/1513393428972189 returns an

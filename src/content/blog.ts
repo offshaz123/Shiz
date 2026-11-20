@@ -16,6 +16,67 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "can-you-run-instagram-ads-without-a-facebook-page",
+    title: "Can You Run Instagram Ads Without a Facebook Page?",
+    description:
+      "Technically yes, once. After that you need a Page. Here is exactly where the line falls, and why a Page you never post on is the usual answer.",
+    publishedAt: "2026-11-20",
+    keywords: [
+      "Instagram ads without Facebook",
+      "do I need a Facebook page for Instagram ads",
+      "Instagram professional account ads",
+      "Instagram advertising UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "This comes up constantly, usually from somebody who has built a real following on Instagram and has no interest in Facebook whatsoever. They do not want a Page, they do not want to maintain one, and they want to know whether they can advertise without it.",
+          "The short answer is: once. After that, no.",
+        ],
+      },
+      {
+        heading: "What you can do without a Page",
+        paragraphs: [
+          "If you have an Instagram professional account — a business or creator account rather than a personal one — you can boost a post from the app itself, and the first time you do that Meta does not insist on a Facebook Page or a separate ad account.",
+          "That is the whole of the exception. It is designed to get somebody from \"I have never advertised\" to \"I have spent twenty pounds\" without a form in the way, and for that it works.",
+          "What it is not is a way to run advertising. You get the Boost button and very little else: no proper audience building, no control over placements, no comparing one version against another, and no useful reporting afterwards.",
+        ],
+      },
+      {
+        heading: "Where the Page becomes unavoidable",
+        paragraphs: [
+          "Every boost after the first one needs a Facebook Page attached. So does anything built in Meta Ads Manager, which is where all the actual controls live.",
+          "That is worth knowing before you start rather than after. A business that boosts one post, likes the result and decides to do it properly hits the requirement at exactly the moment it has decided to spend money, which is an annoying place to find a blocker.",
+          "There is also a smaller requirement people trip on first: a personal Instagram account cannot advertise at all. If the Promote button is not there, that is usually why. Switching to a professional account is free, takes about a minute in settings, and does not change how your profile looks to anybody.",
+        ],
+      },
+      {
+        heading: "A Page you never post on is fine",
+        paragraphs: [
+          "This is the bit that resolves it for most people, and it gets missed because nobody says it out loud.",
+          "The Facebook Page is an identity for the advertising system. It is the thing your ad appears to be from, it is where somebody lands if they tap the name, and it is what Meta hangs the permissions off. Nothing requires you to post on it.",
+          "Plenty of businesses advertising on Instagram have a Facebook Page with a logo, a cover image, correct contact details and opening hours, and nothing else. It is not neglect, it is a deliberate decision about where the audience actually is.",
+          "If you do set one up, spend twenty minutes making it look intentional rather than abandoned — the name matching your Instagram handle, a decent profile picture, the address and phone number filled in, and a link to your website. Somebody will tap it eventually and it should not look like a dead end.",
+        ],
+      },
+      {
+        heading: "Placements are a separate question",
+        paragraphs: [
+          "Having a Page does not mean your ads run on Facebook. Those are two different things and people conflate them constantly.",
+          "In Ads Manager you choose where ads appear, and you can restrict that to Instagram placements only — feed, stories, reels, explore — with nothing at all showing on Facebook. The Page sits behind it as the identity and never sees a penny of the budget.",
+          "Whether that is a good idea is a separate argument. Leaving Facebook placements on sometimes brings cheaper results than expected, particularly for trades and local services, and it costs nothing to find out and turn them off again if the quality is poor.",
+        ],
+      },
+      {
+        heading: "Check it before you plan around it",
+        paragraphs: [
+          "Meta changes the edges of this periodically, and guides written a year ago describe rules that no longer hold. What is written above matches Meta's own help pages at the time of writing, but if the answer matters to how you are planning to spend, look at their current documentation rather than taking anybody's word for it, including ours.",
+          "The practical position has been stable for a while, though: a professional account is required, a Page is required for anything beyond a first boost, and the Page does not have to be a Facebook strategy. It has to exist.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "writing-a-google-business-profile-description-that-does-something",
     title: "Writing a Google Business Profile Description That Does Something",
     description:
