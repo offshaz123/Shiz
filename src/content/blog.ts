@@ -16,6 +16,82 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "what-a-contact-page-should-actually-have-on-it",
+    title: "What a Contact Page Should Actually Have on It",
+    description:
+      "The contact page is where people land once they have decided. Here is what belongs on it, in what order, and the small things that quietly lose the enquiry.",
+    publishedAt: "2026-11-21",
+    keywords: [
+      "contact page best practices small business",
+      "what to put on a contact page",
+      "small business contact page",
+      "website enquiry form UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Most pages on a website are trying to persuade somebody. The contact page is not. By the time anyone opens it they have already decided — they want to get hold of you and they are looking for the quickest way to do it.",
+          "Which makes it the easiest page on the site to get right and a surprisingly easy one to get wrong, because the usual mistake is treating it like another page to design rather than a door to open.",
+        ],
+      },
+      {
+        heading: "The phone number, as text, near the top",
+        paragraphs: [
+          "Written out, tappable on a phone, and not inside an image or a graphic. A number somebody has to retype from a picture is a number half of them will not retype.",
+          "Put it above the form rather than below it. A good proportion of people on your contact page would rather ring than type, and making them scroll past a form to find out whether they can is a strange thing to do to somebody who is trying to give you money.",
+          "If you have a WhatsApp number people actually use, put that next to it. For a lot of trades it is now the first choice, particularly for sending a photo of whatever the problem is.",
+        ],
+      },
+      {
+        heading: "Say when you will get back to them",
+        paragraphs: [
+          "One line: \"we usually reply the same working day\" or \"we answer the phone between 8 and 6, Monday to Saturday\".",
+          "This does two things. It stops somebody wondering at nine in the evening whether the form worked, and it quietly tells them you are the kind of business that answers — which is the thing they are actually weighing up while they look at three different websites.",
+          "Only write what is true. A page promising a reply within the hour, attached to a business that answers on Tuesday, does more harm than saying nothing at all.",
+        ],
+      },
+      {
+        heading: "Where you are, or where you go",
+        paragraphs: [
+          "If people come to you, the full address and an embedded map. Add the bits that are not on the map and that everybody asks on the phone: where to park, which entrance, what the building looks like from the road.",
+          "If you go to them, say the area you cover in the words people use for it. Towns and districts, not \"the North West\". Somebody in Didsbury wants to see Didsbury, or at least Manchester, and will not work out whether they are inside your vague region.",
+          "Either way, put the opening hours on the page. They are on your Google listing, they should be here too, and they should match.",
+        ],
+      },
+      {
+        heading: "The form: every field costs you",
+        paragraphs: [
+          "Name, a way to reach them, and a box for what they need. That is usually the whole thing.",
+          "Every extra field is another chance for somebody to decide it is too much effort on a phone in a van. Dropdowns asking them to categorise their own job, questions about budget, \"how did you hear about us\" — all of it is useful to you and friction for them, and the enquiry you do not get is worth less than the data you wanted.",
+          "If you genuinely need something extra to quote, ask for it in your reply. You will get an answer, because by then they are in a conversation rather than filling in a form.",
+          "Make the email and phone fields optional-but-one-required if you can. Plenty of people will give you a number and not an address, or the other way round, and refusing the enquiry because they skipped one is the most avoidable loss on the page.",
+        ],
+      },
+      {
+        heading: "What happens after they press send",
+        paragraphs: [
+          "The thing most contact pages get wrong, and the cheapest to fix.",
+          "Pressing send should visibly do something: the form goes away and a real sentence appears saying what happens next and roughly when. Not a flash of green, not a page that looks like it reloaded for no reason.",
+          "An automatic email straight afterwards is better still. Two lines, in your name, saying you have got it and will come back shortly. It costs nothing, it goes out in seconds, and it means nobody is sat there wondering whether to fill it in again or ring somebody else.",
+        ],
+      },
+      {
+        heading: "It should not be the only way through",
+        paragraphs: [
+          "A phone number in the header on every page, so nobody has to find the contact page to find you. The same number in the footer. On a service page, a way to enquire about that service without going anywhere else.",
+          "The contact page is a destination for people who went looking for it. Most people do not go looking — they decide while reading about the thing they want, and whatever is in front of them at that moment is what they use.",
+        ],
+        bullets: [
+          "Phone number as text, tappable, above the form.",
+          "One honest line about when you reply.",
+          "Address and parking, or the towns you cover.",
+          "Three fields, not nine.",
+          "A real confirmation, and an email that follows it.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "can-you-run-instagram-ads-without-a-facebook-page",
     title: "Can You Run Instagram Ads Without a Facebook Page?",
     description:

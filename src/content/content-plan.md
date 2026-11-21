@@ -477,7 +477,7 @@ site audit tool actually measures, or from a primary source that does load.
       business showing on Google Maps", "Google Maps ranking distance", "business not showing in
       local search UK" (relevance / distance / prominence are Google's own long-stated local
       ranking factors; the post claims no radius figures, because there are none to claim)
-- [ ] What a Contact Page Should Actually Have on It — target: "contact page best practices small
+- [x] What a Contact Page Should Actually Have on It — target: "contact page best practices small
       business", "what to put on a contact page"
 - [x] Why Your Enquiry Form Gets Spam, and What Actually Stops It — target: "stop contact form
       spam UK", "contact form spam small business"
