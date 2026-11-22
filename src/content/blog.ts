@@ -16,6 +16,91 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "does-a-small-business-need-a-blog-if-nobody-reads-it",
+    title: "Does a Small Business Need a Blog If Nobody Reads It?",
+    description:
+      "Almost nobody reads a small business blog the way they read a newspaper. That is not what it is for. Here is the honest case for having one, and the honest case for not bothering.",
+    publishedAt: "2026-11-22",
+    keywords: [
+      "does a small business need a blog",
+      "blogging worth it small business UK",
+      "small business blog ideas",
+      "business blog SEO UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Somebody set you up with a blog when they built your website. There are two posts on it, both from the week it launched, and the second one is called \"Welcome to Our New Website\". Nobody has looked at either since.",
+          "So the question is fair: is this worth any of your time, or is it a box that web designers tick?",
+          "The honest answer is that the question is usually asked the wrong way round. Almost nobody reads a small business blog in the way you read a newspaper. They never did. That is not the job.",
+        ],
+      },
+      {
+        heading: "What a post is actually for",
+        paragraphs: [
+          "A blog post is a page on your website that answers one question, and it goes on existing after you have written it.",
+          "Somebody types that question into Google at eleven at night. If you have a page that answers it properly, you are in the running to be the page they land on. They were not looking for your blog and they do not care that it is a blog. They had a question and your page had the answer.",
+          "That is the whole mechanism. Not readership, not subscribers, not anybody coming back next week to see what else you have written. One page, one question, found by the person asking it.",
+        ],
+      },
+      {
+        heading: "The second job: something to send people",
+        paragraphs: [
+          "The use that gets overlooked is the one that has nothing to do with search at all.",
+          "When a customer asks how your pricing works, or why you need access to the loft, or what the difference is between the two options you quoted — you can either explain it again on the phone or send them a link to the page where you have already explained it well, once.",
+          "That page gets read by exactly the people who need it, at the moment they need it. It saves you the same conversation forty times, and it makes you look like somebody who has thought about the work. Nobody browsing your site would ever find it. That does not make it a wasted page.",
+        ],
+      },
+      {
+        heading: "A third one, newer: AI answers",
+        paragraphs: [
+          "Increasingly people ask a question and get an answer written for them rather than a list of links. Those answers are assembled from pages that explain things clearly.",
+          "A site that is five pages of service descriptions gives a system very little to work with. A site that explains, in plain words, what the job involves and what it costs and what goes wrong, is far easier to pull an answer out of — and the answer tends to name the source.",
+          "Nobody can tell you exactly how that gets decided, and anybody claiming to has made it up. But the ingredient is the same as it has always been: pages that actually answer something.",
+        ],
+      },
+      {
+        heading: "The test before you write anything",
+        paragraphs: [
+          "One question: would somebody type this into Google?",
+          "\"How much does it cost to rewire a three-bed house\" — yes. \"What to check before you book a cleaner\" — yes. \"Our team had a lovely day at the trade show\" — no. \"Five reasons to choose us\" — no, nobody in the history of the internet has searched for that.",
+          "The two kinds of page that pass the test are the question somebody asks before they buy, and the question your customers ask you after they have. If a post is not one of those, it is a diary entry, and a diary entry is the thing that gives blogs their reputation.",
+        ],
+      },
+      {
+        heading: "Why most of them fail",
+        paragraphs: [
+          "Not because blogging does not work. Because of how it gets started.",
+          "Somebody decides to post weekly, writes four posts in a fortnight, runs out of things to say, and stops. The blog now sits there with its newest item dated eighteen months ago, which is worse than having nothing, because it tells every visitor the site is abandoned.",
+          "The other failure is writing for the sake of the word count. Six hundred words that circle round a topic without answering it will not rank and will not help the one customer who reads it. One page that genuinely answers one question beats ten that gesture at ten.",
+          "And it is slow. A page published today is not doing anything this month. That is not a flaw to fix, it is the nature of it — which is exactly why it is a bad answer to \"I need work in by Friday\" and a good answer to \"I would like to stop paying for every single enquiry\".",
+        ],
+      },
+      {
+        heading: "When the answer is no",
+        paragraphs: [
+          "If your website has no proper service pages yet, write those first. A blog post sending traffic to a site with nothing solid behind it wastes the visit.",
+          "If your Google Business Profile is half filled in, do that first too. For most local businesses it brings in more than the website does, and it takes an afternoon rather than a year.",
+          "If nobody in the business will ever write anything and the budget does not stretch to paying somebody who will, then no — do not start one. An empty blog in the navigation is worse than no blog at all, and deleting the link is a two-minute job.",
+        ],
+      },
+      {
+        heading: "If you do start",
+        paragraphs: [
+          "Forget frequency. Nobody is waiting for Thursday's post. One good page a month, or one good page when you have something worth saying, is a blog that works.",
+        ],
+        bullets: [
+          "Write down the ten questions you get asked most. That is your first ten posts, already researched.",
+          "Answer one question per page, in the words customers use rather than the words your trade uses.",
+          "Put a way to contact you on every post. A page that answers the question and then stops is a page that sends them back to Google.",
+          "Link posts to the service page they relate to, and the service page back to them.",
+          "Leave the dates on. A page dated last month looks current; the fix for a page dated 2023 is to update it, not to hide when it was written.",
+          "If a post stops being true, change it. These pages are assets, not a chronological record.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "what-a-contact-page-should-actually-have-on-it",
     title: "What a Contact Page Should Actually Have on It",
     description:

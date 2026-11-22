@@ -493,7 +493,7 @@ site audit tool actually measures, or from a primary source that does load.
       Profile description tips", "business description examples local"
 - [x] Your Title Tag: The Sixty Characters That Decide the Click — target: "title tag length SEO",
       "page title for local business"
-- [ ] Does a Small Business Need a Blog If Nobody Reads It? — target: "does a small business need
+- [x] Does a Small Business Need a Blog If Nobody Reads It? — target: "does a small business need
       a blog", "blogging worth it small business UK"
 - [ ] What "Service Area" Really Does on a Google Listing — target: "Google Business Profile
       service area", "service area business vs storefront UK"
