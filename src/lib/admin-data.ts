@@ -1,5 +1,6 @@
 import type { RowDataPacket } from "mysql2";
 import { withDb } from "./db";
+import { isRegion, type Region } from "./regions";
 
 /** What the admin page reads. Nothing here writes. */
 
@@ -329,7 +330,18 @@ interface AutoRow extends RowDataPacket {
   kind: "outreach" | "audit";
 }
 
-export async function getAutomaticEmails(limit = 40): Promise<AutomaticEmailLog | null> {
+export async function getAutomaticEmails(
+  limit = 40,
+  region?: Region,
+): Promise<AutomaticEmailLog | null> {
+  // Same reasoning as engine-room: one of two literals, checked at
+  // runtime because it is written into SQL rather than bound.
+  const only = isRegion(region) ? region : null;
+  // The audit follow-ups go to people who filled in the form on the
+  // British site. They have no region of their own, so when one country
+  // is picked they are left out rather than claimed for it.
+  const OUT = only ? `AND p.region = '${only}'` : "";
+  const AUDIT = only ? "AND 0" : "";
   return withDb(async (db) => {
     // UNION ALL rather than two round trips, so the ordering across both
     // sequences is the database's job and the page cannot show a mixed list
@@ -350,7 +362,7 @@ export async function getAutomaticEmails(limit = 40): Promise<AutomaticEmailLog 
                (p.email_dead_at IS NOT NULL) AS dead
           FROM prospect_emails e
           JOIN prospects p ON p.id = e.prospect_id
-         WHERE e.sent_by = 'auto')
+         WHERE e.sent_by = 'auto' ${OUT})
        UNION ALL
        (SELECT e.id,
                NULL AS prospect_id,
@@ -365,7 +377,8 @@ export async function getAutomaticEmails(limit = 40): Promise<AutomaticEmailLog 
                NULL AS replied,
                NULL AS dead
           FROM lead_emails e
-          JOIN scan_leads l ON l.id = e.lead_id)
+          JOIN scan_leads l ON l.id = e.lead_id
+         WHERE 1 ${AUDIT})
        ORDER BY sent_at DESC
        LIMIT ?`,
       [limit],
@@ -379,9 +392,11 @@ export async function getAutomaticEmails(limit = 40): Promise<AutomaticEmailLog 
          SUM(sent_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) AND status = 'sent') AS week,
          SUM(sent_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) AND status <> 'sent') AS failed
        FROM (
-         SELECT sent_at, status FROM prospect_emails WHERE sent_by = 'auto'
+         SELECT e.sent_at, e.status FROM prospect_emails e
+           JOIN prospects p ON p.id = e.prospect_id
+          WHERE e.sent_by = 'auto' ${OUT}
          UNION ALL
-         SELECT sent_at, status FROM lead_emails
+         SELECT sent_at, status FROM lead_emails WHERE 1 ${AUDIT}
        ) AS automatic`,
     );
 

@@ -1,6 +1,4 @@
-"use client";
-
-import { useState } from "react";
+import Link from "next/link";
 import { REGIONS, REGION_INFO, callableNow, callingWindow, type Region } from "@/lib/regions";
 import type { RegionStats as Row } from "@/lib/admin-data";
 
@@ -49,8 +47,20 @@ function add(a: Omit<Row, "region">, b: Omit<Row, "region">): Omit<Row, "region"
   };
 }
 
-export function RegionStats({ rows, regions }: { rows: Row[]; regions: Region[] }) {
-  const [pick, setPick] = useState<Region | "both">(regions.length > 1 ? "both" : regions[0]);
+export function RegionStats({
+  rows,
+  regions,
+  picked,
+}: {
+  rows: Row[];
+  regions: Region[];
+  /** Undefined means both. Comes from the address rather than from state
+   *  here, so the rest of the page is fetched for the same country —
+   *  otherwise these eight tiles change and everything below them does
+   *  not, which is exactly how this read wrong the first time. */
+  picked?: Region;
+}) {
+  const pick: Region | "both" = picked ?? (regions.length > 1 ? "both" : regions[0]);
 
   const forRegion = (key: Region): Omit<Row, "region"> =>
     rows.find((r) => r.region === key) ?? EMPTY;
@@ -73,9 +83,8 @@ export function RegionStats({ rows, regions }: { rows: Row[]; regions: Region[] 
     <section>
       <div className="flex flex-wrap items-center gap-2">
         {regions.length > 1 && (
-          <button
-            type="button"
-            onClick={() => setPick("both")}
+          <Link
+            href="/admin"
             className={`rounded-lg border px-3.5 py-2 text-sm font-bold ${
               pick === "both"
                 ? "border-brand-pink bg-brand-pink/10 text-foreground"
@@ -83,13 +92,12 @@ export function RegionStats({ rows, regions }: { rows: Row[]; regions: Region[] 
             }`}
           >
             Both
-          </button>
+          </Link>
         )}
         {regions.map((key) => (
-          <button
+          <Link
             key={key}
-            type="button"
-            onClick={() => setPick(key)}
+            href={`/admin?region=${key}`}
             className={`rounded-lg border px-3.5 py-2 text-sm font-bold ${
               pick === key
                 ? "border-brand-pink bg-brand-pink/10 text-foreground"
@@ -100,7 +108,7 @@ export function RegionStats({ rows, regions }: { rows: Row[]; regions: Region[] 
             <span className="ml-2 text-[11px] font-semibold text-muted">
               {forRegion(key).found}
             </span>
-          </button>
+          </Link>
         ))}
       </div>
 

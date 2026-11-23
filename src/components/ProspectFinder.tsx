@@ -348,6 +348,12 @@ export function ProspectFinder({ regions = ["uk"] }: { regions?: Region[] }) {
   /** Fixed for the life of the page, so every row and every tab agree about
    *  what "today" means even if somebody leaves it open over midnight. */
   const [now] = useState(() => Date.now());
+
+  /** The on-demand run of the daily rotation, and how far through it this
+   *  sitting has already got, so a second press looks somewhere new. */
+  const [finding, setFinding] = useState(false);
+  const [findNote, setFindNote] = useState("");
+  const [findOffset, setFindOffset] = useState(0);
   const [counts, setCounts] = useState<{ notContacted: number; contacted: number } | null>(null);
   const [moved, setMoved] = useState("");
   /** What the last search actually did, in words. Without this a search that
@@ -571,6 +577,45 @@ export function ProspectFinder({ regions = ["uk"] }: { regions?: Region[] }) {
     } finally {
       setLoading(false);
       setLoaded(true);
+    }
+  }
+
+  /**
+   * Runs today's rotation now rather than waiting for 6:17.
+   *
+   * Here because a new market starts empty: the American list had nothing
+   * on it and ten searches a day is a slow way to find out whether it is
+   * worth working.
+   */
+  async function findNow() {
+    if (finding) return;
+    setFinding(true);
+    setFindNote("");
+    try {
+      const res = await fetch("/api/admin/prospects/find", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ region, count: 10, offset: findOffset }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setFindNote(ERRORS[data?.error] ?? "That didn't work. Try again in a minute.");
+      } else {
+        setFindOffset((n) => n + 10);
+        setFindNote(
+          data.found > 0
+            ? `${data.found} found in ${data.searches} searches of ${data.industry}.` +
+                (data.stopped ? ` Stopped: ${data.stopped}.` : "")
+            : `Nothing new from ${data.searches} searches${
+                data.stopped ? ` — ${data.stopped}` : ". Press again to try other places."
+              }`,
+        );
+        await load();
+      }
+    } catch {
+      setFindNote("Couldn't reach the server.");
+    } finally {
+      setFinding(false);
     }
   }
 
@@ -800,6 +845,27 @@ export function ProspectFinder({ regions = ["uk"] }: { regions?: Region[] }) {
           </span>
         </summary>
         <div className="mt-4">
+          {/* The same job the scheduler runs each morning, on demand.
+              First thing in the panel because when a list is empty this
+              is the answer, and typing a trade and a town is the slow
+              way to get to it. */}
+          <div className="mb-5 flex flex-wrap items-center gap-3 rounded-xl border border-border bg-background p-4">
+            <button
+              type="button"
+              onClick={findNow}
+              disabled={finding}
+              className="brand-gradient-bg rounded-lg px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            >
+              {finding ? "Looking…" : `Find more in the ${REGION_INFO[region].label} now`}
+            </button>
+            <span className="text-xs text-muted">
+              Runs today&apos;s round of searches straight away instead of waiting for 6:17.
+              Press it again to look at other places.
+            </span>
+            {findNote && (
+              <span className="w-full text-xs font-semibold text-foreground">{findNote}</span>
+            )}
+          </div>
       <form onSubmit={search} className="flex flex-col gap-3 sm:flex-row sm:items-end">
         <div className="flex-1">
           <label htmlFor="prospect-query" className="mb-1.5 block text-sm text-muted">

@@ -2,6 +2,7 @@ import type { RowDataPacket } from "mysql2";
 import { withDb } from "./db";
 import { getCronHealth } from "./admin-data";
 import { placesBudget } from "./google-business";
+import { isRegion, type Region } from "./regions";
 import { dayIndex, industryForDay } from "./auto-search";
 
 /**
@@ -59,26 +60,54 @@ interface CountRow extends RowDataPacket {
   leads: number;
 }
 
-export async function getEngineRoom(): Promise<EngineRoom | null> {
+/**
+ * The pipeline, for one country or for both.
+ *
+ * Every figure here except the website enquiries is a count of prospects
+ * or of emails to prospects, and both of those know which country they
+ * belong to. Pressing United States and then scrolling into British
+ * numbers is the bug this argument fixes.
+ *
+ * scan_leads — people who asked for an audit through the website — has no
+ * region and is not given a fake one. It is the same number whichever
+ * country is selected, and the page says so rather than pretending the
+ * enquiries split.
+ */
+export async function getEngineRoom(region?: Region): Promise<EngineRoom | null> {
+  // Written as SQL fragments rather than as bound parameters because they
+  // are repeated a dozen times inside one statement, and a dozen ?s in the
+  // right order is a bug waiting for somebody to add a thirteenth. The
+  // value is never user input: it is one of two literals from REGIONS.
+  // Checked at runtime, not only by the type. This value is written into
+  // SQL text rather than bound, and "the type says it is safe" is exactly
+  // the reasoning that stops being true the day somebody passes a string
+  // through from a query parameter.
+  const only = isRegion(region) ? region : null;
+  const R = only ? `region = '${only}'` : "1";
+  const PE = only
+    ? `EXISTS (SELECT 1 FROM prospects p WHERE p.id = e.prospect_id AND p.region = '${only}')`
+    : "1";
+
   const counts = await withDb(async (db) => {
     const [rows] = await db.query<CountRow[]>(
       `SELECT
-         (SELECT COUNT(*) FROM prospects) AS prospects,
-         (SELECT COUNT(*) FROM prospects WHERE website IS NOT NULL AND website <> '') AS with_site,
-         (SELECT COUNT(*) FROM prospects WHERE scanned_at IS NOT NULL) AS scanned,
-         (SELECT COUNT(*) FROM prospects WHERE email IS NOT NULL AND email <> '') AS with_email,
-         (SELECT COUNT(*) FROM prospects WHERE emailed_at IS NOT NULL OR called_at IS NOT NULL) AS contacted,
+         (SELECT COUNT(*) FROM prospects WHERE ${R}) AS prospects,
+         (SELECT COUNT(*) FROM prospects WHERE ${R} AND website IS NOT NULL AND website <> '') AS with_site,
+         (SELECT COUNT(*) FROM prospects WHERE ${R} AND scanned_at IS NOT NULL) AS scanned,
+         (SELECT COUNT(*) FROM prospects WHERE ${R} AND email IS NOT NULL AND email <> '') AS with_email,
+         (SELECT COUNT(*) FROM prospects WHERE ${R} AND (emailed_at IS NOT NULL OR called_at IS NOT NULL)) AS contacted,
          (SELECT COUNT(*) FROM prospects
-            WHERE sequence_started_at IS NOT NULL
+            WHERE ${R}
+              AND sequence_started_at IS NOT NULL
               AND sequence_stopped_at IS NULL
               AND replied_at IS NULL
               AND unsubscribed_at IS NULL) AS sequences,
-         (SELECT COUNT(*) FROM prospects WHERE replied_at IS NOT NULL) AS replied,
-         (SELECT COUNT(*) FROM prospects WHERE unsubscribed_at IS NOT NULL) AS unsubscribed,
-         (SELECT COUNT(*) FROM prospect_emails WHERE status = 'sent') AS emails,
-         (SELECT COUNT(*) FROM prospect_emails
-            WHERE status = 'sent' AND sent_at >= CURDATE()) AS emails_today,
-         (SELECT COUNT(*) FROM prospects WHERE created_at >= CURDATE()) AS found_today,
+         (SELECT COUNT(*) FROM prospects WHERE ${R} AND replied_at IS NOT NULL) AS replied,
+         (SELECT COUNT(*) FROM prospects WHERE ${R} AND unsubscribed_at IS NOT NULL) AS unsubscribed,
+         (SELECT COUNT(*) FROM prospect_emails e WHERE e.status = 'sent' AND ${PE}) AS emails,
+         (SELECT COUNT(*) FROM prospect_emails e
+            WHERE e.status = 'sent' AND e.sent_at >= CURDATE() AND ${PE}) AS emails_today,
+         (SELECT COUNT(*) FROM prospects WHERE ${R} AND created_at >= CURDATE()) AS found_today,
          (SELECT COUNT(*) FROM scan_leads) AS leads`,
     );
     return rows[0];
@@ -91,10 +120,10 @@ export async function getEngineRoom(): Promise<EngineRoom | null> {
   // last one was sent, not how many or which.
   const steps = await withDb(async (db) => {
     const [rows] = await db.query<(RowDataPacket & { step: number; n: number })[]>(
-      `SELECT step, COUNT(DISTINCT prospect_id) AS n
-         FROM prospect_emails
-        WHERE status = 'sent'
-        GROUP BY step`,
+      `SELECT e.step, COUNT(DISTINCT e.prospect_id) AS n
+         FROM prospect_emails e
+        WHERE e.status = 'sent' AND ${PE}
+        GROUP BY e.step`,
     );
     const by = new Map(rows.map((r) => [Number(r.step), Number(r.n)]));
     return { first: by.get(1) ?? 0, second: by.get(2) ?? 0, third: by.get(3) ?? 0 };
@@ -107,12 +136,12 @@ export async function getEngineRoom(): Promise<EngineRoom | null> {
       // Formatted in SQL rather than in JavaScript: the driver hands back a
       // Date object, and String()ing one gives "Wed Nov 11 2026", which
       // never matches an ISO key and silently produces an empty chart.
-      `SELECT DATE_FORMAT(sent_at, '%Y-%m-%d') AS d,
-              SUM(step = 1) AS first,
-              SUM(step > 1) AS follow_up
-         FROM prospect_emails
-        WHERE status = 'sent' AND sent_at >= DATE_SUB(CURDATE(), INTERVAL 13 DAY)
-        GROUP BY DATE_FORMAT(sent_at, '%Y-%m-%d')
+      `SELECT DATE_FORMAT(e.sent_at, '%Y-%m-%d') AS d,
+              SUM(e.step = 1) AS first,
+              SUM(e.step > 1) AS follow_up
+         FROM prospect_emails e
+        WHERE e.status = 'sent' AND e.sent_at >= DATE_SUB(CURDATE(), INTERVAL 13 DAY) AND ${PE}
+        GROUP BY DATE_FORMAT(e.sent_at, '%Y-%m-%d')
         ORDER BY d ASC`,
     );
     const sent = new Map(
