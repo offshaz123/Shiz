@@ -72,15 +72,17 @@ export default function BasketPage() {
                 <p className="whitespace-pre font-display text-2xl font-bold">{item.reg}</p>
                 <p className="text-sm text-muted">{describe(item)}</p>
               </div>
-              {item.fixing === "none" && !item.keepsake && !noFixings.includes(item.id) && (
+              {(item.fixing === "none" || item.fixing === "pads") && !item.keepsake && !noFixings.includes(item.id) && (
                 <div className="rounded-2xl border border-[#e8d89a] bg-[#fdf8e7] p-4">
-                  <p className="font-semibold">Need something to fit them?</p>
+                  <p className="font-semibold">{item.fixing === "pads" ? "🎁 Free sticky pads included" : "Need something to fit them?"}</p>
                   <p className="mt-0.5 text-sm text-muted">
-                    These plates come without fixings. Add them now so you can fit your plates the day they arrive.
+                    {item.fixing === "pads"
+                      ? "Your plates come with free sticky fixing pads. Want screws with matching caps as well?"
+                      : "These plates come without fixings. Add them now so you can fit your plates the day they arrive."}
                   </p>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {fixings
-                      .filter((f) => f.id !== "none")
+                      .filter((f) => (item.fixing === "pads" ? f.id === "both" : f.id === "pads" || f.id === "both"))
                       .map((f) => (
                         <button
                           key={f.id}
@@ -88,7 +90,7 @@ export default function BasketPage() {
                           className="btn btn-white px-3 py-2 text-sm"
                           onClick={() => setFixing(item.id, f.id)}
                         >
-                          + {f.name} {money(f.price)}
+                          + {f.id === "both" && item.fixing === "pads" ? "Add screws" : f.name} {f.price ? money(f.price) : "FREE"}
                         </button>
                       ))}
                     <button

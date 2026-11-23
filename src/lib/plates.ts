@@ -297,12 +297,19 @@ export const borders: { id: BorderId; name: string }[] = [
   { id: "black", name: "Black border" },
 ];
 
+// Sticky fixing pads come FREE with every order (FREE_GIFT): every new plate
+// starts with "pads", and adding screws costs only the screws. "none" and
+// "screws" stay for orders made before the gift.
 export const fixings: { id: FixingId; name: string; note: string; price: number }[] = [
   { id: "none", name: "None", note: "", price: 0 },
-  { id: "pads", name: "Sticky Pads", note: "Sticky fixing pads", price: 199 },
+  { id: "pads", name: "Sticky Pads (FREE gift)", note: "Sticky fixing pads", price: 0 },
   { id: "screws", name: "Screws", note: "Screws with matching caps", price: 299 },
-  { id: "both", name: "Sticky Pads & Screws", note: "Pads and screws kit", price: 399 },
+  { id: "both", name: "Sticky Pads (FREE) & Screws", note: "Pads and screws kit", price: 299 },
 ];
+
+// The free gift shown in the builder and basket. `worth` is what the pads
+// cost on their own before they became free.
+export const FREE_GIFT = { name: "sticky fixing pads", worth: 199 } as const;
 
 export const extrasPrice = {
   badge: 399,
@@ -353,7 +360,7 @@ export const defaultConfig: PlateConfig = {
   which: "pair",
   border: "none",
   badge: "none",
-  fixing: "none",
+  fixing: "pads",
 };
 
 const formats: { re: RegExp; split: number | ((s: string) => number) }[] = [

@@ -18,6 +18,7 @@ import {
   defaultConfig,
   extrasPrice,
   fixings,
+  FREE_GIFT,
   SHOW_MAX,
   cleanShowText,
   formatReg,
@@ -72,6 +73,18 @@ function SizeShape({ size }: { size: (typeof sizes)[number] }) {
 }
 
 // Keeps at most `max` letters and numbers (spaces don't count).
+// The free gift that comes with every order, shown next to the price.
+function FreeGift() {
+  return (
+    <p className="mt-3 flex items-center gap-2 rounded-xl border border-[#e8d89a] bg-[#fdf8e7] px-3 py-2 text-sm">
+      <span aria-hidden className="text-lg">🎁</span>
+      <span>
+        <strong>FREE gift with every order:</strong> {FREE_GIFT.name} (worth {money(FREE_GIFT.worth)}), so you can fit your plates the day they arrive.
+      </span>
+    </p>
+  );
+}
+
 // Under a plate, so people know they can tap it to see it bigger.
 function ZoomHint() {
   return (
@@ -239,7 +252,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
     ...(material.price ? [[material.name, material.price] as [string, number]] : []),
     ...(c.border !== "none" && size.border ? [["Black Border", extrasPrice.border] as [string, number]] : []),
     ...(c.badge !== "none" && size.badge ? [[badge.name, extrasPrice.badge] as [string, number]] : []),
-    ...(c.fixing !== "none" ? [[fixing.name, fixing.price] as [string, number]] : []),
+    ...(fixing.price > 0 ? [[fixing.name, fixing.price] as [string, number]] : []),
   ];
 
   return (
@@ -337,6 +350,9 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                 <PlatePreview config={c} side="rear" className="w-full drop-shadow-md" />
                 <ZoomHint />
               </button>
+              <p className="mt-2 text-center text-sm font-semibold lg:hidden">
+                🎁 FREE {FREE_GIFT.name} with every order
+              </p>
 
               {/* Plate size first: it changes the shape, so customers pick it before anything else. */}
               <div className="mt-5">
@@ -662,7 +678,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                     )}
 
                     <Heading>Plate Fixings</Heading>
-                    {fixings.map((f) => (
+                    {fixings.filter((f) => f.id === "pads" || f.id === "both").map((f) => (
                       <Radio
                         key={f.id}
                         name="fixing"
@@ -709,6 +725,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                 <span className="font-display text-2xl font-bold">Total:</span>
                 <span className="gold-text font-display text-4xl font-bold">{money(unitPrice(c))}</span>
               </div>
+              <FreeGift />
               <KlarnaNote amount={unitPrice(c)} className="mt-3" />
 
               <button type="button" onClick={addToBasket} className="btn btn-dark mt-4 w-full rounded-lg">
