@@ -86,8 +86,19 @@ export function regionInfo(region: Region): RegionInfo {
 export function callableNow(region: Region, now = new Date()): boolean {
   const hour = now.getUTCHours();
   const { open, close } = REGION_INFO[region].businessHoursUtc;
-  // close can run past 24 for a country that spans into the next UTC day.
-  return hour >= open && (close <= 24 ? hour < close : hour < 24 || hour < close - 24);
+
+  if (close <= 24) return hour >= open && hour < close;
+
+  // The window runs past midnight UTC, which America's does: it opens at
+  // 14:00 and closes at 01:00 the next day. Either side of midnight counts,
+  // so the two halves are an or.
+  //
+  // This was written as `hour >= open && (... || hour < close - 24)`, which
+  // can never be true after midnight because the first test has already
+  // failed. The switch said the United States was closed between midnight
+  // and 2am UTC — seven in the evening on the east coast and four in the
+  // afternoon on the west, which is the middle of the Pacific working day.
+  return hour >= open || hour < close - 24;
 }
 
 /**

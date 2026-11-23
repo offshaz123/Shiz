@@ -11,6 +11,8 @@ import {
 } from "./prospects";
 import { bouncesSince, sendersSince } from "./mail-store";
 import { newPerRun } from "./outreach-warm-up";
+import { REGIONS } from "./regions";
+import type { Prospect } from "./prospect-types";
 
 /**
  * The whole prospect sequence: the first email, then day three and day five.
@@ -170,8 +172,30 @@ async function startNewSequences(summary: SequenceSummary): Promise<void> {
   if (everSent === null) return;
 
   const allowed = newPerRun(everSent);
-  const fresh = await listNeverContacted(allowed);
-  if (!fresh || fresh.length === 0) return;
+
+  // Taken from each country in turn rather than oldest-first across both.
+  //
+  // Oldest-first is what this did, and with one country it was right. With
+  // two it is a trap: every American business is newer than every British
+  // one, so the whole British backlog — a hundred and seventy-nine of them
+  // at the time of writing, against a dozen openers a day — would have to
+  // empty before the first email ever went to America. The US list would
+  // have filled up, scanned itself, and sat there for a month looking like
+  // it was working.
+  //
+  // Each country is asked for the whole allowance and the two are
+  // interleaved, so when one has nobody waiting the other still fills the
+  // run rather than half of it going unused.
+  const byRegion = await Promise.all(REGIONS.map((r) => listNeverContacted(allowed, r)));
+  const fresh: Prospect[] = [];
+  for (let i = 0; i < allowed; i += 1) {
+    for (const list of byRegion) {
+      const one = list?.[i];
+      if (one) fresh.push(one);
+    }
+  }
+  if (fresh.length === 0) return;
+  fresh.length = Math.min(fresh.length, allowed);
 
   for (const prospect of fresh) {
     const unsubscribeUrl = prospectUnsubscribeUrl(prospect.id);

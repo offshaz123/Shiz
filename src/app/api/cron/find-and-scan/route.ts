@@ -100,7 +100,13 @@ async function run(request: Request) {
   // Each country is checked and searched on its own. A full British pile
   // is no reason to stop looking in America, and the whole point of the
   // backlog check is that it responds to what is actually waiting.
-  const perRegion = forced ? count : SEARCHES_PER_REGION;
+  // Split between the countries, not handed to each of them. A forced run
+  // asking for forty used to mean forty searches; with two regions and a
+  // per-region figure it quietly became eighty, against a daily Places
+  // allowance of sixty that did not grow when America was added.
+  const perRegion = forced
+    ? Math.max(1, Math.floor(count / REGIONS.length))
+    : SEARCHES_PER_REGION;
   const runs = [];
   for (const region of REGIONS) {
     const waiting = forced ? null : await countUnworked(region);
@@ -114,10 +120,15 @@ async function run(request: Request) {
     runs.push({ region, waiting, full, search });
   }
 
-  // Kept for the log line and the response, which both read as one job.
+  // Totals across both countries. The diary row and the log line read as
+  // one job, and taking them from whichever region happened to come back
+  // first reported half the work — the find-and-scan figure on the
+  // overview would have undercounted from the day America was added.
   const waiting = runs.reduce((n, r) => n + (r.waiting ?? 0), 0);
   const full = runs.every((r) => r.full);
-  const search = runs.find((r) => r.search)?.search ?? null;
+  const found = runs.reduce((n, r) => n + (r.search?.found ?? 0), 0);
+  const searches = runs.reduce((n, r) => n + (r.search?.searches ?? 0), 0);
+  const stopped = runs.find((r) => r.search?.stopped)?.search?.stopped ?? "";
 
   const scan = await scanBatch(SCAN_BATCH).catch((err) => {
     console.error("Scan batch:", err);
@@ -135,7 +146,7 @@ async function run(request: Request) {
   // there is no email anywhere to prove it ran, and a silent stop would
   // look exactly like a quiet week until the list stopped growing.
   await recordCronRun("find-and-scan", {
-    considered: search?.found ?? 0,
+    considered: found,
     detail:
       (full
         ? `${waiting} still waiting to be worked in both countries, so no searching today. ` +
@@ -153,7 +164,7 @@ async function run(request: Request) {
                     : `${r.region.toUpperCase()}: search failed`,
               )
               .join(". ") + `. ${scan?.scanned ?? 0} scanned`
-          : "search failed") +
+          : `search failed. ${scan?.scanned ?? 0} scanned`) +
       // Only mentioned when it found something. A line saying nothing was
       // wrong, every day, is a line nobody reads.
       (sweep && sweep.dead > 0
@@ -169,11 +180,11 @@ async function run(request: Request) {
   }
 
   console.log(
-    `[find-and-scan] ${search?.industry ?? "?"}: ${search?.searches ?? 0} searches, ` +
-      `${search?.found ?? 0} businesses, ${scan?.scanned ?? 0} scanned, ` +
+    `[find-and-scan] ${searches} searches across ${runs.filter((r) => r.search).length} ` +
+      `countries, ${found} businesses, ${scan?.scanned ?? 0} scanned, ` +
       `${scan?.unreadable ?? 0} unreadable, ` +
       `${sweep?.checked ?? 0} addresses checked (${sweep?.dead ?? 0} dead)` +
-      `${search?.stopped ? ` (stopped: ${search.stopped})` : ""}`,
+      `${stopped ? ` (stopped: ${stopped})` : ""}`,
   );
 
   return NextResponse.json({ ok: true, waiting, skippedSearch: full, runs, scan, sweep });

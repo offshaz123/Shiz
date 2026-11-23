@@ -128,3 +128,25 @@ test("an American email carries a postal address and a British one does not", as
     assert.ok(buildDraft(step, them("us"), "https://example.com/u/1").body.includes("E14 5AB"));
   }
 });
+
+test("a working day that runs past midnight UTC stays open", () => {
+  // The bug this pins. America's window is 14:00 to 01:00 UTC, so the
+  // hours after midnight are the ones on the far side of the wrap — and
+  // they are not a quiet corner of the day: 00:00 UTC is 7pm in New York
+  // and 4pm in Los Angeles.
+  for (const [utc, expected] of [
+    ["2026-11-24T13:59:00Z", false],
+    ["2026-11-24T14:00:00Z", true],
+    ["2026-11-24T23:00:00Z", true],
+    ["2026-11-25T00:00:00Z", true],
+    ["2026-11-25T00:59:00Z", true],
+    ["2026-11-25T01:00:00Z", false],
+    ["2026-11-25T06:00:00Z", false],
+  ] as const) {
+    assert.equal(callableNow("us", new Date(utc)), expected, `US at ${utc}`);
+  }
+
+  // The UK window does not wrap and must be unaffected.
+  assert.ok(!callableNow("uk", new Date("2026-11-25T00:00:00Z")));
+  assert.ok(callableNow("uk", new Date("2026-11-24T09:00:00Z")));
+});

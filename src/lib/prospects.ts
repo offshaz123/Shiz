@@ -594,11 +594,15 @@ export async function listSequenceDue(limit = 20): Promise<SequenceDue[] | null>
  * Oldest first, so a backlog is worked through in the order it was found
  * rather than the newest arrivals jumping the queue forever.
  */
-export async function listNeverContacted(limit = 10): Promise<Prospect[] | null> {
+export async function listNeverContacted(
+  limit = 10,
+  region?: Region,
+): Promise<Prospect[] | null> {
   return withDb(async (db) => {
     const [rows] = await db.query<ProspectRow[]>(
       `SELECT * FROM prospects
         WHERE sequence_started_at IS NULL
+          ${region ? "AND region = ?" : ""}
           AND deleted_at IS NULL
           AND replied_at IS NULL
           AND unsubscribed_at IS NULL
@@ -609,7 +613,7 @@ export async function listNeverContacted(limit = 10): Promise<Prospect[] | null>
           AND status NOT IN ('interested', 'not-interested', 'customer')
         ORDER BY created_at ASC
         LIMIT ?`,
-      [limit],
+      region ? [region, limit] : [limit],
     );
     return rows.map(toProspect);
   });
