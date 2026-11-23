@@ -321,6 +321,20 @@ export function ProspectFinder() {
   // rung leaves the list of people still to approach, because the whole job
   // of that list is "who have we not got to yet".
   const [contact, setContact] = useState<"not-contacted" | "contacted" | "all">("not-contacted");
+  /**
+   * Which slice of the list is on screen.
+   *
+   * Asked for because the page was one column with everything in it, and
+   * the two jobs somebody actually sits down to do are different jobs: ring
+   * the ones with no website, or work through the ones whose site is poor.
+   * Scrolling past the first to reach the second is not a filter, it is a
+   * scroll, and after a week nobody does it.
+   */
+  const [view, setView] = useState<"today" | "no-site" | "has-site" | "all">("today");
+
+  /** Fixed for the life of the page, so every row and every tab agree about
+   *  what "today" means even if somebody leaves it open over midnight. */
+  const [now] = useState(() => Date.now());
   const [counts, setCounts] = useState<{ notContacted: number; contacted: number } | null>(null);
   const [moved, setMoved] = useState("");
   /** What the last search actually did, in words. Without this a search that
@@ -688,8 +702,32 @@ export function ProspectFinder() {
   const noSite = prospects.filter((p) => !p.website);
   const withSite = prospects.filter((p) => p.website);
 
+  /**
+   * The ones worth ringing before lunch.
+   *
+   * Taken straight from the same urgency the rows already show, rather than
+   * from a second rule written here — a tab that disagrees with the badge
+   * on the row it contains is worse than no tab.
+   */
+  const ringToday = prospects.filter((p) => planCall(p, now).urgency === "today");
+
   return (
     <div>
+      {/* Finding more businesses is a job somebody does now and then; the
+          call list is the job somebody does every day. The search was the
+          first thing on the page and took up most of a screen, so the page
+          opened on the thing nobody came for. Folded shut, it is one line.
+
+          Left as a details rather than a tab so a search in progress is
+          never thrown away by clicking somewhere else. */}
+      <details className="rounded-2xl border border-border bg-surface p-4">
+        <summary className="cursor-pointer text-sm font-bold text-foreground">
+          Find more businesses
+          <span className="ml-2 text-xs font-medium text-muted">
+            search a trade and an area
+          </span>
+        </summary>
+        <div className="mt-4">
       <form onSubmit={search} className="flex flex-col gap-3 sm:flex-row sm:items-end">
         <div className="flex-1">
           <label htmlFor="prospect-query" className="mb-1.5 block text-sm text-muted">
@@ -711,47 +749,6 @@ export function ProspectFinder() {
           {searching ? "Searching…" : "Find"}
         </button>
       </form>
-
-      <div className="mt-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-muted">Industry</p>
-        <div className="mt-2 flex flex-wrap gap-2">
-          {/* First, and spelled out, because the whole list is the default
-              view anyone wants when the question is "who have we contacted"
-              rather than "who shall I ring next". Clicking the selected
-              industry again did this already, which nobody could be expected
-              to guess. */}
-          <button
-            type="button"
-            onClick={() => setIndustry("")}
-            className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${
-              industry === ""
-                ? "border-brand-pink text-foreground"
-                : "border-border text-muted hover:text-foreground"
-            }`}
-          >
-            All industries
-          </button>
-          {industries.map((i) => (
-            <button
-              key={i.slug}
-              type="button"
-              onClick={() => setIndustry(industry === i.slug ? "" : i.slug)}
-              className={`rounded-full border px-3 py-1.5 text-xs font-semibold ${
-                industry === i.slug
-                  ? "border-brand-pink text-foreground"
-                  : "border-border text-muted hover:text-foreground"
-              }`}
-            >
-              {i.name}
-            </button>
-          ))}
-        </div>
-        <p className="mt-2 text-xs text-muted">
-          {industry
-            ? "The list below is filtered to this industry. Pick a trade to find more."
-            : "Showing every business you have ever searched for. Pick a trade below to go and find more, or an industry above to narrow this list down."}
-        </p>
-      </div>
 
       {/* Always on. It used to be hidden unless an industry was picked, which
           made "All industries" the one view you could not search from. */}
@@ -877,6 +874,9 @@ export function ProspectFinder() {
         )}
       </div>
 
+        </div>
+      </details>
+
       {/* The two lists. Everything found by a search starts on the left; the
           moment it is emailed or rung it moves to the right, so the left is
           always and only the people still waiting to be approached. */}
@@ -905,9 +905,14 @@ export function ProspectFinder() {
         {moved && <span className="text-xs font-bold text-emerald-500">{moved}</span>}
       </div>
 
-      {/* Six words on what the colours mean, because a worker who has not
-          been told will otherwise ask, or worse, guess. */}
-      <p className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-[11px] text-muted">
+      {/* What the colours mean. Folded away because it is a thing you read
+          once on your first morning and never again, and six lines of key
+          above the work is six lines between somebody and the work. */}
+      <details className="mt-3">
+        <summary className="cursor-pointer text-[11px] font-semibold text-muted hover:text-foreground">
+          What the colours down the side mean
+        </summary>
+        <p className="mt-2 flex flex-wrap gap-x-5 gap-y-1.5 text-[11px] text-muted">
         <span className="border-l-4 border-l-emerald-500 pl-2">
           <b className="text-foreground">Green</b> — email sent, nothing else yet
         </span>
@@ -923,10 +928,14 @@ export function ProspectFinder() {
         <span className="border-l-4 border-l-red-500/70 pl-2">
           <b className="text-foreground">Red</b> — unsubscribed, do not contact
         </span>
-        <span className="border-l-4 border-l-border pl-2">
-          <b className="text-foreground">Grey</b> — not interested
-        </span>
-      </p>
+          <span className="border-l-4 border-l-border pl-2">
+            <b className="text-foreground">Grey</b> — not interested
+          </span>
+          <span className="border-l-4 border-l-amber-500 pl-2">
+            <b className="text-foreground">Amber edge</b> — their email address bounces
+          </span>
+        </p>
+      </details>
 
       {searchNote && (
         <p className="mt-3 rounded-xl border border-border bg-surface px-4 py-3 text-xs font-semibold text-foreground">
@@ -975,23 +984,44 @@ export function ProspectFinder() {
           </select>
         </div>
         <div>
-          <span className="mb-1.5 block text-xs text-muted">Status</span>
-          <div className="flex flex-wrap gap-1.5">
-            {FILTERS.map((f) => (
-              <button
-                key={f.value}
-                type="button"
-                onClick={() => setStatus(f.value)}
-                className={`rounded-lg border px-3 py-2 text-xs font-semibold ${
-                  status === f.value
-                    ? "border-brand-pink text-foreground"
-                    : "border-border text-muted hover:text-foreground"
-                }`}
-              >
-                {f.label}
-              </button>
+          {/* The industry filter used to be two rows of chips above the
+              search. It filters the list, not the search, so it belongs
+              here with the other things that filter the list. */}
+          <label htmlFor="f-industry" className="mb-1.5 block text-xs text-muted">
+            Industry
+          </label>
+          <select
+            id="f-industry"
+            value={industry}
+            onChange={(e) => setIndustry(e.target.value)}
+            className="w-44 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand-pink"
+          >
+            <option value="">All industries</option>
+            {industries.map((i) => (
+              <option key={i.slug} value={i.slug}>
+                {i.name}
+              </option>
             ))}
-          </div>
+          </select>
+        </div>
+        <div>
+          {/* Was seven buttons across the page. A dropdown says the same
+              thing in one control and leaves room for the work. */}
+          <label htmlFor="f-status" className="mb-1.5 block text-xs text-muted">
+            Status
+          </label>
+          <select
+            id="f-status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="w-44 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand-pink"
+          >
+            {FILTERS.map((f) => (
+              <option key={f.value} value={f.value}>
+                {f.label}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           <label htmlFor="f-town" className="mb-1.5 block text-xs text-muted">
@@ -1011,15 +1041,31 @@ export function ProspectFinder() {
             ))}
           </select>
         </div>
-        <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value as "default" | "worst-site")}
-          className="rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold text-muted"
-          aria-label="Order"
-        >
-          <option value="default">By status</option>
-          <option value="worst-site">Worst site first</option>
-        </select>
+        <div>
+          <label htmlFor="f-order" className="mb-1.5 block text-xs text-muted">
+            Order
+          </label>
+          <select
+            id="f-order"
+            value={sort}
+            onChange={(e) => setSort(e.target.value as "default" | "worst-site")}
+            className="w-44 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand-pink"
+          >
+            <option value="default">By status</option>
+            <option value="worst-site">Worst site first</option>
+          </select>
+        </div>
+      </div>
+
+      {/* The jobs that act on the whole list rather than on one business.
+          Folded away: they are run occasionally and by one person, and
+          every one of them sitting in the toolbar made the page look like
+          a control panel rather than a call list. */}
+      <details className="mt-3">
+        <summary className="cursor-pointer text-[11px] font-semibold text-muted hover:text-foreground">
+          Tools for the whole list
+        </summary>
+        <div className="mt-2 flex flex-wrap items-center gap-2">
         <button
           type="button"
           onClick={() => scanAll()}
@@ -1054,6 +1100,10 @@ export function ProspectFinder() {
         >
           Remove register adds
         </button>
+        </div>
+      </details>
+
+      <div className="mt-4 flex flex-wrap items-center gap-2">
         <button
           type="button"
           onClick={load}
@@ -1106,7 +1156,70 @@ export function ProspectFinder() {
           </p>
         )}
 
-      {noSite.length > 0 && (
+      {/* Pick the job, then do it.
+          Four slices of the same list rather than one list with everything
+          in it. "Ring today" is the morning's work, the two website tabs
+          are the two different conversations, and Everyone is there so
+          nothing is ever actually hidden. */}
+      {loaded && !error && prospects.length > 0 && (
+        <div className="mt-8 flex flex-wrap gap-2 border-t border-border pt-6">
+          {([
+            { value: "today", label: "Ring today", n: ringToday.length, hint: "Callbacks due and the strongest reasons" },
+            { value: "no-site", label: "No website", n: noSite.length, hint: "Nothing to criticise, something to build" },
+            { value: "has-site", label: "Has a website", n: withSite.length, hint: "Open with what is wrong with it" },
+            { value: "all", label: "Everyone", n: prospects.length, hint: "The whole list, in order" },
+          ] as const).map((t) => (
+            <button
+              key={t.value}
+              type="button"
+              onClick={() => setView(t.value)}
+              title={t.hint}
+              className={`rounded-xl border px-4 py-2.5 text-left transition ${
+                view === t.value
+                  ? "border-brand-pink bg-brand-pink/10"
+                  : "border-border hover:border-brand-pink/40"
+              }`}
+            >
+              <span className="flex items-baseline gap-2">
+                <span
+                  className={`text-sm font-bold ${
+                    view === t.value ? "text-foreground" : "text-muted"
+                  }`}
+                >
+                  {t.label}
+                </span>
+                <span className="text-sm font-bold tabular-nums text-brand-pink">{t.n}</span>
+              </span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {view === "today" && prospects.length > 0 && (
+        <Section
+          title={`Ring today (${ringToday.length})`}
+          note={
+            ringToday.length === 0
+              ? "Nothing urgent. Pick one of the other tabs and work down it."
+              : "Callbacks you promised first, then the businesses with the most wrong."
+          }
+        >
+          {ringToday.map((p) => (
+            <Row
+              key={p.id}
+              p={p}
+              busy={busy[p.id]}
+              onSave={save}
+              onScan={scan}
+              onContacted={markContacted}
+              onLogged={load}
+              onDelete={setDeleted}
+            />
+          ))}
+        </Section>
+      )}
+
+      {(view === "no-site" || view === "all") && noSite.length > 0 && (
         <Section
           title={`No website at all — ring these first (${noSite.length})`}
           note="Nothing to criticise, just something to build."
@@ -1126,7 +1239,7 @@ export function ProspectFinder() {
         </Section>
       )}
 
-      {withSite.length > 0 && (
+      {(view === "has-site" || view === "all") && withSite.length > 0 && (
         <Section
           title={`Has a website (${withSite.length})`}
           note="Fewest reviews first. Press Scan to score their site."
@@ -1505,14 +1618,27 @@ function Row({
             >
               {p.email}
             </button>
-            <button
-              type="button"
-              onClick={() => setCompose(compose ? null : buildDraft(1, p, p.unsubscribeUrl))}
-              className="rounded-lg border border-border px-2.5 py-1 font-semibold hover:border-brand-pink hover:text-foreground"
-              title="Write and send an email to them from here"
-            >
-              {compose ? "Close draft" : "Write email"}
-            </button>
+            {/* No offer to write to an address that has already bounced.
+                The button was still there on a row whose own note said
+                nothing sent to it arrives, which is an invitation to waste
+                five minutes writing into a mailbox that is not there. */}
+            {p.emailDeadAt ? (
+              <span
+                className="rounded-lg border border-amber-500/40 px-2.5 py-1 font-semibold text-muted"
+                title={p.emailDeadReason || "This address bounced"}
+              >
+                bounces — ring instead
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setCompose(compose ? null : buildDraft(1, p, p.unsubscribeUrl))}
+                className="rounded-lg border border-border px-2.5 py-1 font-semibold hover:border-brand-pink hover:text-foreground"
+                title="Write and send an email to them from here"
+              >
+                {compose ? "Close draft" : "Write email"}
+              </button>
+            )}
             {sent && <span className="font-semibold text-emerald-500">{sent}</span>}
             {!sent && p.emailedAt && (
               <span title={p.emailedAt}>emailed {p.emailedAt.slice(0, 10)}</span>
