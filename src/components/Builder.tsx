@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { PlatePreview } from "./PlatePreview";
 import { LaunchPrice } from "./LaunchPrice";
 import { DispatchCountdown } from "./DispatchCountdown";
+import { SaveDesign } from "./SaveDesign";
 import { useCart } from "@/lib/cart";
 import { trackAddToCart, trackViewBuilder } from "@/lib/track";
 import { KlarnaNote } from "./Klarna";
@@ -71,6 +72,19 @@ function SizeShape({ size }: { size: (typeof sizes)[number] }) {
 }
 
 // Keeps at most `max` letters and numbers (spaces don't count).
+// Under a plate, so people know they can tap it to see it bigger.
+function ZoomHint() {
+  return (
+    <span className="pointer-events-none mt-2 flex items-center justify-center gap-1 text-xs font-semibold text-muted">
+      <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden>
+        <circle cx="11" cy="11" r="7" />
+        <path d="M21 21l-4.3-4.3M11 8v6M8 11h6" />
+      </svg>
+      Tap the plate to see it bigger
+    </span>
+  );
+}
+
 function limitChars(text: string, max: number) {
   let n = 0;
   return [...text].filter((ch) => /\s/.test(ch) || ++n <= max).join("");
@@ -135,7 +149,21 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
     setStepError("");
   };
   const nextStep = [1, 2].find((i) => !seen.includes(i)) ?? null;
-  const buttonLabel = nextStep === 1 ? "Choose Your Style" : nextStep === 2 ? "Next: Extras" : "Add to Basket";
+  // One button, worded the same everywhere: it goes to the next step the
+  // customer hasn't seen, then adds the plate to the basket.
+  const buttonLabel = nextStep === 1 ? "Next: Choose Style" : nextStep === 2 ? "Next: Extras" : "Add to Basket";
+  // Tapping a plate shows it full screen (people tap the plate to see it closer).
+  const [zoom, setZoom] = useState(false);
+  useEffect(() => {
+    if (!zoom) return;
+    const close = (e: KeyboardEvent) => e.key === "Escape" && setZoom(false);
+    window.addEventListener("keydown", close);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", close);
+      document.body.style.overflow = "";
+    };
+  }, [zoom]);
   // Most people want a standard plate, so the other sizes are tucked away
   // until asked for (or already chosen, e.g. from a motorbike page).
   const [moreSizes, setMoreSizes] = useState((initial.size ?? "standard") !== "standard");
@@ -300,9 +328,15 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
 
               {/* On phones the full preview is further down the page, so show the plate
                   straight under the registration, where they see it as they type. */}
-              <div className="mt-3 rounded-xl bg-surface-2/60 p-3 lg:hidden" aria-hidden>
+              <button
+                type="button"
+                onClick={() => setZoom(true)}
+                className="relative mt-3 block w-full rounded-xl bg-surface-2/60 p-3 lg:hidden"
+                aria-label="See your plates bigger"
+              >
                 <PlatePreview config={c} side="rear" className="w-full drop-shadow-md" />
-              </div>
+                <ZoomHint />
+              </button>
 
               {/* Plate size first: it changes the shape, so customers pick it before anything else. */}
               <div className="mt-5">
@@ -642,15 +676,10 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                 )}
               </div>
 
-              {tab < tabs.length - 1 ? (
-                <button type="button" className="btn btn-gold mt-7 w-full rounded-lg" onClick={() => setTab(tab + 1)}>
-                  Next: {tab === 0 ? "Choose Style" : "Add Extras"} <span aria-hidden>›</span>
-                </button>
-              ) : (
-                <button type="button" className="btn btn-gold mt-7 w-full rounded-lg" onClick={addToBasket}>
-                  {buttonLabel}
-                </button>
-              )}
+              <button type="button" className="btn btn-gold mt-7 w-full rounded-lg" onClick={addToBasket}>
+                {buttonLabel}
+                {nextStep !== null && <span aria-hidden>›</span>}
+              </button>
             </div>
           </section>
 
@@ -658,20 +687,21 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
           <section className="overflow-hidden rounded-2xl border border-line bg-white shadow-sm lg:sticky lg:top-36">
             <h2 className="gold-bg px-6 py-3 font-display text-xl font-bold">Preview &amp; Summary</h2>
             <div className="p-5 sm:p-6">
-              <div className="mx-auto grid max-w-md gap-3">
+              <button type="button" onClick={() => setZoom(true)} className="relative mx-auto grid w-full max-w-md gap-3 text-left" aria-label="See your plates bigger">
                 {showFront && (
-                  <div>
-                    <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted">Front</p>
+                  <span className="block">
+                    <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted">Front</span>
                     <PlatePreview config={c} side="front" className={`w-full drop-shadow-md ${size.hex ? "" : "rounded-lg border border-line"}`} />
-                  </div>
+                  </span>
                 )}
                 {showRear && (
-                  <div>
-                    <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-muted">Rear</p>
+                  <span className="block">
+                    <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted">Rear</span>
                     <PlatePreview config={c} side="rear" className="w-full drop-shadow-md" />
-                  </div>
+                  </span>
                 )}
-              </div>
+                <ZoomHint />
+              </button>
 
               {/* The price and the button come straight after the plates, so they're
                   in view without scrolling; the details are underneath. */}
@@ -689,6 +719,7 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
                 {nextStep !== null && <span aria-hidden>›</span>}
               </button>
               <p className="mt-2 text-center text-xs text-muted">🔒 Secure checkout · Card, Apple Pay, Google Pay or Klarna</p>
+              <SaveDesign config={c} />
 
               <div className="mt-4">
                 <DispatchCountdown />
@@ -741,6 +772,46 @@ export function Builder({ initial, showPlateNotice = false }: { initial: Partial
           </section>
         </div>
       </div>
+
+      {zoom && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Your plates"
+          className="fixed inset-0 z-50 flex flex-col bg-[#111] px-3 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4 text-white"
+          onClick={() => setZoom(false)}
+        >
+          <div className="mx-auto flex w-full max-w-3xl items-center justify-between">
+            <p className="font-display text-lg font-bold">{plateText(c) || "Your plates"}</p>
+            <button type="button" onClick={() => setZoom(false)} className="rounded-full bg-white/15 px-4 py-2 text-sm font-semibold">
+              Close ✕
+            </button>
+          </div>
+          <div className="mx-auto my-auto grid w-full max-w-3xl gap-6 py-6" onClick={(e) => e.stopPropagation()}>
+            {showFront && <PlatePreview config={c} side="front" className="w-full drop-shadow-xl" />}
+            {showRear && <PlatePreview config={c} side="rear" className="w-full drop-shadow-xl" />}
+            <p className="text-center text-sm text-white/70">
+              {style.name} · {c.type === "show" ? "Show plate, not for road use" : "Road legal, BS AU 145e"}
+            </p>
+          </div>
+          <div className="mx-auto w-full max-w-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-3">
+              <p className="font-display text-3xl font-bold">{money(unitPrice(c))}</p>
+              <button
+                type="button"
+                onClick={() => {
+                  setZoom(false);
+                  addToBasket();
+                }}
+                className="btn btn-gold flex-1 rounded-lg"
+              >
+                {buttonLabel}
+                {nextStep !== null && <span aria-hidden>›</span>}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Phones: the price and the button stay on screen while choosing. */}
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_-12px_rgb(0_0_0/0.25)] backdrop-blur lg:hidden">
