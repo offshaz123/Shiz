@@ -1,5 +1,14 @@
 import { NextResponse } from "next/server";
-import { isAdmin } from "@/lib/admin-auth";
+import { canSee, currentUser } from "@/lib/admin-auth";
+
+/**
+ * The page behind this route. Checked here as well as on the page,
+ * because the browser calls these directly and a member of staff
+ * without the page can type the address of its data.
+ */
+async function allowed(): Promise<boolean> {
+  return canSee(await currentUser(), "company");
+}
 import { companyProfile, searchCompanies, searchRegister, SECTORS } from "@/lib/companies-house";
 import { deleteProspectsFromRegister, saveProspects } from "@/lib/prospects";
 
@@ -23,7 +32,7 @@ const MESSAGES: Record<string, string> = {
 };
 
 export async function GET(request: Request) {
-  if (!(await isAdmin())) {
+  if (!(await allowed())) {
     return NextResponse.json({ error: "unauthorised" }, { status: 401 });
   }
 
@@ -58,7 +67,7 @@ export async function GET(request: Request) {
  * list puts those first.
  */
 export async function POST(request: Request) {
-  if (!(await isAdmin())) {
+  if (!(await allowed())) {
     return NextResponse.json({ error: "unauthorised" }, { status: 401 });
   }
 
@@ -135,7 +144,7 @@ export async function POST(request: Request) {
  * too — it is easy to hit "add all" meaning to look at the results first.
  */
 export async function DELETE() {
-  if (!(await isAdmin())) {
+  if (!(await allowed())) {
     return NextResponse.json({ error: "unauthorised" }, { status: 401 });
   }
 

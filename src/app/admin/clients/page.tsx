@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { isAdmin } from "@/lib/admin-auth";
+import { canSee, currentUser } from "@/lib/admin-auth";
 import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../LoginForm";
+import { NotYours } from "../NotYours";
 import { ClientManager } from "@/components/ClientManager";
 
 export const dynamic = "force-dynamic";
@@ -12,7 +13,9 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminClientsPage() {
-  if (!(await isAdmin())) return <LoginForm />;
+  const who = await currentUser();
+  if (!who) return <LoginForm />;
+  if (!canSee(who, "clients")) return <NotYours page="clients" />;
 
   return (
     <div className="mx-auto max-w-4xl px-5 py-8 sm:px-8">

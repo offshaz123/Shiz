@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { isAdmin } from "@/lib/admin-auth";
+import { canSee, currentUser } from "@/lib/admin-auth";
 import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../LoginForm";
+import { NotYours } from "../NotYours";
 import { runHealthChecks, type Check } from "@/lib/health";
 
 export const dynamic = "force-dynamic";
@@ -49,7 +50,9 @@ const WORD: Record<Check["state"], string> = {
 };
 
 export default async function AdminHealthPage() {
-  if (!(await isAdmin())) return <LoginForm />;
+  const who = await currentUser();
+  if (!who) return <LoginForm />;
+  if (!canSee(who, "health")) return <NotYours page="health" />;
 
   const checks = await runHealthChecks();
   const broken = checks.filter((c) => c.state === "fail").length;

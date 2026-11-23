@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { isAdmin } from "@/lib/admin-auth";
+import { canSee, currentUser } from "@/lib/admin-auth";
 import { LoginForm } from "./LoginForm";
+import { NotYours } from "./NotYours";
 import { getAutomaticEmails, getCronHealth } from "@/lib/admin-data";
 import { getEngineRoom } from "@/lib/engine-room";
 import { EngineRoom } from "@/components/EngineRoom";
@@ -24,7 +25,9 @@ export const metadata: Metadata = {
  * pipeline to read an enquiry.
  */
 export default async function AdminPage() {
-  if (!(await isAdmin())) return <LoginForm />;
+  const who = await currentUser();
+  if (!who) return <LoginForm />;
+  if (!canSee(who, "overview")) return <NotYours page="overview" />;
 
   const [engine, cron, finder, automatic] = await Promise.all([
     getEngineRoom(),

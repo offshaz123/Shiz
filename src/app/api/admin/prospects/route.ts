@@ -1,19 +1,18 @@
 import { NextResponse } from "next/server";
-import { isAdmin } from "@/lib/admin-auth";
+import { actor, canSee, currentUser } from "@/lib/admin-auth";
+import { logAction } from "@/lib/staff";
+
+/**
+ * The page behind this route. Checked here as well as on the page,
+ * because the browser calls these directly and a member of staff
+ * without the page can type the address of its data.
+ */
+async function allowed(): Promise<boolean> {
+  return canSee(await currentUser(), "prospects");
+}
 import { searchBusinesses } from "@/lib/google-business";
 import { industries } from "@/content/industries";
-import {
-  saveProspects,
-  listProspects,
-  countByContact,
-  listTowns,
-  updateProspect,
-  isStatus,
-  type ContactFilter,
-  type ProspectFilters,
-  type ProspectStatus,
-  setProspectDeleted,
-} from "@/lib/prospects";
+import { countByContact, getProspect, isStatus, listProspects, listTowns, saveProspects, setProspectDeleted, type ContactFilter, type ProspectFilters, type ProspectStatus, updateProspect } from "@/lib/prospects";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -30,7 +29,7 @@ export const dynamic = "force-dynamic";
 const MAX_QUERY = 120;
 
 async function guard() {
-  return (await isAdmin()) ? null : NextResponse.json({ error: "unauthorised" }, { status: 401 });
+  return (await allowed()) ? null : NextResponse.json({ error: "unauthorised" }, { status: 401 });
 }
 
 function num(value: unknown): number | undefined {
@@ -167,6 +166,20 @@ export async function PATCH(request: Request) {
 
   const ok = await updateProspect(id, { status, notes, siteScore, email });
   if (!ok) return NextResponse.json({ error: "not_saved" }, { status: 500 });
+
+  // Marking somebody interested or not interested is a decision about a
+  // business, and it is the decision Walid most wants attached to a name.
+  // Notes and email corrections are recorded too, so the log reads as what
+  // somebody did rather than only as the verdicts they reached.
+  if (status || notes !== undefined || email !== undefined) {
+    const them = await getProspect(id);
+    await logAction(
+      await actor(),
+      status ? "set-status" : notes !== undefined ? "wrote-note" : "fixed-email",
+      them?.name ?? `prospect ${id}`,
+      status ?? (notes !== undefined ? notes.trim().slice(0, 200) : email),
+    );
+  }
 
   return NextResponse.json({ ok: true });
 }

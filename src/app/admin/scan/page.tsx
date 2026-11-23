@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { isAdmin } from "@/lib/admin-auth";
+import { canSee, currentUser } from "@/lib/admin-auth";
 import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../LoginForm";
+import { NotYours } from "../NotYours";
 import { AdminScanner } from "@/components/AdminScanner";
 
 export const dynamic = "force-dynamic";
@@ -19,7 +20,9 @@ export const metadata: Metadata = {
  * business.
  */
 export default async function AdminScanPage() {
-  if (!(await isAdmin())) return <LoginForm />;
+  const who = await currentUser();
+  if (!who) return <LoginForm />;
+  if (!canSee(who, "scan")) return <NotYours page="scan" />;
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-8 sm:px-8">

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { isAdmin } from "@/lib/admin-auth";
+import { canSee, currentUser } from "@/lib/admin-auth";
 import {
   getAdminClient,
   getClientSummary,
@@ -13,6 +13,7 @@ import { ClientDashboard } from "@/components/ClientDashboard";
 import { ClientSettings } from "@/components/ClientSettings";
 import { ClientLoginLink } from "@/components/ClientLoginLink";
 import { LoginForm } from "../../LoginForm";
+import { NotYours } from "../../NotYours";
 
 export const dynamic = "force-dynamic";
 
@@ -57,7 +58,9 @@ export default async function AdminClientPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  if (!(await isAdmin())) return <LoginForm />;
+  const who = await currentUser();
+  if (!who) return <LoginForm />;
+  if (!canSee(who, "clients")) return <NotYours page="clients" />;
 
   const { slug } = await params;
   const client = await getAdminClient(slug);

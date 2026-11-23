@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { isAdmin } from "@/lib/admin-auth";
+import { canSee, currentUser } from "@/lib/admin-auth";
 import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../../LoginForm";
+import { NotYours } from "../../NotYours";
 import { getProspect, listProspectCalls, listProspectEmails } from "@/lib/prospects";
 import { CALL_LABEL, type CallOutcome } from "@/lib/prospect-types";
 import { outreachLine } from "@/lib/outreach-lines";
@@ -66,7 +67,9 @@ export default async function ProspectProfile({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  if (!(await isAdmin())) return <LoginForm />;
+  const who = await currentUser();
+  if (!who) return <LoginForm />;
+  if (!canSee(who, "prospects")) return <NotYours page="prospects" />;
 
   const { id: raw } = await params;
   const id = Number(raw);

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { isAdmin } from "@/lib/admin-auth";
+import { canSee, currentUser } from "@/lib/admin-auth";
 import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../LoginForm";
+import { NotYours } from "../NotYours";
 import { ProspectFinder } from "@/components/ProspectFinder";
 
 export const dynamic = "force-dynamic";
@@ -19,7 +20,9 @@ export const metadata: Metadata = {
  * your own screen.
  */
 export default async function AdminProspectsPage() {
-  if (!(await isAdmin())) return <LoginForm />;
+  const who = await currentUser();
+  if (!who) return <LoginForm />;
+  if (!canSee(who, "prospects")) return <NotYours page="prospects" />;
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-8 sm:px-8">

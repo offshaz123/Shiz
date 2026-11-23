@@ -1,7 +1,18 @@
 import { NextResponse } from "next/server";
-import { isAdmin } from "@/lib/admin-auth";
-import { listProspectCalls, logCall } from "@/lib/prospects";
+import { actor, canSee, currentUser } from "@/lib/admin-auth";
+
+/**
+ * The page behind this route. Checked here as well as on the page,
+ * because the browser calls these directly and a member of staff
+ * without the page can type the address of its data.
+ */
+async function allowed(): Promise<boolean> {
+  return canSee(await currentUser(), "prospects");
+}
+import { getProspect, listProspectCalls, logCall } from "@/lib/prospects";
 import { isCallOutcome } from "@/lib/prospect-types";
+import { CALL_LABEL } from "@/lib/prospect-types";
+import { logAction } from "@/lib/staff";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -14,7 +25,7 @@ export const dynamic = "force-dynamic";
  * between "ring this lot" and "here is what they said last time".
  */
 export async function POST(request: Request) {
-  if (!(await isAdmin())) {
+  if (!(await allowed())) {
     return NextResponse.json({ error: "unauthorised" }, { status: 401 });
   }
 
@@ -24,15 +35,35 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "bad_request" }, { status: 400 });
   }
 
+  // Who is signed in, not who typed their name in a box. The caller field
+  // predates accounts and was whatever somebody wrote, which made "who rang
+  // this business" unanswerable the moment two people used the same login.
+  const me = await actor();
+
   const ok = await logCall(id, {
     outcome: body.outcome,
     notes: typeof body?.notes === "string" ? body.notes : "",
     minutes: Number(body?.minutes) || null,
-    caller: typeof body?.caller === "string" ? body.caller : "",
+    caller: me.name,
     // A date, not a time. "Thursday" is how people actually say it, and a
     // callback promised to the minute is a callback nobody keeps.
     callbackAt: /^\d{4}-\d{2}-\d{2}$/.test(body?.callbackAt ?? "") ? body.callbackAt : "",
   });
+
+  if (ok) {
+    const them = await getProspect(id);
+    await logAction(
+      me,
+      "logged-call",
+      them?.name ?? `prospect ${id}`,
+      [
+        CALL_LABEL[body.outcome as keyof typeof CALL_LABEL] ?? body.outcome,
+        typeof body?.notes === "string" && body.notes.trim() ? body.notes.trim() : "",
+      ]
+        .filter(Boolean)
+        .join(" — "),
+    );
+  }
 
   return ok
     ? NextResponse.json({ logged: true })
@@ -40,7 +71,7 @@ export async function POST(request: Request) {
 }
 
 export async function GET(request: Request) {
-  if (!(await isAdmin())) {
+  if (!(await allowed())) {
     return NextResponse.json({ error: "unauthorised" }, { status: 401 });
   }
 

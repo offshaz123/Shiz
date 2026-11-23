@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { isAdmin } from "@/lib/admin-auth";
+import { canSee, currentUser } from "@/lib/admin-auth";
 import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../LoginForm";
+import { NotYours } from "../NotYours";
 import { CompanyLookup } from "@/components/CompanyLookup";
 import { RegisterFinder } from "@/components/RegisterFinder";
 
@@ -13,7 +14,9 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminCompanyPage() {
-  if (!(await isAdmin())) return <LoginForm />;
+  const who = await currentUser();
+  if (!who) return <LoginForm />;
+  if (!canSee(who, "company")) return <NotYours page="company" />;
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-8 sm:px-8">

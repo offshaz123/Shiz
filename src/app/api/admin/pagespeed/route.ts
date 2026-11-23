@@ -1,5 +1,14 @@
 import { NextResponse } from "next/server";
-import { isAdmin } from "@/lib/admin-auth";
+import { canSee, currentUser } from "@/lib/admin-auth";
+
+/**
+ * The page behind this route. Checked here as well as on the page,
+ * because the browser calls these directly and a member of staff
+ * without the page can type the address of its data.
+ */
+async function allowed(): Promise<boolean> {
+  return canSee(await currentUser(), "scan");
+}
 import { measureSpeed } from "@/lib/pagespeed";
 
 export const runtime = "nodejs";
@@ -16,7 +25,7 @@ const MESSAGES: Record<string, string> = {
 };
 
 export async function GET(request: Request) {
-  if (!(await isAdmin())) {
+  if (!(await allowed())) {
     return NextResponse.json({ error: "unauthorised" }, { status: 401 });
   }
 

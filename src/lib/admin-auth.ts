@@ -1,12 +1,20 @@
 import { createHmac, createHash, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
+import { ADMIN_PAGES, type PageKey } from "./admin-pages";
+import { getStaff } from "./staff";
 
 /**
  * Login for the admin page.
  *
- * One shared password in an environment variable, and a signed cookie to
- * remember it. There is one person logging in, so accounts, password resets
- * and a users table would all be machinery with nothing to do.
+ * The owner signs in with one shared password in an environment variable.
+ * Staff sign in with their own name and password against the staff table,
+ * and the cookie says which of the two it is.
+ *
+ * It was one password and no accounts for as long as one person used it,
+ * and the comment here said accounts would be machinery with nothing to do.
+ * That stopped being true the day somebody else started working the call
+ * list: a shared login cannot say who made a call, and cannot keep anyone
+ * out of the clients page.
  *
  * The cookie holds an expiry and a signature over it, nothing else — there is
  * no session table, so a stolen cookie cannot be revoked individually. The
@@ -47,9 +55,20 @@ function equals(a: string, b: string): boolean {
   return timingSafeEqual(ha, hb);
 }
 
-function sign(expiry: number, key: string): string {
-  return createHmac("sha256", key).update(`admin:${expiry}`).digest("hex");
+/**
+ * The signature covers who as well as when.
+ *
+ * Without the identity in the signed part, a member of staff could edit
+ * their own cookie to say owner and the signature would still check out.
+ */
+function sign(expiry: number, who: string, key: string): string {
+  return createHmac("sha256", key).update(`admin:${who}:${expiry}`).digest("hex");
 }
+
+/** Who a session belongs to. "owner" is Walid with ADMIN_PASSWORD. */
+export type Who =
+  | { kind: "owner"; id: null; name: string; pages: "all" }
+  | { kind: "staff"; id: number; name: string; pages: PageKey[] };
 
 export function checkPassword(attempt: string): boolean {
   const key = secret();
@@ -57,13 +76,14 @@ export function checkPassword(attempt: string): boolean {
   return equals(attempt, key);
 }
 
-export async function startSession(): Promise<void> {
+export async function startSession(staffId?: number): Promise<void> {
   const key = secret();
   if (!key) return;
 
+  const who = staffId === undefined ? "owner" : `s${staffId}`;
   const expiry = Date.now() + SESSION_HOURS * 60 * 60 * 1000;
   const store = await cookies();
-  store.set(COOKIE, `${expiry}.${sign(expiry, key)}`, {
+  store.set(COOKIE, `${expiry}.${who}.${sign(expiry, who, key)}`, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -98,20 +118,75 @@ export async function endSession(): Promise<void> {
   store.delete(COOKIE);
 }
 
-/** Whether the current request carries a valid, unexpired admin cookie. */
-export async function isAdmin(): Promise<boolean> {
+/**
+ * Reads the cookie and says who it belongs to, or null.
+ *
+ * Two shapes are accepted. The old one, "expiry.signature", predates staff
+ * accounts and means the owner — kept so that adding accounts does not sign
+ * Walid out of a session he already has. The new one carries who.
+ */
+async function sessionOwner(): Promise<"owner" | number | null> {
   const key = secret();
-  if (!key) return false;
+  if (!key) return null;
 
   const raw = (await cookies()).get(COOKIE)?.value;
-  if (!raw) return false;
+  if (!raw) return null;
 
-  const [expiryPart, signature] = raw.split(".");
+  const parts = raw.split(".");
+  const [expiryPart] = parts;
   const expiry = Number(expiryPart);
-  if (!expiryPart || !signature || !Number.isFinite(expiry)) return false;
-  if (Date.now() > expiry) return false;
+  if (!expiryPart || !Number.isFinite(expiry)) return null;
+  if (Date.now() > expiry) return null;
 
-  return equals(signature, sign(expiry, key));
+  if (parts.length === 2) {
+    // The old cookie. Its signature did not cover an identity, so the only
+    // thing it can mean is the one account that existed when it was issued.
+    return equals(parts[1], createHmac("sha256", key).update(`admin:${expiry}`).digest("hex"))
+      ? "owner"
+      : null;
+  }
+
+  if (parts.length !== 3) return null;
+  const [, who, signature] = parts;
+  if (!equals(signature, sign(expiry, who, key))) return null;
+
+  if (who === "owner") return "owner";
+  const id = Number(who.slice(1));
+  return who.startsWith("s") && Number.isInteger(id) && id > 0 ? id : null;
+}
+
+/** Whether the current request carries a valid, unexpired admin cookie. */
+export async function isAdmin(): Promise<boolean> {
+  return (await sessionOwner()) !== null;
+}
+
+/**
+ * Who is signed in, with their permissions.
+ *
+ * Staff are read from the database on every call rather than from the
+ * cookie, deliberately. Switching somebody off, or taking the clients page
+ * away, has to take effect now — not in twelve hours when their session
+ * expires.
+ */
+export async function currentUser(): Promise<Who | null> {
+  const session = await sessionOwner();
+  if (session === null) return null;
+  if (session === "owner") {
+    return { kind: "owner", id: null, name: "Walid", pages: "all" };
+  }
+
+  const staff = await getStaff(session);
+  if (!staff || !staff.active) return null;
+  return { kind: "staff", id: staff.id, name: staff.name, pages: staff.pages };
+}
+
+/** Whether this person is allowed to open that page. */
+export function canSee(who: Who | null, key: PageKey): boolean {
+  if (!who) return false;
+  if (who.pages === "all") return true;
+  const page = ADMIN_PAGES.find((p) => p.key === key);
+  if (!page || !page.canGrant) return false;
+  return who.pages.includes(key);
 }
 
 /**
@@ -123,6 +198,36 @@ export async function isAdmin(): Promise<boolean> {
  */
 export async function requireAdmin(): Promise<void> {
   if (!(await isAdmin())) throw new Error("Not authorised");
+}
+
+/**
+ * Guard for the things only Walid does: adding people, changing what they
+ * can see, and anything on the clients page a member of staff has not been
+ * given. Hiding a link is not permission — the action behind it is reachable
+ * by direct POST whether or not the button was drawn.
+ */
+export async function requireOwner(): Promise<void> {
+  const who = await currentUser();
+  if (who?.kind !== "owner") throw new Error("Not authorised");
+}
+
+/** Guard for an action that belongs to one page. */
+export async function requirePage(key: PageKey): Promise<Who> {
+  const who = await currentUser();
+  if (!canSee(who, key)) throw new Error("Not authorised");
+  return who as Who;
+}
+
+/**
+ * Who to write in the log for whatever is about to happen.
+ *
+ * Falls back to the owner rather than throwing: every caller of this has
+ * already checked permission, and a logging helper is not the place to
+ * discover otherwise.
+ */
+export async function actor(): Promise<{ id: number | null; name: string }> {
+  const who = await currentUser();
+  return { id: who?.kind === "staff" ? who.id : null, name: who?.name ?? "Walid" };
 }
 
 /**

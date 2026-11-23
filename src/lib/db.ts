@@ -320,6 +320,60 @@ const SCHEMA = [
       REFERENCES prospects (id) ON DELETE CASCADE
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
+  // Who can sign into the admin besides Walid.
+  //
+  // Added when the first person other than him started working the call
+  // list. Before it there was one shared password, which meant the "caller"
+  // box on a logged call was whatever somebody typed, and no way at all to
+  // answer "what did he actually do today".
+  //
+  // The owner is not a row here. He signs in with ADMIN_PASSWORD and sees
+  // everything, so there is no row to delete by accident and no way to lock
+  // him out of his own system.
+  `CREATE TABLE IF NOT EXISTS staff (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(80) NOT NULL,
+    -- What they type to sign in. Lowercased on the way in so "Sam" and
+    -- "sam" are the same person rather than a mystery failed login.
+    username VARCHAR(40) NOT NULL,
+    -- scrypt, salt and hash together. Never the password itself.
+    pass_hash VARCHAR(255) NOT NULL,
+    -- Comma-separated page keys from admin-pages.ts. A short fixed list
+    -- read back whole and never queried, so a join table would be a table
+    -- for the sake of it.
+    pages VARCHAR(255) NOT NULL DEFAULT '',
+    active TINYINT(1) NOT NULL DEFAULT 1,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_seen_at DATETIME NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY uniq_username (username)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  // What everybody has done, in the order they did it.
+  //
+  // Walid asked to be able to see whether somebody is working or "mocking
+  // around". This records facts and timestamps and nothing else: what was
+  // done, to whom, and when. There is deliberately no score and no verdict
+  // — a number claiming to measure effort would be invented, and the first
+  // time it was unfair about somebody it would be worthless.
+  //
+  // The owner's own actions are recorded too, with staff_id NULL. A log
+  // that only watches the staff is a log somebody learns to distrust.
+  `CREATE TABLE IF NOT EXISTS staff_actions (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    staff_id INT UNSIGNED NULL,
+    -- Their name as it was at the time, kept alongside the id so the log
+    -- still reads properly after somebody is renamed or removed.
+    who VARCHAR(80) NOT NULL,
+    action VARCHAR(40) NOT NULL,
+    subject VARCHAR(160) NULL,
+    detail VARCHAR(255) NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    KEY idx_who_when (staff_id, created_at),
+    KEY idx_when (created_at)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
   // One row per outreach email sent from the admin page, with the text that
   // went out.
   //

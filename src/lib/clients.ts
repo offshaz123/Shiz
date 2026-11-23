@@ -706,6 +706,19 @@ export async function getClientLogo(clientId: number): Promise<string> {
   return logoUrlFor(clientId);
 }
 
+/** Just the name, for a log line. "client 4" is not a record anybody can
+ *  read back a month later. */
+export async function clientNameById(id: number): Promise<string | null> {
+  const found = await withDb(async (db) => {
+    const [rows] = await db.query<(RowDataPacket & { name: string })[]>(
+      "SELECT name FROM clients WHERE id = ? LIMIT 1",
+      [id],
+    );
+    return rows[0]?.name ?? null;
+  });
+  return found ?? null;
+}
+
 export async function getClientBySlug(slug: string): Promise<{ id: number } | null> {
   const found = await withDb(async (db) => {
     const [rows] = await db.query<(RowDataPacket & { id: number })[]>(

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { isAdmin } from "@/lib/admin-auth";
+import { canSee, currentUser } from "@/lib/admin-auth";
 import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../LoginForm";
+import { NotYours } from "../NotYours";
 import { getToday } from "@/lib/today";
 import { listProspectsByIds } from "@/lib/prospects";
 import { CALL_LABEL, type CallOutcome } from "@/lib/prospect-types";
@@ -27,7 +28,9 @@ export const metadata: Metadata = {
  * somebody scrolls instead of starting.
  */
 export default async function AdminTodayPage() {
-  if (!(await isAdmin())) return <LoginForm />;
+  const who = await currentUser();
+  if (!who) return <LoginForm />;
+  if (!canSee(who, "today")) return <NotYours page="today" />;
 
   const groups = await getToday(listProspectsByIds);
   const total = (groups ?? []).reduce((n, g) => n + g.prospects.length, 0);

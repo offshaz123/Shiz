@@ -9,9 +9,21 @@ export function LoginForm() {
   return (
     <div className="mx-auto flex min-h-[70vh] max-w-sm flex-col justify-center px-5">
       <h1 className="text-2xl font-bold tracking-tight text-foreground">Admin</h1>
-      <p className="mt-2 text-sm text-muted">Enter the password to see your leads.</p>
+      <p className="mt-2 text-sm text-muted">
+        Staff: your sign-in name and your own password. Walid: leave the name blank.
+      </p>
 
       <form action={action} className="mt-6 flex flex-col gap-3">
+        {/* Optional on purpose. Walid has typed one password into this
+            screen for months and should not have to learn a second field
+            because other people now have accounts. */}
+        <input
+          type="text"
+          name="username"
+          autoComplete="username"
+          placeholder="Sign-in name (staff only)"
+          className="w-full rounded-xl border border-border bg-background px-4 py-3 text-base text-foreground placeholder:text-muted focus:border-brand-pink/60 focus:outline-none"
+        />
         <input
           type="password"
           name="password"

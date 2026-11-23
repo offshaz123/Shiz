@@ -12,6 +12,7 @@ import {
   tooManyAttempts,
 } from "@/lib/admin-auth";
 import { withDb } from "@/lib/db";
+import { checkStaffLogin, logAction } from "@/lib/staff";
 import { deleteReview, setReviewStatus, type ReviewStatus } from "@/lib/reviews";
 import { sendFollowUp } from "@/lib/send-follow-up";
 
@@ -39,16 +40,36 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
   }
 
   const password = String(formData.get("password") ?? "");
-  if (!checkPassword(password)) {
+  const username = String(formData.get("username") ?? "").trim();
+
+  // No name means the owner, which is how this screen has always worked.
+  if (!username) {
+    if (!checkPassword(password)) {
+      recordFailure(ip);
+      // Deliberately the same message whether the password was wrong or
+      // ADMIN_PASSWORD was never set — a login screen should not report on its
+      // own configuration to whoever is standing in front of it.
+      return { error: "That password isn't right." };
+    }
+    clearAttempts(ip);
+    await startSession();
+    await logAction({ id: null, name: "Walid" }, "signed-in");
+    revalidatePath("/admin");
+    return {};
+  }
+
+  const staff = await checkStaffLogin(username, password);
+  if (!staff) {
     recordFailure(ip);
-    // Deliberately the same message whether the password was wrong or
-    // ADMIN_PASSWORD was never set — a login screen should not report on its
-    // own configuration to whoever is standing in front of it.
-    return { error: "That password isn't right." };
+    // One message for a wrong password, an unknown name and a switched-off
+    // account alike. Which of the three it was is not the business of
+    // whoever is standing in front of the screen.
+    return { error: "That name and password don't match." };
   }
 
   clearAttempts(ip);
-  await startSession();
+  await startSession(staff.id);
+  await logAction({ id: staff.id, name: staff.name }, "signed-in");
   revalidatePath("/admin");
   return {};
 }

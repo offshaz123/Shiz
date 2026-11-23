@@ -153,3 +153,15 @@ test("opens a message that looks like a bounce either way round", () => {
   assert.ok(looksLikeBounce("noreply@someisp.net", "Undeliverable: your website"));
   assert.ok(!looksLikeBounce("dave@someroofing.co.uk", "Re: your website"));
 });
+
+test("a scrypt password round-trips and a wrong one does not", async () => {
+  const { hashPassword, passwordMatches, toUsername } = await import("../src/lib/staff.ts");
+  const stored = hashPassword("correct horse battery");
+  assert.ok(passwordMatches("correct horse battery", stored));
+  assert.ok(!passwordMatches("correct horse batter", stored));
+  // Two hashes of the same password differ, because each gets its own salt.
+  assert.notEqual(stored, hashPassword("correct horse battery"));
+  // And a stored value that is not ours is never a match.
+  assert.ok(!passwordMatches("anything", "plain:text"));
+  assert.equal(toUsername("  Sam Ali! "), "samali");
+});

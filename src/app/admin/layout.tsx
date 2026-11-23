@@ -1,5 +1,6 @@
-import { isAdmin } from "@/lib/admin-auth";
+import { canSee, currentUser } from "@/lib/admin-auth";
 import { AdminNav } from "@/components/AdminNav";
+import { ADMIN_PAGES } from "@/lib/admin-pages";
 
 /**
  * The bar across every admin page.
@@ -12,11 +13,14 @@ import { AdminNav } from "@/components/AdminNav";
  * thing to do.
  */
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  const signedIn = await isAdmin();
+  const who = await currentUser();
+  // The bar only offers what this person is allowed to open. The pages
+  // check for themselves as well — a link that is not drawn is not a lock.
+  const pages = ADMIN_PAGES.filter((page) => canSee(who, page.key));
 
   return (
     <>
-      {signedIn && <AdminNav />}
+      {who && <AdminNav pages={pages} who={who.name} />}
       {children}
     </>
   );

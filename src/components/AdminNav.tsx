@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { logout } from "@/app/admin/actions";
 import { siteConfig } from "@/lib/site-config";
+import type { AdminPage } from "@/lib/admin-pages";
 
 /**
  * One bar across every admin page.
@@ -25,18 +26,8 @@ import { siteConfig } from "@/lib/site-config";
  * all eight and that is the context the row gave for free.
  */
 
-const PAGES = [
-  { href: "/admin", label: "Overview", hint: "What the system has done on its own" },
-  { href: "/admin/today", label: "Today", hint: "What to do now" },
-  { href: "/admin/leads", label: "Leads", hint: "People who came to us" },
-  { href: "/admin/clients", label: "Clients", hint: "Who pays us, their logins and their ad spend" },
-  { href: "/admin/prospects", label: "Who to call", hint: "Every business found, and what has been sent to each" },
-  { href: "/admin/company", label: "Company check", hint: "The official register" },
-  { href: "/admin/scan", label: "Scan a site", hint: "Audit any website — safe to show a customer" },
-  { href: "/admin/health", label: "System check", hint: "Is anything broken" },
-];
-
-export function AdminNav() {
+export function AdminNav({ pages, who }: { pages: AdminPage[]; who: string }) {
+  const PAGES = pages;
   // Read rather than passed in, so adding a page means adding one line to
   // PAGES and nothing else anywhere.
   const current = usePathname();
@@ -45,7 +36,7 @@ export function AdminNav() {
   const active =
     PAGES.find((page) =>
       page.href === "/admin" ? current === "/admin" : current.startsWith(page.href),
-    ) ?? PAGES[0];
+    ) ?? PAGES[0] ?? { href: "/admin", label: "Admin", hint: "" };
 
   return (
     <header className="border-b border-border bg-surface">
@@ -79,7 +70,11 @@ export function AdminNav() {
         </nav>
 
         <div className="ml-auto flex items-center gap-3">
-          <span className="hidden text-[11px] text-muted sm:inline">{siteConfig.email}</span>
+          {/* Who you are, not the company inbox. On a shared machine the
+              first question is whose session this is. */}
+          <span className="hidden text-[11px] text-muted sm:inline" title={siteConfig.email}>
+            {who}
+          </span>
           <form action={logout}>
             <button
               type="submit"

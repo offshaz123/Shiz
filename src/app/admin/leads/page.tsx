@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
-import { isAdmin } from "@/lib/admin-auth";
+import { canSee, currentUser } from "@/lib/admin-auth";
 import { AdminHeading } from "@/components/AdminHeading";
 import { isDbConfigured } from "@/lib/db";
 import { getLeads, getStats, type AdminLead } from "@/lib/admin-data";
 import { getAllReviews, type Review } from "@/lib/reviews";
 import { LoginForm } from "../LoginForm";
+import { NotYours } from "../NotYours";
 import { moderateReview, removeReview, saveNote, sendStepNow, setContacted } from "../actions";
 
 export const dynamic = "force-dynamic";
@@ -224,7 +225,9 @@ function NoDatabase() {
 }
 
 export default async function AdminLeadsPage() {
-  if (!(await isAdmin())) return <LoginForm />;
+  const who = await currentUser();
+  if (!who) return <LoginForm />;
+  if (!canSee(who, "leads")) return <NotYours page="leads" />;
 
   const [stats, leads, reviews] = await Promise.all([
     getStats(),
