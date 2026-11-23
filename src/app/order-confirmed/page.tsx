@@ -70,6 +70,9 @@ export default async function OrderConfirmed(props: PageProps<"/order-confirmed"
         </svg>
       </span>
       <h1 className="mt-6 font-display text-4xl font-bold uppercase sm:text-5xl">Thank you!</h1>
+      <p className="mx-auto mt-3 max-w-md rounded-xl border border-[#e8d89a] bg-[#fdf8e7] px-4 py-2 text-sm">
+        🎁 <strong>A FREE surprise gift</strong> is coming with your plates. A little extra from us, as a thank you.
+      </p>
       {orderRef && (
         <p className="mt-3 text-lg">
           Your order number is <strong className="gold-text text-xl">{orderRef}</strong>

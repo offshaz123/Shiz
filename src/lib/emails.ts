@@ -152,6 +152,7 @@ export function customerOrderEmail(o: Order, images: ImageMode = "web") {
     <p style="font:15px Arial,sans-serif;color:${MUTED};margin:0 0 18px;">Order <strong style="color:${INK};">${o.ref}</strong> · ${fmtDate(o.paid_at ?? o.created_at)}</p>
     <p style="margin:0 0 6px;"><span style="display:inline-block;background:${paid ? "#e7f6ec" : "#fff5ec"};color:${paid ? "#1f7a3d" : "#8a4a12"};font:700 13px Arial,sans-serif;padding:6px 12px;border-radius:999px;">${paid ? "✓ Payment received" : "Order received · awaiting payment"}</span></p>
     ${docsWarning}
+    <p style="font:15px Arial,sans-serif;color:${INK};background:#fdf8e7;border:1px solid #e8d89a;border-radius:12px;padding:10px 14px;margin:12px 0;">🎁 <strong>A FREE surprise gift</strong> is coming with your plates. A little extra from us, as a thank you.</p>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${itemsHtml(o, 544, images)}</table>
 
@@ -192,6 +193,7 @@ export function customerOrderEmail(o: Order, images: ImageMode = "web") {
     `Thanks for your order, ${first}!`,
     `Order ${o.ref} · ${paid ? `Payment received (${money(o.amount_paid ?? o.total)})` : "Awaiting payment"}`,
     card && `Paid with ${card}`,
+    "A FREE surprise gift is coming with your plates. A little extra from us, as a thank you.",
     "",
     ...o.items.map((i) => `- "${i.reg}" × ${i.qty}: ${describe(i)} (${money(unitPrice(i) * i.qty)})`),
     o.discount ? `Discount (${o.discount_code}): −${money(o.discount)}` : "",
@@ -400,6 +402,7 @@ export function shopOrderEmail(o: Order, docCount: number, images: ImageMode = "
     paid ? `PAID: ${money(o.amount_paid!)}${card ? ` (${card})` : ""}` : "NOT PAID ONLINE: send the customer a payment link.",
     `Order ${o.ref} · ${fmtDate(o.paid_at ?? o.created_at)}`,
     `Documents: ${docs}`,
+    "🎁 Pack a free gift with this order.",
     "",
     "PLATES",
     ...o.items.map((i) => `- "${i.reg}" × ${i.qty}: ${describe(i)} (${money(unitPrice(i) * i.qty)})`),
@@ -428,6 +431,7 @@ export function shopOrderEmail(o: Order, docCount: number, images: ImageMode = "
     <p style="font:700 24px Arial,sans-serif;color:${INK};margin:0 0 4px;">New order ${o.ref}</p>
     <p style="font:14px Arial,sans-serif;color:${MUTED};margin:0 0 4px;">${fmtDate(o.paid_at ?? o.created_at)}${card ? ` · ${esc(card)}` : ""}</p>
     <p style="font:14px Arial,sans-serif;color:${o.docs_status === "outstanding" ? "#b42318" : INK};margin:0 0 8px;"><strong>Documents:</strong> ${esc(docs)}</p>
+    <p style="font:700 14px Arial,sans-serif;color:${INK};margin:0 0 8px;">🎁 Pack a free gift with this order.</p>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${itemsHtml(o, 420, images)}</table>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;">
       ${o.discount ? row(`Discount (${esc(o.discount_code ?? "")})`, `−${money(o.discount)}`) : ""}

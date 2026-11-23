@@ -67,6 +67,7 @@ export default async function AdminOrderPage(props: PageProps<"/admin/orders/[re
       <div className="mt-6 grid gap-5 lg:grid-cols-[1.4fr_1fr]">
         <div className="space-y-5">
           <Card title="Plates">
+            <p className="mb-3 rounded-lg bg-[#fdf8e7] px-3 py-2 text-sm font-semibold">🎁 Pack a free gift with this order.</p>
             <ul className="divide-y divide-line">
               {order.items.map((i, idx) => (
                 <li key={idx} className="grid gap-4 py-4 first:pt-0 sm:grid-cols-[240px_1fr_auto] sm:items-center">

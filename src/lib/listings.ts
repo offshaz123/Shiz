@@ -75,7 +75,7 @@ export function listing(style: StyleId, kind: Kind): Listing {
     kind,
     path: kind === "pair" ? `/plates/${style}` : `/plates/${style}/${kind}`,
     title: k.title(s.name),
-    description: `${s.blurb} ${k.text}${legal} Same day dispatch when you order before ${site.dispatchCutoff} on a working day.`,
+    description: `${s.blurb} ${k.text}${legal} Free surprise gift in every order. Same day dispatch when you order before ${site.dispatchCutoff} on a working day.`,
     config,
     price: unitPrice({ ...defaultConfig, ...config }),
     image: photo(style, kind, "main"),
