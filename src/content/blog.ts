@@ -16,6 +16,82 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "why-two-businesses-on-the-same-street-rank-differently",
+    title: "Why Two Businesses on the Same Street Rank Differently",
+    description:
+      "Same trade, same street, and one of you is third in the map results while the other is nowhere. Distance cannot be the reason, so here is what actually separates them.",
+    publishedAt: "2026-11-23",
+    keywords: [
+      "local SEO ranking factors small business",
+      "why competitor ranks higher Google Maps",
+      "same street different ranking Google",
+      "local pack ranking UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Two salons, forty yards apart. Somebody searches for a salon in that town and one of them is in the three results on the map and the other is not in the first ten.",
+          "This is the version of the question that is actually worth asking, because it strips out the excuse. You cannot blame distance when you are both on the same street. Whatever is separating you is something one of you has done and the other has not.",
+        ],
+      },
+      {
+        heading: "Distance has gone from being the answer to being a tie",
+        paragraphs: [
+          "Google has said for years that it weighs three things in local results: how relevant the business is to what was typed, how far it is from the searcher, and how prominent it is.",
+          "On the same street, distance is a draw. So the whole decision falls on the other two, and relevance and prominence are both things you can see and change.",
+          "Worth saying before anything else: there is no single ranking to be in. The order shifts with the exact words typed and with where the person is standing when they type them. Checking from your own shop, on your own phone, logged into your own account, tells you very little. Ask somebody three streets away to search the same thing and you will often get a different three.",
+        ],
+      },
+      {
+        heading: "Categories: the first real difference, and the most ignored",
+        paragraphs: [
+          "Your primary category is the strongest single statement you make about what you are. If one of you is set to \"hair salon\" and the other is set to \"beauty salon\", you are competing for different searches whether you meant to or not.",
+          "Open both profiles and compare. The one ranking for the term you want is usually set to the category that matches that term, with the rest added as secondary categories. The one that is not is often set to something broader, or something it chose on the day it signed up and has never looked at since.",
+          "Then look at the services listed underneath. A profile with its actual services written out, in the words customers use, is giving Google far more to match against than one with an empty list.",
+        ],
+      },
+      {
+        heading: "Reviews, and particularly what the recent ones say",
+        paragraphs: [
+          "Reviews feed prominence, and the business with more of them, arriving steadily, generally has the advantage. Nobody outside Google can tell you how many you need or what the gap is worth, and anybody quoting you a number has made it up.",
+          "What you can compare honestly is the shape of it. How many each of you has. Whether the newest one is from this month or from 2023. Whether the owner has replied to any of them.",
+          "The wording matters too. Reviews that mention the actual service — the thing you want to rank for, in the customer's own words — are describing you to Google as well as to the next reader. You cannot script that and should not try, but you can ask in a way that invites it: \"if you have a minute, it helps if you mention what we did\" gets you specifics, where \"please leave us five stars\" gets you nothing to work with.",
+        ],
+      },
+      {
+        heading: "How finished the profile is",
+        paragraphs: [
+          "Go through both, line by line. Opening hours, including the bank holidays. Phone number. Website link. Photos, and when the last one went up. The description. The attributes. Whether messaging is switched on.",
+          "Individually none of these looks like it would decide anything. Together they are the difference between a profile that is clearly being run by somebody and one that was set up and abandoned, and the second one is competing with one hand behind its back.",
+          "The cheapest half hour in local marketing is opening your listing and your competitor's side by side and filling in every box they have filled in and you have not.",
+        ],
+      },
+      {
+        heading: "The website behind the listing",
+        paragraphs: [
+          "The listing does not stand alone. The page it links to is part of how Google judges what you do and whether you are the real thing in that town.",
+          "If one of you links to a home page that mentions the service once and the town not at all, and the other links to a page about that service with the area written into it properly, that is a difference in relevance that has nothing to do with the profile itself.",
+          "Same for the basics: name, address and phone number matching across your site and the listings you appear in elsewhere. It is dull work and it is one of the few bits of local SEO where the right answer is not in dispute.",
+        ],
+      },
+      {
+        heading: "And some of it you cannot fix this week",
+        paragraphs: [
+          "Some of the gap is time. A business that has been verified for nine years, mentioned on local sites, written about in the paper, linked to from the trade body it belongs to, has accumulated something you cannot buy back in a fortnight.",
+          "That is worth knowing because it changes what success looks like. Overtaking a long-established neighbour on the single most competitive search term in your town may not be the move. Being first for the specific thing you actually do, which they only mention in passing, usually is.",
+        ],
+        bullets: [
+          "Check your ranking from somewhere other than your own premises, on a device that is not signed in as you.",
+          "Compare primary categories first. It explains more of these cases than anything else.",
+          "Write out your services, in customer words, and keep photos going up.",
+          "Fill in every field your competitor has filled in and you have not.",
+          "Point the listing at a page about that service and that area, not just your home page.",
+          "Ask for reviews in a way that gets the service mentioned, and reply to them.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "does-a-small-business-need-a-blog-if-nobody-reads-it",
     title: "Does a Small Business Need a Blog If Nobody Reads It?",
     description:

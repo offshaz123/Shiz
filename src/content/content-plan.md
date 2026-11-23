@@ -497,8 +497,16 @@ site audit tool actually measures, or from a primary source that does load.
       a blog", "blogging worth it small business UK"
 - [ ] What "Service Area" Really Does on a Google Listing — target: "Google Business Profile
       service area", "service area business vs storefront UK"
-- [ ] Why Two Businesses on the Same Street Rank Differently — target: "local SEO ranking factors
-      small business", "why competitor ranks higher Google Maps"
+      OVERLAP WARNING 2026-11-23: the published "Service Area Businesses: Should You Hide Your
+      Address?" already covers the no-radius rule and one-profile-not-one-per-town. Only write
+      this if a genuinely separate angle can be found, otherwise drop it rather than compete.
+- [x] Why Two Businesses on the Same Street Rank Differently — target: "local SEO ranking factors
+      small business", "why competitor ranks higher Google Maps" (written 2026-11-23 from Google's
+      own long-stated relevance / distance / prominence framing, which an earlier post already
+      leans on. No review counts, weightings or ranking-factor percentages quoted — none are
+      published and every third-party number found is a guess. Angle is deliberately "same
+      street, so distance is a tie", which keeps it off the ground already covered by "Why Your
+      Business Doesn't Show on Google Maps From Across Town".)
 
 ## Notes for whoever (human or Routine) picks the next topic
 - Rotate categories — don't publish 3 industry guides in a row
