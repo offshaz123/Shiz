@@ -3,6 +3,7 @@ import { canSee, currentUser } from "@/lib/admin-auth";
 import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../LoginForm";
 import { NotYours } from "../NotYours";
+import { markPageSeen } from "@/lib/whats-new";
 import { ProspectFinder } from "@/components/ProspectFinder";
 
 export const dynamic = "force-dynamic";
@@ -23,6 +24,7 @@ export default async function AdminProspectsPage() {
   const who = await currentUser();
   if (!who) return <LoginForm />;
   if (!canSee(who, "prospects")) return <NotYours page="prospects" />;
+  await markPageSeen(who.id, "prospects");
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-8 sm:px-8">

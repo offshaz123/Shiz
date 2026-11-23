@@ -837,7 +837,7 @@ export function ProspectFinder({ regions = ["uk"] }: { regions?: Region[] }) {
 
           Left as a details rather than a tab so a search in progress is
           never thrown away by clicking somewhere else. */}
-      <details className="rounded-2xl border border-border bg-surface p-4">
+      <details id="find" className="scroll-mt-6 rounded-2xl border border-border bg-surface p-4">
         <summary className="cursor-pointer text-sm font-bold text-foreground">
           Find more businesses
           <span className="ml-2 text-xs font-medium text-muted">
@@ -1315,7 +1315,7 @@ export function ProspectFinder({ regions = ["uk"] }: { regions?: Region[] }) {
           that spends a third of its screen on navigation is a phone
           showing you less of the work. */}
       {loaded && !error && prospects.length > 0 && (
-        <div className="mt-8 border-t border-border pt-6 lg:flex lg:gap-8">
+        <div id="list" className="mt-8 scroll-mt-6 border-t border-border pt-6 lg:flex lg:gap-8">
           <nav className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] lg:w-60 lg:shrink-0 lg:flex-col lg:self-start lg:overflow-visible lg:pb-0 lg:sticky lg:top-6 [&::-webkit-scrollbar]:hidden">
             {([
               { value: "today", label: "Ring today", n: ringToday.length, hint: "Callbacks due and the strongest reasons" },

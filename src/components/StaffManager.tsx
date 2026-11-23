@@ -83,7 +83,7 @@ export function StaffManager({
 
   return (
     <div className="flex flex-col gap-10">
-      <section>
+      <section id="people" className="scroll-mt-6">
         <h2 className="text-sm font-bold text-foreground">Who can sign in</h2>
         <p className="mt-1 text-xs text-muted">
           You sign in with the main password and no name, and you always see everything. The
@@ -177,7 +177,7 @@ export function StaffManager({
         </div>
       </section>
 
-      <section>
+      <section id="add" className="scroll-mt-6">
         <h2 className="text-sm font-bold text-foreground">Add somebody</h2>
         <form action={addAction} className="mt-3 flex flex-wrap items-end gap-3">
           <label className="text-xs text-muted">
@@ -231,7 +231,7 @@ export function StaffManager({
         )}
       </section>
 
-      <section>
+      <section id="sittings" className="scroll-mt-6">
         <h2 className="text-sm font-bold text-foreground">Signed in and signed out</h2>
         <p className="mt-1 text-xs text-muted">
           When each sitting started, when it ended, and how long it ran. Measured to the last
@@ -271,7 +271,7 @@ export function StaffManager({
         </ul>
       </section>
 
-      <section>
+      <section id="log" className="scroll-mt-6">
         <h2 className="text-sm font-bold text-foreground">Everything that has happened</h2>
         <p className="mt-1 text-xs text-muted">
           Newest first, everybody including you. This is a record of what was done and when, not

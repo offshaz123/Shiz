@@ -349,6 +349,24 @@ const SCHEMA = [
     UNIQUE KEY uniq_username (username)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
+  // When each person last opened each page.
+  //
+  // Feeds the counts on the navigation: "two new enquiries" means two that
+  // arrived since you last looked at that page, which is the only
+  // definition that lets the badge clear itself when you open it.
+  //
+  // staff_id is 0 for the owner rather than NULL, because MySQL treats
+  // NULLs as distinct in a unique key and he would collect one row per
+  // page view instead of one row per page.
+  `CREATE TABLE IF NOT EXISTS page_seen (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    staff_id INT UNSIGNED NOT NULL DEFAULT 0,
+    page VARCHAR(20) NOT NULL,
+    seen_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id),
+    UNIQUE KEY uniq_staff_page (staff_id, page)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
   // One row per sitting at the system.
   //
   // Walid asked to know when somebody signed in, when they signed out and

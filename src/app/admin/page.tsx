@@ -60,7 +60,9 @@ export default async function AdminPage({
       {/* The scheduler first. Nothing below it means anything if the daily
           job has stopped, and a figure that stopped moving yesterday looks
           exactly like a quiet day until something says otherwise. */}
-      {cron && <SchedulerStatus cron={cron} finder={finder} />}
+      <div id="scheduler" className="scroll-mt-6">
+        {cron && <SchedulerStatus cron={cron} finder={finder} />}
+      </div>
 
       {picked && (
         <p className="rounded-xl border border-brand-pink/40 bg-brand-pink/5 px-4 py-2.5 text-xs text-foreground">
@@ -73,7 +75,9 @@ export default async function AdminPage({
       {/* Both markets, with a switch. Above the engine room because "how
           is each country doing" is the question this page gets opened
           for, and the machinery below it is the answer to why. */}
-      {byRegion && <RegionStats rows={byRegion} regions={who.regions} picked={picked} />}
+      <div id="pipeline" className="scroll-mt-6">
+        {byRegion && <RegionStats rows={byRegion} regions={who.regions} picked={picked} />}
+      </div>
 
       {engine ? (
         <EngineRoom engine={engine} />
@@ -83,7 +87,9 @@ export default async function AdminPage({
         </p>
       )}
 
-      {automatic && <AutomaticEmails log={automatic} />}
+      <div id="sent" className="scroll-mt-6">
+        {automatic && <AutomaticEmails log={automatic} />}
+      </div>
     </div>
   );
 }

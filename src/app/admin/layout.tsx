@@ -2,6 +2,7 @@ import { canSee, currentUser } from "@/lib/admin-auth";
 import { AdminNav } from "@/components/AdminNav";
 import { ADMIN_PAGES } from "@/lib/admin-pages";
 import { touchSitting } from "@/lib/staff";
+import { whatsNew } from "@/lib/whats-new";
 
 /**
  * The bar across every admin page.
@@ -23,10 +24,14 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // "signed in at nine" into "signed in at nine and still on it at one".
   if (who) await touchSitting(who.id);
 
+  // What has arrived since this person last opened each page.
+  const counts = who ? await whatsNew(who.id) : {};
+
   return (
     <>
-      {who && <AdminNav pages={pages} who={who.name} />}
-      {children}
+      {who && <AdminNav pages={pages} who={who.name} counts={counts} />}
+      {/* Room for the column, which is fixed so it does not scroll away. */}
+      <div className={who ? "lg:pl-60" : undefined}>{children}</div>
     </>
   );
 }

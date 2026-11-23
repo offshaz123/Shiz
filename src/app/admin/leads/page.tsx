@@ -6,6 +6,7 @@ import { getLeads, getStats, type AdminLead } from "@/lib/admin-data";
 import { getAllReviews, type Review } from "@/lib/reviews";
 import { LoginForm } from "../LoginForm";
 import { NotYours } from "../NotYours";
+import { markPageSeen } from "@/lib/whats-new";
 import { moderateReview, removeReview, saveNote, sendStepNow, setContacted } from "../actions";
 
 export const dynamic = "force-dynamic";
@@ -228,6 +229,8 @@ export default async function AdminLeadsPage() {
   const who = await currentUser();
   if (!who) return <LoginForm />;
   if (!canSee(who, "leads")) return <NotYours page="leads" />;
+  // Opening the page is what clears its badge.
+  await markPageSeen(who.id, "leads");
 
   const [stats, leads, reviews] = await Promise.all([
     getStats(),
@@ -239,8 +242,11 @@ export default async function AdminLeadsPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
-      <AdminHeading title="Leads">
-        People who asked us for something, and what they have been sent since.
+      <AdminHeading title="Enquiries">
+        Somebody put their website into the free audit on shazmarketing.com and asked for the
+        report. That is what an enquiry is here: a stranger who came to us rather than one we
+        went and found. The businesses we approach are on Who to call. Your reviews are at the
+        bottom of this page.
       </AdminHeading>
 
       {!stats || !leads ? (
@@ -259,7 +265,7 @@ export default async function AdminLeadsPage() {
           </div>
 
           {stats.topPages.length > 0 && (
-            <div className="mt-6 rounded-2xl border border-border bg-surface p-5">
+            <div id="traffic" className="mt-6 scroll-mt-6 rounded-2xl border border-border bg-surface p-5">
               <h2 className="text-sm font-semibold text-foreground">
                 Most viewed pages, last 7 days
               </h2>
@@ -274,7 +280,7 @@ export default async function AdminLeadsPage() {
             </div>
           )}
 
-          <div className="mt-8 flex flex-col gap-4">
+          <div id="enquiries" className="mt-8 scroll-mt-6 flex flex-col gap-4">
             {leads.length === 0 ? (
               <p className="rounded-2xl border border-border bg-surface p-6 text-sm text-muted">
                 Nobody has run a scan yet. They&apos;ll appear here as soon as they do.
@@ -284,7 +290,7 @@ export default async function AdminLeadsPage() {
             )}
           </div>
 
-          <div className="mt-14">
+          <div id="reviews" className="mt-14 scroll-mt-6">
             <h2 className="text-xl font-bold tracking-tight text-foreground">
               Reviews
               {pendingReviews > 0 && (
