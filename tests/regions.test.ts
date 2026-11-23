@@ -98,3 +98,33 @@ test("the daily rotation searches each country in its own words", async () => {
   assert.ok(!us.some((s) => s.town === "Barking"));
   assert.ok(!uk.some((s) => s.town === "Katy"));
 });
+
+test("an American email carries a postal address and a British one does not", async () => {
+  const { buildDraft } = await import("../src/lib/prospect-outreach.ts");
+  const them = (region: "uk" | "us") => ({
+    id: 1, placeId: "p", name: "Katy Mobile Detailing", phone: "555 0100",
+    email: "info@katydetail.com", website: "https://katydetail.com", address: "", category: "",
+    mapsUri: "", reviews: 0, rating: null, siteScore: 41,
+    findings: [{ label: "no phone number on the page", why: "No number on the home page." }],
+    scannedAt: "2026-11-23 09:00:00", status: "new" as const, notes: "", calledAt: null,
+    callbackAt: null, lastCall: null, emailedAt: null, deletedAt: null, sequenceStartedAt: null,
+    sequenceStoppedAt: null, sequenceStopReason: "", repliedAt: null, unsubscribedAt: null,
+    unsubscribeUrl: "", emailCount: 0, foundFor: "", industry: "automotive", town: "Katy",
+    emailDeadAt: null, emailDeadReason: "", region,
+  });
+
+  // US commercial email has to carry a valid physical postal address.
+  // This is the law the sender is held to, not a deliverability tip.
+  const us = buildDraft(1, them("us"), "https://example.com/u/1").body;
+  assert.ok(us.includes("One Canada Square"), "no postal address on a US email");
+  assert.ok(us.includes("United Kingdom"));
+
+  // It came off the UK signature deliberately, and stays off.
+  const uk = buildDraft(1, them("uk"), "https://example.com/u/1").body;
+  assert.ok(!uk.includes("One Canada Square"));
+
+  // Every step, not only the first.
+  for (const step of [1, 2, 3] as const) {
+    assert.ok(buildDraft(step, them("us"), "https://example.com/u/1").body.includes("E14 5AB"));
+  }
+});

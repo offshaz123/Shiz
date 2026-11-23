@@ -1,4 +1,5 @@
 import { siteConfig } from "./site-config";
+import type { Region } from "./regions";
 import { outreachLine, servicesLine } from "./outreach-lines";
 import type { Prospect } from "./prospect-types";
 
@@ -39,6 +40,31 @@ export const SIGNATURE: string[] = [
   siteConfig.email,
   siteConfig.url.replace(/^https?:\/\//, ""),
 ];
+
+/**
+ * The signature, for a business in that country.
+ *
+ * American commercial email has to carry a valid physical postal address.
+ * That is not a best practice or a deliverability tip, it is the law the
+ * sender is held to, and the address came off this signature deliberately
+ * — so it goes back on for the country that requires it and stays off the
+ * one that does not.
+ *
+ * Only the address differs. Everything else about these emails is the
+ * same on both sides of the Atlantic, and a second version of the whole
+ * signature would be a second thing to keep in step.
+ */
+export function signatureFor(region: Region): string[] {
+  if (region !== "us") return SIGNATURE;
+  const { line1, line2, city, postcode, country } = siteConfig.address;
+  return [
+    ...SIGNATURE,
+    "",
+    [line1, line2].filter(Boolean).join(", "),
+    [city, postcode].filter(Boolean).join(" "),
+    country,
+  ];
+}
 
 export type OutreachStep = 1 | 2 | 3;
 
@@ -97,7 +123,7 @@ function stepOne(p: Prospect, unsubscribeUrl: string): Draft {
       ``,
       `Want the full report? Reply and I'll send it over, free. Or ring me on ${siteConfig.phoneDisplay}. I'm Walid Shah, I own the business and I take the calls myself.`,
       ``,
-      ...SIGNATURE,
+      ...signatureFor(p.region),
       // One click rather than "reply and say so". Asking somebody to compose
       // an email to make you stop is a small favour to ask of a person you
       // wrote to out of the blue, and a filter counts a link it can see.
@@ -146,7 +172,7 @@ function stepTwo(p: Prospect, unsubscribeUrl: string): Draft {
       ``,
       `Reply, or ring me on ${siteConfig.phoneDisplay}. If neither, I'll send one more and then leave you to it.`,
       ``,
-      ...SIGNATURE,
+      ...signatureFor(p.region),
       ``,
       `Not interested? Click here and I will not contact you again: ${unsubscribeUrl}`,
     ].join("\n"),
@@ -176,7 +202,7 @@ function stepThree(p: Prospect, unsubscribeUrl: string): Draft {
       ``,
       `All the best with it.`,
       ``,
-      ...SIGNATURE,
+      ...signatureFor(p.region),
       ``,
       `Rather not hear from us again? Click here: ${unsubscribeUrl}`,
     ].join("\n"),

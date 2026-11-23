@@ -1232,108 +1232,134 @@ export function ProspectFinder({ regions = ["uk"] }: { regions?: Region[] }) {
           </p>
         )}
 
-      {/* Pick the job, then do it.
+      {/* Pick the job on the left, do it on the right.
           Four slices of the same list rather than one list with everything
           in it. "Ring today" is the morning's work, the two website tabs
           are the two different conversations, and Everyone is there so
-          nothing is ever actually hidden. */}
+          nothing is ever actually hidden.
+
+          A column rather than a row of tabs, at Walid's ask. It is the
+          better shape for the job as well: the counts sit under each other
+          where they can be compared, the labels have room for the line
+          saying what each one is for, and the column stays on screen while
+          somebody scrolls two hundred businesses — a tab row at the top is
+          a tab row you have to scroll back up to.
+
+          Below lg it goes back to a row above the list, because a phone
+          that spends a third of its screen on navigation is a phone
+          showing you less of the work. */}
       {loaded && !error && prospects.length > 0 && (
-        <div className="mt-8 flex flex-wrap gap-2 border-t border-border pt-6">
-          {([
-            { value: "today", label: "Ring today", n: ringToday.length, hint: "Callbacks due and the strongest reasons" },
-            { value: "no-site", label: "No website", n: noSite.length, hint: "Nothing to criticise, something to build" },
-            { value: "has-site", label: "Has a website", n: withSite.length, hint: "Open with what is wrong with it" },
-            { value: "all", label: "Everyone", n: prospects.length, hint: "The whole list, in order" },
-          ] as const).map((t) => (
-            <button
-              key={t.value}
-              type="button"
-              onClick={() => setView(t.value)}
-              title={t.hint}
-              className={`rounded-xl border px-4 py-2.5 text-left transition ${
-                view === t.value
-                  ? "border-brand-pink bg-brand-pink/10"
-                  : "border-border hover:border-brand-pink/40"
-              }`}
-            >
-              <span className="flex items-baseline gap-2">
-                <span
-                  className={`text-sm font-bold ${
-                    view === t.value ? "text-foreground" : "text-muted"
-                  }`}
-                >
-                  {t.label}
+        <div className="mt-8 border-t border-border pt-6 lg:flex lg:gap-8">
+          <nav className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] lg:w-60 lg:shrink-0 lg:flex-col lg:self-start lg:overflow-visible lg:pb-0 lg:sticky lg:top-6 [&::-webkit-scrollbar]:hidden">
+            {([
+              { value: "today", label: "Ring today", n: ringToday.length, hint: "Callbacks due and the strongest reasons" },
+              { value: "no-site", label: "No website", n: noSite.length, hint: "Nothing to criticise, something to build" },
+              { value: "has-site", label: "Has a website", n: withSite.length, hint: "Open with what is wrong with it" },
+              { value: "all", label: "Everyone", n: prospects.length, hint: "The whole list, in order" },
+            ] as const).map((t) => (
+              <button
+                key={t.value}
+                type="button"
+                onClick={() => setView(t.value)}
+                title={t.hint}
+                aria-current={view === t.value ? "true" : undefined}
+                className={`shrink-0 rounded-xl border px-4 py-2.5 text-left transition lg:w-full ${
+                  view === t.value
+                    ? "border-brand-pink bg-brand-pink/10"
+                    : "border-border hover:border-brand-pink/40"
+                }`}
+              >
+                <span className="flex items-baseline gap-2">
+                  <span
+                    className={`text-sm font-bold ${
+                      view === t.value ? "text-foreground" : "text-muted"
+                    }`}
+                  >
+                    {t.label}
+                  </span>
+                  <span className="text-sm font-bold tabular-nums text-brand-pink lg:ml-auto">
+                    {t.n}
+                  </span>
                 </span>
-                <span className="text-sm font-bold tabular-nums text-brand-pink">{t.n}</span>
-              </span>
-            </button>
-          ))}
+                {/* Only on the wide layout. In a row it would make every
+                    button three lines tall for no gain. */}
+                <span className="mt-0.5 hidden text-[11px] leading-snug text-muted lg:block">
+                  {t.hint}
+                </span>
+              </button>
+            ))}
+          </nav>
+
+          {/* min-w-0 so a long business name cannot push the column off
+              the side of the screen. */}
+          <div className="min-w-0 flex-1">
+        {view === "today" && prospects.length > 0 && (
+          <Section
+            title={`Ring today (${ringToday.length})`}
+            note={
+              ringToday.length === 0
+                ? "Nothing urgent. Pick one of the other tabs and work down it."
+                : "Callbacks you promised first, then the businesses with the most wrong."
+            }
+          >
+            {ringToday.map((p) => (
+              <Row
+                key={p.id}
+                p={p}
+                busy={busy[p.id]}
+                onSave={save}
+                onScan={scan}
+                onContacted={markContacted}
+                onLogged={load}
+                onDelete={setDeleted}
+              />
+            ))}
+          </Section>
+        )}
+
+        {(view === "no-site" || view === "all") && noSite.length > 0 && (
+          <Section
+            title={`No website at all — ring these first (${noSite.length})`}
+            note="Nothing to criticise, just something to build."
+          >
+            {noSite.map((p) => (
+              <Row
+                key={p.id}
+                p={p}
+                busy={busy[p.id]}
+                onSave={save}
+                onScan={scan}
+                onContacted={markContacted}
+                onLogged={load}
+                onDelete={setDeleted}
+              />
+            ))}
+          </Section>
+        )}
+
+        {(view === "has-site" || view === "all") && withSite.length > 0 && (
+          <Section
+            title={`Has a website (${withSite.length})`}
+            note="Fewest reviews first. Press Scan to score their site."
+          >
+            {withSite.map((p) => (
+              <Row
+                key={p.id}
+                p={p}
+                busy={busy[p.id]}
+                onSave={save}
+                onScan={scan}
+                onContacted={markContacted}
+                onLogged={load}
+                onDelete={setDeleted}
+              />
+            ))}
+          </Section>
+        )}
+          </div>
         </div>
       )}
 
-      {view === "today" && prospects.length > 0 && (
-        <Section
-          title={`Ring today (${ringToday.length})`}
-          note={
-            ringToday.length === 0
-              ? "Nothing urgent. Pick one of the other tabs and work down it."
-              : "Callbacks you promised first, then the businesses with the most wrong."
-          }
-        >
-          {ringToday.map((p) => (
-            <Row
-              key={p.id}
-              p={p}
-              busy={busy[p.id]}
-              onSave={save}
-              onScan={scan}
-              onContacted={markContacted}
-              onLogged={load}
-              onDelete={setDeleted}
-            />
-          ))}
-        </Section>
-      )}
-
-      {(view === "no-site" || view === "all") && noSite.length > 0 && (
-        <Section
-          title={`No website at all — ring these first (${noSite.length})`}
-          note="Nothing to criticise, just something to build."
-        >
-          {noSite.map((p) => (
-            <Row
-              key={p.id}
-              p={p}
-              busy={busy[p.id]}
-              onSave={save}
-              onScan={scan}
-              onContacted={markContacted}
-              onLogged={load}
-              onDelete={setDeleted}
-            />
-          ))}
-        </Section>
-      )}
-
-      {(view === "has-site" || view === "all") && withSite.length > 0 && (
-        <Section
-          title={`Has a website (${withSite.length})`}
-          note="Fewest reviews first. Press Scan to score their site."
-        >
-          {withSite.map((p) => (
-            <Row
-              key={p.id}
-              p={p}
-              busy={busy[p.id]}
-              onSave={save}
-              onScan={scan}
-              onContacted={markContacted}
-              onLogged={load}
-              onDelete={setDeleted}
-            />
-          ))}
-        </Section>
-      )}
     </div>
   );
 }
