@@ -206,8 +206,8 @@ export default async function InsightsPage(props: PageProps<"/admin/insights">) 
             <Card label="Premium acrylic" value={pct(x.sellers.premiumShare)}>
               <span className="text-muted">chose the upgrade</span>
             </Card>
-            <Card label="With screws" value={pct(x.sellers.fixingShare)}>
-              <span className="text-muted">added screws (pads are free)</span>
+            <Card label="With fixings" value={pct(x.sellers.fixingShare)}>
+              <span className="text-muted">added pads or screws</span>
             </Card>
             <Card label="With a flag or strip" value={pct(x.sellers.flagShare)}>
               <span className="text-muted">added a badge</span>

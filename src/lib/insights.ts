@@ -177,8 +177,7 @@ export async function getInsights(days: number, end = new Date()): Promise<Insig
       styleCount.set(name, (styleCount.get(name) ?? 0) + i.qty);
       if (sizeOf(i).hex) hex += i.qty;
       if (i.material === "premium") premium += i.qty;
-      // Pads are a free gift on every order now, so count paid screws only.
-      if (i.fixing === "screws" || i.fixing === "both") fixing += i.qty;
+      if (i.fixing !== "none") fixing += i.qty;
       if (i.badge !== "none" && badges.some((b) => b.id === i.badge)) flag += i.qty;
     }
   const share = (n: number) => (plates ? n / plates : 0);
@@ -314,7 +313,7 @@ function advise(x: Insights): Advice[] {
     out.push({ level: "tip", title: `Average order is ${gbp(x.avgOrder)}`, text: "Raise it with the extras: premium acrylic, fixings and hex plates. Show a 4D or gel plate first in your ads; they're the higher-priced styles." });
   if (x.sellers.styles[0]) out.push({ level: "tip", title: `Best seller: ${x.sellers.styles[0][0]}`, text: "Use it as the main picture in your next ad and on social media." });
   if (x.sellers.plates >= 4 && x.sellers.fixingShare < 0.3)
-    out.push({ level: "tip", title: `Only ${Math.round(x.sellers.fixingShare * 100)}% of plates come with screws`, text: "Every order gets free sticky pads; the basket offers screws on top. Mentioning \"fit them the day they arrive\" in posts helps too." });
+    out.push({ level: "tip", title: `Only ${Math.round(x.sellers.fixingShare * 100)}% of plates come with fixings`, text: "The basket already offers them. Mentioning \"fit them the day they arrive\" in posts helps too." });
   if (x.deliveryLoss !== null && x.deliveryLoss > 0)
     out.push({ level: "tip", title: `Delivery cost you ${gbp(x.deliveryLoss)} more than customers paid`, text: "Pick the cheapest courier in Packlink, or put more orders in the free delivery range." });
 
