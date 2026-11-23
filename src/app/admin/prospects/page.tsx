@@ -31,7 +31,7 @@ export default async function AdminProspectsPage() {
       </AdminHeading>
 
       <div className="mt-8">
-        <ProspectFinder />
+        <ProspectFinder regions={who.regions} />
       </div>
     </div>
   );

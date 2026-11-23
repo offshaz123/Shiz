@@ -1,3 +1,4 @@
+import { DEFAULT_REGION, regionInfo, type Region } from "./regions";
 /**
  * Looks up the Google Business Profile behind a website.
  *
@@ -322,6 +323,7 @@ export type ProspectSearch =
 export async function searchBusinesses(
   query: string,
   maxReviews: number,
+  region: Region = DEFAULT_REGION,
 ): Promise<ProspectSearch> {
   const key = process.env.GOOGLE_PLACES_KEY;
   if (!key) return { status: "unavailable", reason: "no_key" };
@@ -331,7 +333,7 @@ export async function searchBusinesses(
 
   let places: Place[];
   try {
-    places = await searchOnce(query, key);
+    places = await searchOnce(query, key, regionInfo(region).placesRegionCode);
   } catch (err) {
     return {
       status: "unavailable",
@@ -410,7 +412,19 @@ function toBusiness(p: Place): GoogleBusiness {
 /* The lookup                                                         */
 /* ------------------------------------------------------------------ */
 
-async function searchOnce(query: string, key: string): Promise<Place[]> {
+/**
+ * One Places text search.
+ *
+ * regionCode defaults to the UK because the two callers that do not pass
+ * one are both UK-only paths: matching a Google listing to a site audited
+ * from the British site, and looking up a company from the Companies House
+ * register. The prospect search passes its own.
+ */
+async function searchOnce(
+  query: string,
+  key: string,
+  regionCode: string = regionInfo(DEFAULT_REGION).placesRegionCode,
+): Promise<Place[]> {
   const res = await fetch(ENDPOINT, {
     method: "POST",
     headers: {
@@ -421,7 +435,10 @@ async function searchOnce(query: string, key: string): Promise<Place[]> {
     body: JSON.stringify({
       textQuery: query,
       maxResultCount: 10,
-      regionCode: "GB",
+      // Without this a search for "detailing in Arlington" is as likely to
+      // return the one in Yorkshire as the one in Texas, and a business
+      // filed under the wrong country is a call at the wrong hour.
+      regionCode,
       languageCode: "en",
     }),
     signal: AbortSignal.timeout(TIMEOUT_MS),

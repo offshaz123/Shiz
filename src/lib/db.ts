@@ -349,6 +349,32 @@ const SCHEMA = [
     UNIQUE KEY uniq_username (username)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
+  // One row per sitting at the system.
+  //
+  // Walid asked to know when somebody signed in, when they signed out and
+  // how long they were actually on it. The action log answers what they
+  // did; this answers how long they were there to do it, which is a
+  // different question and the one he asked second.
+  //
+  // last_seen_at is touched as they move around, so a session that ends by
+  // somebody closing the laptop still has an honest length. A session with
+  // no sign-out is reported as "still open" rather than being silently
+  // closed at the last page load — those are different facts and the
+  // second one is a guess.
+  `CREATE TABLE IF NOT EXISTS staff_sessions (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    staff_id INT UNSIGNED NULL,
+    who VARCHAR(80) NOT NULL,
+    started_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_seen_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    ended_at DATETIME NULL,
+    -- "signed-out" when they pressed the button, left null while open.
+    ended_reason VARCHAR(20) NULL,
+    PRIMARY KEY (id),
+    KEY idx_staff_started (staff_id, started_at),
+    KEY idx_open (staff_id, ended_at)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
   // What everybody has done, in the order they did it.
   //
   // Walid asked to be able to see whether somebody is working or "mocking
@@ -850,6 +876,35 @@ const ADDED_COLUMNS: {
     table: "clients",
     column: "site_scanned_at",
     definition: "DATETIME NULL",
+  },
+  // Which countries a member of staff works.
+  //
+  // Separate from the page switches because it is a different question:
+  // the pages decide what kind of thing somebody can do, this decides
+  // whose businesses they can do it to. Walid wanted to be able to hand
+  // somebody the American list without the British one, or the reverse.
+  //
+  // Empty means both, so every account that existed before this keeps
+  // working rather than silently losing its list.
+  {
+    table: "staff",
+    column: "regions",
+    definition: "VARCHAR(40) NOT NULL DEFAULT '' AFTER pages",
+  },
+  // Which country this business is in.
+  //
+  // One list with a column rather than two sets of tables. Everything
+  // downstream — the call list, the scanner, the three emails, the counts
+  // on the overview — then works for both markets by passing a region
+  // instead of being written twice, and the second copy is always the one
+  // that stops being maintained.
+  //
+  // Everything found before the United States was added is British, which
+  // is what the default says.
+  {
+    table: "prospects",
+    column: "region",
+    definition: "VARCHAR(2) NOT NULL DEFAULT 'uk' AFTER industry",
   },
   // A published email address that does not work.
   //

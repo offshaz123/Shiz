@@ -1,7 +1,10 @@
 import { industries } from "@/content/industries";
 import { allAreas, cities } from "@/content/areas";
+import { allUsAreas, usCities } from "@/content/areas-us";
 import { searchBusinesses, placesBudget } from "./google-business";
 import { saveProspects } from "./prospects";
+import { DEFAULT_REGION, type Region } from "./regions";
+import { tradeName } from "./trade-names";
 
 /**
  * Finding businesses without anybody typing a search.
@@ -57,6 +60,20 @@ const INDUSTRY_ORDER = [
 const SEARCHES_PER_RUN = 20;
 
 /**
+ * How many of those each country gets when both are being searched.
+ *
+ * Ten each rather than twenty each. The Places allowance is sixty a day
+ * and is shared — adding America did not add an allowance, so running the
+ * old number twice would spend the lot before the register lookups and
+ * anything searched by hand got a turn.
+ *
+ * It is also honest about what the second market costs: the pipeline fills
+ * half as fast per country as it did when there was one, until somebody
+ * decides to pay for more.
+ */
+export const SEARCHES_PER_REGION = 10;
+
+/**
  * The review ceiling.
  *
  * The whole premise is businesses that are not being marketed well, and a
@@ -65,9 +82,18 @@ const SEARCHES_PER_RUN = 20;
  */
 const MAX_REVIEWS = 50;
 
-/** East London first, because it is closest to home and a short drive makes
- *  meeting in person possible, then the rest, then the bigger cities. */
-const TOWNS = [...allAreas, ...cities];
+/**
+ * Where to search, per country.
+ *
+ * East London first in the UK, because it is closest to home and a short
+ * drive makes meeting in person possible, then the rest, then the bigger
+ * cities. The American list runs state by state through the suburbs for
+ * the same reason, with the big metros last.
+ */
+const TOWNS: Record<Region, string[]> = {
+  uk: [...allAreas, ...cities],
+  us: [...allUsAreas, ...usCities],
+};
 
 function tradesFor(slug: string): string[] {
   const industry = industries.find((i) => i.slug === slug);
@@ -115,15 +141,17 @@ export function searchesForDay(
    * and tomorrow is too late.
    */
   offset = 0,
+  region: Region = DEFAULT_REGION,
 ): { query: string; industry: string; town: string }[] {
   const industry = industryForDay(day);
   const trades = tradesFor(industry);
-  if (trades.length === 0 || TOWNS.length === 0) return [];
+  const towns = TOWNS[region];
+  if (trades.length === 0 || towns.length === 0) return [];
 
   // Trade varies fastest, so one day covers several trades in several towns
   // rather than one trade everywhere.
   const pairs: { trade: string; town: string }[] = [];
-  for (const town of TOWNS) {
+  for (const town of towns) {
     for (const trade of trades) pairs.push({ trade, town });
   }
 
@@ -134,7 +162,9 @@ export function searchesForDay(
   for (let i = 0; i < Math.min(count, pairs.length); i += 1) {
     const pair = pairs[(start + i) % pairs.length];
     picked.push({
-      query: `${pair.trade} in ${pair.town}`,
+      // Worded for the country being searched. "Garages & MOT in Katy"
+      // finds nobody, and the search is spent either way.
+      query: `${tradeName(pair.trade, region)} in ${pair.town}`,
       industry,
       town: pair.town,
     });
@@ -143,6 +173,7 @@ export function searchesForDay(
 }
 
 export type AutoSearchResult = {
+  region: Region;
   industry: string;
   searches: number;
   found: number;
@@ -153,10 +184,12 @@ export async function runAutoSearch(
   now = new Date(),
   count = SEARCHES_PER_RUN,
   offset = 0,
+  region: Region = DEFAULT_REGION,
 ): Promise<AutoSearchResult> {
   const day = dayIndex(now);
-  const planned = searchesForDay(day, count, offset);
+  const planned = searchesForDay(day, count, offset, region);
   const result: AutoSearchResult = {
+    region,
     industry: industryForDay(day),
     searches: 0,
     found: 0,
@@ -170,7 +203,7 @@ export async function runAutoSearch(
   }
 
   for (const search of planned) {
-    const found = await searchBusinesses(search.query, MAX_REVIEWS);
+    const found = await searchBusinesses(search.query, MAX_REVIEWS, region);
     if (found.status !== "ok") {
       // Budget is the expected stop, not a fault: it means the allowance for
       // the day is gone and tomorrow's run picks up where this one left off.
@@ -183,7 +216,7 @@ export async function runAutoSearch(
     // Keyed on Google's place id, so a business already on the list keeps
     // its status, its notes and the fact it has been called. Only genuinely
     // new ones are added.
-    await saveProspects(found.businesses, search.query, search.industry, search.town);
+    await saveProspects(found.businesses, search.query, search.industry, search.town, region);
     result.found += found.businesses.length;
   }
 

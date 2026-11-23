@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { canSee, currentUser } from "@/lib/admin-auth";
 import { LoginForm } from "./LoginForm";
 import { NotYours } from "./NotYours";
-import { getAutomaticEmails, getCronHealth } from "@/lib/admin-data";
+import { getAutomaticEmails, getCronHealth, getRegionStats } from "@/lib/admin-data";
 import { getEngineRoom } from "@/lib/engine-room";
 import { EngineRoom } from "@/components/EngineRoom";
 import { SchedulerStatus } from "@/components/SchedulerStatus";
 import { AutomaticEmails } from "@/components/AutomaticEmails";
+import { RegionStats } from "@/components/RegionStats";
 import { AdminHeading } from "@/components/AdminHeading";
 
 export const dynamic = "force-dynamic";
@@ -29,11 +30,12 @@ export default async function AdminPage() {
   if (!who) return <LoginForm />;
   if (!canSee(who, "overview")) return <NotYours page="overview" />;
 
-  const [engine, cron, finder, automatic] = await Promise.all([
+  const [engine, cron, finder, automatic, byRegion] = await Promise.all([
     getEngineRoom(),
     getCronHealth(),
     getCronHealth("find-and-scan"),
     getAutomaticEmails(),
+    getRegionStats(),
   ]);
 
   return (
@@ -47,6 +49,11 @@ export default async function AdminPage() {
           job has stopped, and a figure that stopped moving yesterday looks
           exactly like a quiet day until something says otherwise. */}
       {cron && <SchedulerStatus cron={cron} finder={finder} />}
+
+      {/* Both markets, with a switch. Above the engine room because "how
+          is each country doing" is the question this page gets opened
+          for, and the machinery below it is the answer to why. */}
+      {byRegion && <RegionStats rows={byRegion} regions={who.regions} />}
 
       {engine ? (
         <EngineRoom engine={engine} />

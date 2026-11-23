@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { actor, canSee, currentUser } from "@/lib/admin-auth";
+import { actor, canSee, canSeeRegion, currentUser } from "@/lib/admin-auth";
 import { logAction } from "@/lib/staff";
+import { toRegion } from "@/lib/regions";
 
 /**
  * The page behind this route. Checked here as well as on the page,
@@ -66,7 +67,15 @@ export async function GET(request: Request) {
       ? contactParam
       : "all") as ContactFilter,
     town: (params.get("town") ?? "").slice(0, 80),
+    region: toRegion(params.get("region")),
   };
+
+  // The switch is only drawn for the countries somebody works, but the
+  // address it calls is typeable. Asking for a list you were not given
+  // returns nothing rather than returning it.
+  if (!canSeeRegion(await currentUser(), toRegion(filters.region))) {
+    return NextResponse.json({ prospects: [], counts: { notContacted: 0, contacted: 0 }, towns: [] });
+  }
 
   // Both in one request: the list itself, and the two tab counts above it.
   // Separately they would be two round trips that can disagree with each
@@ -95,7 +104,18 @@ export async function POST(request: Request) {
   }
 
   const maxReviews = num(body?.maxReviews) ?? 50;
-  const result = await searchBusinesses(query, Math.min(500, Math.max(0, Math.round(maxReviews))));
+  // Which country to search in, and which to file the results under. Sent
+  // by the page rather than guessed from the words typed: "detailing in
+  // Arlington" is a real place in both.
+  const region = toRegion(body?.region);
+  if (!canSeeRegion(await currentUser(), region)) {
+    return NextResponse.json({ error: "unauthorised" }, { status: 401 });
+  }
+  const result = await searchBusinesses(
+    query,
+    Math.min(500, Math.max(0, Math.round(maxReviews))),
+    region,
+  );
 
   if (result.status === "unavailable") {
     const status = result.reason === "no_key" ? 503 : result.reason === "budget" ? 429 : 502;
@@ -109,7 +129,7 @@ export async function POST(request: Request) {
   // query, so "nail salons in Barking" and a free-text search are filed the
   // same way.
   const town = typeof body?.town === "string" ? body.town.trim().slice(0, 80) : "";
-  await saveProspects(result.businesses, query, industry, town);
+  await saveProspects(result.businesses, query, industry, town, region);
 
   // A search answers "who else could I approach", so it comes back with the
   // people still to approach — not with everyone already emailed mixed back
@@ -120,6 +140,7 @@ export async function POST(request: Request) {
     status: "all" as const,
     industry,
     contact: "not-contacted" as const,
+    region,
   };
   const [prospects, counts] = await Promise.all([
     listProspects(searchFilters),

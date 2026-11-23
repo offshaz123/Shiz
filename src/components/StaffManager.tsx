@@ -9,7 +9,8 @@ import {
   type StaffFormState,
 } from "@/app/admin/staff/actions";
 import { grantablePages } from "@/lib/admin-pages";
-import type { Staff, StaffTally, Activity } from "@/lib/staff";
+import { REGIONS, REGION_INFO } from "@/lib/regions";
+import type { Staff, StaffTally, Activity, Sitting } from "@/lib/staff";
 
 /**
  * The team screen: who can sign in, what each of them can open, and what
@@ -41,6 +42,7 @@ function clock(when: string | null): string {
 
 const ACTION_WORDS: Record<string, string> = {
   "signed-in": "signed in",
+  "signed-out": "signed out",
   "logged-call": "logged a call",
   "set-status": "set the status",
   "wrote-note": "wrote a note",
@@ -55,14 +57,23 @@ const ACTION_WORDS: Record<string, string> = {
   "reset-staff-password": "reset someone's password",
 };
 
+function hoursAndMinutes(minutes: number): string {
+  if (minutes < 60) return `${minutes} min`;
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return m === 0 ? `${h}h` : `${h}h ${m}m`;
+}
+
 export function StaffManager({
   staff,
   tallies,
   activity,
+  sittings,
 }: {
   staff: Staff[];
   tallies: StaffTally[];
   activity: Activity[];
+  sittings: Sitting[];
 }) {
   const [addState, addAction, adding] = useActionState<StaffFormState, FormData>(createStaff, {});
   const [open, setOpen] = useState<number | null>(null);
@@ -133,6 +144,13 @@ export function StaffManager({
                 )}
 
                 <p className="mt-2 text-xs text-muted">
+                  Lists:{" "}
+                  <span className="text-foreground">
+                    {person.regions.map((r) => REGION_INFO[r].label).join(" and ")}
+                  </span>
+                </p>
+
+                <p className="mt-1 text-xs text-muted">
                   Can open:{" "}
                   <span className="text-foreground">
                     {person.pages.length === 0
@@ -214,6 +232,46 @@ export function StaffManager({
       </section>
 
       <section>
+        <h2 className="text-sm font-bold text-foreground">Signed in and signed out</h2>
+        <p className="mt-1 text-xs text-muted">
+          When each sitting started, when it ended, and how long it ran. Measured to the last
+          thing they actually did, not to the moment the tab was finally closed — a browser left
+          open overnight is not a night&apos;s work.
+        </p>
+        <ul className="mt-4 flex flex-col gap-1.5">
+          {sittings.length === 0 && (
+            <li className="rounded-xl border border-border bg-surface px-4 py-3 text-sm text-muted">
+              Nothing yet. This starts filling the next time somebody signs in.
+            </li>
+          )}
+          {sittings.map((sit) => (
+            <li
+              key={sit.id}
+              className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 rounded-xl border border-border bg-surface px-4 py-2.5 text-xs"
+            >
+              <span className="font-semibold text-foreground">{sit.who}</span>
+              <span className="tabular-nums text-muted">
+                {sit.startedAt.slice(5, 16).replace("-", "/")}
+              </span>
+              <span className="text-muted">
+                {sit.open ? (
+                  <span className="font-semibold text-emerald-500">still signed in</span>
+                ) : (
+                  <>
+                    until {sit.endedAt?.slice(11, 16)}
+                    {sit.endedReason === "left" && " (closed the tab)"}
+                  </>
+                )}
+              </span>
+              <span className="ml-auto font-semibold tabular-nums text-foreground">
+                {hoursAndMinutes(sit.minutes)}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section>
         <h2 className="text-sm font-bold text-foreground">Everything that has happened</h2>
         <p className="mt-1 text-xs text-muted">
           Newest first, everybody including you. This is a record of what was done and when, not
@@ -278,6 +336,27 @@ function PersonPanel({ person, activity }: { person: Staff; activity: Activity[]
           Switching a page off hides it from them and blocks the address, even if they type it in.
           Nothing is deleted and nothing changes for you.
         </p>
+
+        <div className="mt-4 border-t border-border pt-4">
+          <p className="text-xs font-semibold text-foreground">Which lists they work</p>
+          <div className="mt-2 flex flex-wrap gap-4">
+            {REGIONS.map((key) => (
+              <label key={key} className="flex items-center gap-2 text-sm text-foreground">
+                <input
+                  type="checkbox"
+                  name={`region-${key}`}
+                  defaultChecked={person.regions.includes(key)}
+                  className="h-4 w-4 accent-[var(--brand-pink,#ec4899)]"
+                />
+                {REGION_INFO[key].name}
+              </label>
+            ))}
+          </div>
+          <p className="mt-2 text-[11px] text-muted">
+            Only the lists ticked here show up on Who to call for them, and the other country&apos;s
+            businesses are not returned even if they go looking for the address.
+          </p>
+        </div>
         <button
           type="submit"
           className="mt-3 rounded-lg border border-brand-pink px-4 py-2 text-xs font-semibold text-foreground"

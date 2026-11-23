@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { actor, requireOwner } from "@/lib/admin-auth";
 import { grantablePages, type PageKey } from "@/lib/admin-pages";
+import { REGIONS, type Region } from "@/lib/regions";
 import {
   addStaff,
   getStaff,
@@ -10,6 +11,7 @@ import {
   setStaffActive,
   setStaffPages,
   setStaffPassword,
+  setStaffRegions,
 } from "@/lib/staff";
 
 /**
@@ -53,13 +55,22 @@ export async function updatePages(formData: FormData): Promise<void> {
     .map((p) => p.key)
     .filter((key) => formData.get(`page-${key}`) === "on") as PageKey[];
 
+  // Which countries' lists, saved from the same form. Two switches that
+  // have to be pressed separately is two ways to leave somebody half set
+  // up, and half set up here means an empty call list and no clue why.
+  const regions = REGIONS.filter((r) => formData.get(`region-${r}`) === "on") as Region[];
+
   const before = await getStaff(id);
   await setStaffPages(id, pages);
+  await setStaffRegions(id, regions);
   await logAction(
     await actor(),
     "changed-access",
     before?.name ?? `staff ${id}`,
-    pages.length ? `can now see: ${pages.join(", ")}` : "can see nothing",
+    [
+      pages.length ? `can see: ${pages.join(", ")}` : "can see no pages",
+      `lists: ${(regions.length ? regions : REGIONS).join(", ")}`,
+    ].join("; "),
   );
   revalidatePath("/admin/staff");
 }

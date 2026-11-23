@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { runAutoSearch } from "@/lib/auto-search";
+import { runAutoSearch, SEARCHES_PER_REGION } from "@/lib/auto-search";
+import { REGIONS } from "@/lib/regions";
 import { scanBatch } from "@/lib/scan-batch";
 import { sweepAddresses } from "@/lib/sweep-addresses";
 import { countUnworked } from "@/lib/prospects";
@@ -95,15 +96,28 @@ async function run(request: Request) {
   // Asked for by hand with a count means somebody wants it to run, so the
   // backlog check is skipped. The daily job passes nothing and is checked.
   const forced = params.get("count") !== null;
-  const waiting = forced ? null : await countUnworked();
-  const full = waiting !== null && waiting >= ENOUGH_WAITING;
 
-  const search = full
-    ? null
-    : await runAutoSearch(new Date(), count, offset).catch((err) => {
-        console.error("Auto search:", err);
-        return null;
-      });
+  // Each country is checked and searched on its own. A full British pile
+  // is no reason to stop looking in America, and the whole point of the
+  // backlog check is that it responds to what is actually waiting.
+  const perRegion = forced ? count : SEARCHES_PER_REGION;
+  const runs = [];
+  for (const region of REGIONS) {
+    const waiting = forced ? null : await countUnworked(region);
+    const full = waiting !== null && waiting >= ENOUGH_WAITING;
+    const search = full
+      ? null
+      : await runAutoSearch(new Date(), perRegion, offset, region).catch((err) => {
+          console.error(`Auto search (${region}):`, err);
+          return null;
+        });
+    runs.push({ region, waiting, full, search });
+  }
+
+  // Kept for the log line and the response, which both read as one job.
+  const waiting = runs.reduce((n, r) => n + (r.waiting ?? 0), 0);
+  const full = runs.every((r) => r.full);
+  const search = runs.find((r) => r.search)?.search ?? null;
 
   const scan = await scanBatch(SCAN_BATCH).catch((err) => {
     console.error("Scan batch:", err);
@@ -124,11 +138,21 @@ async function run(request: Request) {
     considered: search?.found ?? 0,
     detail:
       (full
-        ? `${waiting} still waiting to be worked, so no searching today. ` +
+        ? `${waiting} still waiting to be worked in both countries, so no searching today. ` +
           `${scan?.scanned ?? 0} scanned.`
-        : search
-          ? `${search.industry}: ${search.searches} searches, ${search.found} found, ` +
-            `${scan?.scanned ?? 0} scanned${search.stopped ? ` (stopped: ${search.stopped})` : ""}`
+        : runs.some((r) => r.search)
+          ? // One line per country, so "America found nothing again" is
+            // visible rather than averaged away into a single total.
+            runs
+              .map((r) =>
+                r.full
+                  ? `${r.region.toUpperCase()}: ${r.waiting} waiting, skipped`
+                  : r.search
+                    ? `${r.region.toUpperCase()} ${r.search.industry}: ${r.search.searches} searches, ` +
+                      `${r.search.found} found${r.search.stopped ? ` (stopped: ${r.search.stopped})` : ""}`
+                    : `${r.region.toUpperCase()}: search failed`,
+              )
+              .join(". ") + `. ${scan?.scanned ?? 0} scanned`
           : "search failed") +
       // Only mentioned when it found something. A line saying nothing was
       // wrong, every day, is a line nobody reads.
@@ -152,5 +176,5 @@ async function run(request: Request) {
       `${search?.stopped ? ` (stopped: ${search.stopped})` : ""}`,
   );
 
-  return NextResponse.json({ ok: true, waiting, skippedSearch: full, search, scan, sweep });
+  return NextResponse.json({ ok: true, waiting, skippedSearch: full, runs, scan, sweep });
 }

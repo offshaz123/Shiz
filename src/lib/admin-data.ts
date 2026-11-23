@@ -82,6 +82,68 @@ interface PageRow extends RowDataPacket {
   views: number;
 }
 
+/**
+ * The prospecting pipeline, one row per country.
+ *
+ * Walid asked for both markets on the overview with a way to look at each.
+ * Written as one grouped query rather than one query per country, so the
+ * two can never be a few seconds apart and appear to disagree.
+ */
+export type RegionStats = {
+  region: string;
+  found: number;
+  withWebsite: number;
+  noWebsite: number;
+  scanned: number;
+  withEmail: number;
+  emailed: number;
+  called: number;
+  replied: number;
+  interested: number;
+  customers: number;
+  deadEmails: number;
+  /** Found in the last seven days, so a market that has stalled shows it. */
+  foundThisWeek: number;
+};
+
+export async function getRegionStats(): Promise<RegionStats[] | null> {
+  return withDb(async (db) => {
+    const [rows] = await db.query<(RowDataPacket & Record<string, unknown>)[]>(
+      `SELECT p.region,
+              COUNT(*) AS found,
+              SUM(p.website IS NOT NULL AND p.website <> '') AS with_website,
+              SUM(p.website IS NULL OR p.website = '') AS no_website,
+              SUM(p.scanned_at IS NOT NULL) AS scanned,
+              SUM(p.email IS NOT NULL AND p.email <> '' AND p.email_dead_at IS NULL) AS with_email,
+              SUM(p.email_dead_at IS NOT NULL) AS dead_emails,
+              SUM(p.sequence_started_at IS NOT NULL) AS emailed,
+              SUM(p.called_at IS NOT NULL) AS called,
+              SUM(p.replied_at IS NOT NULL) AS replied,
+              SUM(p.status = 'interested') AS interested,
+              SUM(p.status = 'customer') AS customers,
+              SUM(p.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)) AS found_this_week
+         FROM prospects p
+        WHERE p.deleted_at IS NULL
+        GROUP BY p.region`,
+    );
+    return rows.map((r) => ({
+      region: String(r.region ?? "uk"),
+      found: Number(r.found ?? 0),
+      withWebsite: Number(r.with_website ?? 0),
+      noWebsite: Number(r.no_website ?? 0),
+      scanned: Number(r.scanned ?? 0),
+      withEmail: Number(r.with_email ?? 0),
+      deadEmails: Number(r.dead_emails ?? 0),
+      emailed: Number(r.emailed ?? 0),
+      called: Number(r.called ?? 0),
+      replied: Number(r.replied ?? 0),
+      interested: Number(r.interested ?? 0),
+      customers: Number(r.customers ?? 0),
+      foundThisWeek: Number(r.found_this_week ?? 0),
+    }));
+  });
+}
+
 export async function getStats(): Promise<AdminStats | null> {
   return withDb(async (db) => {
     const week = "DATE_SUB(NOW(), INTERVAL 7 DAY)";

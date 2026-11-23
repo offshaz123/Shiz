@@ -1,6 +1,7 @@
 import type { RowDataPacket, ResultSetHeader } from "mysql2";
 import { withDb } from "./db";
 import { prospectUnsubscribeUrl } from "./unsubscribe-url";
+import { DEFAULT_REGION, isRegion, type Region } from "./regions";
 import type { GoogleBusiness } from "./google-business";
 import {
   isStatus as isValidStatus,
@@ -62,6 +63,7 @@ interface ProspectRow extends RowDataPacket {
   unsubscribed_at: string | null;
   found_for: string | null;
   industry: string | null;
+  region: string | null;
   town: string | null;
 }
 
@@ -125,6 +127,7 @@ function toProspect(row: ProspectRow): Prospect {
     unsubscribeUrl: prospectUnsubscribeUrl(row.id),
     emailCount: Number(row.email_count ?? 0),
     foundFor: row.found_for ?? "",
+    region: isRegion(row.region) ? row.region : DEFAULT_REGION,
     industry: row.industry ?? "",
     town: row.town ?? "",
   };
@@ -148,18 +151,20 @@ function toProspect(row: ProspectRow): Prospect {
  * against — searching while two hundred of these are waiting is paying
  * Google to make a queue longer.
  */
-export async function countUnworked(): Promise<number | null> {
+export async function countUnworked(region?: Region): Promise<number | null> {
   return withDb(async (db) => {
     const [[row]] = await db.query<(RowDataPacket & { n: number })[]>(
       `SELECT COUNT(*) AS n
          FROM prospects p
         WHERE p.deleted_at IS NULL
+          ${region ? "AND p.region = ?" : ""}
           AND p.status IN ('new', 'no-answer')
           AND p.called_at IS NULL
           AND p.unsubscribed_at IS NULL
           AND NOT EXISTS (
             SELECT 1 FROM prospect_emails e WHERE e.prospect_id = p.id
           )`,
+      region ? [region] : [],
     );
     return Number(row?.n ?? 0);
   });
@@ -170,6 +175,7 @@ export async function saveProspects(
   foundFor: string,
   industry: string,
   town = "",
+  region: Region = DEFAULT_REGION,
 ): Promise<void> {
   const rows = businesses.filter((b) => b.id);
   if (rows.length === 0) return;
@@ -178,8 +184,8 @@ export async function saveProspects(
     for (const b of rows) {
       await db.execute(
         `INSERT INTO prospects
-           (place_id, name, phone, website, address, category, maps_uri, reviews, rating, found_for, industry, town)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+           (place_id, name, phone, website, address, category, maps_uri, reviews, rating, found_for, industry, town, region)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON DUPLICATE KEY UPDATE
            name = VALUES(name),
            phone = VALUES(phone),
@@ -194,7 +200,11 @@ export async function saveProspects(
            industry = COALESCE(NULLIF(VALUES(industry), ''), industry),
            -- Same for the town: a business found again by a search with no
            -- town box filled in keeps the area it was first filed under.
-           town = COALESCE(NULLIF(VALUES(town), ''), town)`,
+           town = COALESCE(NULLIF(VALUES(town), ''), town),
+           -- Never moved by a later search. A business is in one country,
+           -- and a plain text search with no region set must not reassign
+           -- one that was found properly.
+           region = region`,
         [
           b.id,
           b.name.slice(0, 200),
@@ -208,6 +218,7 @@ export async function saveProspects(
           foundFor.slice(0, 160),
           industry.slice(0, 40),
           town.slice(0, 80),
+          region,
         ],
       );
     }
@@ -230,6 +241,9 @@ export type ContactFilter = "all" | "not-contacted" | "contacted";
 const CONTACTED_SQL = "(emailed_at IS NOT NULL OR called_at IS NOT NULL)";
 
 export type ProspectFilters = {
+  /** Which country's list. Left out means both, which is what the owner's
+   *  overview wants and what no other caller should ask for. */
+  region?: Region;
   maxReviews?: number;
   minRating?: number;
   /** "deleted" is the folder, not a status a prospect can be set to. */
@@ -249,7 +263,7 @@ export type ProspectFilters = {
  * can never disagree about what they are describing.
  */
 function whereFor(filters: ProspectFilters): { where: string[]; params: (string | number)[] } {
-  const { maxReviews, minRating, status = "all", contact = "all", industry, town } = filters;
+  const { region, maxReviews, minRating, status = "all", contact = "all", industry, town } = filters;
   const where: string[] = [];
   const params: (string | number)[] = [];
 
@@ -268,6 +282,14 @@ function whereFor(filters: ProspectFilters): { where: string[]; params: (string 
     // failing a test it cannot take.
     where.push("(rating IS NULL OR rating >= ?)");
     params.push(minRating);
+  }
+  // First, because it is the one filter that is about which business this
+  // is rather than about what state it is in: a UK list that quietly
+  // included American businesses would be wrong in a way nothing else here
+  // is.
+  if (region) {
+    where.push("region = ?");
+    params.push(region);
   }
   if (industry) {
     where.push("industry = ?");

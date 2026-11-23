@@ -1,6 +1,7 @@
 import { canSee, currentUser } from "@/lib/admin-auth";
 import { AdminNav } from "@/components/AdminNav";
 import { ADMIN_PAGES } from "@/lib/admin-pages";
+import { touchSitting } from "@/lib/staff";
 
 /**
  * The bar across every admin page.
@@ -17,6 +18,10 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // The bar only offers what this person is allowed to open. The pages
   // check for themselves as well — a link that is not drawn is not a lock.
   const pages = ADMIN_PAGES.filter((page) => canSee(who, page.key));
+
+  // Still here. One indexed UPDATE per page load, which is what turns
+  // "signed in at nine" into "signed in at nine and still on it at one".
+  if (who) await touchSitting(who.id);
 
   return (
     <>

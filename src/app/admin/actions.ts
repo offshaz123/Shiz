@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import {
+  actor,
   checkPassword,
   clearAttempts,
   endSession,
@@ -12,7 +13,7 @@ import {
   tooManyAttempts,
 } from "@/lib/admin-auth";
 import { withDb } from "@/lib/db";
-import { checkStaffLogin, logAction } from "@/lib/staff";
+import { checkStaffLogin, endSitting, logAction, startSitting } from "@/lib/staff";
 import { deleteReview, setReviewStatus, type ReviewStatus } from "@/lib/reviews";
 import { sendFollowUp } from "@/lib/send-follow-up";
 
@@ -54,6 +55,7 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
     clearAttempts(ip);
     await startSession();
     await logAction({ id: null, name: "Walid" }, "signed-in");
+    await startSitting({ id: null, name: "Walid" });
     revalidatePath("/admin");
     return {};
   }
@@ -70,11 +72,16 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
   clearAttempts(ip);
   await startSession(staff.id);
   await logAction({ id: staff.id, name: staff.name }, "signed-in");
+  await startSitting({ id: staff.id, name: staff.name });
   revalidatePath("/admin");
   return {};
 }
 
 export async function logout(): Promise<void> {
+  // Closed before the cookie goes, while we still know whose it was.
+  const me = await actor();
+  await endSitting(me.id);
+  await logAction(me, "signed-out");
   await endSession();
   revalidatePath("/admin");
 }

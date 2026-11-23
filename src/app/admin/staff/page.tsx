@@ -4,7 +4,7 @@ import { AdminHeading } from "@/components/AdminHeading";
 import { StaffManager } from "@/components/StaffManager";
 import { LoginForm } from "../LoginForm";
 import { NotYours } from "../NotYours";
-import { listActivity, listStaff, staffTallies } from "@/lib/staff";
+import { listActivity, listSittings, listStaff, staffTallies } from "@/lib/staff";
 
 export const dynamic = "force-dynamic";
 
@@ -31,10 +31,11 @@ export default async function StaffPage() {
   if (!who) return <LoginForm />;
   if (who.kind !== "owner") return <NotYours page="staff" />;
 
-  const [staff, tallies, activity] = await Promise.all([
+  const [staff, tallies, activity, sittings] = await Promise.all([
     listStaff(),
     staffTallies(),
     listActivity("everyone", 80),
+    listSittings(40),
   ]);
 
   return (
@@ -49,7 +50,12 @@ export default async function StaffPage() {
             No database connection, so accounts cannot be read or changed.
           </p>
         ) : (
-          <StaffManager staff={staff} tallies={tallies ?? []} activity={activity ?? []} />
+          <StaffManager
+            staff={staff}
+            tallies={tallies ?? []}
+            activity={activity ?? []}
+            sittings={sittings ?? []}
+          />
         )}
       </div>
     </main>

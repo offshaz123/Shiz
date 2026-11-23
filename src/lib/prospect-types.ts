@@ -8,6 +8,8 @@
  * STATUSES is a real value, so it has to live somewhere the client can reach.
  */
 
+import type { Region } from "./regions";
+
 export const STATUSES = [
   "new",
   "called",
@@ -124,6 +126,9 @@ export type Prospect = {
   foundFor: string;
   /** Which of the site's industries this was found under. */
   industry: string;
+  /** Which country they are in. Decides which list they appear on, and
+   *  what hour of the day it is sensible to ring them. */
+  region: Region;
   /** The town the search that found them was run in. */
   town: string;
 };

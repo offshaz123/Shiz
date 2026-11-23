@@ -13,6 +13,9 @@ import {
 } from "@/lib/prospect-types";
 import { industries } from "@/content/industries";
 import { areaGroups, cities } from "@/content/areas";
+import { usAreaGroups, usCities } from "@/content/areas-us";
+import { REGION_INFO, callableNow, callingWindow, type Region } from "@/lib/regions";
+import { tradeName } from "@/lib/trade-names";
 import { siteConfig } from "@/lib/site-config";
 import { buildDraft } from "@/lib/prospect-outreach";
 
@@ -301,7 +304,7 @@ async function copyText(text: string): Promise<boolean> {
   }
 }
 
-export function ProspectFinder() {
+export function ProspectFinder({ regions = ["uk"] }: { regions?: Region[] }) {
   const [query, setQuery] = useState("");
   const [town, setTown] = useState("");
   const [industry, setIndustry] = useState("");
@@ -331,6 +334,16 @@ export function ProspectFinder() {
    * scroll, and after a week nobody does it.
    */
   const [view, setView] = useState<"today" | "no-site" | "has-site" | "all">("today");
+
+  /**
+   * Which country's list.
+   *
+   * The whole page is one market at a time, deliberately. Mixing them
+   * would mean a caller in one afternoon jumping between businesses that
+   * are open and businesses where it is four in the morning, and an
+   * opening line about the UK market said to somebody in Texas.
+   */
+  const [region, setRegion] = useState<Region>(regions[0] ?? "uk");
 
   /** Fixed for the life of the page, so every row and every tab agree about
    *  what "today" means even if somebody leaves it open over midnight. */
@@ -374,6 +387,7 @@ export function ProspectFinder() {
       industry,
       town: townFilter,
       sort,
+      region,
     });
     const res = await fetch(`/api/admin/prospects?${params}`);
     const data = await res.json();
@@ -406,8 +420,12 @@ export function ProspectFinder() {
     return () => {
       cancelled = true;
     };
+    // region is in here for a reason: without it, pressing United States
+    // changed the switch, the area lists and the heading, and left the
+    // British businesses on screen underneath. Every one of those looked
+    // right, which is what made it worth catching by looking at the page.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [maxReviews, minRating, status, contact, industry, townFilter, sort]);
+  }, [maxReviews, minRating, status, contact, industry, townFilter, sort, region]);
 
   /**
    * Works through every unscanned prospect, a batch at a time.
@@ -569,7 +587,7 @@ export function ProspectFinder() {
       const res = await fetch("/api/admin/prospects", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: text, maxReviews, industry, town: town.trim() }),
+        body: JSON.stringify({ query: text, maxReviews, industry, town: town.trim(), region }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -699,6 +717,12 @@ export function ProspectFinder() {
     }
   }
 
+  // Which places the search form offers. Suburbs here, suburbs by state
+  // there, and the two never mix: a Google search for a British town
+  // while the region says America returns nothing anybody wants.
+  const groups = region === "us" ? usAreaGroups : areaGroups;
+  const bigPlaces = region === "us" ? usCities : cities;
+
   const noSite = prospects.filter((p) => !p.website);
   const withSite = prospects.filter((p) => p.website);
 
@@ -713,6 +737,54 @@ export function ProspectFinder() {
 
   return (
     <div>
+      {/* Which country. Only drawn when there is a choice: somebody with
+          one market should not have to look at a switch with one setting
+          on it. */}
+      {regions.length > 1 && (
+        <div className="mb-5 flex flex-wrap items-center gap-2">
+          {regions.map((key) => {
+            const info = REGION_INFO[key];
+            const here = region === key;
+            const open = callableNow(key);
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => {
+                  setRegion(key);
+                  // The town box holds a place in the other country, and
+                  // the filter holds a town that does not exist in this
+                  // list. Both would silently return nothing.
+                  setTown("");
+                  setTownFilter("");
+                }}
+                className={`rounded-xl border px-4 py-2.5 text-sm font-bold transition ${
+                  here
+                    ? "border-brand-pink bg-brand-pink/10 text-foreground"
+                    : "border-border text-muted hover:text-foreground"
+                }`}
+              >
+                {info.name}
+                {/* Whether it is a sensible hour to be ringing. The person
+                    doing the ringing is in Pakistan, so their afternoon is
+                    Britain's morning and the middle of America's night. */}
+                <span
+                  className={`ml-2 text-[11px] font-semibold ${
+                    open ? "text-emerald-500" : "text-muted"
+                  }`}
+                >
+                  {open ? "open now" : "closed now"}
+                </span>
+              </button>
+            );
+          })}
+          <span className="text-[11px] text-muted">
+            {REGION_INFO[region].name} office hours are{" "}
+            <b className="text-foreground">{callingWindow(region, 5)}</b> in Pakistan.
+          </span>
+        </div>
+      )}
+
       {/* Finding more businesses is a job somebody does now and then; the
           call list is the job somebody does every day. The search was the
           first thing on the page and took up most of a screen, so the page
@@ -737,7 +809,9 @@ export function ProspectFinder() {
             id="prospect-query"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="car detailing in Romford"
+            placeholder={
+              region === "us" ? "car detailing in Katy" : "car detailing in Romford"
+            }
             className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground outline-none focus:border-brand-pink"
           />
         </div>
@@ -761,27 +835,27 @@ export function ProspectFinder() {
             id="prospect-town"
             value={town}
             onChange={(e) => setTown(e.target.value)}
-            placeholder="Romford"
+            placeholder={region === "us" ? "Katy" : "Romford"}
             className="w-full max-w-xs rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground outline-none focus:border-brand-pink"
           />
           {/* A whole city, for when you want to cast wider than the
               suburbs below. It fills the box rather than searching on its
               own, so the trade is still chosen the same way. */}
           <select
-            value={cities.includes(town.trim()) ? town.trim() : ""}
+            value={bigPlaces.includes(town.trim()) ? town.trim() : ""}
             onChange={(e) => e.target.value && setTown(e.target.value)}
             className="rounded-lg border border-border bg-background px-3 py-2 text-sm text-muted outline-none focus:border-brand-pink"
             aria-label="Pick a city"
           >
-            <option value="">Or pick a city…</option>
-            {cities.map((c) => (
+            <option value="">{`Or pick a ${REGION_INFO[region].areaWord}…`}</option>
+            {bigPlaces.map((c) => (
               <option key={c} value={c}>
                 {c}
               </option>
             ))}
           </select>
         </div>
-        {cities.includes(town.trim()) && (
+        {bigPlaces.includes(town.trim()) && (
           <p className="mt-2 text-xs text-muted">
             A whole city mostly returns the big operators who already have an agency. If it comes
             back thin, try a suburb of it below.
@@ -795,7 +869,7 @@ export function ProspectFinder() {
           suburbs, closest first. The box above still takes anything.
         */}
         <div className="mt-3 flex flex-col gap-2">
-          {areaGroups.map((group) => (
+          {groups.map((group) => (
             <div key={group.name} className="flex flex-wrap items-center gap-1.5">
               <span
                 title={group.note}
@@ -842,10 +916,12 @@ export function ProspectFinder() {
                     key={`${group.industry}-${trade}`}
                     type="button"
                     disabled={!town.trim() || searching}
-                    onClick={() => search(undefined, `${trade} in ${town.trim()}`)}
+                    onClick={() =>
+                      search(undefined, `${tradeName(trade, region)} in ${town.trim()}`)
+                    }
                     className="rounded-full border border-border px-3 py-1.5 text-xs text-muted hover:border-brand-pink hover:text-foreground disabled:opacity-40"
                   >
-                    {trade}
+                    {tradeName(trade, region)}
                   </button>
                 ))}
               </div>
@@ -858,10 +934,10 @@ export function ProspectFinder() {
                 key={trade}
                 type="button"
                 disabled={!town.trim() || searching}
-                onClick={() => search(undefined, `${trade} in ${town.trim()}`)}
+                onClick={() => search(undefined, `${tradeName(trade, region)} in ${town.trim()}`)}
                 className="rounded-full border border-border px-3 py-1.5 text-xs text-muted hover:border-brand-pink hover:text-foreground disabled:opacity-40"
               >
-                {trade}
+                {tradeName(trade, region)}
               </button>
             ))}
           </div>
@@ -1585,7 +1661,7 @@ function Row({
                   }
                   if (e.key === "Escape") setTypingEmail(null);
                 }}
-                placeholder="info@theirsite.co.uk"
+                placeholder={p.region === "us" ? "info@theirsite.com" : "info@theirsite.co.uk"}
                 className="w-56 rounded-lg border border-border bg-background px-2.5 py-1 text-[11px] text-foreground outline-none focus:border-brand-pink"
               />
               <button

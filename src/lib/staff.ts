@@ -2,6 +2,7 @@ import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import type { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import { withDb } from "./db";
 import { defaultPages, type PageKey } from "./admin-pages";
+import { REGIONS, isRegion, type Region } from "./regions";
 
 /**
  * Accounts for the people who work the list, and a record of what they did.
@@ -20,6 +21,10 @@ export type Staff = {
   name: string;
   username: string;
   pages: PageKey[];
+  /** Which countries' lists they work. Always a full list in memory —
+   *  the empty column means both, resolved here so nothing downstream
+   *  has to know about that. */
+  regions: Region[];
   active: boolean;
   createdAt: string;
   lastSeenAt: string | null;
@@ -31,6 +36,7 @@ interface StaffRow extends RowDataPacket {
   username: string;
   pass_hash: string;
   pages: string;
+  regions?: string | null;
   active: number;
   created_at: string;
   last_seen_at: string | null;
@@ -42,6 +48,9 @@ function toStaff(row: StaffRow): Staff {
     name: row.name,
     username: row.username,
     pages: row.pages ? (row.pages.split(",").filter(Boolean) as PageKey[]) : [],
+    regions: row.regions
+      ? row.regions.split(",").filter(isRegion)
+      : [...REGIONS],
     active: Boolean(row.active),
     createdAt: String(row.created_at),
     lastSeenAt: row.last_seen_at ? String(row.last_seen_at) : null,
@@ -151,6 +160,20 @@ export async function addStaff(
 export async function setStaffPages(id: number, pages: PageKey[]): Promise<void> {
   await withDb(async (db) => {
     await db.execute("UPDATE staff SET pages = ? WHERE id = ?", [pages.join(","), id]);
+  }).catch(() => null);
+}
+
+/** Replaces the whole set, like setStaffPages and for the same reason.
+ *  An empty list is stored as every region rather than as none: nobody
+ *  means to give somebody an account with no list at all, and if they do,
+ *  switching the account off says it properly. */
+export async function setStaffRegions(id: number, regions: Region[]): Promise<void> {
+  const clean = regions.filter(isRegion);
+  await withDb(async (db) => {
+    await db.execute("UPDATE staff SET regions = ? WHERE id = ?", [
+      clean.length ? clean.join(",") : REGIONS.join(","),
+      id,
+    ]);
   }).catch(() => null);
 }
 
@@ -282,5 +305,104 @@ export async function staffTallies(): Promise<StaffTally[] | null> {
       lastAt: r.last_at ? String(r.last_at) : null,
       firstTodayAt: r.first_today ? String(r.first_today) : null,
     }));
+  });
+}
+
+/* ----------------------------------------------------------- sittings */
+
+export type Sitting = {
+  id: number;
+  staffId: number | null;
+  who: string;
+  startedAt: string;
+  lastSeenAt: string;
+  endedAt: string | null;
+  endedReason: string;
+  /** Minutes between signing in and the last sign of life. */
+  minutes: number;
+  /** True while they are still signed in. */
+  open: boolean;
+};
+
+function minutesBetween(from: string, to: string): number {
+  const a = new Date(from.replace(" ", "T")).getTime();
+  const b = new Date(to.replace(" ", "T")).getTime();
+  if (Number.isNaN(a) || Number.isNaN(b)) return 0;
+  return Math.max(0, Math.round((b - a) / 60000));
+}
+
+/** Opens a sitting. Called once, on a successful sign-in. */
+export async function startSitting(who: { id: number | null; name: string }): Promise<void> {
+  await withDb(async (db) => {
+    // Anything still open for this person is closed first. A session left
+    // open by a closed laptop must not swallow the next day's.
+    await db.execute(
+      `UPDATE staff_sessions
+          SET ended_at = last_seen_at, ended_reason = 'left'
+        WHERE staff_id <=> ? AND ended_at IS NULL`,
+      [who.id],
+    );
+    await db.execute("INSERT INTO staff_sessions (staff_id, who) VALUES (?, ?)", [
+      who.id,
+      who.name.slice(0, 80),
+    ]);
+  }).catch(() => null);
+}
+
+/**
+ * Marks that they are still here.
+ *
+ * Called as pages load. One cheap UPDATE against an indexed row, and the
+ * difference between a record that says "signed in at nine" and one that
+ * says "signed in at nine and was still there at one".
+ */
+export async function touchSitting(staffId: number | null): Promise<void> {
+  await withDb(async (db) => {
+    await db.execute(
+      `UPDATE staff_sessions SET last_seen_at = NOW()
+        WHERE staff_id <=> ? AND ended_at IS NULL
+        ORDER BY started_at DESC LIMIT 1`,
+      [staffId],
+    );
+  }).catch(() => null);
+}
+
+/** Closes it properly, when they press sign out. */
+export async function endSitting(staffId: number | null): Promise<void> {
+  await withDb(async (db) => {
+    await db.execute(
+      `UPDATE staff_sessions
+          SET ended_at = NOW(), last_seen_at = NOW(), ended_reason = 'signed-out'
+        WHERE staff_id <=> ? AND ended_at IS NULL`,
+      [staffId],
+    );
+  }).catch(() => null);
+}
+
+/** Recent sittings, newest first, for the team screen. */
+export async function listSittings(limit = 40): Promise<Sitting[] | null> {
+  return withDb(async (db) => {
+    const [rows] = await db.query<(RowDataPacket & Record<string, unknown>)[]>(
+      `SELECT * FROM staff_sessions ORDER BY started_at DESC LIMIT ?`,
+      [limit],
+    );
+    return rows.map((r) => {
+      const startedAt = String(r.started_at);
+      const lastSeenAt = String(r.last_seen_at);
+      const endedAt = r.ended_at ? String(r.ended_at) : null;
+      return {
+        id: Number(r.id),
+        staffId: r.staff_id === null ? null : Number(r.staff_id),
+        who: String(r.who),
+        startedAt,
+        lastSeenAt,
+        endedAt,
+        endedReason: r.ended_reason ? String(r.ended_reason) : "",
+        // To the last sign of life, not to now. A tab left open overnight
+        // is not fourteen hours of work and should not be recorded as it.
+        minutes: minutesBetween(startedAt, endedAt ?? lastSeenAt),
+        open: endedAt === null,
+      };
+    });
   });
 }

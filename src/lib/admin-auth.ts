@@ -1,6 +1,7 @@
 import { createHmac, createHash, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { ADMIN_PAGES, type PageKey } from "./admin-pages";
+import { REGIONS, type Region } from "./regions";
 import { getStaff } from "./staff";
 
 /**
@@ -67,8 +68,8 @@ function sign(expiry: number, who: string, key: string): string {
 
 /** Who a session belongs to. "owner" is Walid with ADMIN_PASSWORD. */
 export type Who =
-  | { kind: "owner"; id: null; name: string; pages: "all" }
-  | { kind: "staff"; id: number; name: string; pages: PageKey[] };
+  | { kind: "owner"; id: null; name: string; pages: "all"; regions: Region[] }
+  | { kind: "staff"; id: number; name: string; pages: PageKey[]; regions: Region[] };
 
 export function checkPassword(attempt: string): boolean {
   const key = secret();
@@ -172,12 +173,18 @@ export async function currentUser(): Promise<Who | null> {
   const session = await sessionOwner();
   if (session === null) return null;
   if (session === "owner") {
-    return { kind: "owner", id: null, name: "Walid", pages: "all" };
+    return { kind: "owner", id: null, name: "Walid", pages: "all", regions: [...REGIONS] };
   }
 
   const staff = await getStaff(session);
   if (!staff || !staff.active) return null;
-  return { kind: "staff", id: staff.id, name: staff.name, pages: staff.pages };
+  return {
+    kind: "staff",
+    id: staff.id,
+    name: staff.name,
+    pages: staff.pages,
+    regions: staff.regions,
+  };
 }
 
 /** Whether this person is allowed to open that page. */
@@ -209,6 +216,11 @@ export async function requireAdmin(): Promise<void> {
 export async function requireOwner(): Promise<void> {
   const who = await currentUser();
   if (who?.kind !== "owner") throw new Error("Not authorised");
+}
+
+/** Whether this person works that country's list. */
+export function canSeeRegion(who: Who | null, region: Region): boolean {
+  return Boolean(who?.regions.includes(region));
 }
 
 /** Guard for an action that belongs to one page. */
