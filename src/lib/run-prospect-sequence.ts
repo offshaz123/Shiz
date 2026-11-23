@@ -6,9 +6,10 @@ import {
   listNeverContacted,
   listSequenceAddresses,
   listSequenceDue,
+  markEmailDead,
   markReplied,
 } from "./prospects";
-import { sendersSince } from "./mail-store";
+import { bouncesSince, sendersSince } from "./mail-store";
 import { newPerRun } from "./outreach-warm-up";
 
 /**
@@ -55,6 +56,11 @@ const MIN_GAP_HOURS = 20;
  *  the scheduler was down. */
 const REPLY_WINDOW_DAYS = 14;
 
+/** How far back to look for bounces. Longer than the reply window: a bounce
+ *  for a dead address is worth acting on whenever it arrived, and the same
+ *  address turning up again in a later scan should stay marked. */
+const BOUNCE_WINDOW_DAYS = 30;
+
 export type SequenceSummary = {
   sent: number;
   /** First emails opened by this run, counted separately from follow-ups:
@@ -64,6 +70,10 @@ export type SequenceSummary = {
   failed: number;
   skipped: number;
   replied: number;
+  /** Addresses a bounce proved dead this run. Reported because a day where
+   *  five addresses turn out not to work is a day the list got better, and
+   *  it should not look identical to a day where nothing happened. */
+  bounced: number;
   considered: number;
   /** False when the inbox could not be read, which is why nothing was sent. */
   repliesChecked: boolean;
@@ -106,6 +116,38 @@ async function stopAnyoneWhoReplied(): Promise<{ replied: number; checked: boole
     }
   }
   return { replied, checked: true };
+}
+
+/**
+ * Takes every bounce in the inbox and ends the sequence for the address it
+ * names.
+ *
+ * Added after the mail server's own log for 16 to 23 November showed three
+ * hard bounces and six sends to domains with no mail server, none of which
+ * the system knew about. A bounce comes back from MAILER-DAEMON rather than
+ * from the business, so the reply check above cannot see it: it matches the
+ * sender against the addresses we wrote to, and MAILER-DAEMON is not one of
+ * them.
+ *
+ * Failing quietly is the right behaviour here, unlike the reply check. Not
+ * knowing whether somebody replied is a reason to send nothing, because a
+ * follow-up under a reply costs a conversation. Not knowing whether an
+ * address bounced costs one more email to a mailbox that is not there, so
+ * the run carries on.
+ */
+async function stopAnyoneWhoBounced(): Promise<number> {
+  const since = new Date(Date.now() - BOUNCE_WINDOW_DAYS * 86_400_000);
+  const dead = await bouncesSince(since);
+  if (!dead || dead.length === 0) return 0;
+
+  let marked = 0;
+  for (const address of dead) {
+    // Only counts the ones that actually matched a prospect. The inbox also
+    // collects bounces from the audit follow-ups and from Walid's own
+    // sending, and reporting those as list improvements would overstate it.
+    marked += await markEmailDead(address.email, address.reason);
+  }
+  return marked;
 }
 
 /**
@@ -155,11 +197,17 @@ export async function runProspectSequence(): Promise<SequenceSummary> {
     failed: 0,
     skipped: 0,
     replied: 0,
+    bounced: 0,
     considered: 0,
     repliesChecked: true,
     held: 0,
     scanned: 0,
   };
+
+  // Bounces first. A business whose address has just been proved dead
+  // should not be in the follow-up queue this run, let alone be chased
+  // twice more and then land on the call list marked "no reply".
+  summary.bounced = await stopAnyoneWhoBounced();
 
   const replies = await stopAnyoneWhoReplied();
   summary.replied = replies.replied;

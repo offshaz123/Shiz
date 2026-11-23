@@ -135,9 +135,23 @@ export function planCall(prospect: Prospect, now = Date.now()): CallPlan {
     reasons.push(`Only ${prospect.reviews} Google reviews.`);
   }
 
-  // Already being emailed, so the phone is the second attempt rather than
-  // the first. Worth less, not worthless.
-  if (prospect.emailCount > 0) {
+  // The published address does not work, so the phone is not the second
+  // attempt — it is the only way in. Worth more than an untouched row, and
+  // it comes with something true and useful to tell them.
+  //
+  // This is the opposite of the line below it, and reading them the wrong
+  // way round is what the whole column is for: "they ignored three emails"
+  // and "the address on their website is dead" are different calls.
+  if (prospect.emailDeadAt) {
+    score += 25;
+    reasons.push(
+      prospect.email
+        ? `The email address on their website (${prospect.email}) does not work — anything sent to it bounces.`
+        : "The email address on their website does not work.",
+    );
+  } else if (prospect.emailCount > 0) {
+    // Already being emailed, so the phone is the second attempt rather than
+    // the first. Worth less, not worthless.
     score -= 10;
     reasons.push(
       `${prospect.emailCount} email${prospect.emailCount === 1 ? "" : "s"} already sent, no reply.`,
@@ -196,6 +210,13 @@ function openerFor(prospect: Prospect, noWebsite: boolean): string {
 
   if (noWebsite) {
     return `I was looking for ${them} online and could not find a website — is that right?`;
+  }
+
+  // A dead address beats anything about their site, because it is the one
+  // thing on this list they will want to know regardless of whether they
+  // ever buy anything from us.
+  if (prospect.emailDeadAt && prospect.email) {
+    return `I tried to email you on ${prospect.email} and it came straight back — did you know that address is not working?`;
   }
 
   if (prospect.siteScore !== null && prospect.siteScore < 40) {

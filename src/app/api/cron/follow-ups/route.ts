@@ -213,7 +213,13 @@ async function recordRun(
     const parts: string[] = [];
     if (prospects.started > 0) parts.push(`${prospects.started} first email(s)`);
     if (prospects.sent > 0) parts.push(`${prospects.sent} prospect follow-up(s)`);
+    if (prospects.bounced > 0) parts.push(`${prospects.bounced} dead address(es) found`);
     detail = parts.join(", ");
+  } else if (prospects && prospects.bounced > 0) {
+    // A run that sent nothing but took three dead addresses out of the
+    // sequence has done something worth seeing. It used to read as "nobody
+    // was due", which is how the bounces went unnoticed for a month.
+    detail = `nobody due, ${prospects.bounced} dead address(es) found`;
   } else if (prospects && prospects.scanned > 0) {
     // A run that sent nothing and scanned twelve websites is a working run
     // that has just made tomorrow's sending possible. Reporting it as

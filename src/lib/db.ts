@@ -797,6 +797,36 @@ const ADDED_COLUMNS: {
     column: "site_scanned_at",
     definition: "DATETIME NULL",
   },
+  // A published email address that does not work.
+  //
+  // Set when a bounce for it arrives in the inbox, or when a sweep finds the
+  // domain has no mail server at all. Nothing is ever sent to a row with
+  // this set, and the call list says so rather than saying "no reply" — the
+  // two are opposite openings on a phone call.
+  //
+  // The address itself is left in place deliberately. Clearing it would lose
+  // the only thing that explains why this business is on the call list and
+  // not in the email sequence.
+  {
+    table: "prospects",
+    column: "email_dead_at",
+    definition: "DATETIME NULL AFTER email",
+  },
+  {
+    table: "prospects",
+    column: "email_dead_reason",
+    definition: "VARCHAR(200) NULL AFTER email_dead_at",
+  },
+  // When the address's domain was last asked whether it can receive mail at
+  // all. Drives the sweep over rows scanned before that check existed: it is
+  // how the sweep knows which rows it has already done, and it means a
+  // one-off job can run a few at a time off the back of an existing cron
+  // rather than needing a job of its own.
+  {
+    table: "prospects",
+    column: "mx_checked_at",
+    definition: "DATETIME NULL AFTER email_dead_reason",
+  },
 ];
 
 /**

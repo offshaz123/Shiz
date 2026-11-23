@@ -113,3 +113,22 @@ test("a bot challenge is never mistaken for the business's website", () => {
     false,
   );
 });
+
+test("a platform's own address is not the business's address", () => {
+  // blog@wordpress.com is in WordPress's sample content. It was scraped off a
+  // real site, stored as that business's contact address, and emailed three
+  // times before the mail server's log showed the third one hard bouncing.
+  assert.equal(
+    extractEmail('<p>Contact <a href="mailto:blog@wordpress.com">us</a></p>'),
+    "",
+  );
+  assert.equal(extractEmail("<p>support@wix.com</p>"), "");
+  assert.equal(extractEmail("<p>hello@automattic.com</p>"), "");
+
+  // A business whose own domain happens to contain a platform's name is a
+  // business. The filter matches the whole domain for exactly this reason.
+  assert.equal(
+    extractEmail('<a href="mailto:info@wordpresshelp.co.uk">email</a>'),
+    "info@wordpresshelp.co.uk",
+  );
+});

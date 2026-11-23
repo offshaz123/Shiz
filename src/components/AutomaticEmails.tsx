@@ -112,6 +112,11 @@ export function AutomaticEmails({ log }: { log: AutomaticEmailLog }) {
                   {Math.min(email.ofThree, 3)} of 3
                 </span>
               )}
+              {email.addressDead && (
+                <span className="rounded-full border border-amber-500/50 bg-amber-500/10 px-2 py-0.5 text-[11px] font-semibold text-foreground">
+                  address bounces
+                </span>
+              )}
               {email.readyToCall && (
                 <span className="rounded-full border border-brand-pink/40 px-2 py-0.5 text-[11px] font-semibold text-brand-pink">
                   ring them

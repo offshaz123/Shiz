@@ -24,7 +24,8 @@ const p = (over: Partial<Prospect>): Prospect => ({
   status: "new", notes: "", calledAt: null, callbackAt: null, lastCall: null,
   emailedAt: null, deletedAt: null, sequenceStartedAt: null, sequenceStoppedAt: null,
   sequenceStopReason: "", repliedAt: null, unsubscribedAt: null, unsubscribeUrl: "",
-  emailCount: 0, foundFor: "", industry: "automotive", town: "Manchester", ...over,
+  emailCount: 0, foundFor: "", industry: "automotive", town: "Manchester",
+  emailDeadAt: null, emailDeadReason: "", ...over,
 });
 
 test("a promised callback beats everything else on the list", () => {
@@ -130,4 +131,30 @@ test("every reason is a fact, never a guess at whether they will buy", () => {
   for (const reason of plan.reasons) {
     assert.doesNotMatch(reason, /likely|probably|chance|will buy|hot lead/i);
   }
+});
+
+test("a dead email address is a reason to ring, not a snub", () => {
+  // The whole point of the bounce handling. Before it, this business read
+  // as "three emails, no reply" — somebody who had ignored us. They had
+  // never received one.
+  const bounced = p({
+    email: "info@refinedrides.com",
+    emailCount: 3,
+    emailDeadAt: ago(1),
+    emailDeadReason: "550 no MX record",
+    siteScore: 60,
+  });
+  const plan = planCall(bounced, NOW);
+
+  assert.ok(plan.reasons.some((r) => r.includes("does not work")));
+  assert.ok(!plan.reasons.some((r) => r.includes("no reply")));
+  assert.match(plan.opener, /came straight back/);
+  assert.match(plan.opener, /info@refinedrides\.com/);
+});
+
+test("a dead address outranks the same business with a live one", () => {
+  const dead = p({ id: 1, email: "info@x.co.uk", emailCount: 3, emailDeadAt: ago(1) });
+  const ignored = p({ id: 2, email: "info@y.co.uk", emailCount: 3 });
+  const order = callOrder([ignored, dead], NOW);
+  assert.equal(order[0].prospect.id, 1);
 });

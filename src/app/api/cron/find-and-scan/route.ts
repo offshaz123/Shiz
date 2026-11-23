@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { runAutoSearch } from "@/lib/auto-search";
 import { scanBatch } from "@/lib/scan-batch";
+import { sweepAddresses } from "@/lib/sweep-addresses";
 import { countUnworked } from "@/lib/prospects";
 import { recordCronRun } from "@/lib/admin-data";
 
@@ -109,18 +110,31 @@ async function run(request: Request) {
     return null;
   });
 
+  // A few of the addresses stored before anything checked them. Last, so a
+  // slow resolver costs the sweep rather than the scanning.
+  const sweep = await sweepAddresses().catch((err) => {
+    console.error("Address sweep:", err);
+    return null;
+  });
+
   // The diary entry. Without it this job is invisible: it sends nothing, so
   // there is no email anywhere to prove it ran, and a silent stop would
   // look exactly like a quiet week until the list stopped growing.
   await recordCronRun("find-and-scan", {
     considered: search?.found ?? 0,
-    detail: full
-      ? `${waiting} still waiting to be worked, so no searching today. ` +
-        `${scan?.scanned ?? 0} scanned.`
-      : search
-        ? `${search.industry}: ${search.searches} searches, ${search.found} found, ` +
-          `${scan?.scanned ?? 0} scanned${search.stopped ? ` (stopped: ${search.stopped})` : ""}`
-        : "search failed",
+    detail:
+      (full
+        ? `${waiting} still waiting to be worked, so no searching today. ` +
+          `${scan?.scanned ?? 0} scanned.`
+        : search
+          ? `${search.industry}: ${search.searches} searches, ${search.found} found, ` +
+            `${scan?.scanned ?? 0} scanned${search.stopped ? ` (stopped: ${search.stopped})` : ""}`
+          : "search failed") +
+      // Only mentioned when it found something. A line saying nothing was
+      // wrong, every day, is a line nobody reads.
+      (sweep && sweep.dead > 0
+        ? ` ${sweep.dead} of ${sweep.checked} stored addresses have no mail server.`
+        : ""),
   });
 
   if (full) {
@@ -133,8 +147,10 @@ async function run(request: Request) {
   console.log(
     `[find-and-scan] ${search?.industry ?? "?"}: ${search?.searches ?? 0} searches, ` +
       `${search?.found ?? 0} businesses, ${scan?.scanned ?? 0} scanned, ` +
-      `${scan?.unreadable ?? 0} unreadable${search?.stopped ? ` (stopped: ${search.stopped})` : ""}`,
+      `${scan?.unreadable ?? 0} unreadable, ` +
+      `${sweep?.checked ?? 0} addresses checked (${sweep?.dead ?? 0} dead)` +
+      `${search?.stopped ? ` (stopped: ${search.stopped})` : ""}`,
   );
 
-  return NextResponse.json({ ok: true, waiting, skippedSearch: full, search, scan });
+  return NextResponse.json({ ok: true, waiting, skippedSearch: full, search, scan, sweep });
 }

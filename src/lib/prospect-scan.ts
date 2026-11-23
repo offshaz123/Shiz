@@ -56,6 +56,48 @@ const JUNK = [
 const PLACEHOLDER_LOCAL = /^(you|your|yourname|name|someone|user|username|email|firstname)@/;
 
 /**
+ * Domains that belong to the software a site is built with, not to the
+ * business running it.
+ *
+ * Added after blog@wordpress.com was scraped off somebody's site, stored as
+ * their contact address and then emailed three times — the third of which
+ * hard bounced and is in the mail server's log for 21 November. It is in
+ * WordPress's own boilerplate, so any site that left the sample content in
+ * place hands it over, and nothing upstream had a reason to doubt it.
+ *
+ * Matched on the whole domain rather than as a substring, deliberately. A
+ * real agency at wordpresshelp.co.uk is a business with a phone number, and
+ * "contains wordpress" would quietly throw it away.
+ */
+const JUNK_DOMAINS = new Set([
+  "wordpress.com",
+  "wordpress.org",
+  "wp.com",
+  "automattic.com",
+  "gravatar.com",
+  "wix.com",
+  "weebly.com",
+  "shopify.com",
+  "mailchimp.com",
+  "sendgrid.net",
+  "w3.org",
+  "schema.org",
+  "example.com",
+  "example.org",
+  "example.net",
+  "domain.com",
+  "yourdomain.com",
+  "test.com",
+  "localhost",
+]);
+
+function junkDomain(address: string): boolean {
+  const at = address.lastIndexOf("@");
+  if (at < 0) return true;
+  return JUNK_DOMAINS.has(address.slice(at + 1));
+}
+
+/**
  * Cloudflare's email obfuscation, undone.
  *
  * Sites behind Cloudflare with Email Address Obfuscation switched on have
@@ -122,6 +164,7 @@ export function extractEmail(html: string): string {
     .filter((e) => {
       if (e.length < 6 || e.length > 190 || !e.includes("@")) return false;
       if (JUNK.some((j) => e.includes(j))) return false;
+      if (junkDomain(e)) return false;
       if (PLACEHOLDER_LOCAL.test(e)) return false;
       if (seen.has(e)) return false;
       seen.add(e);

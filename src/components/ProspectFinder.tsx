@@ -93,6 +93,7 @@ const STATUS_LABEL: Record<ProspectStatus, string> = {
 function edge(p: Prospect): string {
   if (p.unsubscribedAt) return "border-l-4 border-l-red-500/70";
   if (p.repliedAt) return "border-l-4 border-l-sky-500";
+  if (p.emailDeadAt) return "border-l-4 border-l-amber-500";
   switch (p.status) {
     case "customer":
       return "border-l-4 border-l-violet-500";
@@ -242,6 +243,10 @@ function nextMove(p: Prospect): string {
   if (!p.website) return `No website at all — which is the pitch. Ring them on ${p.phone || "the number on their listing"}.`;
   if (p.scannedAt === null) return "Scan their site first, so there is something to open with.";
   if (!p.email) return `No email published on their site. Ring them on ${p.phone || "the listing number"}.`;
+  // Before the bounce handling this row read as three emails ignored. They
+  // never arrived, and that is worth telling the business when you ring.
+  if (p.emailDeadAt)
+    return `The address on their site (${p.email}) bounces, so nothing we sent arrived. Ring them on ${p.phone || "the listing number"} — and tell them their email is broken.`;
 
   if (sent.length === 0) return "Write the first email. The scan has given you the opening line.";
   if (sent.length >= 3) {
@@ -1848,7 +1853,9 @@ function Row({
               value={
                 p.unsubscribedAt
                   ? "unsubscribed"
-                  : p.repliedAt
+                  : p.emailDeadAt
+                    ? `stopped — their address bounces${p.emailDeadReason ? ` (${p.emailDeadReason})` : ""}`
+                    : p.repliedAt
                     ? `replied ${p.repliedAt.slice(0, 10)}`
                     : p.sequenceStoppedAt
                       ? `stopped${p.sequenceStopReason ? ` — ${p.sequenceStopReason}` : ""}`

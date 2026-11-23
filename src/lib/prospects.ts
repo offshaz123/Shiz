@@ -34,6 +34,8 @@ interface ProspectRow extends RowDataPacket {
   name: string;
   phone: string | null;
   email: string | null;
+  email_dead_at?: string | null;
+  email_dead_reason?: string | null;
   website: string | null;
   address: string | null;
   category: string | null;
@@ -95,6 +97,8 @@ function toProspect(row: ProspectRow): Prospect {
     name: row.name,
     phone: row.phone ?? "",
     email: row.email ?? "",
+    emailDeadAt: row.email_dead_at ?? null,
+    emailDeadReason: row.email_dead_reason ?? "",
     website: row.website ?? "",
     address: row.address ?? "",
     category: row.category ?? "",
@@ -525,6 +529,7 @@ export async function listSequenceDue(limit = 20): Promise<SequenceDue[] | null>
           AND p.replied_at IS NULL
           AND p.unsubscribed_at IS NULL
           AND p.email IS NOT NULL AND p.email <> ''
+          AND p.email_dead_at IS NULL
           AND p.status NOT IN ('interested', 'not-interested', 'customer')
         GROUP BY p.id
        HAVING last_step IS NOT NULL AND last_step < 3
@@ -576,6 +581,7 @@ export async function listNeverContacted(limit = 10): Promise<Prospect[] | null>
           AND replied_at IS NULL
           AND unsubscribed_at IS NULL
           AND email IS NOT NULL AND email <> ''
+          AND email_dead_at IS NULL
           AND scanned_at IS NOT NULL
           AND site_findings IS NOT NULL AND site_findings <> ''
           AND status NOT IN ('interested', 'not-interested', 'customer')
@@ -632,6 +638,76 @@ export async function markReplied(id: number): Promise<void> {
   }).catch(() => null);
 }
 
+/**
+ * Records that a published address does not work.
+ *
+ * Matched on the address rather than on an id, because a bounce names the
+ * recipient and nothing else we can rely on. Two businesses can genuinely
+ * share one — a man with two trading names, an office that handles the post
+ * for both — so every row carrying it is marked, which is correct: the
+ * address is dead for all of them.
+ *
+ * The sequence is stopped at the same time, with its own reason, so the
+ * follow-ups cannot keep going to a mailbox that has already refused one.
+ */
+export async function markEmailDead(
+  email: string,
+  reason: string,
+): Promise<number> {
+  const rows = await withDb(async (db) => {
+    const [res] = await db.execute<ResultSetHeader>(
+      `UPDATE prospects
+          SET email_dead_at = COALESCE(email_dead_at, NOW()),
+              email_dead_reason = COALESCE(email_dead_reason, ?),
+              sequence_stopped_at = COALESCE(sequence_stopped_at, NOW()),
+              sequence_stop_reason = COALESCE(sequence_stop_reason, 'email-dead')
+        WHERE LOWER(email) = ?
+          AND email_dead_at IS NULL`,
+      [reason.slice(0, 200), email.trim().toLowerCase()],
+    );
+    return res.affectedRows;
+  });
+  return rows ?? 0;
+}
+
+/**
+ * Addresses whose domain has never been asked whether it can receive mail.
+ *
+ * The MX check runs when a business is scanned, so every row scanned before
+ * it existed kept whatever address was on the page — including the domains
+ * with no mail server that the send log shows being retried every other day.
+ * This feeds a sweep over those rows, a few at a time.
+ */
+export async function listUncheckedAddresses(
+  limit = 20,
+): Promise<{ id: number; email: string }[] | null> {
+  return withDb(async (db) => {
+    const [rows] = await db.query<(RowDataPacket & { id: number; email: string })[]>(
+      `SELECT id, email FROM prospects
+        WHERE email IS NOT NULL AND email <> ''
+          AND email_dead_at IS NULL
+          AND mx_checked_at IS NULL
+          AND deleted_at IS NULL
+        ORDER BY id ASC
+        LIMIT ?`,
+      [limit],
+    );
+    return rows.map((r) => ({ id: r.id, email: r.email.toLowerCase() }));
+  });
+}
+
+/** Notes that a row's address has now been checked, whatever the answer was,
+ *  so the sweep moves on instead of asking about it again every run. */
+export async function markMxChecked(ids: number[]): Promise<void> {
+  if (ids.length === 0) return;
+  await withDb(async (db) => {
+    await db.query(
+      `UPDATE prospects SET mx_checked_at = NOW() WHERE id IN (${ids.map(() => "?").join(",")})`,
+      ids,
+    );
+  }).catch(() => null);
+}
+
 /** Everyone in a live sequence, so the reply check can compare the whole lot
  *  against one read of the inbox instead of asking once per address. */
 export async function listSequenceAddresses(): Promise<{ id: number; email: string }[] | null> {
@@ -641,6 +717,7 @@ export async function listSequenceAddresses(): Promise<{ id: number; email: stri
         WHERE sequence_started_at IS NOT NULL
           AND sequence_stopped_at IS NULL
           AND replied_at IS NULL
+          AND email_dead_at IS NULL
           AND email IS NOT NULL AND email <> ''`,
     );
     return rows.map((r) => ({ id: r.id, email: r.email.toLowerCase() }));

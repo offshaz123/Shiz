@@ -77,6 +77,12 @@ export type Prospect = {
   phone: string;
   /** Published on their site, when they publish one. */
   email: string;
+  /** Set when that address has been proved not to work: a bounce came back,
+   *  or its domain has no mail server. The address is kept so the call list
+   *  can say which one failed. */
+  emailDeadAt: string | null;
+  /** The receiving server's own words, for showing somebody why. */
+  emailDeadReason: string;
   website: string;
   address: string;
   category: string;

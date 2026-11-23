@@ -1,4 +1,5 @@
 import { ImapFlow } from "imapflow";
+import { looksLikeBounce, parseBounce, type DeadAddress } from "./bounces";
 
 /**
  * The mailbox itself, over IMAP, for the two things SMTP cannot do.
@@ -20,6 +21,11 @@ import { ImapFlow } from "imapflow";
 /** Short, because this runs inside a cron request on shared hosting. A
  *  mailbox that is not answering must not hold a run open. */
 const TIMEOUTS = { greetingTimeout: 8000, socketTimeout: 20_000, connectionTimeout: 10_000 };
+
+/** How many bounce messages to open in one run. Each one is a full download,
+ *  and the newest are the ones that matter, so an inbox with a backlog gets
+ *  worked through over several runs rather than holding one of them open. */
+const MAX_BOUNCES_PER_RUN = 25;
 
 /**
  * Hostinger's IMAP host is the SMTP one with the service name swapped, so
@@ -110,6 +116,47 @@ export async function sendersSince(since: Date): Promise<Set<string> | null> {
         }
       }
       return found;
+    } finally {
+      lock.release();
+    }
+  });
+}
+
+/**
+ * Every address a bounce message says is dead, from one read of the inbox.
+ *
+ * Done as a second pass over the same envelopes rather than by downloading
+ * every message: a bounce has to be read in full to find out which address
+ * failed, and pulling the body of sixty ordinary emails to find three of
+ * them is a lot of a cron run's time for nothing. So the envelopes decide
+ * what is worth opening, and only those get fetched.
+ *
+ * Null means the question could not be answered, exactly as in sendersSince,
+ * and for the same reason: "no bounces" and "we could not look" must not
+ * both read as an empty list.
+ */
+export async function bouncesSince(since: Date): Promise<DeadAddress[] | null> {
+  return withMailbox(async (c) => {
+    const lock = await c.getMailboxLock("INBOX");
+    try {
+      const worthOpening: number[] = [];
+      for await (const message of c.fetch({ since }, { envelope: true, uid: true })) {
+        const from = message.envelope?.from?.[0]?.address ?? "";
+        const subject = message.envelope?.subject ?? "";
+        if (looksLikeBounce(from, subject)) worthOpening.push(message.uid);
+      }
+
+      const found = new Map<string, DeadAddress>();
+      // Bounded, so a mailbox that has filled up with failure reports costs
+      // one run's worth of work rather than the run.
+      for (const uid of worthOpening.slice(-MAX_BOUNCES_PER_RUN)) {
+        const message = await c.fetchOne(String(uid), { source: true }, { uid: true });
+        if (!message || typeof message === "boolean" || !message.source) continue;
+        for (const dead of parseBounce(message.source.toString("utf8"))) {
+          if (!found.has(dead.email)) found.set(dead.email, dead);
+        }
+      }
+      return [...found.values()];
     } finally {
       lock.release();
     }

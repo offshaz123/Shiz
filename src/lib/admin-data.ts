@@ -240,6 +240,9 @@ export type AutomaticEmail = {
   /** True once all three have gone and nobody replied: the row that turns
    *  into a phone call. */
   readyToCall: boolean;
+  /** Their address has been proved dead, so none of it arrived. A different
+   *  row to "they ignored us", and it should not be dressed as one. */
+  addressDead: boolean;
 };
 
 export type AutomaticEmailLog = {
@@ -254,6 +257,7 @@ interface AutoRow extends RowDataPacket {
   prospect_id: number | null;
   of_three: number | null;
   replied: number | null;
+  dead: number | null;
   to_name: string | null;
   recipient: string | null;
   subject: string;
@@ -280,7 +284,8 @@ export async function getAutomaticEmails(limit = 40): Promise<AutomaticEmailLog 
                'outreach' AS kind,
                (SELECT COUNT(*) FROM prospect_emails c
                  WHERE c.prospect_id = e.prospect_id AND c.status = 'sent') AS of_three,
-               (p.replied_at IS NOT NULL OR p.unsubscribed_at IS NOT NULL) AS replied
+               (p.replied_at IS NOT NULL OR p.unsubscribed_at IS NOT NULL) AS replied,
+               (p.email_dead_at IS NOT NULL) AS dead
           FROM prospect_emails e
           JOIN prospects p ON p.id = e.prospect_id
          WHERE e.sent_by = 'auto')
@@ -295,7 +300,8 @@ export async function getAutomaticEmails(limit = 40): Promise<AutomaticEmailLog 
                e.sent_at,
                'audit' AS kind,
                NULL AS of_three,
-               NULL AS replied
+               NULL AS replied,
+               NULL AS dead
           FROM lead_emails e
           JOIN scan_leads l ON l.id = e.lead_id)
        ORDER BY sent_at DESC
@@ -330,7 +336,11 @@ export async function getAutomaticEmails(limit = 40): Promise<AutomaticEmailLog 
         prospectId: row.prospect_id === null ? null : Number(row.prospect_id),
         ofThree: Number(row.of_three ?? 0),
         readyToCall:
-          row.kind === "outreach" && Number(row.of_three ?? 0) >= 3 && !Number(row.replied ?? 0),
+          row.kind === "outreach" &&
+          Number(row.of_three ?? 0) >= 3 &&
+          !Number(row.replied ?? 0) &&
+          !Number(row.dead ?? 0),
+        addressDead: Boolean(Number(row.dead ?? 0)),
       })),
       sentToday: Number(totals?.today ?? 0),
       sentLast7Days: Number(totals?.week ?? 0),
