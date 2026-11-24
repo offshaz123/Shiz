@@ -144,6 +144,7 @@ export function StaffManager({
                 )}
 
                 <p className="mt-2 text-xs text-muted">
+                  {person.extension ? `Extension ${person.extension} · ` : "No extension · "}
                   Lists:{" "}
                   <span className="text-foreground">
                     {person.regions.map((r) => REGION_INFO[r].label).join(" and ")}
@@ -336,6 +337,24 @@ function PersonPanel({ person, activity }: { person: Staff; activity: Activity[]
           Switching a page off hides it from them and blocks the address, even if they type it in.
           Nothing is deleted and nothing changes for you.
         </p>
+
+        <div className="mt-4 border-t border-border pt-4">
+          <label className="text-xs text-muted">
+            Phone extension
+            <input
+              name="extension"
+              defaultValue={person.extension}
+              inputMode="numeric"
+              placeholder="100"
+              className="mt-1.5 block w-28 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
+            />
+          </label>
+          <p className="mt-1.5 text-[11px] text-muted">
+            Their extension in the phone system. This is what attaches a call to them — without
+            it their calls are logged against the business but not against a person, and the Call
+            button on Who to call stays hidden for them.
+          </p>
+        </div>
 
         <div className="mt-4 border-t border-border pt-4">
           <p className="text-xs font-semibold text-foreground">Which lists they work</p>

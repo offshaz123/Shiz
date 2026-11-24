@@ -1,4 +1,5 @@
 import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { siteConfig } from "./site-config";
 
 /**
  * Talking to the phone system.
@@ -16,6 +17,17 @@ import { createHash, createHmac, timingSafeEqual } from "node:crypto";
  */
 
 const BASE = "https://api.zadarma.com";
+
+/**
+ * Where the phone system should post what it knows.
+ *
+ * Built from the site's own address rather than typed anywhere, so the
+ * button that registers it and the route that receives it can never
+ * disagree about what it is.
+ */
+export function webhookUrl(): string {
+  return `${siteConfig.url.replace(/\/$/, "")}/api/zadarma/call`;
+}
 
 function keys(): { key: string; secret: string } | null {
   const key = process.env.ZADARMA_KEY;
@@ -110,6 +122,87 @@ export async function recordingLink(callId: string): Promise<string | null> {
   );
   if (!result || result.status !== "success") return null;
   return result.link ?? result.links?.[0] ?? null;
+}
+
+/**
+ * Points the phone system at us, and switches on the events we use.
+ *
+ * Done from a button rather than by hand in their control panel because
+ * the URL has to match exactly, their setup check posts to it before it
+ * will save, and typing it wrong fails silently — the webhook simply
+ * never arrives and the first anybody knows is an empty call log.
+ *
+ * Their endpoint verifies the address first by sending a GET with a
+ * zd_echo parameter, which our route answers. If that fails, this fails,
+ * which is the right way round: better to be told now than to find out
+ * in a fortnight.
+ */
+export async function connectWebhook(url: string): Promise<{ ok: boolean; reason?: string }> {
+  if (!isConnected()) return { ok: false, reason: "No API key on the server yet." };
+
+  const set = await post("/v1/pbx/callinfo/url/", { url });
+  if (!set || set.status !== "success") {
+    return { ok: false, reason: set?.message ?? "The phone system would not accept the address." };
+  }
+
+  // Only the two we act on. Every event they send is a request to our
+  // server, and asking for five we ignore is four-fifths waste.
+  const on = await post("/v1/pbx/callinfo/notifications/", {
+    notify_out_start: "false",
+    notify_out_end: "true",
+    notify_start: "false",
+    notify_internal: "false",
+    notify_answer: "false",
+    notify_end: "false",
+  });
+  if (!on || on.status !== "success") {
+    return { ok: false, reason: on?.message ?? "Could not switch the notifications on." };
+  }
+
+  return { ok: true };
+}
+
+/** What it currently thinks it should be posting to. */
+export async function webhookSettings(): Promise<{ url: string; events: string[] } | null> {
+  const got = await call<{ status: string; url?: string; notifications?: Record<string, boolean> }>(
+    "/v1/pbx/callinfo/",
+  );
+  if (!got || got.status !== "success") return null;
+  return {
+    url: got.url ?? "",
+    events: Object.entries(got.notifications ?? {})
+      .filter(([, on]) => on)
+      .map(([name]) => name),
+  };
+}
+
+/** Their write methods are POST, and the signature covers the body. */
+async function post(
+  method: string,
+  params: Record<string, string>,
+): Promise<{ status: string; message?: string } | null> {
+  const auth = keys();
+  if (!auth) return null;
+
+  try {
+    const res = await fetch(`${BASE}${method}`, {
+      method: "POST",
+      headers: {
+        Authorization: `${auth.key}: ${sign(method, params, auth.secret)}`,
+        "content-type": "application/x-www-form-urlencoded",
+      },
+      body: queryString(params),
+      signal: AbortSignal.timeout(10_000),
+    });
+    if (!res.ok) {
+      console.error(`Zadarma ${method}: ${res.status}`);
+      return null;
+    }
+    return (await res.json()) as { status: string; message?: string };
+  } catch (err) {
+    console.error(`Zadarma ${method}:`, err);
+    return null;
+  }
 }
 
 /* ------------------------------------------------------- what they tell us */

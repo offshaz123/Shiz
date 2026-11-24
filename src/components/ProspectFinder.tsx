@@ -304,7 +304,16 @@ async function copyText(text: string): Promise<boolean> {
   }
 }
 
-export function ProspectFinder({ regions = ["uk"] }: { regions?: Region[] }) {
+export function ProspectFinder({
+  regions = ["uk"],
+  canDial = false,
+}: {
+  regions?: Region[];
+  /** True when the phone system is connected and this person has an
+   *  extension. Without both, the Call button would be a button that
+   *  cannot work, which is worse than no button. */
+  canDial?: boolean;
+}) {
   const [query, setQuery] = useState("");
   const [town, setTown] = useState("");
   const [industry, setIndustry] = useState("");
@@ -1378,6 +1387,7 @@ export function ProspectFinder({ regions = ["uk"] }: { regions?: Region[] }) {
                 onContacted={markContacted}
                 onLogged={load}
                 onDelete={setDeleted}
+                canDial={canDial}
               />
             ))}
           </Section>
@@ -1398,6 +1408,7 @@ export function ProspectFinder({ regions = ["uk"] }: { regions?: Region[] }) {
                 onContacted={markContacted}
                 onLogged={load}
                 onDelete={setDeleted}
+                canDial={canDial}
               />
             ))}
           </Section>
@@ -1418,6 +1429,7 @@ export function ProspectFinder({ regions = ["uk"] }: { regions?: Region[] }) {
                 onContacted={markContacted}
                 onLogged={load}
                 onDelete={setDeleted}
+                canDial={canDial}
               />
             ))}
           </Section>
@@ -1468,7 +1480,9 @@ function Row({
   onContacted,
   onLogged,
   onDelete,
+  canDial,
 }: {
+  canDial?: boolean;
   p: Prospect;
   busy?: Busy;
   onSave: (id: number, changes: { status?: ProspectStatus; notes?: string; email?: string }) => void;
@@ -1478,6 +1492,7 @@ function Row({
   onDelete: (id: number, deleted: boolean) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const [dialState, setDialState] = useState<"idle" | "ringing" | "failed">("idle");
   const [notes, setNotes] = useState(p.notes);
   const [copied, setCopied] = useState("");
   // Fixed at mount. Worked out fresh on every render it would move under
@@ -1698,6 +1713,41 @@ function Row({
           >
             {p.phone}
           </a>
+        )}
+
+        {/* Rings your own handset first, then them. Only drawn when the
+            phone system is connected and you have an extension — a Call
+            button that cannot call is worse than no button. The tel:
+            link above stays either way, because it is what works on a
+            phone and costs nothing. */}
+        {p.phone && canDial && (
+          <button
+            type="button"
+            onClick={async () => {
+              setDialState("ringing");
+              try {
+                const res = await fetch("/api/admin/prospects/dial", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ id: p.id }),
+                });
+                setDialState(res.ok ? "ringing" : "failed");
+                if (!res.ok) setTimeout(() => setDialState("idle"), 4000);
+                else setTimeout(() => setDialState("idle"), 15000);
+              } catch {
+                setDialState("failed");
+                setTimeout(() => setDialState("idle"), 4000);
+              }
+            }}
+            disabled={dialState === "ringing"}
+            className="rounded-lg border border-brand-pink px-2.5 py-1 font-semibold text-brand-pink disabled:opacity-60"
+          >
+            {dialState === "ringing"
+              ? "Answer your phone…"
+              : dialState === "failed"
+                ? "Didn't connect"
+                : "Call"}
+          </button>
         )}
         {/*
           The site link sits right after the phone and is styled as something

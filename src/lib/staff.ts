@@ -25,6 +25,9 @@ export type Staff = {
    *  the empty column means both, resolved here so nothing downstream
    *  has to know about that. */
   regions: Region[];
+  /** The phone extension they dial from, so a call can be attributed to
+   *  a person and so the Call button knows where to ring. */
+  extension: string;
   active: boolean;
   createdAt: string;
   lastSeenAt: string | null;
@@ -37,6 +40,7 @@ interface StaffRow extends RowDataPacket {
   pass_hash: string;
   pages: string;
   regions?: string | null;
+  extension?: string | null;
   active: number;
   created_at: string;
   last_seen_at: string | null;
@@ -51,6 +55,7 @@ function toStaff(row: StaffRow): Staff {
     regions: row.regions
       ? row.regions.split(",").filter(isRegion)
       : [...REGIONS],
+    extension: row.extension ?? "",
     active: Boolean(row.active),
     createdAt: String(row.created_at),
     lastSeenAt: row.last_seen_at ? String(row.last_seen_at) : null,
@@ -191,6 +196,15 @@ export async function setStaffRegions(id: number, regions: Region[]): Promise<vo
       clean.length ? clean.join(",") : REGIONS.join(","),
       id,
     ]);
+  }).catch(() => null);
+}
+
+/** The PBX extension this person dials from. Digits only: everything
+ *  that reads it compares it to what the phone system reports. */
+export async function setStaffExtension(id: number, extension: string): Promise<void> {
+  const clean = extension.replace(/\D+/g, "").slice(0, 20);
+  await withDb(async (db) => {
+    await db.execute("UPDATE staff SET extension = ? WHERE id = ?", [clean || null, id]);
   }).catch(() => null);
 }
 

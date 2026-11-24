@@ -4,6 +4,7 @@ import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../LoginForm";
 import { NotYours } from "../NotYours";
 import { markPageSeen } from "@/lib/whats-new";
+import { isConnected } from "@/lib/zadarma";
 import { ProspectFinder } from "@/components/ProspectFinder";
 
 export const dynamic = "force-dynamic";
@@ -33,7 +34,7 @@ export default async function AdminProspectsPage() {
       </AdminHeading>
 
       <div className="mt-8">
-        <ProspectFinder regions={who.regions} />
+        <ProspectFinder regions={who.regions} canDial={isConnected() && Boolean(who.extension)} />
       </div>
     </div>
   );

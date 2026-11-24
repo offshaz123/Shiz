@@ -68,8 +68,17 @@ function sign(expiry: number, who: string, key: string): string {
 
 /** Who a session belongs to. "owner" is Walid with ADMIN_PASSWORD. */
 export type Who =
-  | { kind: "owner"; id: null; name: string; pages: "all"; regions: Region[] }
-  | { kind: "staff"; id: number; name: string; pages: PageKey[]; regions: Region[] };
+  | { kind: "owner"; id: null; name: string; pages: "all"; regions: Region[]; extension: string }
+  | {
+      kind: "staff";
+      id: number;
+      name: string;
+      pages: PageKey[];
+      regions: Region[];
+      /** Empty until an extension has been set against them, which is
+       *  what the Call button needs to know where to ring. */
+      extension: string;
+    };
 
 export function checkPassword(attempt: string): boolean {
   const key = secret();
@@ -173,7 +182,15 @@ export async function currentUser(): Promise<Who | null> {
   const session = await sessionOwner();
   if (session === null) return null;
   if (session === "owner") {
-    return { kind: "owner", id: null, name: "Walid", pages: "all", regions: [...REGIONS] };
+    return {
+      kind: "owner",
+      id: null,
+      name: "Walid",
+      pages: "all",
+      regions: [...REGIONS],
+      // The owner's own extension, so he can use the Call button too.
+      extension: process.env.ZADARMA_OWNER_EXTENSION ?? "",
+    };
   }
 
   const staff = await getStaff(session);
@@ -184,6 +201,7 @@ export async function currentUser(): Promise<Who | null> {
     name: staff.name,
     pages: staff.pages,
     regions: staff.regions,
+    extension: staff.extension,
   };
 }
 

@@ -4,6 +4,8 @@ import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../LoginForm";
 import { NotYours } from "../NotYours";
 import { runHealthChecks, type Check } from "@/lib/health";
+import { PhoneSystem } from "@/components/PhoneSystem";
+import { isConnected, webhookSettings, webhookUrl } from "@/lib/zadarma";
 
 export const dynamic = "force-dynamic";
 
@@ -55,6 +57,11 @@ export default async function AdminHealthPage() {
   if (!canSee(who, "health")) return <NotYours page="health" />;
 
   const checks = await runHealthChecks();
+  // Asked for every time this page opens, like every other check here.
+  // A cached answer about whether the phone system is wired up is an
+  // answer that can be wrong in exactly the way this page exists to
+  // catch.
+  const phone = isConnected() ? await webhookSettings() : null;
   const broken = checks.filter((c) => c.state === "fail").length;
   const watch = checks.filter((c) => c.state === "warn").length;
 
@@ -90,6 +97,8 @@ export default async function AdminHealthPage() {
           </li>
         ))}
       </ul>
+
+      <PhoneSystem connected={isConnected()} webhookUrl={webhookUrl()} current={phone} />
 
       <p className="mt-6 text-xs leading-relaxed text-muted">
         This page makes real connections — it logs into the mail server and queries the database

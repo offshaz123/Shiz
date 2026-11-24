@@ -10,6 +10,7 @@ import {
   logAction,
   setStaffActive,
   setStaffPages,
+  setStaffExtension,
   setStaffPassword,
   setStaffRegions,
 } from "@/lib/staff";
@@ -63,6 +64,10 @@ export async function updatePages(formData: FormData): Promise<void> {
   const before = await getStaff(id);
   await setStaffPages(id, pages);
   await setStaffRegions(id, regions);
+  // Saved from the same form as the rest. The extension is what links a
+  // call to a person, and a half-set-up account means calls that log
+  // against nobody.
+  await setStaffExtension(id, String(formData.get("extension") ?? ""));
   await logAction(
     await actor(),
     "changed-access",
