@@ -42,11 +42,27 @@ export function isConnected(): boolean {
   return keys() !== null;
 }
 
+/**
+ * PHP's urlencode, which is not JavaScript's.
+ *
+ * Their example is http_build_query(..., PHP_QUERY_RFC1738), and that
+ * leaves only letters, digits, hyphen, underscore and full stop alone,
+ * turning a space into a plus. encodeURIComponent additionally leaves
+ * ! ~ * ' ( ) untouched, so any parameter containing one of those would
+ * be signed differently from the way their server signs it — and the
+ * only symptom is a rejected request with no reason given.
+ */
+function phpUrlencode(value: string): string {
+  return encodeURIComponent(value)
+    .replace(/[!'()*~]/g, (c) => `%${c.charCodeAt(0).toString(16).toUpperCase()}`)
+    .replace(/%20/g, "+");
+}
+
 /** Sorted, URL-encoded, exactly as their signature expects. */
 function queryString(params: Record<string, string>): string {
   return Object.keys(params)
     .sort()
-    .map((name) => `${encodeURIComponent(name)}=${encodeURIComponent(params[name])}`)
+    .map((name) => `${phpUrlencode(name)}=${phpUrlencode(params[name])}`)
     .join("&");
 }
 
@@ -81,7 +97,12 @@ async function call<T>(method: string, params: Record<string, string> = {}): Pro
   const query = queryString(params);
   try {
     const res = await fetch(`${BASE}${method}${query ? `?${query}` : ""}`, {
-      headers: { Authorization: `${auth.key}: ${sign(method, params, auth.secret)}` },
+      // No space after the colon. Their prose writes it as
+      // "Authorization: user_key: signature", but the code that makes it
+      // is  $userKey . ':' . $sign  — and the space the prose implies is
+      // enough on its own to have every request refused without a
+      // reason. Both halves of this file had it.
+      headers: { Authorization: `${auth.key}:${sign(method, params, auth.secret)}` },
       signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) {
@@ -199,7 +220,7 @@ async function post(
     const res = await fetch(`${BASE}${method}`, {
       method: "POST",
       headers: {
-        Authorization: `${auth.key}: ${sign(method, params, auth.secret)}`,
+        Authorization: `${auth.key}:${sign(method, params, auth.secret)}`,
         "content-type": "application/x-www-form-urlencoded",
       },
       body: queryString(params),

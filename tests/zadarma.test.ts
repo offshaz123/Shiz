@@ -91,3 +91,30 @@ test("the signature is base64 of the hex digest, not of the raw bytes", () => {
   const decoded = Buffer.from(made, "base64").toString("utf8");
   assert.match(decoded, /^[0-9a-f]{40}$/);
 });
+
+test("parameters are encoded the way PHP encodes them", async () => {
+  // Their example is http_build_query(..., PHP_QUERY_RFC1738), which
+  // escapes ! ~ * ' ( ) and turns a space into a plus. JavaScript's
+  // encodeURIComponent leaves all of those alone, so a parameter with
+  // one in it would be signed differently from the way their server
+  // signs it — and the only symptom is a refusal with no reason.
+  const { sign } = await import("../src/lib/zadarma.ts");
+
+  // Same payload, written two ways that only differ in those characters.
+  const withSpecials = sign("/v1/x/", { q: "a b~c*d" }, "s");
+  const naive = Buffer.from(
+    (await import("node:crypto"))
+      .createHmac("sha1", "s")
+      .update(
+        `/v1/x/q=${encodeURIComponent("a b~c*d")}` +
+          (await import("node:crypto"))
+            .createHash("md5")
+            .update(`q=${encodeURIComponent("a b~c*d")}`)
+            .digest("hex"),
+      )
+      .digest("hex"),
+    "utf8",
+  ).toString("base64");
+
+  assert.notEqual(withSpecials, naive, "encoding is still JavaScript's, not PHP's");
+});
