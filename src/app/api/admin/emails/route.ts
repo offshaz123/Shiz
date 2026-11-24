@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { canSee, canSeeRegion, currentUser } from "@/lib/admin-auth";
 import { recentInbox } from "@/lib/mail-store";
 import { classify } from "@/lib/inbox-sort";
-import { listSent, mailboxCounts, sendersWeKnow } from "@/lib/mailbox-view";
+import { listSent, mailboxCounts, sentBody, sendersWeKnow } from "@/lib/mailbox-view";
 import { toRegion, type Region } from "@/lib/regions";
 
 export const runtime = "nodejs";
@@ -35,7 +35,24 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "unauthorised" }, { status: 401 });
   }
 
-  const asked = new URL(request.url).searchParams.get("region");
+  const params = new URL(request.url).searchParams;
+
+  // Opening one sent email. Its own request, so the list stays quick and
+  // the body is only read when somebody actually wants to read it.
+  const message = params.get("message");
+  if (message) {
+    const [kind, raw] = message.split("-");
+    const id = Number(raw);
+    if ((kind !== "outreach" && kind !== "audit") || !Number.isInteger(id) || id <= 0) {
+      return NextResponse.json({ error: "bad_request" }, { status: 400 });
+    }
+    const found = await sentBody(kind, id);
+    return found
+      ? NextResponse.json(found)
+      : NextResponse.json({ error: "not_found" }, { status: 404 });
+  }
+
+  const asked = params.get("region");
   const region: Region | undefined = asked ? toRegion(asked) : undefined;
   if (region && !canSeeRegion(who, region)) {
     return NextResponse.json({ error: "unauthorised" }, { status: 401 });

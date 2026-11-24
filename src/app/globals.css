@@ -925,6 +925,188 @@ body {
    it.
 --------------------------------------------------------------------------- */
 
+/* ---------------------------------------------------------------------------
+   The futuristic layer.
+
+   Four effects, added after looking at what a few software companies do
+   with a landing page and deciding which of it earns its place. The test
+   for each was whether it makes the page feel built rather than merely
+   decorated — motion that says "this thing is running" rather than motion
+   for its own sake.
+
+   All CSS, no JavaScript animation loop. A requestAnimationFrame loop on
+   a marketing page is a frame budget spent on a visitor who came to read
+   a price, and on a mid-range phone it is the thing that makes a site
+   feel slow.
+
+   Every one of them is switched off under prefers-reduced-motion, at the
+   bottom of this block. Somebody who has told their operating system that
+   movement makes them ill has not made a styling suggestion.
+--------------------------------------------------------------------------- */
+
+/* A slow aurora wash. Two gradients drifting across each other at
+   different speeds, which never quite repeats and so never looks looped. */
+@keyframes aurora-drift {
+  0% {
+    transform: translate3d(-8%, -4%, 0) scale(1.1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translate3d(6%, 5%, 0) scale(1.25);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate3d(-8%, -4%, 0) scale(1.1);
+    opacity: 0.55;
+  }
+}
+
+.aurora {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  background:
+    radial-gradient(42% 38% at 20% 30%, color-mix(in srgb, var(--brand-pink) 42%, transparent), transparent 70%),
+    radial-gradient(38% 34% at 78% 60%, color-mix(in srgb, var(--brand-purple, #8b5cf6) 36%, transparent), transparent 70%);
+  filter: blur(68px);
+  animation: aurora-drift 26s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.aurora-slow {
+  animation-duration: 38s;
+  animation-direction: reverse;
+  opacity: 0.6;
+}
+
+/* A grid that recedes, the way a horizon does. Pure background-image, so
+   it costs one paint and no elements. */
+.tech-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--foreground) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--foreground) 7%, transparent) 1px, transparent 1px);
+  background-size: 54px 54px;
+  /* Fades out before it reaches an edge, so it reads as depth rather
+     than as a table laid over the page. */
+  mask-image: radial-gradient(85% 70% at 50% 35%, #000 25%, transparent 78%);
+  -webkit-mask-image: radial-gradient(85% 70% at 50% 35%, #000 25%, transparent 78%);
+}
+
+/* A scan line crossing the grid every so often. Long gap between passes:
+   something that sweeps constantly is a thing you end up closing the tab
+   to get away from. */
+@keyframes scan-sweep {
+  0%,
+  72% {
+    transform: translateY(-12%);
+    opacity: 0;
+  }
+  76% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(820%);
+    opacity: 0;
+  }
+}
+
+.scan-line {
+  position: absolute;
+  inset-inline: 0;
+  height: 1.5px;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    transparent,
+    color-mix(in srgb, var(--brand-pink) 70%, transparent),
+    transparent
+  );
+  animation: scan-sweep 11s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+}
+
+/* A border that has a light travelling around it. Used on one card, not
+   on everything — the moment two of these are on screen together they
+   stop reading as special and start reading as a theme. */
+@keyframes edge-travel {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+.live-edge {
+  position: relative;
+  isolation: isolate;
+}
+
+.live-edge::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 280deg,
+    var(--brand-pink) 330deg,
+    transparent 360deg
+  );
+  animation: edge-travel 6s linear infinite;
+  /* Masked to the border only, so the fill underneath stays the card's
+     own colour rather than becoming a gradient. */
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Counting up. The number is in the markup and readable with no CSS at
+   all; this only animates how it arrives. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.4em);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.rise-in {
+  animation: rise-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora,
+  .scan-line,
+  .live-edge::before,
+  .rise-in {
+    animation: none;
+  }
+
+  /* Without its animation the scan line would sit frozen across the
+     middle of the hero, which is worse than not having it. */
+  .scan-line {
+    display: none;
+  }
+
+  .rise-in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media print {
   /* The one link back, and anything else on a print page that is for the
      person rather than for the document. */

@@ -24,6 +24,15 @@ const bars = [
 export function HeroBackdrop() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
+      {/* Underneath everything: a grid that recedes, two slow auroras
+          drifting across each other, and a scan line that crosses once
+          every eleven seconds. The long gap is the point — something
+          sweeping constantly is a thing you close the tab to escape. */}
+      <div className="tech-grid" />
+      <div className="aurora" />
+      <div className="aurora aurora-slow" />
+      <div className="scan-line" style={{ top: 0 }} />
+
       <div className="brand-gradient-bg animate-drift-glow hero-glow absolute -left-72 -top-80 h-[560px] w-[720px] rounded-full blur-3xl" />
 
       <svg

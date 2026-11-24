@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ReviewBadge } from "./ReviewBadge";
 import { HeroBackdrop } from "./HeroBackdrop";
 import { HeroResultCard } from "./HeroResultCard";
+import { AskAi } from "./AskAi";
 
 export function HomeHero() {
   return (
@@ -64,6 +65,11 @@ export function HomeHero() {
           </p>
 
           <ReviewBadge />
+
+          {/* People check a company by asking an assistant now, and the
+              answer is assembled from whatever it can find. Better to
+              hand them the question than to hope. */}
+          <AskAi className="mt-7 text-left" />
         </div>
 
         {/* Visual — the result card presented like a board. The photo is cut

@@ -217,6 +217,29 @@ export async function mailboxCounts(): Promise<MailboxCounts | null> {
 }
 
 /**
+ * The full text of one sent email.
+ *
+ * Fetched when somebody opens a row rather than with the list. A hundred
+ * and twenty bodies is most of a megabyte of text to answer a question
+ * nobody has asked yet, and the list is the thing that has to be quick.
+ */
+export async function sentBody(
+  kind: "outreach" | "audit",
+  id: number,
+): Promise<{ subject: string; body: string } | null> {
+  const found = await withDb(async (db) => {
+    const [rows] = await db.query<(RowDataPacket & { subject: string; body: string })[]>(
+      kind === "outreach"
+        ? "SELECT subject, body FROM prospect_emails WHERE id = ? LIMIT 1"
+        : "SELECT subject, body FROM lead_emails WHERE id = ? LIMIT 1",
+      [id],
+    );
+    return rows[0] ? { subject: String(rows[0].subject), body: String(rows[0].body) } : null;
+  });
+  return found ?? null;
+}
+
+/**
  * Matches an address that has written to us against a business we wrote
  * to, so the inbox can say who it is rather than only what it is called.
  */

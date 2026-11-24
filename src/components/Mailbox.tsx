@@ -20,7 +20,7 @@ import type { SentEmail, MailboxCounts } from "@/lib/mailbox-view";
  * so the state of a sequence is readable at a glance.
  */
 
-type Folder = "reply" | "bounced" | "other";
+type Folder = "reply" | "sent" | "bounced" | "other";
 
 type InboxMessage = {
   uid: number;
@@ -40,12 +40,14 @@ type InboxMessage = {
 
 const FOLDER_LABEL: Record<Folder, string> = {
   reply: "Replies",
+  sent: "Sent",
   bounced: "Bounced",
   other: "Everything else",
 };
 
 const FOLDER_NOTE: Record<Folder, string> = {
   reply: "People writing to us. Answer these.",
+  sent: "Everything we have sent. Open one to read exactly what went.",
   bounced: "Mail that came back. The address is dead and the sequence has stopped.",
   other: "DMARC reports, TikTok, Trustpilot and the rest. Nothing to do here.",
 };
@@ -145,6 +147,11 @@ export function Mailbox({ regions }: { regions: Region[] }) {
   const byFolder = (which: Folder) => all.filter((m) => m.folder === which && inRegion(m));
   const countIn = (which: Folder) => byFolder(which).length;
   const shown = byFolder(folder);
+
+  // Sent is a folder now rather than a separate section at the bottom of
+  // the page. Walid's point: the thing you most often want is what we
+  // said to somebody, and it was the furthest thing from the top.
+  const sentShown = data?.sent ?? [];
 
   return (
     <div className="flex flex-col gap-10">
@@ -256,7 +263,8 @@ export function Mailbox({ regions }: { regions: Region[] }) {
         <h2 className="text-sm font-bold text-foreground">The inbox</h2>
         <p className="mt-1 text-xs text-muted">
           Read from the mailbox itself every time you open this, so it is whatever is in there
-          now. Sorted into three, because most of what arrives is machinery.
+          now, with everything we have sent alongside it. Sorted, because most of what arrives
+          is machinery.
         </p>
 
         {/* Three piles rather than one list. A month of the real inbox
@@ -265,8 +273,8 @@ export function Mailbox({ regions }: { regions: Region[] }) {
             replies, and showing them as one list buried the only part
             that matters. */}
         <div className="mt-4 flex flex-wrap gap-2">
-          {(["reply", "bounced", "other"] as const).map((key) => {
-            const n = countIn(key);
+          {(["reply", "sent", "bounced", "other"] as const).map((key) => {
+            const n = key === "sent" ? sentShown.length : countIn(key);
             const here = folder === key;
             return (
               <button
@@ -295,7 +303,18 @@ export function Mailbox({ regions }: { regions: Region[] }) {
 
         <p className="mt-2 text-[11px] text-muted">{FOLDER_NOTE[folder]}</p>
 
-        {data?.inbox === null ? (
+        {folder === "sent" ? (
+          <ul className="mt-4 flex flex-col gap-1.5">
+            {!loading && sentShown.length === 0 && (
+              <li className="rounded-xl border border-border bg-surface px-4 py-3 text-sm text-muted">
+                Nothing sent on this list yet.
+              </li>
+            )}
+            {sentShown.map((mail) => (
+              <SentRow key={mail.id} mail={mail} />
+            ))}
+          </ul>
+        ) : data?.inbox === null ? (
           <p className="mt-4 rounded-xl border border-amber-500/40 bg-amber-500/5 px-4 py-3 text-sm text-foreground">
             The mailbox did not answer, so this list is not showing. That is the same connection
             the follow-ups use to check for replies before sending — System check will say why.
@@ -367,76 +386,125 @@ export function Mailbox({ regions }: { regions: Region[] }) {
         )}
       </section>
 
-      <section id="sent" className="scroll-mt-6">
-        <h2 className="text-sm font-bold text-foreground">What has been sent</h2>
-        <p className="mt-1 text-xs text-muted">
-          Newest first. The number against each one is where that business has got to in the three
-          emails, so <b className="text-foreground">1 of 3</b> means two more are still to go.
-        </p>
-
-        <ul className="mt-4 flex flex-col gap-1.5">
-          {!loading && (data?.sent.length ?? 0) === 0 && (
-            <li className="rounded-xl border border-border bg-surface px-4 py-3 text-sm text-muted">
-              Nothing sent on this list yet.
-            </li>
-          )}
-          {data?.sent.map((mail) => (
-            <li
-              key={mail.id}
-              className={`flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-xl border bg-surface px-4 py-2.5 text-xs ${
-                mail.failed
-                  ? "border-red-500/50"
-                  : mail.dead
-                    ? "border-amber-500/50"
-                    : mail.replied
-                      ? "border-sky-500/50"
-                      : "border-border"
-              }`}
-            >
-              {mail.prospectId ? (
-                <Link
-                  href={`/admin/prospects/${mail.prospectId}`}
-                  className="font-bold text-foreground underline decoration-dotted"
-                >
-                  {mail.to}
-                </Link>
-              ) : (
-                <span className="font-bold text-foreground">{mail.to}</span>
-              )}
-
-              <span className="shrink-0 rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold tabular-nums text-muted">
-                {mail.kind === "audit" ? `audit ${mail.step}` : `${mail.step} of 3`}
-              </span>
-
-              <span className="min-w-0 flex-1 truncate text-muted">{mail.subject}</span>
-
-              {mail.failed && (
-                <span className="shrink-0 font-semibold text-red-500">did not send</span>
-              )}
-              {!mail.failed && mail.dead && (
-                <span className="shrink-0 font-semibold text-amber-500">address bounces</span>
-              )}
-              {!mail.failed && !mail.dead && mail.replied && (
-                <span className="shrink-0 font-semibold text-sky-500">replied</span>
-              )}
-              {!mail.failed && !mail.dead && !mail.replied && mail.ofThree >= 3 && (
-                <span className="shrink-0 font-semibold text-brand-pink">all three gone — ring</span>
-              )}
-
-              {mail.region && (
-                <span className="shrink-0 rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold text-muted">
-                  {REGION_INFO[mail.region].label}
-                </span>
-              )}
-              <span className="shrink-0 text-muted" title={`from ${mail.from}`}>
-                {mail.from.split("@")[0]}@
-              </span>
-              <span className="shrink-0 tabular-nums text-muted">{when(mail.sentAt)}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
     </div>
+  );
+}
+
+/**
+ * One sent email, which opens to show exactly what went.
+ *
+ * The text is fetched when it is opened rather than with the list. A
+ * hundred and twenty bodies is most of a megabyte to answer a question
+ * nobody has asked yet, and a slow list is a list nobody scrolls.
+ */
+function SentRow({ mail }: { mail: SentEmail }) {
+  const [open, setOpen] = useState(false);
+  const [body, setBody] = useState<string | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  async function toggle() {
+    const next = !open;
+    setOpen(next);
+    if (!next || body !== null) return;
+    try {
+      const res = await fetch(`/api/admin/emails?message=${encodeURIComponent(mail.id)}`);
+      if (!res.ok) throw new Error("bad");
+      const found = (await res.json()) as { body?: string };
+      // A response without a body is a failure, not an empty email. The
+      // first version set the text to undefined and rendered a blank
+      // panel with no explanation, which looks exactly like an email
+      // that said nothing.
+      if (typeof found.body !== "string" || found.body.trim() === "") {
+        throw new Error("empty");
+      }
+      setBody(found.body);
+      setFailed(false);
+    } catch {
+      setFailed(true);
+    }
+  }
+
+  return (
+    <li
+      className={`rounded-xl border bg-surface text-xs ${
+        mail.failed
+          ? "border-red-500/50"
+          : mail.dead
+            ? "border-amber-500/50"
+            : mail.replied
+              ? "border-sky-500/60"
+              : "border-border"
+      }`}
+    >
+      <button
+        type="button"
+        onClick={toggle}
+        aria-expanded={open}
+        className="flex w-full flex-wrap items-baseline gap-x-3 gap-y-1 px-4 py-3 text-left"
+      >
+        <span className="font-bold text-foreground">{mail.to}</span>
+
+        <span className="shrink-0 rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold tabular-nums text-muted">
+          {mail.kind === "audit" ? `audit ${mail.step}` : `${mail.step} of 3`}
+        </span>
+
+        <span className="min-w-0 flex-1 truncate text-muted">{mail.subject}</span>
+
+        {mail.failed && <span className="shrink-0 font-semibold text-red-500">did not send</span>}
+        {!mail.failed && mail.dead && (
+          <span className="shrink-0 font-semibold text-amber-500">address bounces</span>
+        )}
+        {!mail.failed && !mail.dead && mail.replied && (
+          <span className="shrink-0 font-semibold text-sky-500">replied</span>
+        )}
+        {!mail.failed && !mail.dead && !mail.replied && mail.ofThree >= 3 && (
+          <span className="shrink-0 font-semibold text-brand-pink">all three gone — ring</span>
+        )}
+
+        {mail.region && (
+          <span className="shrink-0 rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold text-muted">
+            {REGION_INFO[mail.region].label}
+          </span>
+        )}
+        <span className="shrink-0 text-muted" title={`from ${mail.from}`}>
+          {mail.from.split("@")[0]}@
+        </span>
+        <span className="shrink-0 tabular-nums text-muted">{when(mail.sentAt)}</span>
+        <span className={`shrink-0 text-muted transition ${open ? "rotate-90" : ""}`}>›</span>
+      </button>
+
+      {open && (
+        <div className="border-t border-border px-4 py-3">
+          <p className="text-[11px] text-muted">
+            To {mail.recipient} · from {mail.from}
+          </p>
+          <p className="mt-1 text-sm font-semibold text-foreground">{mail.subject}</p>
+          {failed ? (
+            <p className="mt-2 text-muted">That email could not be read back.</p>
+          ) : body === null ? (
+            <p className="mt-2 text-muted">Opening…</p>
+          ) : (
+            // Whitespace preserved, because these are written as plain
+            // text with deliberate line breaks and reflowing them makes
+            // a careful email look like a paragraph of mush.
+            <p className="mt-2 whitespace-pre-wrap leading-relaxed text-foreground">{body}</p>
+          )}
+        </div>
+      )}
+
+      {/* Links out of a button would be a button inside a button, so the
+          way to the business sits under the summary instead. */}
+      {open && mail.prospectId && (
+        <div className="border-t border-border px-4 py-2">
+          <Link
+            href={`/admin/prospects/${mail.prospectId}`}
+            className="text-[11px] font-semibold text-brand-pink underline decoration-dotted"
+          >
+            Open {mail.to} on the call list
+          </Link>
+        </div>
+      )}
+    </li>
   );
 }
 

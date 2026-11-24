@@ -124,8 +124,7 @@ export const ADMIN_PAGES: AdminPage[] = [
     hint: "Everything sent and everything that came back, both countries",
     sections: [
       { id: "counts", label: "How many have gone out" },
-      { id: "inbox", label: "Who has written back" },
-      { id: "sent", label: "What has been sent" },
+      { id: "inbox", label: "Replies, sent, bounced" },
     ],
     canGrant: true,
     onByDefault: true,
