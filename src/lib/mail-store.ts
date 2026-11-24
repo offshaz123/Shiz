@@ -1,5 +1,6 @@
 import { ImapFlow } from "imapflow";
 import { looksLikeBounce, parseBounce, type DeadAddress } from "./bounces";
+import { extractReplyText } from "./inbox-sort";
 
 /**
  * The mailbox itself, over IMAP, for the two things SMTP cannot do.
@@ -179,15 +180,29 @@ export type InboxMessage = {
   uid: number;
   from: string;
   fromName: string;
-  /** Which of our addresses it was sent to, when the mailbox has more
-   *  than one going into it. */
+  /** Which of our addresses it came in to, once there is more than one. */
   to: string;
   subject: string;
   at: string;
   seen: boolean;
+  /** Headers used to tell a person from a machine. Empty if unavailable. */
+  headers: Record<string, string>;
+  /** The first few lines of what they said. Only fetched for replies. */
+  said: string;
 };
 
-export async function recentInbox(limit = 40): Promise<InboxMessage[] | null> {
+/** Headers worth having. Cheap next to a body, and they are what a
+ *  sender uses to declare itself a mailing list or an auto-reply. */
+const HEADERS = ["list-unsubscribe", "list-id", "precedence", "auto-submitted", "in-reply-to", "references"];
+
+/** How many replies to open and read. Bodies are the expensive part. */
+const MAX_BODIES = 15;
+
+export async function recentInbox(
+  limit = 40,
+  /** Called per message to say whether its body is worth fetching. */
+  wantsBody?: (message: Omit<InboxMessage, "said">) => boolean,
+): Promise<InboxMessage[] | null> {
   return withMailbox(async (c) => {
     const lock = await c.getMailboxLock("INBOX");
     try {
@@ -198,10 +213,14 @@ export async function recentInbox(limit = 40): Promise<InboxMessage[] | null> {
       // By sequence number from the end, so this asks for the newest
       // forty rather than reading the whole mailbox and taking forty.
       const from = Math.max(1, total - limit + 1);
-      const out: InboxMessage[] = [];
-      for await (const message of c.fetch(`${from}:*`, { envelope: true, uid: true, flags: true })) {
+      const found: Omit<InboxMessage, "said">[] = [];
+
+      for await (const message of c.fetch(
+        `${from}:*`,
+        { envelope: true, uid: true, flags: true, headers: HEADERS },
+      )) {
         const sender = message.envelope?.from?.[0];
-        out.push({
+        found.push({
           uid: message.uid,
           from: (sender?.address ?? "").toLowerCase(),
           fromName: sender?.name ?? "",
@@ -209,13 +228,51 @@ export async function recentInbox(limit = 40): Promise<InboxMessage[] | null> {
           subject: message.envelope?.subject ?? "(no subject)",
           at: (message.envelope?.date ?? new Date()).toISOString(),
           seen: Boolean(message.flags?.has("\\Seen")),
+          headers: parseHeaders(message.headers),
         });
       }
-      return out.reverse();
+
+      found.reverse();
+
+      // Bodies for the ones worth reading, newest first and capped. The
+      // envelopes decide; downloading forty messages to show the text of
+      // three is the difference between a page and a wait.
+      const out: InboxMessage[] = found.map((m) => ({ ...m, said: "" }));
+      let opened = 0;
+      for (const message of out) {
+        if (opened >= MAX_BODIES) break;
+        if (wantsBody && !wantsBody(message)) continue;
+        opened += 1;
+        try {
+          const full = await c.fetchOne(String(message.uid), { source: true }, { uid: true });
+          if (full && typeof full !== "boolean" && full.source) {
+            message.said = extractReplyText(full.source.toString("utf8"));
+          }
+        } catch {
+          // A message that will not download is still a message that
+          // arrived. It keeps its subject and loses its preview.
+        }
+      }
+
+      return out;
     } finally {
       lock.release();
     }
   });
+}
+
+/** ImapFlow hands headers back as a raw buffer. */
+function parseHeaders(raw: unknown): Record<string, string> {
+  if (!raw) return {};
+  const text = typeof raw === "string" ? raw : String(raw);
+  const out: Record<string, string> = {};
+  // Unfold first: a References header routinely runs over several lines.
+  for (const line of text.replace(/\r\n/g, "\n").replace(/\n[ \t]+/g, " ").split("\n")) {
+    const at = line.indexOf(":");
+    if (at <= 0) continue;
+    out[line.slice(0, at).trim().toLowerCase()] = line.slice(at + 1).trim();
+  }
+  return out;
 }
 
 /**

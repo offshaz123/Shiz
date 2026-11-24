@@ -59,9 +59,21 @@ export function AdminNav({
   const [pinned, setPinned] = useState<string | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Long enough that passing over a row does not count as asking for it.
-  const OPEN_AFTER = 450;
-  const CLOSE_AFTER = 200;
+  /**
+   * The pause before a hover counts as asking for the menu.
+   *
+   * This has been wrong in both directions. With no pause at all,
+   * crossing the column flashed three menus open on the way past. At
+   * 450ms it felt broken — you stop on a row and wait, which is worse
+   * than the flashing was.
+   *
+   * Just under a fifth of a second is the gap: long enough that passing
+   * through does not trigger it, short enough that stopping on a row
+   * feels like the menu was already there. Closing waits longer, so
+   * moving the pointer down into the menu does not lose it.
+   */
+  const OPEN_AFTER = 180;
+  const CLOSE_AFTER = 320;
 
   useEffect(() => () => {
     if (timer.current) clearTimeout(timer.current);

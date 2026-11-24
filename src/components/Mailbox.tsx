@@ -20,6 +20,8 @@ import type { SentEmail, MailboxCounts } from "@/lib/mailbox-view";
  * so the state of a sequence is readable at a glance.
  */
 
+type Folder = "reply" | "bounced" | "other";
+
 type InboxMessage = {
   uid: number;
   from: string;
@@ -28,9 +30,24 @@ type InboxMessage = {
   subject: string;
   at: string;
   seen: boolean;
+  /** The first few lines of what they actually said. Replies only. */
+  said: string;
+  folder: Folder;
   business: string;
   prospectId: number | null;
   region: Region | null;
+};
+
+const FOLDER_LABEL: Record<Folder, string> = {
+  reply: "Replies",
+  bounced: "Bounced",
+  other: "Everything else",
+};
+
+const FOLDER_NOTE: Record<Folder, string> = {
+  reply: "People writing to us. Answer these.",
+  bounced: "Mail that came back. The address is dead and the sequence has stopped.",
+  other: "DMARC reports, TikTok, Trustpilot and the rest. Nothing to do here.",
 };
 
 type Payload = {
@@ -51,6 +68,8 @@ function when(iso: string): string {
 
 export function Mailbox({ regions }: { regions: Region[] }) {
   const [pick, setPick] = useState<Region | "both">(regions.length > 1 ? "both" : regions[0]);
+  /** Which pile of the inbox is on screen. Replies first, always. */
+  const [folder, setFolder] = useState<Folder>("reply");
   const [data, setData] = useState<Payload | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -106,13 +125,26 @@ export function Mailbox({ regions }: { regions: Region[] }) {
   // country means that country's outreach only.
   const sentToday = !counts ? 0 : pick === "both" ? sum(counts.today) : (counts.today[pick] ?? 0);
 
-  // The inbox is not filtered by country on the server, because a message
-  // that has arrived does not carry one. It is filtered here, by whose
-  // business sent it, and anything unmatched is always shown: a reply
-  // from an address we do not recognise is still a reply.
-  const inbox = (data?.inbox ?? []).filter(
-    (m) => pick === "both" || m.region === null || m.region === pick,
-  );
+  const all = data?.inbox ?? [];
+
+  /**
+   * A message that has arrived carries no country of its own. It gets
+   * one from the business that sent it, where we recognise them.
+   *
+   * Choosing a country used to leave unmatched messages in, which meant
+   * UK and US showed almost the same list and the filter looked broken.
+   * It now shows only what it can place, and says how many it could
+   * not, so the choice visibly does something and nothing disappears
+   * without being accounted for.
+   */
+  const inRegion = (m: InboxMessage) => pick === "both" || m.region === pick;
+  const unplaced = pick === "both" ? 0 : all.filter((m) => m.region === null).length;
+
+  // Counted the same way the list is filtered. A tab reading "Replies 2"
+  // above a list holding one is a tab nobody trusts again.
+  const byFolder = (which: Folder) => all.filter((m) => m.folder === which && inRegion(m));
+  const countIn = (which: Folder) => byFolder(which).length;
+  const shown = byFolder(folder);
 
   return (
     <div className="flex flex-col gap-10">
@@ -221,11 +253,47 @@ export function Mailbox({ regions }: { regions: Region[] }) {
       </section>
 
       <section id="inbox" className="scroll-mt-6">
-        <h2 className="text-sm font-bold text-foreground">Who has written back</h2>
+        <h2 className="text-sm font-bold text-foreground">The inbox</h2>
         <p className="mt-1 text-xs text-muted">
           Read from the mailbox itself every time you open this, so it is whatever is in there
-          now. A name in bold is a business we have emailed.
+          now. Sorted into three, because most of what arrives is machinery.
         </p>
+
+        {/* Three piles rather than one list. A month of the real inbox
+            held nine bounce reports, sixteen DMARC reports and a steady
+            drip from TikTok and Trustpilot against a handful of actual
+            replies, and showing them as one list buried the only part
+            that matters. */}
+        <div className="mt-4 flex flex-wrap gap-2">
+          {(["reply", "bounced", "other"] as const).map((key) => {
+            const n = countIn(key);
+            const here = folder === key;
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setFolder(key)}
+                title={FOLDER_NOTE[key]}
+                className={`rounded-lg border px-3.5 py-2 text-xs font-bold ${
+                  here
+                    ? "border-brand-pink bg-brand-pink/10 text-foreground"
+                    : "border-border text-muted hover:text-foreground"
+                }`}
+              >
+                {FOLDER_LABEL[key]}
+                <span
+                  className={`ml-2 tabular-nums ${
+                    key === "reply" && n > 0 ? "text-brand-pink" : "text-muted"
+                  }`}
+                >
+                  {n}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <p className="mt-2 text-[11px] text-muted">{FOLDER_NOTE[folder]}</p>
 
         {data?.inbox === null ? (
           <p className="mt-4 rounded-xl border border-amber-500/40 bg-amber-500/5 px-4 py-3 text-sm text-foreground">
@@ -233,42 +301,69 @@ export function Mailbox({ regions }: { regions: Region[] }) {
             the follow-ups use to check for replies before sending — System check will say why.
           </p>
         ) : (
-          <ul className="mt-4 flex flex-col gap-1.5">
-            {!loading && inbox.length === 0 && (
-              <li className="rounded-xl border border-border bg-surface px-4 py-3 text-sm text-muted">
-                Nothing in the inbox for this list.
-              </li>
+          <>
+            <ul className="mt-4 flex flex-col gap-1.5">
+              {!loading && shown.length === 0 && (
+                <li className="rounded-xl border border-border bg-surface px-4 py-3 text-sm text-muted">
+                  Nothing in {FOLDER_LABEL[folder].toLowerCase()} for this list.
+                </li>
+              )}
+              {shown.map((message) => (
+                <li
+                  key={message.uid}
+                  className={`rounded-xl border bg-surface px-4 py-3 text-xs ${
+                    message.folder === "bounced"
+                      ? "border-amber-500/50"
+                      : message.business
+                        ? "border-sky-500/60"
+                        : "border-border"
+                  }`}
+                >
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    {message.business ? (
+                      <Link
+                        href={`/admin/prospects/${message.prospectId}`}
+                        className="font-bold text-foreground underline decoration-dotted"
+                      >
+                        {message.business}
+                      </Link>
+                    ) : (
+                      <span className="font-semibold text-foreground">
+                        {message.fromName || message.from}
+                      </span>
+                    )}
+                    <span className="truncate text-muted">{message.from}</span>
+                    <span className="min-w-0 flex-1 truncate text-foreground">
+                      {message.subject}
+                    </span>
+                    {message.region && (
+                      <span className="shrink-0 rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold text-muted">
+                        {REGION_INFO[message.region].label}
+                      </span>
+                    )}
+                    <span className="shrink-0 tabular-nums text-muted">{when(message.at)}</span>
+                  </div>
+
+                  {/* What they said, which was the whole point of asking
+                      who had written back. Only fetched for replies. */}
+                  {message.said && (
+                    <p className="mt-2 border-l-2 border-border pl-3 leading-relaxed text-foreground">
+                      {message.said}
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
+
+            {/* Nothing vanishes without being accounted for. */}
+            {unplaced > 0 && (
+              <p className="mt-3 text-[11px] text-muted">
+                {unplaced} message{unplaced === 1 ? "" : "s"} came from addresses that do not
+                match a business on either list, so {unplaced === 1 ? "it is" : "they are"} only
+                under <b className="text-foreground">Both</b>.
+              </p>
             )}
-            {inbox.map((message) => (
-              <li
-                key={message.uid}
-                className={`flex flex-wrap items-baseline gap-x-3 gap-y-1 rounded-xl border bg-surface px-4 py-2.5 text-xs ${
-                  message.business ? "border-sky-500/50" : "border-border"
-                }`}
-              >
-                {message.business ? (
-                  <Link
-                    href={`/admin/prospects/${message.prospectId}`}
-                    className="font-bold text-foreground underline decoration-dotted"
-                  >
-                    {message.business}
-                  </Link>
-                ) : (
-                  <span className="font-semibold text-foreground">
-                    {message.fromName || message.from}
-                  </span>
-                )}
-                <span className="text-muted">{message.from}</span>
-                <span className="min-w-0 flex-1 truncate text-foreground">{message.subject}</span>
-                {message.region && (
-                  <span className="shrink-0 rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold text-muted">
-                    {REGION_INFO[message.region].label}
-                  </span>
-                )}
-                <span className="shrink-0 tabular-nums text-muted">{when(message.at)}</span>
-              </li>
-            ))}
-          </ul>
+          </>
         )}
       </section>
 

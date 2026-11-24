@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { canSee, canSeeRegion, currentUser } from "@/lib/admin-auth";
 import { recentInbox } from "@/lib/mail-store";
+import { classify } from "@/lib/inbox-sort";
 import { listSent, mailboxCounts, sendersWeKnow } from "@/lib/mailbox-view";
 import { toRegion, type Region } from "@/lib/regions";
 
@@ -15,12 +16,18 @@ export const dynamic = "force-dynamic";
  * otherwise hold the whole page blank. This way the sent list and the
  * counts appear at once and the inbox fills in behind them.
  *
- * The inbox is not filtered by country, because an email that has
- * arrived does not carry one. What it carries is a sender, so each
- * message is matched against the businesses we have written to, and a
- * message from one of them picks up their country from their row.
- * Anything we cannot match is shown as it is rather than hidden — a
- * reply from an address we do not recognise is still a reply.
+ * The inbox is sorted into three piles here rather than on the page,
+ * because the sorting needs the headers and the headers are not worth
+ * sending to a browser. A reply from a person first, a bounce in its
+ * own pile because it is a job rather than a conversation, and the
+ * machinery — DMARC reports, TikTok, Trustpilot — somewhere you can
+ * still look but do not have to.
+ *
+ * A message that has arrived carries no country. What it carries is a
+ * sender, so each one is matched against the businesses we have written
+ * to and picks up their country from their row. Anything we cannot
+ * match keeps no country and is counted separately, so choosing a
+ * country visibly does something rather than appearing to do nothing.
  */
 export async function GET(request: Request) {
   const who = await currentUser();
@@ -34,7 +41,10 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "unauthorised" }, { status: 401 });
   }
 
-  const [sent, counts, inbox] = await Promise.all([
+  // Two passes over the mailbox, because which messages are worth
+  // opening depends on which senders we recognise, and that is a
+  // database question. The first pass is envelopes only and cheap.
+  const [sent, counts, envelopes] = await Promise.all([
     listSent(region, 120),
     mailboxCounts(),
     // Never allowed to fail the response. A mailbox refusing a login is
@@ -42,7 +52,20 @@ export async function GET(request: Request) {
     recentInbox(40).catch(() => null),
   ]);
 
-  const known = await sendersWeKnow((inbox ?? []).map((m) => m.from));
+  const known = await sendersWeKnow((envelopes ?? []).map((m) => m.from));
+
+  // Now read the bodies, but only of the ones that are replies.
+  const inbox =
+    envelopes === null
+      ? null
+      : await recentInbox(40, (m) =>
+          classify({
+            from: m.from,
+            subject: m.subject,
+            headers: m.headers,
+            known: known.has(m.from),
+          }) === "reply",
+        ).catch(() => envelopes);
 
   return NextResponse.json({
     sent: sent ?? [],
@@ -52,10 +75,18 @@ export async function GET(request: Request) {
     inbox:
       inbox === null
         ? null
-        : inbox.map((m) => {
+        : (inbox ?? []).map((m) => {
             const match = known.get(m.from);
             return {
               ...m,
+              // Not sent to the browser: they are only needed to sort.
+              headers: undefined,
+              folder: classify({
+                from: m.from,
+                subject: m.subject,
+                headers: m.headers,
+                known: Boolean(match),
+              }),
               business: match?.name ?? "",
               prospectId: match?.id ?? null,
               region: match?.region ?? null,
