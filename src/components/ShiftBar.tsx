@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { CALL_LABEL, CALL_OUTCOMES, type CallOutcome } from "@/lib/prospect-types";
 import { noteProblem } from "@/lib/call-notes";
+import { callbackProblem } from "@/lib/callback";
 
 /**
  * The line across the top of the admin for somebody working a shift.
@@ -173,6 +174,7 @@ function CallPrompt({
   );
   const [notes, setNotes] = useState("");
   const [callbackAt, setCallbackAt] = useState("");
+  const [callbackTime, setCallbackTime] = useState("09:30");
   const [saving, setSaving] = useState(false);
   const [tried, setTried] = useState(false);
   const [failed, setFailed] = useState("");
@@ -180,7 +182,8 @@ function CallPrompt({
   // Shown once they have had a go at saving, not while they are still
   // typing the first word. A box that turns red before anybody has done
   // anything wrong is a box people learn to ignore.
-  const problem = noteProblem(notes);
+  const problem =
+    noteProblem(notes) ?? callbackProblem(outcome, { date: callbackAt, time: callbackTime });
 
   const minutes = Math.floor(call.seconds / 60);
   const seconds = call.seconds % 60;
@@ -199,7 +202,8 @@ function CallPrompt({
           id: call.id,
           outcome,
           notes,
-          callbackAt,
+          callbackDate: callbackAt,
+          callbackTime,
           business: call.business,
         }),
       });
@@ -252,15 +256,30 @@ function CallPrompt({
             Thursday" is the single most common thing said on these
             calls and the one most often forgotten. */}
         {outcome === "call-back" && (
-          <label className="mt-3 block text-xs text-muted">
-            Ring them back on
-            <input
-              type="date"
-              value={callbackAt}
-              onChange={(e) => setCallbackAt(e.target.value)}
-              className="mt-1.5 block rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground"
-            />
-          </label>
+          <div className="mt-3 flex flex-wrap gap-3">
+            <label className="block text-xs text-muted">
+              Ring them back on
+              <input
+                type="date"
+                value={callbackAt}
+                onChange={(e) => setCallbackAt(e.target.value)}
+                className="mt-1.5 block rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground"
+              />
+            </label>
+            {/* The time as well, and it is not optional. A day on its
+                own turns "ring me at half nine before we open" into
+                "some time on Thursday", and a callback kept on the
+                wrong side of lunch is a callback missed. */}
+            <label className="block text-xs text-muted">
+              At
+              <input
+                type="time"
+                value={callbackTime}
+                onChange={(e) => setCallbackTime(e.target.value)}
+                className="mt-1.5 block rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground"
+              />
+            </label>
+          </div>
         )}
 
         <label className="mt-3 block text-xs text-muted">

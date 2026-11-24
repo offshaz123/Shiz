@@ -48,6 +48,8 @@ interface Counts extends RowDataPacket {
   ever_sent: number;
   unreviewed: number;
   no_way_in: number;
+  calls_placed: number;
+  calls_confirmed: number;
 }
 
 export async function whatCouldGoWrong(): Promise<Risk[]> {
@@ -78,7 +80,11 @@ export async function whatCouldGoWrong(): Promise<Risk[]> {
            (SELECT COUNT(*) FROM prospects
              WHERE deleted_at IS NULL AND status IN ('new','no-answer')
                AND phone_dead_at IS NOT NULL
-               AND (email IS NULL OR email = '' OR email_dead_at IS NOT NULL)) AS no_way_in`,
+               AND (email IS NULL OR email = '' OR email_dead_at IS NOT NULL)) AS no_way_in,
+           (SELECT COUNT(*) FROM prospect_calls
+             WHERE logged_by IN ('click','phone')) AS calls_placed,
+           (SELECT COUNT(*) FROM prospect_calls
+             WHERE logged_by = 'phone') AS calls_confirmed`,
       );
       return row;
     }),
@@ -210,6 +216,24 @@ export async function whatCouldGoWrong(): Promise<Risk[]> {
         href: "/admin/health",
       });
     }
+  }
+
+  // Click-to-call works one way round on its own: we can ask the phone
+  // system to ring somebody without it ever telling us what happened.
+  // The end-of-call report is a separate thing that has to be pointed
+  // at this site, and until it is, every call is placed and nothing
+  // ever comes back — no duration, no answered-or-not, no recording.
+  // There is no error anywhere when that is the case, which is exactly
+  // why it needs saying out loud.
+  if (n(counts.calls_placed) >= 2 && n(counts.calls_confirmed) === 0) {
+    risks.push({
+      when: "today",
+      level: "bad",
+      title: "The phone system has never reported a call back",
+      detail: `${n(counts.calls_placed)} calls have been placed from the site and not one has been confirmed, so nothing knows how long they lasted or whether anybody picked up.`,
+      fix: "Connect the end-of-call webhook on the system check page.",
+      href: "/admin/health",
+    });
   }
 
   // Calls nobody wrote up. A week of these and the call list is back to

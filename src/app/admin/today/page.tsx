@@ -8,6 +8,8 @@ import { getToday } from "@/lib/today";
 import { listProspectsByIds } from "@/lib/prospects";
 import { callLabel } from "@/lib/prospect-types";
 import { callScript } from "@/lib/call-script";
+import { diary } from "@/lib/callbacks";
+import { CallbackDiary } from "@/components/CallbackDiary";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +34,12 @@ export default async function AdminTodayPage() {
   if (!who) return <LoginForm />;
   if (!canSee(who, "today")) return <NotYours page="today" />;
 
-  const groups = await getToday(listProspectsByIds);
+  // Only the countries this person works, so a diary belongs to the
+  // person looking at it rather than being everybody's at once.
+  const [groups, book] = await Promise.all([
+    getToday(listProspectsByIds),
+    diary({ regions: who.regions }),
+  ]);
   const total = (groups ?? []).reduce((n, g) => n + g.prospects.length, 0);
   const today = new Intl.DateTimeFormat("en-GB", {
     weekday: "long",
@@ -188,6 +195,27 @@ export default async function AdminTodayPage() {
           </section>
         ))}
       </div>
+
+      {/* The diary. Separate from the list above because it is about
+          when rather than about what: the list is "things worth doing",
+          this is "you said you would ring these people at these
+          times". */}
+      <section id="diary" className="mt-12 scroll-mt-6">
+        <h2 className="text-sm font-bold text-foreground">The diary</h2>
+        <p className="mt-1 text-xs text-muted">
+          Everybody who asked to be rung back, on the day and at the time they asked for. It fills
+          itself in when somebody writes up a call as &ldquo;asked to call back&rdquo;.
+        </p>
+        <div className="mt-4">
+          {book === null ? (
+            <p className="rounded-2xl border border-red-500/40 bg-red-500/5 px-4 py-3 text-sm text-foreground">
+              No database connection, so the diary cannot be read.
+            </p>
+          ) : (
+            <CallbackDiary missed={book.missed} days={book.days} />
+          )}
+        </div>
+      </section>
 
       {total > 0 && (
         <p className="mt-10 text-xs leading-relaxed text-muted">

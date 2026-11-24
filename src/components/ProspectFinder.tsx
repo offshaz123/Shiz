@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { URGENCY_WORD, planCall } from "@/lib/call-priority";
 import { noteProblem } from "@/lib/call-notes";
+import { callbackProblem } from "@/lib/callback";
 import {
   CALL_LABEL,
   CALL_OUTCOMES,
@@ -1525,6 +1526,9 @@ function Row({
     notes: string;
     minutes: string;
     callbackAt: string;
+    /** Required with the date, for the outcome that means they asked
+     *  to be rung back. A day on its own gets missed. */
+    callbackTime: string;
   } | null>(null);
   const [loggingCall, setLoggingCall] = useState(false);
   // Why the last attempt to save a call did not save. It used to fail
@@ -1602,7 +1606,12 @@ function Row({
 
     // Checked before the request so the answer is instant, and checked
     // again on the server because this is only the polite half.
-    const wrong = noteProblem(callForm.notes);
+    const wrong =
+      noteProblem(callForm.notes) ??
+      callbackProblem(callForm.outcome, {
+        date: callForm.callbackAt,
+        time: callForm.callbackTime,
+      });
     if (wrong) {
       setCallError(wrong);
       return;
@@ -1614,7 +1623,12 @@ function Row({
       const res = await fetch("/api/admin/prospects/call", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: p.id, ...callForm, minutes: Number(callForm.minutes) || 0 }),
+        body: JSON.stringify({
+          id: p.id,
+          ...callForm,
+          callbackDate: callForm.callbackAt,
+          minutes: Number(callForm.minutes) || 0,
+        }),
       });
       if (res.ok) {
         setCallForm(null);
@@ -1772,7 +1786,22 @@ function Row({
                 });
                 setDialState(res.ok ? "ringing" : "failed");
                 if (!res.ok) setTimeout(() => setDialState("idle"), 4000);
-                else setTimeout(() => setDialState("idle"), 15000);
+                else {
+                  setTimeout(() => setDialState("idle"), 15000);
+                  // The write-up box opens here, on the row you just
+                  // rang from, rather than waiting for the phone system
+                  // to tell us the call ended.
+                  //
+                  // It used to wait, and when the end-of-call webhook
+                  // did not arrive — which is every call until that
+                  // webhook is registered — nobody was ever asked
+                  // anything. Pressing Call is a fact we already have,
+                  // so the question gets asked from it. "No answer" is
+                  // the starting outcome because that is what most
+                  // calls are, and it is the honest default for one
+                  // that has only just been placed.
+                  setCallForm({ outcome: "no-answer", notes: "", minutes: "", callbackAt: "", callbackTime: "09:30" });
+                }
               } catch {
                 setDialState("failed");
                 setTimeout(() => setDialState("idle"), 4000);
@@ -1936,7 +1965,13 @@ function Row({
             setCallForm(
               callForm
                 ? null
-                : { outcome: "spoke", notes: "", minutes: "", callbackAt: "" },
+                : {
+                    outcome: "spoke",
+                    notes: "",
+                    minutes: "",
+                    callbackAt: "",
+                    callbackTime: "09:30",
+                  },
             )
           }
           className="rounded-lg border border-border px-2.5 py-1 font-semibold hover:border-brand-pink hover:text-foreground"
@@ -2045,15 +2080,30 @@ function Row({
           {callError && <p className="text-[11px] text-red-400">{callError}</p>}
 
           <div className="flex flex-wrap items-end gap-3 text-[11px]">
-            <label className="flex flex-col gap-1">
-              <span className="text-muted">Ring back on</span>
-              <input
-                type="date"
-                value={callForm.callbackAt}
-                onChange={(e) => setCallForm({ ...callForm, callbackAt: e.target.value })}
-                className="rounded-lg border border-border bg-surface px-2.5 py-1.5 text-foreground outline-none focus:border-brand-pink"
-              />
-            </label>
+            {/* Only for the outcome that means it, and then both
+                halves of it: a day with no time gets missed. */}
+            {callForm.outcome === "call-back" && (
+              <>
+                <label className="flex flex-col gap-1">
+                  <span className="text-muted">Ring back on</span>
+                  <input
+                    type="date"
+                    value={callForm.callbackAt}
+                    onChange={(e) => setCallForm({ ...callForm, callbackAt: e.target.value })}
+                    className="rounded-lg border border-border bg-surface px-2.5 py-1.5 text-foreground outline-none focus:border-brand-pink"
+                  />
+                </label>
+                <label className="flex flex-col gap-1">
+                  <span className="text-muted">At</span>
+                  <input
+                    type="time"
+                    value={callForm.callbackTime}
+                    onChange={(e) => setCallForm({ ...callForm, callbackTime: e.target.value })}
+                    className="rounded-lg border border-border bg-surface px-2.5 py-1.5 text-foreground outline-none focus:border-brand-pink"
+                  />
+                </label>
+              </>
+            )}
             <label className="flex flex-col gap-1">
               <span className="text-muted">Minutes</span>
               <input

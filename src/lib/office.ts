@@ -55,6 +55,8 @@ export type Worker = {
   name: string;
   /** The job title over their head. */
   title: string;
+  /** The short word on the plate on the floor in front of the desk. */
+  floorLabel: string;
   doing: Doing;
   /** The one line that goes in the speech bubble and the panel heading. */
   says: string;
@@ -83,12 +85,12 @@ export type Office = {
 };
 
 /** The station ids from the engine room, so a rename is caught by the compiler. */
-const DESKS: Record<string, { name: string; title: string }> = {
-  finder: { name: "Faisal", title: "Finds businesses" },
-  scanner: { name: "Sana", title: "Checks their websites" },
-  postman: { name: "Hamza", title: "Sends the first email" },
-  nudger: { name: "Nadia", title: "Sends the follow-ups" },
-  listener: { name: "Layla", title: "Reads the replies" },
+const DESKS: Record<string, { name: string; title: string; floorLabel: string }> = {
+  finder: { name: "Faisal", title: "Finds businesses", floorLabel: "FINDING" },
+  scanner: { name: "Sana", title: "Checks their websites", floorLabel: "SCANNING" },
+  postman: { name: "Hamza", title: "Sends the first email", floorLabel: "FIRST EMAIL" },
+  nudger: { name: "Nadia", title: "Sends the follow-ups", floorLabel: "FOLLOW-UPS" },
+  listener: { name: "Layla", title: "Reads the replies", floorLabel: "REPLIES" },
 };
 
 /**
@@ -182,11 +184,16 @@ export async function getOffice(region?: Region): Promise<Office> {
   // No database, no room. Drawing seven cheerful figures over figures we
   // could not read would be the one thing this page must never do.
   const workers: Worker[] = (engine?.stations ?? []).map((station) => {
-    const desk = DESKS[station.id] ?? { name: station.name, title: station.does };
+    const desk = DESKS[station.id] ?? {
+      name: station.name,
+      title: station.does,
+      floorLabel: station.name.toUpperCase(),
+    };
     return {
       id: station.id,
       name: desk.name,
       title: desk.title,
+      floorLabel: desk.floorLabel,
       doing: doingFor(station),
       says: station.state,
       value: station.value,
@@ -212,6 +219,7 @@ export async function getOffice(region?: Region): Promise<Office> {
 
   workers.splice(2, 0, {
     id: "writer",
+    floorLabel: "BLOG",
     name: "Yusuf",
     title: "Writes the blog",
     doing:
@@ -249,6 +257,7 @@ export async function getOffice(region?: Region): Promise<Office> {
   // reports what they have done, he reports what is about to go wrong.
   workers.push({
     id: "caretaker",
+    floorLabel: "FRONT DESK",
     name: "Bilal",
     title: "Watches for trouble",
     doing:
@@ -286,6 +295,7 @@ export async function getOffice(region?: Region): Promise<Office> {
   workers.push(
     {
       id: "receptionist",
+    floorLabel: "ENQUIRIES",
       name: "Amina",
       title: "Takes the enquiries",
       doing: (counts?.enquiries_week ?? 0) > 0 ? "working" : "walking",
@@ -303,6 +313,7 @@ export async function getOffice(region?: Region): Promise<Office> {
     },
     {
       id: "chaser",
+    floorLabel: "CHASING",
       name: "Imran",
       title: "Chases the enquiries",
       doing: (counts?.lead_emails ?? 0) > 0 ? "working" : "resting",
@@ -320,6 +331,7 @@ export async function getOffice(region?: Region): Promise<Office> {
     },
     {
       id: "switchboard",
+    floorLabel: "CALLS",
       name: "Zara",
       title: "Puts the calls through",
       doing: !isConnected() ? "asleep" : (counts?.calls_week ?? 0) > 0 ? "working" : "walking",
@@ -338,6 +350,7 @@ export async function getOffice(region?: Region): Promise<Office> {
     },
     {
       id: "diary",
+    floorLabel: "DIARY",
       name: "Rania",
       title: "Minds the diary",
       doing: diary.doing,
@@ -350,6 +363,7 @@ export async function getOffice(region?: Region): Promise<Office> {
     },
     {
       id: "reviewer",
+    floorLabel: "REVIEWS",
       name: "Tariq",
       title: "Asks for reviews",
       doing: review.doing,
@@ -362,6 +376,7 @@ export async function getOffice(region?: Region): Promise<Office> {
     },
     {
       id: "bookkeeper",
+    floorLabel: "INVOICES",
       name: "Saleem",
       title: "Does the invoices",
       doing:
@@ -388,6 +403,7 @@ export async function getOffice(region?: Region): Promise<Office> {
     },
     {
       id: "analyst",
+    floorLabel: "VISITORS",
       name: "Hira",
       title: "Watches the visitors",
       doing: (counts?.views_week ?? 0) > 0 ? "working" : "walking",

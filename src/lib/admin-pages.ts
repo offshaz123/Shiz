@@ -79,6 +79,9 @@ export const ADMIN_PAGES: AdminPage[] = [
     hint: "What to do now",
     canGrant: true,
     onByDefault: true,
+    sections: [
+      { id: "diary", label: "The diary" },
+    ],
   },
   {
     key: "leads",

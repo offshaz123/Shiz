@@ -44,13 +44,13 @@ export async function callsNeedingReview(
          JOIN prospects p ON p.id = c.prospect_id
         WHERE c.logged_by IN ('phone', 'click')
           AND c.reviewed_at IS NULL
-          -- A row written the moment Call was pressed is held back for
-          -- a couple of minutes, because the call is probably still
-          -- going on and a write-up box over the screen mid-sentence is
-          -- worse than no box. One the phone system has confirmed is
-          -- shown at once: that call is definitely over.
-          AND (c.logged_by = 'phone'
-               OR c.called_at <= DATE_SUB(NOW(), INTERVAL 2 MINUTE))
+          -- No hold-back. It used to wait two minutes before a call
+          -- placed from the site would count, on the grounds that the
+          -- call might still be going — but the write-up box now opens
+          -- on the row the moment you dial, so closing it and seeing
+          -- nothing at the top read as the system having forgotten.
+          -- The count is a count, not a box in the way: only a call the
+          -- phone system has confirmed opens anything by itself.
           -- Only the last day. A call from a fortnight ago is not a
           -- question anybody can still answer, and leaving it in the
           -- count turns the count into wallpaper.
@@ -93,6 +93,18 @@ export async function reviewCall(
       [review.outcome, review.notes.slice(0, 4000) || null, callId],
     );
     if (res.affectedRows === 0) return false;
+
+    // Written up, so the call definitely happened — which is what makes
+    // the business count as contacted. Pressing Call alone does not,
+    // because a number that rang out is not a business you have spoken
+    // to and it must stay on the list.
+    await db.execute(
+      `UPDATE prospects p
+          JOIN prospect_calls c ON c.prospect_id = p.id
+          SET p.called_at = COALESCE(p.called_at, NOW())
+        WHERE c.id = ?`,
+      [callId],
+    );
 
     // The business's own status follows the outcome, the same way it
     // does when a call is logged by hand. Two routes to the same place

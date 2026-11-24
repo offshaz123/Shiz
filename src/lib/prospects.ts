@@ -1041,6 +1041,17 @@ export async function logCall(
       );
     }
 
+    // A call that was only just placed changes nothing about the
+    // business yet.
+    //
+    // This stamped called_at the instant the button was pressed, and
+    // called_at is what "contacted" means on the call list — so ringing
+    // a number and getting no answer took the business straight off the
+    // To contact list and left somebody hunting for it. It is a fact
+    // about the business only once the call actually happened, which is
+    // when the phone system confirms it or when somebody writes it up.
+    if (call.loggedBy === "click") return true;
+
     await db.execute(
       `UPDATE prospects
           SET called_at = NOW(),
@@ -1244,6 +1255,13 @@ export async function attachPhoneCall(
         prospectId,
       ],
     );
+    // Deliberately changes nothing about the business.
+    //
+    // Knowing a call happened is not the same as knowing what came of
+    // it, and "contacted" is a claim about the second one. A business
+    // stays on the list until somebody has said what was said — which
+    // is the job, and the red count at the top chases it until it is
+    // done.
     return res.affectedRows > 0;
   });
 

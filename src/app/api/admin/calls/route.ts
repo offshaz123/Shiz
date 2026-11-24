@@ -3,6 +3,7 @@ import { canSee, currentUser } from "@/lib/admin-auth";
 import { callsNeedingReview, reviewCall } from "@/lib/call-review";
 import { isCallOutcome } from "@/lib/prospect-types";
 import { noteProblem } from "@/lib/call-notes";
+import { callbackProblem, callbackValue } from "@/lib/callback";
 import { logAction } from "@/lib/staff";
 
 export const runtime = "nodejs";
@@ -49,12 +50,21 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "note_needed", message: problem }, { status: 400 });
   }
 
+  // A day and a time, both required, and only for the outcome that
+  // means they asked to be rung back.
+  const callback = {
+    date: typeof body?.callbackDate === "string" ? body.callbackDate : "",
+    time: typeof body?.callbackTime === "string" ? body.callbackTime : "",
+  };
+  const whenProblem = callbackProblem(body.outcome, callback);
+  if (whenProblem) {
+    return NextResponse.json({ error: "callback_needed", message: whenProblem }, { status: 400 });
+  }
+
   const ok = await reviewCall(id, {
     outcome: body.outcome,
     notes,
-    // A date, not a time. "Thursday" is how people say it, and a
-    // callback promised to the minute is one nobody keeps.
-    callbackAt: /^\d{4}-\d{2}-\d{2}$/.test(body?.callbackAt ?? "") ? body.callbackAt : "",
+    callbackAt: body.outcome === "call-back" ? callbackValue(callback) : "",
   });
 
   if (!ok) return NextResponse.json({ error: "not_saved" }, { status: 409 });

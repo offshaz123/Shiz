@@ -12,6 +12,7 @@ async function allowed(): Promise<boolean> {
 import { getProspect, listProspectCalls, logCall } from "@/lib/prospects";
 import { isCallOutcome } from "@/lib/prospect-types";
 import { noteProblem } from "@/lib/call-notes";
+import { callbackProblem, callbackValue } from "@/lib/callback";
 import { callLabel } from "@/lib/prospect-types";
 import { logAction } from "@/lib/staff";
 
@@ -46,6 +47,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "note_needed", message: problem }, { status: 400 });
   }
 
+  const callback = {
+    date: typeof body?.callbackDate === "string" ? body.callbackDate : "",
+    time: typeof body?.callbackTime === "string" ? body.callbackTime : "",
+  };
+  const whenProblem = callbackProblem(body.outcome, callback);
+  if (whenProblem) {
+    return NextResponse.json({ error: "callback_needed", message: whenProblem }, { status: 400 });
+  }
+
   // Who is signed in, not who typed their name in a box. The caller field
   // predates accounts and was whatever somebody wrote, which made "who rang
   // this business" unanswerable the moment two people used the same login.
@@ -56,9 +66,7 @@ export async function POST(request: Request) {
     notes,
     minutes: Number(body?.minutes) || null,
     caller: me.name,
-    // A date, not a time. "Thursday" is how people actually say it, and a
-    // callback promised to the minute is a callback nobody keeps.
-    callbackAt: /^\d{4}-\d{2}-\d{2}$/.test(body?.callbackAt ?? "") ? body.callbackAt : "",
+    callbackAt: body.outcome === "call-back" ? callbackValue(callback) : "",
   });
 
   if (ok) {

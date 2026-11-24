@@ -1305,3 +1305,17 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .office-live-dot { animation: none !important; opacity: 0.8; }
 }
+
+/* Somebody asleep in a bunk: breathing, nothing more. The figures on
+   the floor move because their jobs are doing something; these ones
+   are not, and a bed that jiggled would say otherwise. */
+.office-sleeper { animation: office-breathe 5.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
+@keyframes office-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(1.5px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .office-sleeper { animation: none !important; }
+}
