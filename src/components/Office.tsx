@@ -139,31 +139,31 @@ function Person({
 
       {/* Head. */}
       <g className="office-head">
-        <circle cx={0} cy={-34} r={17} fill={skin} />
+        <circle cx={0} cy={-36} r={20} fill={skin} />
         {/* Ears, which is most of what stops a circle reading as a ball. */}
-        <circle cx={-16} cy={-32} r={4} fill={skin} />
-        <circle cx={16} cy={-32} r={4} fill={skin} />
-        {index % 3 === 0 && <path d="M -17 -38 q 17 -20 34 0 q -17 -9 -34 0 z" fill="#1f2937" />}
-        {index % 3 === 1 && <path d="M -17 -36 q 4 -20 34 -4 q -6 -12 -34 4 z" fill="#4b2e1e" />}
-        {index % 3 === 2 && <path d="M -18 -34 q 2 -24 36 -6 l -2 8 q -14 -12 -34 -2 z" fill="#111827" />}
+        <circle cx={-19} cy={-34} r={4.5} fill={skin} />
+        <circle cx={19} cy={-34} r={4.5} fill={skin} />
+        {index % 3 === 0 && <path d="M -20 -42 q 20 -22 40 0 q -20 -10 -40 0 z" fill="#1f2937" />}
+        {index % 3 === 1 && <path d="M -20 -40 q 5 -23 40 -5 q -7 -14 -40 5 z" fill="#4b2e1e" />}
+        {index % 3 === 2 && <path d="M -21 -38 q 2 -27 42 -7 l -2 9 q -16 -14 -40 -2 z" fill="#111827" />}
 
         {shut ? (
           <>
-            <path d="M -9 -34 q 4 4 8 0" stroke="#1f2937" strokeWidth={2} fill="none" strokeLinecap="round" />
-            <path d="M 1 -34 q 4 4 8 0" stroke="#1f2937" strokeWidth={2} fill="none" strokeLinecap="round" />
+            <path d="M -12 -36 q 5 6 10 0" stroke="#1f2937" strokeWidth={2.8} fill="none" strokeLinecap="round" />
+            <path d="M 2 -36 q 5 6 10 0" stroke="#1f2937" strokeWidth={2.8} fill="none" strokeLinecap="round" />
           </>
         ) : (
           <>
-            <circle cx={-5} cy={-36} r={2.4} fill="#111827" />
-            <circle cx={5} cy={-36} r={2.4} fill="#111827" />
+            <circle cx={-7} cy={-38} r={3.4} fill="#111827" />
+            <circle cx={7} cy={-38} r={3.4} fill="#111827" />
           </>
         )}
         {/* A rest is a contented thing and a stoppage is not, so the
             resting one keeps its smile and only the stopped one loses it. */}
         <path
-          d={doing === "asleep" ? "M -5 -25 q 5 -3 10 0" : "M -5 -26 q 5 5 10 0"}
+          d={doing === "asleep" ? "M -8 -26 q 8 -4 16 0" : "M -8 -27 q 8 8 16 0"}
           stroke="#111827"
-          strokeWidth={1.8}
+          strokeWidth={2.6}
           fill="none"
           strokeLinecap="round"
         />
@@ -401,13 +401,57 @@ export function Office({ office }: { office: OfficeData }) {
           <rect x={0} y={ROOM.wall} width={ROOM.w} height={ROOM.h - ROOM.wall} fill="#0f172a" />
           <line x1={0} y1={ROOM.wall} x2={ROOM.w} y2={ROOM.wall} stroke="#1f2937" strokeWidth={3} />
 
-          {/* Windows, with a night sky, because this lot work while nobody is in. */}
-          {[40, 228].map((x) => (
+          {/* Windows.
+              They were two flat blue rectangles with a dot in each and
+              read as noticeboards — the first person to see them asked
+              what they were. A sill, a frame, a skyline and a few
+              stars is what makes a window look like a window. */}
+          {[46, 236].map((x) => (
             <g key={x}>
-              <rect x={x} y={28} width={158} height={96} rx={6} fill="#0c4a6e" opacity={0.65} />
-              <rect x={x} y={28} width={158} height={96} rx={6} fill="none" stroke="#334155" strokeWidth={4} />
-              <line x1={x + 79} y1={28} x2={x + 79} y2={124} stroke="#334155" strokeWidth={4} />
-              <circle cx={x + 120} cy={54} r={8} fill="#e2e8f0" opacity={0.7} />
+              <defs>
+                <linearGradient id={`sky-${x}`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#0b2545" />
+                  <stop offset="100%" stopColor="#13395f" />
+                </linearGradient>
+              </defs>
+              <rect x={x} y={28} width={160} height={110} rx={4} fill={`url(#sky-${x})`} />
+
+              {/* The town at night, which is the point: they work while
+                  the lights are off everywhere else. */}
+              <g opacity={0.85}>
+                <rect x={x + 10} y={96} width={22} height={42} fill="#0a1b30" />
+                <rect x={x + 36} y={78} width={18} height={60} fill="#0a1b30" />
+                <rect x={x + 58} y={104} width={26} height={34} fill="#0a1b30" />
+                <rect x={x + 88} y={86} width={20} height={52} fill="#0a1b30" />
+                <rect x={x + 112} y={100} width={30} height={38} fill="#0a1b30" />
+                {[
+                  [16, 104], [24, 118], [41, 86], [41, 104], [47, 120],
+                  [64, 112], [74, 126], [93, 94], [101, 110], [118, 108], [132, 122],
+                ].map(([dx, dy]) => (
+                  <rect
+                    key={`${dx}-${dy}`}
+                    x={x + dx}
+                    y={dy}
+                    width={5}
+                    height={6}
+                    fill="#fcd34d"
+                    opacity={0.75}
+                  />
+                ))}
+              </g>
+
+              {/* A moon and a couple of stars. */}
+              <circle cx={x + 124} cy={52} r={11} fill="#e2e8f0" opacity={0.9} />
+              <circle cx={x + 119} cy={48} r={9} fill={`url(#sky-${x})`} />
+              {[[28, 44], [60, 36], [88, 58], [44, 66]].map(([dx, dy]) => (
+                <circle key={`${dx}-${dy}`} cx={x + dx} cy={dy} r={1.8} fill="#e2e8f0" opacity={0.75} />
+              ))}
+
+              {/* Frame, glazing bars and a sill. */}
+              <rect x={x} y={28} width={160} height={110} rx={4} fill="none" stroke="#475569" strokeWidth={6} />
+              <line x1={x + 80} y1={28} x2={x + 80} y2={138} stroke="#475569" strokeWidth={5} />
+              <line x1={x} y1={83} x2={x + 160} y2={83} stroke="#475569" strokeWidth={5} />
+              <rect x={x - 8} y={138} width={176} height={9} rx={3} fill="#64748b" />
             </g>
           ))}
 
