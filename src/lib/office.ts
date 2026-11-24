@@ -4,6 +4,7 @@ import { withDb } from "./db";
 import { getCronHealth, type CronHealth } from "./admin-data";
 import { getEngineRoom, type Station } from "./engine-room";
 import { runHealthChecks } from "./health";
+import { whatCouldGoWrong, type Risk } from "./lookahead";
 import { isConnected } from "./zadarma";
 import { REGION_INFO, type Region } from "./regions";
 
@@ -33,8 +34,20 @@ export type Doing =
   | "working" // running normally, and has something to get on with
   | "talking" // has something to report
   | "walking" // nothing waiting for it just now
-  | "eating" // idle, nothing due until later
+  | "eating" // on a break, nothing due until later
+  | "resting" // fine, but with nothing at all to do until its next turn
   | "asleep"; // switched off, or has not run when it should have
+
+/**
+ * Resting and stopped are drawn differently on purpose.
+ *
+ * Both have their eyes shut, and telling them apart is the whole point
+ * of the room: resting is a job that is working perfectly and has
+ * nothing to do until tonight, stopped is a job that should have run
+ * and did not. One is fine and one needs you. So resting gets a normal
+ * name tag and faint blue marks, and stopped gets a red tag and red
+ * ones — and a glance across the room finds the red.
+ */
 
 export type Worker = {
   id: string;
@@ -54,6 +67,11 @@ export type Worker = {
   href?: string;
   /** False when this one is not running at all. */
   live: boolean;
+  /** Only the one who watches the system: what he has found. */
+  risks?: Risk[];
+  /** True for the one who sits at the table at the front rather than
+   *  at a desk in the rows. */
+  atTheTable?: boolean;
 };
 
 export type Office = {
@@ -89,6 +107,9 @@ function doingFor(station: Station): Doing {
     return "talking";
   }
   if (/\d/.test(state) && !state.includes("nothing")) return "working";
+  // "nothing waiting", "nothing sent today" — running fine, no work in
+  // front of it. That is a rest, not a wander.
+  if (state.includes("nothing")) return "resting";
   return "walking";
 }
 
@@ -149,12 +170,13 @@ function fromCron(health: CronHealth | null, neverRun: string): { doing: Doing; 
 }
 
 export async function getOffice(region?: Region): Promise<Office> {
-  const [engine, checks, counts, reviewCron, diaryCron] = await Promise.all([
+  const [engine, checks, counts, reviewCron, diaryCron, risks] = await Promise.all([
     getEngineRoom(region),
     runHealthChecks(),
     tallies(),
     getCronHealth("review-requests"),
     getCronHealth("reminders-tomorrow"),
+    whatCouldGoWrong(),
   ]);
 
   // No database, no room. Drawing seven cheerful figures over figures we
@@ -192,7 +214,14 @@ export async function getOffice(region?: Region): Promise<Office> {
     id: "writer",
     name: "Yusuf",
     title: "Writes the blog",
-    doing: daysSincePost === null ? "asleep" : daysSincePost <= 1 ? "working" : daysSincePost <= 7 ? "walking" : "eating",
+    doing:
+      daysSincePost === null
+        ? "asleep"
+        : daysSincePost <= 1
+          ? "working"
+          : daysSincePost <= 7
+            ? "walking"
+            : "eating",
     says:
       daysSincePost === null
         ? "nothing published yet"
@@ -211,23 +240,34 @@ export async function getOffice(region?: Region): Promise<Office> {
   // The caretaker, whose state is the system check itself: anything
   // failing and he is on his feet about it.
   const failing = checks.filter((c) => c.state === "fail");
-  const warning = checks.filter((c) => c.state === "warn");
+  const bad = risks.filter((r) => r.level === "bad");
+  const ahead = risks.filter((r) => r.when === "tomorrow");
+
+  // He sits at the table at the front rather than in the rows, facing
+  // the room, because his job is the room rather than a queue of his
+  // own. He is also the only one who looks forward: everybody else
+  // reports what they have done, he reports what is about to go wrong.
   workers.push({
     id: "caretaker",
     name: "Bilal",
-    title: "Watches the system",
-    doing: failing.length > 0 ? "talking" : warning.length > 0 ? "working" : "walking",
+    title: "Watches for trouble",
+    doing:
+      failing.length > 0 || bad.length > 0 ? "talking" : risks.length > 0 ? "working" : "walking",
     says:
       failing.length > 0
-        ? `${failing.length} thing${failing.length === 1 ? "" : "s"} broken: ${failing[0].name}`
-        : warning.length > 0
-          ? `${warning.length} thing${warning.length === 1 ? "" : "s"} worth a look`
-          : "everything passing",
-    value: checks.filter((c) => c.state === "ok").length,
-    unit: `of ${checks.length} checks passing`,
-    does: "runs every check on the site — mail, database, keys, certificates — and says what is broken",
+        ? `${failing[0].name} is broken`
+        : bad.length > 0
+          ? bad[0].title
+          : ahead.length > 0
+            ? `${ahead.length} thing${ahead.length === 1 ? "" : "s"} to watch for tomorrow`
+            : "nothing coming that I can see",
+    value: risks.length,
+    unit: risks.length === 1 ? "thing on his list" : "things on his list",
+    does: "walks the whole system looking for what is broken now and what will break tomorrow — an empty call list, a missed callback, a job that has quietly stopped, a budget running out",
     href: "/admin/health",
     live: true,
+    risks,
+    atTheTable: true,
   });
 
   // The rest of the room.
@@ -265,7 +305,7 @@ export async function getOffice(region?: Region): Promise<Office> {
       id: "chaser",
       name: "Imran",
       title: "Chases the enquiries",
-      doing: (counts?.lead_emails ?? 0) > 0 ? "working" : "eating",
+      doing: (counts?.lead_emails ?? 0) > 0 ? "working" : "resting",
       says:
         counts === null
           ? "can't read the database"
@@ -331,7 +371,7 @@ export async function getOffice(region?: Region): Promise<Office> {
             ? "talking"
             : counts.invoices > 0
               ? "working"
-              : "eating",
+              : "resting",
       says:
         counts === null
           ? "can't read the database"
@@ -365,10 +405,27 @@ export async function getOffice(region?: Region): Promise<Office> {
     },
   );
 
+  // Busiest at the front.
+  //
+  // Every value here is a count of things that one has handled, so they
+  // can be put in order against each other without inventing a score:
+  // the one that has dealt with the most sits at the front of the room.
+  // A job we could not read a number for goes to the back rather than
+  // being given a nought it has not earned.
+  workers.sort((a, b) => {
+    // The one at the table is not in the running for a desk.
+    if (a.atTheTable) return 1;
+    if (b.atTheTable) return -1;
+    return (b.value ?? -1) - (a.value ?? -1);
+  });
+
   const asleep = workers.filter((w) => w.doing === "asleep");
   const shouting = workers.filter((w) => w.doing === "talking");
 
   const summary =
+    bad.length > 0
+      ? `Bilal has found something: ${bad[0].title.toLowerCase()}.`
+      :
     asleep.length > 0
       ? `${asleep.map((w) => w.name).join(" and ")} ${asleep.length === 1 ? "is" : "are"} not running. Press them to see why.`
       : shouting.length > 0

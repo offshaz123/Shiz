@@ -10,7 +10,7 @@ import { isRegion } from "@/lib/regions";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "AI agents",
+  title: "Office",
   robots: { index: false, follow: false },
 };
 
@@ -25,14 +25,14 @@ export const metadata: Metadata = {
  * what the job behind it is really doing, and every number under them
  * is counted from the database.
  */
-export default async function AgentsPage({
+export default async function OfficePage({
   searchParams,
 }: {
   searchParams: Promise<{ region?: string }>;
 }) {
   const who = await currentUser();
   if (!who) return <LoginForm />;
-  if (!canSee(who, "agents")) return <NotYours page="agents" />;
+  if (!canSee(who, "office")) return <NotYours page="office" />;
 
   // Carried in the address, like the overview, so the server fetches the
   // right numbers rather than the page filtering them afterwards.
@@ -43,7 +43,7 @@ export default async function AgentsPage({
 
   return (
     <main className="mx-auto max-w-6xl px-5 py-10 sm:px-8">
-      <AdminHeading title="AI agents">
+      <AdminHeading title="Office">
         The jobs that run without anybody pressing anything, drawn as the room they would be in
         if they were people. Press one to see what it has done.
       </AdminHeading>

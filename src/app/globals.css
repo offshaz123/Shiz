@@ -1181,19 +1181,47 @@ body {
   50% { opacity: 1; }
 }
 
-/* Up and about: wanders a little way from the desk and back. */
-.office-walking { animation: office-wander 9s ease-in-out infinite; }
-.office-walking .office-arm-left { animation: office-swing 1.1s ease-in-out infinite; transform-origin: -24px 10px; }
-.office-walking .office-arm-right { animation: office-swing 1.1s ease-in-out infinite reverse; transform-origin: 24px 10px; }
+/* Up and about.
+   Mostly sitting, then up for a wander and back down again — a job
+   with nothing waiting is not a job that paces all day. The long still
+   stretches at either end are what make it read as getting up rather
+   than as sliding about, and the arms only swing during the part where
+   they are actually on their feet. */
+.office-walking { animation: office-wander 22s ease-in-out infinite; }
+.office-walking .office-arm-left { animation: office-swing 18.33s linear infinite; transform-origin: -24px 10px; }
+.office-walking .office-arm-right { animation: office-swing 18.33s linear infinite reverse; transform-origin: 24px 10px; }
+
+/* Staggered, or fourteen people stand up in perfect unison, which
+   looks less like an office and more like a chorus line. */
+.office-desk:nth-child(3n) .office-walking { animation-delay: 7s; }
+.office-desk:nth-child(3n + 1) .office-walking { animation-delay: 14s; }
 
 @keyframes office-wander {
-  0%, 100% { transform: translateX(0); }
-  35% { transform: translateX(44px); }
-  65% { transform: translateX(-30px); }
+  /* Sitting. */
+  0%, 26% { transform: translate(0, 0); }
+  /* Up, out from behind the desk. */
+  33% { transform: translate(18px, -16px); }
+  /* A short walk and a pause. */
+  44%, 52% { transform: translate(54px, -20px); }
+  /* Back the other way. */
+  63% { transform: translate(-26px, -18px); }
+  /* Sitting down again. */
+  72% { transform: translate(-4px, -8px); }
+  76%, 100% { transform: translate(0, 0); }
 }
+
+/* Only while they are up: 26% to 76% of the wander, which at 22s is
+   the 5.7s to 16.7s stretch. Written as its own shorter loop with
+   gaps at both ends rather than as one keyframe per step. */
 @keyframes office-swing {
-  0%, 100% { transform: rotate(10deg); }
-  50% { transform: rotate(-10deg); }
+  0%, 24% { transform: rotate(0deg); }
+  30% { transform: rotate(12deg); }
+  38% { transform: rotate(-12deg); }
+  46% { transform: rotate(12deg); }
+  54% { transform: rotate(-12deg); }
+  62% { transform: rotate(12deg); }
+  70% { transform: rotate(-12deg); }
+  76%, 100% { transform: rotate(0deg); }
 }
 
 /* A break: mug up to the mouth now and then, steam rising. */
@@ -1209,6 +1237,19 @@ body {
   0% { opacity: 0; transform: translateY(2px); }
   40% { opacity: 0.8; }
   100% { opacity: 0; transform: translateY(-8px); }
+}
+
+/* Resting: leaning back, breathing slowly. Softer than the slump of a
+   job that has stopped, and no tilt of the head — the difference has to
+   be readable at a glance from the other side of the room. */
+.office-resting { animation: office-rest 5.4s ease-in-out infinite; }
+.office-resting .office-head { transform: translateY(3px); }
+.office-resting .office-zzz text { animation: office-zzz 4.2s ease-in-out infinite; }
+.office-resting .office-zzz text:last-child { animation-delay: 1.4s; }
+
+@keyframes office-rest {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
 }
 
 /* Stopped: slumped forward, breathing, with the z's drifting up. */
@@ -1230,6 +1271,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .office-person,
   .office-person *,
+  .office-resting,
   .office-bubble {
     animation: none !important;
   }
