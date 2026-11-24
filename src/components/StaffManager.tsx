@@ -13,6 +13,7 @@ import { grantablePages } from "@/lib/admin-pages";
 import { REGIONS, REGION_INFO } from "@/lib/regions";
 import type { Staff, StaffTally, Activity, Sitting, DayReport } from "@/lib/staff";
 import { DayCalendar } from "./DayCalendar";
+import { WorkDayLine } from "./WorkDayLine";
 
 /**
  * The team screen: who can sign in, what each of them can open, and what
@@ -171,7 +172,13 @@ export function StaffManager({
                 }`}
               >
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                  <span className="text-sm font-bold text-foreground">{person.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => setOpen(expanded ? null : person.id)}
+                    className="text-sm font-bold text-foreground underline-offset-4 hover:underline"
+                  >
+                    {person.name}
+                  </button>
                   <span className="text-xs text-muted">signs in as {person.username}</span>
                   {!person.active && (
                     <span className="rounded-full border border-red-500/50 px-2 py-0.5 text-[11px] font-semibold text-foreground">
@@ -231,13 +238,14 @@ export function StaffManager({
                   onClick={() => setOpen(expanded ? null : person.id)}
                   className="mt-3 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground"
                 >
-                  {expanded ? "Close" : "Change what they can see"}
+                  {expanded ? "Close" : `Open ${person.name}'s profile`}
                 </button>
 
                 {expanded && (
                   <PersonPanel
                     person={person}
                     activity={activity}
+                    sittings={sittings}
                     days={days[String(person.id)] ?? []}
                   />
                 )}
@@ -342,12 +350,25 @@ export function StaffManager({
       </section>
 
       <section id="log" className="scroll-mt-6">
-        <h2 className="text-sm font-bold text-foreground">Everything that has happened</h2>
-        <p className="mt-1 text-xs text-muted">
-          Newest first, everybody including you. This is a record of what was done and when, not
-          a judgement about it.
-        </p>
-        <ul className="mt-4 flex flex-col gap-1.5">
+        {/* Folded away by default.
+            It is the longest thing on the page by a distance and the
+            least often wanted: what somebody actually opens this page
+            for is one person's day, which is now on their own panel.
+            Left open, it made the page look like a log file. */}
+        <details className="group">
+          <summary className="flex cursor-pointer list-none items-baseline gap-2">
+            <h2 className="text-sm font-bold text-foreground">Everything that has happened</h2>
+            <span className="text-xs text-muted">
+              {activity.length} {activity.length === 1 ? "entry" : "entries"}
+            </span>
+            <span className="text-xs text-muted group-open:hidden">— show</span>
+            <span className="hidden text-xs text-muted group-open:inline">— hide</span>
+          </summary>
+          <p className="mt-1 text-xs text-muted">
+            Newest first, everybody including you. This is a record of what was done and when, not
+            a judgement about it.
+          </p>
+          <ul className="mt-4 flex flex-col gap-1.5">
           {activity.length === 0 && (
             <li className="rounded-xl border border-border bg-surface px-4 py-3 text-sm text-muted">
               Nothing recorded yet.
@@ -367,7 +388,8 @@ export function StaffManager({
               </span>
             </li>
           ))}
-        </ul>
+          </ul>
+        </details>
       </section>
     </div>
   );
@@ -377,10 +399,12 @@ export function StaffManager({
 function PersonPanel({
   person,
   activity,
+  sittings,
   days,
 }: {
   person: Staff;
   activity: Activity[];
+  sittings: Sitting[];
   days: DayReport[];
 }) {
   const [resetState, resetAction, resetting] = useActionState<StaffFormState, FormData>(
@@ -388,7 +412,21 @@ function PersonPanel({
     {},
   );
   const pages = grantablePages();
-  const theirs = activity.filter((a) => a.staffId === person.id).slice(0, 12);
+  // Everything of theirs, not the last twelve: the day line needs the
+  // whole day, and twelve rows is an hour of a busy morning.
+  const theirs = activity.filter((a) => a.staffId === person.id);
+  const theirSittings = sittings.filter((sit) => sit.staffId === person.id);
+
+  // Every day they have anything on, newest first.
+  const dates = [
+    ...new Set([
+      ...theirSittings.map((sit) => sit.startedAt.slice(0, 10)),
+      ...theirs.map((a) => a.at.slice(0, 10)),
+    ]),
+  ]
+    .filter(Boolean)
+    .sort()
+    .reverse();
 
   return (
     <div className="mt-4 border-t border-border pt-4">
@@ -515,21 +553,20 @@ function PersonPanel({
         </div>
       </div>
 
-      {theirs.length > 0 && (
-        <div className="mt-5">
-          <p className="text-xs font-semibold text-foreground">Their last few actions</p>
-          <ul className="mt-2 flex flex-col gap-1 text-[11px] text-muted">
-            {theirs.map((row) => (
-              <li key={row.id}>
-                <span className="tabular-nums">{row.at.slice(5, 16).replace("-", "/")}</span>{" "}
-                {ACTION_WORDS[row.action] ?? row.action}
-                {row.subject ? ` — ${row.subject}` : ""}
-                {row.detail ? `: ${row.detail}` : ""}
-              </li>
-            ))}
-          </ul>
+      {/* Their day, read top to bottom: when they signed in, what they
+          did, and the stretches with nothing in them. This replaced a
+          flat list of their last few actions, which said what happened
+          without ever saying what a day looked like. */}
+      <div className="mt-5 border-t border-border pt-4">
+        <p className="text-xs font-semibold text-foreground">What they did, day by day</p>
+        <p className="mt-1 text-[11px] text-muted">
+          Pick a date. Signing in and out, every action with a time against it, and any stretch
+          with nothing recorded in it.
+        </p>
+        <div className="mt-3">
+          <WorkDayLine sittings={theirSittings} moments={theirs} dates={dates} />
         </div>
-      )}
+      </div>
     </div>
   );
 }
