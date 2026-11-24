@@ -21,6 +21,7 @@ export type PageKey =
   | "emails"
   | "company"
   | "scan"
+  | "agents"
   | "health"
   | "staff";
 
@@ -144,6 +145,14 @@ export const ADMIN_PAGES: AdminPage[] = [
     hint: "Audit any website — safe to show a customer",
     canGrant: true,
     onByDefault: true,
+  },
+  {
+    key: "agents",
+    href: "/admin/agents",
+    label: "AI agents",
+    hint: "The jobs that run on their own, as a room you can look at",
+    canGrant: true,
+    onByDefault: false,
   },
   {
     key: "health",

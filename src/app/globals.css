@@ -1134,3 +1134,132 @@ body {
     padding: 14mm !important;
   }
 }
+
+/* ------------------------------------------------------------------ office
+   The automatic jobs drawn as people at desks.
+
+   Each animation is tied to a real state, not picked at random: the one
+   slumped at the desk is a job that has stopped, and the same job draws
+   the same way every time you look. A room where the figures moved for
+   decoration would be a room that tells you nothing.
+
+   All of it is turned off for anyone who has asked for less motion. A
+   page that moves for twelve hours a day is a page somebody has to sit
+   next to. */
+
+.office-person { transform-box: fill-box; }
+
+/* Typing: the forearms bob, slightly out of step, and the head dips. */
+.office-working .office-arm-left { animation: office-type 0.62s ease-in-out infinite; }
+.office-working .office-arm-right { animation: office-type 0.62s ease-in-out infinite 0.31s; }
+.office-working .office-head { animation: office-nod 3.4s ease-in-out infinite; }
+
+@keyframes office-type {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes office-nod {
+  0%, 92%, 100% { transform: translateY(0) rotate(0deg); }
+  96% { transform: translateY(1px) rotate(-2deg); }
+}
+
+/* Talking: up out of the chair, gesturing, bubble breathing. */
+.office-talking { animation: office-stand 2.6s ease-in-out infinite; }
+.office-talking .office-arm-right { animation: office-gesture 1.5s ease-in-out infinite; transform-origin: 20px 10px; }
+.office-bubble { animation: office-bubble 2.6s ease-in-out infinite; transform-box: view-box; }
+
+@keyframes office-stand {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+@keyframes office-gesture {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-26deg); }
+}
+@keyframes office-bubble {
+  0%, 100% { opacity: 0.92; }
+  50% { opacity: 1; }
+}
+
+/* Up and about: wanders a little way from the desk and back. */
+.office-walking { animation: office-wander 9s ease-in-out infinite; }
+.office-walking .office-arm-left { animation: office-swing 1.1s ease-in-out infinite; transform-origin: -24px 10px; }
+.office-walking .office-arm-right { animation: office-swing 1.1s ease-in-out infinite reverse; transform-origin: 24px 10px; }
+
+@keyframes office-wander {
+  0%, 100% { transform: translateX(0); }
+  35% { transform: translateX(44px); }
+  65% { transform: translateX(-30px); }
+}
+@keyframes office-swing {
+  0%, 100% { transform: rotate(10deg); }
+  50% { transform: rotate(-10deg); }
+}
+
+/* A break: mug up to the mouth now and then, steam rising. */
+.office-eating .office-arm-right { animation: office-sip 4.5s ease-in-out infinite; transform-origin: 20px 10px; }
+.office-eating .office-mug { animation: office-sip 4.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.office-steam { animation: office-steam 2.4s ease-in-out infinite; }
+
+@keyframes office-sip {
+  0%, 60%, 100% { transform: translateY(0) rotate(0deg); }
+  75%, 85% { transform: translateY(-13px) rotate(-12deg); }
+}
+@keyframes office-steam {
+  0% { opacity: 0; transform: translateY(2px); }
+  40% { opacity: 0.8; }
+  100% { opacity: 0; transform: translateY(-8px); }
+}
+
+/* Stopped: slumped forward, breathing, with the z's drifting up. */
+.office-asleep { animation: office-slump 4.6s ease-in-out infinite; }
+.office-asleep .office-head { transform: translateY(9px) rotate(7deg); }
+.office-zzz text { animation: office-zzz 3.4s ease-in-out infinite; }
+.office-zzz text:last-child { animation-delay: 1.1s; }
+
+@keyframes office-slump {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(2.5px); }
+}
+@keyframes office-zzz {
+  0% { opacity: 0; transform: translate(0, 4px); }
+  35% { opacity: 1; }
+  100% { opacity: 0; transform: translate(7px, -14px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .office-person,
+  .office-person *,
+  .office-bubble {
+    animation: none !important;
+  }
+}
+
+/* The screens, which glow whether or not anybody is at them. Slow and
+   slight: a room where seven monitors flickered would be a room nobody
+   could leave open on a second screen. */
+.office-screen { animation: office-glow 7s ease-in-out infinite; }
+.office-screen:nth-of-type(odd) { animation-delay: 2.5s; }
+
+@keyframes office-glow {
+  0%, 100% { fill: #1e3a5f; }
+  50% { fill: #2a5584; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .office-screen { animation: none !important; }
+}
+
+/* The light on the projector screen. Slow, because a blinking dot at
+   the top of a page somebody leaves open all day is a blinking dot
+   somebody ends up covering with a sticky note. */
+.office-live-dot { animation: office-live 3.6s ease-in-out infinite; }
+
+@keyframes office-live {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .office-live-dot { animation: none !important; opacity: 0.8; }
+}
