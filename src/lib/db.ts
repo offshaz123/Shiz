@@ -568,6 +568,23 @@ const ADDED_COLUMNS: {
   // Added at the same time as the sequence: rows written before it exists
   // default to step 1, which is what they were.
   { table: "prospect_emails", column: "step", definition: "TINYINT UNSIGNED NOT NULL DEFAULT 1 AFTER body" },
+  // The phone system's own id for a call, so a recording can be asked
+  // for later. The link itself is deliberately not stored: they expire,
+  // and a column full of addresses that stopped working half an hour
+  // after they were written is worse than no column.
+  {
+    table: "prospect_calls",
+    column: "recording_id",
+    definition: "VARCHAR(80) NULL AFTER caller",
+  },
+  // Whether the row was written by the phone system or typed by a
+  // person. They are different kinds of evidence and the page should
+  // not present them as the same one.
+  {
+    table: "prospect_calls",
+    column: "logged_by",
+    definition: "VARCHAR(10) NOT NULL DEFAULT 'hand' AFTER recording_id",
+  },
   // Which address an email actually left from.
   //
   // Everything has gone from one mailbox so far, so this was knowable
@@ -910,6 +927,17 @@ const ADDED_COLUMNS: {
     table: "clients",
     column: "site_scanned_at",
     definition: "DATETIME NULL",
+  },
+  // The phone extension this person dials from.
+  //
+  // The phone system reports which extension placed a call and nothing
+  // else about who did it, so without this a call can be logged against
+  // a business but not against a person — which is half the point of
+  // having it logged at all.
+  {
+    table: "staff",
+    column: "extension",
+    definition: "VARCHAR(20) NULL AFTER regions",
   },
   // Which countries a member of staff works.
   //

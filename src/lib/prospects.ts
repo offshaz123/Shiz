@@ -739,6 +739,27 @@ export async function markMxChecked(ids: number[]): Promise<void> {
   }).catch(() => null);
 }
 
+/**
+ * Every prospect that has a phone number, as ids and numbers only.
+ *
+ * For matching an incoming call notification to a business. Deliberately
+ * the whole list rather than a SQL LIKE against the dialled number: the
+ * two are written differently every time, and the comparison that works
+ * is on the last nine digits, which is not something an index can help
+ * with anyway.
+ */
+export async function listPhoneNumbers(): Promise<
+  { id: number; phone: string; name: string }[] | null
+> {
+  return withDb(async (db) => {
+    const [rows] = await db.query<(RowDataPacket & { id: number; phone: string; name: string })[]>(
+      `SELECT id, phone, name FROM prospects
+        WHERE phone IS NOT NULL AND phone <> '' AND deleted_at IS NULL`,
+    );
+    return rows.map((r) => ({ id: r.id, phone: String(r.phone), name: String(r.name) }));
+  });
+}
+
 /** Everyone in a live sequence, so the reply check can compare the whole lot
  *  against one read of the inbox instead of asking once per address. */
 export async function listSequenceAddresses(): Promise<{ id: number; email: string }[] | null> {
@@ -950,18 +971,27 @@ export async function logCall(
     minutes: number | null;
     caller: string;
     callbackAt: string;
+    /** The phone system's id, when the row came from a real call. */
+    recordingId?: string;
+    /** "phone" when the system wrote it, "hand" when somebody typed it.
+     *  Different kinds of evidence, and the page should not present
+     *  them as the same one. */
+    loggedBy?: "phone" | "hand";
   },
 ): Promise<boolean> {
   const done = await withDb(async (db) => {
     await db.execute(
-      `INSERT INTO prospect_calls (prospect_id, outcome, notes, minutes, caller)
-       VALUES (?, ?, ?, ?, ?)`,
+      `INSERT INTO prospect_calls
+         (prospect_id, outcome, notes, minutes, caller, recording_id, logged_by)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
       [
         id,
         call.outcome,
         call.notes.slice(0, 4000) || null,
         call.minutes && call.minutes > 0 ? Math.min(255, call.minutes) : null,
         call.caller.slice(0, 60) || null,
+        call.recordingId?.slice(0, 80) || null,
+        call.loggedBy ?? "hand",
       ],
     );
 
