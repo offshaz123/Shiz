@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import type { Doing, Office as OfficeData, Worker } from "@/lib/office";
+import type { Doing, Hair, Office as OfficeData, Worker } from "@/lib/office";
 import { REGIONS, REGION_INFO, type Region } from "@/lib/regions";
 
 /**
@@ -83,6 +83,82 @@ const DOING_WORDS: Record<Doing, string> = {
   asleep: "head down — this one has stopped",
 };
 
+/** The hair colours, walked through in step with the skin tones. */
+const HAIR = ["#1f2937", "#4b2e1e", "#111827", "#3f2a16", "#262626", "#5b3a1e", "#1c1917"];
+
+/**
+ * Hair, drawn per person rather than picked by a number.
+ *
+ * Fourteen identical heads with three hairstyles between them made the
+ * room read as one person copied out, and the half of the room with
+ * women's names looked no different from the other half. Each one now
+ * carries its own style, set where the person is defined.
+ *
+ * The long styles are drawn behind the head as well as on top of it —
+ * that is the whole trick, and without it long hair reads as a hat.
+ */
+function Hairstyle({
+  style,
+  index,
+  layer,
+}: {
+  style: Hair;
+  index: number;
+  /** "back" draws under the head, "front" over it. The long styles need
+   *  both: hair drawn entirely on top of a face reads as a hat. */
+  layer: "back" | "front";
+}) {
+  const colour = HAIR[index % HAIR.length];
+
+  if (style === "long") {
+    return layer === "back" ? (
+      <path d="M -22 -44 q -10 36 -6 60 l 56 0 q 4 -24 -6 -60 z" fill={colour} />
+    ) : (
+      <path d="M -21 -42 q 21 -24 42 0 q -21 -11 -42 0 z" fill={colour} />
+    );
+  }
+
+  if (style === "side") {
+    // Swept over one shoulder, the other common way of wearing it long.
+    return layer === "back" ? (
+      <path d="M -23 -42 q -9 34 -4 52 q 11 5 17 -2 q -11 -20 -6 -50 z" fill={colour} />
+    ) : (
+      <g>
+        <path d="M -21 -42 q 21 -25 42 -1 q -20 -14 -42 1 z" fill={colour} />
+        <path d="M 20 -40 q 6 13 4 22 q -7 -11 -4 -22 z" fill={colour} />
+      </g>
+    );
+  }
+
+  if (style === "bun") {
+    return layer === "back" ? (
+      <circle cx={0} cy={-62} r={12} fill={colour} />
+    ) : (
+      <g>
+        <path d="M -21 -41 q 21 -23 42 0 q -21 -12 -42 0 z" fill={colour} />
+        <path d="M -21 -41 q -2 11 0 17 q 5 -9 0 -17 z" fill={colour} />
+        <path d="M 21 -41 q 2 11 0 17 q -5 -9 0 -17 z" fill={colour} />
+      </g>
+    );
+  }
+
+  if (style === "ponytail") {
+    return layer === "back" ? (
+      <path d="M 18 -46 q 20 8 17 30 q -4 19 -15 23 q 10 -21 3 -37 z" fill={colour} />
+    ) : (
+      <path d="M -21 -42 q 21 -24 42 0 q -21 -11 -42 0 z" fill={colour} />
+    );
+  }
+
+  if (layer === "back") return null;
+
+  if (style === "crop") {
+    return <path d="M -21 -38 q 2 -27 42 -7 l -2 9 q -16 -14 -40 -2 z" fill={colour} />;
+  }
+
+  return <path d="M -20 -42 q 20 -22 40 0 q -20 -10 -40 0 z" fill={colour} />;
+}
+
 function Person({
   worker,
   index,
@@ -139,13 +215,12 @@ function Person({
 
       {/* Head. */}
       <g className="office-head">
+        <Hairstyle style={worker.hair} index={index} layer="back" />
         <circle cx={0} cy={-36} r={20} fill={skin} />
         {/* Ears, which is most of what stops a circle reading as a ball. */}
         <circle cx={-19} cy={-34} r={4.5} fill={skin} />
         <circle cx={19} cy={-34} r={4.5} fill={skin} />
-        {index % 3 === 0 && <path d="M -20 -42 q 20 -22 40 0 q -20 -10 -40 0 z" fill="#1f2937" />}
-        {index % 3 === 1 && <path d="M -20 -40 q 5 -23 40 -5 q -7 -14 -40 5 z" fill="#4b2e1e" />}
-        {index % 3 === 2 && <path d="M -21 -38 q 2 -27 42 -7 l -2 9 q -16 -14 -40 -2 z" fill="#111827" />}
+        <Hairstyle style={worker.hair} index={index} layer="front" />
 
         {shut ? (
           <>
@@ -265,7 +340,9 @@ function Bunk({
       onClick={onPick}
       tabIndex={0}
       role="button"
-      aria-label={`${worker.name}, ${worker.title}, asleep. ${worker.says}`}
+      aria-label={`${worker.name}, ${worker.title}, ${
+        worker.doing === "asleep" ? "stopped and asleep" : "resting, nothing due"
+      }. ${worker.says}`}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
@@ -285,11 +362,24 @@ function Bunk({
         <path d="M -73 -32 q 3 3 6 0" stroke="#1f2937" strokeWidth={1.8} fill="none" strokeLinecap="round" />
         <path d="M -65 -32 q 3 3 6 0" stroke="#1f2937" strokeWidth={1.8} fill="none" strokeLinecap="round" />
         {/* The blanket, pulled up. */}
-        <path d="M -48 -20 h 140 a 6 6 0 0 1 6 6 v 16 h -146 z" fill="#be185d" opacity={0.75} />
+        <path
+          d="M -48 -20 h 140 a 6 6 0 0 1 6 6 v 16 h -146 z"
+          fill={worker.doing === "asleep" ? "#9f1239" : "#1e3a8a"}
+          opacity={0.8}
+        />
         <rect x={-50} y={-24} width={18} height={8} rx={4} fill="#e2e8f0" opacity={0.6} />
       </g>
 
-      <g className="office-zzz" fill="#f87171" fontSize={15} fontWeight={700}>
+      {/* Red for a job that has stopped and should not have, blue for
+          one that is running fine with nothing due. Telling those two
+          apart from across the page is the whole point of the room. */}
+      <g
+        className="office-zzz"
+        fill={worker.doing === "asleep" ? "#f87171" : "#60a5fa"}
+        opacity={worker.doing === "asleep" ? 1 : 0.8}
+        fontSize={15}
+        fontWeight={700}
+      >
         <text x={-44} y={-44}>z</text>
         <text x={-32} y={-58}>z</text>
       </g>
@@ -303,7 +393,13 @@ function Bunk({
           height={30}
           rx={8}
           fill="#0f172a"
-          stroke={selected ? "var(--brand-pink, #ec4899)" : "#7f1d1d"}
+          stroke={
+            selected
+              ? "var(--brand-pink, #ec4899)"
+              : worker.doing === "asleep"
+                ? "#b91c1c"
+                : "#2a3a52"
+          }
           strokeWidth={2}
         />
         <text x={0} y={-1} textAnchor="middle" fill="#f8fafc" fontSize={13} fontWeight={800}>
@@ -348,8 +444,22 @@ export function Office({ office }: { office: OfficeData }) {
   // Anybody whose job has stopped goes to bed next door, rather than
   // being drawn slumped at a desk on the floor where it reads as
   // somebody having a nap at work.
-  const asleep = office.workers.filter((w) => !w.atTheTable && w.doing === "asleep");
-  const onFloor = office.workers.filter((w) => !w.atTheTable && w.doing !== "asleep");
+  // Everybody who is not working goes to bed, which is two different
+  // things kept apart by how they are drawn: a job that has stopped
+  // and should not have (red), and one that is running perfectly with
+  // nothing to do until its next turn (blue). Walid's point was the
+  // reviews one — it was drawn busy while collecting no reviews.
+  //
+  // The rotation he asked for comes out of this on its own. Which jobs
+  // have nothing on changes from day to day, so the beds fill with
+  // different people without anybody having to shuffle them.
+  const inBed = office.workers.filter(
+    (w) => !w.atTheTable && (w.doing === "asleep" || w.doing === "resting"),
+  );
+  const stopped = inBed.filter((w) => w.doing === "asleep");
+  const onFloor = office.workers.filter(
+    (w) => !w.atTheTable && w.doing !== "asleep" && w.doing !== "resting",
+  );
 
   return (
     <div className="flex flex-col gap-4">
@@ -612,61 +722,69 @@ export function Office({ office }: { office: OfficeData }) {
           />
           <g transform={`translate(${(PARTITION + 22 + ROOM.w) / 2} 150)`}>
             <rect
-              x={-150}
+              x={-170}
               y={-26}
-              width={300}
+              width={340}
               height={38}
               rx={10}
               fill="#0b1220"
-              stroke={asleep.length > 0 ? "#ef4444" : "#2a3a52"}
+              stroke={stopped.length > 0 ? "#ef4444" : "#2a3a52"}
               strokeWidth={2}
             />
             <text x={0} y={0} textAnchor="middle" fill="#cbd5e1" fontSize={14} fontWeight={800} letterSpacing="1">
-              ASLEEP · {asleep.length} NOT RUNNING
+              ASLEEP · {inBed.length}
             </text>
-            <text x={0} y={46} textAnchor="middle" fill="#64748b" fontSize={13}>
-              {asleep.length === 0
-                ? "Empty. Everything is switched on."
-                : "These jobs should be running and are not."}
+            <text x={0} y={44} textAnchor="middle" fill="#64748b" fontSize={13}>
+              {inBed.length === 0
+                ? "Nobody in here. Everything has something on."
+                : stopped.length === 0
+                  ? "Nothing due for these until their next turn."
+                  : `${stopped.length} stopped, ${inBed.length - stopped.length} with nothing due.`}
             </text>
+            {stopped.length > 0 && (
+              <text x={0} y={66} textAnchor="middle" fill="#f87171" fontSize={12}>
+                Red ones should be running. Press them.
+              </text>
+            )}
           </g>
 
-          {/* The bunks. Two frames, four beds; anybody past the fourth
-              is counted underneath rather than drawn on the floor. */}
+          {/* The bunks. Two frames of three, six beds; anybody past the
+              sixth is counted underneath rather than drawn. Three high
+              because on a quiet evening most of the room is in here. */}
           {[0, 1].map((frame) => {
             const x = PARTITION + 22 + 116 + frame * 218;
             return (
               <g key={frame}>
                 {/* Posts and rails. */}
-                <rect x={x - 102} y={300} width={11} height={520} rx={4} fill="#334155" />
-                <rect x={x + 91} y={300} width={11} height={520} rx={4} fill="#334155" />
-                <rect x={x - 102} y={300} width={204} height={9} rx={4} fill="#475569" />
-                <rect x={x - 102} y={448} width={204} height={9} rx={4} fill="#475569" />
-                <rect x={x - 102} y={660} width={204} height={9} rx={4} fill="#475569" />
-                <rect x={x - 108} y={814} width={216} height={12} rx={5} fill="#1f2937" />
+                <rect x={x - 102} y={296} width={11} height={580} rx={4} fill="#334155" />
+                <rect x={x + 91} y={296} width={11} height={580} rx={4} fill="#334155" />
+                {[296, 452, 640, 828].map((y) => (
+                  <rect key={y} x={x - 102} y={y} width={204} height={9} rx={4} fill="#475569" />
+                ))}
+                <rect x={x - 108} y={870} width={216} height={12} rx={5} fill="#1f2937" />
                 {/* The ladder. */}
-                {[500, 540, 580, 620].map((y) => (
+                {[470, 510, 550, 590, 630, 670].map((y) => (
                   <rect key={y} x={x + 96} y={y} width={34} height={7} rx={3} fill="#475569" />
                 ))}
               </g>
             );
           })}
 
-          {asleep.slice(0, 4).map((worker, i) => {
+          {inBed.slice(0, 6).map((worker, i) => {
             const x = PARTITION + 22 + 116 + (i % 2) * 218;
-            const y = i < 2 ? 420 : 632;
+            const y = [392, 392, 580, 580, 768, 768][i];
             return (
               <g key={worker.id} transform={`translate(${x} ${y}) scale(0.9)`}>
                 <Bunk
                   worker={worker}
-                  index={i + 9}
+                  index={i + 7}
                   selected={openId === worker.id}
                   onPick={() => setOpenId(openId === worker.id ? null : worker.id)}
                 />
               </g>
             );
           })}
-          {asleep.length > 4 && (
+          {inBed.length > 6 && (
             <text
               x={(PARTITION + 22 + ROOM.w) / 2}
               y={880}
@@ -675,7 +793,7 @@ export function Office({ office }: { office: OfficeData }) {
               fontSize={14}
               fontWeight={700}
             >
-              and {asleep.length - 4} more asleep
+              and {inBed.length - 6} more asleep
             </text>
           )}
 

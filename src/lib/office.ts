@@ -30,6 +30,9 @@ import { REGION_INFO, type Region } from "./regions";
  */
 
 /** What the figure is doing on screen, which follows what the job is doing. */
+/** The hairstyles the drawing knows how to do. */
+export type Hair = "short" | "crop" | "side" | "long" | "bun" | "ponytail";
+
 export type Doing =
   | "working" // running normally, and has something to get on with
   | "talking" // has something to report
@@ -57,6 +60,10 @@ export type Worker = {
   title: string;
   /** The short word on the plate on the floor in front of the desk. */
   floorLabel: string;
+  /** How this one is drawn, so fourteen people are not fourteen of
+   *  the same person. Set per worker rather than worked out from the
+   *  name: a name does not tell you what somebody looks like. */
+  hair: Hair;
   doing: Doing;
   /** The one line that goes in the speech bubble and the panel heading. */
   says: string;
@@ -85,12 +92,12 @@ export type Office = {
 };
 
 /** The station ids from the engine room, so a rename is caught by the compiler. */
-const DESKS: Record<string, { name: string; title: string; floorLabel: string }> = {
-  finder: { name: "Faisal", title: "Finds businesses", floorLabel: "FINDING" },
-  scanner: { name: "Sana", title: "Checks their websites", floorLabel: "SCANNING" },
-  postman: { name: "Hamza", title: "Sends the first email", floorLabel: "FIRST EMAIL" },
-  nudger: { name: "Nadia", title: "Sends the follow-ups", floorLabel: "FOLLOW-UPS" },
-  listener: { name: "Layla", title: "Reads the replies", floorLabel: "REPLIES" },
+const DESKS: Record<string, { name: string; title: string; floorLabel: string; hair: Hair }> = {
+  finder: { name: "Faisal", title: "Finds businesses", floorLabel: "FINDING", hair: "short" },
+  scanner: { name: "Sana", title: "Checks their websites", floorLabel: "SCANNING", hair: "long" },
+  postman: { name: "Hamza", title: "Sends the first email", floorLabel: "FIRST EMAIL", hair: "crop" },
+  nudger: { name: "Nadia", title: "Sends the follow-ups", floorLabel: "FOLLOW-UPS", hair: "bun" },
+  listener: { name: "Layla", title: "Reads the replies", floorLabel: "REPLIES", hair: "side" },
 };
 
 /**
@@ -188,12 +195,14 @@ export async function getOffice(region?: Region): Promise<Office> {
       name: station.name,
       title: station.does,
       floorLabel: station.name.toUpperCase(),
+      hair: "short" as Hair,
     };
     return {
       id: station.id,
       name: desk.name,
       title: desk.title,
       floorLabel: desk.floorLabel,
+      hair: desk.hair,
       doing: doingFor(station),
       says: station.state,
       value: station.value,
@@ -221,6 +230,7 @@ export async function getOffice(region?: Region): Promise<Office> {
     id: "writer",
     floorLabel: "BLOG",
     name: "Yusuf",
+    hair: "crop",
     title: "Writes the blog",
     doing:
       daysSincePost === null
@@ -259,6 +269,7 @@ export async function getOffice(region?: Region): Promise<Office> {
     id: "caretaker",
     floorLabel: "FRONT DESK",
     name: "Bilal",
+    hair: "short",
     title: "Watches for trouble",
     doing:
       failing.length > 0 || bad.length > 0 ? "talking" : risks.length > 0 ? "working" : "walking",
@@ -297,6 +308,7 @@ export async function getOffice(region?: Region): Promise<Office> {
       id: "receptionist",
     floorLabel: "ENQUIRIES",
       name: "Amina",
+    hair: "ponytail",
       title: "Takes the enquiries",
       doing: (counts?.enquiries_week ?? 0) > 0 ? "working" : "walking",
       says:
@@ -315,6 +327,7 @@ export async function getOffice(region?: Region): Promise<Office> {
       id: "chaser",
     floorLabel: "CHASING",
       name: "Imran",
+    hair: "crop",
       title: "Chases the enquiries",
       doing: (counts?.lead_emails ?? 0) > 0 ? "working" : "resting",
       says:
@@ -333,6 +346,7 @@ export async function getOffice(region?: Region): Promise<Office> {
       id: "switchboard",
     floorLabel: "CALLS",
       name: "Zara",
+    hair: "long",
       title: "Puts the calls through",
       doing: !isConnected() ? "asleep" : (counts?.calls_week ?? 0) > 0 ? "working" : "walking",
       says: !isConnected()
@@ -352,6 +366,7 @@ export async function getOffice(region?: Region): Promise<Office> {
       id: "diary",
     floorLabel: "DIARY",
       name: "Rania",
+    hair: "bun",
       title: "Minds the diary",
       doing: diary.doing,
       says: counts?.bookings === 0 ? "no bookings in the diary yet" : diary.says,
@@ -365,6 +380,7 @@ export async function getOffice(region?: Region): Promise<Office> {
       id: "reviewer",
     floorLabel: "REVIEWS",
       name: "Tariq",
+    hair: "short",
       title: "Asks for reviews",
       doing: review.doing,
       says: review.says,
@@ -378,6 +394,7 @@ export async function getOffice(region?: Region): Promise<Office> {
       id: "bookkeeper",
     floorLabel: "INVOICES",
       name: "Saleem",
+    hair: "crop",
       title: "Does the invoices",
       doing:
         counts === null
@@ -405,6 +422,7 @@ export async function getOffice(region?: Region): Promise<Office> {
       id: "analyst",
     floorLabel: "VISITORS",
       name: "Hira",
+    hair: "side",
       title: "Watches the visitors",
       doing: (counts?.views_week ?? 0) > 0 ? "working" : "walking",
       says:
