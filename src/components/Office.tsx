@@ -705,22 +705,30 @@ export function Office({ office }: { office: OfficeData }) {
                 <Desk />
                 <Laptop />
 
-                {/* The name tag over their head. */}
-                <g transform="translate(0 -52)">
+                {/* The nameplate, standing on the front of the desk.
+                    It used to float over their heads, which covered
+                    the top of every face in the room — and a room full
+                    of people whose faces you cannot see is a room you
+                    cannot read. On the desk it is where a nameplate
+                    actually goes, and nothing is in front of anybody. */}
+                <g transform="translate(0 43)">
                   <rect
-                    x={-62}
-                    y={-20}
-                    width={124}
-                    height={34}
-                    rx={9}
+                    x={-56}
+                    y={0}
+                    width={112}
+                    height={31}
+                    rx={5}
                     fill="#0f172a"
-                    stroke={worker.doing === "asleep" ? "#ef4444" : "#334155"}
+                    stroke={worker.doing === "asleep" ? "#ef4444" : "#3b4a63"}
                     strokeWidth={2}
                   />
-                  <text x={0} y={-6} textAnchor="middle" fill="#f8fafc" fontSize={14} fontWeight={800}>
+                  {/* A lip along the bottom, so it reads as standing on
+                      the desk rather than lying on it. */}
+                  <rect x={-60} y={29} width={120} height={6} rx={3} fill="#475569" />
+                  <text x={0} y={13} textAnchor="middle" fill="#f8fafc" fontSize={13} fontWeight={800}>
                     {worker.name}
                   </text>
-                  <text x={0} y={8} textAnchor="middle" fill="#94a3b8" fontSize={10.5}>
+                  <text x={0} y={25} textAnchor="middle" fill="#94a3b8" fontSize={9.5}>
                     {worker.title}
                   </text>
                 </g>
@@ -731,7 +739,7 @@ export function Office({ office }: { office: OfficeData }) {
                     wide enough to read was landing across whoever sat
                     next to them. */}
                 {worker.doing === "talking" && (
-                  <g className="office-bubble" transform="translate(0 -108)">
+                  <g className="office-bubble" transform="translate(0 -92)">
                     <rect x={-88} y={-17} width={176} height={34} rx={10} fill="#fef3c7" />
                     <path d="M -8 17 l 8 12 l 8 -12 z" fill="#fef3c7" />
                     <text x={0} y={5} textAnchor="middle" fill="#78350f" fontSize={11} fontWeight={700}>
@@ -842,29 +850,32 @@ export function Office({ office }: { office: OfficeData }) {
                 <Laptop />
               </g>
 
-              <g transform="translate(0 -78)">
+              {/* His nameplate goes on the table like everybody
+                  else's, so his face is clear too. */}
+              <g transform="translate(0 18)">
                 <rect
-                  x={-74}
-                  y={-20}
-                  width={148}
-                  height={34}
-                  rx={9}
+                  x={-82}
+                  y={0}
+                  width={164}
+                  height={32}
+                  rx={5}
                   fill="#0f172a"
                   stroke={
                     atTable.doing === "talking" ? "#ef4444" : "var(--brand-pink, #ec4899)"
                   }
                   strokeWidth={2}
                 />
-                <text x={0} y={-6} textAnchor="middle" fill="#f8fafc" fontSize={14} fontWeight={800}>
+                <rect x={-86} y={30} width={172} height={6} rx={3} fill="#475569" />
+                <text x={0} y={14} textAnchor="middle" fill="#f8fafc" fontSize={13.5} fontWeight={800}>
                   {atTable.name}
                 </text>
-                <text x={0} y={8} textAnchor="middle" fill="#94a3b8" fontSize={10.5}>
+                <text x={0} y={26} textAnchor="middle" fill="#94a3b8" fontSize={10}>
                   {atTable.title}
                 </text>
               </g>
 
               {atTable.doing === "talking" && (
-                <g className="office-bubble" transform="translate(0 -134)">
+                <g className="office-bubble" transform="translate(0 -112)">
                   <rect x={-150} y={-18} width={300} height={38} rx={11} fill="#fef3c7" />
                   <path d="M -9 20 l 9 13 l 9 -13 z" fill="#fef3c7" />
                   <text x={0} y={6} textAnchor="middle" fill="#78350f" fontSize={13} fontWeight={700}>
