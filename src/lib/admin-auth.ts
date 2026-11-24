@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import { ADMIN_PAGES, type PageKey } from "./admin-pages";
 import { REGIONS, type Region } from "./regions";
 import { getStaff } from "./staff";
+import { ownerExtension } from "./settings";
 
 /**
  * Login for the admin page.
@@ -188,8 +189,9 @@ export async function currentUser(): Promise<Who | null> {
       name: "Walid",
       pages: "all",
       regions: [...REGIONS],
-      // The owner's own extension, so he can use the Call button too.
-      extension: process.env.ZADARMA_OWNER_EXTENSION ?? "",
+      // Set on the Team page like everybody else's, with the old
+      // environment variable still honoured underneath.
+      extension: await ownerExtension(),
     };
   }
 

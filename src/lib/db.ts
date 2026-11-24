@@ -33,6 +33,21 @@ function createPool(): mysql.Pool | null {
     database: DB_NAME,
     user: DB_USER,
     password: DB_PASS,
+    // Dates come back as text, in the form the database writes them:
+    // "2026-11-24 16:35:17".
+    //
+    // Without this the driver hands back JavaScript Date objects, which
+    // stringify as "Tue Nov 24 2026 16:35:17 GMT+0000 (Coordinated
+    // Universal Time)". Every screen that formats a time by cutting the
+    // string up — and there are about fifty — then cuts the wrong
+    // characters out of the wrong format: the sittings list read
+    // "ov 24 2026", and "until 16:35" read "until 2026". Nothing throws,
+    // the page renders, and the only sign is a date that looks mangled.
+    //
+    // The queries that format their own dates with DATE_FORMAT already
+    // return exactly this shape, so this makes the two agree rather
+    // than introducing a third.
+    dateStrings: true,
     waitForConnections: true,
     // Shared hosting caps concurrent connections well below what a default
     // pool would open, and this site's traffic needs nowhere near that.
@@ -42,7 +57,7 @@ function createPool(): mysql.Pool | null {
   });
 }
 
-const SCHEMA = [
+export const SCHEMA = [
   // Someone who ran a scan. One row per submission, not per person: if they
   // come back and check a second site that is a second row, and a second
   // chance to follow up.
@@ -349,6 +364,26 @@ const SCHEMA = [
     UNIQUE KEY uniq_username (username)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
+  // A handful of things the owner sets that have nowhere else to live.
+  //
+  // Staff have a row each, so their settings hang off it. The owner does
+  // not — he signs in with ADMIN_PASSWORD and the system has no record
+  // of him — which meant his own phone extension had to go in an
+  // environment variable while everybody else typed theirs into a box.
+  // Two ways to do one thing, and the asymmetry was confusing enough
+  // that it was asked about the first time it came up.
+  //
+  // Deliberately a key and a value rather than a column per setting:
+  // this is a short list of odds and ends, and a table that needs a
+  // migration every time somebody wants to remember one more thing is
+  // a table nobody adds to.
+  `CREATE TABLE IF NOT EXISTS settings (
+    name VARCHAR(40) NOT NULL,
+    value VARCHAR(255) NOT NULL DEFAULT '',
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (name)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
   // When each person last opened each page.
   //
   // Feeds the counts on the navigation: "two new enquiries" means two that
@@ -526,7 +561,7 @@ const SCHEMA = [
  * database created before these columns existed catches up on next connect
  * and a fresh one does nothing.
  */
-const ADDED_COLUMNS: {
+export const ADDED_COLUMNS: {
   table: string;
   column: string;
   definition: string;
@@ -587,10 +622,19 @@ const ADDED_COLUMNS: {
   // worth ringing again. Null here means the call happened and nobody
   // has told us anything about it yet, which is what the prompt and the
   // red line at the top of the page are counting.
+  //
+  // No AFTER clause, deliberately. This one named logged_by, which is
+  // added further down this same list — so on the live database, where
+  // logged_by already existed from an earlier deploy, it worked, and on
+  // a database that had neither the ALTER failed, ensureSchema threw,
+  // and every admin page said "No database connection" with nothing to
+  // say which column had done it. Where a column sits in a table is
+  // cosmetic; an ordering clause that can only work in one history is
+  // not worth a failure mode that looks like the database being down.
   {
     table: "prospect_calls",
     column: "reviewed_at",
-    definition: "DATETIME NULL AFTER logged_by",
+    definition: "DATETIME NULL",
   },
   // The phone system's own id for a call, so a recording can be asked
   // for later. The link itself is deliberately not stored: they expire,
@@ -686,7 +730,7 @@ const ADDED_COLUMNS: {
   {
     table: "clients",
     column: "auto_reply_on",
-    definition: "TINYINT(1) NOT NULL DEFAULT 0 AFTER default_lead_value",
+    definition: "TINYINT(1) NOT NULL DEFAULT 0",
   },
   {
     table: "clients",
@@ -728,7 +772,7 @@ const ADDED_COLUMNS: {
   {
     table: "clients",
     column: "default_lead_value",
-    definition: "DECIMAL(10,2) NULL AFTER review_requests_on",
+    definition: "DECIMAL(10,2) NULL",
   },
   // What the job was worth.
   //
@@ -961,7 +1005,7 @@ const ADDED_COLUMNS: {
   {
     table: "staff",
     column: "extension",
-    definition: "VARCHAR(20) NULL AFTER regions",
+    definition: "VARCHAR(20) NULL",
   },
   // Which countries a member of staff works.
   //

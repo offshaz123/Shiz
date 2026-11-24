@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { actor, requireOwner } from "@/lib/admin-auth";
 import { grantablePages, type PageKey } from "@/lib/admin-pages";
 import { REGIONS, type Region } from "@/lib/regions";
+import { setSetting } from "@/lib/settings";
 import {
   addStaff,
   getStaff,
@@ -114,4 +115,35 @@ export async function resetPassword(
   await logAction(await actor(), "reset-staff-password", them?.name ?? `staff ${id}`);
   revalidatePath("/admin/staff");
   return { ok: "Password changed. Tell them what it is — it is not shown anywhere." };
+}
+
+/**
+ * The owner's own phone extension.
+ *
+ * This used to be an environment variable, which meant setting it needed
+ * the hosting panel while everybody else typed theirs into a box on this
+ * page — asked about the first time it came up, and fairly. The variable
+ * still works underneath; this just wins over it.
+ */
+export async function saveOwnerExtension(
+  _prev: StaffFormState,
+  formData: FormData,
+): Promise<StaffFormState> {
+  await requireOwner();
+
+  const raw = String(formData.get("extension") ?? "").trim();
+  // Digits only. An extension with a space or a stray letter in it fails
+  // in the phone system with no message, which is the sort of thing that
+  // gets put down to the feature not working.
+  if (raw && !/^\d{1,6}$/.test(raw)) {
+    return { error: "An extension is just the digits, like 100." };
+  }
+
+  await setSetting("owner_extension", raw);
+  await logAction(await actor(), "set-own-extension", raw || "none");
+  revalidatePath("/admin/staff");
+  revalidatePath("/admin/prospects");
+  return {
+    ok: raw ? `Saved. Calls you make go out as extension ${raw}.` : "Cleared.",
+  };
 }

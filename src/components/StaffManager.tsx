@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import {
   createStaff,
   resetPassword,
+  saveOwnerExtension,
   toggleActive,
   updatePages,
   type StaffFormState,
@@ -56,6 +57,7 @@ const ACTION_WORDS: Record<string, string> = {
   "enabled-staff": "switched an account on",
   "disabled-staff": "switched an account off",
   "reset-staff-password": "reset someone's password",
+  "set-own-extension": "set their own extension",
 };
 
 function hoursAndMinutes(minutes: number): string {
@@ -65,12 +67,61 @@ function hoursAndMinutes(minutes: number): string {
   return m === 0 ? `${h}h` : `${h}h ${m}m`;
 }
 
+/**
+ * The owner's own extension, in a box, on the same screen as everyone
+ * else's.
+ *
+ * It was a setting on the server before this, which made it the one
+ * extension on the system that could not be changed from the system —
+ * and the asymmetry was noticed immediately: "why do I need to put the
+ * variable for myself but don't put it for them?" No good answer, so it
+ * is a box now.
+ */
+function YourExtension({ current }: { current: string }) {
+  const [state, action, saving] = useActionState<StaffFormState, FormData>(
+    saveOwnerExtension,
+    {},
+  );
+
+  return (
+    <section className="rounded-2xl border border-border bg-surface p-4">
+      <h2 className="text-sm font-bold text-foreground">Your own extension</h2>
+      <p className="mt-1 text-xs text-muted">
+        Yours in the phone system, the same as everybody else&apos;s below. This is the one the
+        Call button on Who to call rings first, so without it the button stays hidden for you.
+      </p>
+      <form action={action} className="mt-3 flex flex-wrap items-end gap-2">
+        <label className="text-xs text-muted">
+          Extension
+          <input
+            name="extension"
+            defaultValue={current}
+            inputMode="numeric"
+            placeholder="100"
+            className="mt-1.5 block w-28 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
+          />
+        </label>
+        <button
+          type="submit"
+          disabled={saving}
+          className="rounded-lg border border-brand-pink px-4 py-2 text-xs font-semibold text-foreground disabled:opacity-60"
+        >
+          {saving ? "Saving…" : "Save"}
+        </button>
+        {state.error && <span className="text-xs text-red-400">{state.error}</span>}
+        {state.ok && <span className="text-xs text-emerald-400">{state.ok}</span>}
+      </form>
+    </section>
+  );
+}
+
 export function StaffManager({
   staff,
   tallies,
   activity,
   sittings,
   days,
+  ownerExtension,
 }: {
   staff: Staff[];
   tallies: StaffTally[];
@@ -78,6 +129,8 @@ export function StaffManager({
   sittings: Sitting[];
   /** A month of days per person, keyed by staff id. */
   days: Record<string, DayReport[]>;
+  /** The owner's own extension, set on this page rather than on the server. */
+  ownerExtension: string;
 }) {
   const [addState, addAction, adding] = useActionState<StaffFormState, FormData>(createStaff, {});
   const [open, setOpen] = useState<number | null>(null);
@@ -87,6 +140,8 @@ export function StaffManager({
 
   return (
     <div className="flex flex-col gap-10">
+      <YourExtension current={ownerExtension} />
+
       <section id="people" className="scroll-mt-6">
         <h2 className="text-sm font-bold text-foreground">Who can sign in</h2>
         <p className="mt-1 text-xs text-muted">
