@@ -44,3 +44,18 @@ test("a path inside a page belongs to that page, not to the overview", () => {
   assert.equal(pageFor("/admin/staff")?.key, "staff");
   assert.equal(pageFor("/portal"), null);
 });
+
+test("the owner's username cannot be taken by a member of staff", async () => {
+  const { isReservedUsername, toUsername } = await import("../src/lib/staff.ts");
+  // Walid signs in as admin. A staff row holding that username would be
+  // a staff account standing in front of the owner's login.
+  assert.ok(isReservedUsername("admin"));
+  assert.ok(isReservedUsername("ADMIN"));
+  assert.ok(isReservedUsername(" Admin "));
+  assert.ok(isReservedUsername("owner"));
+  assert.ok(!isReservedUsername("adminsam"));
+  assert.ok(!isReservedUsername("sam"));
+  // Usernames may carry digits, which is what Walid asked for.
+  assert.equal(toUsername("Sam 2"), "sam2");
+  assert.equal(toUsername("jade.okoro"), "jade.okoro");
+});

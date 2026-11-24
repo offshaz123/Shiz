@@ -13,7 +13,13 @@ import {
   tooManyAttempts,
 } from "@/lib/admin-auth";
 import { withDb } from "@/lib/db";
-import { checkStaffLogin, endSitting, logAction, startSitting } from "@/lib/staff";
+import {
+  checkStaffLogin,
+  endSitting,
+  isReservedUsername,
+  logAction,
+  startSitting,
+} from "@/lib/staff";
 import { deleteReview, setReviewStatus, type ReviewStatus } from "@/lib/reviews";
 import { sendFollowUp } from "@/lib/send-follow-up";
 
@@ -43,8 +49,12 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
   const password = String(formData.get("password") ?? "");
   const username = String(formData.get("username") ?? "").trim();
 
-  // No name means the owner, which is how this screen has always worked.
-  if (!username) {
+  // Blank, or one of the reserved names, means the owner. Blank is how
+  // this screen has always worked and still works; "admin" is there
+  // because a form with a username box and nothing to type in it reads
+  // like a form you have not filled in. Nobody can register the
+  // reserved names, so there is no account to collide with.
+  if (!username || isReservedUsername(username)) {
     if (!checkPassword(password)) {
       recordFailure(ip);
       // Deliberately the same message whether the password was wrong or
@@ -66,7 +76,7 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
     // One message for a wrong password, an unknown name and a switched-off
     // account alike. Which of the three it was is not the business of
     // whoever is standing in front of the screen.
-    return { error: "That name and password don't match." };
+    return { error: "That username and password don't match." };
   }
 
   clearAttempts(ip);

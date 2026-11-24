@@ -126,6 +126,7 @@ export async function sendProspectEmail(
       step,
       status: "failed",
       sentBy,
+      sentFrom: fromAddress,
       error: String(err),
     });
     return { ok: false, reason: "send_failed" };
@@ -143,6 +144,7 @@ export async function sendProspectEmail(
     step,
     status: "sent",
     sentBy,
+    sentFrom: fromAddress,
   });
 
   return { ok: true, recipient: prospect.email, filedInSent };

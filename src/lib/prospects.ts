@@ -484,17 +484,22 @@ export async function recordProspectEmail(
     status: "sent" | "failed";
     /** The scheduler, or a person pressing send. */
     sentBy: "auto" | "hand";
+    /** The mailbox it left from. Recorded per message rather than read
+     *  back from configuration, because configuration changes and a sent
+     *  email does not. */
+    sentFrom?: string;
     error?: string;
   },
 ): Promise<void> {
   await withDb(async (db) => {
     await db.execute(
       `INSERT INTO prospect_emails
-         (prospect_id, recipient, subject, body, step, status, sent_by, error)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+         (prospect_id, recipient, sent_from, subject, body, step, status, sent_by, error)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         id,
         email.recipient.slice(0, 200),
+        email.sentFrom?.slice(0, 200) ?? null,
         email.subject.slice(0, 255),
         email.body,
         email.step,

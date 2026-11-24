@@ -164,6 +164,61 @@ export async function bouncesSince(since: Date): Promise<DeadAddress[] | null> {
 }
 
 /**
+ * The last few messages in the inbox, as they are right now.
+ *
+ * Read live rather than from a table, because there is no table: nothing
+ * copies incoming mail into the database, and inventing one would mean a
+ * second record of the inbox that is wrong whenever the job that fills it
+ * has not run. The mailbox is the record.
+ *
+ * Envelopes only. The body of a message is not needed to answer "who has
+ * written back", and downloading sixty of them on a page load is the
+ * difference between a page and a wait.
+ */
+export type InboxMessage = {
+  uid: number;
+  from: string;
+  fromName: string;
+  /** Which of our addresses it was sent to, when the mailbox has more
+   *  than one going into it. */
+  to: string;
+  subject: string;
+  at: string;
+  seen: boolean;
+};
+
+export async function recentInbox(limit = 40): Promise<InboxMessage[] | null> {
+  return withMailbox(async (c) => {
+    const lock = await c.getMailboxLock("INBOX");
+    try {
+      const status = await c.status("INBOX", { messages: true });
+      const total = status.messages ?? 0;
+      if (total === 0) return [];
+
+      // By sequence number from the end, so this asks for the newest
+      // forty rather than reading the whole mailbox and taking forty.
+      const from = Math.max(1, total - limit + 1);
+      const out: InboxMessage[] = [];
+      for await (const message of c.fetch(`${from}:*`, { envelope: true, uid: true, flags: true })) {
+        const sender = message.envelope?.from?.[0];
+        out.push({
+          uid: message.uid,
+          from: (sender?.address ?? "").toLowerCase(),
+          fromName: sender?.name ?? "",
+          to: (message.envelope?.to?.[0]?.address ?? "").toLowerCase(),
+          subject: message.envelope?.subject ?? "(no subject)",
+          at: (message.envelope?.date ?? new Date()).toISOString(),
+          seen: Boolean(message.flags?.has("\\Seen")),
+        });
+      }
+      return out.reverse();
+    } finally {
+      lock.release();
+    }
+  });
+}
+
+/**
  * Can we reach the mailbox at all, and is there a Sent folder to file into?
  *
  * For the health page. Everything else in this file swallows its errors so a

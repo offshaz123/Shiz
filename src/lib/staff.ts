@@ -79,6 +79,20 @@ export function passwordMatches(password: string, stored: string): boolean {
   return timingSafeEqual(attempt, known);
 }
 
+/**
+ * Names nobody may sign up as.
+ *
+ * "admin" is how Walid signs in, so a member of staff holding that
+ * username would be a staff account standing in front of the owner's
+ * login. The rest are reserved because they read as the system rather
+ * than as a person.
+ */
+export const RESERVED_USERNAMES = ["admin", "administrator", "owner", "root", "system"];
+
+export function isReservedUsername(name: string): boolean {
+  return RESERVED_USERNAMES.includes(toUsername(name));
+}
+
 /** Tidies a typed name into something that can be a username. */
 export function toUsername(raw: string): string {
   return raw
@@ -133,7 +147,10 @@ export async function addStaff(
 ): Promise<{ ok: true; id: number } | { ok: false; reason: string }> {
   const clean = toUsername(username);
   if (name.trim().length < 2) return { ok: false, reason: "Give them a name." };
-  if (clean.length < 3) return { ok: false, reason: "The sign-in name needs three characters or more." };
+  if (clean.length < 3) return { ok: false, reason: "The username needs three characters or more." };
+  if (isReservedUsername(clean)) {
+    return { ok: false, reason: `"${clean}" is reserved. Pick another username.` };
+  }
   if (password.length < 10) {
     return { ok: false, reason: "Passwords need to be at least ten characters." };
   }
@@ -143,7 +160,7 @@ export async function addStaff(
       "SELECT id FROM staff WHERE username = ? LIMIT 1",
       [clean],
     );
-    if (existing.length > 0) return { ok: false as const, reason: "That sign-in name is taken." };
+    if (existing.length > 0) return { ok: false as const, reason: "That username is taken." };
 
     const [res] = await db.execute<ResultSetHeader>(
       "INSERT INTO staff (name, username, pass_hash, pages) VALUES (?, ?, ?, ?)",

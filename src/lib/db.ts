@@ -568,6 +568,22 @@ const ADDED_COLUMNS: {
   // Added at the same time as the sequence: rows written before it exists
   // default to step 1, which is what they were.
   { table: "prospect_emails", column: "step", definition: "TINYINT UNSIGNED NOT NULL DEFAULT 1 AFTER body" },
+  // Which address an email actually left from.
+  //
+  // Everything has gone from one mailbox so far, so this was knowable
+  // from an environment variable. Walid is adding a second sending
+  // address, and the moment there are two, "which one did this go from"
+  // stops being a setting and becomes a fact about the message — one you
+  // cannot work out afterwards from anywhere else.
+  //
+  // Rows written before this keep the one address there was, which is
+  // what the backfill in ADDED_COLUMNS cannot do and the page does
+  // instead: an empty value is shown as the configured address.
+  {
+    table: "prospect_emails",
+    column: "sent_from",
+    definition: "VARCHAR(200) NULL AFTER recipient",
+  },
   // The town a prospect was found in, so the list can be worked one area at a
   // time — which is how the ringing actually happens, and how a business
   // hears that you know the place rather than that you found them in a list.

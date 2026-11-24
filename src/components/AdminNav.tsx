@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { logout } from "@/app/admin/actions";
 import { siteConfig } from "@/lib/site-config";
 import type { AdminPage, NewCounts } from "@/lib/admin-pages";
@@ -20,6 +20,17 @@ import type { AdminPage, NewCounts } from "@/lib/admin-pages";
  * said so, so the only way to find them was to have been told. Each entry
  * links to its own heading, so you land on the part you wanted rather than
  * at the top of a long page.
+ *
+ * It waits before it opens, which was the second complaint and a fair one:
+ * on the first version the menu appeared the instant the pointer touched a
+ * row, so crossing the column on the way to the page content made three
+ * menus flash open and shut. A pause long enough to mean "I stopped here"
+ * and short enough not to feel broken fixes that, and it closes on a
+ * shorter pause so moving down the list does not leave a trail open.
+ *
+ * The arrow is also a button. Hover intent is a guess about what somebody
+ * meant; a click is not, and once clicked the menu stays until clicked
+ * again.
  *
  * A number next to a page means something arrived since you last opened
  * it. Opening the page clears it, which is why it counts what is new to
@@ -44,6 +55,29 @@ export function AdminNav({
   const current = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState<string | null>(null);
+  /** Set by clicking the arrow. A pinned menu ignores the pointer. */
+  const [pinned, setPinned] = useState<string | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Long enough that passing over a row does not count as asking for it.
+  const OPEN_AFTER = 450;
+  const CLOSE_AFTER = 200;
+
+  useEffect(() => () => {
+    if (timer.current) clearTimeout(timer.current);
+  }, []);
+
+  function hoverOpen(key: string) {
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => setOpen(key), OPEN_AFTER);
+  }
+
+  function hoverClose(key: string) {
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => {
+      setOpen((current) => (current === key ? null : current));
+    }, CLOSE_AFTER);
+  }
 
   const active =
     pages.find((page) =>
@@ -67,19 +101,21 @@ export function AdminNav({
           {pages.map((page) => {
             const here = page.href === active.href;
             const fresh = counts[page.key] ?? 0;
-            const showing = open === page.key && (page.sections?.length ?? 0) > 0;
+            const has = (page.sections?.length ?? 0) > 0;
+            const showing = has && (pinned === page.key || open === page.key);
 
             return (
               <div
                 key={page.href}
-                onMouseEnter={() => setOpen(page.key)}
-                onMouseLeave={() => setOpen((k) => (k === page.key ? null : k))}
+                onMouseEnter={() => has && pinned !== page.key && hoverOpen(page.key)}
+                onMouseLeave={() => pinned !== page.key && hoverClose(page.key)}
               >
+                <div className="flex items-stretch">
                 <Link
                   href={page.href}
                   title={page.hint}
                   aria-current={here ? "page" : undefined}
-                  className={`flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition ${
+                  className={`flex flex-1 items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition ${
                     here
                       ? "bg-brand-pink text-white"
                       : "text-muted hover:bg-background hover:text-foreground"
@@ -101,11 +137,29 @@ export function AdminNav({
                     </span>
                   )}
 
-                  {(page.sections?.length ?? 0) > 0 && (
+                </Link>
+
+                {/* Its own button, outside the link. Inside it, a click
+                    meant "open the menu" and "go to the page" at once,
+                    and the navigation won. */}
+                {has && (
+                  <button
+                    type="button"
+                    aria-expanded={showing}
+                    aria-label={`What is on ${page.label}`}
+                    onClick={() => {
+                      if (timer.current) clearTimeout(timer.current);
+                      setPinned((k) => (k === page.key ? null : page.key));
+                      setOpen(null);
+                    }}
+                    className={`ml-0.5 rounded-lg px-1.5 transition ${
+                      here ? "text-white/80 hover:text-white" : "text-muted hover:text-foreground"
+                    }`}
+                  >
                     <svg
                       viewBox="0 0 24 24"
                       aria-hidden
-                      className={`h-3 w-3 shrink-0 transition ${showing ? "rotate-90" : ""}`}
+                      className={`h-3 w-3 transition ${showing ? "rotate-90" : ""}`}
                       fill="none"
                       stroke="currentColor"
                       strokeWidth="2.5"
@@ -114,8 +168,9 @@ export function AdminNav({
                     >
                       <path d="M9 6l6 6-6 6" />
                     </svg>
-                  )}
-                </Link>
+                  </button>
+                )}
+                </div>
 
                 {/* What is on that page. In the flow rather than floating
                     over it: a menu that appears on top of the next item is

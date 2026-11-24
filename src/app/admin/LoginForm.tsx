@@ -10,18 +10,20 @@ export function LoginForm() {
     <div className="mx-auto flex min-h-[70vh] max-w-sm flex-col justify-center px-5">
       <h1 className="text-2xl font-bold tracking-tight text-foreground">Admin</h1>
       <p className="mt-2 text-sm text-muted">
-        Staff: your sign-in name and your own password. Walid: leave the name blank.
+        Your username and your password. Walid&apos;s username is <b>admin</b>.
       </p>
 
       <form action={action} className="mt-6 flex flex-col gap-3">
-        {/* Optional on purpose. Walid has typed one password into this
-            screen for months and should not have to learn a second field
-            because other people now have accounts. */}
+        {/* "Username", because that is what it is and because it can hold
+            a name, a name with a number after it, or anything else that is
+            unique. It said "sign-in name (staff only)" and left blank for
+            the owner, which looked like a form nobody had filled in.
+            Blank still works, so no habit is broken. */}
         <input
           type="text"
           name="username"
           autoComplete="username"
-          placeholder="Sign-in name (staff only)"
+          placeholder="Username"
           className="w-full rounded-xl border border-border bg-background px-4 py-3 text-base text-foreground placeholder:text-muted focus:border-brand-pink/60 focus:outline-none"
         />
         <input

@@ -18,6 +18,7 @@ export type PageKey =
   | "leads"
   | "clients"
   | "prospects"
+  | "emails"
   | "company"
   | "scan"
   | "health"
@@ -112,6 +113,19 @@ export const ADMIN_PAGES: AdminPage[] = [
     sections: [
       { id: "find", label: "Find more businesses" },
       { id: "list", label: "The call list" },
+    ],
+    canGrant: true,
+    onByDefault: true,
+  },
+  {
+    key: "emails",
+    href: "/admin/emails",
+    label: "Emails",
+    hint: "Everything sent and everything that came back, both countries",
+    sections: [
+      { id: "counts", label: "How many have gone out" },
+      { id: "inbox", label: "Who has written back" },
+      { id: "sent", label: "What has been sent" },
     ],
     canGrant: true,
     onByDefault: true,

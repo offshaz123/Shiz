@@ -6,7 +6,7 @@ import { getAutomaticEmails, getCronHealth, getRegionStats } from "@/lib/admin-d
 import { getEngineRoom } from "@/lib/engine-room";
 import { EngineRoom } from "@/components/EngineRoom";
 import { SchedulerStatus } from "@/components/SchedulerStatus";
-import { AutomaticEmails } from "@/components/AutomaticEmails";
+import Link from "next/link";
 import { RegionStats } from "@/components/RegionStats";
 import { REGION_INFO, isRegion } from "@/lib/regions";
 import { AdminHeading } from "@/components/AdminHeading";
@@ -46,7 +46,8 @@ export default async function AdminPage({
     getEngineRoom(picked),
     getCronHealth(),
     getCronHealth("find-and-scan"),
-    getAutomaticEmails(40, picked),
+    // Only the three counts are wanted here now, so the list is short.
+    getAutomaticEmails(1, picked),
     getRegionStats(),
   ]);
 
@@ -87,9 +88,29 @@ export default async function AdminPage({
         </p>
       )}
 
-      <div id="sent" className="scroll-mt-6">
-        {automatic && <AutomaticEmails log={automatic} />}
-      </div>
+      {/* The full list of everything sent has moved to its own page.
+          It was the third long section on an overview, and the only way
+          to answer "how many went today" was to count the rows or read
+          a line off a chart. One line and a link is what an overview
+          owes it. */}
+      {automatic && (
+        <div id="sent" className="scroll-mt-6 rounded-2xl border border-border bg-surface p-5">
+          <p className="text-sm font-semibold text-foreground">
+            {automatic.sentToday} email{automatic.sentToday === 1 ? "" : "s"} sent today,{" "}
+            {automatic.sentLast7Days} in the last seven days
+            {automatic.failedLast7Days > 0
+              ? `, ${automatic.failedLast7Days} failed to send`
+              : ""}
+            .
+          </p>
+          <Link
+            href="/admin/emails"
+            className="mt-2 inline-block text-xs font-semibold text-brand-pink underline decoration-dotted"
+          >
+            Open the mailbox: everything sent, and who has written back
+          </Link>
+        </div>
+      )}
     </div>
   );
 }
