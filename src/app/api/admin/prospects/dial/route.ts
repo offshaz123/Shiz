@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { actor, canSee, canSeeRegion, currentUser } from "@/lib/admin-auth";
-import { getProspect } from "@/lib/prospects";
+import { getProspect, logCall } from "@/lib/prospects";
+import { NOT_WRITTEN_UP } from "@/lib/prospect-types";
 import { isConnected, placeCall } from "@/lib/zadarma";
 import { logAction } from "@/lib/staff";
 
@@ -49,9 +50,33 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "call_failed", detail: result.reason }, { status: 502 });
   }
 
-  // Logged as an attempt, not as a call. Whether it connected is a thing
-  // only the phone system knows, and it will say so when it ends.
-  await logAction(await actor(), "dialled", them.name, them.phone);
+  // The call is written down here, the moment it is placed, rather than
+  // waiting for the phone system to say it ended.
+  //
+  // This is the difference between a prompt that appears and one that
+  // does not. The write-up prompt used to depend entirely on Zadarma's
+  // end-of-call webhook, so if that was never registered — or its
+  // signature did not match, or the extension matched no account — a
+  // call could be made and nobody was ever asked what was said, with
+  // nothing anywhere to say why. Now the row exists because somebody
+  // pressed the button, which is a fact we already have, and the
+  // webhook fills in the length and the recording when it arrives.
+  //
+  // Its outcome is "pending", not "no answer": what happened on it is
+  // not known yet, and guessing would put a fact about a business into
+  // the record that nobody established.
+  const me = await actor();
+  await logCall(them.id, {
+    outcome: NOT_WRITTEN_UP,
+    notes: "",
+    minutes: null,
+    caller: me.name,
+    staffId: who.id,
+    callbackAt: "",
+    loggedBy: "click",
+  });
+
+  await logAction(me, "dialled", them.name, them.phone);
 
   return NextResponse.json({ ok: true, ringing: who.extension });
 }

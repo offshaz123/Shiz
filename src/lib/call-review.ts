@@ -23,9 +23,13 @@ export type PendingCall = {
   business: string;
   phone: string;
   seconds: number;
-  /** What the phone system thought: answered, or not. */
+  /** What the phone system thought: answered, or not. "pending" when it
+   *  has not told us anything yet. */
   outcome: string;
   at: string;
+  /** True once the phone system has confirmed the call ended. A row
+   *  written when somebody pressed Call starts false. */
+  confirmed: boolean;
 };
 
 export async function callsNeedingReview(
@@ -34,12 +38,19 @@ export async function callsNeedingReview(
 ): Promise<PendingCall[] | null> {
   return withDb(async (db) => {
     const [rows] = await db.query<(RowDataPacket & Record<string, unknown>)[]>(
-      `SELECT c.id, c.prospect_id, c.outcome, c.minutes, c.called_at, c.caller,
+      `SELECT c.id, c.prospect_id, c.outcome, c.minutes, c.called_at, c.caller, c.logged_by,
               p.name AS business, p.phone
          FROM prospect_calls c
          JOIN prospects p ON p.id = c.prospect_id
-        WHERE c.logged_by = 'phone'
+        WHERE c.logged_by IN ('phone', 'click')
           AND c.reviewed_at IS NULL
+          -- A row written the moment Call was pressed is held back for
+          -- a couple of minutes, because the call is probably still
+          -- going on and a write-up box over the screen mid-sentence is
+          -- worse than no box. One the phone system has confirmed is
+          -- shown at once: that call is definitely over.
+          AND (c.logged_by = 'phone'
+               OR c.called_at <= DATE_SUB(NOW(), INTERVAL 2 MINUTE))
           -- Only the last day. A call from a fortnight ago is not a
           -- question anybody can still answer, and leaving it in the
           -- count turns the count into wallpaper.
@@ -58,6 +69,7 @@ export async function callsNeedingReview(
       seconds: Number(r.minutes ?? 0) * 60,
       outcome: String(r.outcome ?? ""),
       at: String(r.called_at),
+      confirmed: r.logged_by === "phone",
     }));
   });
 }
@@ -92,6 +104,19 @@ export async function reviewCall(
           ? "called"
           : null;
 
+    // Said on the write-up rather than when the row was made: the
+    // person only finds out the number is dead by ringing it.
+    if (review.outcome === "bad-number") {
+      await db.execute(
+        `UPDATE prospects p
+            JOIN prospect_calls c ON c.prospect_id = p.id
+            SET p.phone_dead_at = COALESCE(p.phone_dead_at, NOW()),
+                p.phone_dead_reason = COALESCE(p.phone_dead_reason, ?)
+          WHERE c.id = ?`,
+        [review.notes.trim().slice(0, 200) || "Rang it and the number did not work.", callId],
+      );
+    }
+
     if (status || review.callbackAt) {
       await db.execute(
         `UPDATE prospects p
@@ -115,11 +140,15 @@ export async function reviewCall(
 export async function countNeedingReview(staffId: number | null): Promise<number> {
   const found = await withDb(async (db) => {
     const [[row]] = await db.query<(RowDataPacket & { n: number })[]>(
+      // staff_id, not staff_hint. There has never been a column called
+      // staff_hint, so this query failed every time it ran and the
+      // count it returned was always zero — silently, because a failed
+      // read here is treated as "nothing to report".
       `SELECT COUNT(*) AS n FROM prospect_calls
-        WHERE logged_by = 'phone'
+        WHERE logged_by IN ('phone', 'click')
           AND reviewed_at IS NULL
           AND called_at >= DATE_SUB(NOW(), INTERVAL 1 DAY)
-          AND (? IS NULL OR staff_hint <=> ?)`,
+          AND (? IS NULL OR staff_id <=> ?)`,
       [staffId, staffId],
     );
     return Number(row?.n ?? 0);

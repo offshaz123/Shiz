@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { CALL_LABEL, CALL_OUTCOMES, type CallOutcome } from "@/lib/prospect-types";
+import { noteProblem } from "@/lib/call-notes";
 
 /**
  * The line across the top of the admin for somebody working a shift.
@@ -30,6 +31,7 @@ type Pending = {
   seconds: number;
   outcome: string;
   at: string;
+  confirmed: boolean;
 };
 
 /** How often to ask whether a call has finished. */
@@ -77,10 +79,13 @@ export function ShiftBar({
       .then((body) => {
         if (cancelled) return;
         setPending(body.pending);
-        // The newest unwritten call opens by itself. Anything older
-        // stays in the count rather than being thrown at them one
-        // after another.
-        setOpen((current) => current ?? body.pending[0] ?? null);
+        // Only a call the phone system has confirmed is over opens by
+        // itself. A row written when Call was pressed might be a call
+        // still in progress, and a box over the screen mid-sentence is
+        // worse than no box — those wait in the count until the person
+        // presses it. Anything older than the newest stays in the
+        // count too rather than being thrown at them one after another.
+        setOpen((current) => current ?? body.pending.find((c) => c.confirmed) ?? null);
       })
       .catch(() => {
         // A failed check is not worth saying anything about. The next
@@ -169,14 +174,25 @@ function CallPrompt({
   const [notes, setNotes] = useState("");
   const [callbackAt, setCallbackAt] = useState("");
   const [saving, setSaving] = useState(false);
+  const [tried, setTried] = useState(false);
+  const [failed, setFailed] = useState("");
+
+  // Shown once they have had a go at saving, not while they are still
+  // typing the first word. A box that turns red before anybody has done
+  // anything wrong is a box people learn to ignore.
+  const problem = noteProblem(notes);
 
   const minutes = Math.floor(call.seconds / 60);
   const seconds = call.seconds % 60;
 
   async function save() {
+    setTried(true);
+    if (problem) return;
+
     setSaving(true);
+    setFailed("");
     try {
-      await fetch("/api/admin/calls", {
+      const res = await fetch("/api/admin/calls", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -187,7 +203,18 @@ function CallPrompt({
           business: call.business,
         }),
       });
+
+      // It used to call onDone whatever came back, so a refusal or a
+      // database that was down looked exactly like a save: the box
+      // closed, the count went down, and nothing had been written.
+      if (!res.ok) {
+        const body = (await res.json().catch(() => null)) as { message?: string } | null;
+        setFailed(body?.message ?? "That did not save. Try again in a moment.");
+        return;
+      }
       onDone();
+    } catch {
+      setFailed("Could not reach the server. Nothing has been saved.");
     } finally {
       setSaving(false);
     }
@@ -243,10 +270,18 @@ function CallPrompt({
             onChange={(e) => setNotes(e.target.value)}
             rows={3}
             autoFocus
-            placeholder="Who you spoke to, what they said, anything the next person needs."
-            className="mt-1.5 block w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm text-foreground"
+            placeholder={
+              outcome === "bad-number"
+                ? "What the line did. Dead, unobtainable, rang out as a fax."
+                : "Who you spoke to, what they said, anything the next person needs."
+            }
+            className={`mt-1.5 block w-full rounded-lg border bg-surface px-3 py-2 text-sm text-foreground ${
+              tried && problem ? "border-red-500" : "border-border"
+            }`}
           />
         </label>
+        {tried && problem && <p className="mt-1.5 text-xs text-red-400">{problem}</p>}
+        {failed && <p className="mt-1.5 text-xs text-red-400">{failed}</p>}
 
         <div className="mt-4 flex items-center gap-2">
           <button
@@ -265,7 +300,8 @@ function CallPrompt({
             Not now
           </button>
           <span className="text-[11px] text-muted">
-            &ldquo;Not now&rdquo; keeps it in the red count until it is done.
+            Every call needs a line about it. &ldquo;Not now&rdquo; keeps it in the red count
+            until it is done.
           </span>
         </div>
       </div>

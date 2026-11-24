@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { URGENCY_WORD, planCall } from "@/lib/call-priority";
+import { noteProblem } from "@/lib/call-notes";
 import {
   CALL_LABEL,
   CALL_OUTCOMES,
@@ -10,6 +11,7 @@ import {
   type CallOutcome,
   type Prospect,
   type ProspectStatus,
+  callLabel
 } from "@/lib/prospect-types";
 import { industries } from "@/content/industries";
 import { areaGroups, cities } from "@/content/areas";
@@ -96,7 +98,7 @@ const STATUS_LABEL: Record<ProspectStatus, string> = {
 function edge(p: Prospect): string {
   if (p.unsubscribedAt) return "border-l-4 border-l-red-500/70";
   if (p.repliedAt) return "border-l-4 border-l-sky-500";
-  if (p.emailDeadAt) return "border-l-4 border-l-amber-500";
+  if (p.emailDeadAt || p.phoneDeadAt) return "border-l-4 border-l-amber-500";
   switch (p.status) {
     case "customer":
       return "border-l-4 border-l-violet-500";
@@ -250,6 +252,13 @@ function nextMove(p: Prospect): string {
   // never arrived, and that is worth telling the business when you ring.
   if (p.emailDeadAt)
     return `The address on their site (${p.email}) bounces, so nothing we sent arrived. Ring them on ${p.phone || "the listing number"} — and tell them their email is broken.`;
+  // Said before anything that tells somebody to ring: a line reading
+  // "ring them on 0161..." above a number already proved dead is how
+  // the same wasted call happens three times.
+  if (p.phoneDeadAt)
+    return p.email
+      ? `The number does not work${p.phoneDeadReason ? ` — ${p.phoneDeadReason}` : ""}. Email them on ${p.email} instead, or find a new number on their site.`
+      : `The number does not work${p.phoneDeadReason ? ` — ${p.phoneDeadReason}` : ""}. There is no email either, so this one needs a new number before it is worth anything.`;
 
   if (sent.length === 0) return "Write the first email. The scan has given you the opening line.";
   if (sent.length >= 3) {
@@ -506,7 +515,7 @@ export function ProspectFinder({
   async function removeRegisterAdds() {
     if (
       !window.confirm(
-        "Remove every company that came from the Companies House register?\n\nAnything you have already emailed or rung is kept. Businesses found through Google are not touched.",
+        "Move every company that came from the Companies House register to Deleted?\n\nAnything you have already emailed or rung is kept. Businesses found through Google are not touched. Nothing is destroyed — they go to the Deleted folder and can be put back.",
       )
     ) {
       return;
@@ -520,7 +529,7 @@ export function ProspectFinder({
         return;
       }
       setSearchNote(
-        `${data.deleted} removed.` +
+        `${data.deleted} moved to Deleted.` +
           (data.kept > 0 ? ` ${data.kept} kept — already emailed or rung.` : ""),
       );
       await load();
@@ -1518,6 +1527,10 @@ function Row({
     callbackAt: string;
   } | null>(null);
   const [loggingCall, setLoggingCall] = useState(false);
+  // Why the last attempt to save a call did not save. It used to fail
+  // silently: a bad save left the form open with no message, which
+  // reads exactly like a button that does nothing.
+  const [callError, setCallError] = useState("");
   const [speed, setSpeed] = useState<Speed | null>(null);
   const [speedState, setSpeedState] = useState<"idle" | "running" | "failed">("idle");
   const [sending, setSending] = useState(false);
@@ -1586,7 +1599,17 @@ function Row({
    *  tomorrow not knowing. */
   async function saveCall() {
     if (!callForm || loggingCall) return;
+
+    // Checked before the request so the answer is instant, and checked
+    // again on the server because this is only the polite half.
+    const wrong = noteProblem(callForm.notes);
+    if (wrong) {
+      setCallError(wrong);
+      return;
+    }
+
     setLoggingCall(true);
+    setCallError("");
     try {
       const res = await fetch("/api/admin/prospects/call", {
         method: "POST",
@@ -1596,9 +1619,13 @@ function Row({
       if (res.ok) {
         setCallForm(null);
         onLogged();
+        return;
       }
+      const body = (await res.json().catch(() => null)) as { message?: string } | null;
+      setCallError(body?.message ?? "That did not save. Try again in a moment.");
     } catch {
       // Left open with what was typed still in it, so nothing is lost.
+      setCallError("Could not reach the server. Nothing has been saved.");
     } finally {
       setLoggingCall(false);
     }
@@ -1720,7 +1747,19 @@ function Row({
             button that cannot call is worse than no button. The tel:
             link above stays either way, because it is what works on a
             phone and costs nothing. */}
-        {p.phone && canDial && (
+        {/* A number somebody has already rung and found dead does not
+            get a Call button. Same reasoning as the bounced address
+            above: a button that cannot work is an invitation to waste
+            the same thirty seconds the last person wasted. */}
+        {p.phone && p.phoneDeadAt && (
+          <span
+            className="rounded-lg border border-amber-500/40 px-2.5 py-1 font-semibold text-muted"
+            title={p.phoneDeadReason || "Somebody rang this and it did not work"}
+          >
+            number doesn&apos;t work
+          </span>
+        )}
+        {p.phone && !p.phoneDeadAt && canDial && (
           <button
             type="button"
             onClick={async () => {
@@ -1912,7 +1951,7 @@ function Row({
           <span title={`Last call ${p.lastCall.at}`}>
             last call {p.lastCall.at.slice(5)} ·{" "}
             <span className="font-semibold text-foreground">
-              {CALL_LABEL[p.lastCall.outcome as CallOutcome] ?? p.lastCall.outcome}
+              {callLabel(p.lastCall.outcome)}
             </span>
           </span>
         )}
@@ -1989,11 +2028,21 @@ function Row({
 
           <textarea
             value={callForm.notes}
-            onChange={(e) => setCallForm({ ...callForm, notes: e.target.value })}
+            onChange={(e) => {
+              setCallForm({ ...callForm, notes: e.target.value });
+              if (callError) setCallError("");
+            }}
             rows={2}
-            placeholder="What they said. Who you spoke to. Anything the next person needs."
-            className="rounded-lg border border-border bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-brand-pink"
+            placeholder={
+              callForm.outcome === "bad-number"
+                ? "What the line did. Dead, unobtainable, rang out as a fax."
+                : "What they said. Who you spoke to. Anything the next person needs."
+            }
+            className={`rounded-lg border bg-surface px-3 py-2 text-xs text-foreground outline-none focus:border-brand-pink ${
+              callError ? "border-red-500" : "border-border"
+            }`}
           />
+          {callError && <p className="text-[11px] text-red-400">{callError}</p>}
 
           <div className="flex flex-wrap items-end gap-3 text-[11px]">
             <label className="flex flex-col gap-1">
@@ -2023,8 +2072,8 @@ function Row({
               {loggingCall ? "Saving…" : "Save the call"}
             </button>
             <span className="text-muted">
-              Saving also sets the status and stamps the date, so nobody rings them again tomorrow
-              not knowing.
+              Every call needs a line about what happened. Saving also sets the status and stamps
+              the date, so nobody rings them again tomorrow not knowing.
             </span>
           </div>
         </div>
@@ -2275,7 +2324,7 @@ function Row({
                   <li key={`${c.calledAt}-${i}`} className="rounded-lg border border-border px-2.5 py-1.5">
                     <div className="flex flex-wrap items-center gap-2">
                       <span className="font-bold text-foreground">
-                        {CALL_LABEL[c.outcome] ?? c.outcome}
+                        {callLabel(c.outcome)}
                       </span>
                       <span className="text-muted">{c.calledAt.slice(0, 10)}</span>
                       {c.minutes ? <span className="text-muted">{c.minutes} min</span> : null}

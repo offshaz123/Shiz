@@ -36,6 +36,7 @@ export const CALL_OUTCOMES = [
   "call-back",
   "gatekeeper",
   "wrong-number",
+  "bad-number",
   "not-interested",
 ] as const;
 
@@ -48,15 +49,41 @@ export const CALL_LABEL: Record<CallOutcome, string> = {
   "call-back": "Asked to call back",
   gatekeeper: "Got the gatekeeper",
   "wrong-number": "Wrong number",
+  // Different from a wrong number, and the difference matters. A wrong
+  // number reaches somebody else; this one reaches nobody — dead line,
+  // number unobtainable, a digit short. Nothing is learnt about the
+  // business, so its status is left alone, but the number is marked so
+  // the list stops handing it out and the next person does not waste
+  // the same thirty seconds.
+  "bad-number": "Number doesn't work",
   "not-interested": "Not interested",
 };
+
+/**
+ * What a call row says it was, including the ones not chosen from the
+ * list above.
+ *
+ * A call logged the moment somebody presses Call has no outcome yet —
+ * it has not happened. Showing that as "No answer" would be the system
+ * inventing a fact about a business, which is the one thing a call
+ * record must never do.
+ */
+export const NOT_WRITTEN_UP = "pending";
+
+export function callLabel(outcome: string): string {
+  if (outcome === NOT_WRITTEN_UP) return "Not written up yet";
+  return CALL_LABEL[outcome as CallOutcome] ?? outcome;
+}
 
 export function isCallOutcome(value: unknown): value is CallOutcome {
   return typeof value === "string" && (CALL_OUTCOMES as readonly string[]).includes(value);
 }
 
 export type ProspectCall = {
-  outcome: CallOutcome;
+  /** One of CALL_OUTCOMES, or "pending" for a call that was placed and
+   *  has not been written up yet. Read it through callLabel rather than
+   *  looking it up in CALL_LABEL. */
+  outcome: string;
   notes: string;
   minutes: number | null;
   caller: string;
@@ -85,6 +112,12 @@ export type Prospect = {
   emailDeadAt: string | null;
   /** The receiving server's own words, for showing somebody why. */
   emailDeadReason: string;
+  /** Set when somebody rang and the number itself did not work: dead
+   *  line, unobtainable, a digit short. The number is kept so the row
+   *  can say which one failed rather than quietly going blank. */
+  phoneDeadAt: string | null;
+  /** What the person who rang it wrote down. */
+  phoneDeadReason: string;
   website: string;
   address: string;
   category: string;

@@ -6,7 +6,7 @@ import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../../LoginForm";
 import { NotYours } from "../../NotYours";
 import { getProspect, listProspectCalls, listProspectEmails } from "@/lib/prospects";
-import { CALL_LABEL, type CallOutcome } from "@/lib/prospect-types";
+import { callLabel } from "@/lib/prospect-types";
 import { outreachLine } from "@/lib/outreach-lines";
 import { callScript } from "@/lib/call-script";
 import { CallScript } from "@/components/CallScript";
@@ -290,7 +290,7 @@ export default async function ProspectProfile({
             {calls.map((call) => (
               <li key={call.calledAt} className="flex flex-wrap gap-x-3 gap-y-1 py-2.5 text-sm">
                 <span className="font-medium text-foreground">
-                  {CALL_LABEL[call.outcome as CallOutcome] ?? call.outcome}
+                  {callLabel(call.outcome)}
                 </span>
                 {call.minutes !== null && <span className="text-muted">{call.minutes} min</span>}
                 <span className="ml-auto text-xs tabular-nums text-muted">

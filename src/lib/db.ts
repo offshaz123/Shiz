@@ -653,6 +653,23 @@ export const ADDED_COLUMNS: {
     column: "logged_by",
     definition: "VARCHAR(10) NOT NULL DEFAULT 'hand' AFTER recording_id",
   },
+  // A number that was rung and did not work.
+  //
+  // Not the same as a wrong number, which reaches somebody else and
+  // says nothing about the line. This is dead line, unobtainable, a
+  // digit short — and until it was recorded the same broken number came
+  // back round the list every few days and cost somebody the same
+  // thirty seconds to find out again.
+  {
+    table: "prospects",
+    column: "phone_dead_at",
+    definition: "DATETIME NULL",
+  },
+  {
+    table: "prospects",
+    column: "phone_dead_reason",
+    definition: "VARCHAR(200) NULL",
+  },
   // Which address an email actually left from.
   //
   // Everything has gone from one mailbox so far, so this was knowable

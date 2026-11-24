@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { listPhoneNumbers, logCall } from "@/lib/prospects";
+import { attachPhoneCall, listPhoneNumbers, logCall } from "@/lib/prospects";
 import { findByPhone } from "@/lib/phone-match";
 import { outcomeFor, readCallEnded, signatureMatches } from "@/lib/zadarma";
 import { logAction } from "@/lib/staff";
@@ -67,20 +67,39 @@ export async function POST(request: Request) {
   const who = await staffByExtension(ended.internal);
   const minutes = ended.seconds > 0 ? Math.max(1, Math.round(ended.seconds / 60)) : null;
 
-  await logCall(them.id, {
-    outcome: outcomeFor(ended.disposition, ended.seconds) as "spoke" | "no-answer",
-    // Left empty on purpose. The system knows how long the call was and
-    // whether it connected; what was actually said is a thing only the
-    // person who made it knows, and a note written by a machine that
-    // was not listening would read like one.
-    notes: "",
+  const outcome = outcomeFor(ended.disposition, ended.seconds) as "spoke" | "no-answer";
+
+  // Pressing Call already wrote a row for this call. Fill that one in
+  // rather than writing a second: two rows for one call would double
+  // every count on the page and leave the person a write-up prompt for
+  // a call they have already been asked about.
+  const attached = await attachPhoneCall(them.id, {
+    outcome,
     minutes,
-    caller: who?.name ?? `extension ${ended.internal}`,
-    staffId: who?.id ?? null,
-    callbackAt: "",
     recordingId: ended.recordingId,
-    loggedBy: "phone",
+    staffId: who?.id ?? null,
+    caller: who?.name ?? `extension ${ended.internal}`,
   });
+
+  // Nothing to attach it to: the call was made from the softphone
+  // rather than from the website, which is a perfectly normal thing to
+  // do and still belongs in the record.
+  if (!attached) {
+    await logCall(them.id, {
+      outcome,
+      // Left empty on purpose. The system knows how long the call was
+      // and whether it connected; what was actually said is a thing
+      // only the person who made it knows, and a note written by a
+      // machine that was not listening would read like one.
+      notes: "",
+      minutes,
+      caller: who?.name ?? `extension ${ended.internal}`,
+      staffId: who?.id ?? null,
+      callbackAt: "",
+      recordingId: ended.recordingId,
+      loggedBy: "phone",
+    });
+  }
 
   await logAction(
     { id: who?.id ?? null, name: who?.name ?? `extension ${ended.internal}` },

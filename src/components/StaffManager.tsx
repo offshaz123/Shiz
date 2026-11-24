@@ -58,6 +58,10 @@ const ACTION_WORDS: Record<string, string> = {
   "disabled-staff": "switched an account off",
   "reset-staff-password": "reset someone's password",
   "set-own-extension": "set their own extension",
+  "wrote-up-call": "wrote up a call",
+  dialled: "rang a business",
+  "deleted-business": "moved a business to Deleted",
+  "restored-business": "put a business back on the list",
 };
 
 function hoursAndMinutes(minutes: number): string {

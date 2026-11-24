@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { canSee, currentUser } from "@/lib/admin-auth";
 import { callsNeedingReview, reviewCall } from "@/lib/call-review";
 import { isCallOutcome } from "@/lib/prospect-types";
+import { noteProblem } from "@/lib/call-notes";
 import { logAction } from "@/lib/staff";
 
 export const runtime = "nodejs";
@@ -38,9 +39,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "bad_request" }, { status: 400 });
   }
 
+  // Checked here as well as on the screen. A rule the page enforces and
+  // the server does not is a rule that stops the honest and not the
+  // hurried: this endpoint is a plain POST and the button is not the
+  // only way to reach it.
+  const notes = typeof body?.notes === "string" ? body.notes : "";
+  const problem = noteProblem(notes);
+  if (problem) {
+    return NextResponse.json({ error: "note_needed", message: problem }, { status: 400 });
+  }
+
   const ok = await reviewCall(id, {
     outcome: body.outcome,
-    notes: typeof body?.notes === "string" ? body.notes : "",
+    notes,
     // A date, not a time. "Thursday" is how people say it, and a
     // callback promised to the minute is one nobody keeps.
     callbackAt: /^\d{4}-\d{2}-\d{2}$/.test(body?.callbackAt ?? "") ? body.callbackAt : "",
@@ -52,9 +63,7 @@ export async function POST(request: Request) {
     { id: who?.id ?? null, name: who?.name ?? "Walid" },
     "wrote-up-call",
     typeof body?.business === "string" ? body.business : `call ${id}`,
-    [body.outcome, typeof body?.notes === "string" ? body.notes.trim().slice(0, 160) : ""]
-      .filter(Boolean)
-      .join(" — "),
+    [body.outcome, notes.trim().slice(0, 160)].filter(Boolean).join(" — "),
   );
 
   return NextResponse.json({ ok: true });

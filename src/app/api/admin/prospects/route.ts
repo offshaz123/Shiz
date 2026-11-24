@@ -180,8 +180,22 @@ export async function PATCH(request: Request) {
   // change: a deleted prospect keeps whatever status it had, so that putting
   // it back does not quietly reset it to new.
   if (typeof body?.deleted === "boolean") {
+    // Read before the change, because afterwards the name is the only
+    // way to say in the log which business this was.
+    const them = await getProspect(id);
     const moved = await setProspectDeleted(id, body.deleted);
     if (!moved) return NextResponse.json({ error: "not_saved" }, { status: 500 });
+
+    // Recorded like everything else. Nothing here deletes a business
+    // outright — the folder is where they go and they can always come
+    // back — but a row vanishing off somebody's list is still the sort
+    // of thing the person whose list it is should be able to see.
+    await logAction(
+      await actor(),
+      body.deleted ? "deleted-business" : "restored-business",
+      them?.name ?? `prospect ${id}`,
+      them?.phone ?? "",
+    );
     return NextResponse.json({ ok: true });
   }
 

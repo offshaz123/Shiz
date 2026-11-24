@@ -8,7 +8,7 @@ import {
   type Prospect,
   type ProspectStatus,
   type ProspectFinding,
-  isCallOutcome,
+  NOT_WRITTEN_UP,
   type CallOutcome,
   type ProspectCall,
 } from "./prospect-types";
@@ -37,6 +37,8 @@ interface ProspectRow extends RowDataPacket {
   email: string | null;
   email_dead_at?: string | null;
   email_dead_reason?: string | null;
+  phone_dead_at?: string | null;
+  phone_dead_reason?: string | null;
   website: string | null;
   address: string | null;
   category: string | null;
@@ -101,6 +103,8 @@ function toProspect(row: ProspectRow): Prospect {
     email: row.email ?? "",
     emailDeadAt: row.email_dead_at ?? null,
     emailDeadReason: row.email_dead_reason ?? "",
+    phoneDeadAt: row.phone_dead_at ?? null,
+    phoneDeadReason: row.phone_dead_reason ?? "",
     website: row.website ?? "",
     address: row.address ?? "",
     category: row.category ?? "",
@@ -301,6 +305,11 @@ function whereFor(filters: ProspectFilters): { where: string[]; params: (string 
   }
   if (status === "to-call") {
     where.push("status IN ('new', 'no-answer')");
+    // A number somebody has already rung and found dead is not a
+    // business to contact, it is a business with no way in. It stays on
+    // the list under Everyone, labelled, rather than being hidden: the
+    // row is still worth having the day somebody finds a new number.
+    where.push("phone_dead_at IS NULL");
   } else if (status !== "all" && status !== "deleted") {
     where.push("status = ?");
     params.push(status);
@@ -966,7 +975,9 @@ export async function markListingChecked(id: number): Promise<void> {
 export async function logCall(
   id: number,
   call: {
-    outcome: CallOutcome;
+    /** "pending" when the row was written because somebody pressed
+     *  Call and nobody has said yet what happened on it. */
+    outcome: CallOutcome | typeof NOT_WRITTEN_UP;
     notes: string;
     minutes: number | null;
     caller: string;
@@ -976,7 +987,7 @@ export async function logCall(
     /** "phone" when the system wrote it, "hand" when somebody typed it.
      *  Different kinds of evidence, and the page should not present
      *  them as the same one. */
-    loggedBy?: "phone" | "hand";
+    loggedBy?: "phone" | "hand" | "click";
     /** Which member of staff, by id. Null means the owner. Kept
      *  alongside the name because a rename must not empty somebody's
      *  list of calls to write up. */
@@ -1011,7 +1022,24 @@ export async function logCall(
           ? "called"
           : call.outcome === "no-answer" || call.outcome === "voicemail"
             ? "no-answer"
-            : null;
+            : // A wrong number, a dead line, or a call nobody has written
+              // up yet all say nothing about the business itself, so the
+              // status is left exactly as it was.
+              null;
+
+    // A number that does not work is a fact about the line, not about
+    // the business. Recorded so the list stops handing the same broken
+    // number out, and kept rather than blanked so somebody can see what
+    // was tried.
+    if (call.outcome === "bad-number") {
+      await db.execute(
+        `UPDATE prospects
+            SET phone_dead_at = COALESCE(phone_dead_at, NOW()),
+                phone_dead_reason = COALESCE(phone_dead_reason, ?)
+          WHERE id = ?`,
+        [call.notes.trim().slice(0, 200) || "Rang it and the number did not work.", id],
+      );
+    }
 
     await db.execute(
       `UPDATE prospects
@@ -1050,7 +1078,11 @@ export async function listProspectCalls(id: number): Promise<ProspectCall[] | nu
       [id],
     );
     return rows.map((r) => ({
-      outcome: (isCallOutcome(r.outcome) ? r.outcome : "spoke") as CallOutcome,
+      // Kept as written, not forced into the list of choosable
+      // outcomes. A call logged the moment somebody pressed Call has
+      // not happened yet; calling that "spoke to them" would be the
+      // system inventing a fact about a business.
+      outcome: String(r.outcome),
       notes: r.notes ?? "",
       minutes: r.minutes === null ? null : Number(r.minutes),
       caller: r.caller ?? "",
@@ -1110,21 +1142,27 @@ export async function deleteProspectsFromRegister(): Promise<{
          COALESCE(SUM(${CONTACTED_P}), 0) AS contacted,
          COUNT(*) AS total
        FROM prospects p
-       WHERE p.place_id LIKE 'ch:%'`,
+       WHERE p.place_id LIKE 'ch:%' AND p.deleted_at IS NULL`,
     );
 
     const total = Number(countRows[0]?.total ?? 0);
     const kept = Number(countRows[0]?.contacted ?? 0);
     if (total === 0) return { deleted: 0, kept: 0 };
 
-    // prospect_calls and prospect_emails are both ON DELETE CASCADE, so
-    // their rows go with the parent. An earlier version cleared them by hand
-    // first, which was unnecessary and was itself the bug: that join put
-    // prospect_calls in scope, and its own called_at column made the
-    // condition ambiguous enough for MySQL to refuse the statement.
+    // Moved to the deleted folder, not removed.
+    //
+    // This was a real DELETE, and it was the one place in the whole
+    // admin where something could be destroyed outright — which made
+    // the rule everywhere else ("deleting puts it in the folder, and
+    // the folder keeps it") not actually true. A clear-out of a few
+    // hundred imported companies is exactly the moment somebody
+    // realises one of them was worth keeping.
     const [result] = await db.execute<ResultSetHeader>(
-      `DELETE p FROM prospects p
-        WHERE p.place_id LIKE 'ch:%' AND NOT ${CONTACTED_P}`,
+      `UPDATE prospects p
+          SET p.deleted_at = NOW()
+        WHERE p.place_id LIKE 'ch:%'
+          AND p.deleted_at IS NULL
+          AND NOT ${CONTACTED_P}`,
     );
 
     return { deleted: result.affectedRows, kept };
@@ -1149,4 +1187,84 @@ export async function setProspectDeleted(id: number, deleted: boolean): Promise<
   });
 
   return result ?? false;
+}
+
+/**
+ * Fills in a call the phone system has just told us about.
+ *
+ * Pressing Call writes a row straight away, because the write-up prompt
+ * has to appear whether or not the phone system ever calls back — if it
+ * only appeared on the webhook, then a webhook that was never
+ * registered means nobody is ever asked anything, and the first sign of
+ * it is an empty call log a fortnight later. That is exactly what
+ * happened.
+ *
+ * So when the end-of-call notification does arrive, it belongs on the
+ * row that is already there rather than beside it. Matched on the
+ * business and a short window, because a person rings one business at a
+ * time: two rows for one call would double every count on the page.
+ *
+ * Returns false when there is nothing to attach it to — a call made
+ * from the softphone rather than from here — and the caller writes a
+ * new row instead.
+ */
+export async function attachPhoneCall(
+  prospectId: number,
+  call: {
+    outcome: CallOutcome;
+    minutes: number | null;
+    recordingId: string;
+    staffId: number | null;
+    caller: string;
+  },
+): Promise<boolean> {
+  const done = await withDb(async (db) => {
+    const [res] = await db.execute<ResultSetHeader>(
+      `UPDATE prospect_calls
+          SET outcome = ?,
+              minutes = COALESCE(?, minutes),
+              recording_id = COALESCE(NULLIF(?, ''), recording_id),
+              logged_by = 'phone',
+              caller = COALESCE(caller, ?),
+              staff_id = COALESCE(staff_id, ?)
+        WHERE prospect_id = ?
+          AND logged_by = 'click'
+          AND reviewed_at IS NULL
+          -- A call placed from here in the last half hour. Longer and a
+          -- notification could land on a different attempt entirely.
+          AND called_at >= DATE_SUB(NOW(), INTERVAL 30 MINUTE)
+        ORDER BY called_at DESC
+        LIMIT 1`,
+      [
+        call.outcome,
+        call.minutes && call.minutes > 0 ? Math.min(255, call.minutes) : null,
+        call.recordingId.slice(0, 80),
+        call.caller.slice(0, 60) || null,
+        call.staffId ?? null,
+        prospectId,
+      ],
+    );
+    return res.affectedRows > 0;
+  });
+
+  return done ?? false;
+}
+
+/**
+ * Marks a number as one that does not work.
+ *
+ * Separate from logCall because the write-up prompt reaches it by a
+ * different road: that row already exists, so there is nothing to
+ * insert, only a number to retire.
+ */
+export async function markPhoneDead(prospectId: number, reason: string): Promise<void> {
+  await withDb(async (db) => {
+    await db.execute(
+      `UPDATE prospects
+          SET phone_dead_at = COALESCE(phone_dead_at, NOW()),
+              phone_dead_reason = COALESCE(phone_dead_reason, ?)
+        WHERE id = ?`,
+      [reason.trim().slice(0, 200) || "Rang it and the number did not work.", prospectId],
+    );
+  }).catch(() => null);
 }

@@ -6,7 +6,7 @@ import { LoginForm } from "../LoginForm";
 import { NotYours } from "../NotYours";
 import { getToday } from "@/lib/today";
 import { listProspectsByIds } from "@/lib/prospects";
-import { CALL_LABEL, type CallOutcome } from "@/lib/prospect-types";
+import { callLabel } from "@/lib/prospect-types";
 import { callScript } from "@/lib/call-script";
 
 export const dynamic = "force-dynamic";
@@ -162,7 +162,7 @@ export default async function AdminTodayPage() {
                   {p.lastCall && (
                     <span className="text-muted">
                       last call {p.lastCall.at.slice(5)} ·{" "}
-                      {CALL_LABEL[p.lastCall.outcome as CallOutcome] ?? p.lastCall.outcome}
+                      {callLabel(p.lastCall.outcome)}
                     </span>
                   )}
 

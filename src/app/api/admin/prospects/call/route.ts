@@ -11,7 +11,8 @@ async function allowed(): Promise<boolean> {
 }
 import { getProspect, listProspectCalls, logCall } from "@/lib/prospects";
 import { isCallOutcome } from "@/lib/prospect-types";
-import { CALL_LABEL } from "@/lib/prospect-types";
+import { noteProblem } from "@/lib/call-notes";
+import { callLabel } from "@/lib/prospect-types";
 import { logAction } from "@/lib/staff";
 
 export const runtime = "nodejs";
@@ -35,6 +36,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "bad_request" }, { status: 400 });
   }
 
+  // Every call gets a note, whatever the outcome. "Not interested" with
+  // no reason is the one that costs most: a business that said "we
+  // already have an agency" and one that said "ring me in March" both
+  // end up as the same dead row, and the second was worth money.
+  const notes = typeof body?.notes === "string" ? body.notes : "";
+  const problem = noteProblem(notes);
+  if (problem) {
+    return NextResponse.json({ error: "note_needed", message: problem }, { status: 400 });
+  }
+
   // Who is signed in, not who typed their name in a box. The caller field
   // predates accounts and was whatever somebody wrote, which made "who rang
   // this business" unanswerable the moment two people used the same login.
@@ -42,7 +53,7 @@ export async function POST(request: Request) {
 
   const ok = await logCall(id, {
     outcome: body.outcome,
-    notes: typeof body?.notes === "string" ? body.notes : "",
+    notes,
     minutes: Number(body?.minutes) || null,
     caller: me.name,
     // A date, not a time. "Thursday" is how people actually say it, and a
@@ -57,8 +68,8 @@ export async function POST(request: Request) {
       "logged-call",
       them?.name ?? `prospect ${id}`,
       [
-        CALL_LABEL[body.outcome as keyof typeof CALL_LABEL] ?? body.outcome,
-        typeof body?.notes === "string" && body.notes.trim() ? body.notes.trim() : "",
+        callLabel(body.outcome),
+        notes.trim(),
       ]
         .filter(Boolean)
         .join(" — "),
