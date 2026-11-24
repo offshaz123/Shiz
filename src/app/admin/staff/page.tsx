@@ -4,7 +4,7 @@ import { AdminHeading } from "@/components/AdminHeading";
 import { StaffManager } from "@/components/StaffManager";
 import { LoginForm } from "../LoginForm";
 import { NotYours } from "../NotYours";
-import { listActivity, listSittings, listStaff, staffTallies } from "@/lib/staff";
+import { dayReports, listActivity, listSittings, listStaff, staffTallies } from "@/lib/staff";
 
 export const dynamic = "force-dynamic";
 
@@ -38,6 +38,13 @@ export default async function StaffPage() {
     listSittings(40),
   ]);
 
+  // A month per person, fetched here so the panel can open instantly
+  // rather than waiting on a request when somebody presses a name.
+  const days: Record<string, Awaited<ReturnType<typeof dayReports>>> = {};
+  for (const person of staff ?? []) {
+    days[String(person.id)] = await dayReports(person.id, 30);
+  }
+
   return (
     <main className="mx-auto max-w-5xl px-5 py-12 sm:px-8">
       <AdminHeading title="Team">
@@ -55,6 +62,9 @@ export default async function StaffPage() {
             tallies={tallies ?? []}
             activity={activity ?? []}
             sittings={sittings ?? []}
+            days={Object.fromEntries(
+              Object.entries(days).map(([id, rows]) => [id, rows ?? []]),
+            )}
           />
         )}
       </div>

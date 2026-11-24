@@ -977,19 +977,24 @@ export async function logCall(
      *  Different kinds of evidence, and the page should not present
      *  them as the same one. */
     loggedBy?: "phone" | "hand";
+    /** Which member of staff, by id. Null means the owner. Kept
+     *  alongside the name because a rename must not empty somebody's
+     *  list of calls to write up. */
+    staffId?: number | null;
   },
 ): Promise<boolean> {
   const done = await withDb(async (db) => {
     await db.execute(
       `INSERT INTO prospect_calls
-         (prospect_id, outcome, notes, minutes, caller, recording_id, logged_by)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+         (prospect_id, outcome, notes, minutes, caller, staff_id, recording_id, logged_by)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         id,
         call.outcome,
         call.notes.slice(0, 4000) || null,
         call.minutes && call.minutes > 0 ? Math.min(255, call.minutes) : null,
         call.caller.slice(0, 60) || null,
+        call.staffId ?? null,
         call.recordingId?.slice(0, 80) || null,
         call.loggedBy ?? "hand",
       ],

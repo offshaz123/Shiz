@@ -10,7 +10,8 @@ import {
 } from "@/app/admin/staff/actions";
 import { grantablePages } from "@/lib/admin-pages";
 import { REGIONS, REGION_INFO } from "@/lib/regions";
-import type { Staff, StaffTally, Activity, Sitting } from "@/lib/staff";
+import type { Staff, StaffTally, Activity, Sitting, DayReport } from "@/lib/staff";
+import { DayCalendar } from "./DayCalendar";
 
 /**
  * The team screen: who can sign in, what each of them can open, and what
@@ -69,11 +70,14 @@ export function StaffManager({
   tallies,
   activity,
   sittings,
+  days,
 }: {
   staff: Staff[];
   tallies: StaffTally[];
   activity: Activity[];
   sittings: Sitting[];
+  /** A month of days per person, keyed by staff id. */
+  days: Record<string, DayReport[]>;
 }) {
   const [addState, addAction, adding] = useActionState<StaffFormState, FormData>(createStaff, {});
   const [open, setOpen] = useState<number | null>(null);
@@ -171,7 +175,13 @@ export function StaffManager({
                   {expanded ? "Close" : "Change what they can see"}
                 </button>
 
-                {expanded && <PersonPanel person={person} activity={activity} />}
+                {expanded && (
+                  <PersonPanel
+                    person={person}
+                    activity={activity}
+                    days={days[String(person.id)] ?? []}
+                  />
+                )}
               </div>
             );
           })}
@@ -305,7 +315,15 @@ export function StaffManager({
 }
 
 /** The switches and the password reset for one person. */
-function PersonPanel({ person, activity }: { person: Staff; activity: Activity[] }) {
+function PersonPanel({
+  person,
+  activity,
+  days,
+}: {
+  person: Staff;
+  activity: Activity[];
+  days: DayReport[];
+}) {
   const [resetState, resetAction, resetting] = useActionState<StaffFormState, FormData>(
     resetPassword,
     {},
@@ -427,6 +445,16 @@ function PersonPanel({ person, activity }: { person: Staff; activity: Activity[]
         {resetState.error && <span className="text-xs text-foreground">{resetState.error}</span>}
         {resetState.ok && <span className="text-xs text-emerald-500">{resetState.ok}</span>}
       </form>
+
+      <div className="mt-5 border-t border-border pt-4">
+        <p className="text-xs font-semibold text-foreground">Day by day</p>
+        <p className="mt-1 text-[11px] text-muted">
+          Press a date to see what happened on it.
+        </p>
+        <div className="mt-3">
+          <DayCalendar days={days} />
+        </div>
+      </div>
 
       {theirs.length > 0 && (
         <div className="mt-5">

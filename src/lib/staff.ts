@@ -437,3 +437,142 @@ export async function listSittings(limit = 40): Promise<Sitting[] | null> {
     });
   });
 }
+
+/**
+ * When this person's current sitting began, or null if none is open.
+ *
+ * For the line at the top of the screen that says how long they have
+ * been on. Read rather than computed from the cookie, because a session
+ * that survived a laptop lid closing overnight should not claim
+ * fourteen hours of work.
+ */
+export async function openSitting(staffId: number | null): Promise<string | null> {
+  const found = await withDb(async (db) => {
+    const [rows] = await db.query<(RowDataPacket & { started_at: string })[]>(
+      `SELECT started_at FROM staff_sessions
+        WHERE staff_id <=> ? AND ended_at IS NULL
+        ORDER BY started_at DESC LIMIT 1`,
+      [staffId],
+    );
+    return rows[0] ? String(rows[0].started_at) : null;
+  });
+  return found ?? null;
+}
+
+export type DayReport = {
+  /** YYYY-MM-DD. */
+  date: string;
+  /** Minutes between the first and last thing they did that day. */
+  onFor: number;
+  firstAt: string;
+  lastAt: string;
+  calls: number;
+  /** Calls where somebody actually spoke to a person. */
+  spoke: number;
+  /** Seconds of actual conversation. */
+  talkSeconds: number;
+  interested: number;
+  notInterested: number;
+  notes: number;
+  /** Calls still not written up. The number Walid asked for: what did
+   *  they miss, rather than only what they did. */
+  unwritten: number;
+};
+
+/**
+ * A day at a time, for one person.
+ *
+ * Walid asked for a calendar he can press a date on and see what
+ * happened. This is the data behind it, and it is all counting — no
+ * score, no rating, nothing that claims to know whether it was a good
+ * day. Fourteen calls between nine and one reads differently from two
+ * at half past four, and the person reading it knows what the day was
+ * supposed to contain.
+ */
+export async function dayReports(
+  staffId: number | null,
+  days = 30,
+): Promise<DayReport[] | null> {
+  return withDb(async (db) => {
+    const [activity] = await db.query<(RowDataPacket & Record<string, unknown>)[]>(
+      `SELECT DATE_FORMAT(created_at, '%Y-%m-%d') AS d,
+              MIN(created_at) AS first_at,
+              MAX(created_at) AS last_at,
+              SUM(action = 'wrote-up-call' OR action = 'wrote-note') AS notes
+         FROM staff_actions
+        WHERE staff_id <=> ?
+          AND created_at >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
+        GROUP BY d`,
+      [staffId, days],
+    );
+
+    const [calls] = await db.query<(RowDataPacket & Record<string, unknown>)[]>(
+      `SELECT DATE_FORMAT(c.called_at, '%Y-%m-%d') AS d,
+              COUNT(*) AS calls,
+              SUM(c.outcome = 'spoke') AS spoke,
+              SUM(COALESCE(c.minutes, 0)) * 60 AS talk_seconds,
+              SUM(c.outcome = 'not-interested') AS not_interested,
+              SUM(c.logged_by = 'phone' AND c.reviewed_at IS NULL) AS unwritten
+         FROM prospect_calls c
+        WHERE c.staff_id <=> ?
+          AND c.called_at >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
+        GROUP BY d`,
+      [staffId, days],
+    );
+
+    const [interested] = await db.query<(RowDataPacket & Record<string, unknown>)[]>(
+      `SELECT DATE_FORMAT(created_at, '%Y-%m-%d') AS d, COUNT(*) AS n
+         FROM staff_actions
+        WHERE staff_id <=> ?
+          AND action = 'set-status' AND detail = 'interested'
+          AND created_at >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
+        GROUP BY d`,
+      [staffId, days],
+    );
+
+    const byDay = new Map<string, DayReport>();
+    const get = (date: string): DayReport => {
+      const found = byDay.get(date);
+      if (found) return found;
+      const made: DayReport = {
+        date,
+        onFor: 0,
+        firstAt: "",
+        lastAt: "",
+        calls: 0,
+        spoke: 0,
+        talkSeconds: 0,
+        interested: 0,
+        notInterested: 0,
+        notes: 0,
+        unwritten: 0,
+      };
+      byDay.set(date, made);
+      return made;
+    };
+
+    for (const row of activity) {
+      const day = get(String(row.d));
+      day.firstAt = String(row.first_at ?? "");
+      day.lastAt = String(row.last_at ?? "");
+      day.notes = Number(row.notes ?? 0);
+      const from = new Date(day.firstAt.replace(" ", "T")).getTime();
+      const to = new Date(day.lastAt.replace(" ", "T")).getTime();
+      day.onFor =
+        Number.isFinite(from) && Number.isFinite(to) ? Math.max(0, Math.round((to - from) / 60000)) : 0;
+    }
+    for (const row of calls) {
+      const day = get(String(row.d));
+      day.calls = Number(row.calls ?? 0);
+      day.spoke = Number(row.spoke ?? 0);
+      day.talkSeconds = Number(row.talk_seconds ?? 0);
+      day.notInterested = Number(row.not_interested ?? 0);
+      day.unwritten = Number(row.unwritten ?? 0);
+    }
+    for (const row of interested) {
+      get(String(row.d)).interested = Number(row.n ?? 0);
+    }
+
+    return [...byDay.values()].sort((a, b) => b.date.localeCompare(a.date));
+  });
+}

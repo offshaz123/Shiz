@@ -568,6 +568,30 @@ const ADDED_COLUMNS: {
   // Added at the same time as the sequence: rows written before it exists
   // default to step 1, which is what they were.
   { table: "prospect_emails", column: "step", definition: "TINYINT UNSIGNED NOT NULL DEFAULT 1 AFTER body" },
+  // Which member of staff made the call, as an id rather than a name.
+  //
+  // The caller column holds whatever name was current at the time, which
+  // is right for reading a year-old row back. It is wrong for asking
+  // "what has this person not written up yet", because a rename would
+  // silently empty their list. Null means the owner, as everywhere else.
+  {
+    table: "prospect_calls",
+    column: "staff_id",
+    definition: "INT UNSIGNED NULL AFTER caller",
+  },
+  // When the person who made the call said what happened on it.
+  //
+  // The phone system writes a row the moment a call ends — length,
+  // connected or not, which extension. What it cannot know is what was
+  // said, and that is the half that decides whether the business is
+  // worth ringing again. Null here means the call happened and nobody
+  // has told us anything about it yet, which is what the prompt and the
+  // red line at the top of the page are counting.
+  {
+    table: "prospect_calls",
+    column: "reviewed_at",
+    definition: "DATETIME NULL AFTER logged_by",
+  },
   // The phone system's own id for a call, so a recording can be asked
   // for later. The link itself is deliberately not stored: they expire,
   // and a column full of addresses that stopped working half an hour

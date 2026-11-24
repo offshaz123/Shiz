@@ -76,6 +76,7 @@ export async function POST(request: Request) {
     notes: "",
     minutes,
     caller: who?.name ?? `extension ${ended.internal}`,
+    staffId: who?.id ?? null,
     callbackAt: "",
     recordingId: ended.recordingId,
     loggedBy: "phone",

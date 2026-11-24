@@ -1,7 +1,9 @@
 import { canSee, currentUser } from "@/lib/admin-auth";
 import { AdminNav } from "@/components/AdminNav";
 import { ADMIN_PAGES } from "@/lib/admin-pages";
-import { touchSitting } from "@/lib/staff";
+import { openSitting, touchSitting } from "@/lib/staff";
+import { ShiftBar } from "@/components/ShiftBar";
+import { isConnected } from "@/lib/zadarma";
 import { whatsNew } from "@/lib/whats-new";
 
 /**
@@ -27,9 +29,19 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   // What has arrived since this person last opened each page.
   const counts = who ? await whatsNew(who.id) : {};
 
+  // The shift bar is for somebody who makes calls. Drawn when the phone
+  // system is connected and this person has an extension, which is the
+  // same test the Call button uses — one answer, two places.
+  const sitting = who?.extension && isConnected() ? await openSitting(who.id) : null;
+
   return (
     <>
       {who && <AdminNav pages={pages} who={who.name} counts={counts} />}
+      {who && sitting && (
+        <div className="lg:pl-60">
+          <ShiftBar name={who.name} signedInAt={sitting} />
+        </div>
+      )}
       {/* Room for the column, which is fixed so it does not scroll away. */}
       <div className={who ? "lg:pl-60" : undefined}>{children}</div>
     </>
