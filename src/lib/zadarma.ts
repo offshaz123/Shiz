@@ -196,14 +196,24 @@ export async function connectWebhook(url: string): Promise<{ ok: boolean; reason
 
 /** What it currently thinks it should be posting to. */
 export async function webhookSettings(): Promise<{ url: string; events: string[] } | null> {
-  const got = await call<{ status: string; url?: string; notifications?: Record<string, boolean> }>(
-    "/v1/pbx/callinfo/",
-  );
+  const got = await call<{
+    status: string;
+    url?: string;
+    notifications?: Record<string, unknown>;
+  }>("/v1/pbx/callinfo/");
   if (!got || got.status !== "success") return null;
+
+  // Their JSON sends these as the strings "true" and "false", not as
+  // booleans — and "false" is perfectly truthy, so a plain filter
+  // reported every event as switched on including the seven that are
+  // not. A panel that overstates what is connected is worse than no
+  // panel: it is the one you check instead of checking.
+  const on = (value: unknown) => value === true || value === "true";
+
   return {
     url: got.url ?? "",
     events: Object.entries(got.notifications ?? {})
-      .filter(([, on]) => on)
+      .filter(([, value]) => on(value))
       .map(([name]) => name),
   };
 }
