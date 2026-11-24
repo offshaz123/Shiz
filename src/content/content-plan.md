@@ -324,8 +324,13 @@ keywords, dealership social strategy).
       threshold and the 7-day pause threshold are third-party only and the sources disagree
       with each other, so the post says so rather than picking a number. The ~50 optimisation
       events in 7 days figure is widely cited and consistent across sources.)
-- [ ] What Happens to Your Ads When You Change the Budget Mid-Flight — target: "changing Facebook
-      ad budget resets learning"
+- [x] What Happens to Your Ads When You Change the Budget Mid-Flight — target: "changing Facebook
+      ad budget resets learning" (researched 2026-11-24: there is no published threshold. Third
+      parties give 20% and 30% with equal confidence and neither cites Meta; Jon Loomer argues it
+      is the size of the jump rather than a percentage at all, and that Meta's own "significant
+      edits" help page gives no figure. The post says so rather than picking one. The ~50
+      optimisation events in 7 days from the last significant edit is consistent everywhere,
+      including Meta's own wording, and is the only number used.)
 
 ## Backlog — local search (added 2026-10-08 research round)
 - [x] Choosing the Right Primary Category on Google Business Profile — target: "Google Business

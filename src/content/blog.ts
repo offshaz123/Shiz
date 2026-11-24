@@ -16,6 +16,81 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "what-happens-when-you-change-your-ad-budget-mid-flight",
+    title: "What Happens to Your Ads When You Change the Budget Mid-Flight",
+    description:
+      "You have something working and you want more of it. Here is what a budget change actually does to a running ad set, and why nobody can honestly give you a safe percentage.",
+    publishedAt: "2026-11-24",
+    keywords: [
+      "changing Facebook ad budget resets learning",
+      "Meta ads budget change learning phase",
+      "how to increase Facebook ad budget safely",
+      "Facebook ads significant edit",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Something is finally working. The enquiries are coming in at a price you are happy with, and the obvious thought is the right one: spend more.",
+          "Then you read a forum post saying that touching the budget resets everything and you will be back to square one. So the budget stays where it is, and the thing that works carries on working at a size that is not worth very much.",
+          "It is a fair worry and it is not nonsense. But the advice around it is worse than the problem.",
+        ],
+      },
+      {
+        heading: "What a change actually does",
+        paragraphs: [
+          "Meta's delivery system learns who to show an ad to by showing it to people and watching what happens. While it is working that out, the ad set is in what Meta calls the learning phase, and results during it are less stable and often more expensive.",
+          "The ad set leaves that phase after roughly fifty optimisation events in the week following its last significant edit. If you are optimising for leads, that is about fifty leads in seven days — which a lot of small local budgets never reach, and that is its own conversation.",
+          "The important words are \"significant edit\". Certain changes restart that clock. A budget change can be one of them. Which is where the trouble starts.",
+        ],
+      },
+      {
+        heading: "The number nobody can give you",
+        paragraphs: [
+          "Search for a safe percentage and you will find one. You will also find a different one.",
+          "Some sources say a change of more than 20% restarts the learning. Others say 30%, stated just as confidently. A widely read Meta ads commentator argues it is not a fixed percentage at all, and that the size of the jump is what matters — going from £100 a day to £101 is unlikely to do anything, going from £100 to £1,000 might.",
+          "What none of them have is Meta saying so. The help page on significant edits has been there for years and does not give a threshold for budget changes, and the people quoting 20% and 30% are not citing it, because there is nothing there to cite.",
+          "We would rather tell you that than pick one of the numbers and sound certain. If somebody hands you a percentage as fact, ask where it came from.",
+        ],
+      },
+      {
+        heading: "What is actually agreed",
+        paragraphs: [
+          "Three things are consistent across every source, including Meta's own wording.",
+        ],
+        bullets: [
+          "The learning phase ends at roughly fifty optimisation events in seven days, counted from the last significant edit.",
+          "Some edits restart it and some do not, and budget changes are in the group that can.",
+          "A bigger change is more likely to restart it than a smaller one.",
+        ],
+      },
+      {
+        heading: "What to do instead of chasing a threshold",
+        paragraphs: [
+          "Since the exact rule is not published, the sensible approach is one that works whatever the rule turns out to be.",
+          "Raise it in steps rather than in one jump. If you want to double the budget, get there over a week or two instead of on a Tuesday afternoon. A series of small rises gives the system less to re-learn each time, and if performance falls apart you know roughly where it started.",
+          "Leave it alone in between. Changing the budget every day is not a gradual increase, it is a permanent state of change — the ad set never gets a settled week to learn from. Give each rise several days before deciding whether it worked.",
+          "Change one thing at a time. If you raise the budget and swap the creative and widen the audience on the same afternoon, then whatever happens next, you have no idea which of the three did it.",
+          "And judge it over a sensible window. The day after a budget change is the worst possible moment to decide whether a budget change was a mistake.",
+        ],
+      },
+      {
+        heading: "The bit that catches people out",
+        paragraphs: [
+          "If your budget is set at campaign level rather than on each ad set — Advantage campaign budget, previously called CBO — then changing it is a change to every ad set underneath it at once.",
+          "So one edit can put several ad sets back into learning together, including the ones that were doing fine and that you had no intention of touching. Worth knowing before you adjust a campaign that contains the one ad set earning its keep.",
+        ],
+      },
+      {
+        heading: "When to accept the reset and move on",
+        paragraphs: [
+          "Sometimes the right change is a big one. A budget that is far too small to ever reach fifty events a week is not going to escape the learning phase by being nudged politely, and protecting a learning phase you were never going to exit is protecting nothing.",
+          "The same goes for a genuine opportunity. If December is your month, the cost of a few unsettled days is small against three weeks of being too quiet to matter.",
+          "The real mistake is not changing the budget. It is changing it, panicking two days later, changing it back, and doing that every week until nothing has ever had a settled fortnight to be judged on.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "why-two-businesses-on-the-same-street-rank-differently",
     title: "Why Two Businesses on the Same Street Rank Differently",
     description:
