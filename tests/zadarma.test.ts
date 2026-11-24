@@ -74,3 +74,20 @@ test("a two-second answer is not a conversation", () => {
   assert.equal(outcomeFor("no answer", 0), "no-answer");
   assert.equal(outcomeFor("failed", 0), "no-answer");
 });
+
+test("the signature is base64 of the hex digest, not of the raw bytes", () => {
+  // The bug that stopped the first connection attempt working. Their
+  // documented example is PHP's base64_encode(hash_hmac('sha1', ...)),
+  // and PHP's hash_hmac returns a hex string unless told otherwise — so
+  // what is base64'd is forty hex characters, not twenty bytes.
+  //
+  // Both forms are valid base64 and both look plausible in a header.
+  // The only way to tell them apart without their server is the length:
+  // 40 bytes of hex encode to 56 characters, 20 raw bytes to 28.
+  const made = sign("/v1/pbx/callinfo/", { url: "https://example.com/hook" }, "secret");
+  assert.equal(made.length, 56, "signature is the wrong length to be hex-then-base64");
+
+  // And what it decodes to must be readable hex, which raw bytes are not.
+  const decoded = Buffer.from(made, "base64").toString("utf8");
+  assert.match(decoded, /^[0-9a-f]{40}$/);
+});

@@ -53,7 +53,18 @@ function queryString(params: Record<string, string>): string {
 export function sign(method: string, params: Record<string, string>, secret: string): string {
   const query = queryString(params);
   const payload = `${method}${query}${createHash("md5").update(query).digest("hex")}`;
-  return createHmac("sha1", secret).update(payload).digest("base64");
+
+  // base64 of the HEX digest, not of the raw bytes.
+  //
+  // Their documented example is PHP:
+  //   base64_encode(hash_hmac('sha1', $payload, $secret))
+  // and PHP's hash_hmac returns a hex *string* unless you pass
+  // raw_output. So what gets base64'd is forty hex characters, not
+  // twenty bytes. Writing it the obvious way — .digest("base64") —
+  // produces a perfectly valid signature of the right thing that their
+  // server rejects without saying why, which is exactly what it did.
+  const hex = createHmac("sha1", secret).update(payload).digest("hex");
+  return Buffer.from(hex, "utf8").toString("base64");
 }
 
 /**
@@ -222,7 +233,13 @@ export function signatureMatches(body: string, header: string | null): boolean {
   const auth = keys();
   if (!auth || !header) return false;
 
-  const expected = createHmac("sha1", auth.secret).update(body).digest("base64");
+  // Same hex-then-base64 as above: their webhook signature is made by
+  // the same PHP one-liner, so a raw-bytes comparison would reject
+  // every notification they ever send.
+  const expected = Buffer.from(
+    createHmac("sha1", auth.secret).update(body).digest("hex"),
+    "utf8",
+  ).toString("base64");
   const given = Buffer.from(header.trim());
   const mine = Buffer.from(expected);
   if (given.length !== mine.length) return false;
