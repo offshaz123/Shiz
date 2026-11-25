@@ -118,3 +118,77 @@ test("parameters are encoded the way PHP encodes them", async () => {
 
   assert.notEqual(withSpecials, naive, "encoding is still JavaScript's, not PHP's");
 });
+
+/**
+ * What goes out on the wire when somebody presses Call, and when the
+ * number a business sees has to change.
+ *
+ * Worth testing because the first version of this was wrong in a way
+ * nothing could catch: it passed a phone number as the `sip` parameter,
+ * which that API takes as an extension number. The request succeeded,
+ * the call went through, and every American business saw a London
+ * number. Nothing failed, so nothing said so.
+ */
+test("placing a call asks for the two things the API takes, and nothing else", async () => {
+  process.env.ZADARMA_KEY = "key";
+  process.env.ZADARMA_SECRET = "secret";
+  const seen: { url: string; init: RequestInit }[] = [];
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = (async (url: string, init: RequestInit) => {
+    seen.push({ url: String(url), init });
+    return new Response(JSON.stringify({ status: "success" }), { status: 200 });
+  }) as typeof fetch;
+  try {
+    const { placeCall } = await import("../src/lib/zadarma.ts");
+    const result = await placeCall("101", "02071234567");
+    assert.equal(result.ok, true);
+    assert.equal(seen.length, 1);
+    assert.match(seen[0].url, /\/v1\/request\/callback\/\?/);
+    assert.match(seen[0].url, /from=101/);
+    assert.match(seen[0].url, /to=02071234567/);
+    // The parameter that did nothing. It takes an extension, not a
+    // number, so a number in it is worse than leaving it out.
+    assert.doesNotMatch(seen[0].url, /sip=/);
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+});
+
+test("changing the number a business sees is a PUT with the number in the body", async () => {
+  process.env.ZADARMA_KEY = "key";
+  process.env.ZADARMA_SECRET = "secret";
+  const seen: { url: string; init: RequestInit }[] = [];
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = (async (url: string, init: RequestInit) => {
+    seen.push({ url: String(url), init });
+    return new Response(JSON.stringify({ status: "success" }), { status: 200 });
+  }) as typeof fetch;
+  try {
+    const { setExtensionCallerId } = await import("../src/lib/zadarma.ts");
+    assert.equal(await setExtensionCallerId("101", "+12029824683"), true);
+    assert.equal(seen.length, 1);
+    assert.equal(seen[0].init.method, "PUT");
+    assert.match(seen[0].url, /\/v1\/pbx\/internal\/101\/callerid\/$/);
+    // In the body, not the address, and signed all the same.
+    assert.equal(seen[0].init.body, "number=%2B12029824683");
+    const headers = seen[0].init.headers as Record<string, string>;
+    assert.equal(headers["Content-Type"], "application/x-www-form-urlencoded");
+    assert.match(headers.Authorization, /^key:/);
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+});
+
+test("a refusal from the phone system is a refusal here, not a shrug", async () => {
+  process.env.ZADARMA_KEY = "key";
+  process.env.ZADARMA_SECRET = "secret";
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = (async () =>
+    new Response(JSON.stringify({ status: "error" }), { status: 200 })) as typeof fetch;
+  try {
+    const { setExtensionCallerId } = await import("../src/lib/zadarma.ts");
+    assert.equal(await setExtensionCallerId("101", "+12029824683"), false);
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+});

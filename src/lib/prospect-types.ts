@@ -88,6 +88,10 @@ export type ProspectCall = {
   minutes: number | null;
   caller: string;
   calledAt: string;
+  /** Our number that showed on their phone, or "by country" where the
+   *  phone system chose it. Blank on anything written up by hand, where
+   *  nobody can know. */
+  shownAs: string;
 };
 
 export function isStatus(value: unknown): value is ProspectStatus {

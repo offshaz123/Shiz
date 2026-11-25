@@ -831,6 +831,16 @@ export const ADDED_COLUMNS: {
     column: "review_sent_at",
     definition: "DATETIME NULL AFTER reminded_at",
   },
+  // Which of our numbers showed on their phone. Recorded per call
+  // because it is otherwise unknowable afterwards: nothing in a bill or
+  // a call log says what came up on the other end, and an American
+  // business seeing a London number is the difference between a call
+  // back and a blocked number.
+  {
+    table: "prospect_calls",
+    column: "shown_as",
+    definition: "VARCHAR(24) NULL AFTER caller",
+  },
   {
     table: "prospect_emails",
     column: "sent_by",

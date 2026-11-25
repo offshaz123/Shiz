@@ -999,19 +999,24 @@ export async function logCall(
      *  alongside the name because a rename must not empty somebody's
      *  list of calls to write up. */
     staffId?: number | null;
+    /** Our number that showed on their phone, or "by country" where the
+     *  phone system picked it itself. Blank when nobody knows, which is
+     *  every call written up by hand. */
+    shownAs?: string;
   },
 ): Promise<boolean> {
   const done = await withDb(async (db) => {
     await db.execute(
       `INSERT INTO prospect_calls
-         (prospect_id, outcome, notes, minutes, caller, staff_id, recording_id, logged_by)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+         (prospect_id, outcome, notes, minutes, caller, shown_as, staff_id, recording_id, logged_by)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         id,
         call.outcome,
         call.notes.slice(0, 4000) || null,
         call.minutes && call.minutes > 0 ? Math.min(255, call.minutes) : null,
         call.caller.slice(0, 60) || null,
+        call.shownAs?.slice(0, 24) || null,
         call.staffId ?? null,
         call.recordingId?.slice(0, 80) || null,
         call.loggedBy ?? "hand",
@@ -1087,10 +1092,11 @@ export async function listProspectCalls(id: number): Promise<ProspectCall[] | nu
         notes: string | null;
         minutes: number | null;
         caller: string | null;
+        shown_as: string | null;
         called_at: string;
       })[]
     >(
-      `SELECT outcome, notes, minutes, caller, called_at
+      `SELECT outcome, notes, minutes, caller, shown_as, called_at
          FROM prospect_calls WHERE prospect_id = ?
         ORDER BY called_at DESC LIMIT 25`,
       [id],
@@ -1104,6 +1110,7 @@ export async function listProspectCalls(id: number): Promise<ProspectCall[] | nu
       notes: r.notes ?? "",
       minutes: r.minutes === null ? null : Number(r.minutes),
       caller: r.caller ?? "",
+      shownAs: r.shown_as ?? "",
       calledAt: String(r.called_at),
     }));
   });

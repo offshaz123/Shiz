@@ -84,25 +84,43 @@ export function sign(method: string, params: Record<string, string>, secret: str
 }
 
 /**
- * One signed GET against their API.
+ * One signed request against their API.
  *
  * Never throws. Every caller is either a page being rendered or a button
  * somebody pressed, and neither should break because a phone system is
  * having an afternoon.
  */
-async function call<T>(method: string, params: Record<string, string> = {}): Promise<T | null> {
+async function call<T>(
+  method: string,
+  params: Record<string, string> = {},
+  /** Their API uses PUT for the handful of settings it lets you change.
+   *  Signed exactly the same way; the difference is that the parameters
+   *  go in the body rather than the address. */
+  verb: "GET" | "PUT" | "DELETE" = "GET",
+): Promise<T | null> {
   const auth = keys();
   if (!auth) return null;
 
   const query = queryString(params);
+  const inBody = verb !== "GET";
+  // No space after the colon. Their prose writes it as
+  // "Authorization: user_key: signature", but the code that makes it is
+  //   $userKey . ':' . $sign
+  // and the space the prose implies is enough on its own to have every
+  // request refused without a reason. Both halves of this file had it.
+  const headers: Record<string, string> = {
+    Authorization: `${auth.key}:${sign(method, params, auth.secret)}`,
+  };
+  // Their server reads a PUT body the way it reads a form, so it has to
+  // be said. Without it the parameters arrive as nothing and the change
+  // is refused with no reason given.
+  if (inBody) headers["Content-Type"] = "application/x-www-form-urlencoded";
+
   try {
-    const res = await fetch(`${BASE}${method}${query ? `?${query}` : ""}`, {
-      // No space after the colon. Their prose writes it as
-      // "Authorization: user_key: signature", but the code that makes it
-      // is  $userKey . ':' . $sign  — and the space the prose implies is
-      // enough on its own to have every request refused without a
-      // reason. Both halves of this file had it.
-      headers: { Authorization: `${auth.key}:${sign(method, params, auth.secret)}` },
+    const res = await fetch(`${BASE}${method}${!inBody && query ? `?${query}` : ""}`, {
+      method: verb,
+      headers,
+      ...(inBody ? { body: query } : {}),
       signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) {
@@ -117,21 +135,90 @@ async function call<T>(method: string, params: Record<string, string> = {}): Pro
 }
 
 /**
+ * What an extension shows on the phone of whoever it rings.
+ *
+ * Read rather than assumed, because the number businesses see is the
+ * one thing about this system nobody here can check by looking at it:
+ * the only other way to find out is to ring somebody and ask them what
+ * came up.
+ *
+ * `byDirection` is their own setting for picking a number to match the
+ * country being dialled. Where it is on, it decides, and nothing here
+ * should be changing the number before each call.
+ */
+type CallerId = { number: string; byDirection: boolean };
+
+/**
+ * Remembered for a few minutes, because this is read before every call
+ * and the answer changes about twice a year. Without it, pressing Call
+ * waits on a round trip to their API before the phone starts ringing.
+ * Short enough that a change made in their control panel is picked up
+ * while somebody is still wondering whether it worked.
+ */
+const CALLER_ID_TTL = 5 * 60_000;
+const callerIds = new Map<string, { value: CallerId; at: number }>();
+
+export async function extensionCallerId(extension: string): Promise<CallerId | null> {
+  const known = callerIds.get(extension);
+  if (known && Date.now() - known.at < CALLER_ID_TTL) return known.value;
+
+  const result = await call<{
+    status: string;
+    caller_id?: string;
+    caller_id_by_direction?: boolean;
+  }>(`/v1/pbx/internal/${encodeURIComponent(extension)}/info/`);
+  if (!result || result.status !== "success") return null;
+  const value: CallerId = {
+    number: result.caller_id ?? "",
+    byDirection: result.caller_id_by_direction === true,
+  };
+  callerIds.set(extension, { value, at: Date.now() });
+  return value;
+}
+
+/**
+ * Sets the number an extension shows, in international format.
+ *
+ * This is how a London business sees a London number and an American
+ * one sees an American number. It was tried the obvious way first — a
+ * `sip` parameter on the call itself — and that was wrong: their `sip`
+ * parameter takes an extension, not a phone number, so passing
+ * +442045773152 into it did nothing at all and every call went out
+ * showing whatever the extension was already set to.
+ */
+export async function setExtensionCallerId(
+  extension: string,
+  number: string,
+): Promise<boolean> {
+  if (!isConnected() || !extension || !number) return false;
+  const result = await call<{ status: string }>(
+    `/v1/pbx/internal/${encodeURIComponent(extension)}/callerid/`,
+    { number },
+    "PUT",
+  );
+  const done = result?.status === "success";
+  // Kept in step either way: on success the remembered value is now
+  // this one, and on failure what is remembered can no longer be
+  // trusted, so the next call asks again.
+  if (done) callerIds.set(extension, { value: { number, byDirection: false }, at: Date.now() });
+  else callerIds.delete(extension);
+  return done;
+}
+
+/**
  * Rings the agent, then rings the business, then joins them.
  *
- * `from` is the agent's extension, `to` is the business. The optional
- * `sip` decides whose number shows on the business's phone, which is the
- * whole reason for buying a London number and an American one.
+ * `from` is the agent's extension and `to` is the business. What shows
+ * on the business's phone is the extension's own CallerID, which is set
+ * before the call rather than passed to it — see above.
  */
 export async function placeCall(
   agentExtension: string,
   prospectNumber: string,
-  callerId?: string,
 ): Promise<{ ok: boolean; reason?: string }> {
   if (!isConnected()) return { ok: false, reason: "not_connected" };
 
   const params: Record<string, string> = { from: agentExtension, to: prospectNumber };
-  if (callerId) params.sip = callerId;
 
   const result = await call<{ status: string; message?: string }>("/v1/request/callback/", params);
   if (!result) return { ok: false, reason: "no_answer_from_phone_system" };

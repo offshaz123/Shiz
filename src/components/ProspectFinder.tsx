@@ -1542,13 +1542,24 @@ function Row({
   // by hand. His call, not ours: a sequence already running is work already
   // started, and ringing somebody is not a reason to throw it away.
   const [keepSequence, setKeepSequence] = useState(false);
+  // The number this call will show on their phone, straight from the
+  // phone system rather than from what we meant to happen.
+  const [shownAs, setShownAs] = useState("");
+  const [callerIdNote, setCallerIdNote] = useState("");
   // What the row knows about the sequence after an action on this page, so a
   // send or a stop shows immediately rather than on the next load.
   const [seq, setSeq] = useState<"unchanged" | "started" | "stopped">("unchanged");
   const [profile, setProfile] = useState(false);
   const [history, setHistory] = useState<SentEmail[] | null>(null);
   const [calls, setCalls] = useState<
-    { outcome: CallOutcome; notes: string; minutes: number | null; caller: string; calledAt: string }[]
+    {
+      outcome: CallOutcome;
+      notes: string;
+      minutes: number | null;
+      caller: string;
+      shownAs: string;
+      calledAt: string;
+    }[]
   | null>(null);
   const [openEmail, setOpenEmail] = useState<number | null>(null);
   const [typingEmail, setTypingEmail] = useState<string | null>(null);
@@ -1859,6 +1870,16 @@ function Row({
                   headers: { "Content-Type": "application/json" },
                   body: JSON.stringify({ id: p.id }),
                 });
+                // What number the business is about to see, said back
+                // on the row. It is the one part of a call nobody here
+                // can check by looking, and a US business seeing a
+                // London number is a number that gets blocked.
+                const dialed = (await res
+                  .clone()
+                  .json()
+                  .catch(() => null)) as { shownAs?: string; callerIdNote?: string } | null;
+                setShownAs(dialed?.shownAs ?? "");
+                setCallerIdNote(dialed?.callerIdNote ?? "");
                 setDialState(res.ok ? "ringing" : "failed");
                 if (!res.ok) setTimeout(() => setDialState("idle"), 4000);
                 else {
@@ -1896,6 +1917,21 @@ function Row({
                 ? "Didn't connect"
                 : "Call"}
           </button>
+        )}
+        {/* Said once the call is placed, because it is the one thing
+            about a call nobody at this end can see. */}
+        {shownAs && dialState !== "failed" && (
+          <span className="text-[11px] text-muted" title="The number showing on their phone">
+            they see{" "}
+            <span className="font-semibold text-foreground">
+              {shownAs === "by country" ? "a number for their country" : shownAs}
+            </span>
+          </span>
+        )}
+        {callerIdNote && (
+          <span className="rounded-lg border border-amber-500/40 px-2.5 py-1 text-[11px] font-semibold text-amber-500">
+            {callerIdNote}
+          </span>
         )}
         {/*
           The site link sits right after the phone and is styled as something
@@ -2538,6 +2574,13 @@ function Row({
                       <span className="text-muted">{c.calledAt.slice(0, 10)}</span>
                       {c.minutes ? <span className="text-muted">{c.minutes} min</span> : null}
                       {c.caller ? <span className="text-muted">· {c.caller}</span> : null}
+                      {/* Which of our numbers came up on their phone.
+                          Only known for calls placed from here. */}
+                      {c.shownAs ? (
+                        <span className="text-muted" title="The number that showed on their phone">
+                          · they saw {c.shownAs}
+                        </span>
+                      ) : null}
                     </div>
                     {c.notes && (
                       <p className="mt-1 leading-relaxed text-muted">{c.notes}</p>

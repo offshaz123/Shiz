@@ -5,7 +5,7 @@ import { AdminHeading } from "@/components/AdminHeading";
 import { LoginForm } from "../LoginForm";
 import { NotYours } from "../NotYours";
 import { pbxId } from "@/lib/settings";
-import { isConnected } from "@/lib/zadarma";
+import { extensionCallerId, isConnected } from "@/lib/zadarma";
 import { siteConfig } from "@/lib/site-config";
 
 export const dynamic = "force-dynamic";
@@ -39,6 +39,11 @@ export default async function PhonePage() {
   if (!canSee(who, "phone")) return <NotYours page="phone" />;
 
   const pbx = await pbxId();
+  // Read from the phone system rather than from what this site thinks
+  // it set. The number a business sees is the one thing about a call
+  // nobody at this end can check by looking at a screen, so it is
+  // printed here from the source.
+  const callerId = who.extension ? await extensionCallerId(who.extension) : null;
   // The owner is the person everybody else is told to ask, so telling
   // him to ask himself reads as a page that was never looked at.
   const owner = who.kind === "owner";
@@ -89,6 +94,35 @@ export default async function PhonePage() {
           <div className="flex flex-wrap items-baseline gap-x-4 border-b border-border px-4 py-3">
             <dt className="w-40 shrink-0 text-xs font-semibold text-muted">Server / domain</dt>
             <dd className="text-sm font-bold text-foreground">pbx.zadarma.com</dd>
+          </div>
+          <div className="flex flex-wrap items-baseline gap-x-4 border-b border-border px-4 py-3">
+            <dt className="w-40 shrink-0 text-xs font-semibold text-muted">
+              What they see when you ring
+            </dt>
+            <dd className="text-sm text-foreground">
+              {callerId === null ? (
+                <span className="text-muted">
+                  {isConnected()
+                    ? "The phone system did not answer just now, so this could not be checked."
+                    : "The phone system is not connected to this site yet."}
+                </span>
+              ) : callerId.byDirection ? (
+                <span className="font-bold">
+                  A number for their country
+                  <span className="ml-2 font-normal text-muted">
+                    picked by the phone system on each call
+                  </span>
+                </span>
+              ) : (
+                <span className="font-bold tabular-nums">
+                  {callerId.number || <span className="font-normal text-muted">not set</span>}
+                  <span className="ml-2 font-normal text-muted tabular-nums">
+                    switched per call: UK businesses see the UK number, American ones the American
+                    one
+                  </span>
+                </span>
+              )}
+            </dd>
           </div>
           <div className="flex flex-wrap items-baseline gap-x-4 px-4 py-3">
             <dt className="w-40 shrink-0 text-xs font-semibold text-muted">Password</dt>
