@@ -12,6 +12,8 @@
  * staff row with its own password and its own set of these keys.
  */
 
+import type { AdminGroupKey } from "./nav-groups";
+
 export type PageKey =
   | "overview"
   | "today"
@@ -47,6 +49,8 @@ export type PageSection = {
 
 export type AdminPage = {
   key: PageKey;
+  /** Which heading it sits under in the side column. */
+  group: AdminGroupKey;
   href: string;
   label: string;
   hint: string;
@@ -76,6 +80,7 @@ export type AdminPage = {
 export const ADMIN_PAGES: AdminPage[] = [
   {
     key: "overview",
+    group: "day",
     href: "/admin",
     label: "Overview",
     hint: "What the system has done on its own",
@@ -89,6 +94,7 @@ export const ADMIN_PAGES: AdminPage[] = [
   },
   {
     key: "today",
+    group: "day",
     href: "/admin/today",
     label: "Today",
     hint: "What to do now",
@@ -100,6 +106,7 @@ export const ADMIN_PAGES: AdminPage[] = [
   },
   {
     key: "calendar",
+    group: "day",
     href: "/admin/calendar",
     label: "Calendar",
     hint: "Everything promised, by the day it was promised for",
@@ -118,6 +125,7 @@ export const ADMIN_PAGES: AdminPage[] = [
   },
   {
     key: "leads",
+    group: "winning",
     href: "/admin/leads",
     label: "Enquiries",
     // "Leads" meant nothing to anybody who had not had it explained.
@@ -134,6 +142,7 @@ export const ADMIN_PAGES: AdminPage[] = [
   },
   {
     key: "money",
+    group: "winning",
     href: "/admin/money",
     label: "Warm list",
     hint: "Everybody who already put their hand up and was never closed",
@@ -142,6 +151,7 @@ export const ADMIN_PAGES: AdminPage[] = [
   },
   {
     key: "clients",
+    group: "customers",
     href: "/admin/clients",
     label: "Clients",
     hint: "Who pays us, their logins and their ad spend",
@@ -156,6 +166,7 @@ export const ADMIN_PAGES: AdminPage[] = [
   },
   {
     key: "prospects",
+    group: "winning",
     href: "/admin/prospects",
     label: "Who to call",
     hint: "Every business found, and what has been sent to each",
@@ -168,6 +179,7 @@ export const ADMIN_PAGES: AdminPage[] = [
   },
   {
     key: "emails",
+    group: "winning",
     href: "/admin/emails",
     label: "Emails",
     hint: "Everything sent and everything that came back, both countries",
@@ -180,6 +192,7 @@ export const ADMIN_PAGES: AdminPage[] = [
   },
   {
     key: "company",
+    group: "tools",
     href: "/admin/company",
     label: "Company check",
     hint: "The official register",
@@ -188,6 +201,7 @@ export const ADMIN_PAGES: AdminPage[] = [
   },
   {
     key: "scan",
+    group: "tools",
     href: "/admin/scan",
     label: "Scan a site",
     hint: "Audit any website — safe to show a customer",
@@ -196,6 +210,7 @@ export const ADMIN_PAGES: AdminPage[] = [
   },
   {
     key: "phone",
+    group: "setup",
     href: "/admin/phone",
     label: "Phone setup",
     hint: "How to get the calling app working on your laptop",
@@ -213,6 +228,7 @@ export const ADMIN_PAGES: AdminPage[] = [
   },
   {
     key: "office",
+    group: "tools",
     href: "/admin/office",
     label: "Office",
     hint: "The jobs that run on their own, as a room you can look at",
@@ -221,6 +237,7 @@ export const ADMIN_PAGES: AdminPage[] = [
   },
   {
     key: "health",
+    group: "tools",
     href: "/admin/health",
     label: "System check",
     hint: "Is anything broken",
@@ -229,6 +246,7 @@ export const ADMIN_PAGES: AdminPage[] = [
   },
   {
     key: "staff",
+    group: "setup",
     href: "/admin/staff",
     label: "Team",
     hint: "Who can sign in, what they can see, and what they have done",
@@ -244,6 +262,7 @@ export const ADMIN_PAGES: AdminPage[] = [
   },
   {
     key: "settings",
+    group: "setup",
     href: "/admin/settings",
     label: "Settings",
     hint: "The things set once for the whole company",

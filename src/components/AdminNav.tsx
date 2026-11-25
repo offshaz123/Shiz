@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { logout } from "@/app/admin/actions";
 import { siteConfig } from "@/lib/site-config";
 import type { AdminPage, NewCounts } from "@/lib/admin-pages";
+import { ADMIN_GROUPS, TONE } from "@/lib/nav-groups";
 
 /**
  * The way around the admin.
@@ -109,8 +110,28 @@ export function AdminNav({
           </span>
         </Link>
 
-        <nav className="mt-6 flex flex-col gap-0.5">
-          {pages.map((page) => {
+        <nav className="mt-6 flex flex-col">
+          {ADMIN_GROUPS.map((group) => {
+            const mine = pages.filter((page) => page.group === group.key);
+            // A heading over nothing is worse than no heading: it tells
+            // somebody there is a part of this they cannot see.
+            if (mine.length === 0) return null;
+            const tone = TONE[group.tone];
+
+            return (
+              <div key={group.key} className="mb-1">
+                <div className="mb-1 mt-4 flex items-center gap-2 px-2 first:mt-0">
+                  <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${tone.dot}`} />
+                  <span
+                    className={`text-[10px] font-bold uppercase tracking-[0.14em] ${tone.label}`}
+                  >
+                    {group.label}
+                  </span>
+                  <span className={`h-px flex-1 ${tone.rule}`} />
+                </div>
+
+                <div className="flex flex-col gap-0.5">
+          {mine.map((page) => {
             const here = page.href === active.href;
             const fresh = counts[page.key] ?? 0;
             const has = (page.sections?.length ?? 0) > 0;
@@ -129,8 +150,8 @@ export function AdminNav({
                   aria-current={here ? "page" : undefined}
                   className={`flex flex-1 items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition ${
                     here
-                      ? "bg-brand-pink text-white"
-                      : "text-muted hover:bg-background hover:text-foreground"
+                      ? tone.active
+                      : "border-l-2 border-transparent text-muted hover:border-border hover:bg-background hover:text-foreground"
                   }`}
                 >
                   <span className="min-w-0 flex-1 truncate">{page.label}</span>
@@ -141,9 +162,7 @@ export function AdminNav({
                   {fresh > 0 && (
                     <span
                       title={`${fresh} new since you last opened this`}
-                      className={`shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums ${
-                        here ? "bg-white/25 text-white" : "bg-brand-pink text-white"
-                      }`}
+                      className="shrink-0 rounded-full bg-brand-pink px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-white"
                     >
                       {fresh > 99 ? "99+" : fresh}
                     </span>
@@ -164,9 +183,7 @@ export function AdminNav({
                       setPinned((k) => (k === page.key ? null : page.key));
                       setOpen(null);
                     }}
-                    className={`ml-0.5 rounded-lg px-1.5 transition ${
-                      here ? "text-white/80 hover:text-white" : "text-muted hover:text-foreground"
-                    }`}
+                    className="ml-0.5 rounded-lg px-1.5 text-muted transition hover:text-foreground"
                   >
                     <svg
                       viewBox="0 0 24 24"
@@ -201,6 +218,10 @@ export function AdminNav({
                     ))}
                   </ul>
                 )}
+              </div>
+            );
+          })}
+                </div>
               </div>
             );
           })}
@@ -251,13 +272,24 @@ export function AdminNav({
             onChange={(e) => router.push(e.target.value)}
             className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm font-semibold text-foreground"
           >
-            {pages.map((page) => {
-              const fresh = counts[page.key] ?? 0;
+            {/* The same grouping as the column, because a flat list of
+                fifteen in a phone picker is the thing the headings were
+                added to fix. */}
+            {ADMIN_GROUPS.map((group) => {
+              const mine = pages.filter((page) => page.group === group.key);
+              if (mine.length === 0) return null;
               return (
-                <option key={page.href} value={page.href}>
-                  {page.label}
-                  {fresh > 0 ? ` (${fresh} new)` : ""}
-                </option>
+                <optgroup key={group.key} label={group.label}>
+                  {mine.map((page) => {
+                    const fresh = counts[page.key] ?? 0;
+                    return (
+                      <option key={page.href} value={page.href}>
+                        {page.label}
+                        {fresh > 0 ? ` (${fresh} new)` : ""}
+                      </option>
+                    );
+                  })}
+                </optgroup>
               );
             })}
           </select>

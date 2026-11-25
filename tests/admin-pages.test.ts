@@ -6,6 +6,7 @@ import {
   grantablePages,
   pageFor,
 } from "../src/lib/admin-pages.ts";
+import { ADMIN_GROUPS, PORTAL_GROUPS, TONE } from "../src/lib/nav-groups.ts";
 
 /**
  * The page list is the whole permission model, so the quiet mistakes in it
@@ -58,4 +59,53 @@ test("the owner's username cannot be taken by a member of staff", async () => {
   // Usernames may carry digits, which is what Walid asked for.
   assert.equal(toUsername("Sam 2"), "sam2");
   assert.equal(toUsername("jade.okoro"), "jade.okoro");
+});
+
+/**
+ * The side column is drawn by group, not by page.
+ *
+ * That is a new way for a page to disappear: it exists, it is allowed,
+ * it has a heading — and if that heading is not in the list the column
+ * draws, nothing renders it and the only way to reach the page is to
+ * type the address. The page would still work, which is what makes it
+ * the kind of thing nobody notices for a month.
+ */
+test("every page sits under a heading the column actually draws", () => {
+  const drawn = new Set(ADMIN_GROUPS.map((g) => g.key));
+  for (const page of ADMIN_PAGES) {
+    assert.ok(
+      drawn.has(page.group),
+      `${page.key} is under "${page.group}", which the side column does not draw`,
+    );
+  }
+});
+
+test("no heading is drawn over nothing", () => {
+  for (const group of ADMIN_GROUPS) {
+    assert.ok(
+      ADMIN_PAGES.some((page) => page.group === group.key),
+      `"${group.label}" has no pages under it`,
+    );
+  }
+});
+
+test("every heading has a colour of its own", () => {
+  const tones = ADMIN_GROUPS.map((g) => g.tone);
+  assert.equal(new Set(tones).size, tones.length, "two headings share a colour");
+  for (const group of ADMIN_GROUPS) {
+    const tone = TONE[group.tone];
+    assert.ok(tone, `${group.key} has no tone`);
+    // Whole class names, never built up at runtime, or Tailwind never
+    // generates them and the colour silently does not appear.
+    for (const part of [tone.dot, tone.label, tone.rule, tone.active, tone.icon]) {
+      assert.doesNotMatch(part, /\$\{|undefined/);
+      assert.ok(part.length > 0);
+    }
+  }
+});
+
+test("the client portal's headings are sound in the same way", () => {
+  const tones = PORTAL_GROUPS.map((g) => g.tone);
+  assert.equal(new Set(tones).size, tones.length);
+  for (const group of PORTAL_GROUPS) assert.ok(TONE[group.tone]);
 });

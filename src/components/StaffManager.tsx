@@ -173,6 +173,7 @@ export function StaffManager({
   sittings,
   days,
   ownerExtension,
+  unwritten,
 }: {
   staff: Staff[];
   tallies: StaffTally[];
@@ -182,6 +183,8 @@ export function StaffManager({
   days: Record<string, DayReport[]>;
   /** The owner's own extension, set on this page rather than on the server. */
   ownerExtension: string;
+  /** Calls each person has not written up, keyed by staff id. */
+  unwritten: Record<string, number>;
 }) {
   const [addState, addAction, adding] = useActionState<StaffFormState, FormData>(createStaff, {});
 
@@ -264,6 +267,20 @@ export function StaffManager({
                       is a good day depends on what the day was for, and a
                       number here pretending to know that would be wrong
                       about somebody sooner or later. */}
+                  {/* Said here rather than thrown at him as a question.
+                      Nobody can write up a call they were not on, so the
+                      prompt asks each person about their own — which
+                      leaves this the only way to see a backlog quietly
+                      building on somebody else's name. */}
+                  {(unwritten[String(person.id)] ?? 0) > 0 && (
+                    <span
+                      className="rounded-full border border-amber-500/50 px-2 py-0.5 text-[11px] font-semibold text-amber-500"
+                      title="Calls they have made and not said anything about"
+                    >
+                      {unwritten[String(person.id)]} not written up
+                    </span>
+                  )}
+
                   <span className="ml-auto flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted">
                     <span>
                       <b className="text-foreground tabular-nums">{tally?.callsToday ?? 0}</b> calls

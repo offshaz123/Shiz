@@ -5,6 +5,7 @@ import { StaffManager } from "@/components/StaffManager";
 import { LoginForm } from "../LoginForm";
 import { NotYours } from "../NotYours";
 import { dayReports, listActivity, listSittings, listStaff, staffTallies } from "@/lib/staff";
+import { unwrittenByStaff } from "@/lib/call-review";
 import { ownerExtension } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
@@ -32,12 +33,16 @@ export default async function StaffPage() {
   if (!who) return <LoginForm />;
   if (who.kind !== "owner") return <NotYours page="staff" />;
 
-  const [staff, tallies, activity, sittings, mine] = await Promise.all([
+  const [staff, tallies, activity, sittings, mine, unwritten] = await Promise.all([
     listStaff(),
     staffTallies(),
     listActivity("everyone", 80),
     listSittings(40),
     ownerExtension(),
+    // The write-up prompt only ever asks somebody about their own
+    // calls, so this is how the owner sees a backlog building up on
+    // somebody else's.
+    unwrittenByStaff(),
   ]);
 
   // A month per person, fetched here so the panel can open instantly
@@ -68,6 +73,9 @@ export default async function StaffPage() {
               Object.entries(days).map(([id, rows]) => [id, rows ?? []]),
             )}
             ownerExtension={mine}
+            unwritten={Object.fromEntries(
+              [...(unwritten ?? new Map())].map(([id, n]) => [String(id ?? "owner"), n]),
+            )}
           />
         )}
       </div>

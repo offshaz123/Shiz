@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { clientLogout } from "@/app/portal/actions";
+import { PORTAL_GROUPS, TONE } from "@/lib/nav-groups";
 
 /**
  * The client's window onto their own system.
@@ -22,6 +23,7 @@ import { clientLogout } from "@/app/portal/actions";
 const PAGES = [
   {
     href: "/portal",
+    group: "results" as const,
     label: "Results",
     note: "Enquiries and what they cost",
     icon: (
@@ -30,6 +32,7 @@ const PAGES = [
   },
   {
     href: "/portal/opportunities",
+    group: "results" as const,
     label: "Money on the table",
     note: "What is waiting to be picked up",
     icon: (
@@ -40,6 +43,7 @@ const PAGES = [
   },
   {
     href: "/portal/marketing",
+    group: "results" as const,
     label: "More customers",
     note: "Things worth doing this week",
     icon: (
@@ -51,6 +55,7 @@ const PAGES = [
   },
   {
     href: "/portal/customers",
+    group: "customers" as const,
     label: "Customers",
     note: "Everyone, and their history",
     icon: (
@@ -63,6 +68,7 @@ const PAGES = [
   },
   {
     href: "/portal/calendar",
+    group: "customers" as const,
     label: "Diary",
     note: "Jobs booked in",
     icon: (
@@ -74,6 +80,7 @@ const PAGES = [
   },
   {
     href: "/portal/quotes",
+    group: "paid" as const,
     label: "Quotes",
     note: "Price a job up",
     icon: (
@@ -85,6 +92,7 @@ const PAGES = [
   },
   {
     href: "/portal/invoices",
+    group: "paid" as const,
     label: "Invoices",
     note: "Bill your customers",
     icon: (
@@ -96,6 +104,7 @@ const PAGES = [
   },
   {
     href: "/portal/business",
+    group: "setup" as const,
     label: "Business details",
     note: "What goes on your invoices",
     icon: (
@@ -107,6 +116,7 @@ const PAGES = [
   },
   {
     href: "/portal/app",
+    group: "setup" as const,
     label: "Get the app",
     note: "Put it on your phone",
     icon: (
@@ -172,39 +182,66 @@ export function PortalShell({
           </span>
         </div>
 
-        <nav className="mt-8 flex flex-col gap-1">
-          {PAGES.map((page) => {
-            const here = current === page.href;
+        {/* Grouped and coloured, the same language as the admin side.
+            Nine links in one column is a list somebody reads from the
+            top every time; four headings make it a place. */}
+        <nav className="mt-7 flex flex-col">
+          {PORTAL_GROUPS.map((group) => {
+            const mine = PAGES.filter((page) => page.group === group.key);
+            if (mine.length === 0) return null;
+            const tone = TONE[group.tone];
+
             return (
-              <Link
-                key={page.href}
-                href={page.href}
-                aria-current={here ? "page" : undefined}
-                className={`group flex items-start gap-3 rounded-xl px-3 py-2.5 transition ${
-                  here
-                    ? "bg-background text-foreground"
-                    : "text-muted hover:bg-background/60 hover:text-foreground"
-                }`}
-              >
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                  className={`mt-0.5 h-[18px] w-[18px] shrink-0 ${
-                    here ? "text-brand-pink" : ""
-                  }`}
-                >
-                  {page.icon}
-                </svg>
-                <span className="min-w-0">
-                  <span className="block text-sm font-semibold">{page.label}</span>
-                  <span className="block text-[11px] leading-snug text-muted">{page.note}</span>
-                </span>
-              </Link>
+              <div key={group.key} className="mb-1">
+                <div className="mb-1.5 mt-4 flex items-center gap-2 px-2 first:mt-0">
+                  <span className={`h-1.5 w-1.5 shrink-0 rounded-full ${tone.dot}`} />
+                  <span
+                    className={`text-[10px] font-bold uppercase tracking-[0.14em] ${tone.label}`}
+                  >
+                    {group.label}
+                  </span>
+                  <span className={`h-px flex-1 ${tone.rule}`} />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  {mine.map((page) => {
+                    const here = current === page.href;
+                    return (
+                      <Link
+                        key={page.href}
+                        href={page.href}
+                        aria-current={here ? "page" : undefined}
+                        className={`group flex items-start gap-3 rounded-xl px-3 py-2.5 transition ${
+                          here
+                            ? tone.active
+                            : "border-l-2 border-transparent text-muted hover:border-border hover:bg-background/60 hover:text-foreground"
+                        }`}
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden
+                          className={`mt-0.5 h-[18px] w-[18px] shrink-0 ${
+                            here ? tone.icon : ""
+                          }`}
+                        >
+                          {page.icon}
+                        </svg>
+                        <span className="min-w-0">
+                          <span className="block text-sm font-semibold">{page.label}</span>
+                          <span className="block text-[11px] leading-snug text-muted">
+                            {page.note}
+                          </span>
+                        </span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
             );
           })}
         </nav>

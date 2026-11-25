@@ -32,6 +32,21 @@ export type PendingCall = {
   confirmed: boolean;
 };
 
+/**
+ * The calls one person has to write up — theirs, and only theirs.
+ *
+ * It used to hand the owner everybody's. The condition was "this staff
+ * id, or all of them if the id is null", and the owner's id is null, so
+ * Walid was being stopped on every page and asked what was said on a
+ * call Ali made. He was not on it. Nobody can write up somebody else's
+ * call, and a prompt that cannot be answered is a prompt people learn
+ * to close without reading — which costs the write-ups that can be
+ * answered.
+ *
+ * So it is always that person's own. The owner's calls carry no staff
+ * row, so his are the ones with none, which is also where a call from a
+ * handset nobody recognises lands.
+ */
 export async function callsNeedingReview(
   staffId: number | null,
   limit = 20,
@@ -55,10 +70,13 @@ export async function callsNeedingReview(
           -- question anybody can still answer, and leaving it in the
           -- count turns the count into wallpaper.
           AND c.called_at >= DATE_SUB(NOW(), INTERVAL 1 DAY)
-          AND (? IS NULL OR c.staff_id <=> ?)
+          -- <=> rather than =, so the owner's null matches the rows
+          -- that have no staff against them. With = those rows match
+          -- nobody and the prompt never appears for him at all.
+          AND c.staff_id <=> ?
         ORDER BY c.called_at DESC
         LIMIT ?`,
-      [staffId, staffId, limit],
+      [staffId, limit],
     );
 
     return rows.map((r) => ({
@@ -166,4 +184,32 @@ export async function countNeedingReview(staffId: number | null): Promise<number
     return Number(row?.n ?? 0);
   });
   return found ?? 0;
+}
+
+/**
+ * How many calls each person has not written up.
+ *
+ * The prompt only ever asks somebody about their own calls, which is
+ * right — nobody can say what was said on a call they were not on. The
+ * cost of that is that the owner cannot see a person quietly closing
+ * the box every time, so the number goes on the Team page instead: a
+ * fact next to their name rather than a question he cannot answer.
+ *
+ * All of them, not just today's. A backlog is the thing worth seeing.
+ */
+export async function unwrittenByStaff(): Promise<Map<number | null, number> | null> {
+  return withDb(async (db) => {
+    const [rows] = await db.query<(RowDataPacket & { staff_id: number | null; n: number })[]>(
+      `SELECT c.staff_id, COUNT(*) AS n
+         FROM prospect_calls c
+        WHERE c.logged_by IN ('phone', 'click')
+          AND c.reviewed_at IS NULL
+        GROUP BY c.staff_id`,
+    );
+    const counts = new Map<number | null, number>();
+    for (const row of rows) {
+      counts.set(row.staff_id === null ? null : Number(row.staff_id), Number(row.n));
+    }
+    return counts;
+  });
 }
