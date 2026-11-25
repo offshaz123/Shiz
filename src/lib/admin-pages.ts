@@ -16,6 +16,7 @@ export type PageKey =
   | "overview"
   | "today"
   | "leads"
+  | "money"
   | "clients"
   | "prospects"
   | "emails"
@@ -96,6 +97,14 @@ export const ADMIN_PAGES: AdminPage[] = [
       { id: "reviews", label: "Reviews waiting for approval" },
       { id: "traffic", label: "Most viewed pages" },
     ],
+    canGrant: true,
+    onByDefault: true,
+  },
+  {
+    key: "money",
+    href: "/admin/money",
+    label: "Warm list",
+    hint: "Everybody who already put their hand up and was never closed",
     canGrant: true,
     onByDefault: true,
   },
