@@ -147,3 +147,30 @@ export async function saveOwnerExtension(
     ok: raw ? `Saved. Calls you make go out as extension ${raw}.` : "Cleared.",
   };
 }
+
+/**
+ * The phone system's account number.
+ *
+ * Set once, used by everybody: an extension does not log in as "101",
+ * it logs in as the account number and the extension joined with a
+ * hyphen. Without this the phone setup page can tell somebody their
+ * extension and then has to send them to ask for the other half, which
+ * rather defeats a page that exists so nobody has to ask.
+ */
+export async function savePbxId(
+  _prev: StaffFormState,
+  formData: FormData,
+): Promise<StaffFormState> {
+  await requireOwner();
+
+  const raw = String(formData.get("pbxId") ?? "").trim();
+  if (raw && !/^\d{3,10}$/.test(raw)) {
+    return { error: "That is just the digits from the phone system, like 123456." };
+  }
+
+  await setSetting("zadarma_pbx_id", raw);
+  await logAction(await actor(), "set-pbx-id", raw || "none");
+  revalidatePath("/admin/staff");
+  revalidatePath("/admin/phone");
+  return { ok: raw ? `Saved. Everybody logs in as ${raw}-their extension.` : "Cleared." };
+}

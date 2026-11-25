@@ -22,11 +22,21 @@ export type PageKey =
   | "emails"
   | "company"
   | "scan"
+  | "phone"
   | "office"
   | "health"
   | "staff";
 
 /** A part of a page worth jumping straight to. */
+/**
+ * Some pages are not worth a permission.
+ *
+ * A page that only ever shows somebody their own setup, and tells them
+ * how to make their own laptop work, is not a thing to be granted. The
+ * first person who needed the phone setup page could not open it,
+ * which made it a page that exists so nobody has to ask, that you had
+ * to ask for.
+ */
 export type PageSection = {
   /** The id on the heading in that page. */
   id: string;
@@ -57,6 +67,8 @@ export type AdminPage = {
   onByDefault: boolean;
   /** What a member of staff sees if they try the address anyway. */
   why?: string;
+  /** Visible to anybody signed in, with no permission needed. */
+  alwaysOn?: boolean;
 };
 
 export const ADMIN_PAGES: AdminPage[] = [
@@ -156,6 +168,23 @@ export const ADMIN_PAGES: AdminPage[] = [
     label: "Scan a site",
     hint: "Audit any website — safe to show a customer",
     canGrant: true,
+    onByDefault: true,
+  },
+  {
+    key: "phone",
+    href: "/admin/phone",
+    label: "Phone setup",
+    hint: "How to get the calling app working on your laptop",
+    // Everybody, always. It holds nothing but their own settings.
+    alwaysOn: true,
+    sections: [
+      { id: "your-details", label: "Your own settings" },
+      { id: "download", label: "Download the app" },
+      { id: "sign-in", label: "Sign in" },
+      { id: "how-it-works", label: "How calling works" },
+      { id: "when-it-breaks", label: "When it does not work" },
+    ],
+    canGrant: false,
     onByDefault: true,
   },
   {

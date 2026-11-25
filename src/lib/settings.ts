@@ -10,7 +10,7 @@ import { withDb } from "./db";
  * ways to do one thing, and the first person to meet it asked why.
  */
 
-export type SettingName = "owner_extension";
+export type SettingName = "owner_extension" | "zadarma_pbx_id";
 
 export async function getSetting(name: SettingName): Promise<string> {
   const found = await withDb(async (db) => {
@@ -41,6 +41,19 @@ export async function setSetting(name: SettingName, value: string): Promise<void
  * undone — but the box on the screen wins, because that is the one
  * somebody will reach for.
  */
+/**
+ * The phone system's own account number.
+ *
+ * Needed because a PBX extension does not log in as "101". It logs in
+ * as the PBX id and the extension joined with a hyphen — 123456-101 —
+ * and nobody can guess their own. Without it the setup page would have
+ * to say "ask Walid", which is how a page that exists so nobody has to
+ * ask ends up being a page that tells them to ask.
+ */
+export async function pbxId(): Promise<string> {
+  return getSetting("zadarma_pbx_id");
+}
+
 export async function ownerExtension(): Promise<string> {
   const saved = await getSetting("owner_extension");
   return saved || process.env.ZADARMA_OWNER_EXTENSION || "";

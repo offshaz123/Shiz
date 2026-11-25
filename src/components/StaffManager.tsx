@@ -1,10 +1,12 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import Link from "next/link";
 import {
   createStaff,
   resetPassword,
   saveOwnerExtension,
+  savePbxId,
   toggleActive,
   updatePages,
   type StaffFormState,
@@ -82,7 +84,7 @@ function hoursAndMinutes(minutes: number): string {
  * variable for myself but don't put it for them?" No good answer, so it
  * is a box now.
  */
-function YourExtension({ current }: { current: string }) {
+function YourExtension({ current, pbx }: { current: string; pbx: string }) {
   const [state, action, saving] = useActionState<StaffFormState, FormData>(
     saveOwnerExtension,
     {},
@@ -116,7 +118,58 @@ function YourExtension({ current }: { current: string }) {
         {state.error && <span className="text-xs text-red-400">{state.error}</span>}
         {state.ok && <span className="text-xs text-emerald-400">{state.ok}</span>}
       </form>
+
+      <PbxId current={pbx} />
     </section>
+  );
+}
+
+/**
+ * The phone system's account number, set once for everybody.
+ *
+ * It belongs here rather than on each person because it is the same
+ * for all of them. What it unlocks is the setup page: without it that
+ * page can tell somebody their extension and then has to send them off
+ * to ask for the other half of their own login.
+ */
+function PbxId({ current }: { current: string }) {
+  const [state, action, saving] = useActionState<StaffFormState, FormData>(savePbxId, {});
+
+  return (
+    <div className="mt-4 border-t border-border pt-4">
+      <h3 className="text-xs font-bold text-foreground">Phone system account number</h3>
+      <p className="mt-1 text-xs text-muted">
+        The number in front of everybody&apos;s extension when they sign into the calling app —
+        the <span className="tabular-nums">123456</span> in{" "}
+        <span className="tabular-nums">123456-101</span>. It is on the Zadarma panel next to the
+        extensions. Set it once and the{" "}
+        <Link href="/admin/phone" className="underline hover:text-foreground">
+          phone setup page
+        </Link>{" "}
+        shows each person their own full login.
+      </p>
+      <form action={action} className="mt-3 flex flex-wrap items-end gap-2">
+        <label className="text-xs text-muted">
+          Account number
+          <input
+            name="pbxId"
+            defaultValue={current}
+            inputMode="numeric"
+            placeholder="123456"
+            className="mt-1.5 block w-36 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
+          />
+        </label>
+        <button
+          type="submit"
+          disabled={saving}
+          className="rounded-lg border border-brand-pink px-4 py-2 text-xs font-semibold text-foreground disabled:opacity-60"
+        >
+          {saving ? "Saving…" : "Save"}
+        </button>
+        {state.error && <span className="text-xs text-red-400">{state.error}</span>}
+        {state.ok && <span className="text-xs text-emerald-400">{state.ok}</span>}
+      </form>
+    </div>
   );
 }
 
@@ -127,6 +180,7 @@ export function StaffManager({
   sittings,
   days,
   ownerExtension,
+  pbxId,
 }: {
   staff: Staff[];
   tallies: StaffTally[];
@@ -136,6 +190,8 @@ export function StaffManager({
   days: Record<string, DayReport[]>;
   /** The owner's own extension, set on this page rather than on the server. */
   ownerExtension: string;
+  /** The phone system's account number, the same for everybody. */
+  pbxId: string;
 }) {
   const [addState, addAction, adding] = useActionState<StaffFormState, FormData>(createStaff, {});
   const [open, setOpen] = useState<number | null>(null);
@@ -145,7 +201,7 @@ export function StaffManager({
 
   return (
     <div className="flex flex-col gap-10">
-      <YourExtension current={ownerExtension} />
+      <YourExtension current={ownerExtension} pbx={pbxId} />
 
       <section id="people" className="scroll-mt-6">
         <h2 className="text-sm font-bold text-foreground">Who can sign in</h2>

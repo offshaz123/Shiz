@@ -212,7 +212,12 @@ export function canSee(who: Who | null, key: PageKey): boolean {
   if (!who) return false;
   if (who.pages === "all") return true;
   const page = ADMIN_PAGES.find((p) => p.key === key);
-  if (!page || !page.canGrant) return false;
+  if (!page) return false;
+  // A page that only shows somebody their own settings is not worth a
+  // permission, and gating it made the phone setup page unopenable by
+  // the one person who needed it.
+  if (page.alwaysOn) return true;
+  if (!page.canGrant) return false;
   return who.pages.includes(key);
 }
 
