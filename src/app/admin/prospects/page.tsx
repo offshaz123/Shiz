@@ -34,7 +34,11 @@ export default async function AdminProspectsPage() {
       </AdminHeading>
 
       <div className="mt-8">
-        <ProspectFinder regions={who.regions} canDial={isConnected() && Boolean(who.extension)} />
+        <ProspectFinder
+          regions={who.regions}
+          canDial={isConnected() && Boolean(who.extension)}
+          callerName={who.name}
+        />
       </div>
     </div>
   );

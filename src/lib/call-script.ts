@@ -70,7 +70,19 @@ function proofFor(industry: string): string {
   return PROOF[industry] ?? "";
 }
 
-const WHO = `It's Walid from Shaz Marketing Group, we're a marketing agency in Canary Wharf.`;
+/**
+ * How the caller introduces themselves.
+ *
+ * It was "It's Walid" for everybody, which meant the first person
+ * hired would have read somebody else's name down the phone to a
+ * stranger. Wrong, and not a small kind of wrong: the whole opener is
+ * built on not sounding like the call they are braced for, and it is
+ * hard to sound like yourself while using another man's name.
+ */
+function who(callerName: string): string {
+  const name = callerName.trim() || "Walid";
+  return `It's ${name} from ${siteConfig.name}, we're a marketing agency in Canary Wharf.`;
+}
 
 /** The ask. Small on purpose: nobody buys an agency on a cold call. */
 function theAsk(p: Prospect): ScriptSection {
@@ -113,7 +125,8 @@ function objections(p: Prospect, hasEmailed: boolean): { they: string; you: stri
   return list;
 }
 
-export function callScript(p: Prospect, emailsSent: number): CallScript {
+export function callScript(p: Prospect, emailsSent: number, callerName = ""): CallScript {
+  const WHO = who(callerName);
   const proof = proofFor(p.industry);
   const hasEmailed = emailsSent > 0;
   const finding = p.findings[0] ? outreachLine(p.findings[0]) : "";

@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { URGENCY_WORD, planCall } from "@/lib/call-priority";
 import { noteProblem } from "@/lib/call-notes";
+import { callScript } from "@/lib/call-script";
+import { CallScriptPanel } from "./CallScriptPanel";
 import { callbackProblem } from "@/lib/callback";
 import {
   CALL_LABEL,
@@ -317,12 +319,16 @@ async function copyText(text: string): Promise<boolean> {
 export function ProspectFinder({
   regions = ["uk"],
   canDial = false,
+  callerName = "",
 }: {
   regions?: Region[];
   /** True when the phone system is connected and this person has an
    *  extension. Without both, the Call button would be a button that
    *  cannot work, which is worse than no button. */
   canDial?: boolean;
+  /** Whoever is signed in, so the script says their name and not
+   *  somebody else's. */
+  callerName?: string;
 }) {
   const [query, setQuery] = useState("");
   const [town, setTown] = useState("");
@@ -1398,6 +1404,7 @@ export function ProspectFinder({
                 onLogged={load}
                 onDelete={setDeleted}
                 canDial={canDial}
+                callerName={callerName}
               />
             ))}
           </Section>
@@ -1491,8 +1498,11 @@ function Row({
   onLogged,
   onDelete,
   canDial,
+  callerName = "",
 }: {
   canDial?: boolean;
+  /** Whoever is signed in, so the script says their name. */
+  callerName?: string;
   p: Prospect;
   busy?: Busy;
   onSave: (id: number, changes: { status?: ProspectStatus; notes?: string; email?: string }) => void;
@@ -1503,6 +1513,10 @@ function Row({
 }) {
   const [open, setOpen] = useState(false);
   const [dialState, setDialState] = useState<"idle" | "ringing" | "failed">("idle");
+  // What to say, on the row rather than a page away. Opens by itself
+  // when a call is placed: that is the one moment it is wanted and the
+  // one moment nobody has a spare hand to go looking for it.
+  const [script, setScript] = useState(false);
   const [notes, setNotes] = useState(p.notes);
   const [copied, setCopied] = useState("");
   // Fixed at mount. Worked out fresh on every render it would move under
@@ -1761,6 +1775,15 @@ function Row({
             button that cannot call is worse than no button. The tel:
             link above stays either way, because it is what works on a
             phone and costs nothing. */}
+        {/* The script, beside the button that starts the call. */}
+        {p.phone && !p.phoneDeadAt && (
+          <CallScriptPanel
+            script={callScript(p, p.emailCount, callerName)}
+            open={script}
+            onToggle={() => setScript((was) => !was)}
+          />
+        )}
+
         {/* A number somebody has already rung and found dead does not
             get a Call button. Same reasoning as the bounced address
             above: a button that cannot work is an invitation to waste
@@ -1801,6 +1824,7 @@ function Row({
                   // calls are, and it is the honest default for one
                   // that has only just been placed.
                   setCallForm({ outcome: "no-answer", notes: "", minutes: "", callbackAt: "", callbackTime: "09:30" });
+                  setScript(true);
                 }
               } catch {
                 setDialState("failed");
