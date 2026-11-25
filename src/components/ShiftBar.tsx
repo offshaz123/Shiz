@@ -1,6 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import type { DiaryItem } from "@/lib/calendar";
+import { callsLeftWords } from "@/lib/calendar";
 import { CALL_LABEL, CALL_OUTCOMES, type CallOutcome } from "@/lib/prospect-types";
 import { noteProblem } from "@/lib/call-notes";
 import { callbackProblem } from "@/lib/callback";
@@ -58,6 +61,14 @@ export function ShiftBar({
   const [pending, setPending] = useState<Pending[]>([]);
   const [open, setOpen] = useState<Pending | null>(null);
   const [tick, setTick] = useState(0);
+  // The diary half: what has fallen due, and how much of the day is
+  // left. Asked for on the same twenty-second beat as the calls.
+  const [due, setDue] = useState<DiaryItem[]>([]);
+  const [left, setLeft] = useState(0);
+  // Reminders pushed away for this sitting. Kept in the browser rather
+  // than written down, because "I have seen it" is not a fact about the
+  // business — the promise is still owed and the calendar still says so.
+  const [pushedAway, setPushedAway] = useState<string[]>([]);
 
   const look = useCallback(() => setTick((n) => n + 1), []);
 
@@ -93,10 +104,27 @@ export function ShiftBar({
         // one is twenty seconds away.
       });
 
+    fetch("/api/admin/diary")
+      .then(async (res) => {
+        if (!res.ok) throw new Error("no");
+        return (await res.json()) as { due: DiaryItem[]; left: number };
+      })
+      .then((body) => {
+        if (cancelled) return;
+        setDue(body.due);
+        setLeft(body.left);
+      })
+      .catch(() => {
+        // Same as above: the next look is twenty seconds away.
+      });
+
     return () => {
       cancelled = true;
     };
   }, [tick]);
+
+  const owed = due.filter((item) => !pushedAway.includes(item.id));
+  const next = owed[0];
 
   return (
     <>
@@ -121,6 +149,16 @@ export function ShiftBar({
             Your calls, notes and time on here are recorded.
           </span>
 
+          {/* How much of the day is still booked. Quiet, because it is
+              not a problem — it is the answer to "what have I got
+              left", which is otherwise a page you have to go and open. */}
+          <Link
+            href="/admin/calendar"
+            className="font-semibold text-foreground underline-offset-2 hover:underline"
+          >
+            {callsLeftWords(left)}
+          </Link>
+
           {pending.length > 0 && (
             <button
               type="button"
@@ -133,6 +171,43 @@ export function ShiftBar({
           )}
         </div>
       </div>
+
+      {/* The reminder. A band under the bar rather than a box over the
+          page: it has to be seen on every screen, and a modal that
+          covers what somebody is reading mid-call is a modal they learn
+          to close without looking. */}
+      {next && (
+        <div className="border-b border-brand-pink/50 bg-brand-pink/10 px-5 py-2 text-xs sm:px-8">
+          <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-3 gap-y-1">
+            <span className="font-bold text-foreground">
+              Ring {next.title} now
+            </span>
+            <span className="text-muted">
+              {next.time
+                ? `You said ${next.time}${next.day ? ` on ${next.day.slice(8, 10)}/${next.day.slice(5, 7)}` : ""}`
+                : "You said you would ring them back"}
+            </span>
+            {next.detail && <span className="truncate text-muted">{next.detail}</span>}
+            <Link
+              href={next.href}
+              className="ml-auto rounded-lg border border-brand-pink px-3 py-1 font-bold text-foreground"
+            >
+              Open it
+            </Link>
+            <button
+              type="button"
+              onClick={() => setPushedAway((all) => [...all, next.id])}
+              className="rounded-lg border border-border px-2.5 py-1 font-semibold text-muted hover:text-foreground"
+              title="It stays on the calendar and comes back next time you sign in"
+            >
+              Not now
+            </button>
+            {owed.length > 1 && (
+              <span className="text-[11px] text-muted">+{owed.length - 1} more owed</span>
+            )}
+          </div>
+        </div>
+      )}
 
       {open && (
         <CallPrompt

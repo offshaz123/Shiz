@@ -15,6 +15,7 @@
 export type PageKey =
   | "overview"
   | "today"
+  | "calendar"
   | "leads"
   | "money"
   | "clients"
@@ -95,6 +96,24 @@ export const ADMIN_PAGES: AdminPage[] = [
     sections: [
       { id: "diary", label: "The diary" },
     ],
+  },
+  {
+    key: "calendar",
+    href: "/admin/calendar",
+    label: "Calendar",
+    hint: "Everything promised, by the day it was promised for",
+    canGrant: false,
+    onByDefault: true,
+    // Nobody is granted their own diary.
+    //
+    // The page only ever shows the person looking at it their own
+    // promises, in their own countries — the owner is the one exception
+    // and sees the team's. There is nothing on it to withhold, and a
+    // permission would mean every member of staff who already exists
+    // cannot open it until somebody remembers to tick a box. That is
+    // exactly what happened with the phone setup page: a page that
+    // exists so nobody has to ask, that you had to ask for.
+    alwaysOn: true,
   },
   {
     key: "leads",
