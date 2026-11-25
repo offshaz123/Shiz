@@ -5,7 +5,7 @@ import { StaffManager } from "@/components/StaffManager";
 import { LoginForm } from "../LoginForm";
 import { NotYours } from "../NotYours";
 import { dayReports, listActivity, listSittings, listStaff, staffTallies } from "@/lib/staff";
-import { ownerExtension, pbxId } from "@/lib/settings";
+import { callerIdFor, ownerExtension, pbxId } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
 
@@ -32,13 +32,15 @@ export default async function StaffPage() {
   if (!who) return <LoginForm />;
   if (who.kind !== "owner") return <NotYours page="staff" />;
 
-  const [staff, tallies, activity, sittings, mine, pbx] = await Promise.all([
+  const [staff, tallies, activity, sittings, mine, pbx, uk, us] = await Promise.all([
     listStaff(),
     staffTallies(),
     listActivity("everyone", 80),
     listSittings(40),
     ownerExtension(),
     pbxId(),
+    callerIdFor("uk"),
+    callerIdFor("us"),
   ]);
 
   // A month per person, fetched here so the panel can open instantly
@@ -70,6 +72,8 @@ export default async function StaffPage() {
             )}
             ownerExtension={mine}
             pbxId={pbx}
+            ukNumber={uk}
+            usNumber={us}
           />
         )}
       </div>

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { actor, canSee, canSeeRegion, currentUser } from "@/lib/admin-auth";
 import { getProspect, logCall } from "@/lib/prospects";
 import { NOT_WRITTEN_UP } from "@/lib/prospect-types";
+import { callerIdFor } from "@/lib/settings";
 import { isConnected, placeCall } from "@/lib/zadarma";
 import { logAction } from "@/lib/staff";
 
@@ -45,7 +46,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "no_number" }, { status: 400 });
   }
 
-  const result = await placeCall(who.extension, them.phone);
+  // The number they see ringing them, chosen by the country they are
+  // in. A London number on an American phone is a number nobody rings
+  // back. Blank means nothing is sent and the extension's own setting
+  // decides, which is how this worked before.
+  const result = await placeCall(who.extension, them.phone, await callerIdFor(them.region));
   if (!result.ok) {
     return NextResponse.json({ error: "call_failed", detail: result.reason }, { status: 502 });
   }

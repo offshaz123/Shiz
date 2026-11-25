@@ -174,3 +174,39 @@ export async function savePbxId(
   revalidatePath("/admin/phone");
   return { ok: raw ? `Saved. Everybody logs in as ${raw}-their extension.` : "Cleared." };
 }
+
+/**
+ * The number each country's businesses see ringing them.
+ *
+ * Stored rather than hard-coded because the American one did not exist
+ * when the British one was bought, and the next one will not exist
+ * today either.
+ */
+export async function saveNumbers(
+  _prev: StaffFormState,
+  formData: FormData,
+): Promise<StaffFormState> {
+  await requireOwner();
+
+  const clean = (name: string) => String(formData.get(name) ?? "").replace(/[\s()-]/g, "").trim();
+  const uk = clean("ukNumber");
+  const us = clean("usNumber");
+
+  // Loose on purpose: it has to be a plain international number, and
+  // beyond that the phone system is a better judge than a regex.
+  const looksWrong = [uk, us].some((n) => n && !/^\+?\d{7,15}$/.test(n));
+  if (looksWrong) {
+    return { error: "Put the full number in, like +442045773152." };
+  }
+
+  await setSetting("uk_number", uk);
+  await setSetting("us_number", us);
+  await logAction(await actor(), "set-caller-id", [uk, us].filter(Boolean).join(" / ") || "none");
+  revalidatePath("/admin/staff");
+  return {
+    ok:
+      uk || us
+        ? "Saved. Businesses see the number for their own country."
+        : "Cleared. Calls go out on whatever the extension is set to.",
+  };
+}

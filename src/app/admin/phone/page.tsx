@@ -39,6 +39,9 @@ export default async function PhonePage() {
   if (!canSee(who, "phone")) return <NotYours page="phone" />;
 
   const pbx = await pbxId();
+  // The owner is the person everybody else is told to ask, so telling
+  // him to ask himself reads as a page that was never looked at.
+  const owner = who.kind === "owner";
   const extension = who.extension;
   const login = pbx && extension ? `${pbx}-${extension}` : "";
 
@@ -90,7 +93,9 @@ export default async function PhonePage() {
           <div className="flex flex-wrap items-baseline gap-x-4 px-4 py-3">
             <dt className="w-40 shrink-0 text-xs font-semibold text-muted">Password</dt>
             <dd className="text-sm text-foreground">
-              Ask Walid. It is not kept on this site and it never will be.
+              {owner
+                ? "In the Zadarma panel, against the extension. Not kept on this site and never will be."
+                : "Ask Walid. It is not kept on this site and it never will be."}
             </dd>
           </div>
         </dl>
@@ -172,7 +177,12 @@ export default async function PhonePage() {
             For domain, server or host, type{" "}
             <span className="font-bold">pbx.zadarma.com</span> in every box that asks for one.
           </li>
-          <li>Put the password in. Ask Walid for it if you do not have it.</li>
+          <li>
+            Put the password in.{" "}
+            {owner
+              ? "It is in the Zadarma panel against your extension."
+              : "Ask Walid for it if you do not have it."}
+          </li>
           <li>
             Save. Within a few seconds it should say <span className="font-semibold">Online</span>,{" "}
             <span className="font-semibold">Registered</span> or{" "}
@@ -267,8 +277,9 @@ export default async function PhonePage() {
         )}
 
         <p className="mt-6 text-xs leading-relaxed text-muted">
-          Still stuck after all that, message Walid on {siteConfig.phoneDisplay}. Tell him what the app
-          says on its status line — that one word is what tells anybody where the problem is.
+          {owner
+            ? "If it is still not working, the status line in the app is the thing to go on — that one word says where the problem is."
+            : `Still stuck after all that, message Walid on ${siteConfig.phoneDisplay}. Tell him what the app says on its status line — that one word is what tells anybody where the problem is.`}
         </p>
       </section>
     </main>

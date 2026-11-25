@@ -10,7 +10,11 @@ import { withDb } from "./db";
  * ways to do one thing, and the first person to meet it asked why.
  */
 
-export type SettingName = "owner_extension" | "zadarma_pbx_id";
+export type SettingName =
+  | "owner_extension"
+  | "zadarma_pbx_id"
+  | "uk_number"
+  | "us_number";
 
 export async function getSetting(name: SettingName): Promise<string> {
   const found = await withDb(async (db) => {
@@ -52,6 +56,22 @@ export async function setSetting(name: SettingName, value: string): Promise<void
  */
 export async function pbxId(): Promise<string> {
   return getSetting("zadarma_pbx_id");
+}
+
+/**
+ * Which of our numbers a business should see ringing them.
+ *
+ * A London number on a Dallas roofer's phone is a number he does not
+ * ring back, and that is the entire reason for buying an American one.
+ * Each country's number is set here and chosen when the call is
+ * placed, from the country the business is in.
+ *
+ * Blank is a real answer and the safe one: nothing is sent to the
+ * phone system and the call goes out however the extension is already
+ * set up, which is what happened before any of this existed.
+ */
+export async function callerIdFor(region: "uk" | "us"): Promise<string> {
+  return getSetting(region === "us" ? "us_number" : "uk_number");
 }
 
 export async function ownerExtension(): Promise<string> {
