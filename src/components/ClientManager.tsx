@@ -108,66 +108,7 @@ export function ClientManager() {
 
   return (
     <div className="flex flex-col gap-6">
-      <section className="rounded-2xl border border-border bg-surface p-5">
-        <h2 className="text-sm font-semibold text-foreground">Add a client</h2>
-        <p className="mt-0.5 text-xs leading-relaxed text-muted">
-          The account name is what they sign in with and what goes in their form snippet. Keep it
-          short and permanent: it cannot be changed without breaking their form.
-        </p>
-
-        <div className="mt-4 grid gap-3 sm:grid-cols-2">
-          <label className="flex flex-col gap-1">
-            <span className="text-xs font-medium text-muted">Business name</span>
-            <input
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="Auto Wrap Manchester"
-              className="rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground"
-            />
-          </label>
-          <label className="flex flex-col gap-1">
-            <span className="text-xs font-medium text-muted">Account name</span>
-            <input
-              value={form.slug}
-              onChange={(e) => setForm({ ...form, slug: e.target.value })}
-              placeholder="autowrap"
-              className="rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground"
-            />
-          </label>
-          <label className="flex flex-col gap-1">
-            <span className="text-xs font-medium text-muted">Their email</span>
-            <input
-              value={form.contactEmail}
-              onChange={(e) => setForm({ ...form, contactEmail: e.target.value })}
-              className="rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground"
-            />
-          </label>
-          <label className="flex flex-col gap-1">
-            <span className="text-xs font-medium text-muted">Password (8+ characters)</span>
-            <input
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              className="rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground"
-            />
-            <span className="text-[11px] text-muted">
-              Copy it before you leave this page. It is stored hashed, so nobody can read it back,
-              including you.
-            </span>
-          </label>
-        </div>
-
-        <button
-          type="button"
-          onClick={create}
-          disabled={busy}
-          className="brand-gradient-bg mt-4 rounded-full px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
-        >
-          {busy ? "Saving…" : "Create client"}
-        </button>
-        {error && <p className="mt-3 text-xs font-medium text-red-500">{error}</p>}
-      </section>
-
-      <section className="rounded-2xl border border-border bg-surface">
+      <section id="list" className="scroll-mt-6 rounded-2xl border border-border bg-surface">
         <div className="border-b border-border px-5 py-4">
           <h2 className="text-sm font-semibold text-foreground">Clients</h2>
           <p className="mt-0.5 text-xs text-muted">
@@ -257,6 +198,65 @@ export function ClientManager() {
             })}
           </ul>
         )}
+      </section>
+
+      <section id="add" className="scroll-mt-6 rounded-2xl border border-border bg-surface p-5">
+        <h2 className="text-sm font-semibold text-foreground">Add a client</h2>
+        <p className="mt-0.5 text-xs leading-relaxed text-muted">
+          The account name is what they sign in with and what goes in their form snippet. Keep it
+          short and permanent: it cannot be changed without breaking their form.
+        </p>
+
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <label className="flex flex-col gap-1">
+            <span className="text-xs font-medium text-muted">Business name</span>
+            <input
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              placeholder="Auto Wrap Manchester"
+              className="rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground"
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="text-xs font-medium text-muted">Account name</span>
+            <input
+              value={form.slug}
+              onChange={(e) => setForm({ ...form, slug: e.target.value })}
+              placeholder="autowrap"
+              className="rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground"
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="text-xs font-medium text-muted">Their email</span>
+            <input
+              value={form.contactEmail}
+              onChange={(e) => setForm({ ...form, contactEmail: e.target.value })}
+              className="rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground"
+            />
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="text-xs font-medium text-muted">Password (8+ characters)</span>
+            <input
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              className="rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground"
+            />
+            <span className="text-[11px] text-muted">
+              Copy it before you leave this page. It is stored hashed, so nobody can read it back,
+              including you.
+            </span>
+          </label>
+        </div>
+
+        <button
+          type="button"
+          onClick={create}
+          disabled={busy}
+          className="brand-gradient-bg mt-4 rounded-full px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+        >
+          {busy ? "Saving…" : "Create client"}
+        </button>
+        {error && <p className="mt-3 text-xs font-medium text-red-500">{error}</p>}
       </section>
     </div>
   );

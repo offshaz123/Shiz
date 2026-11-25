@@ -26,7 +26,8 @@ export type PageKey =
   | "phone"
   | "office"
   | "health"
-  | "staff";
+  | "staff"
+  | "settings";
 
 /** A part of a page worth jumping straight to. */
 /**
@@ -144,6 +145,10 @@ export const ADMIN_PAGES: AdminPage[] = [
     href: "/admin/clients",
     label: "Clients",
     hint: "Who pays us, their logins and their ad spend",
+    sections: [
+      { id: "list", label: "Who pays us" },
+      { id: "add", label: "Add a client" },
+    ],
     canGrant: true,
     // Off to begin with. It carries other businesses' logins, their spend
     // and their customers' details, and it is the one page Walid named.
@@ -228,11 +233,26 @@ export const ADMIN_PAGES: AdminPage[] = [
     label: "Team",
     hint: "Who can sign in, what they can see, and what they have done",
     sections: [
+      { id: "your-extension", label: "Your own extension" },
       { id: "people", label: "Who can sign in" },
       { id: "add", label: "Add somebody" },
       { id: "sittings", label: "Signed in and signed out" },
       { id: "log", label: "Everything that has happened" },
     ],
+    canGrant: false,
+    onByDefault: false,
+  },
+  {
+    key: "settings",
+    href: "/admin/settings",
+    label: "Settings",
+    hint: "The things set once for the whole company",
+    sections: [
+      { id: "account", label: "Phone system account number" },
+      { id: "numbers", label: "The number businesses see" },
+    ],
+    // The owner's, like Team. Nothing on it belongs to one person, so
+    // there is nothing here anybody else needs.
     canGrant: false,
     onByDefault: false,
   },

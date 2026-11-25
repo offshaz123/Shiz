@@ -6,8 +6,6 @@ import {
   createStaff,
   resetPassword,
   saveOwnerExtension,
-  savePbxId,
-  saveNumbers,
   toggleActive,
   updatePages,
   type StaffFormState,
@@ -109,24 +107,25 @@ function Saved({ value, blank }: { value: string; blank: string }) {
   );
 }
 
-function YourExtension({
-  current,
-  pbx,
-  ukNumber,
-  usNumber,
-}: {
-  current: string;
-  pbx: string;
-  ukNumber: string;
-  usNumber: string;
-}) {
+/**
+ * The owner's own extension, and nothing else.
+ *
+ * It used to hold the phone system's account number and the two numbers
+ * businesses see as well, because there was room. Both of those are the
+ * company's rather than his, so they are on Settings now and this box
+ * means what its heading says.
+ */
+function YourExtension({ current }: { current: string }) {
   const [state, action, saving] = useActionState<StaffFormState, FormData>(
     saveOwnerExtension,
     {},
   );
 
   return (
-    <section className="rounded-2xl border border-border bg-surface p-4">
+    <section
+      id="your-extension"
+      className="scroll-mt-6 rounded-2xl border border-border bg-surface p-4"
+    >
       <h2 className="text-sm font-bold text-foreground">Your own extension</h2>
       <p className="mt-1 text-xs text-muted">
         Yours in the phone system, the same as everybody else&apos;s below. This is the one the
@@ -155,59 +154,15 @@ function YourExtension({
         {state.ok && <span className="text-xs text-emerald-400">{state.ok}</span>}
       </form>
 
-      <PbxId current={pbx} />
-      <OurNumbers uk={ukNumber} us={usNumber} />
-    </section>
-  );
-}
-
-/**
- * The phone system's account number, set once for everybody.
- *
- * It belongs here rather than on each person because it is the same
- * for all of them. What it unlocks is the setup page: without it that
- * page can tell somebody their extension and then has to send them off
- * to ask for the other half of their own login.
- */
-function PbxId({ current }: { current: string }) {
-  const [state, action, saving] = useActionState<StaffFormState, FormData>(savePbxId, {});
-
-  return (
-    <div className="mt-4 border-t border-border pt-4">
-      <h3 className="text-xs font-bold text-foreground">Phone system account number</h3>
-      <p className="mt-1 text-xs text-muted">
-        The number in front of everybody&apos;s extension when they sign into the calling app —
-        the <span className="tabular-nums">123456</span> in{" "}
-        <span className="tabular-nums">123456-101</span>. It is on the Zadarma panel next to the
-        extensions. Set it once and the{" "}
-        <Link href="/admin/phone" className="underline hover:text-foreground">
-          phone setup page
-        </Link>{" "}
-        shows each person their own full login.
+      <p className="mt-3 border-t border-border pt-3 text-[11px] leading-relaxed text-muted">
+        The phone system&apos;s account number and the numbers businesses see are the same for
+        everybody, so they live on{" "}
+        <Link href="/admin/settings" className="underline hover:text-foreground">
+          Settings
+        </Link>
+        .
       </p>
-      <form action={action} className="mt-3 flex flex-wrap items-end gap-2">
-        <label className="text-xs text-muted">
-          Account number
-          <input
-            name="pbxId"
-            defaultValue={current}
-            inputMode="numeric"
-            placeholder="e.g. 123456"
-            className="mt-1.5 block w-40 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
-          />
-          <Saved value={current} blank="Not set — nobody can sign the calling app in" />
-        </label>
-        <button
-          type="submit"
-          disabled={saving}
-          className="rounded-lg border border-brand-pink px-4 py-2 text-xs font-semibold text-foreground disabled:opacity-60"
-        >
-          {saving ? "Saving…" : "Save"}
-        </button>
-        {state.error && <span className="text-xs text-red-400">{state.error}</span>}
-        {state.ok && <span className="text-xs text-emerald-400">{state.ok}</span>}
-      </form>
-    </div>
+    </section>
   );
 }
 
@@ -218,9 +173,6 @@ export function StaffManager({
   sittings,
   days,
   ownerExtension,
-  pbxId,
-  ukNumber,
-  usNumber,
 }: {
   staff: Staff[];
   tallies: StaffTally[];
@@ -230,11 +182,6 @@ export function StaffManager({
   days: Record<string, DayReport[]>;
   /** The owner's own extension, set on this page rather than on the server. */
   ownerExtension: string;
-  /** The phone system's account number, the same for everybody. */
-  pbxId: string;
-  /** The number each country's businesses see ringing them. */
-  ukNumber: string;
-  usNumber: string;
 }) {
   const [addState, addAction, adding] = useActionState<StaffFormState, FormData>(createStaff, {});
 
@@ -272,12 +219,7 @@ export function StaffManager({
         </div>
       )}
 
-      <YourExtension
-        current={ownerExtension}
-        pbx={pbxId}
-        ukNumber={ukNumber}
-        usNumber={usNumber}
-      />
+      <YourExtension current={ownerExtension} />
 
       <section id="people" className="scroll-mt-6">
         <h2 className="text-sm font-bold text-foreground">Who can sign in</h2>
@@ -528,6 +470,19 @@ export function StaffManager({
 }
 
 /** The switches and the password reset for one person. */
+/** A heading inside somebody's panel, so the things under it are
+ *  obviously about the same subject. Without them the panel was one
+ *  column of boxes: pages, then an extension, then countries, then a
+ *  password, with nothing saying where one subject ended. */
+function PanelHeading({ title, note }: { title: string; note: string }) {
+  return (
+    <>
+      <h4 className="text-[11px] font-bold uppercase tracking-wide text-muted">{title}</h4>
+      <p className="mt-0.5 mb-2 text-[11px] leading-relaxed text-muted">{note}</p>
+    </>
+  );
+}
+
 function PersonPanel({
   person,
   activity,
@@ -564,6 +519,10 @@ function PersonPanel({
     <div className="mt-4 border-t border-border pt-4">
       <form action={updatePages}>
         <input type="hidden" name="id" value={person.id} />
+        <PanelHeading
+          title="What they can open"
+          note="Every page behind the login, and the two call lists. This is the whole of what they can reach."
+        />
         <div className="flex flex-col gap-2">
           {pages.map((page) => (
             <label key={page.key} className="flex items-start gap-2.5 text-sm">
@@ -586,6 +545,10 @@ function PersonPanel({
         </p>
 
         <div className="mt-4 border-t border-border pt-4">
+          <PanelHeading
+            title="Their phone"
+            note="What attaches a call to this person rather than to nobody."
+          />
           <label className="text-xs text-muted">
             Phone extension
             <input
@@ -605,6 +568,7 @@ function PersonPanel({
 
         <div className="mt-4 border-t border-border pt-4">
           <p className="text-xs font-semibold text-foreground">Which lists they work</p>
+
           <div className="mt-2 flex flex-wrap gap-4">
             {REGIONS.map((key) => (
               <label key={key} className="flex items-center gap-2 text-sm text-foreground">
@@ -631,7 +595,14 @@ function PersonPanel({
         </button>
       </form>
 
-      <form action={toggleActive} className="mt-4 flex items-center gap-3">
+      <div className="mt-5 border-t border-border pt-4">
+        <PanelHeading
+          title="Their account"
+          note="Whether they can sign in at all, and the password they sign in with."
+        />
+      </div>
+
+      <form action={toggleActive} className="flex items-center gap-3">
         <input type="hidden" name="id" value={person.id} />
         <label className="flex items-center gap-2 text-sm text-foreground">
           <input
@@ -676,10 +647,10 @@ function PersonPanel({
       </form>
 
       <div className="mt-5 border-t border-border pt-4">
-        <p className="text-xs font-semibold text-foreground">Day by day</p>
-        <p className="mt-1 text-[11px] text-muted">
-          Press a date to see what happened on it.
-        </p>
+        <PanelHeading
+          title="What they have done"
+          note="Press a date to see the day: when they signed in, what they did, and the stretches with nothing in them."
+        />
         <div className="mt-3">
           <DayCalendar days={days} />
         </div>
@@ -712,53 +683,3 @@ function PersonPanel({
  * a number he does not ring back, and that is the whole point of
  * having bought an American one.
  */
-function OurNumbers({ uk, us }: { uk: string; us: string }) {
-  const [state, action, saving] = useActionState<StaffFormState, FormData>(saveNumbers, {});
-
-  return (
-    <div className="mt-4 border-t border-border pt-4">
-      <h3 className="text-xs font-bold text-foreground">The number businesses see</h3>
-      <p className="mt-1 text-xs text-muted">
-        Picked by the country the business is in, when the call is placed. Leave one empty and
-        calls to that country go out on whatever the extension is set to in the phone system.
-      </p>
-      <form action={action} className="mt-3 flex flex-wrap items-end gap-2">
-        <label className="text-xs text-muted">
-          United Kingdom
-          <input
-            name="ukNumber"
-            defaultValue={uk}
-            inputMode="tel"
-            placeholder="e.g. +44…"
-            className="mt-1.5 block w-48 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
-          />
-          <Saved value={uk} blank="Not set — the extension decides" />
-        </label>
-        <label className="text-xs text-muted">
-          United States
-          <input
-            name="usNumber"
-            defaultValue={us}
-            inputMode="tel"
-            placeholder="e.g. +1…"
-            className="mt-1.5 block w-48 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
-          />
-          <Saved value={us} blank="Not set — the extension decides" />
-        </label>
-        <button
-          type="submit"
-          disabled={saving}
-          className="rounded-lg border border-brand-pink px-4 py-2 text-xs font-semibold text-foreground disabled:opacity-60"
-        >
-          {saving ? "Saving…" : "Save"}
-        </button>
-        {state.error && <span className="text-xs text-red-400">{state.error}</span>}
-        {state.ok && <span className="text-xs text-emerald-400">{state.ok}</span>}
-      </form>
-      <p className="mt-2 text-[11px] text-muted">
-        An American number only works once the phone system says it is active. While it is still
-        in process, leave it out.
-      </p>
-    </div>
-  );
-}

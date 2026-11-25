@@ -126,7 +126,7 @@ export default async function AdminClientPage({
         <ClientLoginLink slug={client.slug} name={client.name} />
       </div>
 
-      <section className="mt-8">
+      <section id="dashboard" className="mt-8 scroll-mt-6">
         <h2 className="text-sm font-bold text-foreground">What they see</h2>
         <p className="mt-0.5 text-xs leading-relaxed text-muted">
           Their own dashboard, exactly as it looks to them. Read-only here — marking an enquiry
@@ -149,7 +149,7 @@ export default async function AdminClientPage({
         </div>
       </section>
 
-      <section className="mt-8">
+      <section id="diary" className="mt-8 scroll-mt-6">
         <h2 className="text-sm font-bold text-foreground">Their diary</h2>
         <p className="mt-0.5 text-xs text-muted">The next two weeks of jobs they have booked in.</p>
 
@@ -177,13 +177,18 @@ export default async function AdminClientPage({
         </div>
       </section>
 
-      <section className="mt-8">
+      {/* Their settings, in four groups rather than nine boxes in a
+          column. What they do, what they spend, what runs for them, and
+          how they get in — which is also the order somebody goes
+          looking in. */}
+      <section id="settings" className="mt-8 scroll-mt-6">
         <h2 className="text-sm font-bold text-foreground">Settings</h2>
         <p className="mt-0.5 text-xs leading-relaxed text-muted">
-          The things only we can change. Text boxes save when you click away.
+          The things only we can change, grouped by what they are about. Text boxes save when you
+          click away.
         </p>
 
-        <div className="mt-4">
+        <div className="mt-5">
           <ClientSettings client={client} />
         </div>
       </section>
