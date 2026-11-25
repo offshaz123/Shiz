@@ -486,8 +486,12 @@ site audit tool actually measures, or from a primary source that does load.
       business", "what to put on a contact page"
 - [x] Why Your Enquiry Form Gets Spam, and What Actually Stops It — target: "stop contact form
       spam UK", "contact form spam small business"
-- [ ] How Many Pages Does a Small Business Website Really Need? — target: "how many pages should a
-      small business website have", "small business website structure"
+- [x] How Many Pages Does a Small Business Website Really Need? — target: "how many pages should a
+      small business website have", "small business website structure" (written 2026-11-25. Angle
+      is "count the jobs, not the pages": one page per thing somebody searches for, one per
+      question they need answered before ringing. No page-count claims presented as rules and no
+      invented statistics — the near-duplicate town-page warning is framed on Google's long-stated
+      people-first position rather than on any named penalty.)
 - [x] What Happens to a Lead When Nobody Answers the Phone — target: "missed calls losing
       business", "responding to enquiries fast"
 - [x] The Four Numbers a Small Business Actually Needs From Its Marketing — target: "marketing
@@ -512,6 +516,47 @@ site audit tool actually measures, or from a primary source that does load.
       published and every third-party number found is a guess. Angle is deliberately "same
       street, so distance is a tie", which keeps it off the ground already covered by "Why Your
       Business Doesn't Show on Google Maps From Across Town".)
+
+## Backlog — added 2026-11-25 research round
+Added because the backlog was down to five, of which one is BLOCKED, one carries an overlap
+warning and two need verifying before they can be written. Research round done 2026-11-25 on
+Google Business Profile changes and current UK local-search questions. Every claim found came
+from agency blogs that disagree with each other, so the verification notes below are not
+optional — several of these topics are unwritable until somebody checks Google's own pages.
+
+- [ ] When Google's AI Answers a Customer's Question For You — target: "Ask Maps Google Business
+      Profile", "AI answers Google listing" (VERIFY on Google's own Business Profile help pages
+      first. Third-party blogs disagree on whether the old Q&A section is gone and when it went.
+      Do not state a date or a feature name that cannot be found on a Google page.)
+- [ ] Keeping a Google Listing Active: What Counts and What Doesn't — target: "Google Business
+      Profile activity", "how often to post Google Business Profile" (do NOT repeat the "profiles
+      inactive for a month lose visibility" claim — it is one agency blog's anecdote with no
+      source behind it. Write the post about what activity consists of, not about a penalty.)
+- [ ] What AI Search Can Find About Your Business, and Where It Got It — target: "AI overviews
+      local business UK", "how AI finds business information" (safe angle: the sources an AI
+      answer draws on are the ones you already control — listing, site, reviews. No claims about
+      rankings inside AI answers; nothing is published about how they are chosen.)
+- [ ] Messaging Apps vs a Phone Number: Where Should Enquiries Land? — target: "WhatsApp for
+      business enquiries UK", "best way to receive customer enquiries" (VERIFY current
+      WhatsApp-on-Google-Business availability in the UK before claiming any eligibility — one
+      source says it is limited to single-location food and drink businesses.)
+- [ ] Writing Service Page Content When You've Never Written Anything Before — target: "how to
+      write a service page", "what to put on a service page small business"
+- [ ] The Photos That Actually Get a Trade Hired — target: "business photos that win work",
+      "before and after photos small business marketing"
+- [ ] What to Do With an Enquiry You Can't Help — target: "turning down work professionally",
+      "referring enquiries you cannot take" (angle: the referral you make today is the one you
+      get back in March. No claims about reciprocity rates.)
+- [ ] What Happens in the First Thirty Days of a New Ad Account — target: "new Facebook ad
+      account first month", "how long before Facebook ads work" (expectation-setting piece. No
+      promised timelines and no cost-per-lead figures — they depend entirely on the trade.)
+- [ ] Why Two Agencies Quote Wildly Different Prices for the Same Job — target: "why marketing
+      quotes differ", "how much should marketing cost small business UK" (explain what is
+      actually being bought in each case. Name no competitor and give no price range as a norm.)
+- [ ] The Quiet Months: What to Cut and What to Keep — target: "marketing in quiet months small
+      business", "should I pause ads when business is quiet" (seasonal planning. Honest about the
+      cost of switching things off and on, including the learning-phase point already covered in
+      the budget post — link to it rather than repeating it.)
 
 ## Notes for whoever (human or Routine) picks the next topic
 - Rotate categories — don't publish 3 industry guides in a row

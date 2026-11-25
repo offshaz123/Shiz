@@ -16,6 +16,85 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "how-many-pages-does-a-small-business-website-need",
+    title: "How Many Pages Does a Small Business Website Really Need?",
+    description:
+      "Nobody can answer this with a number, and the ones who try are guessing. Here is the question to ask instead, and the handful of pages almost every local business turns out to need.",
+    publishedAt: "2026-11-25",
+    keywords: [
+      "how many pages should a small business website have",
+      "small business website structure",
+      "service pages vs location pages",
+      "how many pages does a website need UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "It is one of the first questions anybody asks when they are getting a website built, usually because somebody has quoted them per page.",
+          "The answers come back fast and they contradict each other. Five. Seven to ten. As many as you can manage. None of them can be right, because none of them asked what the business does.",
+          "The number is not the thing to decide. What the pages are for is.",
+        ],
+      },
+      {
+        heading: "Count the jobs, not the pages",
+        paragraphs: [
+          "A page earns its place by doing one of two jobs, and a good website has no pages doing neither.",
+          "The first job is being found. Somebody types something into Google and there is a page on your site that answers exactly that. If you fit tyres and you repair alloys, those are two different searches by two different people with two different problems, and one page trying to be both is weaker at both.",
+          "The second job is moving somebody closer to getting in touch. Proof that you have done this before. What it costs, or at least how pricing works. Who you are. How to reach you without hunting. These pages rarely rank for anything and they are not supposed to — they do their work on somebody who has already landed.",
+          "So the real question is: how many distinct things do people search for, and how many questions do they need answered before they will ring? Count those, and you have your number.",
+        ],
+      },
+      {
+        heading: "The set almost everybody ends up with",
+        paragraphs: [
+          "Across most local service businesses, the same shape appears. Not because it is a rule, but because these are the jobs that keep coming up.",
+        ],
+        bullets: [
+          "A home page that says what you do and where, in the first line, without making anybody scroll to find out.",
+          "One page per service you actually want more of. Not one per service you are capable of.",
+          "Somewhere to see the work — photos, jobs, before and afters. For a trade this is often the page that does the convincing.",
+          "An about page, which matters more for a small business than for a big one, because people are deciding whether to let you into their house.",
+          "A contact page that a person can act on in ten seconds.",
+          "The dull legal ones: privacy, and terms if you take payment or bookings online.",
+        ],
+      },
+      {
+        heading: "Where more pages genuinely help",
+        paragraphs: [
+          "That is roughly six to twelve pages for most businesses, and it lands there by counting rather than by picking a package. There are then two places where adding more is the right call rather than padding.",
+          "Splitting a service that has become two. If one page is trying to cover emergency call-outs and planned installations, the people searching for each want completely different things — one wants to know you can come today, the other wants to know what it costs and how long it takes. Two pages, each honest about one job, beats one page hedging.",
+          "Covering the places you work. If you genuinely serve five towns, a page about the work you do in each can make sense, because somebody searching with a town name in it is asking a slightly different question.",
+          "But that second one comes with a catch big enough to have ruined plenty of small sites.",
+        ],
+      },
+      {
+        heading: "Where more pages cost you",
+        paragraphs: [
+          "Twenty town pages made by copying one page and swapping the place name is the most common way a small website gets worse by getting bigger.",
+          "They read as filler because they are filler, and Google has been consistent for years that it wants pages made for people rather than pages made to catch a search. A visitor who lands on one can tell immediately — the text does not mention anything about their area that you could only know by having worked there.",
+          "The same goes for a page about a town you have never had a job in. If somebody rings from it, you will either turn down the work or drive an hour for it, and neither was worth the page.",
+          "There is a quieter cost too. Every page is something to keep current. A site with thirty pages where eleven have an old phone number, a service you dropped and a price from two years ago is doing you more harm than a tidy site with eight.",
+        ],
+      },
+      {
+        heading: "The test to put any new page through",
+        paragraphs: [
+          "Before a page goes on the site, one question sorts it: what would somebody have typed, or what would they have wanted to know, for this page to be the answer?",
+          "If that can be said in a sentence, build the page. If the honest answer is \"nothing, but we wanted more pages\", it is not a page, it is a paragraph on a page that already exists.",
+          "And if two pages would have the same answer to that question, they are one page that has been split in half, and both halves are weaker for it.",
+        ],
+      },
+      {
+        heading: "Start smaller than you think",
+        paragraphs: [
+          "A six-page site where every page is specific, current and written by somebody who does the work beats a twenty-page site assembled to look substantial. It is also far more likely to still be accurate next year.",
+          "Pages are easy to add once you know what people actually ask you. They are much harder to maintain once you have fifty you never needed.",
+          "If you are being quoted per page, that is worth remembering: the right number is the number of jobs to be done, and it is usually smaller at the start than anybody selling pages will tell you.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "what-happens-when-you-change-your-ad-budget-mid-flight",
     title: "What Happens to Your Ads When You Change the Budget Mid-Flight",
     description:
