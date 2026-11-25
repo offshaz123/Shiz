@@ -34,6 +34,16 @@ export type Rebuilt = {
   email: string;
   /** A paragraph about them, theirs. */
   about: string;
+  /** The offer bar off the top of their own site, where they run one.
+   *  Theirs, word for word, so the rebuilt page is not inventing a sale. */
+  promo: string;
+  /** The year they say they started, when the page says it. */
+  since: string;
+  /** What their own page claims about reviews, when it claims anything.
+   *  Read from schema.org markup, which is the only place on a page where
+   *  these two numbers mean what they say. */
+  rating: string;
+  reviewCount: string;
 };
 
 const EMPTY: Rebuilt = {
@@ -46,6 +56,10 @@ const EMPTY: Rebuilt = {
   phone: "",
   email: "",
   about: "",
+  promo: "",
+  since: "",
+  rating: "",
+  reviewCount: "",
 };
 
 /** Tags whose contents are never page text. */
@@ -297,6 +311,50 @@ function aboutOf(html: string): string {
 }
 
 /**
+ * The offer they are already running, off the bar at the top of their site.
+ *
+ * Taken word for word rather than written, because an offer is a promise
+ * about money and the only safe one to put on a mock-up of their site is
+ * the one they are making themselves.
+ */
+const OFFER = /(\d+\s?%\s?off|free (uk )?(tracked )?delivery|free (quote|survey|consultation|fitting)|same day|next day|\bsale\b|discount code|use code)/i;
+
+function promoOf(html: string): string {
+  // The usual places a site puts one, in the order they are usually used.
+  const bars =
+    html.match(
+      /<(div|p|span|section|header|aside)\b[^>]*(announcement|promo|topbar|top-bar|offer|banner|ticker|marquee)[^>]*>([\s\S]{0,400}?)<\/\1>/gi,
+    ) ?? [];
+  for (const bar of bars) {
+    const words = text(bar);
+    if (words.length >= 8 && words.length <= 140 && OFFER.test(words)) return words;
+  }
+  return "";
+}
+
+/** The year they say they started. */
+function sinceOf(html: string): string {
+  const m = text(html).match(/\b(?:since|established|est\.?|trading since)\s+((?:19|20)\d{2})\b/i);
+  if (!m) return "";
+  const year = Number(m[1]);
+  const now = new Date().getFullYear();
+  return year >= 1900 && year <= now ? m[1] : "";
+}
+
+/**
+ * Their own review numbers, from schema.org markup only.
+ *
+ * Loose text matching finds "4.9" next to the word reviews on pages where
+ * it means something else entirely, and a wrong star rating on a page with
+ * their name on it is worse than no star rating.
+ */
+function reviewsOf(html: string): { rating: string; count: string } {
+  const rating = html.match(/"ratingValue"\s*:\s*"?([0-9](?:\.[0-9])?)"?/i);
+  const count = html.match(/"(?:reviewCount|ratingCount)"\s*:\s*"?(\d{1,6})"?/i);
+  return { rating: rating?.[1] ?? "", count: count?.[1] ?? "" };
+}
+
+/**
  * Everything the rebuilt page needs, off their own homepage.
  *
  * Never throws and never guesses. A field it cannot find comes back empty
@@ -324,5 +382,11 @@ export function rebuildFrom(html: string, baseUrl: string): Rebuilt {
     phone: phoneOf(clean),
     email: emailOf(clean),
     about: aboutOf(clean),
+    promo: promoOf(clean),
+    since: sinceOf(clean),
+    // Reads the raw page: schema markup lives in a script tag, which
+    // stripNoise has just taken out.
+    rating: reviewsOf(html).rating,
+    reviewCount: reviewsOf(html).count,
   };
 }
