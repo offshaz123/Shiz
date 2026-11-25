@@ -23,6 +23,7 @@ import { REGION_INFO, callableNow, callingWindow, type Region } from "@/lib/regi
 import { tradeName } from "@/lib/trade-names";
 import { siteConfig } from "@/lib/site-config";
 import { buildDraft } from "@/lib/prospect-outreach";
+import { callTemplates, type TemplateKey } from "@/lib/call-templates";
 
 /**
  * The call list.
@@ -1524,7 +1525,23 @@ function Row({
   // while they were looking at it.
   const [now] = useState(() => Date.now());
   const plan = planCall(p, now);
-  const [compose, setCompose] = useState<{ subject: string; body: string } | null>(null);
+  // Which draft is in the box as well as what is in it. A cold opener and
+  // an email to somebody you have just spoken to are different things: the
+  // cold one starts a sequence of three and the other must not, and the box
+  // has to know which it is holding to say the right thing and send it the
+  // right way.
+  const [compose, setCompose] = useState<{
+    subject: string;
+    body: string;
+    kind: "cold" | TemplateKey;
+  } | null>(null);
+  // When Call was last pressed on this row, so the script can show a clock
+  // and the email box can offer the after-a-call wording first.
+  const [ringingSince, setRingingSince] = useState<number | null>(null);
+  // Whether the day 3 and day 5 emails carry on after sending one of these
+  // by hand. His call, not ours: a sequence already running is work already
+  // started, and ringing somebody is not a reason to throw it away.
+  const [keepSequence, setKeepSequence] = useState(false);
   // What the row knows about the sequence after an action on this page, so a
   // send or a stop shows immediately rather than on the next load.
   const [seq, setSeq] = useState<"unchanged" | "started" | "stopped">("unchanged");
@@ -1669,6 +1686,31 @@ function Row({
     }).catch(() => null);
   }
 
+  /** The drafts this row can put in the box: the cold opener, and the three
+   *  for somebody already spoken to. Worked out here so the picker and the
+   *  Write email button cannot disagree about what a template says. */
+  const templates = callTemplates(p, callerName, p.unsubscribeUrl);
+
+  /** Is there a three-email sequence still running on this business? Only
+   *  then is there anything to ask about carrying on with. */
+  const sequenceLive =
+    (seq === "started" || Boolean(p.sequenceStartedAt)) &&
+    seq !== "stopped" &&
+    !p.sequenceStoppedAt &&
+    !p.repliedAt &&
+    !p.unsubscribedAt;
+
+  /** Puts one of them in the box, keeping nothing the person had typed —
+   *  pressing a different template means they want that one, not a merge. */
+  function pick(kind: "cold" | TemplateKey) {
+    if (kind === "cold") {
+      setCompose({ ...buildDraft(1, p, p.unsubscribeUrl), kind: "cold" });
+      return;
+    }
+    const t = templates.find((x) => x.key === kind);
+    if (t) setCompose({ subject: t.subject, body: t.body, kind });
+  }
+
   /** Sends the draft through the site's own mail server, so this works from
    *  any device signed into the admin page with no mail client set up. */
   async function send() {
@@ -1679,7 +1721,16 @@ function Row({
       const res = await fetch("/api/admin/prospects/email", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ id: p.id, subject: compose.subject, body: compose.body }),
+        body: JSON.stringify({
+          id: p.id,
+          subject: compose.subject,
+          body: compose.body,
+          // Anything but the cold opener is a one-off after a conversation,
+          // and must not start the three-email sequence.
+          afterCall: compose.kind !== "cold",
+          // Ticked, the day 3 and day 5 emails carry on as they were.
+          keepSequence,
+        }),
       });
       const data = (await res.json().catch(() => null)) as
         | {
@@ -1781,6 +1832,7 @@ function Row({
             script={callScript(p, p.emailCount, callerName)}
             open={script}
             onToggle={() => setScript((was) => !was)}
+            ringingSince={ringingSince}
           />
         )}
 
@@ -1825,6 +1877,10 @@ function Row({
                   // that has only just been placed.
                   setCallForm({ outcome: "no-answer", notes: "", minutes: "", callbackAt: "", callbackTime: "09:30" });
                   setScript(true);
+                  // Starts the clock on the script. Five minutes is the
+                  // limit and every minute of it is paid for, so the time
+                  // is on screen rather than in somebody's head.
+                  setRingingSince(Date.now());
                 }
               } catch {
                 setDialState("failed");
@@ -1942,7 +1998,15 @@ function Row({
             ) : (
               <button
                 type="button"
-                onClick={() => setCompose(compose ? null : buildDraft(1, p, p.unsubscribeUrl))}
+                onClick={() =>
+                  compose
+                    ? setCompose(null)
+                    : // Just rung them, or rung them before: what they are
+                      // waiting for is what you promised on the phone, not
+                      // a cold opener that reads as a mail-merge twenty
+                      // seconds after speaking to a person.
+                      pick(ringingSince || p.calledAt ? "as-promised" : "cold")
+                }
                 className="rounded-lg border border-border px-2.5 py-1 font-semibold hover:border-brand-pink hover:text-foreground"
                 title="Write and send an email to them from here"
               >
@@ -2189,18 +2253,89 @@ function Row({
             To <span className="text-foreground">{p.email}</span> · from{" "}
             <span className="text-foreground">{siteConfig.email}</span>
           </div>
+
+          {/* The four things this email can be. Pressing one replaces the
+              draft, so the choice is made before typing rather than by
+              editing a cold email into something else. */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            {[
+              { key: "cold" as const, label: "Cold opener", when: "Never spoken to them" },
+              ...templates.map((t) => ({ key: t.key, label: t.label, when: t.when })),
+            ].map((choice) => (
+              <button
+                key={choice.key}
+                type="button"
+                onClick={() => pick(choice.key)}
+                title={choice.when}
+                className={`rounded-lg border px-2.5 py-1 text-[11px] font-semibold ${
+                  compose.kind === choice.key
+                    ? "border-brand-pink bg-brand-pink/10 text-foreground"
+                    : "border-border text-muted hover:border-brand-pink hover:text-foreground"
+                }`}
+              >
+                {choice.label}
+              </button>
+            ))}
+          </div>
+          <p className="text-[11px] text-muted">
+            {compose.kind === "cold"
+              ? "Never spoken to them."
+              : templates.find((t) => t.key === compose.kind)?.when}
+          </p>
           {/* Said here because pressing send does two things, and the second
-              one happens days later when nobody is watching. */}
-          <div className="text-[11px] leading-relaxed text-muted">
-            Sending this starts the sequence: a longer follow-up goes on day 3 and a last one on
-            day 5, both with an unsubscribe link. They stop on their own the moment this business
-            replies, unsubscribes, or you mark them interested, not interested or a customer.
-          </div>
-          <div className="text-[11px] leading-relaxed text-muted">
-            You do not have to use this. The daily job sends a first email to anyone scanned,
-            with findings and an address, who has not been written to. This is for the one you
-            want to word yourself.
-          </div>
+              one happens days later when nobody is watching. Only true of
+              the cold opener: the other three are one-offs on purpose. */}
+          {compose.kind === "cold" ? (
+            <>
+              <div className="text-[11px] leading-relaxed text-muted">
+                Sending this starts the sequence: a longer follow-up goes on day 3 and a last one
+                on day 5, both with an unsubscribe link. They stop on their own the moment this
+                business replies, unsubscribes, or you mark them interested, not interested or a
+                customer.
+              </div>
+              <div className="text-[11px] leading-relaxed text-muted">
+                You do not have to use this. The daily job sends a first email to anyone scanned,
+                with findings and an address, who has not been written to. This is for the one you
+                want to word yourself.
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="text-[11px] leading-relaxed text-muted">
+                This one goes on its own. Read it before you send it and change anything that is
+                not true of your call.
+              </div>
+              {/* Only asked where there is something to carry on with. A
+                  sequence already running is work already started, and
+                  ringing somebody is not a reason to bin it — but the day 3
+                  and day 5 emails are written cold, so sending them to
+                  somebody you have just spoken to can read badly. So it is
+                  a question rather than a decision made for him. */}
+              {sequenceLive ? (
+                <label className="flex items-start gap-2 rounded-lg border border-border bg-surface px-3 py-2 text-[11px] leading-relaxed text-foreground">
+                  <input
+                    type="checkbox"
+                    checked={keepSequence}
+                    onChange={(e) => setKeepSequence(e.target.checked)}
+                    className="mt-0.5 accent-brand-pink"
+                  />
+                  <span>
+                    Carry on with the day 3 and day 5 emails.{" "}
+                    <span className="text-muted">
+                      {keepSequence
+                        ? "They will still go out as planned. They are written cold, so they will not mention your call."
+                        : "Left unticked, this email goes and the two automatic ones are called off — nothing else writes to them."}
+                    </span>
+                  </span>
+                </label>
+              ) : (
+                <div className="text-[11px] leading-relaxed text-muted">
+                  No sequence is running for this one, so nothing automatic will write to them
+                  afterwards. What happens next is yours.
+                </div>
+              )}
+            </>
+          )}
           <input
             value={compose.subject}
             onChange={(e) => setCompose({ ...compose, subject: e.target.value })}

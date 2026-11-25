@@ -46,6 +46,15 @@ export type CallScript = {
   reason: string;
   sections: ScriptSection[];
   objections: { they: string; you: string }[];
+  /** Everything found wrong with their site, in the order to raise it.
+   *  Beside the script rather than inside it: the opener uses the
+   *  first one, and these are what you talk through if they stay on
+   *  the line and ask what else. Without them the call runs out of
+   *  material after one sentence, which is where people hang up. */
+  keyPoints: string[];
+  /** How long this call should last, in minutes. Every minute is
+   *  charged, and the thing worth winning is free. */
+  minutes: number;
 };
 
 /**
@@ -84,16 +93,43 @@ function who(callerName: string): string {
   return `It's ${name} from ${siteConfig.name}, we're a marketing agency in Canary Wharf.`;
 }
 
-/** The ask. Small on purpose: nobody buys an agency on a cold call. */
+/**
+ * The ask: their WhatsApp number.
+ *
+ * It used to be the email address, and an email address is a worse
+ * thing to win. An email goes into an inbox with forty others and
+ * gets answered when they get round to it, which is never. A WhatsApp
+ * message is read, and it gets replied to in a sentence rather than
+ * in a letter — so the conversation carries on instead of stopping.
+ *
+ * It is also the cheapest thing on this page. Every minute of the
+ * call costs money per minute; WhatsApp costs nothing at all. So the
+ * job of the call is not to sell anything. It is to turn a metered
+ * phone line into a free conversation, and then get off the phone.
+ */
 function theAsk(p: Prospect): ScriptSection {
   return {
-    heading: "What to ask for",
+    heading: "What to ask for — their WhatsApp",
     say: p.website
-      ? `Let me send you the full report on the site. It's free, there's no obligation, and whether you ever work with us is up to you after you've read it. What's the best email?`
-      : `Let me put thirty minutes aside and show you what a page for ${p.name} would look like. No charge for the look, and if you hate it that's the end of it.`,
-    note: "Ask for the small thing, not the work. A report they agreed to receive is a warm lead; a quote nobody asked for is a deleted email. Getting the email address is also the win on a call that goes nowhere else.",
+      ? `Look, I'll not keep you on the phone. Are you on WhatsApp? Give me the number and I'll send you exactly what I found, in writing, so you can read it when you've got two minutes rather than me talking at you now.`
+      : `I'll not keep you. Are you on WhatsApp? Give me your number and I'll send you a mock-up of what a page for ${p.name} could look like — you can look at it tonight and tell me to get lost if you hate it.`,
+    note: "The WhatsApp number is the win, not the sale. An email address gets you into an inbox with forty others; a WhatsApp number gets you a conversation they actually answer, and it costs nothing per minute. If they will only give you an email, take the email — but ask for WhatsApp first, every time.",
   };
 }
+
+/**
+ * The reminder that the call is costing money by the minute.
+ *
+ * Put at the end rather than the start because that is when it is
+ * needed: the risk is not starting a long call, it is not noticing
+ * one. Five minutes is a number somebody can hold in their head while
+ * talking.
+ */
+const KEEP_IT_SHORT: ScriptSection = {
+  heading: "Get off the phone",
+  say: `That's great — I'll send it over to you on WhatsApp now. Thanks for your time.`,
+  note: "Five minutes is the limit. Past that the call is costing real money and you are no longer selling, you are chatting. Once you have the WhatsApp number the valuable part of this call is over: say thanks, hang up, and send the message while you are still fresh in their mind.",
+};
 
 function objections(p: Prospect, hasEmailed: boolean): { they: string; you: string }[] {
   const list = [
@@ -179,6 +215,7 @@ export function callScript(p: Prospect, emailsSent: number, callerName = ""): Ca
   }
 
   sections.push(theAsk(p));
+  sections.push(KEEP_IT_SHORT);
 
   const reason = !p.website
     ? "No website at all. Nothing for anyone to land on when they search for them."
@@ -190,5 +227,11 @@ export function callScript(p: Prospect, emailsSent: number, callerName = ""): Ca
           ? `Their website has ${p.findings.length} thing${p.findings.length === 1 ? "" : "s"} wrong with it that are costing them enquiries.`
           : "On the list from a search, scanned, nothing obviously wrong with the site.";
 
-  return { reason, sections, objections: objections(p, hasEmailed) };
+  return {
+    reason,
+    sections,
+    objections: objections(p, hasEmailed),
+    keyPoints: p.findings.map((f) => outreachLine(f)),
+    minutes: 5,
+  };
 }

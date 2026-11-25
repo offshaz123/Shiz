@@ -57,12 +57,19 @@ export async function POST(request: Request) {
     return NextResponse.json({ stopped: true });
   }
 
-  // Always step one from here. Steps two and three exist only for a prospect
-  // whose first email a person read and sent, and they are sent by the cron.
-  // "hand": this is the one path where a person has read the email and
-  // pressed send. Everything else goes out as "auto", which is what the
-  // admin page's automatic-email section reads.
-  const result = await sendProspectEmail(id, subject, text, 1, "hand");
+  // An email sent straight after a phone call is a one-off, not step one of
+  // anything. Step 0 says so: it marks them written to without starting the
+  // day 3 and day 5 follow-ups, because somebody who has just been spoken to
+  // and has given a WhatsApp number does not then want two scripted cold
+  // emails. The sequence is stopped outright below for the same reason.
+  //
+  // Otherwise it is always step one from here. Steps two and three exist
+  // only for a prospect whose first email a person read and sent, and they
+  // are sent by the cron. "hand": this is the one path where a person has
+  // read the email and pressed send. Everything else goes out as "auto",
+  // which is what the admin page's automatic-email section reads.
+  const afterCall = body?.afterCall === true;
+  const result = await sendProspectEmail(id, subject, text, afterCall ? 0 : 1, "hand");
   if (!result.ok) {
     return NextResponse.json(
       { error: result.reason, message: MESSAGES[result.reason] ?? result.reason },
@@ -72,8 +79,18 @@ export async function POST(request: Request) {
     );
   }
 
+  // Said out loud on the record, and it also keeps the automatic first
+  // email away from them: that job writes to anybody never written to, and
+  // a step 0 send leaves no sequence start behind for it to notice.
+  // Unless he has said to carry on with them, which the box asks him
+  // whenever a sequence is actually running.
+  if (afterCall && body?.keepSequence !== true) {
+    await stopSequence(id, "emailed by hand after a call");
+  }
+
   return NextResponse.json({
     sent: true,
+    afterCall,
     recipient: result.recipient,
     // False means the email went but no copy could be put in the Sent
     // folder, which the admin page says out loud rather than leaving him to

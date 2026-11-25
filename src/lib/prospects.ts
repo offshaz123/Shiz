@@ -596,6 +596,12 @@ export async function listSequenceDue(limit = 20): Promise<SequenceDue[] | null>
  *  - Not unsubscribed, not already replied, not in the deleted folder, and
  *    not marked interested, not interested or a customer — at which point a
  *    cold opener is the wrong thing to send whichever way it went.
+ *  - Nobody has stopped the sequence on them by hand. That is set when
+ *    somebody presses stop on the row, and when an email is sent after a
+ *    phone call — in both cases a person has decided what happens next with
+ *    this business, and a cold opener arriving afterwards makes a liar of
+ *    them. It was missing, so both of those could be followed by an
+ *    automatic "I had a look at your website" the next morning.
  *
  * And the one that is about the email being true. The first email opens "I
  * had a look at the <name> website, and these things are costing you
@@ -617,6 +623,7 @@ export async function listNeverContacted(
       `SELECT * FROM prospects
         WHERE sequence_started_at IS NULL
           ${region ? "AND region = ?" : ""}
+          AND sequence_stopped_at IS NULL
           AND deleted_at IS NULL
           AND replied_at IS NULL
           AND unsubscribed_at IS NULL
