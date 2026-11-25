@@ -15,6 +15,7 @@ import {
 import { grantablePages } from "@/lib/admin-pages";
 import { REGIONS, REGION_INFO } from "@/lib/regions";
 import type { Staff, StaffTally, Activity, Sitting, DayReport } from "@/lib/staff";
+import { clashes, clashWords } from "@/lib/extensions";
 import { DayCalendar } from "./DayCalendar";
 import { WorkDayLine } from "./WorkDayLine";
 
@@ -85,6 +86,29 @@ function hoursAndMinutes(minutes: number): string {
  * variable for myself but don't put it for them?" No good answer, so it
  * is a box now.
  */
+
+/**
+ * What is actually saved, under the box.
+ *
+ * The boxes had realistic placeholders — "100", "+442045773152" — and
+ * grey hint text in an empty box looks exactly like a saved value in a
+ * filled one. The first time anybody used the page they pressed Save
+ * on what they thought was already filled in, and cleared it.
+ */
+function Saved({ value, blank }: { value: string; blank: string }) {
+  return (
+    <p className="mt-1.5 text-[11px] text-muted">
+      {value ? (
+        <>
+          Saved: <span className="font-semibold tabular-nums text-foreground">{value}</span>
+        </>
+      ) : (
+        <span className="text-amber-400">{blank}</span>
+      )}
+    </p>
+  );
+}
+
 function YourExtension({
   current,
   pbx,
@@ -115,9 +139,10 @@ function YourExtension({
             name="extension"
             defaultValue={current}
             inputMode="numeric"
-            placeholder="100"
-            className="mt-1.5 block w-28 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
+            placeholder="e.g. 100"
+            className="mt-1.5 block w-32 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
           />
+          <Saved value={current} blank="Not set — the Call button stays hidden for you" />
         </label>
         <button
           type="submit"
@@ -167,9 +192,10 @@ function PbxId({ current }: { current: string }) {
             name="pbxId"
             defaultValue={current}
             inputMode="numeric"
-            placeholder="123456"
-            className="mt-1.5 block w-36 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
+            placeholder="e.g. 123456"
+            className="mt-1.5 block w-40 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
           />
+          <Saved value={current} blank="Not set — nobody can sign the calling app in" />
         </label>
         <button
           type="submit"
@@ -211,6 +237,13 @@ export function StaffManager({
   usNumber: string;
 }) {
   const [addState, addAction, adding] = useActionState<StaffFormState, FormData>(createStaff, {});
+
+  // Two people on one extension is how the call record quietly becomes
+  // fiction, and nothing else on this page would ever say so.
+  const sharing = clashes([
+    { name: "You", extension: ownerExtension },
+    ...staff.map((person) => ({ name: person.name, extension: person.extension })),
+  ]);
   const [open, setOpen] = useState<number | null>(null);
   const pages = grantablePages();
 
@@ -218,6 +251,27 @@ export function StaffManager({
 
   return (
     <div className="flex flex-col gap-10">
+      {sharing.length > 0 && (
+        <div className="rounded-2xl border border-red-500/60 bg-red-500/10 p-4">
+          <p className="text-sm font-bold text-foreground">
+            {sharing.length === 1
+              ? "Two people are on the same extension"
+              : "Some extensions are shared"}
+          </p>
+          <ul className="mt-2 flex flex-col gap-1.5">
+            {sharing.map((clash) => (
+              <li key={clash.extension} className="text-xs leading-relaxed text-foreground">
+                {clashWords(clash)}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-2 text-xs text-muted">
+            Give each person their own and the calls file themselves correctly from the next one
+            onwards. Anything already logged stays as it was recorded.
+          </p>
+        </div>
+      )}
+
       <YourExtension
         current={ownerExtension}
         pbx={pbxId}
@@ -675,9 +729,10 @@ function OurNumbers({ uk, us }: { uk: string; us: string }) {
             name="ukNumber"
             defaultValue={uk}
             inputMode="tel"
-            placeholder="+442045773152"
+            placeholder="e.g. +44…"
             className="mt-1.5 block w-48 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
           />
+          <Saved value={uk} blank="Not set — the extension decides" />
         </label>
         <label className="text-xs text-muted">
           United States
@@ -685,9 +740,10 @@ function OurNumbers({ uk, us }: { uk: string; us: string }) {
             name="usNumber"
             defaultValue={us}
             inputMode="tel"
-            placeholder="+12029824683"
+            placeholder="e.g. +1…"
             className="mt-1.5 block w-48 rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground"
           />
+          <Saved value={us} blank="Not set — the extension decides" />
         </label>
         <button
           type="submit"
