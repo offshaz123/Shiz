@@ -1,6 +1,6 @@
 import { buildDraft, STEP_DAYS, type OutreachStep } from "./prospect-outreach";
 import { sendProspectEmail } from "./send-prospect-email";
-import { createPreview, hasPreview, previewUrl } from "./previews";
+import { createPreview, dropPreview, hasPreview, previewUrl } from "./previews";
 import { worthAPreview } from "./preview-worth-it";
 import { prospectUnsubscribeUrl } from "./unsubscribe-url";
 import {
@@ -216,16 +216,26 @@ async function startNewSequences(summary: SequenceSummary): Promise<void> {
     // business ever: a second one landing a fortnight later reads as a
     // machine, which is the opposite of the point.
     let link = "";
+    let previewId: number | null = null;
     if (worthAPreview(prospect) && !(await hasPreview(prospect.id))) {
       const preview = await createPreview(prospect.id, prospect.name);
       if (preview) {
         link = previewUrl(preview);
-        summary.previews += 1;
+        previewId = preview.id;
       }
     }
 
     const draft = buildDraft(1, prospect, unsubscribeUrl, link);
     const result = await sendProspectEmail(prospect.id, draft.subject, draft.body, 1);
+
+    // The page exists only to be in that email. If the email did not
+    // go, the page is a link nobody has, and leaving it there would
+    // mark this business as already done and bar them from ever
+    // getting one.
+    if (previewId !== null) {
+      if (result.ok) summary.previews += 1;
+      else await dropPreview(previewId);
+    }
     // sendProspectEmail stamps sequence_started_at on a successful step 1,
     // which is what puts them into listSequenceDue for days three and five.
     if (result.ok) summary.started += 1;

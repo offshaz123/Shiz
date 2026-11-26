@@ -50,13 +50,33 @@ function notFound(): Response {
   return new Response("Not found", { status: 404, headers: { "x-robots-tag": "noindex" } });
 }
 
-/** Shown when the week is up, or when their site will not answer today. */
-function gone(name: string): Response {
+/**
+ * The short honest page, for the two ways this does not work.
+ *
+ * They were one message and one status code until somebody clicked a
+ * perfectly live link whose business had a website that would not
+ * answer, and was told their preview had expired. Two different
+ * problems reading the same is how somebody decides the whole thing is
+ * broken.
+ */
+function stop(
+  name: string,
+  kind: "expired" | "unreachable",
+): Response {
+  const expired = kind === "expired";
+  const title = expired ? "This preview has expired" : "We could not load your website";
+  const body = expired
+    ? `The page we built${name ? ` for ${name}` : ""} was live for a week and has now come down.
+       If you would still like to see it, we can put it back up in a couple of minutes.`
+    : `The page we built${name ? ` for ${name}` : ""} is made fresh from your own website each
+       time it is opened, and your site did not answer just now. It may be a blip. Try again in
+       a few minutes, or tell us and we will send you a copy instead.`;
+
   return new Response(
     `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
-<title>Preview expired</title>
+<title>${title}</title>
 <style>
  body{margin:0;min-height:100vh;display:grid;place-items:center;background:#07090d;color:#eef2f7;
       font-family:ui-sans-serif,system-ui,sans-serif;padding:24px;text-align:center;line-height:1.6}
@@ -65,13 +85,15 @@ function gone(name: string): Response {
        text-decoration:none;font-weight:700}
  .small{font-size:14px;margin-top:18px}
 </style></head><body><div class="box">
-<h1>This preview has expired</h1>
-<p>The page we built${name ? ` for ${name}` : ""} was live for a week and has now come down.
-If you would still like to see it, we can put it back up in a couple of minutes.</p>
+<h1>${title}</h1>
+<p>${body}</p>
 <p><a class="btn" href="https://wa.me/${siteConfig.whatsappNumber}">Message us on WhatsApp</a></p>
 <p class="small">Or ring ${siteConfig.phoneDisplay}. ${siteConfig.name}.</p>
 </div></body></html>`,
-    { status: 410, headers: HTML },
+    // Gone for an expired link, and a plain 200 for a site that did not
+    // answer: nothing has expired, and a 410 would tell a crawler this
+    // address is dead for good.
+    { status: expired ? 410 : 200, headers: HTML },
   );
 }
 
@@ -88,6 +110,9 @@ export async function GET(
 
   const them = await getProspect(preview.prospectId);
   if (!them) return notFound();
+  // Deleted from the list means we are finished with them, and a page
+  // carrying their logo should not outlive that decision.
+  if (them.deletedAt) return notFound();
 
   // Counted before the expiry check on purpose. A business coming back to
   // a dead link is still a business worth ringing, and that is exactly
@@ -95,7 +120,7 @@ export async function GET(
   await recordOpen(token);
 
   if (new Date(preview.expiresAt.replace(" ", "T")).getTime() < Date.now()) {
-    return gone(them.name);
+    return stop(them.name, "expired");
   }
 
   // No website to rebuild. The no-website version of this is a different
@@ -103,7 +128,10 @@ export async function GET(
   if (!them.website.trim()) return notFound();
 
   try {
-    const fetched = await fetchForAudit(them.website, 15_000);
+    // Ten, not fifteen. This is a cold prospect who has just clicked a
+    // link from a stranger; a blank tab for fifteen seconds is a closed
+    // tab, and the honest "could not load it" page is better than that.
+    const fetched = await fetchForAudit(them.website, 10_000);
     const report = buildReport({
       html: fetched.html,
       finalUrl: fetched.finalUrl,
@@ -131,8 +159,8 @@ export async function GET(
 
     return new Response(page, { status: 200, headers: HTML });
   } catch {
-    // Their site is down, or refusing us today. An honest page beats a
-    // broken one: they still get the invitation to talk.
-    return gone(them.name);
+    // Their site is down, or refusing us today. Said as what it is,
+    // rather than as an expiry that has not happened.
+    return stop(them.name, "unreachable");
   }
 }

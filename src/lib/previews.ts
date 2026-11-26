@@ -171,6 +171,20 @@ export async function previewsForProspects(
   });
 }
 
+/**
+ * Thrown away when the email it was made for never left.
+ *
+ * The page is built before the email so the link can go inside it. If
+ * the send then fails, the row still exists, and because it exists
+ * this business can never be sent one again: a mail server having a
+ * bad minute would quietly cost us the best email we had for them.
+ */
+export async function dropPreview(id: number): Promise<void> {
+  await withDb(async (db) => {
+    await db.execute("DELETE FROM prospect_previews WHERE id = ?", [id]);
+  }).catch(() => null);
+}
+
 /** Whether one has ever been built for this business. One each, ever. */
 export async function hasPreview(prospectId: number): Promise<boolean> {
   const n = await withDb(async (db) => {

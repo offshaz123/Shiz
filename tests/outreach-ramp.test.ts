@@ -19,12 +19,14 @@ test("the ramp does not open up until enough have been sent", () => {
   assert.equal(newPerRun(39), 8);
   assert.equal(newPerRun(40), 12);
   assert.equal(newPerRun(119), 12);
-  assert.equal(newPerRun(120), 15);
+  assert.equal(newPerRun(120), 40);
+  assert.equal(newPerRun(399), 40);
+  assert.equal(newPerRun(400), 80);
 });
 
 test("the ramp has a ceiling and never climbs past it", () => {
-  assert.equal(newPerRun(1_000), 15);
-  assert.equal(newPerRun(1_000_000), 15);
+  assert.equal(newPerRun(1_000), 80);
+  assert.equal(newPerRun(1_000_000), 80);
 });
 
 /**

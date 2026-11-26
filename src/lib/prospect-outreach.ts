@@ -117,19 +117,34 @@ const COUNT_WORDS = ["", "One", "Two", "Three", "Four", "Five", "Six"];
 function whatWeKnow(p: Prospect): string {
   const trade = p.category ? p.category.toLowerCase() : "";
   const where = p.town ? ` in ${p.town}` : "";
-  const them = trade ? `You run a ${trade}${where}.` : where ? `You are based${where}.` : "";
+  // "You run a plumber in Leeds" is what the obvious wording produces,
+  // because Google's category is sometimes a trade (plumber, dentist)
+  // and sometimes a business (car detailing service). Saying where it
+  // came from fixes the grammar for both and quietly proves we looked
+  // at their listing rather than guessed.
+  const article = /^[aeiou]/.test(trade) ? "an" : "a";
+  const them = trade
+    ? `Google has you as ${article} ${trade}${where}.`
+    : where
+      ? `You are based${where}.`
+      : "";
 
   const n = p.reviews;
   const stars = p.rating;
 
-  // Nothing to say about reviews they do not have.
-  if (!n || stars === null) {
+  if (n === 0) {
     return [
       them,
-      n === 0
-        ? "You have no Google reviews yet, which is the cheapest thing on this list to put right."
-        : "",
+      "You have no Google reviews yet, which is the cheapest thing on this list to put right.",
     ]
+      .filter(Boolean)
+      .join(" ");
+  }
+
+  // Reviews but no star rating stored. The count alone is still proof
+  // somebody looked, and is still true.
+  if (stars === null) {
+    return [them, `${n} review${n === 1 ? "" : "s"} on Google, so people are finding you.`]
       .filter(Boolean)
       .join(" ");
   }
@@ -189,7 +204,10 @@ function stepOneWithPreview(p: Prospect, unsubscribeUrl: string, link: string): 
             ``,
             `All of them are sorted on that page, and it says what each one was costing you.`,
           ]
-        : [`Why I bothered: there are things on your site as it is now that are costing you enquiries, and the page lists them.`]),
+        // Unreachable while the rules require findings to build a page at
+        // all, but written as though it is not: a page that promises a
+        // list and then has none is the worst version of this.
+        : [`Why I bothered: your site as it is now is costing you enquiries, and that page is what it could look like instead.`]),
       ``,
       `If you want it, ring me on ${siteConfig.phoneDisplay}. I'm Walid Shah, I own the business and I take the calls myself.`,
       ``,
