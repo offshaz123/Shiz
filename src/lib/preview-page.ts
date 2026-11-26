@@ -171,6 +171,18 @@ export function previewPage(input: PreviewInput): string {
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+  /* Real pages, switched instantly. Theirs takes a second or two to load
+     a new page; ours does not, and somebody clicking between the two
+     feels that before they can name it. */
+  .page { display: none; animation: arrive .45s cubic-bezier(.22,.61,.36,1); }
+  .page.live { display: block; }
+  @keyframes arrive { from { opacity: 0; transform: translateY(14px); } }
+  .banner { padding: 86px 0 52px; border-bottom: 1px solid var(--line); position: relative; overflow: hidden; }
+  .banner .wrap { position: relative; z-index: 2; }
+  .banner h1 { font-size: clamp(32px, 5vw, 56px); margin: 0 0 12px; max-width: 18ch; }
+  .banner p { color: var(--soft); max-width: 58ch; margin: 0; font-size: 16.5px; }
+  .banner .glowbg { position: absolute; width: 620px; height: 620px; border-radius: 50%;
+                    filter: blur(150px); background: var(--brand); opacity: .16; top: -300px; right: -140px; }
   body { margin: 0; background: var(--bg); color: #eef2f7;
          font-family: Inter, ui-sans-serif, system-ui, sans-serif; line-height: 1.62; overflow-x: hidden; }
   img { max-width: 100%; display: block; }
@@ -385,7 +397,7 @@ ${them.promo ? `<div class="promo"><i>${esc(them.promo)}&nbsp;&nbsp;&middot;&nbs
 <header id="head"><div class="inner">
   ${them.logo ? `<img class="mark" src="${esc(them.logo)}" alt="${esc(name)}">` : `<div class="logo">${esc(name)}</div>`}
   <nav>
-    ${nav.map((n) => `<a href="#${n.id}" data-to="${n.id}">${esc(n.label)}</a>`).join("\n    ")}
+    ${nav.map((n) => `<a href="#${n.id}" data-page="${n.id}">${esc(n.label)}</a>`).join("\n    ")}
   </nav>
   ${tel ? `<a class="call" href="tel:${esc(tel)}">${esc(them.phone)}</a>` : `<a class="call" href="#contact">Get in touch</a>`}
 </div></header>
@@ -404,12 +416,14 @@ ${them.promo ? `<div class="promo"><i>${esc(them.promo)}&nbsp;&nbsp;&middot;&nbs
     <div class="note">Some sites refuse to load inside another page. If the panel below is blank,
       <a href="${esc(website)}" target="_blank" rel="noreferrer noopener">open your site in a new tab</a>
       and put the two side by side.</div>
-    <iframe src="${esc(website)}" title="Your current website" loading="lazy" referrerpolicy="no-referrer"></iframe>
+    <iframe data-src="${esc(website)}" title="Your current website" loading="lazy" referrerpolicy="no-referrer"></iframe>
   </div>
 </div></section>
 
 <div id="after">
-<div class="hero" id="top">
+
+<div class="page live" id="page-top">
+<div class="hero">
   ${hero ? `<div class="shot" id="shot" style="background-image:url('${esc(hero)}')"></div>` : `<div class="shot" id="shot"></div>`}
   <div class="blob a"></div>
   <div class="blob b"></div>
@@ -448,12 +462,13 @@ ${
 
 ${
   them.services.length
-    ? `<section id="services"><div class="wrap">
+    ? `<section><div class="wrap">
   <span class="tag rise">What we do</span>
   <h2 class="rise">Everything, done properly</h2>
   <p class="lead rise">Taken from your own website. Nothing added, nothing invented.</p>
   <div class="cards">
     ${them.services
+      .slice(0, 6)
       .map(
         (s, i) =>
           `<div class="card rise" style="transition-delay:${i * 70}ms"><div class="mark">${String(i + 1).padStart(2, "0")}</div><h3>${esc(s)}</h3></div>`,
@@ -463,10 +478,39 @@ ${
 </div></section>`
     : ""
 }
+</div><!-- /page-top -->
+
+${
+  them.services.length
+    ? `<div class="page" id="page-services">
+  <div class="banner"><div class="glowbg"></div><div class="wrap">
+    <span class="tag">Services</span>
+    <h1>What ${esc(name)} does</h1>
+    <p>Every one of these is already on your own website. A page each is how somebody searching for one of them finds you.</p>
+  </div></div>
+  <section><div class="wrap">
+    <div class="cards">
+      ${them.services
+        .map(
+          (s, i) =>
+            `<div class="card rise" style="transition-delay:${(i % 6) * 70}ms"><div class="mark">${String(i + 1).padStart(2, "0")}</div><h3>${esc(s)}</h3></div>`,
+        )
+        .join("\n      ")}
+    </div>
+  </div></section>
+</div>`
+    : ""
+}
 
 ${
   gallery.length
-    ? `<section id="work"><div class="wrap">
+    ? `<div class="page" id="page-work">
+  <div class="banner"><div class="glowbg"></div><div class="wrap">
+    <span class="tag">Our work</span>
+    <h1>The work, not a stock photograph</h1>
+    <p>Every picture here is one of yours, loaded from your own server.</p>
+  </div></div>
+  <section><div class="wrap">
   <span class="tag rise">Our work</span>
   <h2 class="rise">Your own photographs, shown properly</h2>
   <p class="lead rise">Same pictures that are on your site now, given the room they deserve.</p>
@@ -478,10 +522,11 @@ ${
       )
       .join("\n    ")}
   </div>
-</div></section>`
+</div></section></div>`
     : ""
 }
 
+<div class="page" id="page-reviews">
 ${proposed(
   "reviews",
   "What your customers say",
@@ -501,15 +546,19 @@ ${proposed(
     </div>`,
 )}
 
+</div>
+
 ${
   them.about
-    ? `<section id="about"><div class="wrap">
+    ? `<div class="page" id="page-about"><section><div class="wrap">
   <span class="tag rise">About</span>
   <h2 class="rise">About ${esc(name)}</h2>
   <p class="about rise">${esc(them.about)}</p>
-</div></section>`
+</div></section></div>`
     : ""
 }
+
+<div class="page" id="page-contact">
 
 ${proposed(
   "contact",
@@ -532,6 +581,7 @@ ${proposed(
         .join("\n      ")}
     </div>`,
 )}
+</div><!-- /page-contact -->
 </div><!-- /after -->
 
 <section class="fixes"><div class="wrap">
@@ -612,12 +662,43 @@ ${proposed(
     requestAnimationFrame(step);
   }
 
-  // Their site against ours.
+  // Real pages. Switched instantly, which is half the argument: theirs
+  // reloads for a second or two, ours does not.
+  var pages = [].slice.call(document.querySelectorAll('.page'));
+  var links = [].slice.call(document.querySelectorAll('nav a'));
+  function goTo(id) {
+    var found = document.getElementById('page-' + id);
+    if (!found) return false;
+    pages.forEach(function (pg) { pg.classList.toggle('live', pg === found); });
+    links.forEach(function (a) { a.classList.toggle('here', a.dataset.page === id); });
+    window.scrollTo(0, 0);
+    // Anything on the page that was waiting to arrive, arrives now.
+    found.querySelectorAll('.rise').forEach(function (el) { el.classList.add('in'); });
+    found.querySelectorAll('.num').forEach(function (el) { count(el); });
+    return true;
+  }
+  links.forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      if (goTo(a.dataset.page)) e.preventDefault();
+    });
+  });
+  // Any other link to a page on this mock-up, such as the hero buttons.
+  document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    if (!document.getElementById('page-' + id)) return;
+    a.addEventListener('click', function (e) { if (goTo(id)) e.preventDefault(); });
+  });
+
+  // Their site against ours. The frame is only loaded when somebody asks
+  // for it: their homepage is often megabytes, and making our page wait
+  // on it would hand them the one comparison we are trying to win.
   var after = document.getElementById('after');
   var before = document.getElementById('before');
   var tabA = document.getElementById('tab-after');
   var tabB = document.getElementById('tab-before');
+  var frame = before.querySelector('iframe');
   function show(theirs) {
+    if (theirs && frame && !frame.src) frame.src = frame.dataset.src;
     before.classList.toggle('on', theirs);
     after.style.display = theirs ? 'none' : '';
     tabB.setAttribute('aria-pressed', String(theirs));
@@ -631,8 +712,9 @@ ${proposed(
   var shot = document.getElementById('shot');
   var wa = document.querySelector('.wa');
   var bar = document.getElementById('progress');
-  var links = [].slice.call(document.querySelectorAll('nav a'));
   var ticking = false;
+
+  links.forEach(function (a) { a.classList.toggle('here', a.dataset.page === 'top'); });
 
   function onScroll() {
     if (ticking) return;
@@ -647,13 +729,6 @@ ${proposed(
       if (shot && !reduce && y < window.innerHeight * 1.2) {
         shot.style.transform = 'scale(1.08) translate3d(0,' + (y * 0.22) + 'px,0)';
       }
-      // Which section they are in, marked in the navigation.
-      var here = '';
-      links.forEach(function (a) {
-        var target = document.getElementById(a.dataset.to);
-        if (target && target.getBoundingClientRect().top <= 140) here = a.dataset.to;
-      });
-      links.forEach(function (a) { a.classList.toggle('here', a.dataset.to === here); });
       ticking = false;
     });
   }

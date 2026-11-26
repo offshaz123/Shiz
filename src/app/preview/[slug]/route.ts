@@ -1,6 +1,6 @@
 import { byToken, recordOpen, tokenFrom } from "@/lib/previews";
 import { getProspect } from "@/lib/prospects";
-import { rebuildFrom } from "@/lib/site-rebuild";
+import { merge, otherPages, rebuildFrom } from "@/lib/site-rebuild";
 import { previewPage } from "@/lib/preview-page";
 import { fetchForAudit } from "@/lib/scan-site";
 import { buildReport } from "@/lib/site-audit";
@@ -146,8 +146,24 @@ export async function GET(
       .filter((c) => c.severity === "critical" || c.severity === "warning")
       .sort((a, b) => rank(a.severity) - rank(b.severity));
 
+    // Their other pages, read in parallel. A homepage alone gives one
+    // screen of material, which is why the first rebuild read as a
+    // leaflet next to a real website. Three at most, each with a short
+    // timeout, and any that does not answer is simply left out.
+    const main = rebuildFrom(fetched.html, fetched.finalUrl);
+    const others = await Promise.all(
+      otherPages(fetched.html, fetched.finalUrl).map(async (href) => {
+        try {
+          const extra = await fetchForAudit(href, 6_000);
+          return rebuildFrom(extra.html, extra.finalUrl);
+        } catch {
+          return null;
+        }
+      }),
+    );
+
     const page = previewPage({
-      them: rebuildFrom(fetched.html, fetched.finalUrl),
+      them: merge(main, others.filter((one) => one !== null)),
       website: fetched.finalUrl,
       findings: worst.slice(0, 5).map((c) => outreachLine({ label: c.label, why: c.why ?? "" })),
       score: Math.round(report.score),

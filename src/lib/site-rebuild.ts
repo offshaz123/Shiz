@@ -355,6 +355,90 @@ function reviewsOf(html: string): { rating: string; count: string } {
 }
 
 /**
+ * Their other pages, worth reading for the rebuild.
+ *
+ * The homepage alone gives one screen of material, which is why the
+ * first rebuilt version read as a leaflet next to a real website. A
+ * services page and an about page have the words a business actually
+ * uses about itself, and pictures the homepage never shows.
+ *
+ * Same site only, three at most, and each kind only once. Following
+ * every link on a site would be a crawl, which is a different thing
+ * from reading the few pages a person would read.
+ */
+const WORTH_READING: { kind: string; test: RegExp }[] = [
+  { kind: "services", test: /\/(services?|what-we-do|treatments?|products?|shop|packages?|pricing|prices)(\/|$|\?)/i },
+  { kind: "about", test: /\/(about|about-us|our-story|who-we-are|meet-the-team)(\/|$|\?)/i },
+  { kind: "gallery", test: /\/(gallery|portfolio|our-work|projects?|case-stud|examples?)(\/|$|\?)/i },
+];
+
+export function otherPages(html: string, baseUrl: string): string[] {
+  let origin = "";
+  try {
+    origin = new URL(baseUrl).origin;
+  } catch {
+    return [];
+  }
+
+  const taken = new Set<string>();
+  const out: string[] = [];
+  const clean = stripNoise(html);
+
+  for (const m of clean.matchAll(/href\s*=\s*["']([^"'#]+)["']/gi)) {
+    const href = absolute(m[1], baseUrl);
+    if (!href || !href.startsWith(origin)) continue;
+    // Files are not pages.
+    if (/\.(pdf|jpe?g|png|gif|webp|svg|zip|docx?|xlsx?)(\?|$)/i.test(href)) continue;
+
+    const path = href.slice(origin.length) || "/";
+    const match = WORTH_READING.find((w) => w.test.test(path));
+    if (!match || taken.has(match.kind) || out.includes(href)) continue;
+
+    taken.add(match.kind);
+    out.push(href);
+    if (out.length === 3) break;
+  }
+  return out;
+}
+
+/**
+ * Two pages of theirs, read as one business.
+ *
+ * The homepage decides the name, the look and the headline, because
+ * that is what it is for. Everything countable — services, pictures —
+ * is added to from the rest, because more of their own material is
+ * exactly what the rebuild was short of.
+ */
+export function merge(main: Rebuilt, extra: Rebuilt[]): Rebuilt {
+  const services = [...main.services];
+  const images = [...main.images];
+
+  for (const other of extra) {
+    for (const s of other.services) {
+      if (services.length < 9 && !services.some((have) => have.toLowerCase() === s.toLowerCase())) {
+        services.push(s);
+      }
+    }
+    for (const src of other.images) {
+      if (images.length < 12 && !images.includes(src) && src !== main.logo) images.push(src);
+    }
+  }
+
+  return {
+    ...main,
+    services,
+    images,
+    // The longest honest paragraph about them, wherever it was found.
+    about: [main.about, ...extra.map((e) => e.about)].reduce(
+      (best, one) => (one.length > best.length ? one : best),
+      "",
+    ),
+    phone: main.phone || extra.map((e) => e.phone).find(Boolean) || "",
+    email: main.email || extra.map((e) => e.email).find(Boolean) || "",
+  };
+}
+
+/**
  * Everything the rebuilt page needs, off their own homepage.
  *
  * Never throws and never guesses. A field it cannot find comes back empty
