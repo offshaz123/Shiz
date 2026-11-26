@@ -47,6 +47,10 @@ export type PreviewInput = {
   expires: string;
   /** Who is sending it, for the bar at the top. */
   from: string;
+  /** The plain names of the checks their site failed, so the page can
+   *  list what it has not got beside what we would put on it. Labels
+   *  rather than the prose findings, because this is a checklist. */
+  missing?: string[];
   /** Their Google rating and review count, where we hold them from the
    *  listing rather than from their page. Used in preference, because
    *  Google's numbers are the ones their customers see. */
@@ -125,8 +129,64 @@ function proposed(id: string, title: string, note: string, inner: string): strin
 </section>`;
 }
 
+/**
+ * What a site like theirs ought to have, in the order it earns money.
+ *
+ * Matched against the checks their own site failed, so every cross on
+ * the list is a thing our audit actually found missing rather than a
+ * thing we decided to sell them.
+ */
+const SHOULD_HAVE: { label: string; checks: string[]; why: string }[] = [
+  {
+    label: "A number you can tap",
+    checks: ["Tappable phone number"],
+    why: "On a phone, one tap dials you instead of them copying it out.",
+  },
+  {
+    label: "An enquiry form",
+    checks: ["Enquiry form"],
+    why: "For the people who will never ring but will type.",
+  },
+  {
+    label: "WhatsApp",
+    checks: ["WhatsApp link"],
+    why: "Most people answer a message faster than they answer a call.",
+  },
+  {
+    label: "Your reviews, on your own site",
+    checks: ["Reviews shown on site"],
+    why: "The thing that decides it for somebody sitting on the fence.",
+  },
+  {
+    label: "Online booking",
+    checks: ["Online booking"],
+    why: "So a job can be booked at nine at night without you.",
+  },
+  {
+    label: "An answer out of hours",
+    checks: ["Live chat or chatbot"],
+    why: "An enquiry at eleven gets a reply, not a wait until morning.",
+  },
+  {
+    label: "Knowing where your customers came from",
+    checks: ["Google Analytics", "Meta Pixel", "Google Ads tracking", "Google Tag Manager"],
+    why: "Otherwise every pound of advertising is spent blind.",
+  },
+  {
+    label: "Showing up properly in Google",
+    checks: ["Structured data", "Page title", "Meta description"],
+    why: "What Google and the AI answers read to work out who you are.",
+  },
+];
+
 export function previewPage(input: PreviewInput): string {
   const { them, website, findings, score, expires, from } = input;
+  const failed = (input.missing ?? []).map((m) => m.toLowerCase());
+  const wanted = SHOULD_HAVE.map((item) => ({
+    ...item,
+    has: !item.checks.some((c) => failed.includes(c.toLowerCase())),
+  }));
+  const gaps = wanted.filter((w) => !w.has).length;
   const brand = /^#[0-9a-f]{6}$/i.test(them.colour) ? them.colour : "#2563eb";
   const ink = inkOn(brand);
   const name = them.name || website.replace(/^https?:\/\//, "").replace(/\/$/, "");
@@ -320,6 +380,32 @@ export function previewPage(input: PreviewInput): string {
   .faq div { border-bottom: 1px solid var(--line); padding: 20px 0; display: flex; gap: 16px; align-items: baseline; }
   .faq b { font-weight: 600; font-size: 16.5px; }
   .faq span { margin-left: auto; color: var(--brand); font-size: 22px; line-height: 1; }
+
+  /* What they have, what they have not, and what one more job is worth. */
+  .gaps { background: linear-gradient(180deg, rgba(255,255,255,.025), transparent); border-top: 1px solid var(--line); }
+  .list { display: grid; gap: 2px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+  .item { display: flex; gap: 14px; align-items: flex-start; padding: 17px 18px; border-radius: 14px;
+          border: 1px solid transparent; }
+  .item.no { background: rgba(255,255,255,.03); border-color: var(--line); }
+  .item .box { width: 22px; height: 22px; border-radius: 7px; flex: none; display: grid; place-items: center;
+               font-size: 13px; font-weight: 800; margin-top: 2px; }
+  .item.yes .box { background: rgba(255,255,255,.08); color: var(--soft); }
+  .item.no .box { background: var(--brand); color: var(--ink); }
+  .item b { display: block; font-weight: 600; font-size: 16px; }
+  .item.yes b { color: var(--soft); }
+  .item small { color: var(--soft); font-size: 13.5px; display: block; margin-top: 3px; }
+
+  .sum { margin-top: 44px; border: 1px solid var(--line); border-radius: 22px; padding: 30px;
+         background: rgba(255,255,255,.03); max-width: 720px; }
+  .sum h3 { margin: 0 0 8px; font-size: 20px; }
+  .sum .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 22px 0 6px; }
+  .sum label { font-size: 14.5px; color: var(--soft); }
+  .sum input[type=number] { width: 120px; font: inherit; font-weight: 700; color: #fff; padding: 11px 13px;
+                            border-radius: 11px; border: 1px solid var(--line); background: rgba(0,0,0,.35); }
+  .sum input[type=range] { flex: 1; min-width: 180px; accent-color: var(--brand); }
+  .sum .out { font-family: Sora; font-weight: 800; font-size: clamp(30px, 4.4vw, 46px); color: var(--brand);
+              line-height: 1.05; margin-top: 14px; }
+  .sum .cav { color: var(--soft); font-size: 13px; margin-top: 12px; }
 
   /* What we changed. The one section that is about them, not about the site. */
   .fixes { background: linear-gradient(180deg, #080b11, #05070a); border-top: 1px solid var(--line); }
@@ -584,6 +670,43 @@ ${proposed(
 </div><!-- /page-contact -->
 </div><!-- /after -->
 
+<section class="gaps"><div class="wrap">
+  <span class="tag rise">What is missing</span>
+  <h2 class="rise">${gaps > 0 ? `${gaps} thing${gaps === 1 ? "" : "s"} your site has not got` : "What a site like yours should have"}</h2>
+  <p class="lead rise">Ticked is what you already have. The rest is what we would put on, and what each one is for.</p>
+
+  <div class="list">
+    ${wanted
+      .map(
+        (w, i) =>
+          `<div class="item ${w.has ? "yes" : "no"} rise" style="transition-delay:${(i % 8) * 50}ms">
+        <span class="box">${w.has ? "&#10003;" : "+"}</span>
+        <span><b>${esc(w.label)}</b><small>${w.has ? "Already on your site." : esc(w.why)}</small></span>
+      </div>`,
+      )
+      .join("\n    ")}
+  </div>
+
+  <!-- Their arithmetic, on a number they choose. Not a forecast, and it
+       says so: we have no idea what they charge or how many enquiries
+       they get, and a page that guessed would be caught out by the only
+       person who knows. -->
+  <div class="sum rise">
+    <h3>What would one more job a month be worth?</h3>
+    <p class="lead" style="margin:0">We do not know what you charge, so put your own number in.</p>
+    <div class="row">
+      <label for="job">An average job is worth</label>
+      <span style="font-weight:700">&pound;</span>
+      <input id="job" type="number" min="20" max="20000" step="10" value="400" aria-label="Average job value in pounds">
+      <input id="jobr" type="range" min="50" max="5000" step="50" value="400" aria-label="Average job value">
+    </div>
+    <div class="out"><span id="year">&pound;4,800</span> a year</div>
+    <p class="cav">That is one extra job a month, times twelve, at the figure you typed. It is arithmetic on
+      your own number, not a promise and not a prediction. Nobody can tell you in advance what a website will
+      bring in, and anybody who does is guessing.</p>
+  </div>
+</div></section>
+
 <section class="fixes"><div class="wrap">
   ${score !== null ? `<div class="pill rise">Your website scored ${score} out of 100 on our audit</div>` : ""}
   <span class="tag rise">The honest part</span>
@@ -707,6 +830,21 @@ ${proposed(
   }
   tabA.addEventListener('click', function () { show(false); });
   tabB.addEventListener('click', function () { show(true); });
+
+  // One more job a month, at whatever they say a job is worth.
+  var job = document.getElementById('job');
+  var jobr = document.getElementById('jobr');
+  var year = document.getElementById('year');
+  function sum(from) {
+    var v = Math.max(0, Math.min(20000, Number(from.value) || 0));
+    if (from === job) jobr.value = Math.max(50, Math.min(5000, v));
+    else job.value = v;
+    year.textContent = '\u00A3' + (v * 12).toLocaleString('en-GB');
+  }
+  if (job && jobr && year) {
+    job.addEventListener('input', function () { sum(job); });
+    jobr.addEventListener('input', function () { sum(jobr); });
+  }
 
   var head = document.getElementById('head');
   var shot = document.getElementById('shot');

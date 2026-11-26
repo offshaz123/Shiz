@@ -166,6 +166,10 @@ export async function GET(
       them: merge(main, others.filter((one) => one !== null)),
       website: fetched.finalUrl,
       findings: worst.slice(0, 5).map((c) => outreachLine({ label: c.label, why: c.why ?? "" })),
+      // Every failed check, not just the worst five: the checklist is
+      // about what is missing, and a thing that did not make the top
+      // five is still missing.
+      missing: worst.map((c) => c.label),
       score: Math.round(report.score),
       expires: dayWords(preview.expiresAt),
       from: siteConfig.name,
