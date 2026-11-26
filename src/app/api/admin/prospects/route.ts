@@ -63,7 +63,12 @@ export async function GET(request: Request) {
         : isStatus(statusParam)
           ? statusParam
           : ("all" as const),
-    contact: (contactParam === "not-contacted" || contactParam === "contacted"
+    // Anything unrecognised falls through to the whole list, which is
+    // the safe answer: a typo in a query string should show too much
+    // rather than quietly show the wrong people.
+    contact: (contactParam === "not-contacted" ||
+    contactParam === "contacted" ||
+    contactParam === "previews"
       ? contactParam
       : "all") as ContactFilter,
     town: (params.get("town") ?? "").slice(0, 80),

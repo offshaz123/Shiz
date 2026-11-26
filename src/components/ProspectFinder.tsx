@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import type { ContactFilter } from "@/lib/prospects";
 import { URGENCY_WORD, planCall } from "@/lib/call-priority";
 import { noteProblem } from "@/lib/call-notes";
 import { callScript } from "@/lib/call-script";
@@ -350,7 +351,7 @@ export function ProspectFinder({
   // Which half of the list you are looking at. Anyone who has been emailed or
   // rung leaves the list of people still to approach, because the whole job
   // of that list is "who have we not got to yet".
-  const [contact, setContact] = useState<"not-contacted" | "contacted" | "all">("not-contacted");
+  const [contact, setContact] = useState<ContactFilter>("not-contacted");
   /**
    * Which slice of the list is on screen.
    *
@@ -1053,6 +1054,11 @@ export function ProspectFinder({
         {([
           { value: "not-contacted", label: "To contact", count: counts?.notContacted },
           { value: "contacted", label: "Contacted", count: counts?.contacted },
+          // Its own list on purpose. A business sent a page built out of
+          // their own site is a different conversation from the rest of
+          // Contacted, and the ones who opened it are the best calls of
+          // the day. Among six hundred rows nobody ever finds them.
+          { value: "previews", label: "Sites we rebuilt", count: undefined },
           { value: "all", label: "Everyone", count: undefined },
         ] as const).map((tab) => (
           <button
@@ -1848,6 +1854,13 @@ function Row({
           />
         )}
 
+        {/* Whether a page was built for them out of their own site, and
+            whether they have looked at it. Out here rather than beside
+            the email, where the first version put it: that block only
+            renders for a business that has an email address, so a
+            preview sent to anybody else was invisible. */}
+        <PreviewBadge prospect={p} />
+
         {/* A number somebody has already rung and found dead does not
             get a Call button. Same reasoning as the bounced address
             above: a button that cannot work is an invitation to waste
@@ -2055,9 +2068,6 @@ function Row({
               <span title={p.emailedAt}>emailed {p.emailedAt.slice(0, 10)}</span>
             )}
 
-            {/* Whether a page was built for them out of their own site,
-                and whether they have looked at it. */}
-            <PreviewBadge prospect={p} />
             {/* Where the three-email sequence has got to. All three send
                 themselves now; the Write email button is for the one you
                 want to word yourself rather than the normal route in. */}

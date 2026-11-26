@@ -255,7 +255,7 @@ export async function saveProspects(
  * these people" is a fact, and it is the one that decides whether a row
  * belongs on the list of people still to approach.
  */
-export type ContactFilter = "all" | "not-contacted" | "contacted";
+export type ContactFilter = "all" | "not-contacted" | "contacted" | "previews";
 
 /** Approached at all: emailed from the admin page, or given a status that
  *  stamped called_at. */
@@ -333,6 +333,13 @@ function whereFor(filters: ProspectFilters): { where: string[]; params: (string 
   }
   if (contact === "not-contacted") where.push(`NOT ${CONTACTED_SQL}`);
   else if (contact === "contacted") where.push(CONTACTED_SQL);
+  // Its own list, because it is its own conversation. These are the
+  // businesses that have been sent a page built out of their own site,
+  // and the ones who opened it are the best calls anybody will make
+  // that day. Buried in Contacted among hundreds, nobody finds them.
+  else if (contact === "previews") {
+    where.push("EXISTS (SELECT 1 FROM prospect_previews v WHERE v.prospect_id = p.id)");
+  }
 
   return { where, params };
 }
@@ -349,7 +356,7 @@ export async function countByContact(
   return withDb(async (db) => {
     const [rows] = await db.query<(RowDataPacket & { contacted: number; total: number })[]>(
       `SELECT SUM(${CONTACTED_SQL}) AS contacted, COUNT(*) AS total
-         FROM prospects
+         FROM prospects p
         ${where.length ? `WHERE ${where.join(" AND ")}` : ""}`,
       params,
     );
@@ -880,7 +887,7 @@ export async function listTowns(
   const clauses = [...where, "town IS NOT NULL", "town <> ''"];
   return withDb(async (db) => {
     const [rows] = await db.query<(RowDataPacket & { town: string; n: number })[]>(
-      `SELECT town, COUNT(*) AS n FROM prospects
+      `SELECT town, COUNT(*) AS n FROM prospects p
         WHERE ${clauses.join(" AND ")}
         GROUP BY town
         ORDER BY n DESC, town ASC

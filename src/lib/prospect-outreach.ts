@@ -98,7 +98,112 @@ const COUNT_WORDS = ["", "One", "Two", "Three", "Four", "Five", "Six"];
  * findings are numbered because somebody who checked three things writes
  * 1, 2, 3.
  */
+/**
+ * The line that proves somebody actually looked them up.
+ *
+ * Walid's point, and a fair one: an email that opens with "I had a look
+ * at your website" could have been sent to ten thousand people. One
+ * that says their trade, their town and their own Google rating could
+ * not, and the reader knows it in the first two seconds. That is the
+ * whole job of this line.
+ *
+ * Every version of it is true or it is not written. A rating that is
+ * genuinely good is said so, because flattery that happens to be
+ * accurate is the easiest way into a conversation. A rating that is
+ * poor is said plainly but framed as what it costs them, never as a
+ * verdict on their business: we are a stranger and they are not asking
+ * for our opinion of their work.
+ */
+function whatWeKnow(p: Prospect): string {
+  const trade = p.category ? p.category.toLowerCase() : "";
+  const where = p.town ? ` in ${p.town}` : "";
+  const them = trade ? `You run a ${trade}${where}.` : where ? `You are based${where}.` : "";
+
+  const n = p.reviews;
+  const stars = p.rating;
+
+  // Nothing to say about reviews they do not have.
+  if (!n || stars === null) {
+    return [
+      them,
+      n === 0
+        ? "You have no Google reviews yet, which is the cheapest thing on this list to put right."
+        : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
+  }
+
+  const score = `${stars.toFixed(1)} from ${n} review${n === 1 ? "" : "s"}`;
+
+  if (stars >= 4.5 && n >= 10) {
+    return `${them} ${score} on Google, which is better than most of what I looked at. The site is the part not keeping up.`.trim();
+  }
+  if (stars >= 4) {
+    return `${them} ${score} on Google, so people who use you are happy. The problem is how many of them get as far as using you.`.trim();
+  }
+  // Said once, as a cost, and then left alone.
+  return `${them} ${score} on Google. That number is doing you damage before anybody reaches the site, and it is fixable.`.trim();
+}
+
+/**
+ * The first email, where a page has been built for them.
+ *
+ * The link goes in the third line, not the twelfth. The first version
+ * put three paragraphs of findings in front of it, which is the wrong
+ * way round: the thing worth opening the email for was underneath the
+ * reasons for it, and nobody reads that far in a message from somebody
+ * they have never heard of.
+ *
+ * So: here is what we made you, here is what it is, here is why we
+ * made it, here is how to get it. Each part one or two lines.
+ */
+function stepOneWithPreview(p: Prospect, unsubscribeUrl: string, link: string): Draft {
+  const count = p.findings.length;
+  const word = COUNT_WORDS[count] ?? String(count);
+
+  return {
+    subject: `I rebuilt the ${p.name} homepage, have a look`,
+    body: [
+      `Hi,`,
+      ``,
+      `I have rebuilt your homepage. Here it is:`,
+      ``,
+      link,
+      ``,
+      `Your business, your words, your own photographs, put together properly. It comes down in a week.`,
+      ``,
+      // Proof a person looked them up, before the criticism lands.
+      whatWeKnow(p),
+      ``,
+      ...(count
+        ? [
+            count === 1
+              ? `Why I bothered: one thing on your site as it is now is losing you enquiries.`
+              // Lower case on purpose. COUNT_WORDS is capitalised because
+              // it normally opens a sentence, and "Why I bothered: Three"
+              // is the sort of thing that reads as machine-written.
+              : `Why I bothered: ${word.toLowerCase()} things on your site as it is now are losing you enquiries.`,
+            ``,
+            ...p.findings.map((f, i) => `${i + 1}. ${outreachLine(f)}`),
+            ``,
+            `All of them are sorted on that page, and it says what each one was costing you.`,
+          ]
+        : [`Why I bothered: there are things on your site as it is now that are costing you enquiries, and the page lists them.`]),
+      ``,
+      `If you want it, ring me on ${siteConfig.phoneDisplay}. I'm Walid Shah, I own the business and I take the calls myself.`,
+      ``,
+      ...signatureFor(p.region),
+      ...(unsubscribeUrl
+        ? [``, `Rather not hear from me? Click here and I won't contact you again: ${unsubscribeUrl}`]
+        : [``, `If you'd rather I didn't email again, just say so and that's the end of it.`]),
+    ].join("\n"),
+  };
+}
+
 function stepOne(p: Prospect, unsubscribeUrl: string, previewUrl = ""): Draft {
+  if (previewUrl) return stepOneWithPreview(p, unsubscribeUrl, previewUrl);
+
   const count = p.findings.length;
   const word = COUNT_WORDS[count] ?? String(count);
 
@@ -121,20 +226,7 @@ function stepOne(p: Prospect, unsubscribeUrl: string, previewUrl = ""): Draft {
       ``,
       `We fix that sort of thing, and run the Google and Meta ads that bring people to the site in the first place.`,
       ``,
-      // The link goes where the ask used to be, because it is a better
-      // ask. "Here is your site, rebuilt" beats "reply for a report":
-      // one is a thing they can look at now, the other is homework.
-      ...(previewUrl
-        ? [
-            `Rather than describe it, I rebuilt your homepage so you can see what I mean. Same business, same words, same photographs, put together properly:`,
-            ``,
-            previewUrl,
-            ``,
-            `It comes down in a week. If you want it, ring me on ${siteConfig.phoneDisplay}. I'm Walid Shah, I own the business and I take the calls myself.`,
-          ]
-        : [
-            `Want the full report? Reply and I'll send it over, free. Or ring me on ${siteConfig.phoneDisplay}. I'm Walid Shah, I own the business and I take the calls myself.`,
-          ]),
+      `Want the full report? Reply and I'll send it over, free. Or ring me on ${siteConfig.phoneDisplay}. I'm Walid Shah, I own the business and I take the calls myself.`,
       ``,
       ...signatureFor(p.region),
       // One click rather than "reply and say so". Asking somebody to compose

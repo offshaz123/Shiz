@@ -461,6 +461,20 @@ function SentRow({ mail }: { mail: SentEmail }) {
           <span className="shrink-0 font-semibold text-brand-pink">all three gone — ring</span>
         )}
 
+        {/* Which of the day's emails had a rebuilt site behind it, and
+            whether the business has looked. The whole reason to open
+            this page the afternoon after a send. */}
+        {mail.preview && mail.preview.opens > 0 && (
+          <span className="shrink-0 rounded-full border border-red-500/60 bg-red-500/10 px-2 py-0.5 text-[10px] font-bold text-red-500">
+            opened their preview {mail.preview.opens}×
+          </span>
+        )}
+        {mail.preview && mail.preview.opens === 0 && (
+          <span className="shrink-0 rounded-full border border-sky-500/50 px-2 py-0.5 text-[10px] font-semibold text-sky-600 dark:text-sky-400">
+            site preview sent
+          </span>
+        )}
+
         {mail.region && (
           <span className="shrink-0 rounded-full border border-border px-2 py-0.5 text-[10px] font-semibold text-muted">
             {REGION_INFO[mail.region].label}

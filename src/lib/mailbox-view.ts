@@ -40,6 +40,10 @@ export type SentEmail = {
   region: Region | null;
   kind: "outreach" | "audit";
   prospectId: number | null;
+  /** The page built out of their own site that went with this email, and
+   *  whether they have opened it. Null on everything else, which is most
+   *  of the list. */
+  preview: { url: string; expiresAt: string; opens: number } | null;
   /** They wrote back, so the sequence has stopped. */
   replied: boolean;
   /** Their address is dead, so none of it arrived. */
@@ -99,9 +103,16 @@ export async function listSent(
                (p.replied_at IS NOT NULL) AS replied,
                (p.email_dead_at IS NOT NULL) AS dead,
                (SELECT COUNT(*) FROM prospect_emails c
-                 WHERE c.prospect_id = e.prospect_id AND c.status = 'sent') AS of_three
+                 WHERE c.prospect_id = e.prospect_id AND c.status = 'sent') AS of_three,
+               v.token AS preview_token, v.slug AS preview_slug,
+               v.expires_at AS preview_expires, v.opens AS preview_opens
           FROM prospect_emails e
           JOIN prospects p ON p.id = e.prospect_id
+          -- The page built for them, so a day's sending can be read for
+          -- which ones had something to look at behind them.
+          LEFT JOIN prospect_previews v
+            ON v.id = (SELECT MAX(v2.id) FROM prospect_previews v2
+                        WHERE v2.prospect_id = e.prospect_id)
          WHERE 1 ${OUT})
        UNION ALL
        (SELECT e.id,
@@ -117,7 +128,12 @@ export async function listSent(
                NULL AS region,
                0 AS replied,
                0 AS dead,
-               NULL AS of_three
+               NULL AS of_three,
+               -- An audit email belongs to a lead, not a prospect, so
+               -- there is never a page behind it. Still has to be here:
+               -- both halves of a union need the same columns.
+               NULL AS preview_token, NULL AS preview_slug,
+               NULL AS preview_expires, NULL AS preview_opens
           FROM lead_emails e
           JOIN scan_leads l ON l.id = e.lead_id
          WHERE 1 ${AUDIT})
@@ -141,6 +157,14 @@ export async function listSent(
       region: toRegionOrNull(r.region),
       kind: String(r.kind) === "audit" ? ("audit" as const) : ("outreach" as const),
       prospectId: r.prospect_id === null ? null : Number(r.prospect_id),
+      preview:
+        r.preview_token && r.preview_slug
+          ? {
+              url: `${siteConfig.url}/preview/${String(r.preview_slug)}-${String(r.preview_token)}`,
+              expiresAt: String(r.preview_expires ?? ""),
+              opens: Number(r.preview_opens ?? 0),
+            }
+          : null,
       replied: Boolean(Number(r.replied ?? 0)),
       dead: Boolean(Number(r.dead ?? 0)),
     }));
