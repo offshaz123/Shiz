@@ -724,6 +724,67 @@ export async function countStepOneSentSince(
   });
 }
 
+/**
+ * Why the businesses nobody has written to yet cannot be written to.
+ *
+ * "Nobody is queued" is not an answer. On the evening this was written
+ * there were twenty-nine American businesses in the system, none of
+ * them queued, and no way to tell from any screen whether that meant
+ * they were all already contacted, all unscanned, or all missing an
+ * email address — three problems with three different fixes.
+ *
+ * One bucket per business, in the order the sending itself checks them,
+ * so the counts add up to the total rather than overlapping.
+ */
+export type QueueBlockers = {
+  /** Eligible right now. */
+  ready: number;
+  /** No address was found on their site or their listing. */
+  noEmail: number;
+  /** The address bounced, so it is not used again. */
+  deadEmail: number;
+  /** Not looked at yet, so the first email would have nothing to say. */
+  notScanned: number;
+  /** Scanned, and their site is fine — nothing to open an email with. */
+  noFindings: number;
+  total: number;
+};
+
+export async function countQueueBlockers(region: Region): Promise<QueueBlockers | null> {
+  return withDb(async (db) => {
+    const [rows] = await db.query<(RowDataPacket & { why: string; n: number })[]>(
+      `SELECT CASE
+                WHEN email IS NULL OR email = '' THEN 'no-email'
+                WHEN email_dead_at IS NOT NULL THEN 'dead-email'
+                WHEN scanned_at IS NULL THEN 'not-scanned'
+                WHEN site_findings IS NULL OR site_findings = '' THEN 'no-findings'
+                ELSE 'ready'
+              END AS why,
+              COUNT(*) AS n
+         FROM prospects
+        WHERE deleted_at IS NULL
+          AND sequence_started_at IS NULL
+          AND sequence_stopped_at IS NULL
+          AND replied_at IS NULL
+          AND unsubscribed_at IS NULL
+          AND status NOT IN ('interested', 'not-interested', 'customer')
+          AND region = ?
+        GROUP BY why`,
+      [region],
+    );
+    const by = new Map(rows.map((r) => [String(r.why), Number(r.n)]));
+    const get = (k: string) => by.get(k) ?? 0;
+    return {
+      ready: get("ready"),
+      noEmail: get("no-email"),
+      deadEmail: get("dead-email"),
+      notScanned: get("not-scanned"),
+      noFindings: get("no-findings"),
+      total: [...by.values()].reduce((a, b) => a + b, 0),
+    };
+  });
+}
+
 /** Takes a prospect out of the sequence for good, with the reason why. */
 export async function stopSequence(id: number, reason: string): Promise<void> {
   await withDb(async (db) => {

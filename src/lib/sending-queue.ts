@@ -1,5 +1,10 @@
 import { REGIONS, type Region } from "./regions";
-import { countStepOneSentSince, listNeverContacted } from "./prospects";
+import {
+  countQueueBlockers,
+  countStepOneSentSince,
+  listNeverContacted,
+  type QueueBlockers,
+} from "./prospects";
 import { composeBatch } from "./run-prospect-sequence";
 import {
   allowanceNow,
@@ -53,6 +58,9 @@ export type QueuedBatch = {
   /** How many of them will carry a link. */
   links: number;
   businesses: QueuedBusiness[];
+  /** Why the rest of this country's list is not in the queue. Null when
+   *  the count could not be made. */
+  blocked: QueueBlockers | null;
 };
 
 function theirTime(region: Region, now: Date): string {
@@ -96,6 +104,7 @@ async function batchFor(region: Region, now: Date): Promise<QueuedBatch | null> 
   // The same over-fetch the run does, so the same businesses are chosen.
   const pool = await listNeverContacted(Math.min(room * 4, 200), region);
   const batch = composeBatch(pool ?? [], room);
+  const blocked = await countQueueBlockers(region);
 
   return {
     region,
@@ -104,6 +113,7 @@ async function batchFor(region: Region, now: Date): Promise<QueuedBatch | null> 
     theirTime: theirTime(region, now),
     room,
     links: batch.filter((b) => b.wantLink).length,
+    blocked,
     businesses: batch.map(({ prospect, wantLink }) => ({
       id: prospect.id,
       name: prospect.name,

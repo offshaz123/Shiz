@@ -622,8 +622,7 @@ function QueueCard({ batch }: { batch: QueuedBatch }) {
 
       {batch.businesses.length === 0 ? (
         <p className="mt-4 text-xs text-muted">
-          Nobody is queued. Either everyone eligible has been written to, or the list needs
-          finding and scanning before it can hold a batch.
+          Nobody is queued for this batch.
         </p>
       ) : (
         <>
@@ -655,6 +654,38 @@ function QueueCard({ batch }: { batch: QueuedBatch }) {
             ))}
           </ol>
         </>
+      )}
+
+      {/* Why the rest of the list is not in the queue.
+          "Nobody is queued" on its own is not an answer: twenty-nine
+          businesses with no email address, twenty-nine nobody has
+          scanned, and twenty-nine already written to are three
+          different problems with three different fixes, and the page
+          used to show the same sentence for all of them. */}
+      {batch.blocked && batch.blocked.total > 0 && (
+        <div className="mt-4 border-t border-border pt-3">
+          <p className="text-[11px] font-bold text-muted">
+            {batch.blocked.total} not written to yet
+          </p>
+          <ul className="mt-1.5 flex flex-col gap-1">
+            {[
+              { n: batch.blocked.ready, say: "ready to go, waiting their turn" },
+              { n: batch.blocked.noEmail, say: "no email address found — these need a call" },
+              { n: batch.blocked.notScanned, say: "not scanned yet, so there is nothing to say" },
+              { n: batch.blocked.noFindings, say: "scanned, nothing wrong with their site" },
+              { n: batch.blocked.deadEmail, say: "address bounced" },
+            ]
+              .filter((r) => r.n > 0)
+              .map((r) => (
+                <li key={r.say} className="flex gap-2 text-[11px] text-muted">
+                  <span className="w-7 shrink-0 text-right font-bold tabular-nums text-foreground">
+                    {r.n}
+                  </span>
+                  <span>{r.say}</span>
+                </li>
+              ))}
+          </ul>
+        </div>
       )}
     </div>
   );
