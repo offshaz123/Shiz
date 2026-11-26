@@ -16,6 +16,86 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "why-two-agencies-quote-different-prices-for-the-same-job",
+    title: "Why Two Agencies Quote Wildly Different Prices for the Same Job",
+    description:
+      "You asked three people for the same thing and got three numbers that are nowhere near each other. Here is what is actually different between them, and the questions that make the quotes comparable.",
+    publishedAt: "2026-11-26",
+    keywords: [
+      "why marketing quotes differ",
+      "how much should marketing cost small business UK",
+      "comparing marketing agency quotes",
+      "marketing agency pricing UK",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "You describe the same job to three people. One comes back with a few hundred pounds, one with a few thousand, and one wants a monthly fee with no end date on it.",
+          "The natural conclusion is that somebody is trying it on. Usually nobody is. They have quoted three different jobs, because you asked a question that has three reasonable answers and none of them said which one they were giving you.",
+          "Here is what is actually moving underneath those numbers.",
+        ],
+      },
+      {
+        heading: "The word covers more than one job",
+        paragraphs: [
+          "Ask for \"a website\" and you could be asking for any of these: a template with your text in it, a site designed around how your particular business wins work, or a site with something behind it that does a job, like bookings or an online shop.",
+          "Those are weeks apart in work. All three are honestly a website.",
+          "Same with ads. \"Run my Facebook ads\" might mean pointing an existing campaign at a new budget, or it might mean writing the adverts, shooting the pictures, building the audiences, setting up the tracking so you can tell what worked, and watching it weekly. One of those is an afternoon. The other is a job that never finishes.",
+          "So the first reason the numbers differ is that the quotes are not for the same amount of work, and the brief did not make anybody say so.",
+        ],
+      },
+      {
+        heading: "Who does the work, and where",
+        paragraphs: [
+          "A one-person freelancer, an agency with a team, and an overseas studio all have different costs to cover, and that lands in the price before anybody has done anything.",
+          "None of those is automatically the right answer. A good freelancer will beat a bad agency every time. But they are buying you different things, and the difference shows up when something goes wrong rather than while everything is fine.",
+          "What a team buys you is cover: somebody is still there when one person is ill or busy. What a freelancer buys you is that the person you spoke to is the person doing it. What distance costs you is usually time zones and the small misunderstandings that come from not knowing the place you are selling into.",
+          "Work out which of those matters for your job, because you are paying for one of them either way.",
+        ],
+      },
+      {
+        heading: "What happens the day after it goes live",
+        paragraphs: [
+          "This is where the gap between two quotes is often hiding entirely.",
+          "The cheaper one frequently ends at launch. The site goes up, the invoice is paid, and the relationship is over. Everything after that is a new conversation: changing a price, adding a service, fixing something that broke when the host updated, renewing the thing nobody told you renews.",
+          "The dearer one often includes some of that. Not always, and it is worth checking rather than assuming, because \"support\" means anything from a real monthly block of work to somebody answering an email eventually.",
+          "The question that separates them is simple: in six months, when I want to change the prices on one page, what happens and what does it cost?",
+        ],
+      },
+      {
+        heading: "With ads, the fee and the spend are two different numbers",
+        paragraphs: [
+          "This one causes more confusion than anything else on the list, and it is worth being blunt about.",
+          "There is what you pay Meta or Google, which goes to them and buys the clicks. And there is what you pay whoever manages it, which goes to them and buys the work. They are separate, they come out of different budgets, and a quote that mentions one number without saying which it is cannot be compared to anything.",
+          "Management is usually charged as a flat monthly fee, a percentage of the spend, or sometimes both. A percentage looks cheap while you are spending little and stops looking cheap as you grow. A flat fee is the reverse. Neither is a trick, but they are not the same deal twelve months in, so ask which one you are being offered.",
+          "Be careful with anything quoted per lead or per result as well. It can be perfectly fair. It can also mean the incentive is volume rather than quality, and you are the one who has to ring all of them.",
+        ],
+      },
+      {
+        heading: "The questions that make three quotes comparable",
+        paragraphs: [
+          "You do not need to become an expert to compare these properly. You need everybody answering the same questions, in writing.",
+        ],
+        bullets: [
+          "What exactly is included, listed as things, not as a package name?",
+          "Who owns it at the end — the site, the domain, the ad account, the content? If the answer is not plainly you, that is the whole conversation.",
+          "What happens after it goes live, what is included for how long, and what a change costs once it is not?",
+          "For ads: is this your fee, the spend, or both together, and how is the fee worked out?",
+          "What do you need from me, and when? A cheap quote that quietly depends on you writing all the text is not cheap.",
+          "What would make this take longer or cost more than quoted?",
+        ],
+      },
+      {
+        heading: "A cheap quote is not a bad quote",
+        paragraphs: [
+          "It is worth saying plainly, because the whole industry has an interest in you believing otherwise. Sometimes the cheap quote is the right one. If you need a tidy five-page site and somebody good will build it for a fair price, paying four times that for a bigger process buys you nothing you asked for.",
+          "What a cheap quote cannot be is cheap and the same job. If one number is a fraction of the others, something is different, and it is better to find out what before you choose than after.",
+          "The useful question is never which is cheapest. It is which of these is quoting the job I actually need, and the only way to know is to make all three describe it in the same words.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "how-many-pages-does-a-small-business-website-need",
     title: "How Many Pages Does a Small Business Website Really Need?",
     description:

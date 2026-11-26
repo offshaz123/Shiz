@@ -550,7 +550,7 @@ optional — several of these topics are unwritable until somebody checks Google
 - [ ] What Happens in the First Thirty Days of a New Ad Account — target: "new Facebook ad
       account first month", "how long before Facebook ads work" (expectation-setting piece. No
       promised timelines and no cost-per-lead figures — they depend entirely on the trade.)
-- [ ] Why Two Agencies Quote Wildly Different Prices for the Same Job — target: "why marketing
+- [x] Why Two Agencies Quote Wildly Different Prices for the Same Job — target: "why marketing
       quotes differ", "how much should marketing cost small business UK" (explain what is
       actually being bought in each case. Name no competitor and give no price range as a norm.)
 - [ ] The Quiet Months: What to Cut and What to Keep — target: "marketing in quiet months small
