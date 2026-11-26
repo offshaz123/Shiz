@@ -2,6 +2,7 @@ import { buildDraft, STEP_DAYS, type OutreachStep } from "./prospect-outreach";
 import { sendProspectEmail } from "./send-prospect-email";
 import { createPreview, dropPreview, hasPreview, previewUrl } from "./previews";
 import { canBuildPreview, worthAPreview } from "./preview-worth-it";
+import { previewWouldWork } from "./preview-quality";
 import { prospectUnsubscribeUrl } from "./unsubscribe-url";
 import {
   countStepOneSent,
@@ -162,6 +163,11 @@ export type SequenceSummary = {
    *  number matters: one is a quiet day, thirty is a stalled pipeline that
    *  nobody has noticed. */
   held: number;
+  /** Pages not built because the business's site could not be read well
+   *  enough to make one worth looking at. Counted because a day where
+   *  six previews were refused is a day the gate did its job, and it
+   *  should not read as a quiet day. */
+  previewsRefused: number;
   /** Businesses passed over because it is the wrong time of day where
    *  they are. Reported separately from skipped, because "nothing went to
    *  America at six in the morning their time" is the system working and
@@ -337,10 +343,20 @@ async function startNewSequences(summary: SequenceSummary): Promise<void> {
     let link = "";
     let previewId: number | null = null;
     if (wantLink && !(await hasPreview(prospect.id))) {
-      const preview = await createPreview(prospect.id, prospect.name);
-      if (preview) {
-        link = previewUrl(preview);
-        previewId = preview.id;
+      // Looked at before the link goes in an email, never after. A
+      // business whose site we cannot read gives a page with nothing on
+      // it, and a stranger who opens an empty page does not open a
+      // second link from us. No preview is a fine outcome; the empty
+      // one was not.
+      const worth = await previewWouldWork(prospect.website);
+      if (worth.ok) {
+        const preview = await createPreview(prospect.id, prospect.name);
+        if (preview) {
+          link = previewUrl(preview);
+          previewId = preview.id;
+        }
+      } else {
+        summary.previewsRefused += 1;
       }
     }
 
@@ -375,6 +391,7 @@ export async function runProspectSequence(): Promise<SequenceSummary> {
     considered: 0,
     repliesChecked: true,
     held: 0,
+    previewsRefused: 0,
     outOfHours: 0,
     scanned: 0,
   };

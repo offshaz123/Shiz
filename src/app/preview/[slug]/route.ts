@@ -162,8 +162,18 @@ export async function GET(
       }),
     );
 
+    const built = merge(main, others.filter((one) => one !== null));
+
+    // Nothing to look at, so nothing is shown.
+    //
+    // The gate at send time means a link like this should not exist,
+    // but links already in inboxes predate it, and a site can lose its
+    // pictures in the week between the email and the click. An honest
+    // short page beats a black screen with their name on it.
+    if (built.images.length === 0) return stop(them.name, "unreachable");
+
     const page = previewPage({
-      them: merge(main, others.filter((one) => one !== null)),
+      them: built,
       website: fetched.finalUrl,
       findings: worst.slice(0, 5).map((c) => outreachLine({ label: c.label, why: c.why ?? "" })),
       // Every failed check, not just the worst five: the checklist is
