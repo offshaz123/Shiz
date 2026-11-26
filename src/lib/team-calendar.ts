@@ -20,12 +20,23 @@ import type { DiaryItem } from "./calendar";
  * later are when the next ones go.
  */
 
+/**
+ * Whose diary this is, said in a way that cannot be misread.
+ *
+ * It used to be one `staffId` where null meant everybody. The owner's
+ * id is null, so asking for the owner's own diary asked for the whole
+ * team's, and Walid was stopped on every page and told to ring a
+ * business Ali had promised to ring. The same ambiguity had already
+ * caused the same bug in the call write-up prompt, which is why it is
+ * now two shapes rather than one nullable number.
+ */
+export type Whose = { everybody: true } | { staffId: number | null };
+
 type Options = {
   /** Only these countries, so somebody's diary is their own work. */
   regions?: Region[];
-  /** Only this member of staff's promises. Undefined means everybody,
-   *  which is what the owner sees. */
-  staffId?: number | null;
+  /** Whose promises to return. Defaults to everybody's. */
+  whose?: Whose;
   /** How far back and forward to look, in days. */
   back?: number;
   ahead?: number;
@@ -76,7 +87,9 @@ function shiftDay(from: string, by: number): string {
 }
 
 export async function teamDiary(options: Options = {}): Promise<DiaryItem[] | null> {
-  const { regions, staffId, back = 60, ahead = 120 } = options;
+  const { regions, whose = { everybody: true }, back = 60, ahead = 120 } = options;
+  const everybody = "everybody" in whose;
+  const mine = everybody ? undefined : whose.staffId;
 
   return withDb(async (db) => {
     const items: DiaryItem[] = [];
@@ -112,13 +125,12 @@ export async function teamDiary(options: Options = {}): Promise<DiaryItem[] | nu
     );
 
     for (const row of calls) {
-      // A member of staff sees their own promises. Anything nobody is
-      // recorded against stays on everybody's diary rather than
-      // disappearing: an unowned promise is still owed.
+      // Whoever made the promise owns it. A promise with nobody
+      // recorded against it belongs to the owner, who is the fallback
+      // for everything in this system, rather than to everybody: an
+      // unowned promise is still owed, but only by one person.
       const owner = row.staff_id === null ? null : Number(row.staff_id);
-      if (staffId !== undefined && staffId !== null && owner !== null && owner !== staffId) {
-        continue;
-      }
+      if (!everybody && owner !== (mine ?? null)) continue;
 
       const at = String(row.callback_at);
       items.push({
@@ -155,9 +167,9 @@ export async function teamDiary(options: Options = {}): Promise<DiaryItem[] | nu
       [back, ahead],
     );
 
-    // Money is the owner's business, not a caller's. Somebody whose
-    // diary is filtered to their own calls does not get the invoices.
-    if (staffId === undefined || staffId === null) {
+    // Money is the owner's business, not a caller's. A diary filtered
+    // to one person's own calls does not carry the invoices.
+    if (everybody) {
       for (const row of invoices) {
         items.push({
           id: `invoice-${row.id}`,
@@ -207,9 +219,9 @@ export async function teamDiary(options: Options = {}): Promise<DiaryItem[] | nu
       seqParams,
     );
 
-    // Nobody's personal job, so they are the owner's view only — the
-    // same reasoning as the invoices.
-    if (staffId === undefined || staffId === null) {
+    // Nobody's personal job, so the whole-team view only — the same
+    // reasoning as the invoices.
+    if (everybody) {
       for (const row of sequences) {
         const next = Number(row.last_step ?? 1) + 1;
         const after = SEQUENCE_DAYS[next];

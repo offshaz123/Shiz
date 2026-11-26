@@ -25,8 +25,12 @@ export async function GET() {
 
   const items = await teamDiary({
     regions: who?.regions,
-    // The owner sees everybody's promises; everybody else sees their own.
-    staffId: who?.kind === "owner" ? null : who?.id,
+    // Your own, whoever you are. This band crosses the top of every
+    // page, and being interrupted about a call somebody else promised
+    // to make is not a reminder, it is noise you learn to ignore. The
+    // owner still sees the whole team's on the Calendar, which is a
+    // page you open rather than one that shouts at you.
+    whose: { staffId: who?.kind === "owner" ? null : (who?.id ?? null) },
     // Nothing from months back needs to interrupt anybody. A call-back
     // older than this belongs on the calendar, not in a banner.
     back: 14,

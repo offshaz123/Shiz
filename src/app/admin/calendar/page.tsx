@@ -39,7 +39,7 @@ export default async function CalendarPage() {
   const everyone = who.kind === "owner";
   const items = await teamDiary({
     regions: who.regions,
-    staffId: everyone ? null : who.id,
+    whose: everyone ? { everybody: true } : { staffId: who.id },
   });
 
   // Worked out on the server so the grid, the banner and the database

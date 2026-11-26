@@ -13,6 +13,7 @@ import {
   weeksOf,
   type DiaryItem,
 } from "../src/lib/calendar.ts";
+import type { Whose } from "../src/lib/team-calendar.ts";
 
 /**
  * The month grid and the counting behind the diary.
@@ -140,4 +141,37 @@ test("days are named the way somebody would say them out loud", () => {
   assert.equal(dayLabel("2026-11-26", "2026-11-25"), "Tomorrow");
   assert.equal(dayLabel("2026-11-24", "2026-11-25"), "Yesterday");
   assert.equal(dayLabel("2026-11-27", "2026-11-25"), "Fri 27 Nov");
+});
+
+/**
+ * Whose diary it is.
+ *
+ * This has been the same bug twice. Both the call write-up prompt and
+ * the reminder band keyed "whose" on a nullable staff id where null
+ * meant everybody, and the owner's id is null, so asking for the
+ * owner's own work asked for the whole team's. Walid was stopped on
+ * every page and told to ring a business Ali had promised to ring.
+ *
+ * teamDiary needs a database, so what is pinned here is the shape that
+ * made it impossible: everybody and one person are now two different
+ * things rather than one value with a special case.
+ */
+test("everybody and one person cannot be confused for each other", () => {
+  const everybody: Whose = { everybody: true };
+  const theOwner: Whose = { staffId: null };
+  const ali: Whose = { staffId: 2 };
+
+  assert.ok("everybody" in everybody);
+  // The owner's own diary. The old shape could not say this at all:
+  // null was the owner and null was also the whole team.
+  assert.ok(!("everybody" in theOwner));
+  assert.equal(theOwner.staffId, null);
+  assert.ok(!("everybody" in ali));
+  assert.equal(ali.staffId, 2);
+});
+
+test("the owner's own diary is not the same request as the team's", () => {
+  const mine: Whose = { staffId: null };
+  const all: Whose = { everybody: true };
+  assert.notDeepEqual(mine, all);
 });
