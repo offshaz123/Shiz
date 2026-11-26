@@ -17,34 +17,42 @@
  * make. It is his domain and his sending reputation, he has been told
  * twice what the risk is, and he has decided it is not one.
  *
- * The ramp is kept rather than replaced with a flat eighty, because a
+ * The ramp is kept rather than replaced with a flat number, because a
  * brand new domain sending eighty on its first day is a different thing
  * from an established one doing it, and this table is read by whatever
- * domain the sending moves to next. From where this one already stands
- * the top tier applies immediately.
+ * domain the sending moves to next.
  *
- * This number is split across both countries, not applied to each: the
- * run asks each region for the whole allowance and interleaves them, so
- * eighty here is roughly forty apiece when both lists are full.
+ * Per country, not split between them. That changed when the sending
+ * moved to batches: each country now has its own two batches of twenty
+ * a day, on its own clock, and a number shared between them would mean
+ * Britain's quiet day silently doubling America's.
+ *
+ * The middle tier used to be twelve and the one above it needed a
+ * hundred and twenty first emails before it opened, which left the real
+ * ceiling at twelve a run — below a single batch. Walid asked for
+ * twenty, twice, and the batch size is the policy now; this table is
+ * only here to stop a cold domain starting at its ceiling. A domain
+ * that has already sent forty first emails is not cold.
+ *
+ * What that costs is worth saying plainly, because it is his to decide
+ * and he has decided it twice: eighty cold emails a day leave this
+ * domain, from the same mailbox as the client work, and that mailbox
+ * allows a hundred outgoing in total. Twenty a day is the whole margin
+ * for replies to customers, invoices and everything sent by hand.
  *
  * What has not changed is why there is a ceiling at all. These leave from
  * the same mailbox as the client work and the enquiry replies, so the
  * domain's own reputation is what is at stake, and bounces and complaints
  * land on the address Walid's customers write to.
  *
- * One number nobody has verified, and it matters a great deal more at
- * eighty a day than it did at fifteen: the Hostinger mailbox has its own
- * daily sending limit and we have not confirmed what it is. The client
- * work leaves from the same mailbox, so hitting that ceiling would stop
- * a reply to a customer, not just an outreach email. If sends start
- * failing in batches, that limit is the first thing to check and this
- * table is the second.
+ * The mailbox limit is a hundred outgoing a day, shared with everything
+ * else that leaves this address. If sends start failing in batches that
+ * ceiling is the first thing to check and this table is the second.
  */
 export const WARM_UP: readonly { after: number; perRun: number }[] = [
   { after: 0, perRun: 8 },
-  { after: 40, perRun: 12 },
-  { after: 120, perRun: 40 },
-  { after: 400, perRun: 80 },
+  { after: 40, perRun: 20 },
+  { after: 200, perRun: 40 },
 ];
 
 export function newPerRun(everSent: number): number {

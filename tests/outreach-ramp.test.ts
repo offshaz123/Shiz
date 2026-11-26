@@ -17,16 +17,26 @@ test("a domain with no sending history starts at the bottom of the ramp", () => 
 
 test("the ramp does not open up until enough have been sent", () => {
   assert.equal(newPerRun(39), 8);
-  assert.equal(newPerRun(40), 12);
-  assert.equal(newPerRun(119), 12);
-  assert.equal(newPerRun(120), 40);
-  assert.equal(newPerRun(399), 40);
-  assert.equal(newPerRun(400), 80);
+  assert.equal(newPerRun(40), 20);
+  assert.equal(newPerRun(199), 20);
+  assert.equal(newPerRun(200), 40);
+});
+
+/**
+ * The tier that matters now is twenty, because twenty is a batch.
+ *
+ * The ramp used to sit at twelve between forty and a hundred and twenty
+ * first emails, which made the real ceiling twelve a run — less than the
+ * batch size the whole schedule is built around, so the batches could
+ * never actually fill. A domain that has sent forty is not cold.
+ */
+test("a domain past its cold start can send a whole batch", () => {
+  assert.equal(newPerRun(40), 20);
 });
 
 test("the ramp has a ceiling and never climbs past it", () => {
-  assert.equal(newPerRun(1_000), 80);
-  assert.equal(newPerRun(1_000_000), 80);
+  assert.equal(newPerRun(1_000), 40);
+  assert.equal(newPerRun(1_000_000), 40);
 });
 
 /**
