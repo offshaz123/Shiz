@@ -216,6 +216,12 @@ async function recordRun(
     // Worth its own line: it is the number that says how much of the
     // day's sending had something to look at behind it.
     if (prospects.previews > 0) parts.push(`${prospects.previews} site preview(s) built`);
+    // The gate working is not the same as nothing happening. This is
+    // also the number that answers whether paying for a real browser is
+    // worth it: a week of it says what share of the list we cannot read.
+    if (prospects.previewsRefused > 0) {
+      parts.push(`${prospects.previewsRefused} site(s) could not be rebuilt`);
+    }
     if (prospects.bounced > 0) parts.push(`${prospects.bounced} dead address(es) found`);
     detail = parts.join(", ");
   } else if (prospects && prospects.bounced > 0) {

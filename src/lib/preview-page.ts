@@ -1,4 +1,5 @@
 import type { Rebuilt } from "./site-rebuild";
+import { throughUs } from "./preview-image";
 import { siteConfig } from "./site-config";
 
 /**
@@ -582,7 +583,7 @@ export function previewPage(input: PreviewInput): string {
 ${them.promo ? `<div class="promo"><i>${esc(them.promo)}&nbsp;&nbsp;&middot;&nbsp;&nbsp;${esc(them.promo)}&nbsp;&nbsp;&middot;&nbsp;&nbsp;</i></div>` : ""}
 
 <header id="head"><div class="inner">
-  ${them.logo ? `<img class="mark" src="${esc(them.logo)}" alt="${esc(name)}">` : `<div class="logo">${esc(name)}</div>`}
+  ${them.logo ? `<img class="mark" src="${esc(throughUs(them.logo))}" alt="${esc(name)}">` : `<div class="logo">${esc(name)}</div>`}
   <nav>
     ${nav.map((n) => `<a href="#${n.id}" data-page="${n.id}">${esc(n.label)}</a>`).join("\n    ")}
   </nav>
@@ -611,7 +612,7 @@ ${them.promo ? `<div class="promo"><i>${esc(them.promo)}&nbsp;&nbsp;&middot;&nbs
 
 <div class="page live" id="page-top">
 <div class="hero">
-  ${hero ? `<div class="shot" id="shot" style="background-image:url('${esc(hero)}')"></div>` : `<div class="shot" id="shot"></div>`}
+  ${hero ? `<div class="shot" id="shot" style="background-image:url('${esc(throughUs(hero))}')"></div>` : `<div class="shot" id="shot"></div>`}
   <div class="blob a"></div>
   <div class="blob b"></div>
   <div class="wrap">
@@ -659,7 +660,7 @@ ${
     ${showcase
       .map(
         (src, i) =>
-          `<figure data-show style="transition-delay:${i * 90}ms"><img src="${esc(src)}" alt="${esc(name)}" loading="lazy"></figure>`,
+          `<figure data-show style="transition-delay:${i * 90}ms"><img src="${esc(throughUs(src))}" alt="${esc(name)}" loading="lazy"></figure>`,
       )
       .join("\n    ")}
   </div>
@@ -681,7 +682,7 @@ ${
         const n = String(i + 1).padStart(2, "0");
         return pic
           ? `<div class="card shot-card rise" style="transition-delay:${i * 70}ms">
-      <div class="pic"><img src="${esc(pic)}" alt="${esc(s)}" loading="lazy"><div class="mark">${n}</div></div>
+      <div class="pic"><img src="${esc(throughUs(pic))}" alt="${esc(s)}" loading="lazy"><div class="mark">${n}</div></div>
       <div class="cap"><h3>${esc(s)}</h3></div>
     </div>`
           : `<div class="card rise" style="transition-delay:${i * 70}ms"><div class="mark">${n}</div><h3>${esc(s)}</h3></div>`;
@@ -731,7 +732,7 @@ ${
     ${gallery
       .map(
         (src, i) =>
-          `<figure class="rise" style="transition-delay:${i * 80}ms"><img src="${esc(src)}" alt="" loading="lazy"></figure>`,
+          `<figure class="rise" style="transition-delay:${i * 80}ms"><img src="${esc(throughUs(src))}" alt="" loading="lazy"></figure>`,
       )
       .join("\n    ")}
   </div>
