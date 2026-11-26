@@ -243,6 +243,23 @@ export function previewPage(input: PreviewInput): string {
     .rise, .hero .shot, .glow { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
   }
 
+  /* Their site, and ours, one tap apart. The whole argument on one control. */
+  .flip { position: sticky; top: 69px; z-index: 48; display: flex; justify-content: center;
+          padding: 14px 0; background: linear-gradient(180deg, rgba(7,9,13,.96), rgba(7,9,13,0)); }
+  .flip .set { display: inline-flex; background: rgba(255,255,255,.06); border: 1px solid var(--line);
+               border-radius: 999px; padding: 4px; gap: 3px; }
+  .flip button { appearance: none; border: 0; cursor: pointer; font: inherit; font-weight: 700;
+                 font-size: 13.5px; padding: 9px 20px; border-radius: 999px; color: var(--soft);
+                 background: transparent; transition: background .2s, color .2s; }
+  .flip button[aria-pressed="true"] { background: var(--brand); color: var(--ink); }
+  #before { display: none; }
+  #before.on { display: block; }
+  .theirs { border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: #fff; }
+  .theirs iframe { width: 100%; height: 72vh; border: 0; display: block; background: #fff; }
+  .theirs .note { padding: 14px 18px; font-size: 13px; color: var(--soft); background: var(--panel);
+                  border-bottom: 1px solid var(--line); }
+  .theirs .note a { color: #fff; }
+
   .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 65; display: none; gap: 10px; padding: 10px 12px;
          background: rgba(7,9,13,.94); border-top: 1px solid var(--line); backdrop-filter: blur(10px); }
   .bar a { flex: 1; text-align: center; padding: 15px; border-radius: 14px; text-decoration: none; font-weight: 800; }
@@ -272,6 +289,25 @@ ${them.promo ? `<div class="promo">${esc(them.promo)}</div>` : ""}
   ${tel ? `<a class="call" href="tel:${esc(tel)}">${esc(them.phone)}</a>` : ""}
 </div></header>
 
+<div class="flip">
+  <div class="set" role="group" aria-label="Which version to show">
+    <button id="tab-after" aria-pressed="true">Rebuilt</button>
+    <button id="tab-before" aria-pressed="false">Your site now</button>
+  </div>
+</div>
+
+<section id="before"><div class="wrap">
+  <h2>Your website as it is today</h2>
+  <p class="lead">Loaded live from ${esc(website.replace(/^https?:\/\//, "").replace(/\/$/, ""))}. Nothing has been changed.</p>
+  <div class="theirs">
+    <div class="note">Some sites refuse to load inside another page. If the panel below is blank,
+      <a href="${esc(website)}" target="_blank" rel="noreferrer noopener">open your site in a new tab</a>
+      and put the two side by side.</div>
+    <iframe src="${esc(website)}" title="Your current website" loading="lazy" referrerpolicy="no-referrer"></iframe>
+  </div>
+</div></section>
+
+<div id="after">
 <div class="hero">
   ${hero ? `<div class="shot" style="background-image:url('${esc(hero)}')"></div>` : `<div class="shot"></div>`}
   <div class="glow"></div>
@@ -342,6 +378,8 @@ ${
     : ""
 }
 
+</div><!-- /after -->
+
 <section class="fixes"><div class="wrap">
   ${score !== null ? `<div class="pill rise">Your website scored ${score} out of 100 on our audit</div>` : ""}
   <h2 class="rise">What we changed, and what it was costing you</h2>
@@ -410,6 +448,23 @@ ${
     }
     requestAnimationFrame(step);
   }
+
+  // Their site against ours. Switching scrolls back to the top, because
+  // landing halfway down the other version reads as the page breaking.
+  var after = document.getElementById('after');
+  var before = document.getElementById('before');
+  var tabA = document.getElementById('tab-after');
+  var tabB = document.getElementById('tab-before');
+  function show(which) {
+    var theirs = which === 'before';
+    before.classList.toggle('on', theirs);
+    after.style.display = theirs ? 'none' : '';
+    tabB.setAttribute('aria-pressed', String(theirs));
+    tabA.setAttribute('aria-pressed', String(!theirs));
+    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+  }
+  tabA.addEventListener('click', function () { show('after'); });
+  tabB.addEventListener('click', function () { show('before'); });
 
   // WhatsApp appears once they have started reading, not on arrival.
   var wa = document.querySelector('.wa');

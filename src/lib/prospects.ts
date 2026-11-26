@@ -1,4 +1,5 @@
 import type { RowDataPacket, ResultSetHeader } from "mysql2";
+import { siteConfig } from "./site-config";
 import { withDb } from "./db";
 import { prospectUnsubscribeUrl } from "./unsubscribe-url";
 import { DEFAULT_REGION, isRegion, type Region } from "./regions";
@@ -57,6 +58,12 @@ interface ProspectRow extends RowDataPacket {
   emailed_at: string | null;
   deleted_at: string | null;
   email_count?: number | null;
+  preview_token?: string | null;
+  preview_slug?: string | null;
+  preview_sent?: string | null;
+  preview_expires?: string | null;
+  preview_opens?: number | null;
+  preview_last_open?: string | null;
   listing_checked_at: string | null;
   sequence_started_at: string | null;
   sequence_stopped_at: string | null;
@@ -122,6 +129,16 @@ function toProspect(row: ProspectRow): Prospect {
       ? { outcome: String(row.last_call_outcome), at: String(row.last_call_at ?? "") }
       : null,
     emailedAt: row.emailed_at ? String(row.emailed_at) : null,
+    preview:
+      row.preview_token && row.preview_slug
+        ? {
+            url: `${siteConfig.url}/preview/${row.preview_slug}-${row.preview_token}`,
+            sentAt: String(row.preview_sent ?? ""),
+            expiresAt: String(row.preview_expires ?? ""),
+            opens: Number(row.preview_opens ?? 0),
+            lastOpenedAt: row.preview_last_open ? String(row.preview_last_open) : null,
+          }
+        : null,
     deletedAt: row.deleted_at ? String(row.deleted_at) : null,
     sequenceStartedAt: row.sequence_started_at ? String(row.sequence_started_at) : null,
     sequenceStoppedAt: row.sequence_stopped_at ? String(row.sequence_stopped_at) : null,
@@ -354,8 +371,15 @@ export async function listProspects(filters: ProspectFilters = {}): Promise<Pros
               (SELECT c.outcome FROM prospect_calls c
                 WHERE c.prospect_id = p.id ORDER BY c.called_at DESC LIMIT 1) AS last_call_outcome,
               (SELECT DATE_FORMAT(c.called_at, '%Y-%m-%d') FROM prospect_calls c
-                WHERE c.prospect_id = p.id ORDER BY c.called_at DESC LIMIT 1) AS last_call_at
+                WHERE c.prospect_id = p.id ORDER BY c.called_at DESC LIMIT 1) AS last_call_at,
+              v.token AS preview_token, v.slug AS preview_slug,
+              v.created_at AS preview_sent, v.expires_at AS preview_expires,
+              v.opens AS preview_opens, v.last_opened_at AS preview_last_open
          FROM prospects p
+         -- The newest page built for them, when there is one. A left join
+         -- on one row rather than six subselects down a list of hundreds.
+         LEFT JOIN prospect_previews v
+           ON v.id = (SELECT MAX(v2.id) FROM prospect_previews v2 WHERE v2.prospect_id = p.id)
        ${where.length ? `WHERE ${where.join(" AND ")}` : ""}
        ORDER BY ${
          sort === "worst-site"
@@ -1131,8 +1155,15 @@ export async function listProspectsByIds(ids: number[]): Promise<Prospect[] | nu
               (SELECT c.outcome FROM prospect_calls c
                 WHERE c.prospect_id = p.id ORDER BY c.called_at DESC LIMIT 1) AS last_call_outcome,
               (SELECT DATE_FORMAT(c.called_at, '%Y-%m-%d') FROM prospect_calls c
-                WHERE c.prospect_id = p.id ORDER BY c.called_at DESC LIMIT 1) AS last_call_at
+                WHERE c.prospect_id = p.id ORDER BY c.called_at DESC LIMIT 1) AS last_call_at,
+              v.token AS preview_token, v.slug AS preview_slug,
+              v.created_at AS preview_sent, v.expires_at AS preview_expires,
+              v.opens AS preview_opens, v.last_opened_at AS preview_last_open
          FROM prospects p
+         -- The newest page built for them, when there is one. A left join
+         -- on one row rather than six subselects down a list of hundreds.
+         LEFT JOIN prospect_previews v
+           ON v.id = (SELECT MAX(v2.id) FROM prospect_previews v2 WHERE v2.prospect_id = p.id)
         WHERE p.id IN (${clean.map(() => "?").join(",")})
         ORDER BY FIELD(p.id, ${clean.map(() => "?").join(",")})`,
       [...clean, ...clean],

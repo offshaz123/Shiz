@@ -26,7 +26,7 @@ const p = (over: Partial<Prospect>): Prospect => ({
   sequenceStopReason: "", repliedAt: null, unsubscribedAt: null, unsubscribeUrl: "",
   emailCount: 0, foundFor: "", industry: "automotive", town: "Manchester",
   emailDeadAt: null, emailDeadReason: "", phoneDeadAt: null, phoneDeadReason: "",
-  region: "uk", ...over,
+  region: "uk", preview: null, ...over,
 });
 
 test("a promised callback beats everything else on the list", () => {

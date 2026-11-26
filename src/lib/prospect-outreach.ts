@@ -98,7 +98,7 @@ const COUNT_WORDS = ["", "One", "Two", "Three", "Four", "Five", "Six"];
  * findings are numbered because somebody who checked three things writes
  * 1, 2, 3.
  */
-function stepOne(p: Prospect, unsubscribeUrl: string): Draft {
+function stepOne(p: Prospect, unsubscribeUrl: string, previewUrl = ""): Draft {
   const count = p.findings.length;
   const word = COUNT_WORDS[count] ?? String(count);
 
@@ -121,7 +121,20 @@ function stepOne(p: Prospect, unsubscribeUrl: string): Draft {
       ``,
       `We fix that sort of thing, and run the Google and Meta ads that bring people to the site in the first place.`,
       ``,
-      `Want the full report? Reply and I'll send it over, free. Or ring me on ${siteConfig.phoneDisplay}. I'm Walid Shah, I own the business and I take the calls myself.`,
+      // The link goes where the ask used to be, because it is a better
+      // ask. "Here is your site, rebuilt" beats "reply for a report":
+      // one is a thing they can look at now, the other is homework.
+      ...(previewUrl
+        ? [
+            `Rather than describe it, I rebuilt your homepage so you can see what I mean. Same business, same words, same photographs, put together properly:`,
+            ``,
+            previewUrl,
+            ``,
+            `It comes down in a week. If you want it, ring me on ${siteConfig.phoneDisplay}. I'm Walid Shah, I own the business and I take the calls myself.`,
+          ]
+        : [
+            `Want the full report? Reply and I'll send it over, free. Or ring me on ${siteConfig.phoneDisplay}. I'm Walid Shah, I own the business and I take the calls myself.`,
+          ]),
       ``,
       ...signatureFor(p.region),
       // One click rather than "reply and say so". Asking somebody to compose
@@ -209,8 +222,16 @@ function stepThree(p: Prospect, unsubscribeUrl: string): Draft {
   };
 }
 
-export function buildDraft(step: OutreachStep, p: Prospect, unsubscribeUrl = ""): Draft {
+export function buildDraft(
+  step: OutreachStep,
+  p: Prospect,
+  unsubscribeUrl = "",
+  /** A page built for them out of their own site, where one exists. One
+   *  link, in plain text: the page does the showing, the email does not
+   *  try to, and an image-heavy email lands in Promotions anyway. */
+  previewUrl = "",
+): Draft {
   if (step === 2) return stepTwo(p, unsubscribeUrl);
   if (step === 3) return stepThree(p, unsubscribeUrl);
-  return stepOne(p, unsubscribeUrl);
+  return stepOne(p, unsubscribeUrl, previewUrl);
 }

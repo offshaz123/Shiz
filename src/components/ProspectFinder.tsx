@@ -6,6 +6,7 @@ import { URGENCY_WORD, planCall } from "@/lib/call-priority";
 import { noteProblem } from "@/lib/call-notes";
 import { callScript } from "@/lib/call-script";
 import { CallScriptPanel } from "./CallScriptPanel";
+import { PreviewBadge } from "./PreviewBadge";
 import { callbackProblem } from "@/lib/callback";
 import {
   CALL_LABEL,
@@ -2053,6 +2054,10 @@ function Row({
             {!sent && p.emailedAt && (
               <span title={p.emailedAt}>emailed {p.emailedAt.slice(0, 10)}</span>
             )}
+
+            {/* Whether a page was built for them out of their own site,
+                and whether they have looked at it. */}
+            <PreviewBadge prospect={p} />
             {/* Where the three-email sequence has got to. All three send
                 themselves now; the Write email button is for the one you
                 want to word yourself rather than the normal route in. */}

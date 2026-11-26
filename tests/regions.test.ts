@@ -112,6 +112,7 @@ test("an American email carries a postal address and a British one does not", as
     unsubscribeUrl: "", emailCount: 0, foundFor: "", industry: "automotive", town: "Katy",
     emailDeadAt: null, emailDeadReason: "", phoneDeadAt: null, phoneDeadReason: "",
     region,
+  preview: null,
   });
 
   // US commercial email has to carry a valid physical postal address.

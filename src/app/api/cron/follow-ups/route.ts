@@ -213,6 +213,9 @@ async function recordRun(
     const parts: string[] = [];
     if (prospects.started > 0) parts.push(`${prospects.started} first email(s)`);
     if (prospects.sent > 0) parts.push(`${prospects.sent} prospect follow-up(s)`);
+    // Worth its own line: it is the number that says how much of the
+    // day's sending had something to look at behind it.
+    if (prospects.previews > 0) parts.push(`${prospects.previews} site preview(s) built`);
     if (prospects.bounced > 0) parts.push(`${prospects.bounced} dead address(es) found`);
     detail = parts.join(", ");
   } else if (prospects && prospects.bounced > 0) {

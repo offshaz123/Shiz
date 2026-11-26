@@ -1,5 +1,7 @@
 import { buildDraft, STEP_DAYS, type OutreachStep } from "./prospect-outreach";
 import { sendProspectEmail } from "./send-prospect-email";
+import { createPreview, hasPreview, previewUrl } from "./previews";
+import { worthAPreview } from "./preview-worth-it";
 import { prospectUnsubscribeUrl } from "./unsubscribe-url";
 import {
   countStepOneSent,
@@ -65,6 +67,11 @@ const BOUNCE_WINDOW_DAYS = 30;
 
 export type SequenceSummary = {
   sent: number;
+  /** Pages built out of a business's own site this run, for the ones the
+   *  rules say are worth winning. Counted separately because it is the
+   *  number that says how much of a day's sending had something to look
+   *  at behind it. */
+  previews: number;
   /** First emails opened by this run, counted separately from follow-ups:
    *  "we wrote to four new businesses" and "we chased four" are different
    *  days and should never read the same on the admin page. */
@@ -204,7 +211,20 @@ async function startNewSequences(summary: SequenceSummary): Promise<void> {
       continue;
     }
 
-    const draft = buildDraft(1, prospect, unsubscribeUrl);
+    // A page built out of their own site, for the ones worth winning.
+    // Made before the email so the link can go in it, and only once per
+    // business ever: a second one landing a fortnight later reads as a
+    // machine, which is the opposite of the point.
+    let link = "";
+    if (worthAPreview(prospect) && !(await hasPreview(prospect.id))) {
+      const preview = await createPreview(prospect.id, prospect.name);
+      if (preview) {
+        link = previewUrl(preview);
+        summary.previews += 1;
+      }
+    }
+
+    const draft = buildDraft(1, prospect, unsubscribeUrl, link);
     const result = await sendProspectEmail(prospect.id, draft.subject, draft.body, 1);
     // sendProspectEmail stamps sequence_started_at on a successful step 1,
     // which is what puts them into listSequenceDue for days three and five.
@@ -217,6 +237,7 @@ async function startNewSequences(summary: SequenceSummary): Promise<void> {
 export async function runProspectSequence(): Promise<SequenceSummary> {
   const summary: SequenceSummary = {
     sent: 0,
+    previews: 0,
     started: 0,
     failed: 0,
     skipped: 0,

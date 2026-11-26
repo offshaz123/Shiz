@@ -312,6 +312,30 @@ export const SCHEMA = [
     KEY idx_reviews (reviews)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
+  // A page built for one business, showing their own site rebuilt.
+  //
+  // The token is the whole security of it: these pages carry somebody's
+  // logo and photographs, so the address has to be unguessable and the
+  // page has to stop working. Slug is only there to make the link read
+  // like the business it belongs to, and is never looked up by.
+  `CREATE TABLE IF NOT EXISTS prospect_previews (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    prospect_id INT UNSIGNED NOT NULL,
+    token CHAR(16) NOT NULL,
+    slug VARCHAR(80) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at DATETIME NOT NULL,
+    -- How interested they are, which is the whole reason for the table.
+    opens SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    first_opened_at DATETIME NULL,
+    last_opened_at DATETIME NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY uniq_token (token),
+    KEY idx_prospect (prospect_id, created_at),
+    CONSTRAINT fk_preview_prospect FOREIGN KEY (prospect_id)
+      REFERENCES prospects (id) ON DELETE CASCADE
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
   // One row per phone call, with what came of it.
   //
   // Notes on a prospect are a single field that gets rewritten, so the third
