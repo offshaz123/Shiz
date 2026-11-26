@@ -407,6 +407,22 @@ export function previewPage(input: PreviewInput): string {
               line-height: 1.05; margin-top: 14px; }
   .sum .cav { color: var(--soft); font-size: 13px; margin-top: 12px; }
 
+  /* The part after the website. A site nobody lands on is a leaflet in
+     a drawer, and saying so is more honest than selling one and
+     stopping there. */
+  .next { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); margin-top: 44px; }
+  .step { border: 1px solid var(--line); border-radius: 20px; padding: 26px; background: rgba(255,255,255,.025);
+          position: relative; }
+  .step .n { font-family: Sora; font-size: 13px; font-weight: 800; color: var(--brand); letter-spacing: .1em; }
+  .step h3 { margin: 10px 0 8px; font-size: 18.5px; font-weight: 700; }
+  .step p { margin: 0; color: var(--soft); font-size: 14.5px; }
+  .chain { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 30px;
+           font-family: Sora; font-weight: 700; font-size: 15px; }
+  .chain i { font-style: normal; border: 1px solid var(--line); border-radius: 999px; padding: 9px 17px;
+             background: rgba(255,255,255,.03); }
+  .chain i.lit { border-color: var(--brand); color: var(--brand); }
+  .chain s { text-decoration: none; color: var(--brand); }
+
   /* What we changed. The one section that is about them, not about the site. */
   .fixes { background: linear-gradient(180deg, #080b11, #05070a); border-top: 1px solid var(--line); }
   .pill { display: inline-block; border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px;
@@ -431,10 +447,24 @@ export function previewPage(input: PreviewInput): string {
           transition: opacity .75s cubic-bezier(.22,.61,.36,1), transform .75s cubic-bezier(.22,.61,.36,1); }
   .rise.in { opacity: 1; transform: none; }
 
+  /* No band behind it. A gradient that fades to nothing leaves the
+     paragraph underneath half-visible across the full width, which
+     reads as a rendering fault rather than a design. The pill is solid,
+     so it can float over the page on its own. */
+  /* A solid row under the header rather than a pill floating over the
+     page. It is sticky for the whole document, and a see-through pill
+     parked on top of a paragraph reads as a rendering fault; as a bar
+     it reads as part of the furniture. Worth the strip of height: this
+     is the one control the whole page is built around. */
   .flip { position: sticky; top: 64px; z-index: 48; display: flex; justify-content: center;
-          padding: 14px 0; background: linear-gradient(180deg, rgba(5,7,10,.96), rgba(5,7,10,0)); }
-  .flip .set { display: inline-flex; background: rgba(255,255,255,.06); border: 1px solid var(--line);
-               border-radius: 999px; padding: 4px; gap: 3px; }
+          padding: 10px 0; background: rgba(5,7,10,.92); backdrop-filter: blur(14px);
+          border-bottom: 1px solid var(--line); }
+  /* Solid rather than translucent. It is sticky for the whole page, so
+     a see-through pill puts a paragraph straight through the middle of
+     the two words somebody is trying to read. */
+  .flip .set { display: inline-flex; background: rgba(9,11,16,.94); border: 1px solid var(--line);
+               border-radius: 999px; padding: 4px; gap: 3px;
+               backdrop-filter: blur(14px); box-shadow: 0 12px 30px rgba(0,0,0,.5); }
   .flip button { appearance: none; border: 0; cursor: pointer; font: inherit; font-weight: 700;
                  font-size: 13.5px; padding: 9px 20px; border-radius: 999px; color: var(--soft);
                  background: transparent; transition: background .2s, color .2s; }
@@ -704,6 +734,41 @@ ${proposed(
     <p class="cav">That is one extra job a month, times twelve, at the figure you typed. It is arithmetic on
       your own number, not a promise and not a prediction. Nobody can tell you in advance what a website will
       bring in, and anybody who does is guessing.</p>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <span class="tag rise">After the website</span>
+  <h2 class="rise">A good site on its own is a leaflet in a drawer</h2>
+  <p class="lead rise">Worth saying plainly, because it is the bit most people selling websites leave out.
+    A website only works on people who already found you. These are the two halves that put somebody in
+    front of it and make sure nobody who lands gets dropped.</p>
+
+  <div class="chain rise">
+    <i class="lit">Google &amp; Meta ads</i><s>&rarr;</s>
+    <i class="lit">your website</i><s>&rarr;</s>
+    <i class="lit">a CRM that catches it</i><s>&rarr;</s>
+    <i>a job</i>
+  </div>
+
+  <div class="next">
+    <div class="step rise"><div class="n">01</div>
+      <h3>Google and Meta ads</h3>
+      <p>Somebody searching for what you do today, in the towns you cover, and somebody who has
+        never heard of you seeing your work on their phone tonight. Watched weekly and turned off
+        where it is not paying, rather than left running quietly.</p>
+    </div>
+    <div class="step rise" style="transition-delay:80ms"><div class="n">02</div>
+      <h3>A CRM behind it</h3>
+      <p>Every enquiry, from the site, the ads, the phone and WhatsApp, landing in one place with
+        the source against it. Answered within seconds, chased if nobody replies, and nothing
+        sitting in an inbox overnight.</p>
+    </div>
+    <div class="step rise" style="transition-delay:160ms"><div class="n">03</div>
+      <h3>Then you can see what works</h3>
+      <p>With all three you know what you spent, how many enquiries came of it and what each one
+        cost. Without the middle two the website is guesswork, however good it looks.</p>
+    </div>
   </div>
 </div></section>
 

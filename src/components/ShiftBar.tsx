@@ -6,6 +6,7 @@ import type { DiaryItem } from "@/lib/calendar";
 import { callsLeftWords } from "@/lib/calendar";
 import { CALL_LABEL, CALL_OUTCOMES, type CallOutcome } from "@/lib/prospect-types";
 import { noteProblem } from "@/lib/call-notes";
+import { NOTE_RULE, exampleNote } from "@/lib/note-examples";
 import { callbackProblem } from "@/lib/callback";
 
 /**
@@ -374,6 +375,10 @@ function CallPrompt({
             }`}
           />
         </label>
+        <p className="mt-1.5 text-[11px] leading-relaxed text-muted">
+          {NOTE_RULE} Like this:{" "}
+          <span className="italic text-foreground/70">&ldquo;{exampleNote(outcome)}&rdquo;</span>
+        </p>
         {tried && problem && <p className="mt-1.5 text-xs text-red-400">{problem}</p>}
         {failed && <p className="mt-1.5 text-xs text-red-400">{failed}</p>}
 

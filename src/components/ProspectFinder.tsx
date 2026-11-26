@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import type { ContactFilter } from "@/lib/prospects";
 import { URGENCY_WORD, planCall } from "@/lib/call-priority";
 import { noteProblem } from "@/lib/call-notes";
+import { NOTE_RULE, exampleNote } from "@/lib/note-examples";
 import { callScript } from "@/lib/call-script";
 import { CallScriptPanel } from "./CallScriptPanel";
 import { PreviewBadge } from "./PreviewBadge";
@@ -397,6 +398,23 @@ export function ProspectFinder({
     running: false,
     done: 0,
   });
+  /**
+   * One business on the screen at a time.
+   *
+   * The list is right for picking, and wrong for an hour of calling: a
+   * screen of forty businesses is forty small decisions about which one
+   * to ring before any ringing happens, and the ones at the bottom never
+   * get rung at all. In this mode there is one business, the buttons to
+   * work it, and Next.
+   *
+   * Which one is left is worked out from the ids already finished rather
+   * than from a position in the list, because logging a call reloads the
+   * list and a business usually leaves it — an index would skip whoever
+   * moved up into the gap.
+   */
+  const [solo, setSolo] = useState(false);
+  const [handled, setHandled] = useState<number[]>([]);
+
   const [error, setError] = useState("");
   const [loaded, setLoaded] = useState(false);
 
@@ -695,6 +713,10 @@ export function ProspectFinder({
    * The line it leaves behind is the receipt: the row vanishing on its own
    * with nothing said would read as something having gone wrong.
    */
+  function done(id: number) {
+    setHandled((was) => (was.includes(id) ? was : [...was, id]));
+  }
+
   function markContacted(id: number, name: string) {
     setCounts((c) => (c ? { notContacted: c.notContacted - 1, contacted: c.contacted + 1 } : c));
     if (contact !== "not-contacted") return;
@@ -808,6 +830,24 @@ export function ProspectFinder({
    */
   const ringToday = prospects.filter((p) => planCall(p, now).urgency === "today");
 
+  /**
+   * The tab's businesses in the order the tab shows them, which is the
+   * order one-at-a-time hands them over in. Same order, so the mode is
+   * a different way of looking at the same work rather than a second
+   * queue that disagrees with the first.
+   */
+  const inView =
+    view === "today"
+      ? ringToday
+      : view === "no-site"
+        ? noSite
+        : view === "has-site"
+          ? withSite
+          : [...noSite, ...withSite];
+  const left = inView.filter((p) => !handled.includes(p.id));
+  const one = left[0];
+  const atNumber = inView.length - left.length + 1;
+
   return (
     <div>
       {/* Which country. Only drawn when there is a choice: somebody with
@@ -825,6 +865,7 @@ export function ProspectFinder({
                 type="button"
                 onClick={() => {
                   setRegion(key);
+                  setHandled([]);
                   // The town box holds a place in the other country, and
                   // the filter holds a town that does not exist in this
                   // list. Both would silently return nothing.
@@ -1359,7 +1400,10 @@ export function ProspectFinder({
               <button
                 key={t.value}
                 type="button"
-                onClick={() => setView(t.value)}
+                onClick={() => {
+                  setView(t.value);
+                  setHandled([]);
+                }}
                 title={t.hint}
                 aria-current={view === t.value ? "true" : undefined}
                 className={`shrink-0 rounded-xl border px-4 py-2.5 text-left transition lg:w-full ${
@@ -1392,7 +1436,116 @@ export function ProspectFinder({
           {/* min-w-0 so a long business name cannot push the column off
               the side of the screen. */}
           <div className="min-w-0 flex-1">
-        {view === "today" && prospects.length > 0 && (
+
+        {/* List, or one at a time. Only drawn when there is something in
+            the tab: a switch over an empty list is a switch between two
+            views of nothing. */}
+        {inView.length > 0 && (
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <div className="flex rounded-xl border border-border p-1">
+              {([false, true] as const).map((want) => (
+                <button
+                  key={String(want)}
+                  type="button"
+                  onClick={() => {
+                    setSolo(want);
+                    if (want) setHandled([]);
+                  }}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-bold transition ${
+                    solo === want
+                      ? "bg-brand-pink text-white"
+                      : "text-muted hover:text-foreground"
+                  }`}
+                >
+                  {want ? "One at a time" : "The list"}
+                </button>
+              ))}
+            </div>
+            <p className="text-[11px] text-muted">
+              {solo
+                ? "One business, call it, write it up, next one loads."
+                : `${inView.length} in this tab.`}
+            </p>
+          </div>
+        )}
+
+        {solo && inView.length > 0 && (
+          one ? (
+            <div>
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-brand-pink/30 bg-brand-pink/5 px-4 py-3">
+                <div>
+                  <p className="text-sm font-bold text-foreground">
+                    Business {atNumber} of {inView.length}
+                  </p>
+                  <p className="text-[11px] text-muted">
+                    {left.length - 1 > 0
+                      ? `${left.length - 1} more after this one`
+                      : "Last one in this tab"}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  {handled.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setHandled((was) => was.slice(0, -1))}
+                      className="rounded-lg border border-border px-3 py-2 text-xs font-bold text-muted transition hover:text-foreground"
+                    >
+                      Back
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => done(one.id)}
+                    className="rounded-lg bg-brand-pink px-4 py-2 text-xs font-bold text-white transition hover:opacity-90"
+                  >
+                    Next business →
+                  </button>
+                </div>
+              </div>
+
+              {/* Keyed on the id so the card is built fresh for each
+                  business: without it React keeps the notes box, the
+                  open script and the half-filled write-up from the last
+                  one and shows them against the next name. */}
+              <Row
+                key={one.id}
+                p={one}
+                startOpen
+                busy={busy[one.id]}
+                onSave={save}
+                onScan={scan}
+                onContacted={markContacted}
+                // Written up, so it is finished: the next business is
+                // on the screen by the time they look up.
+                onLogged={() => {
+                  done(one.id);
+                  load();
+                }}
+                onDelete={setDeleted}
+                canDial={canDial}
+                callerName={callerName}
+              />
+            </div>
+          ) : (
+            <div className="rounded-xl border border-border px-4 py-8 text-center">
+              <p className="text-sm font-bold text-foreground">
+                That is every business in this tab.
+              </p>
+              <p className="mt-1 text-xs text-muted">
+                {inView.length} gone through. Pick another tab, or find more.
+              </p>
+              <button
+                type="button"
+                onClick={() => setHandled([])}
+                className="mt-4 rounded-lg border border-border px-4 py-2 text-xs font-bold transition hover:border-brand-pink/40"
+              >
+                Go through them again
+              </button>
+            </div>
+          )
+        )}
+
+        {!solo && view === "today" && prospects.length > 0 && (
           <Section
             title={`Ring today (${ringToday.length})`}
             note={
@@ -1418,7 +1571,7 @@ export function ProspectFinder({
           </Section>
         )}
 
-        {(view === "no-site" || view === "all") && noSite.length > 0 && (
+        {!solo && (view === "no-site" || view === "all") && noSite.length > 0 && (
           <Section
             title={`No website at all — ring these first (${noSite.length})`}
             note="Nothing to criticise, just something to build."
@@ -1439,7 +1592,7 @@ export function ProspectFinder({
           </Section>
         )}
 
-        {(view === "has-site" || view === "all") && withSite.length > 0 && (
+        {!solo && (view === "has-site" || view === "all") && withSite.length > 0 && (
           <Section
             title={`Has a website (${withSite.length})`}
             note="Fewest reviews first. Press Scan to score their site."
@@ -1507,8 +1660,15 @@ function Row({
   onDelete,
   canDial,
   callerName = "",
+  startOpen = false,
 }: {
   canDial?: boolean;
+  /**
+   * Drawn already open. One-at-a-time mode shows a single business and
+   * nothing else, so making somebody press the name first would be a
+   * click that reveals what the screen is already for.
+   */
+  startOpen?: boolean;
   /** Whoever is signed in, so the script says their name. */
   callerName?: string;
   p: Prospect;
@@ -1519,7 +1679,7 @@ function Row({
   onLogged: () => void;
   onDelete: (id: number, deleted: boolean) => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(startOpen);
   const [dialState, setDialState] = useState<"idle" | "ringing" | "failed">("idle");
   // What to say, on the row rather than a page away. Opens by itself
   // when a call is placed: that is the one moment it is wanted and the
@@ -2217,6 +2377,15 @@ function Row({
             }`}
           />
           {callError && <p className="text-[11px] text-red-400">{callError}</p>}
+
+          {/* Shown, not described. Beside the box rather than in it, so
+              nobody saves the example by accident. */}
+          <p className="text-[11px] leading-relaxed text-muted">
+            {NOTE_RULE} Like this:{" "}
+            <span className="italic text-foreground/70">
+              &ldquo;{exampleNote(callForm.outcome)}&rdquo;
+            </span>
+          </p>
 
           <div className="flex flex-wrap items-end gap-3 text-[11px]">
             {/* Only for the outcome that means it, and then both
