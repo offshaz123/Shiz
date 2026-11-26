@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { REGIONS, REGION_INFO, type Region } from "@/lib/regions";
 import type { SentEmail, MailboxCounts } from "@/lib/mailbox-view";
+import type { QueuedBatch } from "@/lib/sending-queue";
+import { PER_SLOT, slotWords } from "@/lib/sending-hours";
 
 /**
  * The mailbox, as a page.
@@ -19,6 +21,9 @@ import type { SentEmail, MailboxCounts } from "@/lib/mailbox-view";
  * it has not run. Then what was sent, with 1 of 3 against each business
  * so the state of a sequence is readable at a glance.
  */
+
+/** Worked out once: the two batch times, written out. */
+const SLOT_WORDS = slotWords();
 
 type Folder = "reply" | "sent" | "bounced" | "other";
 
@@ -57,6 +62,8 @@ type Payload = {
   counts: MailboxCounts | null;
   /** Null means the mailbox could not be read at all. */
   inbox: InboxMessage[] | null;
+  /** What is still to go out, and when. Null means the forecast failed. */
+  queued: QueuedBatch[] | null;
 };
 
 function when(iso: string): string {
@@ -257,6 +264,36 @@ export function Mailbox({ regions }: { regions: Region[] }) {
             {error}
           </p>
         )}
+      </section>
+
+      {/* What has not gone yet.
+          Above the inbox on purpose. Everything below this point is a
+          record of things that already happened and cannot be changed;
+          this is the one part of the page where seeing it early is worth
+          something, because a batch you can see before it leaves is a
+          batch you can still stop. */}
+      <section id="queued" className="scroll-mt-6">
+        <h2 className="text-sm font-bold text-foreground">Going out next</h2>
+        <p className="mt-1 text-xs text-muted">
+          Two batches of {PER_SLOT} a day for each country, at {SLOT_WORDS} in that country&rsquo;s
+          own time, so nothing lands in the middle of somebody&rsquo;s night. These are the
+          businesses next in line. Anyone who replies or unsubscribes before then drops out.
+        </p>
+
+        {data?.queued === null && (
+          <p className="mt-3 text-xs text-muted">
+            Could not work out what is next. The list itself is fine; this panel is the only
+            thing missing.
+          </p>
+        )}
+
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          {(data?.queued ?? [])
+            .filter((b) => pick === "both" || b.region === pick)
+            .map((batch) => (
+              <QueueCard key={batch.region} batch={batch} />
+            ))}
+        </div>
       </section>
 
       <section id="inbox" className="scroll-mt-6">
@@ -546,6 +583,79 @@ function Tile({
       <p className="text-2xl font-bold tabular-nums text-foreground">{value}</p>
       <p className="mt-1 text-xs font-semibold text-foreground">{label}</p>
       <p className="mt-0.5 text-[11px] leading-snug text-muted">{note}</p>
+    </div>
+  );
+}
+
+/**
+ * One country's next batch.
+ *
+ * The time comes first and it is their time, because that is the whole
+ * change: the number on this card is not the clock on the wall of
+ * whoever is reading it. A batch waiting on the scheduler says so rather
+ * than naming an hour, since the hour has already passed and the only
+ * honest answer is "the next time the cron runs".
+ */
+function QueueCard({ batch }: { batch: QueuedBatch }) {
+  const info = REGION_INFO[batch.region];
+  const when =
+    batch.day === "now"
+      ? "Waiting on the next run"
+      : batch.day === "today"
+        ? `Goes at ${batch.at} their time`
+        : `Nothing more today — next at ${batch.at} their time`;
+
+  return (
+    <div className="rounded-2xl border border-border p-5">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h3 className="text-sm font-bold text-foreground">{info.name}</h3>
+        <span className="text-xs tabular-nums text-muted">{batch.theirTime} there</span>
+      </div>
+
+      <p
+        className={`mt-1 text-xs font-bold ${
+          batch.day === "now" ? "text-brand-pink" : "text-muted"
+        }`}
+      >
+        {when}
+      </p>
+
+      {batch.businesses.length === 0 ? (
+        <p className="mt-4 text-xs text-muted">
+          Nobody is queued. Either everyone eligible has been written to, or the list needs
+          finding and scanning before it can hold a batch.
+        </p>
+      ) : (
+        <>
+          <p className="mt-1 text-xs text-muted">
+            {batch.businesses.length} of a possible {batch.room} · {batch.links} with a rebuilt
+            page
+          </p>
+
+          <ol className="mt-3 flex flex-col gap-1.5">
+            {batch.businesses.map((b, i) => (
+              <li key={b.id} className="flex items-baseline gap-2 text-xs">
+                <span className="w-5 shrink-0 tabular-nums text-muted">{i + 1}</span>
+                <Link
+                  href={`/admin/prospects/${b.id}`}
+                  className="min-w-0 flex-1 truncate font-bold text-foreground hover:text-brand-pink"
+                >
+                  {b.name}
+                </Link>
+                {b.town && <span className="shrink-0 text-muted">{b.town}</span>}
+                {/* Said on the row rather than counted at the top, because
+                    "which ones get a page" is the question Walid actually
+                    asks, and a total does not answer it. */}
+                {b.link && (
+                  <span className="shrink-0 rounded-md bg-brand-pink/15 px-1.5 py-0.5 text-[10px] font-bold text-brand-pink">
+                    with link
+                  </span>
+                )}
+              </li>
+            ))}
+          </ol>
+        </>
+      )}
     </div>
   );
 }

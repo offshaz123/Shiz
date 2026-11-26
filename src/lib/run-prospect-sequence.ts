@@ -1,10 +1,11 @@
 import { buildDraft, STEP_DAYS, type OutreachStep } from "./prospect-outreach";
 import { sendProspectEmail } from "./send-prospect-email";
 import { createPreview, dropPreview, hasPreview, previewUrl } from "./previews";
-import { worthAPreview } from "./preview-worth-it";
+import { canBuildPreview, worthAPreview } from "./preview-worth-it";
 import { prospectUnsubscribeUrl } from "./unsubscribe-url";
 import {
   countStepOneSent,
+  countStepOneSentSince,
   listNeverContacted,
   listSequenceAddresses,
   listSequenceDue,
@@ -13,7 +14,8 @@ import {
 } from "./prospects";
 import { bouncesSince, sendersSince } from "./mail-store";
 import { newPerRun } from "./outreach-warm-up";
-import { REGIONS } from "./regions";
+import { REGIONS, type Region } from "./regions";
+import { allowanceNow, minutesSinceDayStart, openNow } from "./sending-hours";
 import type { Prospect } from "./prospect-types";
 
 /**
@@ -46,6 +48,76 @@ import type { Prospect } from "./prospect-types";
 /** Kept well under the request timeout, and small enough that a stuck
  *  mail server costs one run rather than the site. */
 const MAX_PER_RUN = 12;
+
+/**
+ * How many of every twenty openers should carry a rebuilt page.
+ *
+ * Walid's number. An email that says "I rebuilt your homepage, here it
+ * is" is a different email from one that lists three faults, and when the
+ * batch happens to hold nobody strictly worth the effort the whole day's
+ * sending turns into the second kind. Seven in twenty is the floor, not
+ * the target: everyone who clears the stricter test still gets one.
+ */
+const LINKS_PER = 7;
+const OUT_OF = 20;
+
+/** The floor for a batch of this size, rounded up, never above the batch. */
+function linkFloor(batch: number): number {
+  return Math.min(batch, Math.ceil((batch * LINKS_PER) / OUT_OF));
+}
+
+/**
+ * Chooses the batch so that enough of it can carry a link.
+ *
+ * Oldest first is still the rule, and this only breaks it as far as it
+ * has to: the businesses worth a page are pulled forward until the floor
+ * is met, then the rest of the batch fills in order behind them, and the
+ * whole thing is put back into the original order before it is sent so a
+ * day's mail is not obviously sorted into two halves.
+ *
+ * `want` is what may be sent; `pool` should hold more than that, or there
+ * is nothing to choose between.
+ */
+export function composeBatch(
+  pool: Prospect[],
+  want: number,
+): { prospect: Prospect; wantLink: boolean }[] {
+  const need = linkFloor(want);
+  const chosen: Prospect[] = [];
+  const taken = new Set<number>();
+
+  // Worth winning first, then merely possible, until the floor is met.
+  for (const test of [worthAPreview, canBuildPreview]) {
+    for (const one of pool) {
+      if (chosen.length >= need) break;
+      if (taken.has(one.id) || !test(one)) continue;
+      chosen.push(one);
+      taken.add(one.id);
+    }
+  }
+  // Then the rest of the batch, oldest first, whoever they are.
+  for (const one of pool) {
+    if (chosen.length >= want) break;
+    if (taken.has(one.id)) continue;
+    chosen.push(one);
+    taken.add(one.id);
+  }
+
+  const order = new Map(pool.map((one, i) => [one.id, i]));
+  chosen.sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
+
+  // Who actually gets a page. Everyone who clears the stricter test, plus
+  // as many of the looser ones as it takes to reach the floor.
+  let links = chosen.filter(worthAPreview).length;
+  return chosen.map((prospect) => {
+    if (worthAPreview(prospect)) return { prospect, wantLink: true };
+    if (links < need && canBuildPreview(prospect)) {
+      links += 1;
+      return { prospect, wantLink: true };
+    }
+    return { prospect, wantLink: false };
+  });
+}
 
 /**
  * Minimum gap between two emails to the same business, whatever the schedule
@@ -90,6 +162,11 @@ export type SequenceSummary = {
    *  number matters: one is a quiet day, thirty is a stalled pipeline that
    *  nobody has noticed. */
   held: number;
+  /** Businesses passed over because it is the wrong time of day where
+   *  they are. Reported separately from skipped, because "nothing went to
+   *  America at six in the morning their time" is the system working and
+   *  should not read like a failure. */
+  outOfHours: number;
   /** Websites read this run. Always 0 now that scanning has its own job,
    *  kept because the admin page and the cron detail read it and a missing
    *  field would read as a failure rather than as "somewhere else". */
@@ -178,7 +255,31 @@ async function startNewSequences(summary: SequenceSummary): Promise<void> {
   // we are, and guessing low is still guessing. Send none.
   if (everSent === null) return;
 
-  const allowed = newPerRun(everSent);
+  // The ramp is still the ceiling. It is about how fast this domain may
+  // raise its volume, which is a different question from what hour of the
+  // day it is in Ohio, and the lower of the two answers wins.
+  const ramp = newPerRun(everSent);
+  const now = new Date();
+
+  // What each country may still have today, in its own hours. Two batches
+  // of twenty, the first opening at ten in the morning there and the
+  // second at two in the afternoon, less whatever has already gone out
+  // since that country's midnight. A country whose day has not opened yet,
+  // or has closed, comes back zero and is left alone until tomorrow.
+  const perRegion = new Map<Region, number>();
+  for (const region of REGIONS) {
+    if (!openNow(region, now)) continue;
+    const already = await countStepOneSentSince(region, minutesSinceDayStart(region, now));
+    // A count that could not be read is not a zero. Sending the whole
+    // batch again on a failed count is the one mistake here that cannot
+    // be taken back.
+    if (already === null) continue;
+    const room = allowanceNow(region, already, now);
+    if (room > 0) perRegion.set(region, Math.min(room, ramp));
+  }
+  if (perRegion.size === 0) return;
+
+  const allowed = [...perRegion.values()].reduce((a, b) => a + b, 0);
 
   // Taken from each country in turn rather than oldest-first across both.
   //
@@ -193,31 +294,49 @@ async function startNewSequences(summary: SequenceSummary): Promise<void> {
   // Each country is asked for the whole allowance and the two are
   // interleaved, so when one has nobody waiting the other still fills the
   // run rather than half of it going unused.
-  const byRegion = await Promise.all(REGIONS.map((r) => listNeverContacted(allowed, r)));
-  const fresh: Prospect[] = [];
+  // Each country is asked only for its own remaining allowance, so one
+  // country's quiet day no longer spends the other's. That is a change
+  // from asking both for the whole number and interleaving: the batch
+  // sizes are now the point, and lending twenty of America's to Britain
+  // would put forty British emails out in one morning.
+  //
+  // More is read than will be sent, because the batch is then composed
+  // rather than taken off the top — see composeBatch. With exactly twenty
+  // rows there is nothing to choose between, and the share of the day's
+  // mail that carries a rebuilt page would be whatever the list happened
+  // to be sorted into.
+  const wanted = [...perRegion.entries()];
+  const byRegion = await Promise.all(
+    wanted.map(([r, n]) => listNeverContacted(Math.min(n * 4, 200), r)),
+  );
+  const batches = wanted.map(([, n], i) => composeBatch(byRegion[i] ?? [], n));
+
+  // The countries are interleaved so a failure partway through a run costs
+  // both of them a little rather than one of them everything.
+  const fresh: { prospect: Prospect; wantLink: boolean }[] = [];
   for (let i = 0; i < allowed; i += 1) {
-    for (const list of byRegion) {
-      const one = list?.[i];
+    for (const batch of batches) {
+      const one = batch[i];
       if (one) fresh.push(one);
     }
   }
   if (fresh.length === 0) return;
   fresh.length = Math.min(fresh.length, allowed);
 
-  for (const prospect of fresh) {
+  for (const { prospect, wantLink } of fresh) {
     const unsubscribeUrl = prospectUnsubscribeUrl(prospect.id);
     if (!unsubscribeUrl) {
       summary.skipped += 1;
       continue;
     }
 
-    // A page built out of their own site, for the ones worth winning.
-    // Made before the email so the link can go in it, and only once per
-    // business ever: a second one landing a fortnight later reads as a
-    // machine, which is the opposite of the point.
+    // A page built out of their own site. Made before the email so the
+    // link can go in it, and only once per business ever: a second one
+    // landing a fortnight later reads as a machine, which is the
+    // opposite of the point.
     let link = "";
     let previewId: number | null = null;
-    if (worthAPreview(prospect) && !(await hasPreview(prospect.id))) {
+    if (wantLink && !(await hasPreview(prospect.id))) {
       const preview = await createPreview(prospect.id, prospect.name);
       if (preview) {
         link = previewUrl(preview);
@@ -256,6 +375,7 @@ export async function runProspectSequence(): Promise<SequenceSummary> {
     considered: 0,
     repliesChecked: true,
     held: 0,
+    outOfHours: 0,
     scanned: 0,
   };
 
@@ -284,9 +404,24 @@ export async function runProspectSequence(): Promise<SequenceSummary> {
   if (!due) return summary;
   summary.considered = due.length;
 
+  // One reading of the clock for the whole loop, so a run that straddles
+  // the top of an hour cannot send half its follow-ups under one rule and
+  // half under another.
+  const clockNow = new Date();
+
   for (const row of due) {
     const next = (row.lastStep + 1) as OutreachStep;
     if (next !== 2 && next !== 3) continue;
+
+    // The same hours as the openers. A chase landing at three in the
+    // morning is worse than a cold opener doing it, not better: this is
+    // the second or third time this business has heard from us, and the
+    // timestamp is the thing that decides whether that reads as a person
+    // following up or a machine working through a list overnight.
+    if (!openNow(row.prospect.region, clockNow)) {
+      summary.outOfHours += 1;
+      continue;
+    }
 
     const dueAfterHours = STEP_DAYS[next] * 24;
     // Half a day of slack, so a scheduler that drifts an hour or runs at a

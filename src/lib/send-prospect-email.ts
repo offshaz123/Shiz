@@ -4,6 +4,7 @@ import { getProspect, recordProspectEmail } from "./prospects";
 import { siteConfig } from "./site-config";
 import { fileInSent } from "./mail-store";
 import { prospectUnsubscribeUrl } from "./unsubscribe-url";
+import { plainToHtml } from "./plain-to-html";
 
 /**
  * Sends one outreach email to one prospect.
@@ -91,10 +92,19 @@ export async function sendProspectEmail(
     to: prospect.email,
     replyTo: siteConfig.email,
     subject: cleanSubject,
-    // Plain text only, on purpose. A one-to-one note about someone's website
-    // should look like one, and an HTML template around four sentences reads
-    // as a mailshot to both the recipient and the filters.
+    // Two parts carrying the same words. The text part is the message and
+    // is unchanged; a one-to-one note about someone's website should look
+    // like one, and an HTML template around four sentences reads as a
+    // mailshot to the recipient and the filters alike.
+    //
+    // The HTML part exists for one reason: the first email now has a web
+    // address in it, and whether a plain-text address is clickable is up
+    // to the mail program. Phones link it, Outlook on a desktop often does
+    // not, and the result was people being sent a link they had to copy
+    // out by hand. The HTML part is the same text with the address in an
+    // anchor and no styling of any kind — see plainToHtml.
     text: cleanBody,
+    html: plainToHtml(cleanBody),
     headers: unsubscribeUrl
       ? {
           "List-Unsubscribe": `<${unsubscribeUrl}>`,

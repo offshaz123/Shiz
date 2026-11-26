@@ -689,6 +689,41 @@ export async function countStepOneSent(): Promise<number | null> {
   });
 }
 
+/**
+ * First emails sent to one country since a given moment.
+ *
+ * The moment is that country's own midnight, not ours, which is why it is
+ * passed in rather than worked out here: the Pakistan office's day and the
+ * American one barely overlap, and a count that reset at midnight here
+ * would hand America a second allowance in the middle of its afternoon.
+ *
+ * Counts what was actually sent, so a handful pressed out by hand eats
+ * into the automatic batch rather than earning extra on top of it.
+ *
+ * Takes a length of time rather than an instant on purpose. sent_at is
+ * written by the database's own clock and a JavaScript Date is converted
+ * using this process's, so comparing the two is only right while both
+ * machines agree about what time it is. A duration is the same number on
+ * either clock.
+ */
+export async function countStepOneSentSince(
+  region: Region,
+  minutesAgo: number,
+): Promise<number | null> {
+  return withDb(async (db) => {
+    const [[row]] = await db.query<(RowDataPacket & { n: number })[]>(
+      `SELECT COUNT(*) AS n
+         FROM prospect_emails e
+         JOIN prospects p ON p.id = e.prospect_id
+        WHERE e.step = 1 AND e.status = 'sent'
+          AND p.region = ?
+          AND e.sent_at >= DATE_SUB(NOW(), INTERVAL ? MINUTE)`,
+      [region, Math.max(0, Math.round(minutesAgo))],
+    );
+    return Number(row?.n ?? 0);
+  });
+}
+
 /** Takes a prospect out of the sequence for good, with the reason why. */
 export async function stopSequence(id: number, reason: string): Promise<void> {
   await withDb(async (db) => {

@@ -56,6 +56,23 @@ export function worthAPreview(p: Prospect): boolean {
   return previewProblem(p) === null;
 }
 
+/**
+ * Could a page be built for this business at all, setting aside whether
+ * it is the best use of the effort.
+ *
+ * The looser of the two tests. worthAPreview asks "would we be pleased if
+ * this one replied"; this one asks only whether there is a site to rebuild
+ * and something to say about it. Walid wants a fixed share of every batch
+ * to go out with a link in it — seven in twenty — and on a day when the
+ * list does not hold seven businesses worth winning, these are the ones
+ * that make up the number. A site scoring 58 is a weaker argument than one
+ * scoring 31, not an impossible one.
+ */
+export function canBuildPreview(p: Prospect): boolean {
+  const problem = previewProblem(p);
+  return problem === null || problem === "site-is-fine" || problem === "too-quiet";
+}
+
 /** What the admin page says when the answer is no. */
 export function previewWords(reason: NotWorthIt, p: Prospect): string {
   switch (reason) {

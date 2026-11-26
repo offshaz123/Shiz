@@ -4,6 +4,7 @@ import { recentInbox } from "@/lib/mail-store";
 import { classify } from "@/lib/inbox-sort";
 import { listSent, mailboxCounts, sentBody, sendersWeKnow } from "@/lib/mailbox-view";
 import { toRegion, type Region } from "@/lib/regions";
+import { nextBatches } from "@/lib/sending-queue";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -61,12 +62,15 @@ export async function GET(request: Request) {
   // Two passes over the mailbox, because which messages are worth
   // opening depends on which senders we recognise, and that is a
   // database question. The first pass is envelopes only and cheap.
-  const [sent, counts, envelopes] = await Promise.all([
+  const [sent, counts, envelopes, queued] = await Promise.all([
     listSent(region, 120),
     mailboxCounts(),
     // Never allowed to fail the response. A mailbox refusing a login is
     // a thing to say on the page, not a reason to show nothing at all.
     recentInbox(40).catch(() => null),
+    // What has not gone yet. Same rule: a forecast that cannot be made
+    // is a missing panel, not a failed page.
+    nextBatches(region ? [region] : who?.regions).catch(() => null),
   ]);
 
   const known = await sendersWeKnow((envelopes ?? []).map((m) => m.from));
@@ -110,5 +114,9 @@ export async function GET(request: Request) {
             };
           }),
     savedList: sent !== null,
+    // What is still to go, and when. Null means the forecast could not
+    // be made; an empty list means nothing is waiting, which is a
+    // different thing and says the prospect list needs filling.
+    queued,
   });
 }
