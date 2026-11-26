@@ -235,22 +235,111 @@ function servicesOf(html: string): string[] {
 /** Tells an icon, a tracking pixel or a payment badge from a photograph. */
 const NOT_A_PHOTO = /icon|sprite|logo|badge|pixel|spacer|placeholder|avatar|flag|payment|visa|mastercard|paypal|klarna|stripe|trustpilot|\.svg(\?|$)/i;
 
+/**
+ * Theme furniture.
+ *
+ * Every bought template ships with a folder of decorative files — blobs
+ * behind a heading, a wave along the bottom of a section, a scattering
+ * of dots. They are images by the standard of an img tag and they are
+ * nothing by the standard of a person looking at the page.
+ *
+ * This was the bug Walid caught on the physiotherapy clinic. Their site
+ * has nine photographs of treatment rooms and a hero shot, and the page
+ * we sent them showed about-shape-1, about-shape-2 and wh-shape-5: three
+ * grey smudges. He was right that it is worse than showing nothing,
+ * because it is evidence that nobody looked.
+ */
+const DECORATION =
+  /(^|[^a-z])(shapes?|patterns?|blobs?|waves?|dots?|dividers?|swirls?|decor|ornament|overlay|texture|frame|curve|squiggle|ellipse|scribble|brush|splash|grain|noise|mask|arrow)([^a-z]|$)/i;
+
+/** Other people's marks: client logos, partner badges, awards. */
+const SOMEBODY_ELSE =
+  /(^|[^a-z])(clients?|partners?|brands?|sponsors?|logos?|awards?|accredit\w*|certific\w*|membership)([^a-z]|$)/i;
+
+/**
+ * How much a photograph is worth showing, from where it lives.
+ *
+ * Document order is the wrong order. A template puts its decoration
+ * first and its content last, so taking the first six images off the
+ * page is close to taking the six least useful ones — which is exactly
+ * what happened. Folder names are a better signal than position: a site
+ * that keeps nine files under /services/ is telling you what it is
+ * proud of.
+ */
+function worthShowing(src: string): number {
+  // The path only. Scoring the whole address lets the domain decide:
+  // every picture on cliniccare.co.uk would read as a photograph of the
+  // clinic, and every picture on teamplumbing.com as a photograph of
+  // the team, which makes the ranking noise.
+  const path = src.toLowerCase().replace(/^[a-z]+:\/\/[^/]+/, "");
+  if (/gallery|portfolio|\bwork\b|project|case-?stud|before|after|treatment|service/.test(path)) return 4;
+  if (/hero|banner|feature|showcase|\bmain\b|slider|carousel/.test(path)) return 3;
+  if (/about|team|staff|clinic|practice|studio|salon|premises|interior|shop|van|fleet/.test(path)) return 2;
+  // Blog thumbnails are usually bought stock, so they are the last resort
+  // rather than excluded: a page with nothing else is better with them.
+  if (/blog|news|article|post/.test(path)) return 0;
+  return 1;
+}
+
+/** The largest candidate in a srcset, which is the one worth showing. */
+function biggestIn(srcset: string): string {
+  let best = "";
+  let widest = -1;
+  for (const part of srcset.split(",")) {
+    const [url, size] = part.trim().split(/\s+/);
+    if (!url) continue;
+    const w = size?.endsWith("w") ? Number(size.slice(0, -1)) : 0;
+    if (w >= widest) {
+      widest = w;
+      best = url;
+    }
+  }
+  return best;
+}
+
 function imagesOf(html: string, base: string): string[] {
-  const out: string[] = [];
+  const found: { src: string; score: number }[] = [];
   const seen = new Set<string>();
+
   for (const tag of html.match(/<img\b[^>]*>/gi) ?? []) {
-    const raw = attr(tag, "src") || attr(tag, "data-src") || attr(tag, "data-lazy-src");
+    // srcset first: a lazy-loading template often puts a blurred
+    // placeholder in src and the real photograph in the set.
+    const set = attr(tag, "srcset") || attr(tag, "data-srcset");
+    const raw =
+      (set && biggestIn(set)) ||
+      attr(tag, "src") ||
+      attr(tag, "data-src") ||
+      attr(tag, "data-lazy-src") ||
+      attr(tag, "data-original");
     const src = absolute(raw, base);
-    if (!src || seen.has(src) || NOT_A_PHOTO.test(src)) continue;
+    if (!src || seen.has(src)) continue;
+    if (NOT_A_PHOTO.test(src) || DECORATION.test(src) || SOMEBODY_ELSE.test(src)) continue;
     // Anything the page itself declares as tiny is furniture.
     const w = Number(attr(tag, "width") || 0);
     const h = Number(attr(tag, "height") || 0);
     if ((w && w < 150) || (h && h < 150)) continue;
     seen.add(src);
-    out.push(src);
-    if (out.length === 6) break;
+    found.push({ src, score: worthShowing(src) });
   }
-  return out;
+
+  // Hero photographs are very often a CSS background rather than an img,
+  // so a page can have a perfectly good main image and no img tag for it.
+  for (const match of html.matchAll(/background(?:-image)?\s*:\s*url\(\s*['"]?([^'")]+)/gi)) {
+    const src = absolute(match[1], base);
+    if (!src || seen.has(src)) continue;
+    if (!/\.(jpe?g|png|webp|avif)(\?|$)/i.test(src)) continue;
+    if (NOT_A_PHOTO.test(src) || DECORATION.test(src) || SOMEBODY_ELSE.test(src)) continue;
+    seen.add(src);
+    found.push({ src, score: worthShowing(src) });
+  }
+
+  // Best first, and document order within a score so a run of service
+  // photographs stays in the order the business put them in.
+  return found
+    .map((f, i) => ({ ...f, i }))
+    .sort((a, b) => b.score - a.score || a.i - b.i)
+    .slice(0, 12)
+    .map((f) => f.src);
 }
 
 /** The colour the site declares for itself, so the rebuild is recognisably theirs. */

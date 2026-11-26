@@ -191,7 +191,21 @@ export function previewPage(input: PreviewInput): string {
   const ink = inkOn(brand);
   const name = them.name || website.replace(/^https?:\/\//, "").replace(/\/$/, "");
   const hero = them.images[0] ?? "";
-  const gallery = them.images.slice(1, 7);
+  // The rest, shared between the service cards and the showcase band.
+  // Both are on the home page now: their photographs were sitting on a
+  // separate tab in a grid of equal boxes, which is where Walid found
+  // them and fairly asked what we thought we had built.
+  const rest = them.images.slice(1);
+  // All the service cards get a photograph or none of them do. A row
+  // where three cards have a picture and three are empty boxes looks
+  // like the page failed to load, which is a worse impression than six
+  // honest text cards.
+  const wantCards = Math.min(6, them.services.length);
+  const cardShots = rest.length >= wantCards ? rest.slice(0, wantCards) : [];
+  const showcase = rest.slice(cardShots.length, cardShots.length + 8);
+  // Whatever is left over still has a page of its own, but it is the
+  // overflow now rather than the only place the pictures appear.
+  const gallery = rest.slice(cardShots.length + showcase.length, cardShots.length + showcase.length + 6);
   const stats = statsFor(input);
   const tel = them.phone.replace(/\s+/g, "");
   const wa = siteConfig.whatsappNumber;
@@ -288,15 +302,26 @@ export function previewPage(input: PreviewInput): string {
   .hero { position: relative; min-height: 92vh; display: flex; align-items: center; overflow: hidden; }
   .hero .shot { position: absolute; inset: -6%; background: #090d13 center/cover no-repeat;
                 transform: scale(1.08); will-change: transform; }
+  /* Enough shading to read white type over, and no more.
+     This was dark enough to hide the photograph underneath it, which
+     defeats the point: the whole argument of this page is that their
+     own pictures are worth looking at. The scrim is now heavy on the
+     left where the words sit and light on the right where the picture
+     is, rather than flat black across the whole frame. */
   .hero::after { content: ""; position: absolute; inset: 0;
-                 background: radial-gradient(85% 70% at 12% 42%, rgba(5,7,10,.5), rgba(5,7,10,.93) 68%),
-                             linear-gradient(180deg, rgba(5,7,10,.35), rgba(5,7,10,.99)); }
+                 background: linear-gradient(100deg, rgba(5,7,10,.92) 0%, rgba(5,7,10,.72) 38%,
+                             rgba(5,7,10,.28) 66%, rgba(5,7,10,.18) 100%),
+                             linear-gradient(180deg, rgba(5,7,10,.55), rgba(5,7,10,0) 30%,
+                             rgba(5,7,10,0) 62%, rgba(5,7,10,.9)); }
+  /* The words carry their own shadow so they stay readable wherever the
+     photograph happens to be bright. */
+  .hero h1, .hero .eyebrow { text-shadow: 0 2px 30px rgba(0,0,0,.6); }
   .blob { position: absolute; border-radius: 50%; filter: blur(140px); z-index: 1; pointer-events: none; }
-  .blob.a { width: 720px; height: 720px; background: var(--brand); opacity: .24; top: -240px; right: -160px;
+  .blob.a { width: 720px; height: 720px; background: var(--brand); opacity: .14; top: -240px; right: -160px;
             animation: float 11s ease-in-out infinite alternate; }
-  .blob.b { width: 460px; height: 460px; background: var(--brand); opacity: .12; bottom: -180px; left: -120px;
+  .blob.b { width: 460px; height: 460px; background: var(--brand); opacity: .08; bottom: -180px; left: -120px;
             animation: float 14s ease-in-out infinite alternate-reverse; }
-  @keyframes float { to { transform: translate3d(40px, -30px, 0) scale(1.15); opacity: .34; } }
+  @keyframes float { to { transform: translate3d(40px, -30px, 0) scale(1.15); opacity: .2; } }
   .hero .wrap { position: relative; z-index: 2; padding: 100px 22px; }
   .eyebrow { display: inline-flex; align-items: center; gap: 9px; border: 1px solid var(--line);
              background: rgba(255,255,255,.05); border-radius: 999px; padding: 7px 15px;
@@ -342,7 +367,53 @@ export function previewPage(input: PreviewInput): string {
          text-transform: uppercase; color: var(--brand); margin-bottom: 14px; }
   h2 { font-size: clamp(27px, 3.6vw, 42px); font-weight: 800; margin: 0 0 12px; }
   .lead { color: var(--soft); margin: 0 0 42px; max-width: 58ch; font-size: 16.5px; }
-  .cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+  /* A service card carries its photograph.
+     It used to be a number in a box and a line of text, which is what a
+     template looks like before anybody has done the work. Their own
+     photograph in it is the difference between "somebody built this" and
+     "somebody generated this", and they already own the pictures. */
+  .cards { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); }
+  .card.shot-card { padding: 0; overflow: hidden; }
+  .card .pic { position: relative; aspect-ratio: 16/11; overflow: hidden; background: #0c1016; }
+  .card .pic img { width: 100%; height: 100%; object-fit: cover; display: block;
+                   transform: scale(1.02); transition: transform .9s cubic-bezier(.22,.61,.36,1); }
+  .card:hover .pic img { transform: scale(1.09); }
+  .card .pic::after { content: ""; position: absolute; inset: 0;
+                      background: linear-gradient(180deg, rgba(5,7,10,0) 45%, rgba(5,7,10,.85)); }
+  .card .pic .mark { position: absolute; left: 16px; top: 16px; z-index: 2; margin: 0; }
+  .card .cap { padding: 18px 22px 22px; position: relative; }
+  .card .cap h3 { margin: 0; }
+
+  /* The showcase: their photographs on the home page, at the size they
+     deserve, in an asymmetric grid rather than a tray of equal squares.
+     Walid's complaint was that a flat grid of same-sized boxes reads as
+     a dumped folder; the whole job of this band is to look composed. */
+  .show { display: grid; gap: 14px; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 150px; }
+  .show figure { margin: 0; position: relative; overflow: hidden; border-radius: 20px;
+                 border: 1px solid var(--line); background: #0c1016;
+                 clip-path: inset(0 0 100% 0); transition: clip-path 1s cubic-bezier(.22,.61,.36,1); }
+  .show figure.in { clip-path: inset(0 0 0 0); }
+  .show img { width: 100%; height: 100%; object-fit: cover; display: block;
+              transform: scale(1.06); transition: transform 1.1s cubic-bezier(.22,.61,.36,1); }
+  .show figure.in img { transform: scale(1); }
+  .show figure:hover img { transform: scale(1.07); }
+  /* The pattern: one tall anchor, then a run of wide and square tiles.
+     Written out rather than computed so the shape is the same every
+     time and cannot collapse into a row of identical boxes. */
+  .show figure:nth-child(1) { grid-column: span 4; grid-row: span 2; }
+  .show figure:nth-child(2) { grid-column: span 2; grid-row: span 1; }
+  .show figure:nth-child(3) { grid-column: span 2; grid-row: span 1; }
+  .show figure:nth-child(4) { grid-column: span 2; grid-row: span 2; }
+  .show figure:nth-child(5) { grid-column: span 4; grid-row: span 2; }
+  .show figure:nth-child(6) { grid-column: span 3; grid-row: span 2; }
+  .show figure:nth-child(7) { grid-column: span 3; grid-row: span 2; }
+  .show figure:nth-child(8) { grid-column: span 6; grid-row: span 2; }
+  @media (max-width: 760px) {
+    .show { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 120px; }
+    .show figure:nth-child(n) { grid-column: span 2; grid-row: span 2; }
+    .show figure:nth-child(2), .show figure:nth-child(3) { grid-column: span 1; grid-row: span 1; }
+  }
+
   .card { border: 1px solid var(--line); border-radius: 20px; padding: 28px; background: rgba(255,255,255,.025);
           transition: transform .35s cubic-bezier(.22,.61,.36,1), border-color .35s, background .35s;
           position: relative; overflow: hidden; }
@@ -577,6 +648,26 @@ ${
 }
 
 ${
+  showcase.length
+    ? `<section><div class="wrap">
+  <span class="tag rise">Your own photographs</span>
+  <h2 class="rise">These were already on your site</h2>
+  <p class="lead rise">Every picture here is yours. We have not bought a single stock photograph,
+    and we have not added anything that is not already true about you. The only thing that has
+    changed is how much room they get.</p>
+  <div class="show">
+    ${showcase
+      .map(
+        (src, i) =>
+          `<figure data-show style="transition-delay:${i * 90}ms"><img src="${esc(src)}" alt="${esc(name)}" loading="lazy"></figure>`,
+      )
+      .join("\n    ")}
+  </div>
+</div></section>`
+    : ""
+}
+
+${
   them.services.length
     ? `<section><div class="wrap">
   <span class="tag rise">What we do</span>
@@ -585,10 +676,16 @@ ${
   <div class="cards">
     ${them.services
       .slice(0, 6)
-      .map(
-        (s, i) =>
-          `<div class="card rise" style="transition-delay:${i * 70}ms"><div class="mark">${String(i + 1).padStart(2, "0")}</div><h3>${esc(s)}</h3></div>`,
-      )
+      .map((s, i) => {
+        const pic = cardShots[i];
+        const n = String(i + 1).padStart(2, "0");
+        return pic
+          ? `<div class="card shot-card rise" style="transition-delay:${i * 70}ms">
+      <div class="pic"><img src="${esc(pic)}" alt="${esc(s)}" loading="lazy"><div class="mark">${n}</div></div>
+      <div class="cap"><h3>${esc(s)}</h3></div>
+    </div>`
+          : `<div class="card rise" style="transition-delay:${i * 70}ms"><div class="mark">${n}</div><h3>${esc(s)}</h3></div>`;
+      })
       .join("\n    ")}
   </div>
 </div></section>`
@@ -817,7 +914,10 @@ ${proposed(
     }).join(' ');
   }
 
-  var rise = document.querySelectorAll('.rise');
+  // The showcase tiles wipe open from the bottom as they arrive, one
+  // after another. Same observer as everything else so a tile that is
+  // already on screen when the page loads does not sit there closed.
+  var rise = document.querySelectorAll('.rise, [data-show]');
   if (reduce || !('IntersectionObserver' in window)) {
     rise.forEach(function (el) { el.classList.add('in'); });
     document.querySelectorAll('.num').forEach(function (el) { el.firstChild.nodeValue = el.dataset.to; });
@@ -861,7 +961,7 @@ ${proposed(
     links.forEach(function (a) { a.classList.toggle('here', a.dataset.page === id); });
     window.scrollTo(0, 0);
     // Anything on the page that was waiting to arrive, arrives now.
-    found.querySelectorAll('.rise').forEach(function (el) { el.classList.add('in'); });
+    found.querySelectorAll('.rise, [data-show]').forEach(function (el) { el.classList.add('in'); });
     found.querySelectorAll('.num').forEach(function (el) { count(el); });
     return true;
   }
