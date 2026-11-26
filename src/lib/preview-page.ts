@@ -2,18 +2,24 @@ import type { Rebuilt } from "./site-rebuild";
 import { siteConfig } from "./site-config";
 
 /**
- * Their own website, rebuilt, as one page they can look at.
+ * Their own website, rebuilt, as something they can look at.
  *
  * Written as a string of HTML rather than as a React component on purpose.
  * This page borrows the business's own colour, carries their own
  * photographs and is served on its own with nothing of ours around it,
  * which is a different job from every other page on this site.
  *
- * It has to look expensive. The whole pitch is a person opening it on a
- * phone and thinking "that is better than mine", so it moves: things
- * arrive as you reach them, the numbers count up, and the call button
- * follows you down the page. None of that is decoration. A page that
- * feels alive is the argument, and the price lands softer afterwards.
+ * It has to beat what they already have. That is the whole bar, and the
+ * first version did not clear it: Walid sent a few, looked at the sites
+ * they went to, and found businesses whose own homepage opens with video
+ * and movement being shown a tidy static page. "Not bad" is a losing
+ * answer. So this one moves the whole way down, and it is a site rather
+ * than a page: a working navigation, sections they do not currently have,
+ * and a clear mark on every one of those saying we would add it.
+ *
+ * All of the motion is CSS and a few lines of JavaScript in the document
+ * itself. Nothing is fetched, nothing is stored, and the server does no
+ * more work than it did for the flat version.
  *
  * The rules it must never break, in order of how much trouble they save:
  *
@@ -21,15 +27,11 @@ import { siteConfig } from "./site-config";
  *     carrying somebody's logo and photographs, sent to them unasked,
  *     has to be unmistakably a mock-up and unmistakably from us.
  *  2. Nothing on it is invented. Every word, picture, offer and number
- *     came off their own homepage, or is left out. The counters are the
- *     part to watch: an impressive number nobody can evidence is the one
- *     thing that would turn this from flattering into embarrassing.
- *  3. It is never indexed. The link is unguessable, the page says
- *     noindex, and it expires.
- *
- * Their photographs stay on their own server. We point at them, so
- * nothing of theirs is copied onto ours, and if their host refuses the
- * request the page carries on without the picture.
+ *     came off their own homepage, or is left out. A section we are
+ *     proposing rather than rebuilding says so on its face, because a
+ *     business owner who thinks we are showing them their own reviews
+ *     and then finds we made them up is a business owner who is gone.
+ *  3. It is never indexed. The link is unguessable and it expires.
  */
 
 export type PreviewInput = {
@@ -104,16 +106,49 @@ function statsFor(input: PreviewInput): Stat[] {
   return out.slice(0, 4);
 }
 
+/**
+ * A section we are proposing, not one we rebuilt.
+ *
+ * Marked on its face, every time. These are the most persuasive part of
+ * the page, because they are the only part showing something they have
+ * not got, and that is exactly why they must not be mistaken for their
+ * own content.
+ */
+function proposed(id: string, title: string, note: string, inner: string): string {
+  return `<section id="${id}" class="add">
+  <div class="wrap">
+    <div class="addmark rise">Not on your site today &middot; we would add this</div>
+    <h2 class="rise">${title}</h2>
+    <p class="lead rise">${note}</p>
+    ${inner}
+  </div>
+</section>`;
+}
+
 export function previewPage(input: PreviewInput): string {
   const { them, website, findings, score, expires, from } = input;
   const brand = /^#[0-9a-f]{6}$/i.test(them.colour) ? them.colour : "#2563eb";
   const ink = inkOn(brand);
   const name = them.name || website.replace(/^https?:\/\//, "").replace(/\/$/, "");
   const hero = them.images[0] ?? "";
-  const gallery = them.images.slice(1, 4);
+  const gallery = them.images.slice(1, 7);
   const stats = statsFor(input);
   const tel = them.phone.replace(/\s+/g, "");
   const wa = siteConfig.whatsappNumber;
+  const rating = input.googleRating ?? (them.rating ? Number(them.rating) : null);
+  const reviewCount = input.googleReviews ?? (them.reviewCount ? Number(them.reviewCount) : null);
+  const plain = website.replace(/^https?:\/\//, "").replace(/\/$/, "");
+
+  // The navigation only offers what the page actually has, so nothing
+  // leads anywhere empty.
+  const nav: { id: string; label: string }[] = [
+    { id: "top", label: "Home" },
+    ...(them.services.length ? [{ id: "services", label: "Services" }] : []),
+    ...(gallery.length ? [{ id: "work", label: "Our work" }] : []),
+    { id: "reviews", label: "Reviews" },
+    ...(them.about ? [{ id: "about", label: "About" }] : []),
+    { id: "contact", label: "Contact" },
+  ];
 
   return `<!doctype html>
 <html lang="en">
@@ -124,128 +159,182 @@ export function previewPage(input: PreviewInput): string {
 <title>${esc(name)}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --brand: ${brand};
     --ink: ${ink};
-    --bg: #07090d;
-    --panel: #0d1117;
-    --line: rgba(255,255,255,.09);
-    --soft: #99a3b3;
+    --bg: #05070a;
+    --panel: #0b0f15;
+    --line: rgba(255,255,255,.085);
+    --soft: #94a0b1;
   }
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; scroll-padding-top: 90px; }
   body { margin: 0; background: var(--bg); color: #eef2f7;
-         font-family: Inter, ui-sans-serif, system-ui, sans-serif; line-height: 1.6; overflow-x: hidden; }
+         font-family: Inter, ui-sans-serif, system-ui, sans-serif; line-height: 1.62; overflow-x: hidden; }
   img { max-width: 100%; display: block; }
-  h1, h2, h3, .num { font-family: Sora, Inter, sans-serif; letter-spacing: -.025em; }
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 22px; }
+  h1, h2, h3, .num, .logo { font-family: Sora, Inter, sans-serif; letter-spacing: -.025em; }
+  .wrap { max-width: 1140px; margin: 0 auto; padding: 0 22px; }
+  a { color: inherit; }
 
-  /* The bar that says what this is. Not dismissible, never animated away. */
+  /* How far down they are. A small thing that makes a page feel built. */
+  .progress { position: fixed; top: 0; left: 0; height: 2px; width: 0; background: var(--brand);
+              z-index: 90; box-shadow: 0 0 14px var(--brand); transition: width .08s linear; }
+
   .mock { background: #000; color: #fff; font-size: 12.5px; padding: 9px 20px; text-align: center;
           position: relative; z-index: 60; }
   .mock b { font-weight: 700; }
   .mock span { opacity: .6; }
 
-  /* Their own offer, in their own words. */
   .promo { background: var(--brand); color: var(--ink); text-align: center; font-weight: 700;
-           font-size: 13.5px; padding: 9px 20px; position: relative; z-index: 55; }
+           font-size: 13.5px; padding: 9px 20px; position: relative; z-index: 55; overflow: hidden; }
+  .promo i { font-style: normal; display: inline-block; animation: slide 22s linear infinite; }
+  @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-  header { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(14px);
-           background: rgba(7,9,13,.72); border-bottom: 1px solid var(--line); }
-  header .inner { display: flex; align-items: center; gap: 16px; max-width: 1120px; margin: 0 auto; padding: 14px 22px; }
-  header img { height: 40px; width: auto; }
-  header .name { font-family: Sora; font-weight: 800; font-size: 19px; }
+  /* A real navigation, so it reads as a website rather than a page. */
+  header { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(16px);
+           background: rgba(5,7,10,.7); border-bottom: 1px solid transparent; transition: border-color .3s, background .3s; }
+  header.stuck { border-bottom-color: var(--line); background: rgba(5,7,10,.92); }
+  header .inner { display: flex; align-items: center; gap: 22px; max-width: 1140px; margin: 0 auto; padding: 13px 22px; }
+  header img.mark { height: 38px; width: auto; }
+  .logo { font-weight: 800; font-size: 18px; }
+  nav { display: flex; gap: 22px; margin-left: 12px; }
+  nav a { font-size: 14px; color: var(--soft); text-decoration: none; position: relative; padding: 4px 0;
+          transition: color .2s; }
+  nav a::after { content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: 0;
+                 background: var(--brand); transition: width .25s; }
+  nav a:hover { color: #fff; }
+  nav a:hover::after, nav a.here::after { width: 100%; }
+  nav a.here { color: #fff; }
   header .call { margin-left: auto; background: var(--brand); color: var(--ink); padding: 11px 20px;
                  border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 14.5px;
-                 transition: transform .2s, box-shadow .2s; }
-  header .call:hover { transform: translateY(-1px); box-shadow: 0 10px 30px -10px var(--brand); }
+                 white-space: nowrap; transition: transform .2s, box-shadow .2s; }
+  header .call:hover { transform: translateY(-1px); box-shadow: 0 12px 30px -10px var(--brand); }
 
-  /* Hero. The glow behind it is what stops a dark page looking flat. */
-  .hero { position: relative; min-height: 86vh; display: flex; align-items: center; overflow: hidden; }
-  .hero .shot { position: absolute; inset: 0; background: #0b0f16 center/cover no-repeat; transform: scale(1.06);
-                animation: drift 22s ease-in-out infinite alternate; }
-  @keyframes drift { to { transform: scale(1.14) translate3d(-1.5%, -1%, 0); } }
+  /* Hero. Their photograph, moving, with their colour bled through it. */
+  .hero { position: relative; min-height: 92vh; display: flex; align-items: center; overflow: hidden; }
+  .hero .shot { position: absolute; inset: -6%; background: #090d13 center/cover no-repeat;
+                transform: scale(1.08); will-change: transform; }
   .hero::after { content: ""; position: absolute; inset: 0;
-                 background: radial-gradient(90% 70% at 15% 40%, rgba(7,9,13,.55), rgba(7,9,13,.94) 70%),
-                             linear-gradient(180deg, rgba(7,9,13,.4), rgba(7,9,13,.98)); }
-  .glow { position: absolute; width: 760px; height: 760px; border-radius: 50%; filter: blur(130px);
-          background: var(--brand); opacity: .22; top: -220px; right: -180px; z-index: 1;
-          animation: pulse 9s ease-in-out infinite alternate; }
-  @keyframes pulse { to { opacity: .34; transform: scale(1.12); } }
-  .hero .wrap { position: relative; z-index: 2; padding: 90px 22px; }
+                 background: radial-gradient(85% 70% at 12% 42%, rgba(5,7,10,.5), rgba(5,7,10,.93) 68%),
+                             linear-gradient(180deg, rgba(5,7,10,.35), rgba(5,7,10,.99)); }
+  .blob { position: absolute; border-radius: 50%; filter: blur(140px); z-index: 1; pointer-events: none; }
+  .blob.a { width: 720px; height: 720px; background: var(--brand); opacity: .24; top: -240px; right: -160px;
+            animation: float 11s ease-in-out infinite alternate; }
+  .blob.b { width: 460px; height: 460px; background: var(--brand); opacity: .12; bottom: -180px; left: -120px;
+            animation: float 14s ease-in-out infinite alternate-reverse; }
+  @keyframes float { to { transform: translate3d(40px, -30px, 0) scale(1.15); opacity: .34; } }
+  .hero .wrap { position: relative; z-index: 2; padding: 100px 22px; }
   .eyebrow { display: inline-flex; align-items: center; gap: 9px; border: 1px solid var(--line);
              background: rgba(255,255,255,.05); border-radius: 999px; padding: 7px 15px;
              font-size: 12.5px; color: var(--soft); margin-bottom: 22px; }
-  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 12px var(--brand); }
-  h1 { font-size: clamp(38px, 6.4vw, 74px); line-height: 1.02; font-weight: 800; margin: 0 0 20px; max-width: 15ch; }
-  .hero p { font-size: clamp(16px, 2vw, 19px); color: #c4cdda; max-width: 52ch; margin: 0 0 34px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 12px var(--brand);
+         animation: beat 2.4s ease-in-out infinite; }
+  @keyframes beat { 50% { transform: scale(1.5); opacity: .55; } }
+  h1 { font-size: clamp(40px, 7vw, 82px); line-height: 1; font-weight: 800; margin: 0 0 20px; max-width: 15ch; }
+  /* Each word arrives a beat after the last. */
+  h1 span { display: inline-block; opacity: 0; transform: translateY(22px);
+            animation: word .66s cubic-bezier(.22,.61,.36,1) forwards; }
+  @keyframes word { to { opacity: 1; transform: none; } }
+  .hero p { font-size: clamp(16px, 2vw, 19.5px); color: #c2cbd8; max-width: 52ch; margin: 0 0 34px; }
   .btns { display: flex; gap: 12px; flex-wrap: wrap; }
   .btn { display: inline-flex; align-items: center; gap: 9px; background: var(--brand); color: var(--ink);
          padding: 16px 30px; border-radius: 999px; text-decoration: none; font-weight: 800; font-size: 16.5px;
-         transition: transform .2s, box-shadow .2s; box-shadow: 0 16px 40px -16px var(--brand); }
-  .btn:hover { transform: translateY(-2px); box-shadow: 0 22px 50px -16px var(--brand); }
+         transition: transform .2s, box-shadow .2s; box-shadow: 0 16px 42px -16px var(--brand); }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 24px 54px -16px var(--brand); }
   .btn.ghost { background: rgba(255,255,255,.07); color: #fff; border: 1px solid var(--line); box-shadow: none; }
+  .cue { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); z-index: 2;
+         width: 24px; height: 38px; border: 2px solid rgba(255,255,255,.3); border-radius: 14px; }
+  .cue::after { content: ""; position: absolute; left: 50%; top: 7px; width: 3px; height: 7px; border-radius: 2px;
+                background: #fff; transform: translateX(-50%); animation: wheel 1.9s ease-in-out infinite; }
+  @keyframes wheel { 50% { transform: translate(-50%, 13px); opacity: .25; } }
 
-  /* The numbers. They count up when you reach them. */
-  .stats { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.015); }
+  /* The services, running past in a band, before the grid of them. */
+  .ticker { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+            overflow: hidden; background: rgba(255,255,255,.015); padding: 15px 0; }
+  .ticker .row { display: flex; gap: 48px; width: max-content; animation: slide 28s linear infinite; }
+  .ticker span { font-family: Sora; font-weight: 600; font-size: 15px; color: var(--soft); white-space: nowrap; }
+  .ticker b { color: var(--brand); margin-right: 48px; }
+
+  .stats { border-bottom: 1px solid var(--line); background: rgba(255,255,255,.015); }
   .stats .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
-  .stat { padding: 34px 22px; text-align: center; border-right: 1px solid var(--line); }
+  .stat { padding: 36px 22px; text-align: center; border-right: 1px solid var(--line); }
   .stat:last-child { border-right: 0; }
-  .num { font-size: clamp(32px, 4.4vw, 46px); font-weight: 800; color: #fff; line-height: 1; }
+  .num { font-size: clamp(32px, 4.6vw, 48px); font-weight: 800; color: #fff; line-height: 1; }
   .num span { color: var(--brand); }
-  .stat .label { font-size: 12.5px; color: var(--soft); margin-top: 9px; letter-spacing: .02em; }
+  .stat .label { font-size: 12.5px; color: var(--soft); margin-top: 9px; }
 
-  section { padding: 96px 0; }
-  h2 { font-size: clamp(26px, 3.4vw, 38px); font-weight: 800; margin: 0 0 12px; }
-  .lead { color: var(--soft); margin: 0 0 40px; max-width: 58ch; font-size: 16.5px; }
+  section { padding: 104px 0; position: relative; }
+  .tag { display: inline-block; font-family: Sora; font-size: 12px; font-weight: 700; letter-spacing: .16em;
+         text-transform: uppercase; color: var(--brand); margin-bottom: 14px; }
+  h2 { font-size: clamp(27px, 3.6vw, 42px); font-weight: 800; margin: 0 0 12px; }
+  .lead { color: var(--soft); margin: 0 0 42px; max-width: 58ch; font-size: 16.5px; }
   .cards { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-  .card { border: 1px solid var(--line); border-radius: 18px; padding: 26px; background: rgba(255,255,255,.025);
-          transition: transform .3s, border-color .3s, background .3s; }
-  .card:hover { transform: translateY(-4px); border-color: var(--brand); background: rgba(255,255,255,.05); }
-  .card .mark { width: 38px; height: 38px; border-radius: 11px; background: var(--brand); color: var(--ink);
-                display: grid; place-items: center; font-weight: 800; margin-bottom: 15px; }
-  .card h3 { margin: 0; font-size: 17.5px; font-weight: 600; }
+  .card { border: 1px solid var(--line); border-radius: 20px; padding: 28px; background: rgba(255,255,255,.025);
+          transition: transform .35s cubic-bezier(.22,.61,.36,1), border-color .35s, background .35s;
+          position: relative; overflow: hidden; }
+  .card::before { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .35s;
+                  background: radial-gradient(60% 60% at 50% 0%, var(--brand), transparent 70%); }
+  .card:hover { transform: translateY(-6px); border-color: var(--brand); background: rgba(255,255,255,.05); }
+  .card:hover::before { opacity: .14; }
+  .card .mark { width: 40px; height: 40px; border-radius: 12px; background: var(--brand); color: var(--ink);
+                display: grid; place-items: center; font-weight: 800; margin-bottom: 16px; position: relative; }
+  .card h3 { margin: 0; font-size: 17.5px; font-weight: 600; position: relative; }
 
-  .shots { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-  .shots figure { margin: 0; overflow: hidden; border-radius: 18px; border: 1px solid var(--line); }
-  .shots img { aspect-ratio: 4/3; object-fit: cover; width: 100%; transition: transform .6s ease; }
-  .shots figure:hover img { transform: scale(1.06); }
+  .shots { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .shots figure { margin: 0; overflow: hidden; border-radius: 20px; border: 1px solid var(--line); position: relative; }
+  .shots img { aspect-ratio: 4/3; object-fit: cover; width: 100%; transition: transform .8s cubic-bezier(.22,.61,.36,1); }
+  .shots figure:hover img { transform: scale(1.08); }
 
-  .about { max-width: 62ch; font-size: 17.5px; color: #c4cdda; }
+  .about { max-width: 62ch; font-size: 17.5px; color: #c2cbd8; }
 
-  /* What we changed. The one part that is about them, not us. */
-  .fixes { background: linear-gradient(180deg, #0a0d13, #07090d); border-top: 1px solid var(--line); }
+  /* The sections we are proposing rather than rebuilding. */
+  .add { background: linear-gradient(180deg, rgba(255,255,255,.02), transparent); }
+  .addmark { display: inline-block; border: 1px dashed var(--brand); border-radius: 999px;
+             padding: 6px 15px; font-size: 12px; font-weight: 700; color: var(--brand);
+             margin-bottom: 16px; }
+  .quotes { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .quote { border: 1px dashed var(--line); border-radius: 20px; padding: 26px; background: rgba(255,255,255,.02); }
+  .quote .stars { color: var(--brand); letter-spacing: 3px; font-size: 15px; }
+  .quote p { color: var(--soft); font-style: italic; margin: 12px 0 0; }
+  .form { display: grid; gap: 12px; max-width: 560px; }
+  .form .pair { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
+  .fake { border: 1px solid var(--line); border-radius: 13px; padding: 15px 17px; color: var(--soft);
+          background: rgba(255,255,255,.03); font-size: 15px; }
+  .form .send { background: var(--brand); color: var(--ink); border: 0; border-radius: 13px; padding: 16px;
+                font: inherit; font-weight: 800; text-align: center; }
+  .faq { border-top: 1px solid var(--line); }
+  .faq div { border-bottom: 1px solid var(--line); padding: 20px 0; display: flex; gap: 16px; align-items: baseline; }
+  .faq b { font-weight: 600; font-size: 16.5px; }
+  .faq span { margin-left: auto; color: var(--brand); font-size: 22px; line-height: 1; }
+
+  /* What we changed. The one section that is about them, not about the site. */
+  .fixes { background: linear-gradient(180deg, #080b11, #05070a); border-top: 1px solid var(--line); }
   .pill { display: inline-block; border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px;
           font-size: 12.5px; color: var(--soft); margin-bottom: 20px; }
   .fix { display: flex; gap: 18px; padding: 22px 0; border-top: 1px solid var(--line); }
-  .fix .n { font-family: Sora; color: var(--brand); font-weight: 800; font-size: 15px; min-width: 26px; }
-  .fix p { margin: 0; color: #c4cdda; }
+  .fix .n { font-family: Sora; color: var(--brand); font-weight: 800; font-size: 15px; min-width: 28px; }
+  .fix p { margin: 0; color: #c2cbd8; }
 
-  footer { padding: 86px 0 120px; text-align: center; border-top: 1px solid var(--line); }
-  footer .big { font-family: Sora; font-size: clamp(24px, 3.2vw, 34px); font-weight: 800; margin-bottom: 12px; }
-  footer .small { color: var(--soft); font-size: 13.5px; margin-top: 26px; }
+  footer { padding: 96px 0 130px; text-align: center; border-top: 1px solid var(--line); position: relative; }
+  footer .big { font-family: Sora; font-size: clamp(26px, 3.6vw, 40px); font-weight: 800; margin-bottom: 12px; }
+  footer .small { color: var(--soft); font-size: 13.5px; margin-top: 28px; }
 
-  /* WhatsApp, bottom right, once you have started reading. */
   .wa { position: fixed; right: 18px; bottom: 18px; z-index: 70; width: 58px; height: 58px; border-radius: 50%;
         background: #25d366; display: grid; place-items: center; box-shadow: 0 14px 34px -8px rgba(37,211,102,.6);
         opacity: 0; transform: translateY(18px) scale(.85); pointer-events: none;
         transition: opacity .35s, transform .35s; }
   .wa.on { opacity: 1; transform: none; pointer-events: auto; }
-  .wa:hover { transform: scale(1.07); }
+  .wa:hover { transform: scale(1.08); }
   .wa svg { width: 30px; height: 30px; fill: #fff; }
 
-  /* Arrive as you reach them. */
-  .rise { opacity: 0; transform: translateY(26px); transition: opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1); }
+  .rise { opacity: 0; transform: translateY(28px);
+          transition: opacity .75s cubic-bezier(.22,.61,.36,1), transform .75s cubic-bezier(.22,.61,.36,1); }
   .rise.in { opacity: 1; transform: none; }
-  @media (prefers-reduced-motion: reduce) {
-    .rise, .hero .shot, .glow { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
-  }
 
-  /* Their site, and ours, one tap apart. The whole argument on one control. */
-  .flip { position: sticky; top: 69px; z-index: 48; display: flex; justify-content: center;
-          padding: 14px 0; background: linear-gradient(180deg, rgba(7,9,13,.96), rgba(7,9,13,0)); }
+  .flip { position: sticky; top: 64px; z-index: 48; display: flex; justify-content: center;
+          padding: 14px 0; background: linear-gradient(180deg, rgba(5,7,10,.96), rgba(5,7,10,0)); }
   .flip .set { display: inline-flex; background: rgba(255,255,255,.06); border: 1px solid var(--line);
                border-radius: 999px; padding: 4px; gap: 3px; }
   .flip button { appearance: none; border: 0; cursor: pointer; font: inherit; font-weight: 700;
@@ -254,39 +343,51 @@ export function previewPage(input: PreviewInput): string {
   .flip button[aria-pressed="true"] { background: var(--brand); color: var(--ink); }
   #before { display: none; }
   #before.on { display: block; }
-  .theirs { border: 1px solid var(--line); border-radius: 18px; overflow: hidden; background: #fff; }
+  .theirs { border: 1px solid var(--line); border-radius: 20px; overflow: hidden; background: #fff; }
   .theirs iframe { width: 100%; height: 72vh; border: 0; display: block; background: #fff; }
   .theirs .note { padding: 14px 18px; font-size: 13px; color: var(--soft); background: var(--panel);
                   border-bottom: 1px solid var(--line); }
   .theirs .note a { color: #fff; }
 
   .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 65; display: none; gap: 10px; padding: 10px 12px;
-         background: rgba(7,9,13,.94); border-top: 1px solid var(--line); backdrop-filter: blur(10px); }
+         background: rgba(5,7,10,.95); border-top: 1px solid var(--line); backdrop-filter: blur(10px); }
   .bar a { flex: 1; text-align: center; padding: 15px; border-radius: 14px; text-decoration: none; font-weight: 800; }
   .bar .a { background: var(--brand); color: var(--ink); }
+
+  @media (max-width: 880px) { nav { display: none; } }
   @media (max-width: 780px) {
     .bar { display: flex; }
     body { padding-bottom: 82px; }
     header .call { display: none; }
     .wa { bottom: 92px; }
-    .hero { min-height: 72vh; }
+    .hero { min-height: 78vh; }
     .stat { border-right: 0; border-bottom: 1px solid var(--line); padding: 26px 18px; }
-    section { padding: 68px 0; }
+    section { padding: 72px 0; }
+    .form .pair { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .rise, h1 span { opacity: 1 !important; transform: none !important; }
   }
 </style>
 </head>
 <body>
+
+<div class="progress" id="progress"></div>
 
 <div class="mock">
   <b>A mock-up built for ${esc(name)} by ${esc(from)}.</b>
   <span>Not a live website. This link stops working on ${esc(expires)}.</span>
 </div>
 
-${them.promo ? `<div class="promo">${esc(them.promo)}</div>` : ""}
+${them.promo ? `<div class="promo"><i>${esc(them.promo)}&nbsp;&nbsp;&middot;&nbsp;&nbsp;${esc(them.promo)}&nbsp;&nbsp;&middot;&nbsp;&nbsp;</i></div>` : ""}
 
-<header><div class="inner">
-  ${them.logo ? `<img src="${esc(them.logo)}" alt="${esc(name)}">` : `<div class="name">${esc(name)}</div>`}
-  ${tel ? `<a class="call" href="tel:${esc(tel)}">${esc(them.phone)}</a>` : ""}
+<header id="head"><div class="inner">
+  ${them.logo ? `<img class="mark" src="${esc(them.logo)}" alt="${esc(name)}">` : `<div class="logo">${esc(name)}</div>`}
+  <nav>
+    ${nav.map((n) => `<a href="#${n.id}" data-to="${n.id}">${esc(n.label)}</a>`).join("\n    ")}
+  </nav>
+  ${tel ? `<a class="call" href="tel:${esc(tel)}">${esc(them.phone)}</a>` : `<a class="call" href="#contact">Get in touch</a>`}
 </div></header>
 
 <div class="flip">
@@ -298,7 +399,7 @@ ${them.promo ? `<div class="promo">${esc(them.promo)}</div>` : ""}
 
 <section id="before"><div class="wrap">
   <h2>Your website as it is today</h2>
-  <p class="lead">Loaded live from ${esc(website.replace(/^https?:\/\//, "").replace(/\/$/, ""))}. Nothing has been changed.</p>
+  <p class="lead">Loaded live from ${esc(plain)}. Nothing has been changed.</p>
   <div class="theirs">
     <div class="note">Some sites refuse to load inside another page. If the panel below is blank,
       <a href="${esc(website)}" target="_blank" rel="noreferrer noopener">open your site in a new tab</a>
@@ -308,19 +409,29 @@ ${them.promo ? `<div class="promo">${esc(them.promo)}</div>` : ""}
 </div></section>
 
 <div id="after">
-<div class="hero">
-  ${hero ? `<div class="shot" style="background-image:url('${esc(hero)}')"></div>` : `<div class="shot"></div>`}
-  <div class="glow"></div>
+<div class="hero" id="top">
+  ${hero ? `<div class="shot" id="shot" style="background-image:url('${esc(hero)}')"></div>` : `<div class="shot" id="shot"></div>`}
+  <div class="blob a"></div>
+  <div class="blob b"></div>
   <div class="wrap">
     <div class="eyebrow rise"><span class="dot"></span> ${esc(name)}${them.since ? ` &middot; since ${esc(them.since)}` : ""}</div>
-    <h1 class="rise">${esc(them.tagline && them.tagline.length < 70 ? them.tagline : name)}</h1>
+    <h1 id="headline">${esc(them.tagline && them.tagline.length < 70 ? them.tagline : name)}</h1>
     ${them.tagline && them.tagline.length >= 70 ? `<p class="rise">${esc(them.tagline)}</p>` : ""}
     <div class="btns rise">
       ${tel ? `<a class="btn" href="tel:${esc(tel)}">Call ${esc(them.phone)}</a>` : ""}
-      <a class="btn ghost" href="https://wa.me/${esc(wa)}">Message on WhatsApp</a>
+      <a class="btn ghost" href="#contact">Get a quote</a>
     </div>
   </div>
+  <div class="cue"></div>
 </div>
+
+${
+  them.services.length
+    ? `<div class="ticker"><div class="row">
+  ${[...them.services, ...them.services].map((s) => `<span><b>&bull;</b>${esc(s)}</span>`).join("\n  ")}
+</div></div>`
+    : ""
+}
 
 ${
   stats.length
@@ -337,14 +448,15 @@ ${
 
 ${
   them.services.length
-    ? `<section><div class="wrap">
-  <h2 class="rise">What we do</h2>
-  <p class="lead rise">Taken from your own website, nothing added.</p>
+    ? `<section id="services"><div class="wrap">
+  <span class="tag rise">What we do</span>
+  <h2 class="rise">Everything, done properly</h2>
+  <p class="lead rise">Taken from your own website. Nothing added, nothing invented.</p>
   <div class="cards">
     ${them.services
       .map(
         (s, i) =>
-          `<div class="card rise" style="transition-delay:${i * 60}ms"><div class="mark">${i + 1}</div><h3>${esc(s)}</h3></div>`,
+          `<div class="card rise" style="transition-delay:${i * 70}ms"><div class="mark">${String(i + 1).padStart(2, "0")}</div><h3>${esc(s)}</h3></div>`,
       )
       .join("\n    ")}
   </div>
@@ -354,14 +466,15 @@ ${
 
 ${
   gallery.length
-    ? `<section><div class="wrap">
-  <h2 class="rise">Our work</h2>
-  <p class="lead rise">Your own photographs, shown properly.</p>
+    ? `<section id="work"><div class="wrap">
+  <span class="tag rise">Our work</span>
+  <h2 class="rise">Your own photographs, shown properly</h2>
+  <p class="lead rise">Same pictures that are on your site now, given the room they deserve.</p>
   <div class="shots">
     ${gallery
       .map(
         (src, i) =>
-          `<figure class="rise" style="transition-delay:${i * 70}ms"><img src="${esc(src)}" alt="" loading="lazy"></figure>`,
+          `<figure class="rise" style="transition-delay:${i * 80}ms"><img src="${esc(src)}" alt="" loading="lazy"></figure>`,
       )
       .join("\n    ")}
   </div>
@@ -369,33 +482,75 @@ ${
     : ""
 }
 
+${proposed(
+  "reviews",
+  "What your customers say",
+  rating && reviewCount
+    ? `You are on ${rating.toFixed(1)} from ${reviewCount} reviews on Google, and none of it is on your website. This section pulls them in automatically as they come, so the newest one is always showing.`
+    : "Your Google reviews, pulled in automatically as they come, so the newest one is always showing.",
+  `<div class="quotes">
+      ${[0, 1, 2]
+        .map(
+          (i) =>
+            `<div class="quote rise" style="transition-delay:${i * 80}ms">
+        <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <p>Your real Google reviews appear here. We do not write them and we do not choose them.</p>
+      </div>`,
+        )
+        .join("\n      ")}
+    </div>`,
+)}
+
 ${
   them.about
-    ? `<section><div class="wrap">
+    ? `<section id="about"><div class="wrap">
+  <span class="tag rise">About</span>
   <h2 class="rise">About ${esc(name)}</h2>
   <p class="about rise">${esc(them.about)}</p>
 </div></section>`
     : ""
 }
 
+${proposed(
+  "contact",
+  "Get a quote in thirty seconds",
+  "Four boxes, nothing else. Every enquiry lands in one place and gets an answer within seconds, day or night, signed in your name.",
+  `<div class="form rise">
+      <div class="pair"><div class="fake">Your name</div><div class="fake">Phone number</div></div>
+      <div class="fake">What do you need?</div>
+      <div class="send">Send it</div>
+    </div>`,
+)}
+
+${proposed(
+  "faq",
+  "The questions you get asked every day",
+  "Written once, answered forever. These are also the questions people type into Google, which is how a page like this gets found.",
+  `<div class="faq rise">
+      ${["How much does it cost?", "How soon can you come out?", "Which areas do you cover?", "Are you insured?"]
+        .map((q) => `<div><b>${esc(q)}</b><span>+</span></div>`)
+        .join("\n      ")}
+    </div>`,
+)}
 </div><!-- /after -->
 
 <section class="fixes"><div class="wrap">
   ${score !== null ? `<div class="pill rise">Your website scored ${score} out of 100 on our audit</div>` : ""}
+  <span class="tag rise">The honest part</span>
   <h2 class="rise">What we changed, and what it was costing you</h2>
   <p class="lead rise">Every one of these is on your site right now. Check them yourself.</p>
   ${findings
     .map(
       (f, i) =>
-        `<div class="fix rise" style="transition-delay:${i * 50}ms"><span class="n">0${i + 1}</span><p>${esc(f)}</p></div>`,
+        `<div class="fix rise" style="transition-delay:${i * 60}ms"><span class="n">${String(i + 1).padStart(2, "0")}</span><p>${esc(f)}</p></div>`,
     )
     .join("\n  ")}
 </div></section>
 
 <footer><div class="wrap">
   <div class="big rise">Want this one instead?</div>
-  <div class="lead rise" style="margin:0 auto">Reply to the email, or ring ${esc(siteConfig.phoneDisplay)} and we will talk it through.</div>
-  <div class="btns rise" style="justify-content:center;margin-top:26px">
+  <div class="lead rise" style="margin:0 auto">Reply to the email, or ring ${esc(siteConfig.phoneDisplay)} and we will talk it through. No obligation and no sales pitch.</div>
+  <div class="btns rise" style="justify-content:center;margin-top:28px">
     <a class="btn" href="https://wa.me/${esc(wa)}">Message on WhatsApp</a>
     <a class="btn ghost" href="tel:${esc(siteConfig.phoneE164)}">Call ${esc(siteConfig.phoneDisplay)}</a>
   </div>
@@ -414,62 +569,93 @@ ${
 <script>
 (function () {
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // The headline, a word at a time.
+  var h1 = document.getElementById('headline');
+  if (h1 && !reduce) {
+    var words = h1.textContent.split(' ');
+    h1.innerHTML = words.map(function (w, i) {
+      return '<span style="animation-delay:' + (120 + i * 70) + 'ms">' + w + '</span>';
+    }).join(' ');
+  }
+
   var rise = document.querySelectorAll('.rise');
   if (reduce || !('IntersectionObserver' in window)) {
     rise.forEach(function (el) { el.classList.add('in'); });
     document.querySelectorAll('.num').forEach(function (el) { el.firstChild.nodeValue = el.dataset.to; });
     document.querySelector('.wa').classList.add('on');
-    return;
+  } else {
+    var seen = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('in');
+        seen.unobserve(e.target);
+        var num = e.target.querySelector('.num');
+        if (num) count(num);
+      });
+    }, { rootMargin: '0px 0px -12% 0px' });
+    rise.forEach(function (el) { seen.observe(el); });
   }
-
-  var seen = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (!e.isIntersecting) return;
-      e.target.classList.add('in');
-      seen.unobserve(e.target);
-      var num = e.target.querySelector('.num');
-      if (num) count(num);
-    });
-  }, { rootMargin: '0px 0px -12% 0px' });
-  rise.forEach(function (el) { seen.observe(el); });
 
   // Counts to the real value, decimals kept, so 4.8 does not land on 5.
   function count(el) {
     var target = parseFloat(el.dataset.to);
     if (isNaN(target)) { el.firstChild.nodeValue = el.dataset.to; return; }
     var dp = (el.dataset.to.split('.')[1] || '').length;
-    var started = null, ms = 1100;
+    var started = null, ms = 1200;
     function step(now) {
       if (!started) started = now;
       var p = Math.min(1, (now - started) / ms);
-      var eased = 1 - Math.pow(1 - p, 3);
-      el.firstChild.nodeValue = (target * eased).toFixed(dp);
+      el.firstChild.nodeValue = (target * (1 - Math.pow(1 - p, 3))).toFixed(dp);
       if (p < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
   }
 
-  // Their site against ours. Switching scrolls back to the top, because
-  // landing halfway down the other version reads as the page breaking.
+  // Their site against ours.
   var after = document.getElementById('after');
   var before = document.getElementById('before');
   var tabA = document.getElementById('tab-after');
   var tabB = document.getElementById('tab-before');
-  function show(which) {
-    var theirs = which === 'before';
+  function show(theirs) {
     before.classList.toggle('on', theirs);
     after.style.display = theirs ? 'none' : '';
     tabB.setAttribute('aria-pressed', String(theirs));
     tabA.setAttribute('aria-pressed', String(!theirs));
-    window.scrollTo({ top: 0, behavior: 'instant' in window ? 'instant' : 'auto' });
+    window.scrollTo(0, 0);
   }
-  tabA.addEventListener('click', function () { show('after'); });
-  tabB.addEventListener('click', function () { show('before'); });
+  tabA.addEventListener('click', function () { show(false); });
+  tabB.addEventListener('click', function () { show(true); });
 
-  // WhatsApp appears once they have started reading, not on arrival.
+  var head = document.getElementById('head');
+  var shot = document.getElementById('shot');
   var wa = document.querySelector('.wa');
+  var bar = document.getElementById('progress');
+  var links = [].slice.call(document.querySelectorAll('nav a'));
+  var ticking = false;
+
   function onScroll() {
-    if (window.scrollY > 420) wa.classList.add('on'); else wa.classList.remove('on');
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      var y = window.scrollY;
+      var tall = document.body.scrollHeight - window.innerHeight;
+      bar.style.width = (tall > 0 ? (y / tall) * 100 : 0) + '%';
+      head.classList.toggle('stuck', y > 40);
+      if (wa) wa.classList.toggle('on', y > 420);
+      // The hero photograph drifts slower than the page does.
+      if (shot && !reduce && y < window.innerHeight * 1.2) {
+        shot.style.transform = 'scale(1.08) translate3d(0,' + (y * 0.22) + 'px,0)';
+      }
+      // Which section they are in, marked in the navigation.
+      var here = '';
+      links.forEach(function (a) {
+        var target = document.getElementById(a.dataset.to);
+        if (target && target.getBoundingClientRect().top <= 140) here = a.dataset.to;
+      });
+      links.forEach(function (a) { a.classList.toggle('here', a.dataset.to === here); });
+      ticking = false;
+    });
   }
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
