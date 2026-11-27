@@ -804,10 +804,17 @@ export type QueueBlockers = {
 export async function countQueueBlockers(region: Region): Promise<QueueBlockers | null> {
   return withDb(async (db) => {
     const [rows] = await db.query<(RowDataPacket & { why: string; n: number })[]>(
+      // Scanned first, and this order matters. The email address is
+      // found BY the scan — it is read off their website — so an
+      // unscanned business always has no address, and asking about the
+      // address first labels the entire unscanned backlog "no email".
+      // That is what it did: it reported 133 UK businesses with no
+      // address when most of them simply had not been looked at yet,
+      // which points at the wrong fix entirely.
       `SELECT CASE
+                WHEN scanned_at IS NULL THEN 'not-scanned'
                 WHEN email IS NULL OR email = '' THEN 'no-email'
                 WHEN email_dead_at IS NOT NULL THEN 'dead-email'
-                WHEN scanned_at IS NULL THEN 'not-scanned'
                 WHEN site_findings IS NULL OR site_findings = '' THEN 'no-findings'
                 ELSE 'ready'
               END AS why,
