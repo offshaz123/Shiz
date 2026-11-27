@@ -3,7 +3,7 @@ import { runAutoSearch, SEARCHES_PER_REGION } from "@/lib/auto-search";
 import { REGIONS } from "@/lib/regions";
 import { scanBatch } from "@/lib/scan-batch";
 import { sweepAddresses } from "@/lib/sweep-addresses";
-import { countUnworked } from "@/lib/prospects";
+import { countQueueBlockers } from "@/lib/prospects";
 import { recordCronRun } from "@/lib/admin-data";
 
 export const runtime = "nodejs";
@@ -36,19 +36,30 @@ export const dynamic = "force-dynamic";
 const SCAN_BATCH = 80;
 
 /**
- * How big the unworked pile is allowed to get before the search stops.
+ * How many usable businesses a country should have in hand before the
+ * search stops for the day.
  *
- * The whole point of the number. Finding is the only part of this that
- * costs money, and it was running flat out whether or not anybody was
- * getting through the last lot — up to two hundred found a day against
- * fifteen emails and whatever the phone managed.
+ * Walid's number, and the measure behind it is the thing that was
+ * wrong. This used to count every business nobody had contacted yet,
+ * which sounds right and is not: a business with no email address and
+ * nothing wrong with its website counts towards that total and can
+ * never be written to. So the pile read as a hundred and fifty full
+ * while the part of it the sending could actually use was empty, the
+ * search throttled itself, and a morning went out with eight follow-ups
+ * and no new business at all.
  *
- * So it now looks at what is already waiting and skips the search when
- * there is plenty. Nobody has to tune it: a busy week on the phone empties
- * the pile and searching starts again by itself, a quiet week leaves it
- * full and we stop paying Google to lengthen a queue.
+ * What is counted now is the pipeline: businesses ready to be written
+ * to today, plus the ones not yet scanned, which may become ready once
+ * they are. Businesses blocked for good — no address, nothing wrong
+ * with their site — are not in it, because they are a call list rather
+ * than stock.
+ *
+ * Counting the unscanned ones is also what stops this buying more every
+ * single day. If forty are sitting unscanned the pipeline is not empty,
+ * it is unprocessed, and the answer is to scan them rather than to pay
+ * Google for forty more.
  */
-const ENOUGH_WAITING = 150;
+const ENOUGH_READY = 70;
 
 function authorised(request: Request): "ok" | "wrong_key" | "not_configured" {
   const secret = process.env.CRON_SECRET;
@@ -109,8 +120,11 @@ async function run(request: Request) {
     : SEARCHES_PER_REGION;
   const runs = [];
   for (const region of REGIONS) {
-    const waiting = forced ? null : await countUnworked(region);
-    const full = waiting !== null && waiting >= ENOUGH_WAITING;
+    const stock = forced ? null : await countQueueBlockers(region);
+    // Ready to write to, plus the ones a scan might still make ready.
+    // Not the ones that can never be emailed.
+    const waiting = stock ? stock.ready + stock.notScanned : null;
+    const full = waiting !== null && waiting >= ENOUGH_READY;
     const search = full
       ? null
       : await runAutoSearch(new Date(), perRegion, offset, region).catch((err) => {
@@ -149,7 +163,7 @@ async function run(request: Request) {
     considered: found,
     detail:
       (full
-        ? `${waiting} still waiting to be worked in both countries, so no searching today. ` +
+        ? `${waiting} usable in both countries, so no searching today. ` +
           `${scan?.scanned ?? 0} scanned.`
         : runs.some((r) => r.search)
           ? // One line per country, so "America found nothing again" is
@@ -157,7 +171,7 @@ async function run(request: Request) {
             runs
               .map((r) =>
                 r.full
-                  ? `${r.region.toUpperCase()}: ${r.waiting} waiting, skipped`
+                  ? `${r.region.toUpperCase()}: ${r.waiting} usable, skipped`
                   : r.search
                     ? `${r.region.toUpperCase()} ${r.search.industry}: ${r.search.searches} searches, ` +
                       `${r.search.found} found${r.search.stopped ? ` (stopped: ${r.search.stopped})` : ""}`
@@ -174,7 +188,7 @@ async function run(request: Request) {
 
   if (full) {
     console.log(
-      `[find-and-scan] ${waiting} unworked, skipping the search. ` +
+      `[find-and-scan] ${waiting} usable in the pipeline, skipping the search. ` +
         `${scan?.scanned ?? 0} scanned.`,
     );
   }
