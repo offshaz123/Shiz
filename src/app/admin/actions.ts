@@ -42,7 +42,7 @@ async function clientIp(): Promise<string> {
 
 export async function login(_prev: LoginState, formData: FormData): Promise<LoginState> {
   const ip = await clientIp();
-  if (tooManyAttempts(ip)) {
+  if (await tooManyAttempts(ip)) {
     return { error: "Too many attempts. Wait fifteen minutes and try again." };
   }
 
@@ -56,13 +56,13 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
   // reserved names, so there is no account to collide with.
   if (!username || isReservedUsername(username)) {
     if (!checkPassword(password)) {
-      recordFailure(ip);
+      await recordFailure(ip);
       // Deliberately the same message whether the password was wrong or
       // ADMIN_PASSWORD was never set — a login screen should not report on its
       // own configuration to whoever is standing in front of it.
       return { error: "That password isn't right." };
     }
-    clearAttempts(ip);
+    await clearAttempts(ip);
     await startSession();
     await logAction({ id: null, name: "Walid" }, "signed-in");
     await startSitting({ id: null, name: "Walid" });
@@ -72,14 +72,14 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
 
   const staff = await checkStaffLogin(username, password);
   if (!staff) {
-    recordFailure(ip);
+    await recordFailure(ip);
     // One message for a wrong password, an unknown name and a switched-off
     // account alike. Which of the three it was is not the business of
     // whoever is standing in front of the screen.
     return { error: "That username and password don't match." };
   }
 
-  clearAttempts(ip);
+  await clearAttempts(ip);
   await startSession(staff.id);
   await logAction({ id: staff.id, name: staff.name }, "signed-in");
   await startSitting({ id: staff.id, name: staff.name });

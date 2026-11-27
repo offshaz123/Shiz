@@ -401,6 +401,28 @@ export const SCHEMA = [
   // this is a short list of odds and ends, and a table that needs a
   // migration every time somebody wants to remember one more thing is
   // a table nobody adds to.
+  // Failed logins, per address and per kind of login.
+  //
+  // In a table rather than in memory, and that is the whole point of
+  // it. The counter used to be a Map inside the module, which works
+  // when one copy of the module serves every request and silently
+  // does nothing when it does not: the admin login blocked after eight
+  // tries and the client portal never blocked at all, because the two
+  // server actions are bundled separately and each had its own empty
+  // Map. A security control that depends on how a bundler split the
+  // code is not a control.
+  //
+  // One row per address and kind. Rows older than the window are
+  // cleared out as they are read, so this never needs a job of its own.
+  `CREATE TABLE IF NOT EXISTS login_attempts (
+    scope VARCHAR(16) NOT NULL,
+    ip VARCHAR(64) NOT NULL,
+    tries SMALLINT UNSIGNED NOT NULL DEFAULT 0,
+    until_at DATETIME NOT NULL,
+    PRIMARY KEY (scope, ip),
+    KEY idx_until (until_at)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
   `CREATE TABLE IF NOT EXISTS settings (
     name VARCHAR(40) NOT NULL,
     value VARCHAR(255) NOT NULL DEFAULT '',

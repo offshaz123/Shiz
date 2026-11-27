@@ -19,7 +19,16 @@ import { clientLogin } from "./actions";
  * header any more: with no chrome at all, a password box on a dark screen
  * gives nobody a reason to believe it is ours.
  */
-export function LoginForm({ failed }: { failed: boolean }) {
+export function LoginForm({
+  failed,
+  /** Too many wrong passwords from this address. Said plainly, because
+   *  a client locked out by a colleague's typing should know it is the
+   *  waiting and not their own password. */
+  slowDown = false,
+}: {
+  failed: boolean;
+  slowDown?: boolean;
+}) {
   return (
     <div className="mx-auto flex min-h-[85vh] max-w-md flex-col justify-center px-5 py-16">
       <div className="mb-8">
@@ -54,11 +63,18 @@ export function LoginForm({ failed }: { failed: boolean }) {
           />
         </label>
 
-        {failed && (
+        {slowDown ? (
           <p className="text-sm font-medium text-red-500">
-            That did not work. Try your email address instead, or give us a ring and we will
-            reset it.
+            Too many tries from here. Wait fifteen minutes, or give us a ring and we will let
+            you straight in.
           </p>
+        ) : (
+          failed && (
+            <p className="text-sm font-medium text-red-500">
+              That did not work. Try your email address instead, or give us a ring and we will
+              reset it.
+            </p>
+          )
         )}
 
         <button

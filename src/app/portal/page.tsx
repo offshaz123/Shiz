@@ -47,7 +47,7 @@ export default async function PortalPage({
   const client = await currentClient();
   if (!client) {
     const { error } = await searchParams;
-    return <LoginForm failed={error === "1"} />;
+    return <LoginForm failed={error === "1"} slowDown={error === "slow"} />;
   }
 
   const [summary, trend, everything, admin] = await Promise.all([

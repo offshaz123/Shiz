@@ -268,44 +268,8 @@ export async function actor(): Promise<{ id: number | null; name: string }> {
 }
 
 /**
- * Login attempt limiting, held in memory.
- *
- * Process-local, so it resets on deploy and would not be shared across
- * instances. That is a real limit and worth naming: it is a speed bump
- * against someone guessing at the password, not a lockout. The password's own
- * length is what actually has to hold.
+ * Login attempt limiting now lives in its own module, because the
+ * client portal needs the same guard and had none at all. Re-exported
+ * here so the admin login keeps working unchanged.
  */
-const attempts = new Map<string, { count: number; until: number }>();
-const MAX_ATTEMPTS = 8;
-const WINDOW_MS = 15 * 60 * 1000;
-
-export function tooManyAttempts(ip: string): boolean {
-  const record = attempts.get(ip);
-  if (!record) return false;
-  if (Date.now() > record.until) {
-    attempts.delete(ip);
-    return false;
-  }
-  return record.count >= MAX_ATTEMPTS;
-}
-
-export function recordFailure(ip: string): void {
-  const now = Date.now();
-  const record = attempts.get(ip);
-  if (!record || now > record.until) {
-    attempts.set(ip, { count: 1, until: now + WINDOW_MS });
-    return;
-  }
-  record.count += 1;
-
-  // Stop the map growing without bound if someone cycles through addresses.
-  if (attempts.size > 5000) {
-    for (const [key, value] of attempts) {
-      if (now > value.until) attempts.delete(key);
-    }
-  }
-}
-
-export function clearAttempts(ip: string): void {
-  attempts.delete(ip);
-}
+export { clearAttempts, recordFailure, tooManyAttempts } from "./login-attempts";
