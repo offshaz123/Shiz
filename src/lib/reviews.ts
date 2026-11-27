@@ -145,6 +145,32 @@ export async function deleteReview(id: number): Promise<void> {
 }
 
 /** Average and count across approved reviews, for the heading. */
+/**
+ * The headline figure, worked out over every approved review.
+ *
+ * Not over the handful the page happens to show, which is what it used
+ * to do. The homepage fetches fourteen for the marquee, so after fifty
+ * real reviews went up it told visitors "4.6 from 14 reviews" — it was
+ * quietly throwing away two thirds of the proof, and the average was
+ * the average of whichever fourteen came back rather than of the lot.
+ *
+ * One query, counted by the database, so the number on the page is the
+ * number in the table however many the marquee is showing.
+ */
+export async function reviewStats(): Promise<{ average: number; count: number } | null> {
+  const row = await withDb(async (db) => {
+    const [[r]] = await db.query<(RowDataPacket & { n: number; avg: string | null })[]>(
+      `SELECT COUNT(*) AS n, AVG(rating) AS avg FROM reviews WHERE status = 'approved'`,
+    );
+    return r;
+  });
+  const count = Number(row?.n ?? 0);
+  if (!count) return null;
+  return { average: Math.round(Number(row?.avg ?? 0) * 10) / 10, count };
+}
+
+/** The same sum over a list already in hand, for anywhere without a
+ *  database round trip to spare. */
 export function summarise(reviews: Review[]): { average: number; count: number } | null {
   if (reviews.length === 0) return null;
   const total = reviews.reduce((sum, r) => sum + r.rating, 0);

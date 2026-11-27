@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getApprovedReviews, summarise, type Review } from "@/lib/reviews";
+import { getApprovedReviews, reviewStats, type Review } from "@/lib/reviews";
 
 /**
  * The reviews section, at the very bottom of the homepage above the footer.
@@ -61,9 +61,11 @@ function Card({ review }: { review: Review }) {
 
 export async function Reviews() {
   // More than the grid showed, since the marquee has room for them.
-  const reviews = await getApprovedReviews(14);
-  const summary = summarise(reviews);
-  if (!summary) return null;
+  // Two queries on purpose: the marquee shows a sample, and the figure
+  // above it counts every approved review. Averaging only the ones on
+  // screen said "4.6 from 14" when there were fifty in the table.
+  const [reviews, summary] = await Promise.all([getApprovedReviews(24), reviewStats()]);
+  if (!summary || reviews.length === 0) return null;
 
   return (
     <section className="border-t border-border bg-surface">
