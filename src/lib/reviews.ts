@@ -93,6 +93,45 @@ export async function createReview(input: {
   });
 }
 
+/**
+ * Several real reviews at once, already approved.
+ *
+ * Separate from createReview, which is the public form and leaves
+ * everything pending for a reason: anybody on the internet can post
+ * through it. These come from Walid pasting reviews he already has,
+ * from Google or an email or a phone, so holding them for moderation
+ * would mean approving his own typing one row at a time.
+ *
+ * Inserted one statement per review rather than one big one, so a
+ * single odd row cannot lose the rest of the batch, and the caller is
+ * told how many actually landed.
+ */
+export async function addApprovedReviews(
+  rows: { name: string; business: string | null; rating: number; body: string }[],
+): Promise<number | null> {
+  if (rows.length === 0) return 0;
+  return withDb(async (db) => {
+    let added = 0;
+    for (const row of rows) {
+      // Belt and braces on the rating: the column is unsigned and a
+      // value outside one to five would render as a broken row of
+      // stars on the homepage rather than fail here.
+      const rating = Math.min(5, Math.max(1, Math.round(row.rating)));
+      try {
+        await db.execute(
+          `INSERT INTO reviews (name, business, rating, body, source, status)
+           VALUES (?, ?, ?, ?, 'imported', 'approved')`,
+          [row.name.slice(0, 120), row.business?.slice(0, 160) ?? null, rating, row.body],
+        );
+        added += 1;
+      } catch (err) {
+        console.error("Review import skipped a row:", err);
+      }
+    }
+    return added;
+  });
+}
+
 export async function setReviewStatus(id: number, status: ReviewStatus): Promise<void> {
   await withDb(async (db) => {
     await db.execute("UPDATE reviews SET status = ? WHERE id = ?", [status, id]);

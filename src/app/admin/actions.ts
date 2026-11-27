@@ -20,7 +20,8 @@ import {
   logAction,
   startSitting,
 } from "@/lib/staff";
-import { deleteReview, setReviewStatus, type ReviewStatus } from "@/lib/reviews";
+import { addApprovedReviews, deleteReview, setReviewStatus, type ReviewStatus } from "@/lib/reviews";
+import { parsePastedReviews } from "@/lib/review-paste";
 import { sendFollowUp } from "@/lib/send-follow-up";
 
 /**
@@ -144,6 +145,35 @@ export async function moderateReview(formData: FormData): Promise<void> {
   // would sit invisible for up to that long and look like the button failed.
   revalidatePath("/admin");
   revalidatePath("/");
+}
+
+/**
+ * A block of real reviews, pasted in.
+ *
+ * Returns what happened rather than redirecting, because the useful
+ * answer is "eleven went in, line four was missing its rating" and
+ * that has to reach the screen.
+ */
+export async function importReviews(
+  _prev: { added?: number; problems?: { line: number; text: string; why: string }[]; error?: string },
+  formData: FormData,
+): Promise<{ added?: number; problems?: { line: number; text: string; why: string }[]; error?: string }> {
+  await requireAdmin();
+
+  const pasted = String(formData.get("pasted") ?? "");
+  if (!pasted.trim()) return { error: "Nothing pasted." };
+
+  const { reviews, problems } = parsePastedReviews(pasted);
+  if (reviews.length === 0) {
+    return { added: 0, problems, error: problems.length ? undefined : "Could not read any reviews." };
+  }
+
+  const added = await addApprovedReviews(reviews);
+  if (added === null) return { error: "Could not save them. The database did not answer." };
+
+  revalidatePath("/admin/leads");
+  revalidatePath("/");
+  return { added, problems };
 }
 
 export async function removeReview(formData: FormData): Promise<void> {

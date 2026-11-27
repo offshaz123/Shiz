@@ -4,6 +4,7 @@ import { AdminHeading } from "@/components/AdminHeading";
 import { isDbConfigured } from "@/lib/db";
 import { getLeads, getStats, type AdminLead } from "@/lib/admin-data";
 import { getAllReviews, type Review } from "@/lib/reviews";
+import { ImportReviews } from "@/components/ImportReviews";
 import { LoginForm } from "../LoginForm";
 import { NotYours } from "../NotYours";
 import { markPageSeen } from "@/lib/whats-new";
@@ -300,8 +301,13 @@ export default async function AdminLeadsPage() {
               )}
             </h2>
             <p className="mt-2 text-sm text-muted">
-              Nothing appears on the website until you approve it.
+              Reviews people leave through the website wait here until you approve them. Ones you
+              paste in yourself go straight on.
             </p>
+
+            <div className="mt-6">
+              <ImportReviews />
+            </div>
 
             <div className="mt-6 flex flex-col gap-4">
               {!reviews || reviews.length === 0 ? (
