@@ -690,6 +690,57 @@ export async function countStepOneSent(): Promise<number | null> {
 }
 
 /**
+ * Claims a business for a first email, so two runs cannot both take it.
+ *
+ * The scheduler fires every fifteen minutes. A run that takes longer
+ * than that — and one reading twenty websites to check their
+ * photographs easily can — is still working when the next one starts,
+ * and both read the same "never contacted" list before either has
+ * stamped anything. Alpha Landscaping was sent two different first
+ * emails in the same minute that way.
+ *
+ * One UPDATE decides it. The WHERE clause carries the condition, so the
+ * database does the checking and the claiming in one step and exactly
+ * one caller can win. Returns true to the winner and false to everybody
+ * else.
+ *
+ * The stamp is put on before the email rather than after, which is the
+ * right way round: a business marked as written to and not written to
+ * is a prospect lost, and a business written to twice is a prospect
+ * lost plus somebody annoyed. If the send then fails the stamp is taken
+ * off again by releaseForFirstEmail.
+ */
+export async function claimForFirstEmail(id: number): Promise<boolean> {
+  const won = await withDb(async (db) => {
+    const [result] = await db.execute<ResultSetHeader>(
+      `UPDATE prospects
+          SET sequence_started_at = NOW()
+        WHERE id = ? AND sequence_started_at IS NULL`,
+      [id],
+    );
+    return result.affectedRows === 1;
+  });
+  return won === true;
+}
+
+/** Puts a claimed business back, when the email did not go after all. */
+export async function releaseForFirstEmail(id: number): Promise<void> {
+  await withDb(async (db) => {
+    await db.execute(
+      `UPDATE prospects
+          SET sequence_started_at = NULL
+        WHERE id = ?
+          AND NOT EXISTS (
+            SELECT 1 FROM (SELECT 1) AS x
+             WHERE EXISTS (SELECT 1 FROM prospect_emails e
+                            WHERE e.prospect_id = ? AND e.status = 'sent')
+          )`,
+      [id, id],
+    );
+  });
+}
+
+/**
  * First emails sent to one country since a given moment.
  *
  * The moment is that country's own midnight, not ours, which is why it is

@@ -5,6 +5,7 @@ import { canBuildPreview, worthAPreview } from "./preview-worth-it";
 import { previewWouldWork } from "./preview-quality";
 import { prospectUnsubscribeUrl } from "./unsubscribe-url";
 import {
+  claimForFirstEmail,
   countQueueBlockers,
   countStepOneSent,
   countStepOneSentSince,
@@ -13,6 +14,7 @@ import {
   listSequenceDue,
   markEmailDead,
   markReplied,
+  releaseForFirstEmail,
 } from "./prospects";
 import { bouncesSince, sendersSince } from "./mail-store";
 import { newPerRun } from "./outreach-warm-up";
@@ -362,6 +364,19 @@ async function startNewSequences(summary: SequenceSummary): Promise<void> {
       continue;
     }
 
+    // Taken before anything else, because everything else is slow. The
+    // scheduler fires every fifteen minutes and a run that reads twenty
+    // websites takes longer than that, so two runs overlap and both
+    // read the same list. Alpha Landscaping was sent two different
+    // first emails in the same minute that way — one with a rebuilt
+    // page and one without, from two runs that each thought they were
+    // the only one.
+    if (!(await claimForFirstEmail(prospect.id))) {
+      summary.skipped += 1;
+      continue;
+    }
+    let delivered = false;
+
     // A page built out of their own site. Made before the email so the
     // link can go in it, and only once per business ever: a second one
     // landing a fortnight later reads as a machine, which is the
@@ -399,9 +414,16 @@ async function startNewSequences(summary: SequenceSummary): Promise<void> {
     }
     // sendProspectEmail stamps sequence_started_at on a successful step 1,
     // which is what puts them into listSequenceDue for days three and five.
-    if (result.ok) summary.started += 1;
-    else if (result.reason === "send_failed") summary.failed += 1;
+    if (result.ok) {
+      summary.started += 1;
+      delivered = true;
+    } else if (result.reason === "send_failed") summary.failed += 1;
     else summary.skipped += 1;
+
+    // The claim is a promise to write to them. If nothing went, put
+    // them back rather than leaving a business marked as contacted that
+    // never heard from us.
+    if (!delivered) await releaseForFirstEmail(prospect.id);
   }
 }
 
