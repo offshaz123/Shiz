@@ -148,8 +148,10 @@ export async function GET(
 
     // Their other pages, read in parallel. A homepage alone gives one
     // screen of material, which is why the first rebuild read as a
-    // leaflet next to a real website. Three at most, each with a short
-    // timeout, and any that does not answer is simply left out.
+    // leaflet next to a real website. Six at most, each with a short
+    // timeout, and any that does not answer is simply left out. They go
+    // out together, so six pages cost about as long as the slowest one
+    // rather than six times the one.
     const main = rebuildFrom(fetched.html, fetched.finalUrl);
     const others = await Promise.all(
       otherPages(fetched.html, fetched.finalUrl).map(async (href) => {

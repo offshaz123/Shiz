@@ -523,6 +523,30 @@ const WORTH_READING: { kind: string; test: RegExp }[] = [
   { kind: "gallery", test: /\/(gallery|portfolio|our-work|projects?|case-stud|examples?)(\/|$|\?)/i },
 ];
 
+/**
+ * Pages that are never worth reading for this.
+ *
+ * Housekeeping, paperwork and anything behind a login. None of it has a
+ * photograph of the business on it, and a basket page in particular is
+ * a good way to end up reading somebody's checkout.
+ */
+const NOT_WORTH_READING =
+  /\/(basket|cart|checkout|login|signin|sign-in|register|account|my-account|wishlist|track|returns?|refund|delivery|shipping|privacy|terms|legal|cookie|disclaimer|sitemap|search|feed|rss|tag|author|wp-admin|wp-login|upload|faqs?|blog\/.+|news\/.+)(\/|$|\?)/i;
+
+/**
+ * How many of their pages to read.
+ *
+ * Raised from three. PlatedUp sells number plates from /3d-gel-plates,
+ * /4d-plates and /2d-printed-plates, none of which look like the word
+ * "services", so the old list found their About page and nothing else
+ * — two photographs for the whole rebuild. The pages a business thinks
+ * matter are the ones in its own navigation, whatever they are called.
+ *
+ * Each one is a request to somebody else's server while a prospect
+ * waits, so they are fetched together and six is the ceiling.
+ */
+const MOST_PAGES = 6;
+
 export function otherPages(html: string, baseUrl: string): string[] {
   let origin = "";
   try {
@@ -531,25 +555,35 @@ export function otherPages(html: string, baseUrl: string): string[] {
     return [];
   }
 
-  const taken = new Set<string>();
-  const out: string[] = [];
   const clean = stripNoise(html);
+  const seen = new Set<string>();
+  const ranked: { href: string; rank: number; order: number }[] = [];
+  let order = 0;
 
   for (const m of clean.matchAll(/href\s*=\s*["']([^"'#]+)["']/gi)) {
     const href = absolute(m[1], baseUrl);
     if (!href || !href.startsWith(origin)) continue;
-    // Files are not pages.
-    if (/\.(pdf|jpe?g|png|gif|webp|svg|zip|docx?|xlsx?)(\?|$)/i.test(href)) continue;
+    // Files are not pages, and neither is the build output.
+    if (/\.(pdf|jpe?g|png|gif|webp|svg|zip|docx?|xlsx?|css|js|woff2?|ico|xml|txt)(\?|$)/i.test(href)) continue;
 
     const path = href.slice(origin.length) || "/";
-    const match = WORTH_READING.find((w) => w.test.test(path));
-    if (!match || taken.has(match.kind) || out.includes(href)) continue;
+    if (path === "/" || seen.has(href)) continue;
+    if (/^\/(_next|_nuxt|static|assets|cdn-cgi)\//i.test(path)) continue;
+    if (NOT_WORTH_READING.test(path)) continue;
+    // One level down only. A product page is worth reading; the fourth
+    // page of a blog archive is not.
+    if ((path.match(/\//g) ?? []).length > 2) continue;
 
-    taken.add(match.kind);
-    out.push(href);
-    if (out.length === 3) break;
+    const known = WORTH_READING.findIndex((w) => w.test.test(path));
+    seen.add(href);
+    // Pages whose names we recognise first, then everything else in the
+    // order the site itself lists it — which is its navigation, and so
+    // the business's own answer to what matters.
+    ranked.push({ href, rank: known === -1 ? WORTH_READING.length : known, order: order++ });
   }
-  return out;
+
+  ranked.sort((a, b) => a.rank - b.rank || a.order - b.order);
+  return ranked.slice(0, MOST_PAGES).map((r) => r.href);
 }
 
 /**
@@ -571,7 +605,10 @@ export function merge(main: Rebuilt, extra: Rebuilt[]): Rebuilt {
       }
     }
     for (const src of other.images) {
-      if (images.length < 12 && !images.includes(src) && src !== main.logo) images.push(src);
+      // Twenty rather than twelve: six pages of a shop can carry real
+      // photographs on every one, and the page has room for them —
+      // hero, six service cards, eight in the showcase and a gallery.
+      if (images.length < 20 && !images.includes(src) && src !== main.logo) images.push(src);
     }
   }
 
