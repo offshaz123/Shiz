@@ -222,8 +222,13 @@ async function recordRun(
     if (prospects.previewsRefused > 0) {
       parts.push(`${prospects.previewsRefused} site(s) could not be rebuilt`);
     }
+    if (prospects.whyNothingNew) parts.push(`no new openers — ${prospects.whyNothingNew}`);
     if (prospects.bounced > 0) parts.push(`${prospects.bounced} dead address(es) found`);
     detail = parts.join(", ");
+  } else if (prospects && prospects.whyNothingNew) {
+    // The run had room and nobody to use it on. Saying which is the
+    // difference between a log nobody can act on and a job list.
+    detail = `no new openers — ${prospects.whyNothingNew}`;
   } else if (prospects && prospects.bounced > 0) {
     // A run that sent nothing but took three dead addresses out of the
     // sequence has done something worth seeing. It used to read as "nobody

@@ -5,6 +5,7 @@ import { canBuildPreview, worthAPreview } from "./preview-worth-it";
 import { previewWouldWork } from "./preview-quality";
 import { prospectUnsubscribeUrl } from "./unsubscribe-url";
 import {
+  countQueueBlockers,
   countStepOneSent,
   countStepOneSentSince,
   listNeverContacted,
@@ -163,6 +164,11 @@ export type SequenceSummary = {
    *  number matters: one is a quiet day, thirty is a stalled pipeline that
    *  nobody has noticed. */
   held: number;
+  /** Why no new business was written to, when none was. Empty when some
+   *  were. Carried all the way out to the cron log, because "nothing
+   *  went" and "nothing could go, and here is what is blocking it" are
+   *  different reports and only one of them is actionable. */
+  whyNothingNew: string;
   /** Pages not built because the business's site could not be read well
    *  enough to make one worth looking at. Counted because a day where
    *  six previews were refused is a day the gate did its job, and it
@@ -283,7 +289,10 @@ async function startNewSequences(summary: SequenceSummary): Promise<void> {
     const room = allowanceNow(region, already, now);
     if (room > 0) perRegion.set(region, Math.min(room, ramp));
   }
-  if (perRegion.size === 0) return;
+  if (perRegion.size === 0) {
+    summary.whyNothingNew = "outside both countries' sending hours";
+    return;
+  }
 
   const allowed = [...perRegion.values()].reduce((a, b) => a + b, 0);
 
@@ -326,7 +335,24 @@ async function startNewSequences(summary: SequenceSummary): Promise<void> {
       if (one) fresh.push(one);
     }
   }
-  if (fresh.length === 0) return;
+  if (fresh.length === 0) {
+    // Room to send and nobody to send to. The interesting case, and the
+    // one that used to read the same as a quiet day: the list is not
+    // empty, it is full of businesses that cannot be written to yet.
+    const why: string[] = [];
+    for (const [region] of perRegion) {
+      const stuck = await countQueueBlockers(region);
+      if (!stuck || stuck.total === 0) continue;
+      const bits: string[] = [];
+      if (stuck.noEmail) bits.push(`${stuck.noEmail} no email`);
+      if (stuck.notScanned) bits.push(`${stuck.notScanned} unscanned`);
+      if (stuck.noFindings) bits.push(`${stuck.noFindings} nothing wrong`);
+      if (stuck.deadEmail) bits.push(`${stuck.deadEmail} bounced`);
+      why.push(`${region.toUpperCase()}: ${stuck.total} waiting (${bits.join(", ")})`);
+    }
+    summary.whyNothingNew = why.length ? why.join("; ") : "nobody eligible";
+    return;
+  }
   fresh.length = Math.min(fresh.length, allowed);
 
   for (const { prospect, wantLink } of fresh) {
@@ -391,6 +417,7 @@ export async function runProspectSequence(): Promise<SequenceSummary> {
     considered: 0,
     repliesChecked: true,
     held: 0,
+    whyNothingNew: "",
     previewsRefused: 0,
     outOfHours: 0,
     scanned: 0,
