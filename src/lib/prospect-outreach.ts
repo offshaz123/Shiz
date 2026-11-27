@@ -271,7 +271,24 @@ function stepOne(p: Prospect, unsubscribeUrl: string, previewUrl = ""): Draft {
  * about. No invented numbers. What is lost here is described, not counted,
  * because we have not measured their business and will not pretend to have.
  */
-function stepTwo(p: Prospect, unsubscribeUrl: string): Draft {
+/**
+ * How long their page has left, said the way somebody says it.
+ *
+ * Real urgency rather than invented urgency: the page genuinely comes
+ * down on that day, because it rebuilds itself from their site every
+ * time it is opened and we are not keeping it up for ever.
+ */
+function daysLeftWords(expiresAt: string): string {
+  const when = new Date(expiresAt.replace(" ", "T")).getTime();
+  if (Number.isNaN(when)) return "";
+  const days = Math.ceil((when - Date.now()) / 86_400_000);
+  if (days <= 0) return "";
+  if (days === 1) return "It comes down tomorrow";
+  return `It comes down in ${days} days`;
+}
+
+function stepTwo(p: Prospect, unsubscribeUrl: string, previewUrl = "", expiresAt = ""): Draft {
+  const left = previewUrl ? daysLeftWords(expiresAt) : "";
   return {
     subject: `Re: A couple of things on the ${p.name} website`,
     body: [
@@ -279,6 +296,18 @@ function stepTwo(p: Prospect, unsubscribeUrl: string): Draft {
       ``,
       `Following up on what I sent about the ${p.name} website.`,
       ``,
+      // The page is the one thing in this sequence worth clicking, and
+      // the first email was the only one that mentioned it.
+      ...(previewUrl
+        ? [
+            `The homepage I rebuilt for you is still up:`,
+            ``,
+            previewUrl,
+            ``,
+            `${left ? `${left}. ` : ""}Your words, your photographs, put together properly.`,
+            ``,
+          ]
+        : []),
       `Those things are all the same story. Somebody looking for exactly what you sell finds you, something small gets in the way, and they go back to the search results and ring the next one instead. You never see it happen. It just looks like a quiet week.`,
       ``,
       `What we would actually do, in order:`,
@@ -309,7 +338,8 @@ function stepTwo(p: Prospect, unsubscribeUrl: string): Draft {
  * a cold sequence that a person can verify, because the proof arrives when
  * nothing else does.
  */
-function stepThree(p: Prospect, unsubscribeUrl: string): Draft {
+function stepThree(p: Prospect, unsubscribeUrl: string, previewUrl = "", expiresAt = ""): Draft {
+  const left = previewUrl ? daysLeftWords(expiresAt) : "";
   return {
     subject: `Re: A couple of things on the ${p.name} website`,
     body: [
@@ -317,6 +347,16 @@ function stepThree(p: Prospect, unsubscribeUrl: string): Draft {
       ``,
       `Last one from me, as promised.`,
       ``,
+      ...(previewUrl
+        ? [
+            `The rebuilt homepage is still there for now:`,
+            ``,
+            previewUrl,
+            ``,
+            `${left ? `${left}, ` : ""}and I am not going to rebuild it a second time, so have a look if you are going to.`,
+            ``,
+          ]
+        : []),
       `The ${p.name} website is losing enquiries it doesn't need to lose. I can show you exactly where, and the report is free whether or not you ever work with us.`,
       ``,
       `If the timing's wrong, or you already have somebody, or it's simply not the thing you need this month, that's fair enough. I won't email you again either way.`,
@@ -340,8 +380,10 @@ export function buildDraft(
    *  link, in plain text: the page does the showing, the email does not
    *  try to, and an image-heavy email lands in Promotions anyway. */
   previewUrl = "",
+  /** When that page comes down, so the follow-ups can say so honestly. */
+  previewExpiresAt = "",
 ): Draft {
-  if (step === 2) return stepTwo(p, unsubscribeUrl);
-  if (step === 3) return stepThree(p, unsubscribeUrl);
+  if (step === 2) return stepTwo(p, unsubscribeUrl, previewUrl, previewExpiresAt);
+  if (step === 3) return stepThree(p, unsubscribeUrl, previewUrl, previewExpiresAt);
   return stepOne(p, unsubscribeUrl, previewUrl);
 }

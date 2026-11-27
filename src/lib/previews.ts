@@ -198,6 +198,39 @@ export async function hasPreview(prospectId: number): Promise<boolean> {
 }
 
 /**
+ * Their page, if it is still up.
+ *
+ * The follow-ups needed this. A business that got a rebuilt page in the
+ * first email was then sent two more that never mentioned it, which
+ * wastes the one thing in the sequence worth clicking — and the page
+ * has its own honest deadline, so the second email can say it comes
+ * down on Tuesday and mean it.
+ *
+ * Only a live one comes back. A link to a page that has already expired
+ * is worse than no link: it opens on a notice saying it is gone, which
+ * reads as carelessness rather than scarcity.
+ */
+export async function livePreview(
+  prospectId: number,
+): Promise<{ url: string; expiresAt: string } | null> {
+  return withDb(async (db) => {
+    const [[row]] = await db.query<(RowDataPacket & { slug: string; token: string; expires_at: string })[]>(
+      `SELECT slug, token, expires_at
+         FROM prospect_previews
+        WHERE prospect_id = ? AND expires_at > NOW()
+        ORDER BY expires_at DESC
+        LIMIT 1`,
+      [prospectId],
+    );
+    if (!row) return null;
+    return {
+      url: previewUrl({ slug: String(row.slug), token: String(row.token) }),
+      expiresAt: String(row.expires_at),
+    };
+  });
+}
+
+/**
  * Who has opened one and not been rung since.
  *
  * The reason the whole thing earns its keep: a morning list of people

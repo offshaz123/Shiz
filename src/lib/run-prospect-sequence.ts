@@ -1,6 +1,6 @@
 import { buildDraft, STEP_DAYS, type OutreachStep } from "./prospect-outreach";
 import { sendProspectEmail } from "./send-prospect-email";
-import { createPreview, dropPreview, hasPreview, previewUrl } from "./previews";
+import { createPreview, dropPreview, hasPreview, livePreview, previewUrl } from "./previews";
 import { canBuildPreview, worthAPreview } from "./preview-worth-it";
 import { previewWouldWork } from "./preview-quality";
 import { prospectUnsubscribeUrl } from "./unsubscribe-url";
@@ -480,7 +480,17 @@ export async function runProspectSequence(): Promise<SequenceSummary> {
       continue;
     }
 
-    const draft = buildDraft(next, row.prospect, prospectUnsubscribeUrl(row.prospect.id));
+    // The page built for them in the first email, if it is still up.
+    // Without this the follow-ups never mention the one thing in the
+    // sequence worth clicking, and the deadline on it goes unused.
+    const page = await livePreview(row.prospect.id);
+    const draft = buildDraft(
+      next,
+      row.prospect,
+      prospectUnsubscribeUrl(row.prospect.id),
+      page?.url ?? "",
+      page?.expiresAt ?? "",
+    );
     const result = await sendProspectEmail(row.prospect.id, draft.subject, draft.body, next);
     if (result.ok) summary.sent += 1;
     else if (result.reason === "send_failed") summary.failed += 1;
