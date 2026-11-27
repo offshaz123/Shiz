@@ -794,8 +794,13 @@ export type QueueBlockers = {
   noEmail: number;
   /** The address bounced, so it is not used again. */
   deadEmail: number;
-  /** Not looked at yet, so the first email would have nothing to say. */
+  /** Has a website nobody has read yet. Pipeline: a scan may well turn
+   *  this into a business we can write to. */
   notScanned: number;
+  /** No website at all. Never scannable, never emailable from a scan,
+   *  and counted apart from the rest because it is the one bucket that
+   *  will never move on its own — it is a call, not a queue. */
+  noWebsite: number;
   /** Scanned, and their site is fine — nothing to open an email with. */
   noFindings: number;
   total: number;
@@ -812,6 +817,7 @@ export async function countQueueBlockers(region: Region): Promise<QueueBlockers 
       // address when most of them simply had not been looked at yet,
       // which points at the wrong fix entirely.
       `SELECT CASE
+                WHEN website IS NULL OR website = '' THEN 'no-website'
                 WHEN scanned_at IS NULL THEN 'not-scanned'
                 WHEN email IS NULL OR email = '' THEN 'no-email'
                 WHEN email_dead_at IS NOT NULL THEN 'dead-email'
@@ -837,6 +843,7 @@ export async function countQueueBlockers(region: Region): Promise<QueueBlockers 
       noEmail: get("no-email"),
       deadEmail: get("dead-email"),
       notScanned: get("not-scanned"),
+      noWebsite: get("no-website"),
       noFindings: get("no-findings"),
       total: [...by.values()].reduce((a, b) => a + b, 0),
     };

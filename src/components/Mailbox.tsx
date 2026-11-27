@@ -671,6 +671,7 @@ function QueueCard({ batch }: { batch: QueuedBatch }) {
             {[
               { n: batch.blocked.ready, say: "ready to go, waiting their turn" },
               { n: batch.blocked.noEmail, say: "no email address found — these need a call" },
+              { n: batch.blocked.noWebsite, say: "no website at all — these need a call" },
               { n: batch.blocked.notScanned, say: "not scanned yet, so there is nothing to say" },
               { n: batch.blocked.noFindings, say: "scanned, nothing wrong with their site" },
               { n: batch.blocked.deadEmail, say: "address bounced" },

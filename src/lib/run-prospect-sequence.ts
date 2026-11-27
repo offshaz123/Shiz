@@ -347,6 +347,7 @@ async function startNewSequences(summary: SequenceSummary): Promise<void> {
       if (!stuck || stuck.total === 0) continue;
       const bits: string[] = [];
       if (stuck.noEmail) bits.push(`${stuck.noEmail} no email`);
+      if (stuck.noWebsite) bits.push(`${stuck.noWebsite} no website, call only`);
       if (stuck.notScanned) bits.push(`${stuck.notScanned} unscanned`);
       if (stuck.noFindings) bits.push(`${stuck.noFindings} nothing wrong`);
       if (stuck.deadEmail) bits.push(`${stuck.deadEmail} bounced`);
