@@ -59,6 +59,23 @@ export type PreviewInput = {
   googleReviews?: number | null;
 };
 
+/**
+ * Their initials, for the wordmark.
+ *
+ * Two letters from the first two real words, so "Hair at Lounge 27"
+ * gives HL rather than HA — the little joining words are noise in a
+ * monogram. One letter where that is all there is.
+ */
+export function initials(name: string): string {
+  const words = name
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .split(/\s+/)
+    .filter((w) => w && !/^(the|and|at|of|for|a|an|&)$/i.test(w));
+  if (words.length === 0) return "?";
+  const take = words.slice(0, 2).map((w) => w[0].toUpperCase());
+  return take.join("");
+}
+
 function esc(value: string): string {
   return value
     .replace(/&/g, "&amp;")
@@ -70,7 +87,7 @@ function esc(value: string): string {
 /** Readable text on their colour, so a yellow brand does not get white type. */
 function inkOn(hex: string): string {
   const h = hex.replace("#", "");
-  if (h.length !== 6) return "#ffffff";
+  if (h.length !== 6) return "var(--fg)";
   const [r, g, b] = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16));
   return (r * 299 + g * 587 + b * 114) / 1000 < 150 ? "#ffffff" : "#111111";
 }
@@ -236,13 +253,29 @@ export function previewPage(input: PreviewInput): string {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+  /* Two themes off one set of tokens.
+     Walid asked for a white and a black button so a business can see
+     their rebuilt site both ways before deciding. Everything that was
+     a hardcoded white or near-black is now mixed from --fg and --bg,
+     so flipping those two inverts the whole page rather than leaving
+     white text on a white panel in half of it. */
   :root {
     --brand: ${brand};
     --ink: ${ink};
+    --fg: #ffffff;
     --bg: #05070a;
     --panel: #0b0f15;
-    --line: rgba(255,255,255,.085);
+    --line: color-mix(in srgb, var(--fg) 8.5%, transparent);
     --soft: #94a0b1;
+    --shade: 0 0 0;
+  }
+  :root[data-theme="light"] {
+    --fg: #0a0e14;
+    --bg: #ffffff;
+    --panel: #f4f6f9;
+    --line: color-mix(in srgb, var(--fg) 12%, transparent);
+    --soft: #55606f;
+    --shade: 0 0 0;
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; scroll-padding-top: 90px; }
@@ -258,7 +291,7 @@ export function previewPage(input: PreviewInput): string {
   .banner p { color: var(--soft); max-width: 58ch; margin: 0; font-size: 16.5px; }
   .banner .glowbg { position: absolute; width: 620px; height: 620px; border-radius: 50%;
                     filter: blur(150px); background: var(--brand); opacity: .16; top: -300px; right: -140px; }
-  body { margin: 0; background: var(--bg); color: #eef2f7;
+  body { margin: 0; background: var(--bg); color: color-mix(in srgb, var(--fg) 94%, var(--bg));
          font-family: Inter, ui-sans-serif, system-ui, sans-serif; line-height: 1.62; overflow-x: hidden; }
   img { max-width: 100%; display: block; }
   h1, h2, h3, .num, .logo { font-family: Sora, Inter, sans-serif; letter-spacing: -.025em; }
@@ -281,19 +314,32 @@ export function previewPage(input: PreviewInput): string {
 
   /* A real navigation, so it reads as a website rather than a page. */
   header { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(16px);
-           background: rgba(5,7,10,.7); border-bottom: 1px solid transparent; transition: border-color .3s, background .3s; }
-  header.stuck { border-bottom-color: var(--line); background: rgba(5,7,10,.92); }
+           background: color-mix(in srgb, var(--bg) 70%, transparent); border-bottom: 1px solid transparent; transition: border-color .3s, background .3s; }
+  header.stuck { border-bottom-color: var(--line); background: color-mix(in srgb, var(--bg) 92%, transparent); }
   header .inner { display: flex; align-items: center; gap: 22px; max-width: 1140px; margin: 0 auto; padding: 13px 22px; }
   header img.mark { height: 38px; width: auto; }
-  .logo { font-weight: 800; font-size: 18px; }
+  /* The wordmark, for a business with no logo file of its own.
+     Far more common than it sounds — plenty of trades have a listing
+     and a phone number and no brand at all — and it is now what gets
+     drawn whenever we cannot find a real logo, because a photograph
+     squeezed into a logo-shaped box reads as a mistake and a
+     monogram never does. */
+  .logo { display: inline-flex; align-items: center; gap: 10px;
+          font-weight: 800; font-size: 18px; letter-spacing: -.03em; }
+  .logo .sigil { display: grid; place-items: center; width: 34px; height: 34px; flex: none;
+                 border-radius: 10px; background: var(--brand); color: var(--ink);
+                 font-size: 15px; font-weight: 800; letter-spacing: 0;
+                 box-shadow: 0 6px 18px color-mix(in srgb, var(--brand) 45%, transparent); }
+  .logo .said { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 42vw; }
+  @media (max-width: 560px) { .logo .said { max-width: 46vw; font-size: 16px; } }
   nav { display: flex; gap: 22px; margin-left: 12px; }
   nav a { font-size: 14px; color: var(--soft); text-decoration: none; position: relative; padding: 4px 0;
           transition: color .2s; }
   nav a::after { content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: 0;
                  background: var(--brand); transition: width .25s; }
-  nav a:hover { color: #fff; }
+  nav a:hover { color: var(--fg); }
   nav a:hover::after, nav a.here::after { width: 100%; }
-  nav a.here { color: #fff; }
+  nav a.here { color: var(--fg); }
   header .call { margin-left: auto; background: var(--brand); color: var(--ink); padding: 11px 20px;
                  border-radius: 999px; text-decoration: none; font-weight: 700; font-size: 14.5px;
                  white-space: nowrap; transition: transform .2s, box-shadow .2s; }
@@ -310,10 +356,10 @@ export function previewPage(input: PreviewInput): string {
      left where the words sit and light on the right where the picture
      is, rather than flat black across the whole frame. */
   .hero::after { content: ""; position: absolute; inset: 0;
-                 background: linear-gradient(100deg, rgba(5,7,10,.92) 0%, rgba(5,7,10,.72) 38%,
-                             rgba(5,7,10,.28) 66%, rgba(5,7,10,.18) 100%),
-                             linear-gradient(180deg, rgba(5,7,10,.55), rgba(5,7,10,0) 30%,
-                             rgba(5,7,10,0) 62%, rgba(5,7,10,.9)); }
+                 background: linear-gradient(100deg, color-mix(in srgb, var(--bg) 92%, transparent) 0%, color-mix(in srgb, var(--bg) 72%, transparent) 38%,
+                             color-mix(in srgb, var(--bg) 28%, transparent) 66%, color-mix(in srgb, var(--bg) 18%, transparent) 100%),
+                             linear-gradient(180deg, color-mix(in srgb, var(--bg) 55%, transparent), color-mix(in srgb, var(--bg) 0%, transparent) 30%,
+                             color-mix(in srgb, var(--bg) 0%, transparent) 62%, color-mix(in srgb, var(--bg) 90%, transparent)); }
   /* The words carry their own shadow so they stay readable wherever the
      photograph happens to be bright. */
   .hero h1, .hero .eyebrow { text-shadow: 0 2px 30px rgba(0,0,0,.6); }
@@ -325,7 +371,7 @@ export function previewPage(input: PreviewInput): string {
   @keyframes float { to { transform: translate3d(40px, -30px, 0) scale(1.15); opacity: .2; } }
   .hero .wrap { position: relative; z-index: 2; padding: 100px 22px; }
   .eyebrow { display: inline-flex; align-items: center; gap: 9px; border: 1px solid var(--line);
-             background: rgba(255,255,255,.05); border-radius: 999px; padding: 7px 15px;
+             background: color-mix(in srgb, var(--fg) 5%, transparent); border-radius: 999px; padding: 7px 15px;
              font-size: 12.5px; color: var(--soft); margin-bottom: 22px; }
   .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--brand); box-shadow: 0 0 12px var(--brand);
          animation: beat 2.4s ease-in-out infinite; }
@@ -335,31 +381,31 @@ export function previewPage(input: PreviewInput): string {
   h1 span { display: inline-block; opacity: 0; transform: translateY(22px);
             animation: word .66s cubic-bezier(.22,.61,.36,1) forwards; }
   @keyframes word { to { opacity: 1; transform: none; } }
-  .hero p { font-size: clamp(16px, 2vw, 19.5px); color: #c2cbd8; max-width: 52ch; margin: 0 0 34px; }
+  .hero p { font-size: clamp(16px, 2vw, 19.5px); color: var(--soft); max-width: 52ch; margin: 0 0 34px; }
   .btns { display: flex; gap: 12px; flex-wrap: wrap; }
   .btn { display: inline-flex; align-items: center; gap: 9px; background: var(--brand); color: var(--ink);
          padding: 16px 30px; border-radius: 999px; text-decoration: none; font-weight: 800; font-size: 16.5px;
          transition: transform .2s, box-shadow .2s; box-shadow: 0 16px 42px -16px var(--brand); }
   .btn:hover { transform: translateY(-2px); box-shadow: 0 24px 54px -16px var(--brand); }
-  .btn.ghost { background: rgba(255,255,255,.07); color: #fff; border: 1px solid var(--line); box-shadow: none; }
+  .btn.ghost { background: color-mix(in srgb, var(--fg) 7%, transparent); color: var(--fg); border: 1px solid var(--line); box-shadow: none; }
   .cue { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); z-index: 2;
-         width: 24px; height: 38px; border: 2px solid rgba(255,255,255,.3); border-radius: 14px; }
+         width: 24px; height: 38px; border: 2px solid color-mix(in srgb, var(--fg) 30%, transparent); border-radius: 14px; }
   .cue::after { content: ""; position: absolute; left: 50%; top: 7px; width: 3px; height: 7px; border-radius: 2px;
-                background: #fff; transform: translateX(-50%); animation: wheel 1.9s ease-in-out infinite; }
+                background: var(--fg); transform: translateX(-50%); animation: wheel 1.9s ease-in-out infinite; }
   @keyframes wheel { 50% { transform: translate(-50%, 13px); opacity: .25; } }
 
   /* The services, running past in a band, before the grid of them. */
   .ticker { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-            overflow: hidden; background: rgba(255,255,255,.015); padding: 15px 0; }
+            overflow: hidden; background: color-mix(in srgb, var(--fg) 1.5%, transparent); padding: 15px 0; }
   .ticker .row { display: flex; gap: 48px; width: max-content; animation: slide 28s linear infinite; }
   .ticker span { font-family: Sora; font-weight: 600; font-size: 15px; color: var(--soft); white-space: nowrap; }
   .ticker b { color: var(--brand); margin-right: 48px; }
 
-  .stats { border-bottom: 1px solid var(--line); background: rgba(255,255,255,.015); }
+  .stats { border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--fg) 1.5%, transparent); }
   .stats .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
   .stat { padding: 36px 22px; text-align: center; border-right: 1px solid var(--line); }
   .stat:last-child { border-right: 0; }
-  .num { font-size: clamp(32px, 4.6vw, 48px); font-weight: 800; color: #fff; line-height: 1; }
+  .num { font-size: clamp(32px, 4.6vw, 48px); font-weight: 800; color: var(--fg); line-height: 1; }
   .num span { color: var(--brand); }
   .stat .label { font-size: 12.5px; color: var(--soft); margin-top: 9px; }
 
@@ -375,12 +421,12 @@ export function previewPage(input: PreviewInput): string {
      "somebody generated this", and they already own the pictures. */
   .cards { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); }
   .card.shot-card { padding: 0; overflow: hidden; }
-  .card .pic { position: relative; aspect-ratio: 16/11; overflow: hidden; background: #0c1016; }
+  .card .pic { position: relative; aspect-ratio: 16/11; overflow: hidden; background: var(--panel); }
   .card .pic img { width: 100%; height: 100%; object-fit: cover; display: block;
                    transform: scale(1.02); transition: transform .9s cubic-bezier(.22,.61,.36,1); }
   .card:hover .pic img { transform: scale(1.09); }
   .card .pic::after { content: ""; position: absolute; inset: 0;
-                      background: linear-gradient(180deg, rgba(5,7,10,0) 45%, rgba(5,7,10,.85)); }
+                      background: linear-gradient(180deg, color-mix(in srgb, var(--bg) 0%, transparent) 45%, color-mix(in srgb, var(--bg) 85%, transparent)); }
   .card .pic .mark { position: absolute; left: 16px; top: 16px; z-index: 2; margin: 0; }
   .card .cap { padding: 18px 22px 22px; position: relative; }
   .card .cap h3 { margin: 0; }
@@ -391,7 +437,7 @@ export function previewPage(input: PreviewInput): string {
      a dumped folder; the whole job of this band is to look composed. */
   .show { display: grid; gap: 14px; grid-template-columns: repeat(6, 1fr); grid-auto-rows: 150px; }
   .show figure { margin: 0; position: relative; overflow: hidden; border-radius: 20px;
-                 border: 1px solid var(--line); background: #0c1016;
+                 border: 1px solid var(--line); background: var(--panel);
                  clip-path: inset(0 0 100% 0); transition: clip-path 1s cubic-bezier(.22,.61,.36,1); }
   .show figure.in { clip-path: inset(0 0 0 0); }
   .show img { width: 100%; height: 100%; object-fit: cover; display: block;
@@ -415,12 +461,12 @@ export function previewPage(input: PreviewInput): string {
     .show figure:nth-child(2), .show figure:nth-child(3) { grid-column: span 1; grid-row: span 1; }
   }
 
-  .card { border: 1px solid var(--line); border-radius: 20px; padding: 28px; background: rgba(255,255,255,.025);
+  .card { border: 1px solid var(--line); border-radius: 20px; padding: 28px; background: color-mix(in srgb, var(--fg) 2.5%, transparent);
           transition: transform .35s cubic-bezier(.22,.61,.36,1), border-color .35s, background .35s;
           position: relative; overflow: hidden; }
   .card::before { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .35s;
                   background: radial-gradient(60% 60% at 50% 0%, var(--brand), transparent 70%); }
-  .card:hover { transform: translateY(-6px); border-color: var(--brand); background: rgba(255,255,255,.05); }
+  .card:hover { transform: translateY(-6px); border-color: var(--brand); background: color-mix(in srgb, var(--fg) 5%, transparent); }
   .card:hover::before { opacity: .14; }
   .card .mark { width: 40px; height: 40px; border-radius: 12px; background: var(--brand); color: var(--ink);
                 display: grid; place-items: center; font-weight: 800; margin-bottom: 16px; position: relative; }
@@ -431,21 +477,21 @@ export function previewPage(input: PreviewInput): string {
   .shots img { aspect-ratio: 4/3; object-fit: cover; width: 100%; transition: transform .8s cubic-bezier(.22,.61,.36,1); }
   .shots figure:hover img { transform: scale(1.08); }
 
-  .about { max-width: 62ch; font-size: 17.5px; color: #c2cbd8; }
+  .about { max-width: 62ch; font-size: 17.5px; color: var(--soft); }
 
   /* The sections we are proposing rather than rebuilding. */
-  .add { background: linear-gradient(180deg, rgba(255,255,255,.02), transparent); }
+  .add { background: linear-gradient(180deg, color-mix(in srgb, var(--fg) 2%, transparent), transparent); }
   .addmark { display: inline-block; border: 1px dashed var(--brand); border-radius: 999px;
              padding: 6px 15px; font-size: 12px; font-weight: 700; color: var(--brand);
              margin-bottom: 16px; }
   .quotes { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-  .quote { border: 1px dashed var(--line); border-radius: 20px; padding: 26px; background: rgba(255,255,255,.02); }
+  .quote { border: 1px dashed var(--line); border-radius: 20px; padding: 26px; background: color-mix(in srgb, var(--fg) 2%, transparent); }
   .quote .stars { color: var(--brand); letter-spacing: 3px; font-size: 15px; }
   .quote p { color: var(--soft); font-style: italic; margin: 12px 0 0; }
   .form { display: grid; gap: 12px; max-width: 560px; }
   .form .pair { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
   .fake { border: 1px solid var(--line); border-radius: 13px; padding: 15px 17px; color: var(--soft);
-          background: rgba(255,255,255,.03); font-size: 15px; }
+          background: color-mix(in srgb, var(--fg) 3%, transparent); font-size: 15px; }
   .form .send { background: var(--brand); color: var(--ink); border: 0; border-radius: 13px; padding: 16px;
                 font: inherit; font-weight: 800; text-align: center; }
   .faq { border-top: 1px solid var(--line); }
@@ -454,25 +500,25 @@ export function previewPage(input: PreviewInput): string {
   .faq span { margin-left: auto; color: var(--brand); font-size: 22px; line-height: 1; }
 
   /* What they have, what they have not, and what one more job is worth. */
-  .gaps { background: linear-gradient(180deg, rgba(255,255,255,.025), transparent); border-top: 1px solid var(--line); }
+  .gaps { background: linear-gradient(180deg, color-mix(in srgb, var(--fg) 2.5%, transparent), transparent); border-top: 1px solid var(--line); }
   .list { display: grid; gap: 2px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
   .item { display: flex; gap: 14px; align-items: flex-start; padding: 17px 18px; border-radius: 14px;
           border: 1px solid transparent; }
-  .item.no { background: rgba(255,255,255,.03); border-color: var(--line); }
+  .item.no { background: color-mix(in srgb, var(--fg) 3%, transparent); border-color: var(--line); }
   .item .box { width: 22px; height: 22px; border-radius: 7px; flex: none; display: grid; place-items: center;
                font-size: 13px; font-weight: 800; margin-top: 2px; }
-  .item.yes .box { background: rgba(255,255,255,.08); color: var(--soft); }
+  .item.yes .box { background: color-mix(in srgb, var(--fg) 8%, transparent); color: var(--soft); }
   .item.no .box { background: var(--brand); color: var(--ink); }
   .item b { display: block; font-weight: 600; font-size: 16px; }
   .item.yes b { color: var(--soft); }
   .item small { color: var(--soft); font-size: 13.5px; display: block; margin-top: 3px; }
 
   .sum { margin-top: 44px; border: 1px solid var(--line); border-radius: 22px; padding: 30px;
-         background: rgba(255,255,255,.03); max-width: 720px; }
+         background: color-mix(in srgb, var(--fg) 3%, transparent); max-width: 720px; }
   .sum h3 { margin: 0 0 8px; font-size: 20px; }
   .sum .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 22px 0 6px; }
   .sum label { font-size: 14.5px; color: var(--soft); }
-  .sum input[type=number] { width: 120px; font: inherit; font-weight: 700; color: #fff; padding: 11px 13px;
+  .sum input[type=number] { width: 120px; font: inherit; font-weight: 700; color: var(--fg); padding: 11px 13px;
                             border-radius: 11px; border: 1px solid var(--line); background: rgba(0,0,0,.35); }
   .sum input[type=range] { flex: 1; min-width: 180px; accent-color: var(--brand); }
   .sum .out { font-family: Sora; font-weight: 800; font-size: clamp(30px, 4.4vw, 46px); color: var(--brand);
@@ -483,7 +529,7 @@ export function previewPage(input: PreviewInput): string {
      a drawer, and saying so is more honest than selling one and
      stopping there. */
   .next { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); margin-top: 44px; }
-  .step { border: 1px solid var(--line); border-radius: 20px; padding: 26px; background: rgba(255,255,255,.025);
+  .step { border: 1px solid var(--line); border-radius: 20px; padding: 26px; background: color-mix(in srgb, var(--fg) 2.5%, transparent);
           position: relative; }
   .step .n { font-family: Sora; font-size: 13px; font-weight: 800; color: var(--brand); letter-spacing: .1em; }
   .step h3 { margin: 10px 0 8px; font-size: 18.5px; font-weight: 700; }
@@ -491,7 +537,7 @@ export function previewPage(input: PreviewInput): string {
   .chain { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 30px;
            font-family: Sora; font-weight: 700; font-size: 15px; }
   .chain i { font-style: normal; border: 1px solid var(--line); border-radius: 999px; padding: 9px 17px;
-             background: rgba(255,255,255,.03); }
+             background: color-mix(in srgb, var(--fg) 3%, transparent); }
   .chain i.lit { border-color: var(--brand); color: var(--brand); }
   .chain s { text-decoration: none; color: var(--brand); }
 
@@ -501,7 +547,7 @@ export function previewPage(input: PreviewInput): string {
           font-size: 12.5px; color: var(--soft); margin-bottom: 20px; }
   .fix { display: flex; gap: 18px; padding: 22px 0; border-top: 1px solid var(--line); }
   .fix .n { font-family: Sora; color: var(--brand); font-weight: 800; font-size: 15px; min-width: 28px; }
-  .fix p { margin: 0; color: #c2cbd8; }
+  .fix p { margin: 0; color: var(--soft); }
 
   footer { padding: 96px 0 130px; text-align: center; border-top: 1px solid var(--line); position: relative; }
   footer .big { font-family: Sora; font-size: clamp(26px, 3.6vw, 40px); font-weight: 800; margin-bottom: 12px; }
@@ -513,7 +559,7 @@ export function previewPage(input: PreviewInput): string {
         transition: opacity .35s, transform .35s; }
   .wa.on { opacity: 1; transform: none; pointer-events: auto; }
   .wa:hover { transform: scale(1.08); }
-  .wa svg { width: 30px; height: 30px; fill: #fff; }
+  .wa svg { width: 30px; height: 30px; fill: var(--fg); }
 
   .rise { opacity: 0; transform: translateY(28px);
           transition: opacity .75s cubic-bezier(.22,.61,.36,1), transform .75s cubic-bezier(.22,.61,.36,1); }
@@ -528,15 +574,20 @@ export function previewPage(input: PreviewInput): string {
      parked on top of a paragraph reads as a rendering fault; as a bar
      it reads as part of the furniture. Worth the strip of height: this
      is the one control the whole page is built around. */
-  .flip { position: sticky; top: 64px; z-index: 48; display: flex; justify-content: center;
-          padding: 10px 0; background: rgba(5,7,10,.92); backdrop-filter: blur(14px);
+  .flip .tone button { padding: 9px 15px; }
+  .flip .swatch { display: inline-block; width: 13px; height: 13px; border-radius: 50%;
+                  margin-right: 7px; vertical-align: -2px; border: 1px solid color-mix(in srgb, var(--fg) 30%, transparent); }
+  .flip .swatch.dark { background: #0a0e14; }
+  .flip .swatch.light { background: #ffffff; }
+  .flip { position: sticky; top: 64px; z-index: 48; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap;
+          padding: 10px 0; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(14px);
           border-bottom: 1px solid var(--line); }
   /* Solid rather than translucent. It is sticky for the whole page, so
      a see-through pill puts a paragraph straight through the middle of
      the two words somebody is trying to read. */
-  .flip .set { display: inline-flex; background: rgba(9,11,16,.94); border: 1px solid var(--line);
+  .flip .set { display: inline-flex; background: color-mix(in srgb, var(--bg) 94%, var(--fg)); border: 1px solid var(--line);
                border-radius: 999px; padding: 4px; gap: 3px;
-               backdrop-filter: blur(14px); box-shadow: 0 12px 30px rgba(0,0,0,.5); }
+               backdrop-filter: blur(14px); box-shadow: 0 12px 30px rgb(var(--shade) / .4); }
   .flip button { appearance: none; border: 0; cursor: pointer; font: inherit; font-weight: 700;
                  font-size: 13.5px; padding: 9px 20px; border-radius: 999px; color: var(--soft);
                  background: transparent; transition: background .2s, color .2s; }
@@ -547,10 +598,10 @@ export function previewPage(input: PreviewInput): string {
   .theirs iframe { width: 100%; height: 72vh; border: 0; display: block; background: #fff; }
   .theirs .note { padding: 14px 18px; font-size: 13px; color: var(--soft); background: var(--panel);
                   border-bottom: 1px solid var(--line); }
-  .theirs .note a { color: #fff; }
+  .theirs .note a { color: var(--fg); }
 
   .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 65; display: none; gap: 10px; padding: 10px 12px;
-         background: rgba(5,7,10,.95); border-top: 1px solid var(--line); backdrop-filter: blur(10px); }
+         background: color-mix(in srgb, var(--bg) 95%, transparent); border-top: 1px solid var(--line); backdrop-filter: blur(10px); }
   .bar a { flex: 1; text-align: center; padding: 15px; border-radius: 14px; text-decoration: none; font-weight: 800; }
   .bar .a { background: var(--brand); color: var(--ink); }
 
@@ -583,7 +634,11 @@ export function previewPage(input: PreviewInput): string {
 ${them.promo ? `<div class="promo"><i>${esc(them.promo)}&nbsp;&nbsp;&middot;&nbsp;&nbsp;${esc(them.promo)}&nbsp;&nbsp;&middot;&nbsp;&nbsp;</i></div>` : ""}
 
 <header id="head"><div class="inner">
-  ${them.logo ? `<img class="mark" src="${esc(throughUs(them.logo))}" alt="${esc(name)}">` : `<div class="logo">${esc(name)}</div>`}
+  ${
+    them.logo
+      ? `<img class="mark" src="${esc(throughUs(them.logo))}" alt="${esc(name)}">`
+      : `<div class="logo"><span class="sigil">${esc(initials(name))}</span><span class="said">${esc(name)}</span></div>`
+  }
   <nav>
     ${nav.map((n) => `<a href="#${n.id}" data-page="${n.id}">${esc(n.label)}</a>`).join("\n    ")}
   </nav>
@@ -594,6 +649,10 @@ ${them.promo ? `<div class="promo"><i>${esc(them.promo)}&nbsp;&nbsp;&middot;&nbs
   <div class="set" role="group" aria-label="Which version to show">
     <button id="tab-after" aria-pressed="true">Rebuilt</button>
     <button id="tab-before" aria-pressed="false">Your site now</button>
+  </div>
+  <div class="set tone" role="group" aria-label="Light or dark">
+    <button id="tone-dark" aria-pressed="true" title="Dark"><span class="swatch dark"></span>Dark</button>
+    <button id="tone-light" aria-pressed="false" title="Light"><span class="swatch light"></span>Light</button>
   </div>
 </div>
 
@@ -899,7 +958,7 @@ ${proposed(
 
 <div class="bar">
   ${tel ? `<a class="a" href="tel:${esc(tel)}">Call now</a>` : ""}
-  <a class="a" style="background:#25d366;color:#fff" href="https://wa.me/${esc(wa)}">WhatsApp</a>
+  <a class="a" style="background:#25d366;color:var(--fg)" href="https://wa.me/${esc(wa)}">WhatsApp</a>
 </div>
 
 <script>
@@ -994,6 +1053,21 @@ ${proposed(
     tabA.setAttribute('aria-pressed', String(!theirs));
     window.scrollTo(0, 0);
   }
+  // Light or dark. Their choice is remembered for the week the page is
+  // up, because somebody who picked white and came back to black would
+  // reasonably think it was broken.
+  var toneDark = document.getElementById('tone-dark');
+  var toneLight = document.getElementById('tone-light');
+  function tone(light) {
+    document.documentElement.setAttribute('data-theme', light ? 'light' : 'dark');
+    toneLight.setAttribute('aria-pressed', String(light));
+    toneDark.setAttribute('aria-pressed', String(!light));
+    try { localStorage.setItem('preview-tone', light ? 'light' : 'dark'); } catch (e) {}
+  }
+  toneDark.addEventListener('click', function () { tone(false); });
+  toneLight.addEventListener('click', function () { tone(true); });
+  try { if (localStorage.getItem('preview-tone') === 'light') tone(true); } catch (e) {}
+
   tabA.addEventListener('click', function () { show(false); });
   tabB.addEventListener('click', function () { show(true); });
 

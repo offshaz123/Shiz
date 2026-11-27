@@ -167,16 +167,39 @@ function taglineOf(html: string): string {
  * labels it, then the social preview image as a fallback. The social image
  * is often a photograph rather than a logo, so it is the second choice.
  */
+/**
+ * Their logo, or nothing.
+ *
+ * It used to fall back to og:image, which is wrong and looked it: an
+ * og:image is the picture a site wants shown when it is shared on
+ * social media, and for a salon that is a photograph of the salon. One
+ * rebuilt page carried a 1080 by 720 photograph in the header where the
+ * logo goes, which reads as a mistake because it is one.
+ *
+ * Nothing is the better answer. A page with no logo draws the business
+ * name as a wordmark instead, which always looks deliberate; a page
+ * with a photograph crammed into a logo-shaped box never does.
+ *
+ * A real logo is also wide rather than tall, and not enormous. A square
+ * file the size of a photograph is a photograph, whatever its filename
+ * happens to say.
+ */
 function logoOf(html: string, base: string): string {
   const imgs = html.match(/<img\b[^>]*>/gi) ?? [];
   for (const tag of imgs) {
     const hay = `${attr(tag, "src")} ${attr(tag, "alt")} ${attr(tag, "class")} ${attr(tag, "id")}`;
-    if (/logo|brand/i.test(hay)) {
-      const src = absolute(attr(tag, "src") || attr(tag, "data-src"), base);
-      if (src) return src;
+    if (!/logo|brand/i.test(hay)) continue;
+    const src = absolute(attr(tag, "src") || attr(tag, "data-src"), base);
+    if (!src) continue;
+    const said = sizeFromUrl(src);
+    // Tall, or as big as a photograph: not a logo, whatever it is called.
+    if (said.w && said.h) {
+      if (said.h > said.w) continue;
+      if (said.w > 900 && said.h > 500) continue;
     }
+    return src;
   }
-  return absolute(meta(html, "og:image"), base);
+  return "";
 }
 
 /** Words that are navigation furniture rather than something they sell. */
@@ -281,6 +304,40 @@ function worthShowing(src: string): number {
   return 1;
 }
 
+/**
+ * How big the file says it is, when the address says so.
+ *
+ * Plenty of image servers put the size in the path — Treatwell writes
+ * w133.h40, WordPress writes -150x150, others put it in the query. The
+ * img tag itself often carries no width or height at all, so without
+ * reading the address there is nothing to judge by.
+ *
+ * This is how a 133 by 40 pixel logo belonging to the booking site
+ * ended up stretched across a full-width hero as a grey blur. It was
+ * the first image on the page, nothing said it was small, and so it won.
+ *
+ * Returns 0 when the address does not say, which is treated as unknown
+ * rather than as small.
+ */
+function sizeFromUrl(src: string): { w: number; h: number } {
+  const marked = src.match(/[._-]w(\d{2,5})[._-]h(\d{2,5})\b/i);
+  if (marked) return { w: Number(marked[1]), h: Number(marked[2]) };
+  const dims = src.match(/[-_/](\d{2,5})x(\d{2,5})\.(?:jpe?g|png|webp|avif|gif)/i);
+  if (dims) return { w: Number(dims[1]), h: Number(dims[2]) };
+  try {
+    const q = new URL(src, "https://x.test").searchParams;
+    const w = Number(q.get("w") ?? q.get("width") ?? 0);
+    const h = Number(q.get("h") ?? q.get("height") ?? 0);
+    if (w || h) return { w, h };
+  } catch {
+    /* not a URL we can read; unknown is the right answer */
+  }
+  return { w: 0, h: 0 };
+}
+
+/** Too small to be a photograph of anything. */
+const SMALLEST = 200;
+
 /** The largest candidate in a srcset, which is the one worth showing. */
 function biggestIn(srcset: string): string {
   let best = "";
@@ -314,10 +371,13 @@ function imagesOf(html: string, base: string): string[] {
     const src = absolute(raw, base);
     if (!src || seen.has(src)) continue;
     if (NOT_A_PHOTO.test(src) || DECORATION.test(src) || SOMEBODY_ELSE.test(src)) continue;
-    // Anything the page itself declares as tiny is furniture.
+    // Anything declared tiny is furniture — by the tag where it says so,
+    // and by the address where the tag does not.
     const w = Number(attr(tag, "width") || 0);
     const h = Number(attr(tag, "height") || 0);
     if ((w && w < 150) || (h && h < 150)) continue;
+    const said = sizeFromUrl(src);
+    if ((said.w && said.w < SMALLEST) || (said.h && said.h < SMALLEST)) continue;
     seen.add(src);
     found.push({ src, score: worthShowing(src) });
   }
@@ -329,6 +389,8 @@ function imagesOf(html: string, base: string): string[] {
     if (!src || seen.has(src)) continue;
     if (!/\.(jpe?g|png|webp|avif)(\?|$)/i.test(src)) continue;
     if (NOT_A_PHOTO.test(src) || DECORATION.test(src) || SOMEBODY_ELSE.test(src)) continue;
+    const small = sizeFromUrl(src);
+    if ((small.w && small.w < SMALLEST) || (small.h && small.h < SMALLEST)) continue;
     seen.add(src);
     found.push({ src, score: worthShowing(src) });
   }
