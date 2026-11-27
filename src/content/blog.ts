@@ -16,6 +16,90 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "the-photos-that-actually-get-a-trade-hired",
+    title: "The Photos That Actually Get a Trade Hired",
+    description:
+      "Most trade sites have stock photos or none, and both cost work. What a customer is really looking for in a picture, and how to get those shots on a phone.",
+    publishedAt: "2026-11-27",
+    keywords: [
+      "business photos that win work",
+      "before and after photos small business marketing",
+      "photos for a trade website",
+      "what photos to put on a tradesman website",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "Someone is deciding whether to ring you. They have your website open and two others. All three say the same things about quality and reliability, because everybody says those things.",
+          "So they scroll, and they look at the pictures. That is the part of the page doing the actual work, and on most trade sites it is either a stock photo of a smiling man in a hard hat or nothing at all.",
+          "Both are a problem. The stock photo is worse, because it tells them something true: this business could not show one job of its own.",
+        ],
+      },
+      {
+        heading: "What they are actually looking for",
+        paragraphs: [
+          "Not art. They are not judging your composition. They are trying to answer three questions quickly, and good photos answer all three without a word of text.",
+          "Is this real? A photograph of your own work, in a recognisable British house, with your tools in it, proves you exist in a way no paragraph can.",
+          "Do you do my kind of job? Somebody with a leaking flat roof is looking for a flat roof. A gallery of bathrooms tells them nothing, however good the bathrooms are.",
+          "Would I be happy with that finish? This is the one people underestimate. They are looking at the edges, the silicone line, the way the last tile meets the wall. Close-ups of finished detail do more than a wide shot of the whole room.",
+        ],
+      },
+      {
+        heading: "Before and after, done properly",
+        paragraphs: [
+          "Before and after pairs work because they show the thing people are buying, which is the change rather than the object.",
+          "They only work when the two photographs are comparable, and this is where most attempts fall down. A dark, crooked phone snap of a tatty kitchen next to a bright, straight, wide shot of a new one does not read as a transformation. It reads as two unrelated pictures, and people notice.",
+          "The rule is simple enough to do on a busy day: same spot, same height, same direction. Stand in the doorway for the before. Stand in the same doorway for the after. If you have to, take a photo of your own feet on the floor so you can find the spot again.",
+        ],
+        bullets: [
+          "Take the before shot before you move anything. The temptation is to tidy up first, and tidying up is half the after.",
+          "Get the whole thing in, then take a second closer one of the worst bit.",
+          "Do not use a flash for one and not the other.",
+          "Take more befores than you think you need. You cannot go back for them.",
+        ],
+      },
+      {
+        heading: "The pictures nobody takes",
+        paragraphs: [
+          "Most trades have a folder of finished-job photos and nothing else. The ones that are missing are often the ones that do the persuading.",
+          "The van, clean, outside a normal house. It says you turn up in something that looks like a business.",
+          "You, or your lads, actually working. Faces beat buildings for trust. It does not need to be posed, and a posed one usually looks worse.",
+          "The tidy-up. A photograph of a clean floor and the dust sheets coming off is, to anyone who has had a bad experience with a trade, close to the most reassuring thing on the page.",
+          "The bit that is hidden afterwards. The pipework before it is boxed in, the membrane before the tiles go on. Nobody else will ever see that work, which is exactly why showing it is worth something.",
+        ],
+      },
+      {
+        heading: "A phone is fine. These are the bits that matter",
+        paragraphs: [
+          "You do not need a photographer and you do not need a camera. Modern phones are genuinely good. What lets people down is almost always light, lens and clutter, in that order.",
+          "Wipe the lens. A phone that lives in a work pocket has a film on it, and it turns every photo slightly foggy. This one change improves more trade photos than anything else on this list.",
+          "Use the light that is there. Open the curtains, put the lights on, and stand so the window is behind you rather than in front of you. Avoid the flash indoors — it flattens everything and makes a nice finish look cheap.",
+          "Move the rubbish out of the shot. Your bag, the kettle, the empty cups. It takes ten seconds and it is the difference between a professional photo and a snap.",
+          "Get closer than feels natural. Most people stand too far back and end up with a small subject in a big room. If the job is the tiling, fill the frame with the tiling.",
+          "Hold it straight. Vertical lines that lean make a good job look wonky. Most phones will show you a grid if you turn it on in the camera settings.",
+        ],
+      },
+      {
+        heading: "Permission, and what not to put up",
+        paragraphs: [
+          "This matters more than people assume, and getting it wrong is the kind of thing that turns a happy customer into an unhappy one.",
+          "Ask before you photograph somebody's home, and ask again before you put it on the internet. A verbal yes at the time is worth having in a text message afterwards. Most people say yes and are pleased to be asked.",
+          "Keep other people's children and other people's faces out of it unless you have asked them directly. Blur number plates and house numbers where they are readable. Do not tag the street or post the address.",
+          "If a customer says no, that is the end of it, even for a job you are proud of. There will be another one.",
+        ],
+      },
+      {
+        heading: "Where they need to end up",
+        paragraphs: [
+          "Photographs stuck in a gallery page nobody opens are worth very little. The useful place for them is beside the thing they prove.",
+          "Put the bathroom photos on the bathroom page, the roofing photos on the roofing page. Somebody reading about flat roofs should be looking at your flat roofs while they read, not clicking through to a mixed folder and hunting.",
+          "The same goes for your Google listing. Photos there are seen by people who have not reached your website at all, and a listing with recent pictures of real work is a different proposition from one with a logo and nothing else.",
+          "And keep taking them. The hardest part of this is not the photography, it is remembering on a Tuesday afternoon when you are behind and just want to get home. One good job a month, photographed properly, is a year of material.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "why-two-agencies-quote-different-prices-for-the-same-job",
     title: "Why Two Agencies Quote Wildly Different Prices for the Same Job",
     description:

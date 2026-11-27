@@ -542,7 +542,7 @@ optional — several of these topics are unwritable until somebody checks Google
       source says it is limited to single-location food and drink businesses.)
 - [ ] Writing Service Page Content When You've Never Written Anything Before — target: "how to
       write a service page", "what to put on a service page small business"
-- [ ] The Photos That Actually Get a Trade Hired — target: "business photos that win work",
+- [x] The Photos That Actually Get a Trade Hired — target: "business photos that win work",
       "before and after photos small business marketing"
 - [ ] What to Do With an Enquiry You Can't Help — target: "turning down work professionally",
       "referring enquiries you cannot take" (angle: the referral you make today is the one you
