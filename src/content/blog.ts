@@ -16,6 +16,79 @@ export type BlogPost = {
 // Newest first. Add new posts to the top of this array.
 export const blogPosts: BlogPost[] = [
   {
+    slug: "what-happens-in-the-first-thirty-days-of-a-new-ad-account",
+    title: "What Happens in the First Thirty Days of a New Ad Account",
+    description:
+      "Ads rarely work properly in week one, and that is normal rather than a warning sign. Here is what the first month actually looks like and what to judge it on.",
+    publishedAt: "2026-11-28",
+    keywords: [
+      "new Facebook ad account first month",
+      "how long before Facebook ads work",
+      "new ad account learning phase",
+      "Meta ads first 30 days",
+    ],
+    sections: [
+      {
+        paragraphs: [
+          "The first week of a new ad account is the week most people decide whether advertising works. It is the worst possible week to decide it.",
+          "Nothing is wrong with you, your budget or the agency if day three is quiet. A brand new account is a stranger to the platform: it has no history, no data about who bought, and no idea which of the people it can reach are worth showing your ad to. It spends the first stretch finding out, and finding out costs money before it saves any.",
+          "Here is what is actually happening, week by week, so you can tell a slow start from a real problem.",
+        ],
+      },
+      {
+        heading: "Week one: the platform is guessing",
+        paragraphs: [
+          "Meta decides who sees your ad by predicting who is likely to do the thing you asked for. On a new account it has nothing to predict from, so it shows the ad widely and watches what happens.",
+          "This is usually called the learning phase, and it is not a marketing euphemism — it is a real state the platform puts a campaign in. While it lasts, results swing about. One day looks promising, the next looks dead, and neither is the truth.",
+          "The temptation in week one is to fiddle. Change the audience, change the image, change the budget. Every one of those restarts the guessing, which is why a campaign that gets adjusted daily can stay in its expensive opening stretch for a month.",
+        ],
+        bullets: [
+          "Expect enquiries to be lumpy rather than steady.",
+          "Expect the cost of a result to look bad, because it is averaging in everyone the platform tried and got wrong.",
+          "Do not switch anything off on day two. There is not enough there to switch off.",
+        ],
+      },
+      {
+        heading: "Week two: the first real signal",
+        paragraphs: [
+          "By the second week there is usually enough to see a shape. Not a result — a shape. Which advert people stopped scrolling for. Which audience clicked. Which landing page they left immediately.",
+          "This is the first point where changing something is sensible rather than nervous, and the change should be one thing at a time. If you swap the picture and the headline and the audience in the same afternoon and it improves, you have learned nothing about why.",
+          "It is also the week the unglamorous problems show up. The form that does not work on an iPhone. The phone number nobody answers after five. The enquiry that sat unread for two days. Advertising is very good at finding the weak link in a business, and it is rarely the advert.",
+        ],
+      },
+      {
+        heading: "Weeks three and four: it starts to settle",
+        paragraphs: [
+          "Somewhere in here, if the offer is sound and the tracking is right, the cost of a result usually starts to come down and stay down. The platform has enough examples of people who actually enquired to go looking for more of them.",
+          "This is the point at which the numbers mean something. Before this they are noise with decimal places.",
+          "What you should have by the end of the month is not a verdict on advertising. It is a short list of things that are now known: which message works, which audience responds, roughly what an enquiry costs, and where enquiries are being lost after they arrive.",
+        ],
+      },
+      {
+        heading: "The things that genuinely are warning signs",
+        paragraphs: [
+          "A slow start is normal. These are not, and they are worth raising in week one rather than week six.",
+        ],
+        bullets: [
+          "No tracking on the website. If nothing records what happened after the click, nobody will ever be able to tell you which half of the spend worked.",
+          "Ads pointing at a homepage. Someone who clicked an advert about guttering should land on guttering, not on a page about everything you do.",
+          "Nobody can tell you what the campaign is optimising for. \"Clicks\" and \"enquiries\" are different instructions and produce very different results.",
+          "The account was rejected or restricted and nobody mentioned it. This happens, it is usually fixable, and it should be told to you the day it happens.",
+          "You cannot see the account. You should have access to it in your own name, whoever is running it.",
+        ],
+      },
+      {
+        heading: "What to judge the first month on",
+        paragraphs: [
+          "Not revenue. A month is rarely long enough for that, particularly for anything people think about before buying.",
+          "Judge it on whether you know more than you did. Can whoever runs it tell you which advert did best and why they think so? Can they show you what happened after the click, not just how many clicks there were? Did they change one thing at a time, and can they say what each change did?",
+          "An honest answer to those is worth more at thirty days than a good-looking cost per lead, because the answers are what the second month is built on. If nobody can answer them, the problem is not that the ads need longer.",
+          "And a last thing worth being blunt about: nobody can tell you in advance what your enquiries will cost. It depends on the trade, the town, the time of year and what you are asking people to do. Anybody who gives you that number before the account has spent anything is guessing, and the guess is not in your favour.",
+        ],
+      },
+    ],
+  },
+  {
     slug: "the-photos-that-actually-get-a-trade-hired",
     title: "The Photos That Actually Get a Trade Hired",
     description:

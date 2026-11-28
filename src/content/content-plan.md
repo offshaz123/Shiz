@@ -504,7 +504,7 @@ site audit tool actually measures, or from a primary source that does load.
       "page title for local business"
 - [x] Does a Small Business Need a Blog If Nobody Reads It? — target: "does a small business need
       a blog", "blogging worth it small business UK"
-- [ ] What "Service Area" Really Does on a Google Listing — target: "Google Business Profile
+- [x] DROPPED 2026-11-28 (overlaps the published "Service Area Businesses: Should You Hide Your Address?" — no separate angle found) — What "Service Area" Really Does on a Google Listing — target: "Google Business Profile
       service area", "service area business vs storefront UK"
       OVERLAP WARNING 2026-11-23: the published "Service Area Businesses: Should You Hide Your
       Address?" already covers the no-radius rule and one-profile-not-one-per-town. Only write
@@ -547,7 +547,7 @@ optional — several of these topics are unwritable until somebody checks Google
 - [ ] What to Do With an Enquiry You Can't Help — target: "turning down work professionally",
       "referring enquiries you cannot take" (angle: the referral you make today is the one you
       get back in March. No claims about reciprocity rates.)
-- [ ] What Happens in the First Thirty Days of a New Ad Account — target: "new Facebook ad
+- [x] What Happens in the First Thirty Days of a New Ad Account — target: "new Facebook ad
       account first month", "how long before Facebook ads work" (expectation-setting piece. No
       promised timelines and no cost-per-lead figures — they depend entirely on the trade.)
 - [x] Why Two Agencies Quote Wildly Different Prices for the Same Job — target: "why marketing
